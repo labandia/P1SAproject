@@ -348,13 +348,21 @@
        EVENT BINDINGS
     ========================================================= */
     function bindEvents() {
-        const addfunc = state.isSelectedSearch === 0 ? handleAddDaily : handleDailyDieSerial;
+        //const addfunc = state.isSelectedSearch === 0 ? handleAddDaily : handleDailyDieSerial;
 
-        $("#addDailyForm").on("submit", addfunc);
+        $("#addDailyForm").on("submit", handleAddDaily);
         $("#EditPartnumforms").on("submit", handleEditDaily);
 
-        $("#searchButton").on("click", () => runSearch(0));
-        $("#searchDieButton").on("click", () => runSearch(1));
+        $("#EditDailyforms").on("submit", handleEditDailyDieSerial);
+
+        $("#searchButton").on("click", () => {
+            DOM.searchDie.val("");
+            runSearch(0);
+        });
+        $("#searchDieButton").on("click", () => {
+            DOM.searchInput.val("");
+            runSearch(1);
+        });
 
         DOM.searchInput.on("keypress", e => {
             if (e.key === "Enter") {
@@ -382,26 +390,25 @@
         DOM.monthSelect.on("change", reloadDailyData);
         DOM.yearSelect.on("change", reloadDailyData);
         DOM.dateInput.on("change", reloadDailyData);
-        DOM.processSelect.on("change", reloadDailyData);
+        DOM.filterProcess.on("change", reloadDailyData);
 
         DOM.tableDisplay.on("click", ".EditDailypartnum", OpenEditDailyModal);
         DOM.tableDisplay.on("click", ".deleteDailypartnumButn", handleDeleteDaily);
 
+        DOM.tableDisplay.on("click", ".EditDailyDieSerial", OpenEditSerialModal);
+        DOM.tableDisplay.on("click", ".DeleteDailyDieSerial", handleDeleteDailyDieSerial);
+
         $("#DailyPartnumDateInput").on("change", () => state.isChangeDate = 1);
+        $("#DieSerialDateInput").on("change", () => state.isChangeDate = 1);
     }
 
-
-
-    async function handleDailyDieSerial(e) {
-
-    }
 
     /* =========================================================
                 DAILY PARTNUMBER PROCESS
     ========================================================= */
      async function handleAddDaily(e) {
          e.preventDefault();
-         let searchval = $("#searchInput").val().trim();
+         let searchval = state.isSelectedSearch === 0 ? $("#searchInput").val().trim() : $("#searchDie").val().trim();
 
          if (searchval === "" && DOM.processSelect.val()) {
              alert("Check all the required Input");
@@ -411,7 +418,7 @@
          let formData = new FormData(e.target);
          formData.append('ProcessID', DOM.processSelect.val());
          formData.append("PartNo", state.partNo);
-         formData.append("DieSerial", DOM.searchDie.val());
+         formData.append("DieSerial", state.dieSerial);
          formData.append("SearchMode", state.isSelectedSearch); // 0 = PartNo, 1 = DieSerial
 
          const data = Object.fromEntries(formData);
@@ -428,11 +435,11 @@
               return;
          }
 
-         if (cycleShot === 0) {
-             let checkzero = state.getData.find(res => Number(res.Total) === cycleShot);
-             if (checkzero) {
-                 alert("Zero Cycle Shot is Already Input on the last record");
-                 return
+         if (cycleShot === 0 && state.getData.length > 0) {
+             const lastrecord = state.getData[0]
+             if (Number(latestRecord.Total) === 0) {
+                 alert("Zero Cycle Shot is already input on the latest record");
+                 return;
              }
          }
          // Insert a new Daily Records
@@ -509,7 +516,7 @@
                  searchByPart();
                  //SearchByDieNo(strDieSerial);
                  //$("#EditDailyforms")[0].reset();
-                 //$("#EditDailyMold").modal("hide");
+                 $("#EditPartnumMold").modal("hide");
              });
          }
      }
@@ -517,7 +524,6 @@
          const id = this.id.split("_")[1];
          const row = state.getData.find(r => r.RecordID === parseInt(id));
          if (!row) return;
-         console.log(row);
 
             Swal.fire({
                 title: "Are you sure you want to delete this?",
@@ -552,6 +558,110 @@
      }
 
     /* =========================================================
+                DAILY DIE SERIAL PROCESS
+     ========================================================= */
+    async function OpenEditSerialModal() {
+        const serial = this.id.split("_")[1];
+        const row = state.getData.find(r => r.DateInput === serial);
+        if (!row) return;
+
+        $("#DieSerialID").val(row.DieSerial);
+        //$("#DailyEditPartNo").val(row.PartNo);
+        setDateInput("DieSerialDateInput", row.DateInput);
+        $("#DieSerialCycleShot").val(row.CycleShot);
+        $("#DieSerialMachineNo").val(row.MachineNo);
+        $("#DieSerialRemarks").val(row.Remarks);
+        $("#DieSerialMincharge").val(row.Mincharge);
+        $("#EditDailyMold").modal("show");
+    }
+    async function handleEditDailyDieSerial(e) {
+        e.preventDefault();
+         let formData = new FormData(e.target);
+         const data = Object.fromEntries(formData);
+
+         const findData = state.getData.filter(res =>
+             normalizeMMDDYY(res.DateInput) === data.DateInput
+         );
+
+         if (findData.length > 0 && state.isChangeDate === 1) {
+             showAlert(data.DateInput + " is Already Input");
+             return;
+         }
+
+         function toDate(value) {
+             if (value.includes("/")) {
+                 let [m, d, y] = value.split("/");
+                 y = y.length === 2 ? `20${y}` : y;
+                 return new Date(`${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`);
+             }
+             // Supports YYYY-MM-DD
+             return new Date(value);
+         }
+
+         const inputDate = toDate(data.DateInput);
+         const previousDate = toDate(state.tempDate);
+
+         // 🔴 validation: input date must NOT be after tempDate
+         if (inputDate < previousDate) {
+             showAlert("Date must not be later than the previous date")
+             return;
+         }
+
+         let res = await postMethod('@Url.Action("UpdateDieSerialMoldDieMonitor", "Mold")', formData);
+
+         if (res?.Success) {
+             Swal.fire({
+                 title: "Success",
+                 text: res.Message,
+                 icon: "success",
+                 confirmButtonColor: "#0d97c9",
+                 timer: 1500
+             }).then(() => {
+                 searchByDie();
+                 $("#EditDailyMold").modal("hide");
+             });
+         }
+     }
+    async function handleDeleteDailyDieSerial(e) {
+        const serial = this.id.split("_")[1];
+        const row = state.getData.find(r => r.DateInput === serial);
+        if (!row) return;
+
+         Swal.fire({
+             title: "Are you sure you want to delete this?",
+             text: "You won't be able to revert this!",
+             icon: "warning",
+             showCancelButton: true,
+             confirmButtonColor: "#3085d6",
+             cancelButtonColor: "#d33",
+             confirmButtonText: "Yes, delete it!"
+         }).then(async (result) => {
+             if (result.isConfirmed) {
+                 let res = await postMethod('@Url.Action("DeleteDieSerialMoldDieMonitor", "Mold")', {
+                     dieSerial: row.DieSerial,
+                     Dateinput: serial
+                 });
+                 if (res?.Success) {
+                     Swal.fire({
+                         title: "Success",
+                         text: res.Message,
+                         icon: "success",
+                         timer: 2000, 
+                         showConfirmButton: false,
+                         allowOutsideClick: false,   // prevent outside click
+                         allowEscapeKey: false,      // optional: prevent ESC key close
+                         allowEnterKey: false        // optional: prevent Enter key close
+                     }).then(() => {
+                         searchByDie();
+                     });
+
+                 }
+             }
+         });
+
+  }
+
+    /* =========================================================
        SEARCH
     ========================================================= */
     async function runSearch(mode) {
@@ -560,9 +670,7 @@
     }
 
     async function searchByPart() {
-        DOM.dailyInputs.show();
-        DOM.dailySummary.hide();
-
+     
         //DOM.searchDie.val("");
         const part = DOM.searchInput.val().trim();
         const process = DOM.processSelect.val();
@@ -585,6 +693,9 @@
             });
             if(!res?.Success) return showNoData();
 
+            DOM.dailyInputs.show();
+            DOM.dailySummary.hide();
+
             state.getData = res.Data.GetList;
             renderPartDetails(res.Data.Details);
             populateTable(state.getData);
@@ -593,9 +704,7 @@
         finally{ hideLoader(btn); }
     }
 
-
     async function searchByDie() {
-        alert("Serach Die Serial");
         //DOM.searchInput.val("");
         DOM.dailyInputs.show();
         DOM.dailySummary.hide();
@@ -618,12 +727,15 @@
             const res = await GetMethod('@Url.Action("SearchByDieSerialMoldie","Mold")',{
                 ProcessID:process, DieInput:die
             });
+
+            console.log(res);
             if(!res?.Success) return showNoData();
 
-            state.partNo = res.Data.Details[0].PartNo;
-            state.dieObj = res.Data.GetList;
+            //state.partNo = res.Data.Details[0].PartNo;
+            //state.dieObj = res.Data.GetList;
 
             state.getData = res.Data.GetList;
+            populateDieSerialDetails(res.Data.Details);
             populateDieTable(state.getData);
 
         }catch(err){ console.error(err); }
@@ -632,6 +744,8 @@
     /* =========================================================
        TABLE BUILDERS
     ========================================================= */
+
+
     function populateTable(list) {
         let counter = 0;
         DOM.tableDisplay.empty();
@@ -671,11 +785,62 @@
         });
     }
 
-    function populateDieTable(list) {
+    function populateDieSerialDetails(details) {
+        DOM.detailSummary.empty();
 
+        const $table = $("#DieSerialMasterlist");
+        $table.empty();
+
+        if (!details || details.length === 0) return;
+        const rowspan = details.length;
+        const dieSerial = details[0].DieSerial;
+        const status = details[0].Status;
+
+
+        details.forEach((part, index) => {
+            let rowHtml = `<tr>
+            <td>${part.PartNo}</td>
+            <td>${part.Dimension_Quality}</td>`;
+
+            // Only add merged cells on first row
+            if (index === 0) {
+                rowHtml += `
+                <td rowspan="${rowspan}" class="die-serial">${dieSerial}</td>
+                <td rowspan="${rowspan}" class="die-status">${getStatusHtml(status)}</td>`;
+            }
+
+            rowHtml += `</tr>`;
+            $table.append(rowHtml);
+        });
+    }
+    function populateDieTable(list) {
+        console.log(list)
+        let counter = 0;
 
         DOM.tableDisplay.empty();
         list.forEach(row => {
+            let actionButton = "";
+
+            if (row.Total === 0) {
+                counter = 1;
+            }
+
+            if (counter === 0) {
+                actionButton = ` <div style='display: grid; grid-template-columns: 50% 50%; gap: 5px;'>
+                       <button type="button" class="text-primary actionicon EditDailyDieSerial"
+                           id="editButton_${row.DateInput}">
+                           <i class="fa-regular fa-pen-to-square action_btn"></i>
+                       </button>
+
+                           <button type="button" class="text-danger actionicon  DeleteDailyDieSerial"
+                               id="deleteDailyButton_${row.DateInput}">
+                               <i class="fa-regular fa-trash-can"></i>
+                           </button>
+                     </div>`;
+                state.tempDate = row.DateInput;
+            }
+
+
             const statusBtns = buildStatusButtonSet(row.RecordID, row.Status, true, row);
             DOM.tableDisplay.append(`<tr>
             <td>${row.DateInput}</td>
@@ -685,25 +850,53 @@
             <td>${row.Remarks}</td>
             <td>${row.Mincharge}</td>
             <td><div class="flex_align">${statusBtns}</div></td>
+            <td>${actionButton}</td>
         </tr>`);
         });
     }
 
 
     function buildStatusButtonSet(id, status, isDie = false, row = null) {
+        let actionStatus = "";
+
+        // For the Partnumber
         if (!isDie) {
-            if (status === 0) return buildStatusButton("Continue", "#054e92", `ChangeStatus(${id},1)`);
-            if (status === 1) return buildStatusButton("Needed", "#c97d0c", `ChangeStatus(${id},1)`) +
-                buildStatusButton("Complete", null, `ChangeStatus(${id},2)`);
-            return buildStatusButton("Needed", null, `ChangeStatus(${id},1)`) +
-                buildStatusButton("Complete", "#188f18", `ChangeStatus(${id},2)`);
+
+            actionStatus = `
+             <button class="status-btn "
+                 ${ status === 0 ? `style="color:#054e92;border:2px solid #054e92;` : ``}
+                 onclick="ChangeStatus(${rowData.RecordID}, 1)">
+                 Continue
+             </button>
+              <button class="status-btn"
+                 ${ status === 1 ? `style="color:#c97d0c;border:2px solid #c97d0c;"` : ``}
+                 onclick="ChangeStatus(${rowData.RecordID}, 1)">
+                 Needed
+             </button>
+             <button class="status-btn"
+                 ${ status === 2 ? `style="color:#188f18;border:2px solid #188f18;"` : ``}
+                 onclick="ChangeStatus(${rowData.RecordID}, 2)">
+                 Complete
+             </button>
+             `;
+
+
         }
-        const key = `'${row.DateInput}','${row.DieSerial}'`;
-        if (status === 0) return buildStatusButton("Continue", "#054e92", `ChangeDieSerialStatus(${key},1)`);
-        if (status === 1) return buildStatusButton("Needed", "#c97d0c", `ChangeDieSerialStatus(${key},1)`) +
-            buildStatusButton("Complete", null, `ChangeDieSerialStatus(${key},2)`);
-        return buildStatusButton("Needed", null, `ChangeDieSerialStatus(${key},1)`) +
-            buildStatusButton("Complete", "#188f18", `ChangeDieSerialStatus(${key},2)`);
+
+
+        //if (!isDie) {
+        //    if (status === 0) return buildStatusButton("Continue", "#054e92", `ChangeStatus(${id},1)`);
+        //    if (status === 1) return buildStatusButton("Needed", "#c97d0c", `ChangeStatus(${id},1)`) +
+        //        buildStatusButton("Complete", null, `ChangeStatus(${id},2)`);
+        //    return buildStatusButton("Needed", null, `ChangeStatus(${id},1)`) +
+        //        buildStatusButton("Complete", "#188f18", `ChangeStatus(${id},2)`);
+        //}
+        //const key = `'${row.DateInput}','${row.DieSerial}'`;
+        //if (status === 0) return buildStatusButton("Continue", "#054e92", `ChangeDieSerialStatus(${key},1)`);
+        //if (status === 1) return buildStatusButton("Needed", "#c97d0c", `ChangeDieSerialStatus(${key},1)`) +
+        //    buildStatusButton("Complete", null, `ChangeDieSerialStatus(${key},2)`);
+        //return buildStatusButton("Needed", null, `ChangeDieSerialStatus(${key},1)`) +
+        //    buildStatusButton("Complete", "#188f18", `ChangeDieSerialStatus(${key},2)`);
     }
     async function ChangeStatus(recordId, status)
     {
@@ -779,7 +972,6 @@
     }
 
     function showNoSummaryData() {
-        DOM.tableDisplay.empty();
         DOM.dailyDisplay.html(`<tr><td colspan="9">🔍 No Data Found</td></tr>`);
     }
 
@@ -825,6 +1017,30 @@
         const [mm, dd, yy] = dateStr.split("/");
         const fullYear = Number(yy) < 50 ? `20${yy}` : `19${yy}`;
         return `${fullYear}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
+    }
+
+    function getStatusHtml(status) {
+        if (status === 0) {
+            return `
+            <button class="status-btn active"
+                style="color:#054e92; border:2px solid #054e92;">
+                Continue
+            </button>`;
+        }
+        else if (status === 1) {
+            return `
+            <button class="status-btn pulse-2">
+                Needed
+            </button>`;
+        }
+        else if (status === 2) {
+            return `
+            <button class="status-btn active"
+                style="color:#188f18; border:2px solid #188f18;">
+                Completed
+            </button>`;
+        }
+        return "";
     }
 
 

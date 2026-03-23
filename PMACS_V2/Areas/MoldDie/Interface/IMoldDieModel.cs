@@ -41,8 +41,8 @@ namespace PMACS_V2.Areas.MoldDie.Interface
 
 
         Task<bool> DeletePartnumberDaily(int recordID, string partno, string dateinput);
+        Task<bool> DeleteDieSerialDaily(string dieSerial, string dateinput);
 
-      
 
         // ===========================================================
         // MOLD DIE TOOLING DATA 

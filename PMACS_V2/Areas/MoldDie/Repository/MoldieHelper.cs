@@ -296,7 +296,6 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 //if (history == null) return false;
                 Debug.WriteLine(history.Dimension_Quality);
 
-                // correct Dimension_Quality per PartNo
                 var (moldtotal, moldstatus) = CalculateTotalAndStatus(
                   lastTotal,
                   mold.CycleShot,
@@ -664,6 +663,81 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                     "CycleShot: " + Lastrecords[i].CycleShot +
                     " | RunningTotal: " + runningTotal
                 );
+            }
+
+            return await Task.FromResult(true);
+        }
+
+        public static async Task<bool> DeleteDailyDieSerial(string dieSerial, string dateinput)
+        {
+
+            // 1.  delete the checker first 
+            var deletecheckTask = SqlDataAccess.ExecuteAsync(
+                        $@"DELETE FROM DieMoldDailyInputChecker 
+                           WHERE DieSerial=@DieSerial AND CAST(DateInput AS DATE) = @DateInput; ",
+                        new { DieSerial = dieSerial, DateInput = dateinput });
+
+            var deleteDailyTask = SqlDataAccess.ExecuteAsync(
+                        $@"DELETE d
+                            FROM DieMold_Daily d
+                            JOIN DieMold_MoldingMainParts c
+                                ON d.PartNo = c.PartNo
+                            WHERE c.DieSerial = @DieSerial AND CAST(DateInput AS DATE) = @DateInput;",
+                        new { DieSerial = dieSerial, DateInput = dateinput });
+
+            var deleteMonitorTask = SqlDataAccess.ExecuteAsync($@"
+                        DELETE d 
+                        FROM DieMoldMonitor d  
+                        JOIN DieMold_MoldingMainParts c
+                        ON d.PartNo = c.PartNo
+                        WHERE c.DieSerial = @DieSerial AND CAST(DateAction AS DATE) = @DateAction;",
+                        new { DieSerial = dieSerial, DateAction = dateinput });
+
+            // Wait for all to finish
+            await Task.WhenAll(deletecheckTask, deleteDailyTask, deleteMonitorTask);
+
+            // Get records
+            var records = await SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>(
+                        @"SELECT
+                            d.DateInput,
+                            d.Total, 
+                            d.CycleShot
+                          FROM DieMold_Daily d
+                          JOIN DieMold_MoldingMainParts p
+                            ON d.PartNo = p.PartNo
+                          WHERE p.DieSerial = @DieSerial
+                          GROUP BY d.DateInput, d.Total, d.CycleShot
+                          ORDER BY d.DateInput DESC",
+                        new { DieSerial = dieSerial });
+
+            // Stop at reset
+            var Lastrecords = records.TakeWhile(r => r.Total != 0).ToList();
+            if (!Lastrecords.Any()) return true;
+
+            // OLDEST → NEWEST
+            Lastrecords.Reverse();
+
+
+            int runningTotal = Lastrecords[0].Total;
+
+            for (int i = 1; i < Lastrecords.Count; i++)
+            {
+                runningTotal += Lastrecords[i].CycleShot;
+                string sql = @"UPDATE d
+                   SET Total = @Total
+                   FROM DieMold_Daily d
+                   JOIN DieMold_MoldingMainParts p
+                        ON d.PartNo = p.PartNo
+                   WHERE p.DieSerial = @DieSerial
+                   AND d.DateInput >= @DateInput
+                   AND d.DateInput < DATEADD(day,1,@DateInput)";
+
+                await SqlDataAccess.ExecuteAsync(sql, new
+                {
+                    Total = runningTotal,
+                    DieSerial = dieSerial,
+                    DateInput = Lastrecords[i].DateInput
+                });
             }
 
             return await Task.FromResult(true);

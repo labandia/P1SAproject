@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.DynamicData;
+using System.Web.UI.WebControls.WebParts;
 using PMACS_V2.Areas.MoldDie.Interface;
 using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Helper;
@@ -239,7 +240,6 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         }
         public async Task<bool> CheckMoldieExist(string searchValue, string Dateinput)
         {
-            Debug.WriteLine(Dateinput.ToString());
             bool isPartNo = !string.IsNullOrWhiteSpace(searchValue)
                            && searchValue.StartsWith("0");
 
@@ -389,7 +389,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
         public Task<List<DieMoldMonitoringModel>> GetMoldieDieSerialParts(string diepart)
         {
-             string strsql = @" SELECT 
+             string strsql = @"SELECT 
                         m.PartNo, m.PartDescription
                         ,m.Dimension_Quality, m.DieSerial
                         ,m.DieNumber,
@@ -702,6 +702,11 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         public async Task<bool> DeletePartnumberDaily(int recordID, string partno, string dateinput)
         {
             return await MoldieHelper.DeletePartnumDailyPartnum(recordID, partno, dateinput);
+        }
+
+        public async Task<bool> DeleteDieSerialDaily(string dieSerial, string dateinput)
+        {
+            return await MoldieHelper.DeleteDailyDieSerial(dieSerial, dateinput);
         }
     }
 }

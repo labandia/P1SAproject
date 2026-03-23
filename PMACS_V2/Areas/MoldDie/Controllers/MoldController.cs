@@ -169,8 +169,7 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
             if (!success)
                 return JsonValidationError();
 
-            return JsonCreated(model,
-                model.SearchMode == 0 ? "Add Data Successfully" : "Update Data Successfully");
+            return JsonCreated(model, "Add Data Successfully");
         }
 
         //  ADD MOLDIE DAILY INPUT BY PARTNO
@@ -208,6 +207,16 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
             if (!update) return JsonValidationError();
             return JsonCreated(update, "Delete Data Successfully");
         }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteDieSerialMoldDieMonitor(string dieSerial, string Dateinput)
+        {
+            bool update = await _dieV2.DeleteDieSerialDaily(dieSerial, Dateinput);
+            if (!update) return JsonValidationError();
+            return JsonCreated(update, "Delete Data Successfully");
+        }
+
+
         [HttpPost]
         public async Task<ActionResult> UpdateDailyStatus(int RecordID, int Status)
         {

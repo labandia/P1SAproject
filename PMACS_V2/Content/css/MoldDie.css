@@ -480,7 +480,11 @@
     }
 
 
-
+.die-status {
+    text-align: center;
+    vertical-align: middle;
+    transform: translateX(25%);
+}
 
 
 

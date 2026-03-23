@@ -14,7 +14,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
     public class MoldDieRepository : IDieMold
     {
         // ===========================================================
-        // ==================== MOLDING DIE MOLD  ======================
+        // ==================== MOLDING DIE MOLD  ====================
         // ===========================================================
 
         // MOLD DIE INPUT DATA

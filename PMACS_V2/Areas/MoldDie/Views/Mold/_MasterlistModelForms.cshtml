@@ -1,0 +1,129 @@
+﻿<!--########################## Adding Tooling  DATA #############################-->
+<div class="modal fade modal-m" id="AddTooling" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Add Masterlist Data</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
+
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Part Number <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="text" placeholder="Enter the Part No" name="PartNo" id="PartNo" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12 mb-3">
+                        <label class="mb-2">Part No. Description<small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                        <div class="select-container" style="width: 100%;">
+                            <select id="PartDescription" name="PartDescription">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Dimension Quality <small style="color: #a81818; font-weight: 600;"> *</small></label>
+                        <input type="text" placeholder="Enter the Dimension Quailty" name="Dimension_Quality" id="Dimension_Quality" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Die Serial<small style="color: #a81818; font-weight: 600;"> *</small></label>
+                        <input type="text" placeholder="Enter the Die Serial" name="DieSerial" id="DieSerial" required />
+                    </div>
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Die Number <small style="color: #a81818; font-weight: 600;"> *</small></label>
+                        <input type="number" placeholder="Enter the Die Number" name="DieNumber" id="DieNumber" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label class="mb-2">Select Process <small style="color: #a81818; font-weight: 600;"> *</small></label>
+                        <div class="select-container" style="width: 100%;">
+                            <select id="ProcessID" name="ProcessID">
+                                <option value="M002">Mold  Frame</option>
+                                <option value="M001">ACM</option>
+                                <option value="M003">Mold Impeller</option>
+                                <option value="M004">Slot Insulator </option>
+                                <option value="M005">Stepping Motor</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        </div>
+                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<!--########################## Edit Tooling  DATA #############################-->
+<div class="modal fade modal-m" id="EditTooling" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header flex_space">
+                    <h5>Edit Masterlist </h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="editnewform" autocomplete="off">
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Part Number </label>
+                        <input type="text" placeholder="Enter the Part No" name="PartNo" id="EditPartNo" readonly />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12 mb-3">
+                        <label class="mb-2">Part No. Description<small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                        <div class="select-container" style="width: 100%;">
+                            <select id="EditPartDescription" name="PartDescription">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Dimension Quality </label>
+                        <input type="text" placeholder="Enter the Part No" name="Dimension_Quality" id="EditDimension_Quality" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Die Serial</label>
+                        <input type="text" placeholder="Enter the Part No" name="DieSerial" id="EditDieSerial" required />
+                    </div>
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Die Number </label>
+                        <input type="number" placeholder="Enter the Part No" name="DieNumber" id="EditDieNumber" required />
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        </div>
+                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>

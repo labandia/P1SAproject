@@ -9,94 +9,98 @@
     <div class="DieMainContainer">
         <!-- Left Panel - Form -->
         <div class="left-panel">
-
-            <div class="formcustomgroup with-icon">
-                <label class="form-label" for="processSelect">
-                    <span>SELECT PROCESS</span> 
-                    <span class="validate-message" id="validprocess">Set Process required</span></label>
-                <select id="processSelect">
-                    <option value="">-- Select Process --</option>
-                    <option value="M001">ACM</option>
-                    <option value="M002">Mold frame</option>
-                    <option value="M003">Mold Impeller</option>
-                    <option value="M004">Slot Insulator</option>
-                    <option value="M005">Stepping Motor</option>
-                </select>
+            <div class="left-header">
+                <h6><i class="fas fa-stopwatch"></i> Daily Moldie Input</h6>
             </div>
 
-            <div class="formcustomgroup" style="margin-top: 1em;">
-                <label class="form-label required" for="processSelect">SEARCH PARTNO <span class="validate-message" id="validDateinput">Input part no is required</span></label>
-                <div class="search-container">
-                    <input type="text" id="searchInput" placeholder="Enter part number to search (e.g., 002886060-01)" maxlength="14">
-                    <button id="searchButton" class="btn btn-secondary">
-                        <i class="fa-solid fa-search"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="formcustomgroup" style="margin-top: 1em;">
-                <label class="form-label required" for="processSelect">SEARCH DIE SERIAL  <span class="validate-message" id="validDateDieSerial">Input DieSerial no.</span></label>
-                <div class="search-container">
-                    <input type="text" id="searchDie" placeholder="Enter part number to search (e.g., 002886060-01)" maxlength="14">
-                    <button id="searchDieButton" class="btn btn-secondary">
-                        <i class="fa-solid fa-search"></i>
-                    </button>
-                </div>
-            </div>
-
-
-            <form id="addDailyForm" class="Moldformcontaner" style="margin-top: 1em;" autocomplete="off">
-                <input type="hidden" name="DieSerial" id="strDieSerial" />
-
-                <!-- Date Input -->
+            <div class="left-content">
                 <div class="formcustomgroup with-icon">
-                    <label class="form-label required" for="dateInput">DATE </label>
-                    <input type="date" id="DateInput" name="DateInput" required>
-                </div>
-
-                <!-- Cycle Shot -->
-                <div class="formcustomgroup with-icon">
-                    <label class="form-label required" for="cycleShot">CYCLE SHOT </label>
-                    <input type="number" id="CycleShot" name="CycleShot" placeholder="Enter Cycle Shot" required min="0">
-                </div>
-
-                <!-- Machine No -->
-                <div class="formcustomgroup with-icon">
-                    <label class="form-label required" for="machineNo">MACHINE NO.</label>
-                    <input type="number" id="MachineNo" name="MachineNo" placeholder="Enter Machine Number" required min="1">
-                </div>
-
-                <!-- Remarks -->
-                <div class="formcustomgroup with-icon">
-                    <label class="form-label" for="remarks">REMARKS</label>
-                    <select id="remarks" name="Remarks">
-                        <option value="N/A">N/A</option>
-                        <option value="Shot cycle cleaning">Shot cycle cleaning</option>
-                        <option value="Die Cleaning Due To 1 Month No operation">Die Cleaning Due To 1 Month No operation</option>
+                    <label class="form-label" for="processSelect">
+                        <span>SELECT PROCESS</span>
+                        <span class="validate-message" id="validprocess">Set Process required</span>
+                    </label>
+                    <select id="processSelect">
+                        <option value="">-- Select Process --</option>
+                        <option value="M001">ACM</option>
+                        <option value="M002">Mold frame</option>
+                        <option value="M003">Mold Impeller</option>
+                        <option value="M004">Slot Insulator</option>
+                        <option value="M005">Stepping Motor</option>
                     </select>
                 </div>
 
-                <!-- Maintenance Incharge -->
-                <div class="formcustomgroup with-icon">
-                    <label class="form-label" for="maintenanceIncharge">MAINTENANCE INCHARGE</label>
-                    <select id="Mincharge" name="Mincharge">
-                        <option value="N.AMLOG">N.AMLOG</option>
-                        <option value="J.ORO">J.ORO</option>
-                        <option value="R.AGACOSCOS">R.AGACOSCOS</option>
-                    </select>
+                <div class="formcustomgroup" style="margin-top: 1em;">
+                    <label class="form-label required" for="processSelect">SEARCH PARTNO <span class="validate-message" id="validDateinput">Input part no is required</span></label>
+                    <div class="search-container">
+                        <input type="text" id="searchInput" placeholder="Enter part number to search (e.g., 002886060-01)" maxlength="14">
+                        <button id="searchButton" class="btn btn-secondary">
+                            <i class="fa-solid fa-search"></i>
+                        </button>
+                    </div>
                 </div>
 
-
-                <hr />
-
-                <div class="form-actions">
-
-                    <button type="submit" class="primarybtn" style="width: 100%; display: flex; place-content: center;  ">
-                        <i class="fa-regular fa-floppy-disk"></i>
-                        Save Record
-                    </button>
+                <div class="formcustomgroup" style="margin-top: 1em;">
+                    <label class="form-label required" for="processSelect">SEARCH DIE SERIAL  <span class="validate-message" id="validDateDieSerial">Input DieSerial no.</span></label>
+                    <div class="search-container">
+                        <input type="text" id="searchDie" placeholder="Enter part number to search (e.g., 002886060-01)" maxlength="14">
+                        <button id="searchDieButton" class="btn btn-secondary">
+                            <i class="fa-solid fa-search"></i>
+                        </button>
+                    </div>
                 </div>
-            </form>
+
+                <form id="addDailyForm" class="Moldformcontaner" style="margin-top: 1em;" autocomplete="off">
+                    <input type="hidden" name="DieSerial" id="strDieSerial" />
+
+                    <!-- Date Input -->
+                    <div class="formcustomgroup with-icon">
+                        <label class="form-label required" for="dateInput">DATE </label>
+                        <input type="date" id="DateInput" name="DateInput" required>
+                    </div>
+
+                    <!-- Cycle Shot -->
+                    <div class="formcustomgroup with-icon">
+                        <label class="form-label required" for="cycleShot">CYCLE SHOT </label>
+                        <input type="number" id="CycleShot" name="CycleShot" placeholder="Enter Cycle Shot" required min="0">
+                    </div>
+
+                    <!-- Machine No -->
+                    <div class="formcustomgroup with-icon">
+                        <label class="form-label required" for="machineNo">MACHINE NO.</label>
+                        <input type="number" id="MachineNo" name="MachineNo" placeholder="Enter Machine Number" required min="1">
+                    </div>
+
+                    <!-- Remarks -->
+                    <div class="formcustomgroup with-icon">
+                        <label class="form-label" for="remarks">REMARKS</label>
+                        <select id="remarks" name="Remarks">
+                            <option value="N/A">N/A</option>
+                            <option value="Shot cycle cleaning">Shot cycle cleaning</option>
+                            <option value="Die Cleaning Due To 1 Month No operation">Die Cleaning Due To 1 Month No operation</option>
+                        </select>
+                    </div>
+
+                    <!-- Maintenance Incharge -->
+                    <div class="formcustomgroup with-icon">
+                        <label class="form-label" for="maintenanceIncharge">MAINTENANCE INCHARGE</label>
+                        <select id="Mincharge" name="Mincharge">
+                            <option value="N.AMLOG">N.AMLOG</option>
+                            <option value="J.ORO">J.ORO</option>
+                            <option value="R.AGACOSCOS">R.AGACOSCOS</option>
+                        </select>
+                    </div>
+
+
+
+                    <div class="form-actions" style="padding-top: 1.5em;">
+
+                        <button type="submit" class="primarybtn" style="width: 100%; display: flex; place-content: center;  ">
+                            <i class="fa-regular fa-floppy-disk"></i>
+                            Save Record
+                        </button>
+                    </div>
+                </form>
+            </div>
 
         </div>
 
@@ -162,7 +166,6 @@
                                 <th>Machine No.</th>
                                 <th>Status</th>
                                 <th>Remarks</th>
-                                <th>MIC</th>
                             </tr>
                         </thead>
                         <tbody id="DieMoldDaily">
@@ -173,7 +176,12 @@
 
                 </div>
 
-                <div id="DailyContainer" class="paginationPartlocal"></div>
+                <div class="pagination" id="pagination">
+
+                    <div class="pagination-items">
+                        <!-- Pagination buttons will be inserted here -->
+                    </div>
+                </div>
             </div>
 
 
@@ -273,6 +281,10 @@
        GLOBAL STATE
     ========================================================= */
     const state = {
+        totalPages: 0,
+        currentPage: 0,
+        pageSize: 20,
+        totalRecords: 0,
         isFirstLoad: true,
         isYearLoad: true,
         isSelectedSearch: 0,
@@ -439,7 +451,7 @@
 
          if (cycleShot === 0 && state.getData.length > 0) {
              const lastrecord = state.getData[0]
-             if (Number(latestRecord.Total) === 0) {
+             if (Number(lastrecord.Total) === 0) {
                  alert("Zero Cycle Shot is already input on the latest record");
                  return;
              }
@@ -709,8 +721,7 @@
 
     async function searchByDie() {
         //DOM.searchInput.val("");
-        DOM.dailyInputs.show();
-        DOM.dailySummary.hide();
+        
         const die = DOM.searchDie.val().trim();
         const process = DOM.processSelect.val();
 
@@ -733,7 +744,8 @@
 
             console.log(res);
             if(!res?.Success) return showNoData();
-
+            DOM.dailyInputs.show();
+            DOM.dailySummary.hide();
             //state.partNo = res.Data.Details[0].PartNo;
             //state.dieObj = res.Data.GetList;
 
@@ -934,14 +946,21 @@
                   Months: month,
                   Days: day,
                   Year: DOM.yearSelect.val() || state.currentYear,
-                  ProcessID: process
+                  ProcessID: process, 
+                  pageNumber: state.currentPage || 1,
+                  pageSize: state.pageSize || 20
               };
               const res = await GetMethod('@Url.Action("GetMoldDieDailyList","Mold")', data);
               DOM.dailyDisplay.empty();
               if (!res?.Success) return showNoSummaryData();
 
-              state.dailyData = res.Data;
-              renderDailyTable(state.dailyData);
+              state.dailyData = res.Data.Items;
+              state.totalRecords = res.Data.TotalRecords || 0;
+              state.totalPages = Math.ceil(state.totalRecords / state.pageSize);
+
+             renderDailyTable(state.dailyData);
+
+             updatePaginationUI();
         } catch (e) {
             showNoSummaryData();
         }
@@ -984,6 +1003,90 @@
         const p = $("#DailyProcess").val();
         loadDaily(m, d, p);
     }
+
+    function updatePaginationUI() {
+
+        const $pagination = $("#pagination");
+        const $paginationItems = $(".pagination-items");
+
+        // Clear existing buttons
+        $paginationItems.empty();
+
+        // Always show pagination for debugging
+        $pagination.css({
+            'display': 'flex',
+            'visibility': 'visible',
+            'opacity': '1',
+            'position': 'relative'
+        });
+
+        // Show/hide pagination based on total records
+        if (state.totalRecords > state.pageSize) {
+            $pagination.show();
+
+            // Create pagination buttons
+            const prevDisabled = state.currentPage === 1 ? 'disabled' : '';
+            const nextDisabled = state.currentPage === state.totalPages || state.totalPages === 0 ? 'disabled' : '';
+
+            $paginationItems.html(`
+              <button class="page-btn prev-btn" ${prevDisabled} data-page="${state.currentPage - 1}">
+                  <i class="fas fa-chevron-left"></i> Previous
+              </button>
+
+              <div class="page-info">
+                  Page ${state.currentPage} of ${state.totalPages || 1}
+                  <span class="record-info"></span>
+              </div>
+
+              <button class="page-btn next-btn" ${nextDisabled} data-page="${state.currentPage + 1}">
+                  Next <i class="fas fa-chevron-right"></i>
+              </button>
+          `);
+
+            // Add page number input for direct navigation (optional)
+            if (state.totalPages > 10) {
+                $paginationItems.append(`
+                  <div class="page-jump">
+                      <input type="number" id="pageJumpInput" min="1" max="${state.totalPages}" value="${state.currentPage}"
+                             style="width: 60px; padding: 5px; border: 1px solid #ddd; border-radius: 4px;">
+                      <button class="page-btn jump-btn" id="pageJumpBtn">Go</button>
+                  </div>
+              `);
+            }
+
+            // Add click handlers
+            $(".page-btn").off('click').on('click', function () {
+                if ($(this).is(':disabled')) return;
+
+                const pageNum = parseInt($(this).data('page'));
+
+                if (pageNum >= 1 && pageNum <= state.totalPages && pageNum !== state.currentPage) {
+                    state.currentPage = pageNum;
+                    loadDaily();
+                }
+            });
+
+            // Add handler for jump button if exists
+            $("#pageJumpBtn").off('click').on('click', function () {
+                const jumpPage = parseInt($("#pageJumpInput").val());
+                if (jumpPage >= 1 && jumpPage <= state.totalPages && jumpPage !== state.currentPage) {
+                    state.currentPage = jumpPage;
+                    loadDaily();
+                }
+            });
+
+            // Add enter key handler for jump input
+            $("#pageJumpInput").off('keypress').on('keypress', function (e) {
+                if (e.which === 13) { // Enter key
+                    $("#pageJumpBtn").click();
+                }
+            });
+
+        } else {
+            $pagination.hide();
+        }
+    }
+
 
     function showNoSummaryData() {
         DOM.dailyDisplay.html(`<tr><td colspan="9">🔍 No Data Found</td></tr>`);

@@ -697,6 +697,7 @@
         display: grid;
         grid-template-columns: 20% 1fr;
         gap: 30px;
+        align-items: flex-start;
     }
 
 
@@ -744,15 +745,29 @@
       }
     } 
 
+    .left-header{
+         border-radius: .8rem .8rem 0 0;
+         padding: 1.1rem;
+         color: #fff;
+         background: hsl(209, 80%, 50%);
+    }
+
+    .left-header h6{
+        margin: 0;
+    }
 
     .left-panel {
             background: #ffffff;
             border-radius: 1.25rem;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.05);
-            padding: 1.5rem;
+           
             border: 1px solid #e9eef3;
             transition: box-shadow 0.2s;
-        }
+    }
+
+    .left-content {
+        padding: 1.5rem;
+    }
 
 
 
@@ -1284,3 +1299,138 @@
         .DetailSerialcard td.status.inactive {
             color: #b02a37;
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Pagination Container */
+.pagination {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background-color: #fff;
+    border-top: 1px solid #e0e3ff;
+    flex-shrink: 0;
+    position: relative;
+    min-height: 60px;
+    box-sizing: border-box;
+}
+
+/* Pagination Items */
+.pagination-items {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    justify-content: center;
+    flex: 1;
+}
+
+/* Page Buttons */
+.page-btn {
+    padding: 8px 16px;
+    border: 1px solid #e0e3ff;
+    background-color: white;
+    color: #495057;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    min-width: 100px;
+    justify-content: center;
+}
+
+    .page-btn:hover:not(:disabled) {
+        background-color: #f8f9fa;
+        border-color: #adb5bd;
+        transform: translateY(-1px);
+    }
+
+    .page-btn:active:not(:disabled) {
+        transform: translateY(0);
+    }
+
+    .page-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background-color: #f8f9fa;
+    }
+
+/* Previous/Next specific styles */
+.prev-btn i, .next-btn i {
+    font-size: 12px;
+}
+
+.prev-btn {
+    background-color: #f8f9fa;
+}
+
+.next-btn {
+    background-color: #4361ee;
+    color: white;
+    border-color: #4361ee;
+}
+
+    .next-btn:hover:not(:disabled) {
+        background-color: #3a56d4;
+        border-color: #3a56d4;
+    }
+
+/* Page Info */
+.page-info {
+    font-weight: 500;
+    color: #495057;
+    text-align: center;
+    min-width: 150px;
+    padding: 8px 12px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #e0e3ff;
+}
+
+.record-info {
+    font-size: 11px;
+    color: #6c757d;
+    display: block;
+    margin-top: 2px;
+    font-weight: normal;
+}
+
+/* Page Jump (Optional) */
+.page-jump {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 10px;
+}
+
+.jump-btn {
+    min-width: auto;
+    padding: 6px 12px;
+    background-color: #28a745;
+    color: white;
+    border-color: #28a745;
+}
+
+    .jump-btn:hover:not(:disabled) {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }

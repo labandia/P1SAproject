@@ -521,6 +521,7 @@
     <Content Include="Scripts\fontawesome.min.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
+    <Content Include="Areas\MoldDie\Views\Mold\_MasterlistModelForms.cshtml" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />

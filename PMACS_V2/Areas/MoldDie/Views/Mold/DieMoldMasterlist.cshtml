@@ -25,7 +25,7 @@
                     <option value="">-- Select Description --</option>
                 </select>
             </div>
-          
+
         </div>
         <button class="primarybtn" data-bs-toggle="modal" data-bs-target="#AddTooling"><i class="fa-solid fa-plus"></i> Add Data</button>
     </div>
@@ -49,199 +49,102 @@
         </table>
     </div>
 
-    <div id="pagination" style="display: flex; align-items:center; justify-content: center; "></div>
+
 </section>
+<div class="pagination" id="pagination">
 
-<!--########################## Adding Tooling  DATA #############################-->
-<div class="modal fade modal-m" id="AddTooling" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body modalwrap">
-                <div class="custom_modal_header">
-                    <h5>Add Masterlist Data</h5>
-
-                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
-                        <span>&times;</span>
-                    </button>
-                </div>
-
-                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
-                      
-
-                    <div class="form_group col-12 col-sm-12">
-                        <label>Part Number <small style="color: #a81818; font-weight: 600;">*</small></label>
-                        <input type="text" placeholder="Enter the Part No" name="PartNo" id="PartNo" required />
-                    </div>
-
-                    <div class="form_group col-12 col-sm-12 mb-3">
-                        <label class="mb-2">Part No. Description<small style="color: #a81818; font-weight: 600;">*</small></label> <br />
-                        <div class="select-container" style="width: 100%;">
-                            <select id="PartDescription" name="PartDescription">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form_group col-12 col-sm-12 ">
-                        <label>Dimension Quality <small style="color: #a81818; font-weight: 600;"> *</small></label>
-                        <input type="text" placeholder="Enter the Dimension Quailty" name="Dimension_Quality" id="Dimension_Quality" required />
-                    </div>
-
-                    <div class="form_group col-12 col-sm-12">
-                        <label>Die Serial<small style="color: #a81818; font-weight: 600;"> *</small></label>
-                        <input type="text" placeholder="Enter the Die Serial" name="DieSerial" id="DieSerial" required />
-                    </div>
-                    <div class="form_group col-12 col-sm-12">
-                        <label>Die Number <small style="color: #a81818; font-weight: 600;"> *</small></label>
-                        <input type="number" placeholder="Enter the Die Number" name="DieNumber" id="DieNumber" required />
-                    </div>
-
-                    <div class="form_group col-12 col-sm-12">
-                        <label class="mb-2">Select Process <small style="color: #a81818; font-weight: 600;"> *</small></label>
-                        <div class="select-container" style="width: 100%;">
-                            <select id="ProcessID" name="ProcessID">
-                                <option value="M002">Mold  Frame</option>
-                                <option value="M001">ACM</option>
-                                <option value="M003">Mold Impeller</option>
-                                <option value="M004">Slot Insulator </option>
-                                <option value="M005">Stepping Motor</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    
-
-                    <div class="d-flex justify-content-between align-items-center mt-4">
-                        <div>
-                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
-                        </div>
-                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
-                    </div>
-                </form>
-
-
-            </div>
-
-
-        </div>
+    <div class="pagination-items">
+        <!-- Pagination buttons will be inserted here -->
+        <span>asdasda</span>
     </div>
 </div>
 
-
-<!--########################## Edit Tooling  DATA #############################-->
-<div class="modal fade modal-m" id="EditTooling" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body modalwrap">
-                <div class="custom_modal_header flex_space">
-                    <h5>Edit Masterlist </h5>
-
-                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
-                        <span>&times;</span>
-                    </button>
-                </div>
-
-                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="editnewform" autocomplete="off">
-
-                    <div class="form_group col-12 col-sm-12">
-                        <label>Part Number </label>
-                        <input type="text" placeholder="Enter the Part No" name="PartNo" id="EditPartNo" readonly />
-                    </div>
-
-                    <div class="form_group col-12 col-sm-12 mb-3">
-                        <label class="mb-2">Part No. Description<small style="color: #a81818; font-weight: 600;">*</small></label> <br />
-                        <div class="select-container" style="width: 100%;">
-                            <select id="EditPartDescription" name="PartDescription">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form_group col-12 col-sm-12 ">
-                        <label>Dimension Quality </label>
-                        <input type="text" placeholder="Enter the Part No" name="Dimension_Quality" id="EditDimension_Quality" required />
-                    </div>
-
-                    <div class="form_group col-12 col-sm-12">
-                        <label>Die Serial</label>
-                        <input type="text" placeholder="Enter the Part No" name="DieSerial" id="EditDieSerial" required />
-                    </div>
-                    <div class="form_group col-12 col-sm-12">
-                        <label>Die Number </label>
-                        <input type="number" placeholder="Enter the Part No" name="DieNumber" id="EditDieNumber" required />
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center mt-4">
-                        <div>
-                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
-                        </div>
-                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
-                    </div>
-                </form>
-
-
-            </div>
-
-
-        </div>
-    </div>
-</div>
-
-
+@Html.Partial("_MasterlistModelForms")
 
 
 
 <script type="text/javascript">
-    let isFirstLoad = true;
-    let currentPage = 1;
-    const pageSize = 50;
+    "use strict";
+    /* =========================================================
+       GLOBAL STATE
+    ========================================================= */
+    const state = {
+        debounceTimer: null,
+        totalPages: 0,
+        currentPage: 1,
+        pageSize: 20,
+        totalRecords: 0,
+        isFirstLoad: true,
+        isYearLoad: true,
+        getData: []
+    };
+    /* =========================================================
+       DOM CACHE
+    ========================================================= */
+    const DOM = {
+        DescriptionSelect : $("#DescriptionID"),
+        ToolingDisplay : $("#DieMoldToolist"),
+        SearchInput: $("#RegisterSearch"),
+        descriptSelect: $("#PartDescription"),
+        editdescriptSelect: $("#EditPartDescription"),
+        Addform : $("#addnewform"),
+        Editform : $("#editnewform")
+    };
+    /* =========================================================
+       HELPERS
+    ========================================================= */
 
-    let DieMasterlist = [];
-    let yearSelect = $("#DescriptionID");
-    let ToolingDisplay = $("#DieMoldToolist");
-
-    let debounceTimer;
-
-    $("#RegisterSearch").on('keyup', () => {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
-            currentPage = 1;
-            GetMoldDieMasterlist();
-        }, 400);
+    /* =========================================================
+       INITIALIZATION
+    ========================================================= */
+    $(document).ready(() => {
+        bindEvents();
+        GetMoldieDescription();
+        GetMoldDieMasterlist();
     });
 
-    $("#DescriptionID").on('change', () => {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
-            currentPage = 1;
-            GetMoldDieMasterlist();
-        }, 400);
-    });
+    /* =========================================================
+       EVENT BINDINGS
+    ========================================================= */
+    function bindEvents() {
+        $("#addnewform").on('submit', HandleAddMasterlist);
+        $("#editnewform").on('submit', HandleEditMasterlist);
 
+        DOM.SearchInput.on("keyup", () => {
+            clearTimeout(state.debounceTimer);
+            state.debounceTimer = setTimeout(() => {
+                GetMoldDieMasterlist();
+            }, 400);
+        });
 
-    $("#addnewform").on('submit', async (e) => {
+        DOM.ToolingDisplay.on("click", ".EditToolClick", OpenEditMasterModal);
+    }
+    /* =========================================================
+       MASTERLIST PROCESS CRUD OPERATION
+    ========================================================= */
+    async function HandleAddMasterlist(e){
         e.preventDefault();
+
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
 
-           // Check for duplicate entry for the same part number on the same date
+        // Check for duplicate entry for the same part number on the same date
         let checkduplicate = await GetMethod('@Url.Action("CheckMasterlistMoldExist", "Mold")',
-          {
-             PartNo: data.PartNo
-         });
+        { PartNo: data.PartNo });
 
-         if (checkduplicate) {
-                 Swal.fire({
-                     icon: "error",
-                     text: `Partnumber ${data.PartNo} is already Exist `,
-                     timer: 1500,
-                     showConfirmButton: false
-                 });
-                 return;
-         }
-
-
-
-
+        if (checkduplicate) {
+            Swal.fire({
+                icon: "error",
+                text: `Partnumber ${data.PartNo} is already Exist `,
+                timer: 1500,
+                showConfirmButton: false
+            });
+            return;
+        }
 
         let res = await postMethod('@Url.Action("AddMoldDieMasterlist", "Mold")', data);
-        if (res && res.Success) {
+
+        if (res?.Success) {
             Swal.fire({
                 title: "Success",
                 text: res.Message,
@@ -249,7 +152,7 @@
                 confirmButtonColor: "#0d97c9",
                 timer: 1500
             }).then(() => {
-                location.reload();
+                GetMoldDieMasterlist();
             });
         } else {
             Swal.fire({
@@ -259,254 +162,201 @@
                 showConfirmButton: false
             });
         }
-    });
+    }
 
-    $("#editnewform").on('submit', async (e) => {
-         e.preventDefault();
-        let formData = new FormData(e.target);
+    async function OpenEditMasterModal() {
+        const partno = this.id.split("_")[1];
+        const row = state.getData.find(r => r.PartNo === partno);
+        if (!row) return;
 
-        const data = Object.fromEntries(formData);
+        $("#EditPartNo").val(partno);
+        $("#EditPartDescription").val(row.PartDescription);
+        $("#EditDimension_Quality").val(row.Dimension_Quality);
+        $("#EditDieSerial").val(row.DieSerial);
+        $("#EditDieNumber").val(row.DieNumber);
+        $("#EditTooling").modal("show");
+    }
+    async function HandleEditMasterlist(e){
+      e.preventDefault();
 
-        let result = await postMethod('@Url.Action("UpdateMoldMasterlist", "Mold")', formData);
+      let formData = new FormData(e.target);
+      const data = Object.fromEntries(formData);
 
-        if (result && result.Error) {
-            // Network or client-side error
-            console.error('Request failed:', result.Message);
-        } else if (result && result.Success === false) {
-            // Server returned error (Success: false)
-            console.error('Server error:', result.Message);
-            alert(result.Message || 'Operation failed');
-        } else {
-            // Success!
-            console.log('User created:', result);
+      let res = await postMethod('@Url.Action("UpdateMoldMasterlist", "Mold")', formData);
 
-            Swal.fire({
-                title: "Success",
-                text: result.Message,
-                icon: "success",
-                confirmButtonColor: "#0d97c9",
-                timer: 1500
-            }).then(() => {
-                GetMoldDieMasterlist();
-                $("#EditTooling").modal('hide');
-                $("#editnewform")[0].reset();
-            });
-        }
-
-
-         //if (res.StatusCode === 201) {
-         //    Swal.fire({
-         //        title: "Success",
-         //        text: res.Message,
-         //        icon: "success",
-         //        confirmButtonColor: "#0d97c9",
-         //        timer: 1500
-         //    }).then(() => {
-         //        GetMoldDieMasterlist();
-         //        $("#EditTooling").modal('hide');
-         //        $("#editnewform")[0].reset();
-         //    });
-         //} else {
-         //    Swal.fire({
-         //        icon: "error",
-         //        text: res?.Message ?? "Update data Failed",
-         //        timer: 1500,
-         //        showConfirmButton: false
-         //    });
-         //}
-     });
-
-    const GetMoldieDescription = async () => {
-        let res = await GetMethod('@Url.Action("GetPartDescription", "Mold")', {});
-
-          //yearSelect.empty();
-          $("#PartDescription").empty();
-          $.each(res, function (index, year) {
-              yearSelect.append(`<option value='${year}'>${year}</option>`);
-              $("#PartDescription").append(`<option value='${year}'>${year}</option>`);
-              $("#EditPartDescription").append(`<option value='${year}'>${year}</option>`);
+      if (res?.Success) {
+          Swal.fire({
+              title: "Success",
+              text: res.Message,
+              icon: "success",
+              confirmButtonColor: "#0d97c9",
+              timer: 1500
+          }).then(() => {
+              GetMoldDieMasterlist();
+              $("#EditTooling").modal("hide");
           });
+      } else {
+          Swal.fire({
+              icon: "error",
+              text: res?.Message ?? "Update data Failed",
+              timer: 1500,
+              showConfirmButton: false
+          });
+      }
+  }
+    /* =========================================================
+       GET MASTERLIST SUMMARY
+    ========================================================= */
+    async function GetMoldDieMasterlist() {
+        try {
+            const data = {
+                search: DOM.SearchInput.val(),
+                filter: DOM.DescriptionSelect.val(),
+                page: state.currentPage || 1,
+                pageSize: state.pageSize || 20
+            };
 
-      // select the first option automatically
-      yearSelect.prop('selectedIndex', 0);
+            const res = await GetMethod('@Url.Action("GetMoldDieMasterList", "Mold")', data);
+            console.log(res);
+            if (res?.Success) {
+                state.getData = res.Data.Items;
+                state.totalRecords = res.Data.TotalRecords || 0;
+                state.totalPages = Math.ceil(state.totalRecords / state.pageSize);
+
+
+                renderMasterlistTable(state.getData);
+            }
+
+        } catch (e) {
+
+        }
     }
-
-    const GetMoldDieMasterlist = async () => {
-        let search = $("#RegisterSearch").val();
-        let filterval = $("#DescriptionID").val();
-
-        const url =
-             `@Url.Action("GetMoldDieMasterList", "Mold")`
-             + `?search=${encodeURIComponent(search)}`
-             + `&filter=${filterval}`
-             + `&page=${currentPage}`
-             + `&pageSize=${pageSize}`;
-
-        // Clear table only on first load
-        if (isFirstLoad) {
-            $("#DieMoldToolist").empty();
-        }
-
-        let loaderId = null;
-
-
-        if (isFirstLoad && typeof window.Loadingsteps === "function") {
-            const id = window.loadingDisplay("DieMoldToolist", 6);
-
-            window.Loadingsteps(id, async () => {
-                await loadMasterlist(url);
-                isFirstLoad = false; // ✅ turn off loader forever
-            });
-        } else {
-            // No loader for filters / pagination
-            await loadMasterlist(url);
-        }
-    }
-
-    const loadMasterlist = async (url) => {
-        let res = await GetMethod(url, {});
-                if (res && res.Success) {
-                    DieMasterlist = res.Data.Items;
-                    // Loads the First Data
-                    DisplayMasterlist(DieMasterlist);
-
-                    renderPagination(res.Data);
-                } else {
-                    const loadData = `<tr>
-                 <td colspan='6'>
-                     🔍 ${res?.Message ?? "No data found"}
-                 </td>
-             </tr>`;
-
-            ToolingDisplay.empty();
-            ToolingDisplay.append(loadData);
-            console.clear();
-        }
-    };
-
-    function DisplayMasterlist(dataArray) {
-        $("#DieMoldToolist").empty();
-
-        dataArray.forEach((row, index) => {
-            var setdata = `<tr >
-             <td style='font-weight: 600;'>${row.PartNo}</td>
-             <td>${row.PartDescription}</td>
-             <td>${row.Dimension_Quality}</td>
-             <td>${row.DieSerial}</td>
-             <td>${row.DieNumber}</td>
-
-             <td>
-                <button type='button' class='btn actionicon text-primary EditToolClick' id='editButton_${row.PartNo}' >
+    function renderMasterlistTable(rows) {
+        DOM.ToolingDisplay.empty();
+        rows.forEach(r => {
+            DOM.ToolingDisplay.append(`<tr>
+              <td style='font-weight: 600;'>${r.PartNo}</td>
+              <td>${r.PartDescription}</td>
+              <td>${r.Dimension_Quality}</td>
+              <td>${r.DieSerial}</td>
+              <td>${r.DieNumber}</td>
+              <td>
+                <button type='button' class='btn actionicon text-primary EditToolClick' id='editButton_${r.PartNo}' >
                    <i class='fa-regular fa-pen-to-square action_btn'></i>
                 </button>
 
                 <button type="button" class="btn actionicon text-danger deleteDailyButton"
-                    id="deleteDailyButton_${row.PartNo}">
+                    id="deleteDailyButton_${r.PartNo}">
                     <i class="fa-regular fa-trash-can"></i>
                 </button>
              </td>
-         </tr>;`
-
-            $("#DieMoldToolist").append(setdata);
+          </tr>`);
         });
 
+        updatePaginationUI();
 
-        // Handle click event for edit button
-        $(document).on('click', '.EditToolClick', function (e) {
-            e.stopPropagation();
-            const buttonId = $(this).attr('id');
-            const rowIndex = buttonId.split('_')[1];
-            var filterData = DieMasterlist.find(res => res.PartNo === rowIndex);
-            if (filterData) {
+    }
 
-                $("#EditPartNo").val(filterData.PartNo);
-                $("#EditPartDescription").val(filterData.PartDescription);
-                $("#EditDimension_Quality").val(filterData.Dimension_Quality);
-                $("#EditDieSerial").val(filterData.DieSerial);
-                $("#EditDieNumber").val(filterData.DieNumber);
+    /* =========================================================
+       GET DESCRIPTION LIST
+    ========================================================= */
+    const GetMoldieDescription = async () => {
+        let res = await GetMethod('@Url.Action("GetPartDescription", "Mold")', {});
+
+        DOM.descriptSelect.empty();
+
+        res.forEach(year => {
+            DOM.DescriptionSelect.append(`<option value='${year}'>${year}</option>`);
+            DOM.descriptSelect.append(`<option value='${year}'>${year}</option>`);
+            DOM.editdescriptSelect.append(`<option value='${year}'>${year}</option>`);
+        });
+
+        DOM.DescriptionSelect.prop('selectedIndex', 0);
+    }
 
 
-                $("#EditTooling").modal("show");
+
+
+    function updatePaginationUI() {
+
+        const $pagination = $("#pagination");
+        const $paginationItems = $(".pagination-items");
+
+        // Clear existing buttons
+        $paginationItems.empty();
+
+        // Always show pagination for debugging
+        $pagination.css({
+            'display': 'flex',
+            'visibility': 'visible',
+            'opacity': '1',
+            'position': 'relative'
+        });
+
+        // Show/hide pagination based on total records
+        if (state.totalRecords > state.pageSize) {
+            $pagination.show();
+
+            // Create pagination buttons
+            const prevDisabled = state.currentPage === 1 ? 'disabled' : '';
+            const nextDisabled = state.currentPage === state.totalPages || state.totalPages === 0 ? 'disabled' : '';
+
+            $paginationItems.html(`
+            <button class="page-btn prev-btn" ${prevDisabled} data-page="${state.currentPage - 1}">
+                <i class="fas fa-chevron-left"></i> Previous
+            </button>
+
+            <div class="page-info">
+                Page ${state.currentPage} of ${state.totalPages || 1}
+                <span class="record-info"></span>
+            </div>
+
+            <button class="page-btn next-btn" ${nextDisabled} data-page="${state.currentPage + 1}">
+                Next <i class="fas fa-chevron-right"></i>
+            </button>
+        `);
+
+            // Add page number input for direct navigation (optional)
+            if (state.totalPages > 10) {
+                $paginationItems.append(`
+                <div class="page-jump">
+                    <input type="number" id="pageJumpInput" min="1" max="${state.totalPages}" value="${state.currentPage}"
+                           style="width: 60px; padding: 5px; border: 1px solid #ddd; border-radius: 4px;">
+                    <button class="page-btn jump-btn" id="pageJumpBtn">Go</button>
+                </div>
+            `);
             }
 
-        });
+            // Add click handlers
+            $(".page-btn").off('click').on('click', function () {
+                if ($(this).is(':disabled')) return;
 
-         // Handle click event for edit button
-            $(document).on('click', '.deleteDailyButton', async function (e) {
-                e.stopPropagation();
-                const buttonId = $(this).attr('id');
-                const rowIndex = buttonId.split('_')[1];
+                const pageNum = parseInt($(this).data('page'));
 
-
-                Swal.fire({
-                    title: "Are you sure you want to delete this?",
-                    text: "You won't be able to revert this!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Yes, delete it!"
-                }).then( async (result) => {
-                    if (result.isConfirmed) {
-                        let res = await postMethod('@Url.Action("DeleteMoldMasterlist", "Mold")', { partno: rowIndex });
-                        if (res.Success && res) {
-
-                            Swal.fire({
-                                title: "Success",
-                                text: res.Message,
-                                icon: "success",
-                                confirmButtonColor: "#0d97c9",
-                                timer: 1500
-                            }).then(() => {
-                                $("#RegisterSearch").val("");
-                                GetMoldDieMasterlist();
-                            });
-
-
-                        }
-                    }
-                });
-
+                if (pageNum >= 1 && pageNum <= state.totalPages && pageNum !== state.currentPage) {
+                    state.currentPage = pageNum;
+                    GetMoldDieMasterlist();
+                }
             });
-    }
 
-    function renderPagination(data) {
-        const pager = document.getElementById("pagination");
-        pager.innerHTML = "";
+            // Add handler for jump button if exists
+            $("#pageJumpBtn").off('click').on('click', function () {
+                const jumpPage = parseInt($("#pageJumpInput").val());
+                if (jumpPage >= 1 && jumpPage <= state.totalPages && jumpPage !== state.currentPage) {
+                    state.currentPage = jumpPage;
+                    GetMoldDieMasterlist();
+                }
+            });
 
-        if (data.PageNumber > 1) {
-            pager.innerHTML += `<button onclick="goPage(${data.PageNumber - 1})">Prev</button>`;
-        }
+            // Add enter key handler for jump input
+            $("#pageJumpInput").off('keypress').on('keypress', function (e) {
+                if (e.which === 13) { // Enter key
+                    $("#pageJumpBtn").click();
+                }
+            });
 
-        pager.innerHTML += ` Page ${data.PageNumber} of ${data.TotalRecords} `;
-
-        if (data.PageNumber < data.TotalRecords) {
-            pager.innerHTML += `<button onclick="goPage(${data.PageNumber + 1})">Next</button>`;
-        }
-    }
-
-    function goPage(page) {
-        currentPage = page;
-        GetMoldDieMasterlist();
-    }
-    function setDateInput(inputId, dateStr) {
-        if (!dateStr) return; // Exit if empty
-
-        const parts = dateStr.split("/"); // ["MM", "DD", "YY"]
-        if (parts.length !== 3) return; // Invalid format
-
-        const month = parts[0].padStart(2, '0');
-        const day = parts[1].padStart(2, '0');
-        const year = parts[2]; // assumes 2000+ year
-
-        const formattedDate = `${year}-${month}-${day}`;
-
-        const inputElement = document.getElementById(inputId);
-        if (inputElement) {
-            inputElement.value = formattedDate;
+        } else {
+            $pagination.hide();
         }
     }
-
-    GetMoldieDescription();
-    GetMoldDieMasterlist();
 </script>

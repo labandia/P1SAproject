@@ -235,7 +235,8 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
         public Task<bool> ChangeStatsDaily(int ID, int Stats)
         {
-            string strsql = $@"UPDATE DieMold_Daily SET Status =@Status WHERE RecordID =@RecordID";
+            string strsql = $@"UPDATE DieMold_Daily 
+                              SET Status =@Status WHERE RecordID =@RecordID";
             return SqlDataAccess.ExecuteAsync(strsql, new { Status = Stats, RecordID = ID });
         }
         public async Task<bool> CheckMoldieExist(string searchValue, string Dateinput)
@@ -367,17 +368,27 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
             string sql = isPartNo
                 ? @"SELECT 
-                      PartNo,PartDescription
-                     ,Dimension_Quality,DieSerial
-                     ,DieNumber
-                FROM DieMold_MoldingMainParts
-                WHERE PartNo = @searchValue"
+                        m.PartNo,
+                        m.PartDescription,
+                        m.Dimension_Quality,
+                        m.DieSerial,
+                        m.DieNumber,
+                        (
+                            SELECT TOP 1 d.Status
+                            FROM DieMold_Daily d
+                            WHERE d.PartNo = m.PartNo
+                            ORDER BY d.RecordID DESC
+                        ) AS Status
+                    FROM DieMold_MoldingMainParts m
+                    WHERE m.PartNo = @searchValue"
                 : @"SELECT 
                       PartNo,PartDescription
                      ,Dimension_Quality,DieSerial
                      ,DieNumber
                 FROM DieMold_MoldingMainParts
                 WHERE DieSerial = @searchValue";
+
+            Debug.WriteLine(sql);
 
             var items = await  SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>(
                 sql,new { SearchValue = partno?.Trim() });
@@ -482,14 +493,10 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             return SqlDataAccess.ExecuteAsync("DELETE FROM DieMold_MoldingMainParts WHERE PartNo =@PartNo", new { PartNo = partno });
         }
 
-       
-
-  
-        
+    
 
         public Task<bool> ChangeStatsSerialDaily(string datestring, string dieSerial, int Stats)
         {
-
             string strsql = $@"UPDATE d
                             SET d.Status =@Status 
                             FROM DieMold_Daily d

@@ -1,20 +1,14 @@
-﻿@font-face {
-    font-family: 'Poppins';
-    src: url('/Content/fonts/Poppins-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
+﻿    @font-face {
+        font-family: 'Poppins';
+        src: url('/Content/fonts/Poppins-Regular.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+    }
 
-        * {
-            font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-/*            color: #fff;*/
-/*            background: #0f172a !important;*/
-            background: #fff;
-            color: #222;
-        }
+    body {
+        font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #f8fafc;
+    }
 
          .primarybtn {
             transition: .5s ease-in-out;
@@ -56,7 +50,11 @@
         }
 
         .form-label{
+            display: flex;
+            align-items:center;
+            justify-content: space-between;
             font-weight: 500;
+            letter-spacing: 0.3px;
             font-size: .8rem !important;
         }
 
@@ -480,11 +478,10 @@
     }
 
 
-.die-status {
-    text-align: center;
-    vertical-align: middle;
-    transform: translateX(25%);
-}
+    .die-status {
+        text-align: center;
+        vertical-align: middle;
+    }
 
 
 
@@ -748,7 +745,14 @@
     } 
 
 
-
+    .left-panel {
+            background: #ffffff;
+            border-radius: 1.25rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            border: 1px solid #e9eef3;
+            transition: box-shadow 0.2s;
+        }
 
 
 
@@ -823,12 +827,14 @@
 
      /* Controls Section */
         .controls-section {
-            background: white;
-            border-radius: 12px;
-/*            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);*/
+           background: white;
+            border-radius: .5rem;
+            padding: 1.25rem 1.5rem;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            gap: 1rem;
+            border: 1px solid #e9eef3;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
         }
 
         .control-group {
@@ -902,6 +908,7 @@
 
         .status-btn, .status-label{
             padding: .5em 1em;
+            font-size: .8rem;
         }
 
 
@@ -931,7 +938,7 @@
         }
 
         .TrackTable th {
-            padding: 18px 20px;
+            padding: 12px 20px;
             text-align: center;
             font-weight: 600;
             color: #334155;
@@ -974,12 +981,10 @@
           line-height: 1;
         }
 
+.formcustomgroup{
 
-
-
-
-
-    /* Input Fields */
+}
+/* Input Fields */
 .formcustomgroup input[type="date"],
 .formcustomgroup input[type="number"],
 .formcustomgroup select {
@@ -1118,10 +1123,14 @@
             pointer-events: none;
         }
 
-        .validate-message{
-            color: #ef476f;
-            font-size: .7rem;
-        }
+.validate-message {
+    font-size: 0.7rem;
+    font-weight: normal;
+    color: #e53e3e;
+    background: #fff5f5;
+    padding: 0.2rem 0.5rem;
+    border-radius: 20px;
+}
 
 
 

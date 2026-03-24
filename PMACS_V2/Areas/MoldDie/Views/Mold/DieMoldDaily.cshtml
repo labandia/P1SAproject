@@ -11,7 +11,9 @@
         <div class="left-panel">
 
             <div class="formcustomgroup with-icon">
-                <label class="form-label" for="processSelect">Select Process <span class="validate-message" id="validprocess">Set Process required</span></label>
+                <label class="form-label" for="processSelect">
+                    <span>SELECT PROCESS</span> 
+                    <span class="validate-message" id="validprocess">Set Process required</span></label>
                 <select id="processSelect">
                     <option value="">-- Select Process --</option>
                     <option value="M001">ACM</option>
@@ -23,7 +25,7 @@
             </div>
 
             <div class="formcustomgroup" style="margin-top: 1em;">
-                <label class="form-label required" for="processSelect">Search PartNo.  <span class="validate-message" id="validDateinput">Input part no.</span></label>
+                <label class="form-label required" for="processSelect">SEARCH PARTNO <span class="validate-message" id="validDateinput">Input part no is required</span></label>
                 <div class="search-container">
                     <input type="text" id="searchInput" placeholder="Enter part number to search (e.g., 002886060-01)" maxlength="14">
                     <button id="searchButton" class="btn btn-secondary">
@@ -33,7 +35,7 @@
             </div>
 
             <div class="formcustomgroup" style="margin-top: 1em;">
-                <label class="form-label required" for="processSelect">Search Die Serial.  <span class="validate-message" id="validDateDieSerial">Input DieSerial no.</span></label>
+                <label class="form-label required" for="processSelect">SEARCH DIE SERIAL  <span class="validate-message" id="validDateDieSerial">Input DieSerial no.</span></label>
                 <div class="search-container">
                     <input type="text" id="searchDie" placeholder="Enter part number to search (e.g., 002886060-01)" maxlength="14">
                     <button id="searchDieButton" class="btn btn-secondary">
@@ -48,25 +50,25 @@
 
                 <!-- Date Input -->
                 <div class="formcustomgroup with-icon">
-                    <label class="form-label required" for="dateInput">Date Input</label>
+                    <label class="form-label required" for="dateInput">DATE </label>
                     <input type="date" id="DateInput" name="DateInput" required>
                 </div>
 
                 <!-- Cycle Shot -->
                 <div class="formcustomgroup with-icon">
-                    <label class="form-label required" for="cycleShot">Cycle Shot</label>
+                    <label class="form-label required" for="cycleShot">CYCLE SHOT </label>
                     <input type="number" id="CycleShot" name="CycleShot" placeholder="Enter Cycle Shot" required min="0">
                 </div>
 
                 <!-- Machine No -->
                 <div class="formcustomgroup with-icon">
-                    <label class="form-label required" for="machineNo">Machine No</label>
+                    <label class="form-label required" for="machineNo">MACHINE NO.</label>
                     <input type="number" id="MachineNo" name="MachineNo" placeholder="Enter Machine Number" required min="1">
                 </div>
 
                 <!-- Remarks -->
                 <div class="formcustomgroup with-icon">
-                    <label class="form-label" for="remarks">Remarks</label>
+                    <label class="form-label" for="remarks">REMARKS</label>
                     <select id="remarks" name="Remarks">
                         <option value="N/A">N/A</option>
                         <option value="Shot cycle cleaning">Shot cycle cleaning</option>
@@ -76,7 +78,7 @@
 
                 <!-- Maintenance Incharge -->
                 <div class="formcustomgroup with-icon">
-                    <label class="form-label" for="maintenanceIncharge">Maintenance Incharge</label>
+                    <label class="form-label" for="maintenanceIncharge">MAINTENANCE INCHARGE</label>
                     <select id="Mincharge" name="Mincharge">
                         <option value="N.AMLOG">N.AMLOG</option>
                         <option value="J.ORO">J.ORO</option>
@@ -646,7 +648,7 @@
                          title: "Success",
                          text: res.Message,
                          icon: "success",
-                         timer: 2000, 
+                         timer: 2000,
                          showConfirmButton: false,
                          allowOutsideClick: false,   // prevent outside click
                          allowEscapeKey: false,      // optional: prevent ESC key close
@@ -670,7 +672,7 @@
     }
 
     async function searchByPart() {
-     
+
         //DOM.searchDie.val("");
         const part = DOM.searchInput.val().trim();
         const process = DOM.processSelect.val();
@@ -691,6 +693,7 @@
             const res = await GetMethod('@Url.Action("SearchMoldieDaily","Mold")',{
                 ProcessID:process, SearchInput:part
             });
+            console.log(res);
             if(!res?.Success) return showNoData();
 
             DOM.dailyInputs.show();
@@ -806,7 +809,7 @@
             if (index === 0) {
                 rowHtml += `
                 <td rowspan="${rowspan}" class="die-serial">${dieSerial}</td>
-                <td rowspan="${rowspan}" class="die-status">${getStatusHtml(status)}</td>`;
+                <td rowspan="${rowspan}" class="die-status">${buildStatusBadge(status)}</td>`;
             }
 
             rowHtml += `</tr>`;
@@ -814,7 +817,6 @@
         });
     }
     function populateDieTable(list) {
-        console.log(list)
         let counter = 0;
 
         DOM.tableDisplay.empty();
@@ -861,50 +863,62 @@
 
         // For the Partnumber
         if (!isDie) {
-
             actionStatus = `
-             <button class="status-btn "
-                 ${ status === 0 ? `style="color:#054e92;border:2px solid #054e92;` : ``}
-                 onclick="ChangeStatus(${rowData.RecordID}, 1)">
+             <button class='status-btn ${status === 0 ? `badge bg-primary` : ``}'
+                 onclick="ChangeStatus(${id}, 0)">
                  Continue
              </button>
-              <button class="status-btn"
-                 ${ status === 1 ? `style="color:#c97d0c;border:2px solid #c97d0c;"` : ``}
-                 onclick="ChangeStatus(${rowData.RecordID}, 1)">
+              <button class='status-btn ${status === 1 ? `badge bg-warning text-dark` : ``}'
+                 onclick="ChangeStatus(${id}, 1)">
                  Needed
              </button>
-             <button class="status-btn"
-                 ${ status === 2 ? `style="color:#188f18;border:2px solid #188f18;"` : ``}
-                 onclick="ChangeStatus(${rowData.RecordID}, 2)">
+             <button class='status-btn ${status === 2 ? `badge bg-success` : ``}'
+                 onclick="ChangeStatus(${id}, 2)">
                  Complete
              </button>
              `;
-
-
+        } else {
+            const key = `'${row.DateInput}','${row.DieSerial}'`;
+            actionStatus = `
+               <button class='status-btn ${status === 0 ? `badge bg-primary` : ``}'
+                   onclick="ChangeDieSerialStatus(${key}, 0)">
+                   Continue
+               </button>
+                <button class='status-btn ${status === 1 ? `badge bg-warning text-dark` : ``}'
+                   onclick="ChangeDieSerialStatus(${key}, 1)">
+                   Needed
+               </button>
+               <button class='status-btn ${status === 2 ? `badge bg-success` : ``}'
+                   onclick="ChangeDieSerialStatus(${key}, 2)">
+                   Complete
+               </button>
+               `;
         }
 
 
-        //if (!isDie) {
-        //    if (status === 0) return buildStatusButton("Continue", "#054e92", `ChangeStatus(${id},1)`);
-        //    if (status === 1) return buildStatusButton("Needed", "#c97d0c", `ChangeStatus(${id},1)`) +
-        //        buildStatusButton("Complete", null, `ChangeStatus(${id},2)`);
-        //    return buildStatusButton("Needed", null, `ChangeStatus(${id},1)`) +
-        //        buildStatusButton("Complete", "#188f18", `ChangeStatus(${id},2)`);
-        //}
-        //const key = `'${row.DateInput}','${row.DieSerial}'`;
-        //if (status === 0) return buildStatusButton("Continue", "#054e92", `ChangeDieSerialStatus(${key},1)`);
-        //if (status === 1) return buildStatusButton("Needed", "#c97d0c", `ChangeDieSerialStatus(${key},1)`) +
-        //    buildStatusButton("Complete", null, `ChangeDieSerialStatus(${key},2)`);
-        //return buildStatusButton("Needed", null, `ChangeDieSerialStatus(${key},1)`) +
-        //    buildStatusButton("Complete", "#188f18", `ChangeDieSerialStatus(${key},2)`);
+
+
+        return actionStatus;
     }
     async function ChangeStatus(recordId, status)
     {
         let res = await postMethod('@Url.Action("UpdateDailyStatus", "Mold")',
-         { RecordID: recordId, Status: status });
-        if (res && res.Success) {
-            // Refresh your table
+        { RecordID: recordId, Status: status });
+        if (res?.Success) {
             searchByPart()
+        }
+    }
+
+    async function ChangeDieSerialStatus(dateinput, serial, status) {
+        let strdate = normalizeMMDDYY(dateinput);
+        let res = await postMethod('@Url.Action("UpdateDailySerialStatus", "Mold")', {
+            Datestring: strdate,
+            DieSerial: serial,
+            Status: status
+        });
+        if (res?.Success) {
+            // Refresh your table
+            searchByDie();
         }
     }
 

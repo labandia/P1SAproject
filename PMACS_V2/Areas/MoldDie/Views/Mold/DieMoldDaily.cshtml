@@ -890,7 +890,7 @@
              </button>
              `;
         } else {
-            const key = `'${row.DateInput}','${row.DieSerial}'`;
+            const key = `'${row.DateInput}','${row.DieSerial}', ${row.Total}`;
             actionStatus = `
                <button class='status-btn ${status === 0 ? `badge bg-primary` : ``}'
                    onclick="ChangeDieSerialStatus(${key}, 0)">
@@ -921,11 +921,12 @@
         }
     }
 
-    async function ChangeDieSerialStatus(dateinput, serial, status) {
+    async function ChangeDieSerialStatus(dateinput, serial, Total, status) {
         let strdate = normalizeMMDDYY(dateinput);
         let res = await postMethod('@Url.Action("UpdateDailySerialStatus", "Mold")', {
             Datestring: strdate,
             DieSerial: serial,
+            Total : Total,
             Status: status
         });
         if (res?.Success) {

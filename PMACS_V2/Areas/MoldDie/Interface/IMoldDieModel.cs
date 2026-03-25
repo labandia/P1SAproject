@@ -41,7 +41,7 @@ namespace PMACS_V2.Areas.MoldDie.Interface
         Task<bool> AddUpdateDailySerialMoldie(DieMoldDieSerialInput mold);
 
         Task<bool> ChangeStatsDaily(int ID, int Stats); // Change the Staus of the Daily Molding Data
-        Task<bool> ChangeStatsSerialDaily(string datestring, string dieSerial, int Stats);
+        Task<bool> ChangeStatsSerialDaily(string datestring, string dieSerial, int Total, int Stats);
         Task<bool> DeleteDailyMoldie(int ID);
         Task<bool> UpdateDailyLastCycle(int recordID, int lastcycle);
 

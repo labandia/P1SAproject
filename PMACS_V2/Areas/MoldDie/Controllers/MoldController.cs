@@ -231,9 +231,13 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
             return JsonCreated(update, "Add Data Successfully");
         }
         [HttpPost]
-        public async Task<ActionResult> UpdateDailySerialStatus(string Datestring, string DieSerial, int Status)
+        public async Task<ActionResult> UpdateDailySerialStatus(
+            string Datestring, 
+            string DieSerial, 
+            int Total,
+            int Status)
         {
-            bool update = await _dieV2.ChangeStatsSerialDaily(Datestring, DieSerial, Status);
+            bool update = await _dieV2.ChangeStatsSerialDaily(Datestring, DieSerial, Total,  Status);
             if (!update) return JsonValidationError();
             return JsonCreated(update, "Add Data Successfully");
         }

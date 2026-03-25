@@ -217,7 +217,7 @@
             };
 
             const res = await GetMethod('@Url.Action("GetMoldDieMasterList", "Mold")', data);
-            console.log(res);
+
             if (res?.Success) {
                 state.getData = res.Data.Items;
                 state.totalRecords = res.Data.TotalRecords || 0;

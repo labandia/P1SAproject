@@ -396,17 +396,13 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                     UPDATE DieMold_Daily
                     SET 
                         DateInput = @DateInput,
-                        CycleShot = @CycleShot,
-                        Total      = @Total,
-                        Status     = @Status
+                        CycleShot = @CycleShot
                     WHERE RecordID = @RecordID",
              new
              {
                  model.RecordID,
                  model.DateInput,
-                 model.CycleShot,
-                 model.Total,
-                 model.Status
+                 model.CycleShot
              });
             // 2. Get all the MoldDie_Daily records and stops if the last record is 0
 
@@ -418,52 +414,25 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                         SELECT RecordID, DateInput, CycleShot, Total, Status
                         FROM DieMold_Daily
                         WHERE PartNo = @PartNo
-                        ORDER BY DateInput DESC",
+                        ORDER BY DateInput DESC, RecordID DESC",
                          new { model.PartNo });
+
+
 
             /* --------------------------------------------------
             * 3. Get Only records of the Last CycleShot that is not 0 (LAST → FIRST)
             * --------------------------------------------------*/
-            //var validRecords = records.TakeWhile(r => r.CycleShot != 0).ToList();
+            var Lastrecords = records.TakeWhile(r => r.Total != 0).ToList();
+       
+            if (!Lastrecords.Any()) return true;
 
-            //List<DieMoldMonitoringModel> nonZero = records
-            //    .Where(r => r.CycleShot != 0)
-            //    .ToList();
-
-            List<DieMoldMonitoringModel> Lastrecords = new List<DieMoldMonitoringModel>();
-
-            foreach (var record in records)
-            {
-                if (record.CycleShot == 0)
-                {
-                    break;
-                }
-                Lastrecords.Add(record);
-            }
-
-            // SET ASCENDING ORDER
-
-
-            /* --------------------------------------------------
-            * 4. LOOP through the records and compute the new Total = current total + NEXT record CycleShot
-            * --------------------------------------------------*/
-            //for (int i = 0; i < Lastrecords.Count; i++)
-            //{
-            //    //if (i == 0) continue;
-
-            //    int newTotal;
-            //    // 4. Total = current total + NEXT record CycleShot
-            //    //newTotal = Lastrecords[i - 1].Total + Lastrecords[i].CycleShot;
-            //    Debug.WriteLine("Index: " + i);
-            //    //Lastrecords[i].Total = newTotal;
-            //    Debug.WriteLine("Current CycleShot: " + Lastrecords[i].CycleShot);
-
-            //    Debug.WriteLine("CycleShot: " + Lastrecords[i].CycleShot + " | Total: " + Lastrecords[i].Total );
-            //}
+            // OLDEST → NEWEST
+            Lastrecords.Reverse();
+           
             int runningTotal = 0;
 
 
-            for (int i = Lastrecords.Count - 1; i >= 0; i--)
+            for (int i = 0; i < Lastrecords.Count; i++)
             {
                 runningTotal += Lastrecords[i].CycleShot;
 
@@ -491,25 +460,76 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         // Working in DieSerial 
         public static async Task<bool> UpdateAllMoldieSerial(DieMoldMonitoringModel model)
         {
-
+            // Get All the list of Partnumber Group by a Die Serial
             var partList = await GetPartNoByDieSerial(model.DieSerial);
             if (!partList.Any()) return false;
 
             // Update edited CycleShot
             foreach (var part in partList)
             {
-                string sql = @"UPDATE DieMold_Daily
-                   SET CycleShot = @CycleShot
-                   WHERE PartNo = @PartNo
-                   AND DateInput >= @DateInput
-                   AND DateInput < DATEADD(day,1,@DateInput)";
+                // 1️⃣ Get previous Total
+                string checkSql = @"
+                    SELECT TOP 1 Total
+                    FROM DieMold_Daily
+                    WHERE PartNo = @PartNo
+                      AND DateInput < @DateInput
+                     ORDER BY DateInput DESC, RecordID DESC";
 
-                await SqlDataAccess.ExecuteAsync(sql, new
+                var prevTotal = await SqlDataAccess.ExecuteScalarAsync(
+                    checkSql,
+                    new
+                    {
+                        PartNo = part,
+                        model.DieSerial,
+                        model.DateInput
+                    });
+
+                // 2️⃣ Build update logic based on previous total
+                string updateSql;
+
+                if (prevTotal == 0)
+                {
+                    Debug.WriteLine("The ZERO DATA");
+
+                    // 🔵 Reset mode
+                    updateSql = @"
+                    UPDATE DieMold_Daily
+                    SET CycleShot = @CycleShot,
+                        Total     = @CycleShot
+                    WHERE PartNo = @PartNo
+                      AND DateInput >= @DateInput
+                      AND DateInput < DATEADD(day,1,@DateInput)";
+                }
+                else
+                {
+                    Debug.WriteLine("The UPDATE ONLY ");
+
+                    updateSql = @"UPDATE DieMold_Daily
+                       SET CycleShot = @CycleShot
+                       WHERE PartNo = @PartNo
+                       AND DateInput >= @DateInput
+                       AND DateInput < DATEADD(day,1,@DateInput)";
+                }
+
+                await SqlDataAccess.ExecuteAsync(updateSql, new
                 {
                     model.CycleShot,
                     PartNo = part,
+                    model.DieSerial,
                     model.DateInput
                 });
+                //string sql = @"UPDATE DieMold_Daily
+                //   SET CycleShot = @CycleShot
+                //   WHERE PartNo = @PartNo
+                //   AND DateInput >= @DateInput
+                //   AND DateInput < DATEADD(day,1,@DateInput)";
+
+                //await SqlDataAccess.ExecuteAsync(sql, new
+                //{
+                //    model.CycleShot,
+                //    PartNo = part,
+                //    model.DateInput
+                //});
             }
 
             // Get records

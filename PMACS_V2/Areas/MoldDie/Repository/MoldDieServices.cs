@@ -38,7 +38,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         {
             string filter = process != "" ? $@" WHERE ProcessID = '{process}' AND p.DieSerial != '' " : "";
 
-            return SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>($@"WITH TotalDiePerPart AS (
+            string sqlquery = $@"WITH TotalDiePerPart AS (
                             SELECT PartNo, SUM(TotalDie) AS TotalQty
                             FROM DieMoldMonitor
                             GROUP BY PartNo
@@ -86,7 +86,12 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                         LEFT JOIN TotalDiePerPart td ON td.PartNo = p.PartNo
                         LEFT JOIN TotalByNo tb ON tb.DieSerial = p.DieSerial
                         {filter}
-                        ORDER BY p.DieSerial ASC", new { month = Month, year = year });
+                        ORDER BY p.DieSerial ASC";
+
+            Debug.WriteLine(sqlquery);
+
+
+            return SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>(sqlquery, new { month = Month, year = year });
         }
         public async Task<List<DieMoldMonitoringModel>> GetMoldDieMonthly(int Month, int year, string process = "")
         {
@@ -229,6 +234,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 AND p.ProcessID = @ProcessID
             ORDER BY d.RecordID DESC;";
 
+           
             return SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>(
                 sql,
                 new
@@ -438,7 +444,6 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 FROM DieMold_MoldingMainParts
                 WHERE DieSerial = @searchValue";
 
-            Debug.WriteLine(sql);
 
             var items = await  SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>(
                 sql,new { SearchValue = partno?.Trim() });
@@ -475,63 +480,56 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         {
             int offset = (pageNumber - 1) * pageSize;
 
-            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            var parameters = new Dictionary<string, object>();
+            var whereClauses = new List<string>();
 
-            string strquery = $@"SELECT PartNo,PartDescription
-                                      ,Dimension_Quality,DieSerial
-                                      ,DieNumber
-                                FROM DieMold_MoldingMainParts ";
-            string strCount = $@"SELECT COUNT(*) FROM DieMold_MoldingMainParts ";
-            
-
-            if (string.IsNullOrEmpty(search) && string.IsNullOrEmpty(filter))
+            // Search filter
+            if (!string.IsNullOrWhiteSpace(search))
             {
-                strquery += $@"WHERE ";
-                strCount += strquery;
-            }
-
-
-            if (!string.IsNullOrEmpty(search))
-            {
-                strquery += $@" (
-                                    @Search IS NULL
-                                    OR PartNo LIKE '%' + @Search + '%'
-                                    OR DieSerial LIKE '%' + @Search + '%'
-                                )";
-                strCount = strquery;
+                whereClauses.Add(@"(
+                    PartNo LIKE '%' + @Search + '%'
+                    OR DieSerial LIKE '%' + @Search + '%'
+                )");
                 parameters.Add("@Search", search);
             }
 
+            // Optional description filter
+            if (!string.IsNullOrWhiteSpace(filter))
+            {
+                whereClauses.Add("PartDescription = @Descript");
+                parameters.Add("@Descript", filter);
+            }
 
-            //if (filter != "")
-            //{
-            //    strquery += " AND PartDescription = @Descript'";
-            //    strCount += strquery;
-            //    parameters.Add("Descript", filter);
-            //}
+            string whereSql = whereClauses.Count > 0
+                ? "WHERE " + string.Join(" AND ", whereClauses)
+                : "";
 
+            string dataQuery = $@"
+                SELECT PartNo, PartDescription, Dimension_Quality, DieSerial, DieNumber
+                FROM DieMold_MoldingMainParts
+                {whereSql}
+                ORDER BY PartNo
+                OFFSET @Offset ROWS
+                FETCH NEXT @PageSize ROWS ONLY";
 
-            strquery += $@"ORDER BY PartNo
-                           OFFSET @Offset ROWS
-                           FETCH NEXT @PageSize ROWS ONLY";
-            strCount += strquery;
+                    string countQuery = $@"
+                SELECT COUNT(*)
+                FROM DieMold_MoldingMainParts
+                {whereSql}";
 
             parameters.Add("@Offset", offset);
             parameters.Add("@PageSize", pageSize);
 
 
-            Debug.WriteLine(strquery);
-
-            var items = await SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>(strquery, parameters);
-
-            int TotalRecords = await SqlDataAccess.ExecuteScalarAsync(strCount, parameters);
+            var items = await SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>(dataQuery, parameters);
+            int totalRecords = await SqlDataAccess.ExecuteScalarAsync(countQuery, parameters);
 
             return new PagedResult<DieMoldMonitoringModel>
             {
                 Items = items,
                 PageNumber = pageNumber,
                 PageSize = pageSize,
-                TotalRecords = TotalRecords
+                TotalRecords = totalRecords
             };
         }
 
@@ -573,15 +571,18 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
     
 
-        public Task<bool> ChangeStatsSerialDaily(string datestring, string dieSerial, int Stats)
+        public Task<bool> ChangeStatsSerialDaily(string datestring, string dieSerial, int Total, int Stats)
         {
             string strsql = $@"UPDATE d
                             SET d.Status =@Status 
                             FROM DieMold_Daily d
                             INNER JOIN DieMold_MoldingMainParts p
                                 ON d.PartNo = p.PartNo
-                            WHERE p.DieSerial = @DieSerial AND CAST(d.DateInput AS DATE) = CAST(@DateInput  AS DATE);";
-            return SqlDataAccess.ExecuteAsync(strsql, new { Status = Stats, DieSerial = dieSerial, DateInput = datestring });
+                            WHERE p.DieSerial = @DieSerial 
+                            AND CAST(d.DateInput AS DATE) = CAST(@DateInput  AS DATE) 
+                            AND d.Total =@Total ";
+            return SqlDataAccess.ExecuteAsync(strsql, new { Status = Stats, 
+                DieSerial = dieSerial, DateInput = datestring, Total });
         }
 
         public async Task<bool> AddUpdateDailySerialMoldie(DieMoldDieSerialInput mold)

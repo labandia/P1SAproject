@@ -336,16 +336,18 @@
                             rowHtml += `<td data-cell="PartNo" style="text-align: left; padding-left: 1.5em; font-weight: 600;" >${rowData.PartNo}</td>`;
                             rowHtml += `<td data-cell="DimensionQuality" >${rowData.Dimension_Quality}</td>`;
 
-                            rowHtml += `<td data-cell="DieNumber" >${rowData.DieNumber}</td>`;
+                            
 
 
 
                             if (idx === 0) {
+                                rowHtml += `<td rowspan="${groupRows.length}" data-cell="DieNumber" >${dienumValue}</td>`;
                                 rowHtml += `<td rowspan="${groupRows.length}" data-cell="DieSerial" >${dieSerialValue}</td>`;
                                 rowHtml += `<td rowspan="${groupRows.length}" data-cell="PreviousCount" >${PreviousValue}</td>`;
                                 //rowHtml += `<td rowspan="${groupRows.length}" data-cell="Remarks" style="${remarkColor}">${RemarkeValue}</td>`;
+                                rowHtml += `<td rowspan="${groupRows.length}" data-cell="ShotOnwards" >${ShotOnValue}</td>`;
                             }
-                            rowHtml += `<td data-cell="ShotOnwards" >${rowData.ShotOnwards}</td>`;
+                           
 
                             if (idx === 0) {
 

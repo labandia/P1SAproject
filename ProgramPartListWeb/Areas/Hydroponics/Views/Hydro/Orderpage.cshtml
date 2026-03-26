@@ -473,6 +473,10 @@
                             <button  class='EditRow text-primary bg-white' id="Details_${row.OrderID}">
                                <i class="fa-solid fa-pen-to-square"></i>
                             </button>
+
+                             <button  class='DeleteRow text-primary bg-white' id="Details_${row.OrderID}">
+                                <i class="fa-solid fa-trash" style="color: rgb(255, 68, 51);"></i>
+                             </button>
                         </div>
                     </td>
                 </tr>
@@ -559,6 +563,17 @@
         const rowId = $(this).attr('id').split('_')[1];
         window.location.href = `/Hydroponics/Hydro/OrderpageDetails?orderID=${rowId}`;
     });
+    $(document).on('click', '.DeleteRow',  async function (e) {
+        e.stopPropagation();
+        const rowId = $(this).attr('id').split('_')[1];
+        let res = await postMethod('@Url.Action("DeleteManageOrders", "Hydro")', { OrderID: rowId });
+        console.log(res);
+        if (res?.Success) {
+            RequesDataList();
+        }
+    });
+
+
 
     $(document).on('click', '.EditRow', function (e) {
         e.stopPropagation();

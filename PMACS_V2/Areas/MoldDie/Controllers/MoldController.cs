@@ -122,10 +122,25 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult> SearchRealMoldie(string ProcessID, string SearchInput)
+        {
+            bool isPartNo = !string.IsNullOrWhiteSpace(SearchInput)
+                       && SearchInput.StartsWith("0");
+
+            string messageChange = isPartNo ? $@"Part number {SearchInput} " : $@"Die Serial {SearchInput} ";
+
+
+            bool result = await _dieV2.CheckMasterlistDieSerial(SearchInput, ProcessID);
+            if (!result) return JsonValidationError($@"{messageChange} is not part of the Process ");
+
+            return JsonSuccess(result, "Input is Validate");
+        }
+
+
+        [HttpGet]
         public async Task<ActionResult> SearchMoldieDaily(string ProcessID, string SearchInput)
         {
         
-            //Run tasks in parallel for better performance
             var datalistTask = await _dieV2.GetDailyMoldHistoryData(SearchInput, ProcessID);
             var detailsTask = await _dieV2.GetMoldieMasterlistParts(SearchInput);
             // All in One Display

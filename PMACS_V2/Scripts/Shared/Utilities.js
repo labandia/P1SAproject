@@ -146,7 +146,22 @@
             }
 
             if (!res.ok) {
-                return { success: false, status: res.status };
+                let errorMessage = "Request failed";
+
+                try {
+                    const errorData = await res.json();
+                    console.log("Server Error Response:", errorData);
+
+                    errorMessage = errorData.Message || errorMessage;
+                } catch (err) {
+                    console.warn("Failed to parse error response");
+                }
+
+                return {
+                    success: false,
+                    status: res.status,
+                    message: errorMessage
+                };
             }
 
             return await res.json();

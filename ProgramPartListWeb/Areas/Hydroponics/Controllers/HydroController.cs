@@ -615,6 +615,16 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
         }
 
+        [HttpPost]
+        public async Task<ActionResult> DeleteManageOrders(string OrderID)
+        {
+            bool result = await _chambers.DeleteRequestOrder(OrderID);
+
+            if (!result) return JsonPostError("Delete failed.", 500);
+
+            return JsonCreated(result, "Delete Order  Successfully");
+        }
+
 
         [HttpPost]
         public async Task<ActionResult> ChangeStatusRequest(string OrderID, string Status, string EditRemarks, string EditCustomerName, double EditAssemblyStats)

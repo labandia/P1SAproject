@@ -7,7 +7,7 @@
 
 <section>
     <div class="Mold_ToolHeader flex_space mb-4">
-        
+
         <div class="flex_align">
 
             <div class="control-group">
@@ -29,7 +29,7 @@
             </div>
 
 
-            
+
         </div>
         <button class="primarybtn" data-bs-toggle="modal" data-bs-target="#AddTooling"><i class="fa-solid fa-plus"></i> Add Data</button>
     </div>
@@ -53,6 +53,14 @@
             <tbody id="DieMoldToolist">
             </tbody>
         </table>
+    </div>
+
+
+    <div class="pagination" id="pagination">
+
+        <div class="pagination-items">
+            <!-- Pagination buttons will be inserted here -->
+        </div>
     </div>
 
 </section>
@@ -253,18 +261,99 @@
 
 
 <script type="text/javascript">
-    let DieTooling = [];
-    let isFirstLoad = true;
-    let currentPage = 1;
-    const pageSize = 50;
-    let ToolingDisplay = $("#DieMoldToolist");
-   $("#AddToolforms").on('submit', async (e) => {
-        e.preventDefault();
-        let formData = new FormData(e.target);
+    "use strict";
+
+    /* =========================================================
+       GLOBAL STATE
+    ========================================================= */
+    const state = {
+        totalPages: 0,
+        currentPage: 0,
+        pageSize: 20,
+        totalRecords: 0,
+        isFirstLoad: true,
+        isYearLoad: true,
+        DieTooling: []
+    };
+
+    /* =========================================================
+       DOM CACHE
+    ========================================================= */
+    const DOM = {
+        ToolingDisplay: $("#DieMoldToolist"),
+        Addforms: $("#AddToolforms"),
+        Editforms: $("#EditToolforms"),
+        searchInput: $("#RegisterSearch"),
+        dateval: $("#Datearrived")
+    };
+    /* =========================================================
+       HELPERS
+    ========================================================= */
+    const validateRequired = (...fields) => fields.every(v => v && v.trim() !== "");
+
+    const showAlert = (msg, icon = "error") => Swal.fire({
+        icon, text: msg, timer: 1500, showConfirmButton: false,
+        allowOutsideClick: false,   // prevent outside click
+        allowEscapeKey: false,      // optional: prevent ESC key close
+        allowEnterKey: false        // optional: prevent Enter key close
+    });
+
+    /* =========================================================
+       INITIALIZATION
+    ========================================================= */
+    $(document).ready(() => {
+        bindEvents();
+        GetMoldDieTooling();
+    });
+
+    /* =========================================================
+       EVENT BINDINGS
+    ========================================================= */
+    function bindEvents() {
+        //const addfunc = state.isSelectedSearch === 0 ? handleAddDaily : handleDailyDieSerial;
+
+        $("#AddToolforms").on("submit", handleAddTools);
+        $("#EditToolforms").on("submit", handleEditTools);
+
+
+
+        DOM.ToolingDisplay.on("click", ".EditToolClick", OpenEditSerialModal);
+        DOM.ToolingDisplay.on("click", ".ToolDeleteClick", DeleteTooling);
+    }
+    /* =========================================================
+            TOOL DATA PROCESS
+    ========================================================= */
+    async function OpenEditSerialModal() {
+        const ID = this.id.split("_")[1];
+        const row = state.DieTooling.find(r => r.RecordID === parseInt(ID));
+        if (!row) return;
+
+        let setDateArrive = formatJsonDate(row.DateArrived);
+        let setDateRepair = formatJsonDate(row.DateRepair);
+
+        setDateInput("EditDateArrived", setDateArrive);
+        setDateInput("EditDateRepair", setDateRepair);
+        $("#EditRecordID").val(row.RecordID);
+        $("#EditRegNo").val(row.RegNo);
+        $("#EditParNoSearch").val(row.PartNo);
+        $("#EditItem").val(row.Item);
+        $("#EditShotRelease").val(row.ShotRelease);
+        $("#EditDetailsModify").val(row.DetailsModify);
+        $("#EditIncharge").val(row.Incharge);
+
+
+        $("#EditRemarks").val(row.Remarks);
+        $("#EditTooling").modal("show");
+    }
+    async function handleAddTools(e) {
+      e.preventDefault();
+
+       let formData = new FormData(e.target);
        const data = Object.fromEntries(formData);
 
        let res = await postMethod('@Url.Action("AddUpdateMoldDieTooling", "Mold")', data);
-        if (res.StatusCode === 201) {
+
+        if (res?.Success) {
             Swal.fire({
                 title: "Success",
                 text: res.Message,
@@ -284,183 +373,211 @@
                 showConfirmButton: false
             });
         }
-    });
 
-    $("#EditToolforms").on('submit', async (e) => {
-         e.preventDefault();
-        let formData = new FormData(e.target);
+  }
+    async function handleEditTools(e) {
+      e.preventDefault();
+      let formData = new FormData(e.target);
 
-         const data = Object.fromEntries(formData);
+       const data = Object.fromEntries(formData);
 
-        let res = await postMethod('@Url.Action("UpdateMoldDieTooling", "Mold")', data);
-         if (res.StatusCode === 201) {
-             Swal.fire({
-                 title: "Success",
-                 text: res.Message,
-                 icon: "success",
-                 confirmButtonColor: "#0d97c9",
-                 timer: 1500
-             }).then(() => {
-                 GetMoldDieTooling();
-                 $("#EditToolforms")[0].reset();
-                 $("#EditTooling").modal("hide");
-             });
-         } else {
-             Swal.fire({
-                 icon: "error",
-                 text: data.ToolNo + " is already Exist",
-                 timer: 1500,
-                 showConfirmButton: false
-             });
-         }
-     });
-
-    const GetMoldDieTooling = async () => {
-        let search = $("#RegisterSearch").val();
-        let dateval = $("#Datearrived").val();
-
-       const url =
-           `@Url.Action("GetMoldDieToolingList", "Mold")`
-           + `?search=${encodeURIComponent(search)}`
-           + `&filter=${dateval}`
-           + `&page=${currentPage}`
-           + `&pageSize=${pageSize}`;
-
-
-        // Clear table only on first load
-        if (isFirstLoad) {
-            $("#DieMoldToolist").empty();
-        }
-
-        let loaderId = null;
-
-
-        if (isFirstLoad && typeof window.Loadingsteps === "function") {
-            const id = window.loadingDisplay("DieMoldToolist", 8);
-
-            window.Loadingsteps(id, async () => {
-                await loadMasterlist(url);
-                isFirstLoad = false; // ✅ turn off loader forever
-            });
-        } else {
-            // No loader for filters / pagination
-            await loadMasterlist(url);
-        }
+      let res = await postMethod('@Url.Action("UpdateMoldDieTooling", "Mold")', data);
+       if (res.StatusCode === 201) {
+           Swal.fire({
+               title: "Success",
+               text: res.Message,
+               icon: "success",
+               confirmButtonColor: "#0d97c9",
+               timer: 1500
+           }).then(() => {
+               GetMoldDieTooling();
+               $("#AddToolforms")[0].reset();
+               $("#EditTooling").modal("hide");
+           });
+       } else {
+           Swal.fire({
+               icon: "error",
+               text: data.ToolNo + " is already Exist",
+               timer: 1500,
+               showConfirmButton: false
+           });
+       }
     }
+    async function DeleteTooling(e) {
+        e.preventDefault();
 
-    const loadMasterlist = async (url) => {
-        let res = await GetMethod(url, {});
+        const buttonId = $(this).attr('id');
+        const rowIndex = buttonId.split('_')[1];
 
-          if (res && res.Success) {
-              DieTooling = res.Data.Items;
-              // Loads the First Data
-              DisplayTooling(DieTooling);
-          } else {
-              const message = res?.Message ?? "No data found";
+           Swal.fire({
+               title: "Are you sure you want to delete this?",
+               text: "You won't be able to revert this!",
+               icon: "warning",
+               showCancelButton: true,
+               confirmButtonColor: "#3085d6",
+               cancelButtonColor: "#d33",
+               confirmButtonText: "Yes, delete it!"
+           }).then( async (result) => {
+               if (result.isConfirmed) {
+                   let res = await postMethod('@Url.Action("DeleteMoldDieTooling", "Mold")', { ID: rowIndex });
+                   if (res.Success && res) {
 
-              const loadData = `<tr>
-                  <td colspan='9'>
-                      🔍 ${message}
-                  </td>
-              </tr>`;
-
-              ToolingDisplay.empty();
-              ToolingDisplay.append(loadData);
-
-          }
-    };
-
-    function DisplayTooling(dataArray) {
-        $("#DieMoldToolist").empty();
-
-        dataArray.forEach((row, index) => {
-            var setdata = `<tr >
-             <td>${row.RegNo}</td>
-             <td style='font-weight: 600;'>${row.PartNo} / ${row.Dimension_Quality}</td>
-             <td>${row.ShotRelease}</td>
-             <td>${formatJsonDate(row.DateRepair)}</td>
-             <td>${row.Incharge}</td>
-             <td>${row.DetailsModify}</td>
-
-             <td>${row.Remarks}</td>
-             <td>
-                <button type='button' class='btn actionicon text-primary EditToolClick' id='editButton_${row.RecordID}' >
-                   <i class='fa-regular fa-pen-to-square action_btn'></i>
-                </button>
-                <button type='button' class='btn actionicon text-danger ToolDeleteClick' id="deleteDailyButton_${row.RecordID}">
-                  <i class="fa-regular fa-trash-can"></i>
-                </button>
-
-             </td>
-         </tr>;`
-
-            $("#DieMoldToolist").append(setdata);
-        });
+                       Swal.fire({
+                           title: "Success",
+                           text: res.Message,
+                           icon: "success",
+                           confirmButtonColor: "#0d97c9",
+                           timer: 1500
+                       }).then(() => {
+                           GetMoldDieTooling();
+                       });
 
 
-        // Handle click event for edit button
-        $(document).on('click', '.EditToolClick', function (e) {
-            e.stopPropagation();
-            const buttonId = $(this).attr('id');
-            const rowIndex = buttonId.split('_')[1];
-            var filterData = DieTooling.find(res => res.RecordID === parseInt(rowIndex));
-            if (filterData) {
-                let setDateArrive = formatJsonDate(filterData.DateArrived);
-                let setDateRepair = formatJsonDate(filterData.DateRepair);
+                   }
+               }
+           });
+    }
+    /* =========================================================
+       DAILY SUMMARY
+    ========================================================= */
 
-                setDateInput("EditDateArrived", setDateArrive);
-                setDateInput("EditDateRepair", setDateRepair);
-                $("#EditRecordID").val(filterData.RecordID);
-                $("#EditRegNo").val(filterData.RegNo);
-                $("#EditParNoSearch").val(filterData.PartNo);
-                $("#EditItem").val(filterData.Item);
-                $("#EditShotRelease").val(filterData.ShotRelease);
-                $("#EditDetailsModify").val(filterData.DetailsModify);
-                $("#EditIncharge").val(filterData.Incharge);
+    async function GetMoldDieTooling() {
+        try {
+             const data = {
+                 search: DOM.searchInput.val(),
+                 filter: DOM.dateval.val(),
+                 page: state.currentPage || 1,
+                 pageSize: state.pageSize || 20
+             };
 
-
-                $("#EditRemarks").val(filterData.Remarks);
-                $("#EditTooling").modal("show");
+            const res = await GetMethod('@Url.Action("GetMoldDieToolingList", "Mold")', data);
+            if (res?.Success) {
+                state.DieTooling = res.Data.Items;
+                renderDailyTable(state.DieTooling);
+                //updatePaginationUI();
             }
 
-        });
+        } catch (e) {
 
-        // Handle click event for edit button
-        $(document).on('click', '.ToolDeleteClick', function (e) {
-            e.stopPropagation();
-            const buttonId = $(this).attr('id');
-            const rowIndex = buttonId.split('_')[1];
-           
-             Swal.fire({
-                 title: "Are you sure you want to delete this?",
-                 text: "You won't be able to revert this!",
-                 icon: "warning",
-                 showCancelButton: true,
-                 confirmButtonColor: "#3085d6",
-                 cancelButtonColor: "#d33",
-                 confirmButtonText: "Yes, delete it!"
-             }).then( async (result) => {
-                 if (result.isConfirmed) {
-                     let res = await postMethod('@Url.Action("DeleteMoldDieTooling", "Mold")', { ID: rowIndex });
-                     if (res.Success && res) {
+        }
+    }
 
-                         Swal.fire({
-                             title: "Success",
-                             text: res.Message,
-                             icon: "success",
-                             confirmButtonColor: "#0d97c9",
-                             timer: 1500
-                         }).then(() => {
-                             GetMoldDieTooling();
-                         });
+    function renderDailyTable(rows) {
+        DOM.ToolingDisplay.empty();
+        rows.forEach(r => {
+            DOM.ToolingDisplay.append(`<tr>
+                 <td>${r.RegNo}</td>
+                <td style='font-weight: 600;'>${r.PartNo} / ${r.Dimension_Quality}</td>
+                <td>${r.ShotRelease}</td>
+                <td>${formatJsonDate(r.DateRepair) }</td>
+                <td>${r.Incharge}</td>
+                <td>${r.DetailsModify}</td>
 
+                <td>${r.Remarks}</td>
+                <td>
+                   <button type='button' class='btn actionicon text-primary EditToolClick' id='editButton_${r.RecordID}' >
+                      <i class='fa-regular fa-pen-to-square action_btn'></i>
+                   </button>
+                   <button type='button' class='btn actionicon text-danger ToolDeleteClick' id="deleteDailyButton_${r.RecordID}">
+                     <i class="fa-regular fa-trash-can"></i>
+                   </button>
 
-                     }
-                 }
-             });
-
+                </td>
+            </tr>;`);
         });
     }
+
+
+
+
+    function updatePaginationUI() {
+
+        const $pagination = $("#pagination");
+        const $paginationItems = $(".pagination-items");
+
+        // Clear existing buttons
+        $paginationItems.empty();
+
+        // Always show pagination for debugging
+        $pagination.css({
+            'display': 'flex',
+            'visibility': 'visible',
+            'opacity': '1',
+            'position': 'relative'
+        });
+
+        // Show/hide pagination based on total records
+        if (state.totalRecords > state.pageSize) {
+            $pagination.show();
+
+            // Create pagination buttons
+            const prevDisabled = state.currentPage === 1 ? 'disabled' : '';
+            const nextDisabled = state.currentPage === state.totalPages || state.totalPages === 0 ? 'disabled' : '';
+
+            $paginationItems.html(`
+           <button class="page-btn prev-btn" ${prevDisabled} data-page="${state.currentPage - 1}">
+               <i class="fas fa-chevron-left"></i> Previous
+           </button>
+
+           <div class="page-info">
+               Page ${state.currentPage} of ${state.totalPages || 1}
+               <span class="record-info"></span>
+           </div>
+
+           <button class="page-btn next-btn" ${nextDisabled} data-page="${state.currentPage + 1}">
+               Next <i class="fas fa-chevron-right"></i>
+           </button>
+       `);
+
+            // Add page number input for direct navigation (optional)
+            if (state.totalPages > 10) {
+                $paginationItems.append(`
+               <div class="page-jump">
+                   <input type="number" id="pageJumpInput" min="1" max="${state.totalPages}" value="${state.currentPage}"
+                          style="width: 60px; padding: 5px; border: 1px solid #ddd; border-radius: 4px;">
+                   <button class="page-btn jump-btn" id="pageJumpBtn">Go</button>
+               </div>
+           `);
+            }
+
+            // Add click handlers
+            $(".page-btn").off('click').on('click', function () {
+                if ($(this).is(':disabled')) return;
+
+                const pageNum = parseInt($(this).data('page'));
+
+                if (pageNum >= 1 && pageNum <= state.totalPages && pageNum !== state.currentPage) {
+                    state.currentPage = pageNum;
+                    GetMoldDieTooling();
+                }
+            });
+
+            // Add handler for jump button if exists
+            $("#pageJumpBtn").off('click').on('click', function () {
+                const jumpPage = parseInt($("#pageJumpInput").val());
+                if (jumpPage >= 1 && jumpPage <= state.totalPages && jumpPage !== state.currentPage) {
+                    state.currentPage = jumpPage;
+                    GetMoldDieTooling();
+                }
+            });
+
+            // Add enter key handler for jump input
+            $("#pageJumpInput").off('keypress').on('keypress', function (e) {
+                if (e.which === 13) { // Enter key
+                    $("#pageJumpBtn").click();
+                }
+            });
+
+        } else {
+            $pagination.hide();
+        }
+    }
+
+
+
+    /* =========================================================
+       UTILITIES
+    ========================================================= */
 
     function setDateInput(inputId, dateStr) {
         if (!dateStr) return; // Exit if empty
@@ -479,7 +596,4 @@
             inputElement.value = formattedDate;
         }
     }
-
-
-    GetMoldDieTooling();
 </script>

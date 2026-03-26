@@ -336,7 +336,10 @@
     const validateRequired = (...fields) => fields.every(v => v && v.trim() !== "");
 
     const showAlert = (msg, icon = "error") => Swal.fire({
-        icon, text: msg, timer: 1500, showConfirmButton: false
+        icon, text: msg, timer: 1500, showConfirmButton: false,
+        allowOutsideClick: false,   // prevent outside click
+        allowEscapeKey: false,      // optional: prevent ESC key close
+        allowEnterKey: false        // optional: prevent Enter key close
     });
     const buildStatusButton = (label, activeColor = null, onclick = "") => {
         const activeStyle = activeColor
@@ -701,11 +704,19 @@
         const btn = document.getElementById("searchButton");
         showLoader(btn);
 
-        try{
+        try {
+            const checkMold = await GetMethod('@Url.Action("SearchRealMoldie", "Mold")', {
+                ProcessID: process, SearchInput: part
+            });
+
+            if (checkMold.success == false) {
+                showAlert(checkMold.message);
+                return;
+            }
+
             const res = await GetMethod('@Url.Action("SearchMoldieDaily","Mold")',{
                 ProcessID:process, SearchInput:part
             });
-            console.log(res);
             if(!res?.Success) return showNoData();
 
             DOM.dailyInputs.show();
@@ -715,13 +726,13 @@
             renderPartDetails(res.Data.Details);
             populateTable(state.getData);
 
-        }catch(err){ console.error(err); }
+        }catch(err){ console.error("asdasd" + err); }
         finally{ hideLoader(btn); }
     }
 
     async function searchByDie() {
         //DOM.searchInput.val("");
-        
+
         const die = DOM.searchDie.val().trim();
         const process = DOM.processSelect.val();
 
@@ -737,12 +748,21 @@
         const btn = document.getElementById("searchDieButton");
         showLoader(btn);
 
-        try{
+        try {
+            const checkMold = await GetMethod('@Url.Action("SearchRealMoldie", "Mold")', {
+                ProcessID: process, SearchInput: die
+            });
+
+            if (checkMold.success == false) {
+                showAlert(checkMold.message);
+                return;
+            }
+
+
             const res = await GetMethod('@Url.Action("SearchByDieSerialMoldie","Mold")',{
                 ProcessID:process, DieInput:die
             });
 
-            console.log(res);
             if(!res?.Success) return showNoData();
             DOM.dailyInputs.show();
             DOM.dailySummary.hide();
@@ -947,7 +967,7 @@
                   Months: month,
                   Days: day,
                   Year: DOM.yearSelect.val() || state.currentYear,
-                  ProcessID: process, 
+                  ProcessID: process,
                   pageNumber: state.currentPage || 1,
                   pageSize: state.pageSize || 20
               };

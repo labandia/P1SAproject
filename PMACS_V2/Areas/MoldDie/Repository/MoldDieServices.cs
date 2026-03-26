@@ -72,13 +72,13 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                             ISNULL(ds.DateAction, NULL) AS DateAction,
                             ISNULL(ds.TotalDie, 0) AS LatestTotalDie,
                             ISNULL(tb.ShotOnwards, 0) AS ShotOnwards,
-                            ISNULL(p.PreviousCount, 0) + ISNULL(tb.ShotOnwards, 0) AS TotalShotCount,
+                            ISNULL(p.PreviousCount, 0) + ISNULL(p.ShotCountprevious, 0) + ISNULL(tb.ShotOnwards, 0) AS TotalShotCount,
                             CASE 
 		                        WHEN ISNULL(1000000, 0) = 0 THEN 0
-		                        ELSE CAST((ISNULL(p.PreviousCount, 0) + ISNULL(tb.ShotOnwards, 0)) AS BIGINT) * 100 / 1000000
+		                        ELSE CAST((ISNULL(p.PreviousCount, 0) + ISNULL(p.ShotCountprevious, 0) +  ISNULL(tb.ShotOnwards, 0)) AS BIGINT) * 100 / 1000000
 	                        END AS Status,
 	                        CASE 
-		                        WHEN CAST((ISNULL(p.PreviousCount, 0) + ISNULL(tb.ShotOnwards, 0)) AS BIGINT) * 100 / 1000000 >= 100 THEN 'End of Life'
+		                        WHEN CAST((ISNULL(p.PreviousCount, 0) + ISNULL(p.ShotCountprevious, 0) +  ISNULL(tb.ShotOnwards, 0)) AS BIGINT) * 100 / 1000000 >= 100 THEN 'End of Life'
 		                        ELSE 'For Monitoring'
 	                        END AS Remarks
                         FROM DieMold_MoldingMainParts p
@@ -88,7 +88,6 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                         {filter}
                         ORDER BY p.DieSerial ASC";
 
-            Debug.WriteLine(sqlquery);
 
 
             return SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>(sqlquery, new { month = Month, year = year });
@@ -793,6 +792,22 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         public async Task<bool> DeleteDieSerialDaily(string dieSerial, string dateinput)
         {
             return await MoldieHelper.DeleteDailyDieSerial(dieSerial, dateinput);
+        }
+
+        public Task<bool> CheckMasterlistDieSerial(string searchValue, string process)
+        {
+            bool isPartNo = !string.IsNullOrWhiteSpace(searchValue)
+                        && searchValue.StartsWith("0");
+
+            string filtercondition = isPartNo ? "PartNo = @searchvalue " : "DieSerial = @searchvalue";
+
+            string strsql = $@"SELECT COUNT(*) 
+                     FROM DieMold_MoldingMainParts
+                     WHERE ProcessID = @ProcessID AND {filtercondition}";
+
+
+            return SqlDataAccess.CheckDataAsync(strsql,
+               new { searchvalue = searchValue, ProcessID = process });
         }
     }
 }

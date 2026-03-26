@@ -5,6 +5,7 @@ using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls.WebParts;
@@ -387,6 +388,38 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             throw new NotImplementedException();
         }
 
-     
+        public async Task<bool> DeleteRequestOrder(string OrderID)
+        {
+            // BEFORE DELETE GET ALL THE DETAILS OF ORDER ID PARTS
+            // 1. Check if order exists
+            var exists = await SqlDataAccess.ExecuteScalarAsync(
+                "SELECT COUNT(1) FROM Hydro_OrderDetails WHERE OrderID = @OrderID",
+                new { OrderID });
+
+            if (exists == 0)
+                return false;
+            // 2. Update the Details parts to the Inventory  stocks 
+            await SqlDataAccess.ExecuteAsync($@"UPDATE s
+                        SET s.CurrentQty = s.CurrentQty + d.QtyUsed
+                        FROM Hydro_Stocks s
+                        INNER JOIN Hydro_OrderDetails d ON s.PartNo = d.PartNo
+                        WHERE d.OrderID = @OrderID;", new { OrderID });
+
+            // 3. Delete details FIRST
+            await SqlDataAccess.ExecuteAsync(@"
+                    DELETE FROM Hydro_OrderDetails
+                    WHERE OrderID = @OrderID;",
+                new { OrderID }
+            );
+            // 4. Delete order
+            await SqlDataAccess.ExecuteAsync(@"
+                    DELETE FROM Hydro_Orders
+                    WHERE OrderID = @OrderID;",
+                new { OrderID }
+            );
+
+
+            return true;    
+        }
     }
 }

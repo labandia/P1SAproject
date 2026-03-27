@@ -181,7 +181,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                             FROM Hydro_ChamberParts cp
                             INNER JOIN Hydro_ChamberMasterlist c ON cp.ChamberID = c.ChamberID
                             LEFT JOIN Hydro_Stocks s ON cp.PartNo = s.PartNo
-                            WHERE cp.ChamberID = 1
+                            WHERE cp.ChamberID = @ChamberID
                             GROUP BY cp.ChamberID, c.ChamberName;";
             var result = await SqlDataAccess.GetDataAsync<ChambersProduce>(strsql, new { ChamberID = chamber });
 

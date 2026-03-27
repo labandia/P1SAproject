@@ -45,12 +45,12 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             };
 
             bool parstResult = await SqlDataAccess.ExecuteAsync(
-                insertPartQuery, partParaers, System.Data.CommandType.Text, "HydroCached");
+                insertPartQuery, partParaers, System.Data.CommandType.Text);
 
             if (!parstResult) return false;
             
             result = await SqlDataAccess.ExecuteAsync(
-                insertStockQuery, stockPramers, System.Data.CommandType.Text, "HydroCached");
+                insertStockQuery, stockPramers, System.Data.CommandType.Text);
 
             return result;
         }
@@ -70,7 +70,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 {
                     PartNo = item.PartNo,
                     CurrentQty = item.quantity
-                }, System.Data.CommandType.Text, "HydroCached");
+                }, System.Data.CommandType.Text);
 
 
                 //// 2️⃣ Auto-allocate to incomplete order details
@@ -152,11 +152,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             };
 
             bool parstResult = await SqlDataAccess.ExecuteAsync(
-                updateQuery, parameters, System.Data.CommandType.Text, "HydroCached");
+                updateQuery, parameters, System.Data.CommandType.Text);
 
             if (!parstResult) return false;
 
-            result = await SqlDataAccess.ExecuteAsync(updateStockQuery, stocksparams, System.Data.CommandType.Text, "HydroCached");
+            result = await SqlDataAccess.ExecuteAsync(updateStockQuery, stocksparams, System.Data.CommandType.Text);
 
             return result;
         }
@@ -195,9 +195,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             return SqlDataAccess.GetDataAsync<StockPartsModel>(
                 "HydroInventory", 
                 null, 
-                System.Data.CommandType.StoredProcedure,
-                "HydroCached"
-             );
+                System.Data.CommandType.StoredProcedure);
         }
 
         public Task<bool> IncrementAndDecreaseStocks(int StockID, double CurrentQty, int Required)
@@ -207,7 +205,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 {
                     CurrentQty = CurrentQty,
                     StockID = StockID,
-                }, System.Data.CommandType.Text, "HydroCached");
+                }, System.Data.CommandType.Text);
         }
 
         public Task<bool> UpdateStocks(int ID, int Quan)
@@ -218,7 +216,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             return SqlDataAccess.ExecuteAsync(strsql, new { 
                                                     PartID = ID, 
                                                     CurrentQty = Quan 
-                                                }, System.Data.CommandType.Text, "HydroCached");
+                                                }, System.Data.CommandType.Text);
         }
 
 

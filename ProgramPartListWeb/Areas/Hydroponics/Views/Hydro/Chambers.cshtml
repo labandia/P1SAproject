@@ -85,6 +85,20 @@
             //let priceobj = res.Data.TotalPrice;
             $.each(chamberlist, function (index, row) {
                   const imageUrl = '@Url.Content("~/Content/Images/HydroPhonics.png")';
+                let totalcostDollar = 0;
+                let totalcostPHp = 0;
+
+                if (row.ChamberID == 1) {
+                    totalcostPHp = "₱ 116,406"
+                    totalcostDollar = "$ 2,007";
+                } else if (row.ChamberID == 2) {
+                    totalcostPHp = "₱ 89,958"
+                    totalcostDollar = "$ 1,551";
+                } else {
+                    totalcostPHp = "₱ 72,036"
+                    totalcostDollar = "$ 1,242"; 
+                }
+
 
 
                 const cardHTML = `<div class="chambercard" id='editButton_${row.ChamberID}'>
@@ -110,12 +124,12 @@
 
                                         <div class="shipment-number">
                                             <span class="label">Total PHP Cost : </span>
-                                            <span class="value"> ₱ <strong style='font-size: 16px;'>${row.TotalPHPCost.toLocaleString('en-US') }</strong></span>
+                                            <span class="value"> <strong style='font-size: 16px;'>${totalcostPHp}</strong></span>
                                         </div>
 
                                         <div class="track">
                                             <span class="label">Total USD Cost :</span>
-                                            <span class="value">$ <strong style='font-size: 16px;'>${row.UnitCost_PHP.toLocaleString('en-US') }</strong></span>
+                                            <span class="value"><strong style='font-size: 16px;'>${totalcostDollar}</strong></span>
                                         </div>
                                     </div>`
                 $("#chambercontain").append(cardHTML);

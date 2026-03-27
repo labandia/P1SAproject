@@ -190,7 +190,19 @@
             let res = await GetMethod('@Url.Action("GetAllChamberList", "Hydro")', { chamber: ID });
             if (res && res.Success) {
                 let priceobj = res.Data.TotalPrice;
+                let totalcostDollar = 0;
+                let totalcostPHp = 0;
 
+                if (ID == 1) {
+                    totalcostPHp = "₱ 116,406"
+                    totalcostDollar = "$ 2,007";
+                } else if (ID == 2) {
+                    totalcostPHp = "₱ 89,958"
+                    totalcostDollar = "$ 1,551";
+                } else {
+                    totalcostPHp = "₱ 72,036"
+                    totalcostDollar = "$ 1,242";
+                }
 
                 // Renders the TableData
                 chamberlist = res.Data.GetList;
@@ -201,8 +213,10 @@
                 $("#breadname").text(res.Data.Produce.ChamberName);
 
                 // Display total price
-                $("#TotalPH").text("$ " + priceobj.PHPTotal.toLocaleString('en-US'));
-                $("#TotalUSD").text("₱ " + priceobj.USDTotal.toLocaleString('en-US'));
+                $("#TotalPH").text(totalcostPHp);
+                $("#TotalUSD").text(totalcostDollar);
+                //$("#TotalPH").text("$ " + priceobj.PHPTotal.toLocaleString('en-US'));
+                //$("#TotalUSD").text("₱ " + priceobj.USDTotal.toLocaleString('en-US'));
 
                 // Display Produce Chambers
                 $("#chamberproduce").text(res.Data.Produce.MaxBuildableChambers);
@@ -224,7 +238,6 @@
     const PartlistTable = async () => {
         $("#addPartNo").empty();
         let res = await GetMethod('@Url.Action("GetPartlistData", "Hydro")', {});
-        console.log(res);
         if (res && res.Success) {
             const filteredParts = res.data.filter(part =>
                 !chamberlist.some(chamber => chamber.PartNo === part.PartNo)

@@ -391,7 +391,7 @@
 
                             <div class="row mb-2">
                                 <div class="form_group col-6 col-sm-6">
-                                    <label>Warning Level</label>
+                                    <label>Required Qty</label>
                                     <input type="number" id="EditWarningLevel" name="EditWarningLevel" step="0.01" min="0" value="10">
                                 </div>
 
@@ -1284,7 +1284,7 @@
                 clearInterval(interval);
                 if (typeof callback === "function") callback();
             }
-        }, 800);
+        }, 500);
     }
 
     // 🔄 Debounce helper

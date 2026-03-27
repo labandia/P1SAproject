@@ -585,6 +585,7 @@
         $("#DieSerialID").val(row.DieSerial);
         //$("#DailyEditPartNo").val(row.PartNo);
         setDateInput("DieSerialDateInput", row.DateInput);
+        $("#DieSerialCurrentDate").val(row.DateInput);
         $("#DieSerialCycleShot").val(row.CycleShot);
         $("#DieSerialMachineNo").val(row.MachineNo);
         $("#DieSerialRemarks").val(row.Remarks);
@@ -594,8 +595,8 @@
     async function handleEditDailyDieSerial(e) {
         e.preventDefault();
          let formData = new FormData(e.target);
-         const data = Object.fromEntries(formData);
-
+        const data = Object.fromEntries(formData);
+        console.log(data);
          const findData = state.getData.filter(res =>
              normalizeMMDDYY(res.DateInput) === data.DateInput
          );
@@ -705,7 +706,7 @@
         showLoader(btn);
 
         try {
-            const checkMold = await GetMethod('@Url.Action("SearchRealMoldie", "Mold")', {
+            const checkMold = await GetMethod('@Url.Action("SearchPartMoldie", "Mold")', {
                 ProcessID: process, SearchInput: part
             });
 

@@ -148,7 +148,7 @@
 
 
     const LoadUsers = async () => {
-        let res = await GetMethod('@Url.Action("GetFullnameList", "PMACS")', {});
+        let res = await getMethod('@Url.Action("GetFullnameList", "PMACS")', {});
         if (res && res.Success) {
             loadData = res.Data;
             loadData = loadData.map(function (item) {

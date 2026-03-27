@@ -794,6 +794,10 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             return await MoldieHelper.DeleteDailyDieSerial(dieSerial, dateinput);
         }
 
+
+
+
+
         public Task<bool> CheckMasterlistDieSerial(string searchValue, string process)
         {
             bool isPartNo = !string.IsNullOrWhiteSpace(searchValue)
@@ -803,7 +807,18 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
             string strsql = $@"SELECT COUNT(*) 
                      FROM DieMold_MoldingMainParts
-                     WHERE ProcessID = @ProcessID AND {filtercondition}";
+                     WHERE ProcessID = @ProcessID AND DieSerial = @searchvalue";
+
+
+            return SqlDataAccess.CheckDataAsync(strsql,
+               new { searchvalue = searchValue, ProcessID = process });
+        }
+
+        public Task<bool> CheckMasterlistPartnumber(string searchValue, string process)
+        {
+            string strsql = $@"SELECT COUNT(*) 
+                     FROM DieMold_MoldingMainParts
+                     WHERE ProcessID = @ProcessID AND PartNo = @searchvalue";
 
 
             return SqlDataAccess.CheckDataAsync(strsql,

@@ -24,11 +24,11 @@
     <table>
         <thead>
             <tr>
-                <th style="width: 25%; text-align: left; padding-left: 1.5em !important;"><span style="margin-left: .5em;">Full Name</span> </th>
+                <th style="text-align: left; padding-left: 1.5em !important;"><span style="margin-left: .5em;">Full Name</span> </th>
                 <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Employee ID</span>  </th>
                 <th> <i class="fa-regular fa-square-check"></i> <span style="margin-left: .5em;">Email Address</span>  </th>
                 <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Roles</span>  </th>
-                <th style="width: 15%;"> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Status</span>  </th>
+                <th style="width: 20%;"> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Status</span>  </th>
 
             </tr>
         </thead>
@@ -281,9 +281,9 @@
                   const rowHtml = `
                          <tr class='' style='padding: 1em 0 !important; '>
                              <td data-cell="Fullname" style='text-align: left; padding-left: 2em !important; font-weight: 600;'>${row.Fullname ? row.Fullname : "-"}</td>
-                             <td style='font-weight: 600;' data-cell="Employee_ID">${row.Employee_ID ? row.Employee_ID : "-"}</td>
+                             <td data-cell="Employee_ID">${row.Employee_ID ? row.Employee_ID : "-"}</td>
                              <td data-cell="Employee_ID">${row.Email ? row.Email : "-"}</td>
-                             <td data-cell="Employee_ID">${GetRoleName(row.Role_ID ? row.Role_ID : 0)}</td>
+                             <td data-cell="Employee_ID"><span class="role-badge ${SetStatus(row.Role_ID ? row.Role_ID : 0)}">${GetRoleName(row.Role_ID ? row.Role_ID : 0)}</span>  </td>
                              <td data-cell="Employee_ID">${row.IsActive === 1 ? "Active " : "No Active"}</td>
                              <td data-cell="Delete" >
                                  <div class='flex_center'>
@@ -326,7 +326,6 @@
             var rowId = $(this).attr("id");
             var rowIndex = rowId.split("_")[1];
             var selected = userData.find(item => item.User_ID === parseInt(rowIndex));
-            console.log(selected);
             if (selected) {
                 $("#EditEmployee_ID").val(selected.Employee_ID);
                 $("#EditFullName").val(selected.Fullname);
@@ -403,6 +402,29 @@
         e.preventDefault();
         $("#AddNewUserModal").modal("show");
     });
+
+    function SetStatus(role) {
+        switch (role) {
+            case 1:
+                return "admin"; // ull system access (can manage everything, including other admins).
+                break;
+            case 2:
+                return "admin"; // Manages users, roles, permissions, and overall system settings.
+                break;
+            case 3:
+                return "moderator"; // Oversees team operations, approves/rejects requests, can view reports.
+                break;
+            case 4:
+                return "Users"; // Can create, edit, and update content/data, but not manage users.
+                break;
+            case 5:
+                return "Staff"; // Basic access, can view and use system features assigned to them.
+                break;
+            default:
+                return "Users";
+                break;
+        }
+    }
 
     function GetRoleName(role) {
         switch (role) {

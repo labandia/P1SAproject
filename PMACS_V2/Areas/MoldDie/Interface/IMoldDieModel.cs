@@ -67,6 +67,8 @@ namespace PMACS_V2.Areas.MoldDie.Interface
         // ===========================================================
         Task<bool> CheckMasterlistDieSerial(string partnum, string process);
 
+        Task<bool> CheckMasterlistPartnumber(string partnum, string process);
+
         Task<PagedResult<DieMoldMonitoringModel>> GetMoldieMasterlist(
               string search,
               string filter,

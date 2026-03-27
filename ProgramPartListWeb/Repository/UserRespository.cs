@@ -199,9 +199,8 @@ namespace ProgramPartListWeb.Data
         public Task<bool> Changepassword(ChangePassModel ch)
         {
             string strsql = $@"UPDATE UserAccounts SET Password =@Password
-                               WHERE User_ID =@User_ID AND Project_ID = 9";
-            var parameter = new { Password = ch.Password, User_ID = ch.User_ID };
-            return SqlDataAccess.ExecuteAsync(strsql, parameter);
+                               WHERE User_ID =@User_ID AND Project_ID = @Project_ID";
+            return SqlDataAccess.ExecuteAsync(strsql, ch);
         }
     }
 }

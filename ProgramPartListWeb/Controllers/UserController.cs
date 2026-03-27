@@ -77,7 +77,7 @@ namespace ProgramPartListWeb.Controllers
             //}
         }
         [HttpPost]
-        public async Task<ActionResult> ChangePassword(string CEmployee_ID, string CNewPassword)
+        public async Task<ActionResult> ChangePassword(string CEmployee_ID, string CNewPassword, int proj)
         {
             var data = await _user.GetAllusers();
             int GetUserID = data.SingleOrDefault(res => res.Employee_ID == CEmployee_ID).User_ID;
@@ -85,13 +85,29 @@ namespace ProgramPartListWeb.Controllers
             var obj = new ChangePassModel
             {
                 User_ID = GetUserID,
-                Project_ID = 9,
+                Project_ID = proj,
                 Password = PasswordHasher.Hashpassword(CNewPassword)
             };
 
             bool result = await _user.Changepassword(obj);
             if (!result) return JsonValidationError();
             return JsonCreated(null, "Change Password Successfully");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ChangePasswordV2(int User_ID, string CNewPassword, int proj)
+        {
+
+            var obj = new ChangePassModel
+            {
+                User_ID = User_ID,
+                Project_ID = proj,
+                Password = PasswordHasher.Hashpassword(CNewPassword)
+            };
+
+            bool result = await _user.Changepassword(obj);
+            if (!result) return JsonValidationError();
+            return JsonCreated(obj, "Change Password Successfully");
         }
         [HttpPost]
         public async Task<ActionResult> CheckMatchPassword(int ID, string password)

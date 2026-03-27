@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.EnterpriseServices;
 
 namespace ProgramPartListWeb.Models
 {

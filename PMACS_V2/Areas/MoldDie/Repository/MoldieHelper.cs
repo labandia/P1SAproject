@@ -499,25 +499,36 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                     WHERE PartNo = @PartNo
                       AND DateInput >= @DateInput
                       AND DateInput < DATEADD(day,1,@DateInput)";
+
+                    await SqlDataAccess.ExecuteAsync(updateSql, new
+                    {
+                        model.CycleShot,
+                        PartNo = part,
+                        model.DieSerial,
+                        model.DateInput
+                    });
                 }
                 else
                 {
                     Debug.WriteLine("The UPDATE ONLY ");
 
                     updateSql = @"UPDATE DieMold_Daily
-                       SET CycleShot = @CycleShot
+                       SET CycleShot = @CycleShot,
+                           DateInput = @DateInput
                        WHERE PartNo = @PartNo
-                       AND DateInput >= @DateInput
-                       AND DateInput < DATEADD(day,1,@DateInput)";
+                       AND DateInput =@CurrentDate";
+
+                    await SqlDataAccess.ExecuteAsync(updateSql, new
+                    {
+                        model.CycleShot,
+                        PartNo = part,
+                        model.DieSerial,
+                        model.DateInput,
+                        model.CurrentDate
+                    });
                 }
 
-                await SqlDataAccess.ExecuteAsync(updateSql, new
-                {
-                    model.CycleShot,
-                    PartNo = part,
-                    model.DieSerial,
-                    model.DateInput
-                });
+              
                 //string sql = @"UPDATE DieMold_Daily
                 //   SET CycleShot = @CycleShot
                 //   WHERE PartNo = @PartNo

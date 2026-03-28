@@ -124,7 +124,8 @@
 <script type="module" asp-append-version="true">
     import {
         getMethod,
-        postMethod
+        postMethod,
+        getMethodPublic
     } from  '@Url.Content("~/Scripts/modules/index.js")';
 
     class Logincontroller{
@@ -187,7 +188,7 @@
         /* ================= LOAD DATA ================= */
 
         async loadUsers() {
-            const res = await getMethod('/PMACS/GetFullnameList', {});
+            const res = await getMethodPublic('/PMACS/GetFullnameList', {});
             if (res?.Success) {
                 this.loadData = res.Data.map(x => x.Fullname);
             }
@@ -265,9 +266,12 @@
             //if (!this.validateForm()) return;
 
             const data = Object.fromEntries(formData);
+            formData.append('proj', 2);
+
             this.submitBtn.innerHTML = `<div class='buttonloading'></div>`;
 
-            const res = await postMethod('/Auth/Authenticate', data);
+            const res = await postMethodPublic('/Auth/Authenticate', formData);
+
             if (res?.Success) {
                 this.loginSuccess(res);
             } else {

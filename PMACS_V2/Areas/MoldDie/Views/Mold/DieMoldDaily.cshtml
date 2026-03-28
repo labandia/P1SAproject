@@ -596,7 +596,7 @@
         e.preventDefault();
          let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
-        console.log(data);
+
          const findData = state.getData.filter(res =>
              normalizeMMDDYY(res.DateInput) === data.DateInput
          );
@@ -690,6 +690,7 @@
     async function searchByPart() {
 
         //DOM.searchDie.val("");
+        DOM.validDie.hide();
         const part = DOM.searchInput.val().trim();
         const process = DOM.processSelect.val();
 

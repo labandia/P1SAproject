@@ -50,7 +50,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             string partinsertquery = $@"UPDATE Hydro_InventoryParts 
                                         SET  PartName =@PartName, CategoryID =@CategoryID, Supplier =@Supplier,
                                             ImageParts =@ImageParts
-                                        WHERE PartNo =@PartNo";
+                                        WHERE PartID =@PartID";
 
             Debug.WriteLine($@"Part-No : {p.PartNo} - Part Name : {p.PartName}");
             var insertparams = new
@@ -59,7 +59,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 PartName = p.PartName,
                 CategoryID = p.CategoryID,
                 Supplier = p.Supplier,
-                ImageParts = p.ImageParts
+                ImageParts = p.ImageParts,
+                p.PartID
             };
 
             

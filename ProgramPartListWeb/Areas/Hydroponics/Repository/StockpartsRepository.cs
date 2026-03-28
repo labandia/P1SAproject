@@ -50,7 +50,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 	                                s.LastUpdated
                                 FROM Hydro_InventoryParts p
                                 LEFT JOIN Hydro_CategoryParts c ON c.CategoryID = p.CategoryID
-                                LEFT JOIN Hydro_Stocks s ON s.PartNo = p.PartNo";
+                                LEFT JOIN Hydro_Stocks s ON s.PartID = p.PartID";
 
             return SqlDataAccess.GetDataAsync<StockPartsModel>(strquery);
         }
@@ -71,7 +71,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             // 1. Updates the Stocks Quantity 
             return await SqlDataAccess.ExecuteAsync($@"UPDATE Hydro_Stocks 
                                                 SET CurrentQty =@CurrentQty 
-                                                WHERE  PartNo =@PartNo",
+                                                WHERE  PartID =@PartID",
                                              new
                                              {
                                                  PartNo = partno,

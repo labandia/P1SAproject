@@ -78,7 +78,7 @@ body {
     transition: .5s ease-in-out;
     background: hsl(175, 77%, 26%);
     border-radius: .2em;
-    padding: 0.6rem 1.25rem;
+    padding: 0.3rem 1rem;
     color: #fff;
 }
 

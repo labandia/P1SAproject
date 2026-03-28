@@ -12,10 +12,6 @@
             <div class="line"></div>
         </div>
 
-
-
-
-
     </div>
 
     <div class="flex_align">
@@ -330,7 +326,8 @@
                                     <label>Part Number </label> <br />
                                     <input type="hidden" name="ExistingImageParts" id="ExistingImageParts" />
                                     <input type="hidden" name="TempPartno" id="TempPartno" />
-                                    <input type="text" name="EditPartNo" id="EditPartNo" placeholder="Enter Part number " readonly />
+                                    <input type="hidden" name="PartID" id="EditPartID" />
+                                    <input type="text" name="EditPartNo" id="EditPartNo" placeholder="Enter Part number "  />
                                 </div>
                                 <div class="form_group col-6 col-sm-6">
                                     <label for="">Part Name  </label>
@@ -499,7 +496,7 @@
 
             if (result && result.Success) {
                 Inventlist = result.data;
-
+                console.log(Inventlist);
                 const lowStockCount = Inventlist.filter(item => item.Status === "Restock").length;
                 const OutStockCount = Inventlist.filter(item => item.Status === "Out of stocks").length;
 
@@ -689,7 +686,7 @@
                     ? `/Hydro/DisplaytheImage?filename=${encodeURIComponent(filterdata.ImageParts)}`
                      : '@Url.Content("~/Content/Images/no-image.png")';
 
-
+                $("#EditPartID").val(filterdata.PartID);
                 $("#TempPartno").val(filterdata.PartNo);
                 $("#EditPartNo").val(filterdata.PartNo);
                 $("#EditPartName").val(filterdata.PartName);
@@ -812,18 +809,18 @@
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
         let res = await postMethod('@Url.Action("EditInventoryParts", "Hydro")', formData);
-        if (res && res.Success) {
-            Swal.fire({
-                title: "Success",
-                text: res.Message,
-                icon: "success",
-                showConfirmButton: false,
-                timer: 1500
-            }).then(() => {
-                InventoryTable();
-                $("#EditModal").modal('hide');
-            });
-        }
+      if (res && res.Success) {
+          Swal.fire({
+              title: "Success",
+              text: res.Message,
+              icon: "success",
+              showConfirmButton: false,
+              timer: 1500
+          }).then(() => {
+              InventoryTable();
+              $("#EditModal").modal('hide');
+          });
+      }
 
     });
 
@@ -1059,10 +1056,11 @@
         const quantityInput = document.getElementById('quantity');
 
         const selectedPart = partSelect.options[partSelect.selectedIndex];
-        const partNo = partSelect.value;
+        const PartID = parseInt(partSelect.value);
         const quantity = parseFloat(quantityInput.value);
 
-        if (!partNo || !quantity || quantity <= 0) {
+
+        if (!PartID || !quantity || quantity <= 0) {
             alert('Please select a part and enter a valid quantity');
             return;
         }
@@ -1072,9 +1070,11 @@
 
         // Check if item is already exist
         // Find and get the index of the current data
-        const existingItemIndex = requestItems.findIndex(item => item.partNo === partNo);
-        const unit = Inventlist.find(item => item.PartNo === partNo)?.Unit;
-        const availableStock = Inventlist.find(item => item.PartNo === partNo)?.CurrentQty;
+        const existingItemIndex = requestItems.findIndex(item => item.PartID === parseInt(PartID));
+        const unit = Inventlist.find(item => item.PartID === parseInt(PartID))?.Unit;
+        const PartNo = Inventlist.find(item => item.PartID === parseInt(PartID))?.PartNo;
+        const availableStock = Inventlist.find(item => item.PartID === parseInt(PartID))?.CurrentQty;
+
 
         if (existingItemIndex > -1) {
             // Updates the current push data
@@ -1082,7 +1082,8 @@
         } else {
             // Insert a new data
             requestItems.push({
-                partNo,
+                PartID, // now NUMBER
+                PartNo,
                 partName,
                 quantity,
                 unit,
@@ -1103,13 +1104,13 @@
         requestItems.forEach(item => {
             const row = document.createElement('tr');
             row.innerHTML = `
-         <td>${item.partNo}</td>
+         <td>${item.PartNo}</td>
          <td>${item.partName}</td>
          <td>${item.quantity}</td>
          <td>${item.unit}</td>
          <td>${item.availableStock}</td>
          <td>
-             <button class="btn btn-sm btn-danger" onclick="removeItem('${item.partNo}')">
+             <button class="btn btn-sm btn-danger" onclick="removeItem(${item.PartID})">
                  <i class="fas fa-trash"></i> Remove
              </button>
          </td>
@@ -1118,8 +1119,8 @@
         });
     }
 
-    function removeItem(partNo) {
-        requestItems = requestItems.filter(item => item.partNo !== partNo);
+    function removeItem(ID) {
+        requestItems = requestItems.filter(item => item.PartID !== ID);
         updateItemsTable();
     }
 
@@ -1240,7 +1241,7 @@
 
 
         $.each(Inventlist, function (index, row) {
-            $("#partSelect").append("<option value='" + row.PartNo + "'>" + row.PartName + "</option>");
+            $("#partSelect").append("<option value='" + row.PartID + "'>" + row.PartName + "</option>");
         });
         requestItems = [];
         $("#AddRequestModal").modal("show");

@@ -63,7 +63,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                         ROUND(SUM((c.UnitCost_PHP / 58) * c.QuantityPerChamber), 0) AS USDTotal,
                                         ROUND(SUM(c.QuantityPerChamber * c.UnitCost_PHP), 0) AS PHPTotal
                                     FROM Hydro_ChamberParts c
-                                    INNER JOIN Hydro_InventoryParts i ON c.PartNo = i.PartNo
+                                    INNER JOIN Hydro_InventoryParts i ON c.PartID = i.PartID   
                                     INNER JOIN Hydro_CategoryParts cp ON cp.CategoryID = i.CategoryID
                                     INNER JOIN Hydro_ChamberMasterlist cm ON cm.ChamberID = c.ChamberID
                                     GROUP BY c.ChamberID
@@ -144,9 +144,9 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 	                            o.Status as MaterialStatus,
                                 i.ImageParts
                             FROM Hydro_OrderDetails o
-                            INNER JOIN Hydro_InventoryParts i ON o.PartNo = i.PartNo
+                            INNER JOIN Hydro_InventoryParts i ON o.PartID = i.PartID
                             INNER JOIN Hydro_CategoryParts c ON i.CategoryID = c.CategoryID
-                            INNER JOIN Hydro_Stocks s ON s.PartNo = o.PartNo
+                            INNER JOIN Hydro_Stocks s ON s.PartID = o.PartID
                             WHERE o.OrderID = @OrderID";
             return SqlDataAccess.GetDataAsync<RequestChambersDetailsModel>(strsql, new { OrderID = order });
         }
@@ -162,10 +162,10 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                 (SELECT COUNT(*) FROM Hydro_ChamberParts p
 	                            WHERE p.ChamberID = cm.ChamberID) as TotalParts
                             FROM Hydro_ChamberParts c
-                            INNER JOIN Hydro_InventoryParts i ON c.PartNo = i.PartNo
+                            INNER JOIN Hydro_InventoryParts i ON c.PartID = i.PartID
                             INNER JOIN Hydro_CategoryParts cp ON cp.CategoryID = i.CategoryID
                             INNER JOIN Hydro_ChamberMasterlist cm ON cm.ChamberID = c.ChamberID
-                            LEFT JOIN Hydro_Stocks s ON c.PartNo = s.PartNo
+                            LEFT JOIN Hydro_Stocks s ON c.PartID = s.PartID
                             GROUP BY cm.ChamberID, cm.ChamberID, cm.ChamberName";
             return await SqlDataAccess.GetDataAsync<ChamberslistModel>(strsql, null);
         }
@@ -180,7 +180,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                  MIN(FLOOR(ISNULL(s.CurrentQty,0) / NULLIF(cp.QuantityPerChamber,0))) AS MaxBuildableChambers
                             FROM Hydro_ChamberParts cp
                             INNER JOIN Hydro_ChamberMasterlist c ON cp.ChamberID = c.ChamberID
-                            LEFT JOIN Hydro_Stocks s ON cp.PartNo = s.PartNo
+                            LEFT JOIN Hydro_Stocks s ON cp.PartID = s.PartID
                             WHERE cp.ChamberID = @ChamberID
                             GROUP BY cp.ChamberID, c.ChamberName;";
             var result = await SqlDataAccess.GetDataAsync<ChambersProduce>(strsql, new { ChamberID = chamber });
@@ -194,7 +194,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                 ROUND(SUM(i.Unit_Price * c.QuantityPerChamber), 0) AS USDTotal,
                                 ROUND(SUM(c.QuantityPerChamber * (i.Unit_Price * 58)), 0) AS PHPTotal
                             FROM Hydro_ChamberParts c
-                            INNER JOIN Hydro_InventoryParts i ON c.PartNo = i.PartNo
+                            INNER JOIN Hydro_InventoryParts i ON c.PartID = i.PartID
                             INNER JOIN Hydro_CategoryParts cp ON cp.CategoryID = i.CategoryID
                             INNER JOIN Hydro_ChamberMasterlist cm ON cm.ChamberID = c.ChamberID
                             WHERE c.ChamberID = @ChamberID;";
@@ -205,6 +205,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         public Task<List<ChamberModel>> GetChambersData(int chamber)
         {
             string strsql = $@"SELECT
+                                i.PartID,
                                 c.ChamberPartID,
 	                            c.ChamberID,
 	                            cm.ChamberName,
@@ -220,7 +221,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                 i.LeadTime, 
 								i.MOQ
                             FROM Hydro_ChamberParts c
-                            INNER JOIN Hydro_InventoryParts i ON c.PartNo = i.PartNo
+                            INNER JOIN Hydro_InventoryParts i ON c.PartID = i.PartID
                             INNER JOIN Hydro_CategoryParts cp ON cp.CategoryID = i.CategoryID
                             INNER JOIN Hydro_ChamberMasterlist cm ON cm.ChamberID = c.ChamberID
                             WHERE c.ChamberID =@ChamberID";
@@ -283,8 +284,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
 
                     // Get current stock
-                    string stockQuery = "SELECT CurrentQty FROM Hydro_Stocks WHERE PartNo = @PartNo";
-                    double currentQty = await SqlDataAccess.ExecuteScalarAsync(stockQuery, new { PartNo = cham.PartNo });
+                    string stockQuery = "SELECT CurrentQty FROM Hydro_Stocks WHERE PartID = @PartID";
+                    double currentQty = await SqlDataAccess.ExecuteScalarAsync(stockQuery, new { PartID = cham.PartID });
 
                     // Determine how much can be used
                     double qtyToUse = Math.Min(currentQty, requiredQty);
@@ -295,13 +296,13 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                         string usedStocksQuery = @"
                             UPDATE Hydro_Stocks
                             SET CurrentQty = CurrentQty - @UpdatedQty
-                            WHERE PartNo = @PartNo
+                            WHERE PartID = @PartID
                               AND CurrentQty >= @UpdatedQty";
 
                         await SqlDataAccess.ExecuteAsync(usedStocksQuery, new
                         {
                             UpdatedQty = requiredQty,
-                            PartNo = cham.PartNo
+                            PartID = cham.PartID
                         });
 
                     }
@@ -311,13 +312,13 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
                     // 6️⃣ INSERT DETAILS
                     string insertDetailSql = @"
-                            INSERT INTO Hydro_OrderDetails(OrderID, PartNo, QtyUsed, RequiredQty)
-                            VALUES (@OrderID, @PartNo, @QtyUsed, @RequiredQty)";
+                            INSERT INTO Hydro_OrderDetails(OrderID, PartID, QtyUsed, RequiredQty)
+                            VALUES (@OrderID, @PartID, @QtyUsed, @RequiredQty)";
 
                     await SqlDataAccess.ExecuteAsync(insertDetailSql, new
                     {
                         OrderID = OrderID,
-                        PartNo = cham.PartNo,
+                        PartID = cham.PartID,
                         QtyUsed = qtyToUse,
                         RequiredQty = requiredQty
                     });
@@ -402,7 +403,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             await SqlDataAccess.ExecuteAsync($@"UPDATE s
                         SET s.CurrentQty = s.CurrentQty + d.QtyUsed
                         FROM Hydro_Stocks s
-                        INNER JOIN Hydro_OrderDetails d ON s.PartNo = d.PartNo
+                        INNER JOIN Hydro_OrderDetails d ON s.PartID = d.PartID
                         WHERE d.OrderID = @OrderID;", new { OrderID });
 
             // 3. Delete details FIRST

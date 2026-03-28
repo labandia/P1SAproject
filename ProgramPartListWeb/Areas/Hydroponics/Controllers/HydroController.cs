@@ -372,6 +372,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
             var editmodel = new AddInventoryModel
             {
+                PartID = Convert.ToInt32(Request.Form["PartID"]),
                 PartNo = Request.Form["EditPartNo"],
                 PartName = Request.Form["EditPartName"],
                 CategoryID = Convert.ToInt32(Request.Form["EditCategoryID"]),

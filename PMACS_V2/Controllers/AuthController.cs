@@ -21,8 +21,9 @@ namespace PMACS_V2.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> Authenticate(string username, string password, int proj = 1)
+        public async Task<ActionResult> Authenticate(string username, string password, int proj)
         {
+            Debug.WriteLine($@"Username : {username} - Password : {password} - Project : {proj}");
             var user = (await _auth.GetByUsername(username.Trim(), proj)).FirstOrDefault();
             var results = new DataMessageResponse<object> { };
 

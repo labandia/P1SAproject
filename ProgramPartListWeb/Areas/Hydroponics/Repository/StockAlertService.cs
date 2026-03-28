@@ -65,7 +65,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                     p.ImageParts
                                 FROM Hydro_InventoryParts p
                                 LEFT JOIN Hydro_CategoryParts c ON c.CategoryID = p.CategoryID
-                                LEFT JOIN Hydro_Stocks s ON s.PartNo = p.PartNo
+                                LEFT JOIN Hydro_Stocks s ON s.PartID = p.PartID
 								WHERE s.Status IN ('Restock', 'Out of stocks')
                                ORDER BY 
 								CASE s.Status
@@ -232,7 +232,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 	                        a.Status
                         FROM Hydro_StockAlerts a
                         INNER JOIN Hydro_Stocks s ON s.StockID = a.StockID
-                        INNER JOIN Hydro_InventoryParts i ON i.PartNo = s.PartNo
+                        INNER JOIN Hydro_InventoryParts i ON i.PartID = s.PartID
                         WHERE a.IsRead = 0";
 
             return SqlDataAccess.GetDataAsync<StockAlert>(sql, null);
@@ -479,7 +479,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 	                                                                        d.WarningLevel, 
 	                                                                        d.Status
                                                                         FROM Hyrdo_StockNotificationDetails d
-                                                                        INNER JOIN Hydro_InventoryParts i ON i.PartNo = d.PartNo
+                                                                        INNER JOIN Hydro_InventoryParts i ON i.PartID = d.PartID
                                                                         WHERE d.NotificationId = @NotificationId;", new { NotificationId = Id });
         }
 

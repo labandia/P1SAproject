@@ -11,12 +11,18 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
     {
         public async Task<bool> AddInventory(AddInventoryModel model)
         {
-            bool result = false;
-            // Step 1: Insert into Hydro_InventoryParts table
-            string insertPartQuery = $@"INSERT INTO Hydro_InventoryParts 
-                                        (PartNo, PartName, CategoryID, Supplier, Unit, ImageParts, Unit_Price) 
-                                        VALUES 
-                                        (@PartNo, @PartName, @CategoryID, @Supplier, @Unit, @ImageParts, @Unit_Price)";
+            // =========================
+            // STEP 1: Insert Part
+            // =========================
+            string insertPartQuery = @"
+                    INSERT INTO Hydro_InventoryParts 
+                        (PartNo, PartName, CategoryID, Supplier, Unit, ImageParts, Unit_Price) 
+                    VALUES 
+                        (@PartNo, @PartName, @CategoryID, @Supplier, @Unit, @ImageParts, @Unit_Price);
+
+                    SELECT CAST(SCOPE_IDENTITY() AS INT);
+                ";
+
             var partParaers = new
             {
                 model.PartNo,
@@ -30,13 +36,22 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
 
 
-            // Step 2: Insert into Hydro_Stocks table
+            int partID = await SqlDataAccess.ExecuteScalarAsync(insertPartQuery, partParaers);
+
+            if (partID <= 0)
+            {
+                return false;
+            }
+            // =========================
+            // STEP 2: Insert Stock
+            // =========================
             string insertStockQuery = $@"INSERT INTO Hydro_Stocks 
-                                         (PartNo, CurrentQty, ReorderLevel, WarningLevel, Unit) 
+                                         (PartID, PartNo, CurrentQty, ReorderLevel, WarningLevel, Unit) 
                                          VALUES 
-                                         (@PartNo, @CurrentQty, @ReorderLevel, @WarningLevel, @Unit)";
+                                         (@PartID, @PartNo, @CurrentQty, @ReorderLevel, @WarningLevel, @Unit)";
             var stockPramers = new
             {
+                PartID = partID,
                 model.PartNo,
                 model.CurrentQty,
                 model.ReorderLevel,
@@ -44,15 +59,51 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 model.Unit
             };
 
-            bool parstResult = await SqlDataAccess.ExecuteAsync(
-                insertPartQuery, partParaers, System.Data.CommandType.Text);
-
-            if (!parstResult) return false;
-            
-            result = await SqlDataAccess.ExecuteAsync(
+            return await SqlDataAccess.ExecuteAsync(
                 insertStockQuery, stockPramers, System.Data.CommandType.Text);
 
-            return result;
+            //bool result = false;
+            //// Step 1: Insert into Hydro_InventoryParts table
+            //string insertPartQuery = $@"INSERT INTO Hydro_InventoryParts 
+            //                            (PartNo, PartName, CategoryID, Supplier, Unit, ImageParts, Unit_Price) 
+            //                            VALUES 
+            //                            (@PartNo, @PartName, @CategoryID, @Supplier, @Unit, @ImageParts, @Unit_Price)";
+            //var partParaers = new
+            //{
+            //    model.PartNo,
+            //    model.PartName,
+            //    model.CategoryID,
+            //    model.Supplier,
+            //    model.Unit,
+            //    model.ImageParts,
+            //    model.Unit_Price
+            //};
+
+
+
+            //// Step 2: Insert into Hydro_Stocks table
+            //string insertStockQuery = $@"INSERT INTO Hydro_Stocks 
+            //                             (PartNo, CurrentQty, ReorderLevel, WarningLevel, Unit) 
+            //                             VALUES 
+            //                             (@PartNo, @CurrentQty, @ReorderLevel, @WarningLevel, @Unit)";
+            //var stockPramers = new
+            //{
+            //    model.PartNo,
+            //    model.CurrentQty,
+            //    model.ReorderLevel,
+            //    model.WarningLevel,
+            //    model.Unit
+            //};
+
+            //bool parstResult = await SqlDataAccess.ExecuteAsync(
+            //    insertPartQuery, partParaers, System.Data.CommandType.Text);
+
+            //if (!parstResult) return false;
+
+            //result = await SqlDataAccess.ExecuteAsync(
+            //    insertStockQuery, stockPramers, System.Data.CommandType.Text);
+
+            //return result;
         }
 
         public async Task<bool> AddStockItem(List<AddStocksItem> stocks)
@@ -64,11 +115,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 // Step 1:  Update Hydro_Stocks
                 string strsql = $@"UPDATE Hydro_Stocks 
                               SET CurrentQty = CurrentQty + @CurrentQty 
-                               WHERE  PartNo =@PartNo";
+                               WHERE  PartID =@PartID";
 
                 await SqlDataAccess.ExecuteAsync(strsql, new
                 {
-                    PartNo = item.PartNo,
+                    PartID = item.PartID,
                     CurrentQty = item.quantity
                 }, System.Data.CommandType.Text);
 
@@ -116,13 +167,12 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
         public async Task<bool> EditInventory(AddInventoryModel model, string partno)
         {
-            bool result = false;    
             // Step 1: Update Hydro_InventoryParts table
             var updateQuery = $@"UPDATE Hydro_InventoryParts SET
                                  PartNo =@PartNo, PartName =@PartName, CategoryID =@CategoryID, 
                                  Supplier =@Supplier, Unit =@Unit, ImageParts =@ImageParts,
                                  Unit_Price =@Unit_Price 
-                                 WHERE PartNo =@TempPart;";
+                                 WHERE PartID =@PartID;";
 
             var parameters = new
             {
@@ -133,14 +183,14 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 model.Unit,
                 model.ImageParts,
                 model.Unit_Price,
-                TempPart = partno
+                model.PartID
             };
 
             // Step 2: Update Hydro_Stocks table
             var updateStockQuery = $@"UPDATE Hydro_Stocks SET
                                  PartNo =@PartNo, ReorderLevel =@ReorderLevel, WarningLevel =@WarningLevel, 
                                  Unit =@Unit
-                                 WHERE PartNo =@TempPart;";
+                                 WHERE PartID =@PartID;";
 
             var stocksparams = new
             {
@@ -148,7 +198,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 model.ReorderLevel,
                 model.WarningLevel,
                 model.Unit,
-                TempPart = partno
+                model.PartID
             };
 
             bool parstResult = await SqlDataAccess.ExecuteAsync(
@@ -156,9 +206,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
             if (!parstResult) return false;
 
-            result = await SqlDataAccess.ExecuteAsync(updateStockQuery, stocksparams, System.Data.CommandType.Text);
-
-            return result;
+            return await SqlDataAccess.ExecuteAsync(updateStockQuery, stocksparams, System.Data.CommandType.Text);
         }
 
         public async Task<IEnumerable<StockAddDetailsModel>> GetAddStocksDetails(int ID)

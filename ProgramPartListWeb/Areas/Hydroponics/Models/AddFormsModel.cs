@@ -9,6 +9,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
 {
     public class AddInventoryModel
     {
+        public int PartID { get; set; }
         public string PartNo { get; set; }
         public string PartName { get; set; }    
         public int CategoryID { get; set; }
@@ -32,6 +33,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
 
     public class AddStocksItem
     {
+        public int PartID { get; set; } 
         public string PartNo { get; set; }
         public string PartName { get; set; }
         public double quantity { get; set; }

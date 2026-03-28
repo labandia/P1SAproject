@@ -101,7 +101,7 @@ namespace PracticeC_
             //DateTime now = DateTime.Now;
 
             //TimeSpan ts = launchDate - now;
-            //samplehash();
+            samplehash();
             //Console.WriteLine("TimeSpan: {0}", ts.ToString());
             //string machineName = Environment.MachineName.ToLower();
             //Console.WriteLine($"Original: {machineName}");
@@ -285,7 +285,7 @@ namespace PracticeC_
             }
 
             byte[] hash = KeyDerivation.Pbkdf2(
-                password: "issuer2023",
+                password: "sdp1234a*",
                 salt: salt,
                 prf: KeyDerivationPrf.HMACSHA256,
                 iterationCount: 10000,

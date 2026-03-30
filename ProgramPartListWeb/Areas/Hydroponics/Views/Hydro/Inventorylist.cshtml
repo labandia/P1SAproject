@@ -496,7 +496,6 @@
 
             if (result && result.Success) {
                 Inventlist = result.data;
-                console.log(Inventlist);
                 const lowStockCount = Inventlist.filter(item => item.Status === "Restock").length;
                 const OutStockCount = Inventlist.filter(item => item.Status === "Out of stocks").length;
 

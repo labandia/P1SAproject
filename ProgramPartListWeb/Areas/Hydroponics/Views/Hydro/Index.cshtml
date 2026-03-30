@@ -222,6 +222,8 @@
 
     class LoginController {
         constructor() {
+            this.isSubmitting = false;
+
             this.loader = document.getElementById('loader');
             this.logform = document.getElementById('logincredentials');
             this.regform = document.getElementById('addnewform');
@@ -277,8 +279,11 @@
 
         async handleLogin(e) {
             e.preventDefault();
-            console.clear();
 
+            if (this.isSubmitting) return;
+            this.isSubmitting = true;
+
+            console.clear();
             this.loader.classList.add('show');
 
             const formData = new FormData(this.logform);
@@ -317,23 +322,24 @@
                 // Optional loader delay animation
                 setTimeout(() => {
                     window.location.href = "/Hydroponics/Hydro/Inventorylist";
-                }, 1200);
+                }, 1000);
 
-           
+
             } catch (error) {
                 setTimeout(() => {
                     Swal.fire({
                         icon: "error",
                         title: "Authentication failed",
                         text: "Username and password is incorrect",
-                        timer: 1500,
-                        showConfirmButton: false,
-                        allowOutsideClick: false,   // prevent outside click
-                        allowEscapeKey: false,      // optional: prevent ESC key close
-                        allowEnterKey: false        // optional: prevent Enter key close
+                        timer: 1500, allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
                     });
                     this.loader.classList.remove('show');
                 }, 1000);
+            } finally {
+                this.isSubmitting = false;
             }
         }
 

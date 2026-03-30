@@ -167,6 +167,7 @@
 <script src="~/Scripts/bootstrap.min.js"></script>
 <script src="~/Scripts/Popper.min.js"></script>
 <script type="text/javascript">
+    let isSubmitting = false;
     const logform = document.getElementById('logincredentials');
     const regform = document.getElementById('addnewform');
     const changeform = document.getElementById('changenewform');
@@ -187,8 +188,13 @@
 
     logform.addEventListener('submit', async (e) => {
         e.preventDefault();
-        console.clear();
         const savebtn = document.querySelector("#loginbtn");
+        // 🚫 Prevent duplicate submit
+        if (isSubmitting) return;
+        isSubmitting = true;
+
+        console.clear();
+        savebtn.disabled = true;
         savebtn.innerHTML = " <div class='buttonloading'></div>";
 
         let formData = new FormData(e.target);
@@ -199,12 +205,12 @@
         try {
             let res = await postMethodPublic('/Auth/Authenticate', data);
             if (!res?.Success) {
-                 Swal.fire({
-                        icon: "error",
-                        text: res.Message,
-                        timer: 1500,
-                        showConfirmButton: false
-                 });
+                Swal.fire({
+                    icon: "error",
+                    text: res.Message,
+                    timer: 1500,
+                    showConfirmButton: false
+                });
 
                 savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
 
@@ -212,11 +218,15 @@
             }
 
             Swal.fire({
-                    title: "Success",
-                    text: res.Message,
-                    icon: "success",
-                    showConfirmButton: false,
-                    timer: 1500
+                title: "Success",
+                text: res.Message,
+                icon: "success",
+                showConfirmButton: false,
+                timer: 2000,
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
             }).then(() => {
                 const user = res.data;
 
@@ -240,9 +250,8 @@
                 );
 
                 // Optional loader delay animation
-                setTimeout(() => {
-                    window.location.href = "/PC/Patrol/Dashboard";
-                }, 1200);
+                window.location.href = "/PC/Patrol/Dashboard";
+
             });
         } catch (error) {
             console.error('Login error:', error);
@@ -255,8 +264,11 @@
 
             savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i>  Login</span>"
 
+        } finally {
+            isSubmitting = false;
+            savebtn.disabled = false;
+            savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-solid fa-right-to-bracket'></i> Login</span>";
         }
-
     });
     regform.addEventListener('submit', async (e) => {
         e.preventDefault();

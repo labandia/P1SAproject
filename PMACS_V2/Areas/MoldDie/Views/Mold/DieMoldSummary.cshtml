@@ -38,54 +38,53 @@
 
 
     <div class="SummaryMainDisplay" id="OverallDisplay">
-        <div class="tablecontent">
-            <div class="MoldiefooterContainer flex_space" id="Summaryfooter">
+        <div class="MoldiefooterContainer flex_space" id="Summaryfooter">
+            <div class="flex_align">
                 <div class="searchinputContainer">
                     <i class="fa-solid fa-magnifying-glass"></i>
                     <input type="text" placeholder="Search here ... " id="searchbox" />
                     <div class="line"></div>
                 </div>
 
-                <div id="SummaryPaginationContainer" class="paginationPartlocal"></div>
+                <div class="flex_align">
+                    <div class="statusbox dieMax"></div>
+                    <small>Max Die life - </small>
+                    <strong id="maxcount">0</strong>
+                    <div class="statusbox dieMonitor"></div>
+                    <small>For Monitoring -</small>
+                    <strong id="Monicount">0</strong>
+                    <div class="statusbox dieEnd"></div>
+                    <small>End of life - </small>
+                    <strong id="Endcount">0</strong>
+                </div>
             </div>
 
 
-            <div class="DieMainTable" id="DieWrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Part No </th>
-                            <th>Dimension/ Quality</th>
-                            <th style="width: 10%;">Die number</th>
-                            <th style="width: 10%;">Die Serial No.</th>
-                            <th>2011-2015</th>
-                            <th>Shot Count </th>
-                            <th>Status</th>
-                            @*<th>Renarks</th>*@
-                        </tr>
-                    </thead>
-                    <tbody id="SummarylistData">
-                    </tbody>
-                </table>
-            </div>
+
+            <div id="SummaryPaginationContainer" class="paginationPartlocal"></div>
         </div>
 
-        <div class="TableCharts">
-            @*<h1>Charts herer</h1>*@
-            <div class="DieMainTable">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Category </th>
-                            <th>No of Die </th>
-                        </tr>
-                    </thead>
-                    <tbody id="FinalSummaryData">
 
-                    </tbody>
-                </table>
-            </div>
+        <div class="DieMainTable" id="DieWrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 10%; text-align: left; padding-left: 1.5em;">Part No </th>
+                        <th>Dimension/ Quality</th>
+                        <th style="width: 10%;">Die number</th>
+                        <th style="width: 10%;">Die Serial No.</th>
+                        <th>2011-2015</th>
+                        <th>Shot Count </th>
+                        <th>Status</th>
+                        @*<th>Renarks</th>*@
+                    </tr>
+                </thead>
+                <tbody id="SummarylistData">
+                </tbody>
+            </table>
         </div>
+
+
 
     </div>
 
@@ -189,7 +188,6 @@
         SummaryData = [];
         FinalSummaryData = [];
         $("#SummarylistData").empty();
-        $("#FinalSummaryData").empty();
         // Loads the year First
         await GetMoldieYears();
 
@@ -214,21 +212,21 @@
 
                          SummaryData = res.Data.FinalSummary;
                          FinalSummaryData = res.Data.MoldDieSummary;
+                         console.log(FinalSummaryData);
                          displaySummaryPagination(SummaryData, 'SummarylistData', 'SummaryPaginationContainer', 100, 5);
 
                          $.each(FinalSummaryData, function (index, row) {
                              let remarkColor = "";
                              if (row.Category === "For Monitoring") {
+                                 $("#Monicount").text(row.MoldDie);
                                  remarkColor = "color: #054e92;";
                              } else if (row.Category === "End of life") {
                                  remarkColor = "color: #a81818;";
+                                 $("#Endcount").text(row.MoldDie);
+                             } else {
+                                 $("#maxcount").text(row.MoldDie);
                              }
-
-                             var setdata = `<tr class= 'row_${index}'>
-                                                   <td style='text-align: left; padding: 1em; font-size: .8rem;  font-weight: 600; ${remarkColor}'>${row.Category}</td>
-                                                   <td style='text-align: center; font-weight: 700;'>${row.MoldDie}</td>
-                                              </tr>`;
-                             $("#FinalSummaryData").append(setdata);
+                                                  
                          });
                      } else {
                          const loadData = `<tr>

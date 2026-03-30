@@ -14,7 +14,11 @@ namespace ProgramPartListWeb.Controllers
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        protected JsonResult JsonPostError(string message = "An error occurred", int statusCode = 500, string errorCode = null, object extra = null)
+        protected JsonResult JsonPostError(
+            string message = "An error occurred", 
+            int statusCode = 500, 
+            string errorCode = null, 
+            object extra = null)
         {
             Response.StatusCode = statusCode;
             Logger.Error("Error POST Response | Message={0} | StatusCode={1} | Path={2}",
@@ -137,12 +141,6 @@ namespace ProgramPartListWeb.Controllers
         {
             Logger.Warn("Data Not Found | Message={0}", message);
             return JsonError(message, 404);
-        }
-
-        protected ActionResult JsonConflict(string message = "Conflict detected")
-        {
-            //Logger.Warn("Conflict | Message={0}", message);
-            return JsonError(message, 409);
         }
 
         protected ActionResult JsonCreated(object data = null, string message = "Created")

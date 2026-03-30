@@ -50,6 +50,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         public Task<List<StockPartsModel>> GetAllStockAlertsAsync()
         {
             string strsql = $@"SELECT
+                                    p.PartID,
                                     s.StockID,
 	                                p.PartNo, 
 	                                p.PartName, 
@@ -125,13 +126,13 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                     {
 
                         string insertDetails = @"
-                        INSERT INTO Hyrdo_StockNotificationDetails (NotificationId, PartNo, CurrentQty, ReorderLevel, WarningLevel, Status)
-                        VALUES(@NotificationId, @PartNo, @CurrentQty, @ReorderLevel, @WarningLevel, @Status)";
+                        INSERT INTO Hyrdo_StockNotificationDetails (NotificationId, PartID, CurrentQty, ReorderLevel, WarningLevel, Status)
+                        VALUES(@NotificationId, @PartID, @CurrentQty, @ReorderLevel, @WarningLevel, @Status)";
                         var parameter = new
                         {
                             NotificationId = notifiResult,
                             CurrentQty = item.CurrentQty,
-                            PartNo = item.PartNo,
+                            PartID = Convert.ToInt32(item.PartID),
                             ReorderLevel = item.ReorderLevel,
                             WarningLevel = item.WarningLevel,
                             Status = item.Status

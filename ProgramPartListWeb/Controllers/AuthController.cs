@@ -19,12 +19,13 @@ namespace ProgramPartListWeb.Controllers
         [HttpPost]
         public async Task<ActionResult> Authenticate(string username, string password, int proj = 1)
         {
+            // Get the Users Information
             var user = (await _auth.GetByUsername(username.Trim(), proj)).FirstOrDefault();
             var results = new DataMessageResponse<object> { };
 
             // Check If the user Exist
             if (user == null)
-                return JsonPostError("Invalid credentials / Username Doesnt is Exist", 400, "VALIDATION_ERROR");
+                return JsonPostError("Invalid credentials / Username Doesn't is Exist", 400, "VALIDATION_ERROR");
             // Check If the Password is Correct
             if (!PasswordHasher.VerifyPassword(user.Password, password))
                 return JsonPostError("Invalid credentials / password is incorrect", 400, "VALIDATION_ERROR");

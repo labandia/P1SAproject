@@ -240,7 +240,9 @@
             let formdata = new FormData(e.target);
             formdata.append('Partnumber', partText);
             const data = Object.fromEntries(formdata);
-            let res = await postMethodPublic('@Url.Action("SubmitMetalMaskInfo", "MetalMask")', formdata);
+
+            console.log(data);
+            @*let res = await postMethodPublic('@Url.Action("SubmitMetalMaskInfo", "MetalMask")', formdata);
             if (res?.Success) {
                 if (refreshData == 1) {
                     GetMetalMaskTransaction();
@@ -252,7 +254,7 @@
                 $("#BlockText").val("-- N/A --");
                 $("#PartSearch").prop("readonly", false);
                 $("#AddProductModal").modal("hide");
-            }
+            }*@
 
         })
 

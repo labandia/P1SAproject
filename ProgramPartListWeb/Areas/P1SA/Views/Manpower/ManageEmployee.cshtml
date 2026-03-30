@@ -1,0 +1,59 @@
+﻿
+@{
+    ViewBag.Title = "ManageEmployee";
+    Layout = "~/Areas/P1SA/Views/Shared/_ManpowerLayout.cshtml";
+}
+
+<div class="top-bar">
+    <div class="page-title">
+        <h1>Leads overview</h1>
+        <p>Manage and track all prospect interactions</p>
+    </div>
+    <div class="action-buttons">
+        <div class="btn-secondary"><i class="fas fa-download"></i> Export</div>
+        <div class="btn-primary"><i class="fas fa-plus-circle"></i> + Add Leads</div>
+    </div>
+</div>
+
+<!-- FILTERS + GroupBy / Bulk actions row exactly from image description -->
+<div class="filter-section">
+    <div class="search-wrapper">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search by name, email or company..." id="searchInput">
+    </div>
+    <div class="filter-tabs" id="typeFilterGroup">
+        <div class="filter-chip active-filter" data-type="all">Type: All Leads</div>
+        <div class="filter-chip" data-type="Accepted">Accepted</div>
+        <div class="filter-chip" data-type="Rejected">Rejected</div>
+        <div class="filter-chip" data-type="Pending">Pending</div>
+        <div class="filter-chip" data-type="Canceled">Canceled</div>
+    </div>
+    <div class="groupby-bulk">
+        <span><i class="fas fa-layer-group"></i> Group by</span>
+        <span><i class="fas fa-check-double"></i> Bulk action</span>
+        <span><i class="fas fa-table"></i> Customize table</span>
+        <span><i class="fas fa-list-ul"></i> List</span>
+    </div>
+</div>
+
+<!-- LEADS TABLE (exactly from given picture data) -->
+<div class="leads-table-container">
+    <table class="data-table" id="leadsTable">
+        <thead>
+            <tr>
+                <th>Profile</th>
+                <th>Contact</th>
+                <th>Company</th>
+                <th>Status</th>
+                <th>Quick Action</th>
+                <th>Time / Date</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            <!-- Data rows will be injected from JS based on image content -->
+        </tbody>
+    </table>
+</div>
+<div style="margin-top: 20px; font-size:0.7rem; color:#64748b; text-align:right;">
+    <i class="fas fa-sync-alt"></i> Updated realtime · <span id="resultCount">9</span> leads
+</div>

@@ -690,8 +690,6 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         public ActionResult Inventorylist() => View();
         // GET: Hydroponics/RequestPage
         public ActionResult RequestPage() => View();
-        // GET: Hydroponics/RequestPage
-        public ActionResult ChamberDesign() => View();
         // GET: Hydroponics/Inventorylist
         public ActionResult AddStocks() => View();
         // GET: Hydroponics/Orderpage
@@ -726,7 +724,5 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
         public ActionResult InventSummary() => View();
         // GET: Hydroponics/UserManage
         public ActionResult UserManage() => View();
-        // GET: Hydroponics/PartList
-        public ActionResult SampleLayout() => View();
     }
 }

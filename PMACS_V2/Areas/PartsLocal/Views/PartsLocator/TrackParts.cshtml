@@ -11,7 +11,7 @@
         <div class="search-section">
             <div class="search-container">
 
-                <input type="text" id="searchInput" style="border-color: hsl(209, 80%, 50%); box-shadow: 0 0 0 0.1rem rgba(100, 128, 253, 0.25); "  placeholder="Enter part number to search (e.g., 002886060-01)" autocomplete="off">
+                <input type="text" id="searchInput" style="border-color: hsl(209, 80%, 50%); box-shadow: 0 0 0 0.1rem rgba(100, 128, 253, 0.25); " placeholder="Enter part number to search (e.g., 002886060-01)" autocomplete="off">
                 <button id="searchButton"><i class="fa-solid fa-magnifying-glass"></i> Search Parts</button>
                 <button id="clearSearch"><i class="fa-solid fa-xmark"></i> Clear Search</button>
             </div>
@@ -69,7 +69,7 @@
                     <p id="Model">--NA--</p>
                 </div>
             </div>
-           
+
             <div class="ProductDetails__content">
                 <div class="ProductDetails__Text">
                     <span>Quantity :</span>
@@ -187,7 +187,7 @@
                             <div class="ModalWrapper">
                                 <label for="QuantityIN" class="form-label">Enter Quantity:</label>
                                 <input type="number" class="form-control" id="QuantityIN" name="QuantityIN" required>
-                            </div>        
+                            </div>
                         </div>
 
                         <!-- Step 2: Profile Information -->
@@ -222,13 +222,13 @@
                                         </div>
 
                                     </form>
-                                </div> 
+                                </div>
 
-                               
-                            </div>       
 
-                               
-                         </div>
+                            </div>
+
+
+                        </div>
                     </div>
 
                     <div class="stepper-actions">
@@ -285,7 +285,7 @@
                     <div class="stepper-content">
                         <!-- Step 1: Quantity Information -->
                         <div class="stepper-pane active" id="validation-out-step-1">
-                
+
                             <div class="ModalWrapper">
                                 <label for="QuantityOUT" class="form-label">Quantity to Issue:</label>
                                 <input type="number" class="form-control" id="QuantityOUT" name="QuantityOUT" required>
@@ -356,11 +356,11 @@
                                         </div>
                                     </form>
                                 </div>
-        
+
                             </div>
 
                         </div>
-                     </div>
+                    </div>
 
                     <div class="stepper-actions">
                         <div class="step-indicators">
@@ -368,7 +368,7 @@
                             <div class="step-indicator" data-step="2"></div>
                         </div>
                         <div>
-                           
+
 
                             <div class="flex_align">
                                 <button class="btn btn-secondary" id="prevBtnOut" disabled> <i class="fas fa-arrow-left"></i> Previous</button>
@@ -461,7 +461,7 @@
 
     const partlocationStorageList = async () => {
         let res = await GetMethod('@Url.Action("GetStorageData", "PartsLocator")', {});
-  
+
         if (res && res.Success) {
             storageList = res.Data;
             createGrid();
@@ -705,12 +705,8 @@
 
     // Highlight ONLY selected letter
     function highlightBoxOnly(selectedArea) {
-        console.log("HERE");
-        console.log("DDDD : " + selectedArea);
         document.querySelectorAll(".grid-cell").forEach(cell => {
-            console.log("HER2");
             const isActive = cell.getAttribute("data-area") === selectedArea;
-            console.log("IsActive : " + isActive);
             cell.classList.toggle("active", isActive);
 
             // Remove highlighted class when selecting a box
@@ -746,8 +742,54 @@
             //console.log("MATCHING : " + matchedAreas);
             highlightMatchingAreas(matchedAreas);
 
-            // ✅ GREEN VERIFIED HIGHLIGHT
-            //highlightVerifiedArea(matchedAreas);
+            // 🔥 CONDITION HERE
+    if (matchedAreas.length === 1) {
+        // ✅ ONLY ONE LOCATION → AUTO VERIFY
+
+        const firstItem = matchedItems[0];
+
+        referpartnum = firstItem.Partnumber;
+        Arealocation = firstItem.Area.substring(1);
+        previousCount = firstItem.Quantity;
+
+        // ✅ GREEN
+        highlightVerifiedArea(firstItem.Area);
+
+        // ✅ Update UI
+        $("#partText").text(firstItem.Partnumber);
+        $("#Model").text(firstItem.ModelName);
+        $("#Quantity").text(firstItem.Quantity);
+
+        $("#VerifyStats").text("GOOD");
+        $("#VerifyIcon").html('<i class="fa-solid fa-circle-check"></i>');
+        $(".VerifyContainer")
+            .removeClass("verify-bad")
+            .addClass("verify-good");
+
+        $("#OpenOutbtn").prop("disabled", false);
+        $("#OpenInbtn").prop("disabled", false);
+        $("#RequireInput").focus();
+
+    } else {
+           // ❌ MULTIPLE LOCATIONS → DO NOT VERIFY
+
+        referpartnum = null;
+        Arealocation = null;
+        previousCount = null;
+
+        // 🔥 RESET ALL COLORS TO GRAY
+        document.querySelectorAll(".grid-cell").forEach(cell => {
+            cell.classList.remove("verified");
+            cell.classList.remove("active");
+        });
+          $(".VerifyContainer")
+      .removeClass("verify-bad")
+      .removeClass("verify-good");
+  
+        $("#OpenOutbtn").prop("disabled", true);
+        $("#OpenInbtn").prop("disabled", true);
+    }
+
 
             // Show results info
             resultsInfo.textContent = `Found ${matchedItems.length} match(es) for "${searchValue}"`;
@@ -757,7 +799,7 @@
             resultsTitle.textContent = `Matches for Partnumber: ${searchValue}`;
             resultsBody.innerHTML = '';
 
-            
+
 
             matchedItems.forEach(item => {
                 const row = document.createElement('tr');
@@ -770,6 +812,7 @@
             });
 
             resultsSection.style.display = 'block';
+
         } else {
             alert("Partnumber not found!");
         }
@@ -923,9 +966,10 @@
          formData.append("Partnumber", referpartnum);
          formData.append("PreviousQuantity", previousCount);
 
-         const data = Object.fromEntries(formData);
-         let res = await postMethod('@Url.Action("AddShopOrderIn", "PartsLocator")', data);
-
+        const data = Object.fromEntries(formData);
+        console.log(data);
+         let res = await postMethod('@Url.Action("AddShopOrderIn", "PartsLocator")', formData);
+        console.log(res);
          if (res?.Success) {
              Swal.fire({
                  title: "Success",
@@ -982,7 +1026,8 @@
           formData.append("Area", Arealocation);
           formData.append("PreviousQuantity", previousCount);
 
-          let res = await postMethod('@Url.Action("AddShopOrderOut", "PartsLocator")', Object.fromEntries(formData));
+          const data = Object.fromEntries(formData);
+          let res = await postMethod('@Url.Action("AddShopOrderOut", "PartsLocator")', formData);
 
           if (res?.Success) {
               Swal.fire({

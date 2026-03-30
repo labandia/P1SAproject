@@ -327,9 +327,14 @@
 
     /* Verified (correct barcode match) */
     .grid-cell.verified {
-        background-color: #28a745;
-        color: #fff;
-        border: 2px solid #1e7e34;
+        background-color: #2ecc71;
+        border-color: #27ae60;
+        color: white !important;
+        font-weight: bold;
+    }
+    .grid-cell.verified,
+    .grid-cell.verified * {
+        color: white !important;
     }
 
 @keyframes pulse {

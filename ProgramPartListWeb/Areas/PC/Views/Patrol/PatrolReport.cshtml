@@ -4,7 +4,7 @@
     Layout = "~/Areas/PC/Views/Shared/_PatrolLayout.cshtml";
 }
 
-<h1>@ViewBag.ClientPC</h1>
+@*<h1>@ViewBag.ClientPC</h1>*@
 
 <header class="InspectHead flex_space mb-1">
     <div class="flex_align">
@@ -31,7 +31,7 @@
     <table>
         <thead>
             <tr>
-                <th style="text-align: center; padding-left: 1.5em;"><i class="fa-solid fa-file-contract"></i> <span style="margin-left: .5em;">Registration No.</span></th>
+                <th style="text-align: center; "><i class="fa-solid fa-file-contract"></i> <span style="margin-left: .5em;">Registration No.</span></th>
                 <th style="text-align: center; padding-left: 1.5em;"><i class="fa-solid fa-user-secret"></i>  <span style="margin-left: .5em;">Inspector</span> </th>
                 <th><i class="fa-regular fa-user"></i> <span style="margin-left: .5em;">PIC</span></th>
                 <th><i class="fa-regular fa-calendar"></i> <span style="margin-left: .5em;">Date Conducted</span> </th>
@@ -204,7 +204,6 @@
                      <td style='font-weight: 600; text-align: left; padding-left: 1.5em; color: #0c382ce8;' data-cell="Inspector">${rowData.InspectName ?? "N/A"}</td>
                      <td style='text-align: left; padding-left: 1.5em;' data-cell="PIC">
                             <p style='color: #0c382ce8; margin: 0; font-weight: 600;'> ${rowData.PICName ?? "N/A"}</p>
-                            <span >${rowData.SectionName ?? "N/A"}</span>
                      </td>
                      <td data-cell="DateConduct">${rowData.DateConduct ?? "N/A"}</td>
                     <td data-cell="ReportStatus">${Stats}</td>

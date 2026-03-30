@@ -67,21 +67,24 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
             string strquery = $@"SELECT t.RecordID, t.DateInput
-                                      ,t.Shift
-                                      ,t.SMTLine
-                                      ,t.Partnumber, t.AREA, m.Blocks
-                                      ,t.SMT_start, t.SMT_end
-                                      ,t.TotalTime, t.TotalPrintBoard
-                                      ,t.SMT_Operator, t.CleanDate
-                                      ,t.Pattern, t.Frame
-                                      ,t.ReadOne
-                                      ,t.ReadTwo,t.ReadThree
-                                      ,t.ReadFour,t.Result
-                                      ,t.Remarks,t.PIC, t.Status
-                                      ,m.ModelType
-                                  FROM MetalMask_Transaction t 
-                                  INNER JOIN MetalMask_Masterlist m ON t.Partnumber = m.Partnumber
-                                  WHERE t.IsDelete = 0 ";
+                                    ,t.Shift
+                                    ,t.SMTLine
+                                    ,t.Partnumber, t.AREA
+                                    ,t.SMT_start, t.SMT_end
+                                    ,t.TotalTime, t.TotalPrintBoard
+                                    ,t.SMT_Operator, t.CleanDate
+                                    ,t.Pattern, t.Frame
+                                    ,t.ReadOne
+                                    ,t.ReadTwo,t.ReadThree
+                                    ,t.ReadFour,t.Result
+                                    ,t.Remarks,t.PIC, t.Status, 
+	                                (SELECT Blocks FROM MetalMask_Masterlist WHERE Partnumber = t.Partnumber AND AREA = t.AREA) as Blocks,
+	                                m.ModelType
+                                FROM MetalMask_Transaction t  LEFT JOIN MetalMask_Masterlist m
+                                ON m.Partnumber = t.Partnumber
+                                AND m.AREA = t.AREA
+                                WHERE 
+	                                t.IsDelete = 0 ";
 
             // Filter By Status 
             strquery += $@" AND t.Status = @Status";

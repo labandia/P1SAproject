@@ -62,6 +62,7 @@ namespace PMACS_V2.Areas.PartsLocal.Model
         private int _PreviousQuantity;
         private int _Quantity;
         private string _Remarks;
+        private int _TransactionType;
 
         public int TransactionID
         {
@@ -114,6 +115,11 @@ namespace PMACS_V2.Areas.PartsLocal.Model
             get => _Remarks;
             set => _Remarks = value;
         }
+        public int TransactionTypes
+        {
+            get => _TransactionType;
+            set => _TransactionType = value;
+        }
     }
 
     public class ShopOrderOutModel
@@ -134,6 +140,7 @@ namespace PMACS_V2.Areas.PartsLocal.Model
         private string _Status;
         private int _BushType;
         private string _Remarks;
+        private int _TransactionType;
 
         public int TransactionID
         {
@@ -218,6 +225,11 @@ namespace PMACS_V2.Areas.PartsLocal.Model
         {
             get => _Status;
             set => _Status = value;
+        }
+        public int TransactionTypes
+        {
+            get => _TransactionType;
+            set => _TransactionType = value;
         }
     }
 }

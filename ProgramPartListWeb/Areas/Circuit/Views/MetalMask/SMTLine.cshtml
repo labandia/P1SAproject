@@ -511,11 +511,13 @@
         const card = e.target.closest(".Maskcard");
         if (!card) return;
 
+        // Default: disable both first
+
         const id = parseInt(card.dataset.id);
         selectedID = id;
 
-        $("#startbtn").prop("disabled", false);
-        $("#endbtn").prop("disabled", false);
+        $("#startbtn").prop("disabled", true);
+        $("#endbtn").prop("disabled", true);
 
         let filterData = SMTData.find(res => res.RecordID == selectedID);
 
@@ -533,6 +535,8 @@
 
 
             if (filterData.SMT_start === "00:00" && filterData.SMT_end === "00:00" && filterData.TotalTimeHHMM === "00:00") {
+                // NOT STARTED → allow play
+                $("#startbtn").prop("disabled", false);
                 updateOperationStatus(0);
             }
 

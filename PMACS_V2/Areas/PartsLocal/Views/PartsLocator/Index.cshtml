@@ -324,6 +324,8 @@
 
 
 <script type="text/javascript">
+  let isSubmitting = false;  
+ 
   const logform = document.getElementById('logincredentials');
  
 
@@ -332,55 +334,82 @@
       e.preventDefault();
       const savebtn = document.querySelector("#loginbtn");
 
+      // 🚫 Prevent duplicate submit
+      if (isSubmitting) return;
+      isSubmitting = true;
+
+
       savebtn.innerHTML = " <div class='loader'></div>";
 
       let formData = new FormData(e.target);
       formData.append('proj', 11);
       const data = Object.fromEntries(formData);
-      let res = await postMethodPublic('/Auth/Authenticate', data);
 
-      if (res?.Success) {
-          setTimeout(() => {
-              Swal.fire({
+      try {
+          let res = await postMethodPublic('/Auth/Authenticate', data);
+
+          if (res?.Success) {
+              await Swal.fire({
                   title: "Success",
                   text: res.Message,
                   icon: "success",
                   showConfirmButton: false,
-                  timer: 1500
-              }).then(() => {
-                  savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Login</span>"
-                  //localStorage.setItem('tempID', res.Data.userID);
-
-
-                  localStorage.removeItem('activeLinkIndex');
-                  localStorage.setItem('Logout', "/PartsLocal/PartsLocator/Index");
-
-                  // For Info of the user
-                  localStorage.setItem('UserRole', res.Data.role);
-                  localStorage.setItem('Fullname', res.Data.fullname);
-
-                  // For Authorize User Access
-                  localStorage.setItem('accessToken', res.Data.access_token);
-                  localStorage.setItem('refreshToken', res.Data.refresh_token);
-
-                  // For Persitent Login
-                  localStorage.setItem('PartslocalTime', new Date().toISOString());
-                  localStorage.setItem('isLoggedInPartslocator', 'true');
-                  //window.location.href = "/P1SA/DieMold/DieMoldLife";
-                  window.location.href = "/PartsLocal/PartsLocator/TrackParts";
-
+                  timer: 2000,
+                  allowOutsideClick: false,
+                  didOpen: () => {
+                      Swal.showLoading();
+                  }
               });
-          }, 500);
-      } else {
+
+              savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Login</span>"
+              //localStorage.setItem('tempID', res.Data.userID);
+
+
+              localStorage.removeItem('activeLinkIndex');
+              localStorage.setItem('Logout', "/PartsLocal/PartsLocator/Index");
+
+              // For Info of the user
+              localStorage.setItem('UserRole', res.Data.role);
+              localStorage.setItem('Fullname', res.Data.fullname);
+
+              // For Authorize User Access
+              localStorage.setItem('accessToken', res.Data.access_token);
+              localStorage.setItem('refreshToken', res.Data.refresh_token);
+
+              // For Persitent Login
+              localStorage.setItem('PartslocalTime', new Date().toISOString());
+              localStorage.setItem('isLoggedInPartslocator', 'true');
+              //window.location.href = "/P1SA/DieMold/DieMoldLife";
+              window.location.href = "/PartsLocal/PartsLocator/TrackParts";
+              return;
+          } 
+
+      } catch (error) {
+          console.error('Login error:', error);
           Swal.fire({
               icon: "error",
-              text: res.Message,
+              text: error,
               timer: 1500,
               showConfirmButton: false
           });
+
+          savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Sign In</span>"
+
+      } finally {
+          isSubmitting = false;
+          savebtn.disabled = false;
+          savebtn.innerHTML = "<span style='color: #fff;'><i class='fa-regular fa-floppy-disk'></i>  Sign In</span>";
       }
 
   });
+
+
+    // 🚫 Prevent Enter spam (optional but recommended)
+    logform.addEventListener('keydown', function (e) {
+        if (e.key === "Enter" && isSubmitting) {
+            e.preventDefault();
+        }
+    });
 
 
     //window.IsLoginUser({

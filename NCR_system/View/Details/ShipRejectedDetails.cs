@@ -11,7 +11,7 @@ namespace NCR_system.View.Details
 {
     public partial class ShipRejectedDetails : Form
     {
-        private readonly IShipRejected _ship;
+        //private readonly IShipRejected _ship;
 
         public ShipRejectedDetails(RejectShipmentModel reg)
         {

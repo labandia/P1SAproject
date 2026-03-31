@@ -20,7 +20,7 @@ namespace NCR_system.View.Module
         private readonly ICustomerComplaint _cust;
 
         private bool _isInitializing = true;
-        private bool _gridConfigured = false;
+        //private bool _gridConfigured = false;
         private bool _isLoading = false;
 
 
@@ -306,7 +306,7 @@ namespace NCR_system.View.Module
             cartesianChart1.AxisX.Clear();
             cartesianChart1.AxisX.Add(new Axis
             {
-                Title = "Department",
+                Title = "",
                 Labels = labels,
                 Foreground = System.Windows.Media.Brushes.White,
                 Separator = new Separator { Step = 1, IsEnabled = false }
@@ -316,7 +316,7 @@ namespace NCR_system.View.Module
             cartesianChart1.AxisY.Clear();
             cartesianChart1.AxisY.Add(new Axis
             {
-                Title = "Total Open",
+                Title = "",
                 LabelFormatter = value => value.ToString("N0"),
                 Foreground = System.Windows.Media.Brushes.White
             });

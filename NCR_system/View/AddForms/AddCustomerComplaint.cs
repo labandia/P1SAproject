@@ -168,7 +168,7 @@ namespace NCR_system.View.AddForms
             selectDepart.SelectedIndex = 0;
         }
 
-        private async void Finalizebtn_Click(object sender, EventArgs e)
+        private  void Finalizebtn_Click(object sender, EventArgs e)
         {
             
         }

@@ -270,7 +270,7 @@ namespace NCR_system.View.Module
             }
         }
 
-        private async void RejectedGrid_CellClick(object sender, DataGridViewCellEventArgs e)
+        private  void RejectedGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             // Make sure user clicked on a valid row (not header)
             if (e.RowIndex < 0)

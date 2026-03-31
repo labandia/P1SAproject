@@ -287,6 +287,7 @@
         totalRecords: 0,
         isFirstLoad: true,
         isYearLoad: true,
+        isSubmitting: false,
         isSelectedSearch: 0,
         isChangeDate: 0,
         currentMonth: new Date().getMonth() + 1,
@@ -425,54 +426,62 @@
     ========================================================= */
      async function handleAddDaily(e) {
          e.preventDefault();
-         let searchval = state.isSelectedSearch === 0 ? $("#searchInput").val().trim() : $("#searchDie").val().trim();
+         const btn = e.submitter || document.querySelector("#addDailyForm button[type='submit']");
 
-         if (searchval === "" && DOM.processSelect.val()) {
-             alert("Check all the required Input");
-             return;
-         }
+         // 🚫 BLOCK duplicate
+         if (!preventDoubleSubmit(btn)) return;
 
-         let formData = new FormData(e.target);
-         formData.append('ProcessID', DOM.processSelect.val());
-         formData.append("PartNo", state.partNo);
-         formData.append("DieSerial", state.dieSerial);
-         formData.append("SearchMode", state.isSelectedSearch); // 0 = PartNo, 1 = DieSerial
+         try {
+             let searchval = state.isSelectedSearch === 0
+                 ? $("#searchInput").val().trim()
+                 : $("#searchDie").val().trim();
 
-         const data = Object.fromEntries(formData);
-
-          let checkduplicate = await GetMethod('@Url.Action("CheckDialyMoldExist", "Mold")',
-              { srcval: searchval, DateInput: data.DateInput });
-
-          // convert to number
-          const cycleShot = Number(data.CycleShot);
-
-          // Check for Existing Date record
-         if (checkduplicate && cycleShot !== 0) {
-             showAlert(data.DateInput + " is Already Input");
-              return;
-         }
-
-         if (cycleShot === 0 && state.getData.length > 0) {
-             const lastrecord = state.getData[0]
-             if (Number(lastrecord.Total) === 0) {
-                 alert("Zero Cycle Shot is already input on the latest record");
+             if (searchval === "" && DOM.processSelect.val()) {
+                 alert("Check all the required Input");
                  return;
              }
-         }
-         // Insert a new Daily Records
-         let res = await postMethod('@Url.Action("SaveDailyMoldDieMonitor", "Mold")', data);
-         if (res?.Success) {
-             // once the Daily update Automatic Refresh the data
-             if (state.isSelectedSearch === 0) {
-                 searchByPart();
-             } else {
-                 searchByDie();
-             }
-             document.getElementById("addDailyForm").reset();
-         } else {
-             showAlert("Error  Problem ecounter.");
-         }
 
+             let formData = new FormData(e.target);
+                 formData.append('ProcessID', DOM.processSelect.val());
+                 formData.append("PartNo", state.partNo);
+                 formData.append("DieSerial", state.dieSerial);
+                 formData.append("SearchMode", state.isSelectedSearch); // 0 = PartNo, 1 = DieSerial
+
+             const data = Object.fromEntries(formData);
+
+             let checkduplicate = await GetMethod('@Url.Action("CheckDialyMoldExist", "Mold")',
+                  { srcval: searchval, DateInput: data.DateInput });
+
+    
+             const cycleShot = Number(data.CycleShot);
+
+             // Check for Existing Date record
+             if (checkduplicate && cycleShot !== 0) {
+                   showAlert(data.DateInput + " is Already Input");
+                   return;
+             }
+
+             if (cycleShot === 0 && state.getData.length > 0) {
+                  const lastrecord = state.getData[0]
+                  if (Number(lastrecord.Total) === 0) {
+                      alert("Zero Cycle Shot is already input on the latest record");
+                      return;
+                  }
+             }
+                    // Insert a new Daily Records
+             let res = await postMethod('@Url.Action("SaveDailyMoldDieMonitor", "Mold")', data);
+
+             if (res?.Success) {
+                 // once the Daily update Automatic Refresh the data
+                 state.isSelectedSearch === 0 ? searchByPart() : searchByDie();
+                 document.getElementById("addDailyForm").reset();
+             }
+
+         } catch (err) {
+             console.error(err);
+         } finally {
+             releaseSubmit(btn); // ✅ ALWAYS release here
+         }
      }
      async function OpenEditDailyModal() {
         const id = this.id.split("_")[1];
@@ -1193,4 +1202,34 @@
 
         state.isYearLoad = false;
     }
+
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" && state.isSubmitting) {
+            e.preventDefault();
+        }
+    });
+
+
+    const preventDoubleSubmit = (btn) => {
+        if (state.isSubmitting) return false;
+
+        state.isSubmitting = true;
+
+        if (btn) {
+            btn.disabled = true;
+            btn.dataset.original = btn.innerHTML;
+            btn.innerHTML = "<div class='loading'></div>";
+        }
+
+        return true;
+    };
+
+    const releaseSubmit = (btn) => {
+        state.isSubmitting = false;
+
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = btn.dataset.original;
+        }
+    };
 </script>

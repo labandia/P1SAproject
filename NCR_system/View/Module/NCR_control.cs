@@ -19,7 +19,7 @@ namespace NCR_system.View.Module
         public int depId { get; set; } = 0;
         public int stats { get; set; } = 0;
 
-        private readonly Dictionary<string, Label> _departmentLabels;
+        //private readonly Dictionary<string, Label> _departmentLabels;
 
         public NCR_control(INCR ncr)
         {

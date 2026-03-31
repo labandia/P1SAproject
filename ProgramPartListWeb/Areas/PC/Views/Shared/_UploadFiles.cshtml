@@ -1,0 +1,83 @@
+﻿ <!--########################## UPLOAD DATA #############################-->
+<div class="modal fade modal-lg " id="uploadmodal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog"
+     data-bs-backdrop="static"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <div class="custom_modal__icon">
+                        <div class="custom_icon_container">
+                            <i class="fa-solid fa-file-import"></i>
+                        </div>
+                        <div class="custom_modal_title">
+                            <span style="font-weight: 600;">Upload your Signature</span>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+
+                <div class="custom_modal_body">
+
+                    <div class="Mold_tabcontainer">
+                        <div class="Mold_tabs">
+                            <button class="Mold_tab active" data-target="UploadImage">Write Signature</button>
+                            <button class="Mold_tab" data-target="WriteTable">Upload Image</button>
+                            <div class="Mold_slider"></div>
+                        </div>
+
+                        <div class="Mold_contentbox">
+                            <div class="Mold_content show" id="UploadImage">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span>Draw a Signature :</span>
+                                        <canvas id="signature-pad" width="400" height="200" style="border:1px solid #ccc;"></canvas>
+                                    </div>
+                                    <div class="col-6">
+                                        <form class="SignatureAction" id="SignatureForms">
+                                            <input type="hidden" id="SignatureData" name="SignatureData" />
+
+                                            <button type="button" class="clearbtn" onclick="clearSignature()"><i class="fa-solid fa-eraser"></i> Clear</button>
+                                            <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                @* Hidden input to hold the base64 image *@
+                            </div>
+                            <div class="Mold_content" id="WriteTable">
+                                <form method="post" enctype="multipart/form-data" id="ImportExcel">
+                                    <div class="upload-container flex_center" id="upload-container">
+                                        <div class="upload-icon">📷</div>
+                                        <div class="file-info">Upload a photo of your signature.<br>Max file size: 1MB<br>png, jpg, jpeg, bmp, gif</div>
+                                        <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.bmp,.gif" class="hidden">
+                                        <button class="upload-btn" id="uploadBtn">Upload Photo</button>
+                                    </div>
+
+                                </form>
+
+                                <div class="preview-container" id="previewContainer">
+                                    <img id="SignatureImage" class="SignatureImage" src="/Content/Images/bussiness-man.png" alt="Signature" style="display: hidden;" />
+                                    <img id="previewImage" class="preview-image" src="" alt="Signature Preview">
+                                </div>
+
+                                <footer class="flex_end">
+                                    <span id="Upload "></span>
+                                    <button class="primarybtn flex_end" id="saveBtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                                </footer>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

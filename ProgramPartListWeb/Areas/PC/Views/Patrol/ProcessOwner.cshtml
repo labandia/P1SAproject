@@ -24,34 +24,8 @@
 
 <body>
     <div class="MainWrapper">
+        @Html.Partial("_StepRegister")
 
-        <div class="sidebar">
-            <h2><i>📄</i><span id="regtext">@regno</span></h2>
-            <ul class="step-list">
-                <li class="step-item active" data-step="1">
-                    <span class="step-number">1</span>
-                    Create new
-                </li>
-                <li class="step-item" data-step="2">
-                    <span class="step-number">2</span>
-                    Process Owner
-                </li>
-
-                <li class="step-item" data-step="3">
-                    <span class="step-number">3</span>
-                    Managers
-                </li>
-
-                <li class="step-item" data-step="4">
-                    <span class="step-number">4</span>
-                    Division Manager
-                </li>
-                <li class="step-item" data-step="5">
-                    <span class="step-number">5</span>
-                    Completed
-                </li>
-            </ul>
-        </div>
 
         <div class="content">
 
@@ -196,64 +170,9 @@
 
 
     <!-- Sequential Loader -->
-    <div id="loader" class="loader-overlay">
-        <div class="loader-box">
-            <div class="loader-title">Updating Registration No...</div>
+    @Html.Partial("_LoaderUpload")
 
-            <div class="progress-container">
-                <div class="progress-bar" style="background: #f5f5f5;">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-                <div class="progress-text" id="progressText">0%</div>
-            </div>
-
-            <div class="step-list">
-                <div class="step" id="step1">
-                    <div class="step-icon">
-                        <i class="fas fa-database"></i>
-                    </div>
-                    <div class="step-contentloader">
-                        <div class="step-title">Updating the Database</div>
-                        <div class="step-description">Submitting approval data to the system</div>
-                    </div>
-                </div>
-
-                <div class="step" id="step2">
-                    <div class="step-icon">
-                        <i class="fas fa-envelope"></i>
-                    </div>
-                    <div class="step-contentloader">
-                        <div class="step-title">Send Email to the Inspectors</div>
-                        <div class="step-description">Notifying the review team</div>
-                    </div>
-                </div>
-
-                <div class="step" id="step3">
-                    <div class="step-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <div class="step-contentloader">
-                        <div class="step-title">Send Message Success</div>
-                        <div class="step-description">Confirming submission completion</div>
-                    </div>
-                </div>
-
-                <div class="step" id="step4">
-                    <div class="step-icon">
-                        <i class="fas fa-flag-checkered"></i>
-                    </div>
-                    <div class="step-contentloader">
-                        <div class="step-title">Done and Close</div>
-                        <div class="step-description">Process completed successfully</div>
-                    </div>
-                </div>
-            </div>
-
-            <button class="done-btn" id="doneBtn"><i class="fa-solid fa-check"></i> Done</button>
-        </div>
-    </div>
-
-
+    <!-- Upload Files -->
     @Html.Partial("_UploadFiles")
 
 
@@ -262,652 +181,315 @@
     <script src="~/Scripts/Popper.min.js"></script>
     <script src="~/Scripts/signature_pad.umd.min.js"></script>
     <script type="text/javascript">
-        let currentStep = 2;
-        const totalSteps = 5;
-        let selectedFiles = [];
-        let emailTable = [];
-
-        let strRegno = "@regno";
-        let modeset = @ViewBag.Mode;
-        let strPIC;
-        // =======  FOR UPLOADING FILES =======================
-        const fileUploadArea = document.getElementById("file-upload-area");
-        const fileList = document.getElementById("fileList");
-        const fileInput = document.getElementById("file-input");
-        // ====================================================
-
-        const addform = document.getElementById("step-2");
-        const signatureImage = document.getElementById('signature-image');
-        const signatureInput = document.getElementById('signature-Input');
-        const placeholder = document.getElementById('placeholder');
-
-        function goToStep(step) {
-            // Update current step
-            currentStep = step;
-
-
-            // Update sidebar step states
-            document.querySelectorAll('.step-item').forEach((item, index) => {
-                const stepNumber = index + 1;
-
-                // Completed (previous steps)
-                if (stepNumber < step) {
-                    item.classList.add('completed');
-                    item.classList.remove('active', 'disabled');
-                }
-                // Active (current step)
-                else if (stepNumber === step) {
-                    item.classList.add('active');
-                    item.classList.remove('completed', 'disabled');
-                }
-                // Locked (future steps)
-                else {
-                    item.classList.add('disabled');
-                    item.classList.remove('active', 'completed');
-                }
-            });
-
-
-            // Show/hide step content
-            document.querySelectorAll('.step-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.getElementById(`step-${step}`).classList.add('active');
-        }
-
-        // Initialize the form
-        document.addEventListener('DOMContentLoaded', function () {
-            goToStep(2);
-
-            // Add click event to sidebar steps
-            document.querySelectorAll('.step-item').forEach(item => {
-                item.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    return;
-                });
-            });
-        });
-
-
-        const findingsJson = (e) => {
-            let formData = new FormData(e);
-            const data = Object.fromEntries(formData);
-
-            const findings = [];
-
-            for (let i = 1; i <= 6; i++) {
-                findings.push({
-                    RegNo: strRegno,
-                    FindID: i,
-                    Countermeasure: data[`counter${i}`]
-                });
-            }
-
-
-            return JSON.stringify(findings);
-        };
-
-        signatureInput.addEventListener('click', function () {
-            $("#uploadmodal").modal('show');
-        });
-
-        $("#uploadSig").on('click', function (e) {
-            e.preventDefault();
-            $("#uploadmodal").modal('show');
-        });
-
-
-
-        addform.addEventListener('submit', async (e) => {
-             e.preventDefault();
-
-                 // Get the ID of the save button and Store original text
-                 //const savebtn = document.querySelector("#btnSave");
-                 //const originalText = savebtn.innerHTML;
-
-                 // Create loading icon and message container
-                 //savebtn.disabled = true;
-                 //savebtn.innerHTML = `<div class='buttonloading'></div><span id='loadingSequence'>Saving data...</span>`;
-
-                 // Append form data
-                 let strfind = findingsJson(e.target);
-                 let finalformData = new FormData(e.target);
-                 finalformData.append('FindJson', strfind);
-                 // ✅ Add multiple attachments
-                 selectedFiles.forEach(file => {
-                     finalformData.append("Attachments", file);
-                 });
-
-                 // For registration validation, read RegNo from form data
-                 const finaldata = Object.fromEntries(finalformData);
-
-                // Show loader
-                document.getElementById('loader').classList.add('active');
-
-                // Reset steps
-                resetSteps();
-
-                let res = await postMethod('@Url.Action("ProcessOwnerSubmission", "Patrol")', finalformData);
-                if (res?.Success) {
-                    // Start the sequential loading process
-                    startSequentialLoading();
-                } else {
-                    // Reset button if failed
-                    document.querySelector("#loadingSequence").textContent = "Failed. Please try again.";
-                    await new Promise(resolve => setTimeout(resolve, 2000));
-                }
-
-                 @*// Step 1: Simulate "Saving data..."
-                 await new Promise(resolve => setTimeout(resolve, 1200)); // 1.2s delay for animation
-
-                 // Step 2: Update loading text
-                 document.querySelector("#loadingSequence").textContent = "Sending email to the inspector...";
-                 await new Promise(resolve => setTimeout(resolve, 1200));
-
-                 // Step 3: Send data to the controller
-                 let res = await postData('@Url.Action("ProcessOwnerSubmission", "Patrol")', finalformData);
-
-                 if (res && res.Success) {
-                     document.querySelector("#loadingSequence").textContent = "Done ✅";
-                     await new Promise(resolve => setTimeout(resolve, 1000));
-                     savebtn.innerHTML = originalText;
-                 } else {
-                     // Reset button if failed
-                     document.querySelector("#loadingSequence").textContent = "Failed. Please try again.";
-                     await new Promise(resolve => setTimeout(resolve, 2000));
-                     savebtn.innerHTML = originalText;
-                     savebtn.disabled = false;
-                 }*@
-
-         });
-
-
-
-        fileUploadArea.addEventListener("click", () => fileInput.click());
-        // =================== MULTIPLE UPLOAD FILES ==============================
-        fileInput.addEventListener("change", function () {
-            // Add new files to the array (avoid duplicates by name+size)
-            for (let file of fileInput.files) {
-                let exists = selectedFiles.some(f => f.name === file.name && f.size === file.size);
-                if (!exists) {
-                    selectedFiles.push(file);
-                }
-            }
-            renderFileList();
-            fileInput.value = ""; // reset input to allow re-upload of same file
-        });
-
-
-        function renderFileList() {
-            fileList.innerHTML = "";
-            selectedFiles.forEach((file, index) => {
-                const div = document.createElement("div");
-                div.classList.add("pdf-container");
-
-                const pdfBtn = document.createElement("button");
-                pdfBtn.classList.add("open-pdf-btn");
-                pdfBtn.innerHTML = `<i class="fa-solid fa-file-pdf"></i> ${file.name}`;
-                pdfBtn.onclick = () => {
-                    const fileURL = URL.createObjectURL(file);
-                    window.open(fileURL, "_blank");
-                };
-
-                const removeBtn = document.createElement("button");
-                removeBtn.classList.add("remove-btn");
-                removeBtn.innerHTML = `<i class="fa-regular fa-circle-xmark"></i>`;
-                removeBtn.onclick = () => {
-                    selectedFiles.splice(index, 1);
-                    renderFileList();
-                };
-
-                div.appendChild(pdfBtn);
-                div.appendChild(removeBtn);
-                fileList.appendChild(div);
-            });
-        }
-
-        const GetRegistrationDetails = async () => {
-            let res = await GetMethod('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
-            if (res && res.Success) {
-                $("#regtext").text(strRegno);
-                $("#SectionName").val("P1SA-" + res.data.SectionName);
-                $("#PIC_Comments").val(res.data.PIC_Comments);
-                strPIC = res.data.PIC_ID;
-
-                let Getitems = emailTable.find(res => res.Employee_ID === strPIC);
-                if (Getitems) {
-                    if (Getitems.Signature) {
-                        // Display the Signature Image
-                        placeholder.style.display = 'none';
-                        signatureInput.style.display = 'none';
-                        signatureImage.style.display = 'block';
-                        signatureImage.src = '/User/GetSignatureImage?filename=' + encodeURIComponent(Getitems.Signature);
-                    } else {
-                        // If No Signature Image
-                        placeholder.style.display = 'none';
-                        signatureImage.style.display = 'none';
-                        signatureInput.style.display = 'block';
-                    }
-                }
-            }
-        }
-
-        const GetRegistrationID = async () => {
-            let res = await GetMethod('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
-
-            if (res && res.Success) {
-                res.data.forEach(item => {
-                    $(`#Inpects${item.FindID}`).text("- " + item.FindDescription);
-                    $(`#counter${item.FindID}`).val(item.Countermeasure);
-                });
-            }
-        }
-
-        const GetRegistratioFiles = async () => {
-            let filesSelect = [];
-
-            if (modeset != 0) {
-                return;
-            }
-
-            $("#file-upload-area").hide();
-            $("#btnSave").hide();
-
-            let res = await GetMethod('@Url.Action("GetRegistrationAllFiles", "Patrol")', { Regno: strRegno });
-             if (res.Success && res) {
-                 filesSelect = res.data;
-
-                 let UploadCounterPath = filesSelect[0].CounterPath;
-
-                 if (UploadCounterPath) {
-                     let files = UploadCounterPath.split(';');
-                     let fileHtml = "";
-
-                     files.forEach(f => {
-                         if (f.trim() !== "") {
-                             let filenameonly = f.replace(/\.pdf$/i, "");
-
-                             const fileExtension = f.split('.').pop().toLowerCase();
-
-                             let fileType = 'default';
-
-                             if (['pdf'].includes(fileExtension)) {
-                                 fileType = 'pdf';
-                             } else if (['xlsx', 'xls', 'xlsm', 'csv'].includes(fileExtension)) {
-                                 fileType = 'xlsx';
-                             } else if (['doc', 'docx', 'txt'].includes(fileExtension)) {
-                                 fileType = 'doc';
-                             } else if (['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(fileExtension)) {
-                                 fileType = 'img';
-                             } else if (['zip', 'rar', '7z'].includes(fileExtension)) {
-                                 fileType = 'zip';
-                             }
-
-                             const fileIconClass = `file-icon ${fileType}`;
-
-
-                             let fileIcon = '';
-
-                             switch (fileType) {
-                                 case 'pdf':
-                                     fileIcon = '<i class="far fa-file-pdf"></i>';
-                                     break;
-                                 case 'doc':
-                                     fileIcon = '<i class="far fa-file-word"></i>';
-                                     break;
-                                 case 'img':
-                                     fileIcon = '<i class="far fa-file-image"></i>';
-                                     break;
-                                 case 'zip':
-                                     fileIcon = '<i class="far fa-file-archive"></i>';
-                                     break;
-                                 case 'xlsx':
-                                     fileIcon = '<i class="fa-regular fa-file-excel"></i>';
-                                     break;
-                                 default:
-                                     fileIcon = '<i class="far fa-file"></i>';
-                             }
-
-                             fileHtml += `
-                                   <button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${f}">
-                                        <div class="${fileIconClass}">
-                                          ${fileIcon}
-                                        </div>
-                                        <div class="file-info">
-                                            <div class="file-name">${filenameonly}</div>
-                                        </div>
-                                 </button>
-                              `;
-                         }
-                     });
-
-                     document.getElementById("fileContainer").innerHTML = fileHtml;
-
-                     // Attach click event
-                     document.querySelectorAll(".open-pdf-btn").forEach(btn => {
-                         btn.addEventListener("click", function () {
-                             let pdfUrl = this.getAttribute("data-pdf-url");
-                             window.open(pdfUrl, "_blank"); // Open in new tab
-                         });
-                     });
-                 }
-
-
-             }
-
- }
-
-
-        const GetEmailList = async () => {
-            let res = await GetMethod('@Url.Action("GetEmaiRegistration", "Patrol")', {});
-            if (res && res.Success) {
-                emailTable = res.data;
-            }
-        };
-
-
-        const RedirectPageView = (stats, regno, mode) => {
-            if (stats == 1) return;
-            // Use encodeURIComponent to avoid issues with special characters
-            const r = encodeURIComponent(regno);
-            const m = encodeURIComponent(mode);
-
-            switch (stats) {
-                case 1:
-                    window.location.href = `/PC/Patrol/ProcessOwner?Regno=${r}&mode=${m}`;
-                    break;
-                case 2:
-                    window.location.href = `/PC/Patrol/InspectorsReview?Regno=${r}&mode=${m}`;
-                    break;
-                case 3:
-                    window.location.href = `/PC/Patrol/ManagerView?Regno=${r}&mode=${m}`;
-                    break;
-                case 4:
-                case 5:
-                case 6:
-                    window.location.href = `/PC/Patrol/DepartmentApproval?Regno=${r}&mode=${m}`;
-                    break;
-                default:
-                    console.warn("Unknown status:", stats);
-            }
-        };
-
-         // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
-         const LoadPageData = async () => {
-             try {
-                 const [regist, ID, email] = await Promise.all([
-                     GetRegistrationDetails(),
-                     GetRegistrationID(),
-                     GetRegistratioFiles()
-                 ]);
-             } catch (error) {
-                 console.error("Failed to load page data:", error);
-             }
-         }
-
-         $(document).ready(() => {
-             LoadPageData();
-             GetEmailList();
-         });
-
-
-
-        // Loading Submisstion Process
-
-        function resetSteps() {
-            const steps = document.querySelectorAll('.step');
-            steps.forEach(step => {
-                step.classList.remove('active', 'completed');
-            });
-
-            document.getElementById('progressFill').style.width = '0%';
-            document.getElementById('progressText').textContent = '0%';
-            document.getElementById('doneBtn').classList.remove('show');
-        }
-
-        function startSequentialLoading() {
-            const steps = [
-                { id: 'step1', duration: 2000, progress: 25 },
-                { id: 'step2', duration: 2500, progress: 50 },
-                { id: 'step3', duration: 1500, progress: 75 },
-                { id: 'step4', duration: 1000, progress: 100 }
-            ];
-
-            let currentStep = 0;
-
-            function processNextStep() {
-                if (currentStep >= steps.length) {
-                    // All steps completed
-                    document.getElementById('doneBtn').classList.add('show');
-                    return;
-                }
-
-                const step = steps[currentStep];
-                const stepElement = document.getElementById(step.id);
-
-                // Activate current step
-                stepElement.classList.add('active');
-
-                // Update progress
-                document.getElementById('progressFill').style.width = step.progress + '%';
-                document.getElementById('progressText').textContent = step.progress + '%';
-
-                // Simulate processing time
-                setTimeout(function () {
-                    // Mark step as completed
-                    stepElement.classList.remove('active');
-                    stepElement.classList.add('completed');
-
-                    // Move to next step
-                    currentStep++;
-                    processNextStep();
-                }, step.duration);
-            }
-
-            // Start the sequence
-            processNextStep();
-        }
-
-
-        document.getElementById('doneBtn').addEventListener('click', function () {
-            // Hide loader
-            document.getElementById('loader').classList.remove('active');
-
-            window.location.href = `/PC/Patrol/ProcessOwner?Regno=${strRegno}&mode=0`;
-
-        });
-
-
-        // Tabs Content
-        const tabs = document.querySelectorAll(".Mold_tab");
-        const slider = document.querySelector(".Mold_slider");
-        const contents = document.querySelectorAll(".Mold_content");
-
-        tabs.forEach((tab, index) => {
-            tab.addEventListener("click", () => {
-                // Handle tab active class
-                document.querySelector(".Mold_tab.active").classList.remove("active");
-                tab.classList.add("active");
-
-                // Move slider
-                slider.style.transform = `translateX(${index * 100}%)`;
-
-                // Switch content
-                const target = tab.getAttribute("data-target");
-                contents.forEach((content) => {
-                    content.classList.remove("show");
-                });
-                document.getElementById(target).classList.add("show");
-            });
-        });
-
-
-        // ==========   FOR DRAWING A SIGNATURE IMAGE =================
-        let canvas = document.getElementById("signature-pad");
-        let signaturePad = new SignaturePad(canvas);
-
-        function clearSignature() {
-            signaturePad.clear();
-        }
-
-        function saveSignature() {
-            if (signaturePad.isEmpty()) {
-                alert("Please provide a signature.");
-                return;
-            }
-
-            const dataUrl = signaturePad.toDataURL("image/png"); // Base64 PNG
-            document.getElementById("SignatureData").value = dataUrl;
-
-            // Submit the form
-            document.getElementById("signatureForm").submit();
-        }
-            // ===========================================================
-
-            document.addEventListener('DOMContentLoaded', function () {
-                const InputFile = document.getElementById('fileInput');
-                const uploadbtn = document.getElementById('uploadBtn');
-                const savebtn = document.getElementById('saveBtn');
-
-                const previewContainer = document.getElementById('previewContainer');
-                const previewImage = document.getElementById('previewImage');
-
-                // Handle Upload button Click
-                uploadbtn.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    InputFile.click();
-                });
-
-                // Handle Functional of File Input Upload
-                InputFile.addEventListener('change', function (e) {
-                    e.preventDefault();
-                    //Check if the Image data exist
-                    if (e.target.files.length > 0) {
-                        const file = e.target.files[0];
-
-                        // Check the file size (Max 1 MB)
-                        if (file.size > 1024 * 1024) {
-                            alert('File size exceeds 1MB limit');
-                            return;
-                        }
-                        // Check file Type
-                        const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/bmp', 'image/gif'];
-
-                        if (!validTypes.includes(file.type)) {
-                            alert("Invalid file type, Please upload a png, jpeg, bmp or gif file");
-                            return;
-                        }
-
-                        //Create a Preview Image When the Upload the file
-                        const reader = new FileReader();
-                        reader.onload = function (e) {
-                            previewImage.src = e.target.result;
-                            previewContainer.style.display = 'block';
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                });
-
-
-                // handle save button click
-                savebtn.addEventListener('click', function (e) {
-                    e.preventDefault();
-
-                    //validate the form
-                    if (!InputFile.files || InputFile.files.length === 0) {
-                        alert("Please upload an image of your signature before saving");
-                        return;
-                    }
-
-
-                    const formData = new FormData();
-                    formData.append('SignatureImage', InputFile.files[0]);
-                    formData.append('UserID', strPIC);
-
-                    const data = Object.fromEntries(formData);
-
-                    $.ajax({
-                        url:  '@Url.Action("UploadSignature", "Patrol")',
-                        type: 'POST',
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function (res) {
-                            if (res && res.success) {
-                                placeholder.style.display = 'none';
-                                signatureImage.style.display = 'block';
-                                signatureInput.style.display = 'none';
-                                signatureImage.src = '/User/GetSignatureImage?filename=' + encodeURIComponent(res.Data);
-                                clearSignature();
-                                $("#uploadmodal").modal("hide");
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            //$('#signatureImageError').text('An error occurred: ' + error);
-                        },
-                        complete: function () {
-                            //saveBtn.prop('disabled', false).text('Save');
-                        }
-                    });
-
-                    // Reset the form
-
-
-                });
-            });
-
-
-
-        $("#SignatureForms").on('submit', async (e) => {
-                      e.preventDefault();
-                      const formData = new FormData(e.target);
-                      const dataUrl = signaturePad.toDataURL("image/png"); // Base64 PNG
-                      //document.getElementById("SignatureData").value = dataUrl;
-
-
-                      //formData.append('SignatureImage', dataUrl);
-                      //formData.append('UserID', selectedInspector);
-
-                      const data = Object.fromEntries(formData);
-
-                      fetch(dataUrl)
-                          .then(res => res.blob())
-                          .then(blob => {
-                              const timestamp = Date.now(); // e.g., 1721705540000
-                              const fileName = `Patrol_${timestamp}.png`;
-
-                              const formData = new FormData();
-                              const file = new File([blob], fileName, { type: "image/png" });
-
-                              formData.append("SignatureImage", file); // Simulates <input type="file" />
-                              formData.append("UserID", strPIC);
-                              const data = Object.fromEntries(formData);
-
-                              $.ajax({
-                                  url:  '@Url.Action("UploadSignature", "Patrol")',
-                                  type: 'POST',
-                                  data: formData,
-                                  processData: false,
-                                  contentType: false,
-                                  success: function (res) {
-                                      if (res && res.success) {
-                                          placeholder.style.display = 'none';
-                                          signatureImage.style.display = 'block';
-                                          signatureInput.style.display = 'none';
-                                          signatureImage.src = '/User/GetSignatureImage?filename=' + encodeURIComponent(res.Data);
-                                          clearSignature();
-                                          $("#uploadmodal").modal("hide");
-                                      }
-                                  },
-                                  error: function (xhr, status, error) {
-                                      //$('#signatureImageError').text('An error occurred: ' + error);
-                                  },
-                                  complete: function () {
-                                      //saveBtn.prop('disabled', false).text('Save');
-                                  }
-                              });
-                          });
-                  });
+        $("#regtext").text("@regno");
     </script>
-</body>
+
+
+    <script type="module">
+        "use strict";
+
+         import {
+          getMethodPublic,
+          postMethodPublic
+        } from '@Url.Content("~/Scripts/modules/index.js")';
+
+        class ProcessOwner {
+            constructor() {
+
+                /* ================= STATE ================= */
+                this.currentStep = 2;
+                this.totalSteps = 5;
+                this.selectedFiles = [];
+                this.emailTable = [];
+
+                this.strRegno = "@regno";
+                this.modeset = @ViewBag.Mode;
+                this.strPIC;
+                /* ================= DOM ================= */
+                this.dom = {
+                    fileUploadArea: document.getElementById("file-upload-area"),
+                    fileList: document.getElementById("fileList"),
+                    fileInput: document.getElementById("file-input"),
+                    form: document.getElementById("step-2"),
+
+                    signatureImage: document.getElementById("signature-image"),
+                    signatureInput: document.getElementById("signature-Input"),
+                    uploadfile: document.getElementById("uploadSig"),
+                    placeholder: document.getElementById("placeholder"),
+                    loader: document.getElementById("loader"),
+                    doneBtn: document.getElementById("doneBtn"),
+
+                };
+
+                /* ================= INIT ================= */
+                this.init();
+
+            }
+
+            /* =========================================================
+               INIT
+            ========================================================= */
+            init() {
+                this.goToStep(2)
+                this.bindEvents();
+                this.loadInitialData();
+            }
+
+            bindEvents() {
+                document.querySelectorAll('.step-item').forEach(item => {
+                    item.addEventListener('click', e => e.preventDefault());
+                });
+
+                this.dom.form.addEventListener('submit', this.handleSubmit.bind(this));
+
+                this.dom.fileUploadArea.addEventListener('click', () => this.dom.fileInput.click());
+                this.dom.fileInput.addEventListener('change', this.HandleFileUpload.bind(this));
+
+                this.dom.signatureInput.addEventListener('click', () => {
+                    $("#uploadmodal").modal('show');
+                });
+
+                this.dom.doneBtn.addEventListener('click', () => {
+                    this.dom.loader.classList.remove('active');
+                    window.location.href = `/PC/Patrol/ProcessOwner?Regno=${this.strRegno}&mode=0`;
+                });
+            }
+
+
+
+
+            /* =========================================================
+               FORM SUBMIT
+            ========================================================= */
+            async handleSubmit(e) {
+                e.preventDefault();
+
+                const formData = new FormData(e.target);
+                formData.append('FindJson', this.buildFindings(e.target));
+
+                this.selectedFiles.forEach(file => formData.append("Attachments", file));
+
+
+                this.dom.loader.classList.add("active");
+                this.startLoading(formData);
+
+            }
+
+            // ================= FINDINGS =================
+            buildFindings(form) {
+                const data = Object.fromEntries(new FormData(form));
+
+                return JSON.stringify(
+                    Array.from({ length: 6 }, (_, i) => ({
+                        RegNo: this.strRegno,
+                        FindID: i + 1,
+                        Countermeasure: data[`counter${i + 1}`]
+                    }))
+                );
+            }
+            /* =========================================================
+               STEPS
+            ========================================================= */
+            initSteps() {
+                this.goToStep(2);
+            }
+
+            goToStep(step) {
+                this.currentStep = step;
+
+                document.querySelectorAll(".step-item").forEach((item, i) => {
+                    item.classList.toggle("completed", i + 1 < step);
+                    item.classList.toggle("active", i + 1 === step);
+                });
+
+                document.querySelectorAll(".step-content")
+                    .forEach(c => c.classList.remove("active"));
+
+                document.getElementById(`step-${step}`).classList.add("active");
+            }
+
+            resetSteps() {
+                document.querySelectorAll(".step")
+                    .forEach(s => s.classList.remove("active", "completed"));
+
+                document.getElementById("progressFill").style.width = "0%";
+                document.getElementById("progressText").textContent = "0%";
+            }
+
+            async startLoading(formData) {
+                    const steps = [
+                        {
+                            id: "step1",
+                            progress: 25,
+                            action: () => postMethodPublic('@Url.Action("ProcessOwnerSubmission", "Patrol")', formData)
+                        },
+                        {
+                            id: "step2",
+                            progress: 50,
+                            action: () => postMethodPublic('@Url.Action("GenerateRegistrationV2", "Patrol")', formData)
+                        },
+                        {
+                            id: "step3",
+                            progress: 75,
+                            action: () => postMethodPublic('@Url.Action("SendEmailFromRegistrationV2", "Patrol")', formData)
+                        },
+                        {
+                            id: "step4",
+                            progress: 100,
+                            action: () => Promise.resolve({ Success: true })
+                        }
+                    ];
+
+                    for (let i = 0; i < steps.length; i++) {
+                        const step = steps[i];
+                        const el = document.getElementById(step.id);
+
+                        try {
+                            el.classList.add("active");
+
+                            document.getElementById("progressFill").style.width = `${step.progress}%`;
+                            document.getElementById("progressText").textContent = `${step.progress}%`;
+
+                            //  CALL BACKEND
+                            const res = await step.action();
+
+                            if (!res?.Success) {
+                                throw new Error(res?.Message || `Step ${i + 1} failed`);
+                            }
+
+                            // 🔥 UPDATE TEXT FROM BACKEND
+                            const titleEl = el.querySelector(".step-title");
+                            const descEl = el.querySelector(".step-description");
+
+                            if (titleEl) titleEl.textContent = res.Message || "Completed";
+                            if (descEl) descEl.textContent = `Step ${i + 1} completed successfully`;
+
+                            // Mark completed
+                            el.classList.remove("active");
+                            el.classList.add("completed");
+
+                            // Optional delay (UX)
+                            await new Promise(r => setTimeout(r, 500));
+
+                        } catch (error) {
+                            console.error(error);
+
+                            el.classList.add("error");
+
+                            // 🔥 SHOW BACKEND ERROR MESSAGE
+                            const descEl = el.querySelector(".step-description");
+                            if (descEl) descEl.textContent = error.message;
+
+                            Swal.fire({
+                                icon: "error",
+                                text: error.message || `Process failed at step ${i + 1}`,
+                            });
+
+                            return;
+                        }
+                    }
+
+                    this.dom.doneBtn.classList.add("show");
+            }
+
+
+
+
+
+            /* =========================================================
+                    FILE UPLOAD
+            ========================================================= */
+            HandleFileUpload() {
+                [...this.dom.fileInput.files].forEach(file => {
+                    const exists = this.selectedFiles.some(f => f.name === file.name && f.size === file.size);
+                    if (!exists) this.selectedFiles.push(file);
+                });
+
+                this.renderFileList();
+            }
+
+            renderFileList() {
+                this.dom.fileList.innerHTML = "";
+
+                this.selectedFiles.forEach((file, index) => {
+                    const div = document.createElement("div");
+                    div.className = "pdf-container";
+
+                    const openBtn = document.createElement("button");
+                    openBtn.className = "open-pdf-btn";
+                    openBtn.innerHTML = `<i class="fa-solid fa-file-pdf"></i> ${file.name}`;
+                    openBtn.onclick = () => window.open(URL.createObjectURL(file), "_blank");
+
+                    const removeBtn = document.createElement("button");
+                    removeBtn.className = "remove-btn";
+                    removeBtn.innerHTML = `<i class="fa-regular fa-circle-xmark"></i>`;
+                    removeBtn.onclick = () => {
+                        this.selectedFiles.splice(index, 1);
+                        this.renderFileList();
+                    };
+
+                    div.append(openBtn, removeBtn);
+                    this.dom.fileList.appendChild(div);
+                });
+            }
+
+            // ================= API =================
+            async getRegistrationDetails() {
+                let res = await getMethodPublic('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: this.strRegno });
+                if (!res?.Success) return;
+
+                const { SectionName, PIC_Comments, PIC_ID } = res.data;
+
+                $("#regtext").text(this.strRegno);
+                $("#SectionName").val(`P1SA-${SectionName}`);
+                $("#PIC_Comments").val(PIC_Comments);
+                this.strPIC = PIC_ID;
+
+                const user = this.emailTable.find(e => e.Employee_ID === this.strPIC);
+
+                if (user?.Signature) {
+                    this.dom.placeholder.style.display = 'none';
+                    this.dom.signatureInput.style.display = 'none';
+                    this.dom.signatureImage.style.display = 'block';
+                    this.dom.signatureImage.src = `/User/GetSignatureImage?filename=${encodeURIComponent(user.Signature)}`;
+                }
+            }
+
+            async getRegistrationID() {
+               let res = await getMethodPublic('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: this.strRegno });
+                res?.data?.forEach(({ FindID, FindDescription, Countermeasure }) => {
+                    $(`#Inpects${FindID}`).text("- " + FindDescription);
+                    $(`#counter${FindID}`).val(Countermeasure);
+                });
+            }
+
+            async getEmailList() {
+                const res = await getMethodPublic('@Url.Action("GetEmaiRegistration", "Patrol")', {});
+                console.log(res);
+
+                if (res?.Success) this.emailTable = res.data;
+            }
+
+            async loadInitialData() {
+                try {
+                    await Promise.all([
+                        this.getEmailList(),
+                        this.getRegistrationDetails(),
+                        this.getRegistrationID()
+                    ]);
+                } catch (err) {
+                    console.error("Load error:", err);
+                }
+            }
+
+        }
+
+        /* =========================================================
+           START APP
+        ========================================================= */
+        document.addEventListener("DOMContentLoaded", () => {
+            new ProcessOwner();
+        });
+    </script>
+</body >
 

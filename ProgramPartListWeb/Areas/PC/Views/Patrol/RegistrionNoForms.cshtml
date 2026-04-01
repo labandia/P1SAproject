@@ -264,7 +264,6 @@
                INIT
             ========================================================= */
             init() {
-                this.initTabs();
                 this.initSignaturePad();
                 this.initFileUpload();
                 this.initFormSubmit();
@@ -274,27 +273,7 @@
                 this.initformselectinspect();
             }
 
-            /* =========================================================
-               TABS
-            ========================================================= */
-            initTabs() {
-                const tabs = document.querySelectorAll(".Mold_tab");
-                const slider = document.querySelector(".Mold_slider");
-                const contents = document.querySelectorAll(".Mold_content");
-
-                tabs.forEach((tab, index) => {
-                    tab.addEventListener("click", () => {
-                        document.querySelector(".Mold_tab.active")?.classList.remove("active");
-                        tab.classList.add("active");
-
-                        slider.style.transform = `translateX(${index * 100}%)`;
-
-                        contents.forEach(c => c.classList.remove("show"));
-                        document.getElementById(tab.dataset.target).classList.add("show");
-                    });
-                });
-            }
-
+       
             /* =========================================================
               SIGNATURE PAD
            ========================================================= */
@@ -421,8 +400,8 @@
                 this.dom.loader.classList.add("active");
                 this.resetSteps();
 
-           
-                if (res?.Success) this.startLoading(formData);
+
+                this.startLoading(formData);
             }
 
             getFindings(form) {
@@ -503,70 +482,81 @@
                 document.getElementById("progressText").textContent = "0%";
             }
 
-            startLoading(formData) {
-                const steps = [
-                    {
-                        id: "step1",
-                        progress: 25,
-                        action: () => postMethodPublic('@Url.Action("AddRegist", "Patrol")', formData)
-                    },
-                    {
-                        id: "step2",
-                        progress: 50,
-                        action: () => postMethod('@Url.Action("GenerateRegistration", "Patrol")', formData)
-                    },
-                    {
-                        id: "step3",
-                        progress: 75,
-                        action: () => postMethod('@Url.Action("SendEmailFromRegistration", "Patrol")', formData)
-                    },
-                    {
-                        id: "step4",
-                        progress: 100,
-                        action: () => Promise.resolve({ Success: true }) // final step (no API)
-                    }
-                ];
-
-                for (let i = 0; i < steps.length; i++) {
-                    const step = steps[i];
-                    const el = document.getElementById(step.id);
-
-                    try {
-                        // Activate step
-                        el.classList.add("active");
-
-                        // Update progress UI
-                        document.getElementById("progressFill").style.width = `${step.progress}%`;
-                        document.getElementById("progressText").textContent = `${step.progress}%`;
-
-                        // 🔥 EXECUTE API HERE
-                        const res = await step.action();
-
-                        if (!res?.Success) {
-                            throw new Error(`Step ${i + 1} failed`);
+            async startLoading(formData) {
+                    const steps = [
+                        {
+                            id: "step1",
+                            progress: 25,
+                            action: () => postMethodPublic('@Url.Action("AddRegist", "Patrol")', formData)
+                        },
+                        {
+                            id: "step2",
+                            progress: 50,
+                            action: () => postMethodPublic('@Url.Action("GenerateRegistration", "Patrol")', formData)
+                        },
+                        {
+                            id: "step3",
+                            progress: 75,
+                            action: () => postMethodPublic('@Url.Action("SendEmailFromRegistration", "Patrol")', formData)
+                        },
+                        {
+                            id: "step4",
+                            progress: 100,
+                            action: () => Promise.resolve({ Success: true })
                         }
+                    ];
 
-                        // Mark completed
-                        el.classList.remove("active");
-                        el.classList.add("completed");
+                    for (let i = 0; i < steps.length; i++) {
+                        const step = steps[i];
+                        const el = document.getElementById(step.id);
 
-                    } catch (error) {
-                        console.error(error);
+                        try {
+                            el.classList.add("active");
 
-                        el.classList.add("error");
+                            document.getElementById("progressFill").style.width = `${step.progress}%`;
+                            document.getElementById("progressText").textContent = `${step.progress}%`;
 
-                        Swal.fire({
-                            icon: "error",
-                            text: `Process failed at step ${i + 1}`,
-                        });
+                            //  CALL BACKEND
+                            const res = await step.action();
 
-                        return; // STOP PROCESS
+                            if (!res?.Success) {
+                                throw new Error(res?.Message || `Step ${i + 1} failed`);
+                            }
+
+                            // 🔥 UPDATE TEXT FROM BACKEND
+                            const titleEl = el.querySelector(".step-title");
+                            const descEl = el.querySelector(".step-description");
+
+                            if (titleEl) titleEl.textContent = res.Message || "Completed";
+                            if (descEl) descEl.textContent = `Step ${i + 1} completed successfully`;
+
+                            // Mark completed
+                            el.classList.remove("active");
+                            el.classList.add("completed");
+
+                            // Optional delay (UX)
+                            await new Promise(r => setTimeout(r, 500));
+
+                        } catch (error) {
+                            console.error(error);
+
+                            el.classList.add("error");
+
+                            // 🔥 SHOW BACKEND ERROR MESSAGE
+                            const descEl = el.querySelector(".step-description");
+                            if (descEl) descEl.textContent = error.message;
+
+                            Swal.fire({
+                                icon: "error",
+                                text: error.message || `Process failed at step ${i + 1}`,
+                            });
+
+                            return;
+                        }
                     }
-                }
 
-                // All steps completed
-                this.dom.doneBtn.classList.add("show");
-            }
+                    this.dom.doneBtn.classList.add("show");
+                }
 
               /* =========================================================
                    DONE BUTTON

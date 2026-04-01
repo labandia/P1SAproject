@@ -5,6 +5,15 @@ using System.Web;
 
 namespace ProgramPartListWeb.Areas.PC.Models
 {
+    public enum RoleType
+    {
+        DivisionManager = 1,
+        Manager = 3,
+        Inspector = 4,
+        PIC = 5
+    }
+
+
     public class PatrolRegistrationViewModel
     {
         // 🧾 Basic Info
@@ -50,6 +59,29 @@ namespace ProgramPartListWeb.Areas.PC.Models
         public bool? DivManager_IsAproved { get; set; }
         public bool? DivManager_IsSent { get; set; }
     }
+
+    public class RegistrationRequest
+    {
+        public string RegNo { get; set; }
+        public string EmployeeId { get; set; }
+        public string InspectorId { get; set; }
+        public int DepartmentId { get; set; }
+        public string FindJson { get; set; }
+        public string Prefix { get; set; }
+        public string FinalPrefix => $"{Prefix}-{RegNo}";
+    }
+
+    public class ProcessOwnerRequest
+    {
+        public string RegNo { get; set; }
+        public string FindJson { get; set; }
+        public string Prefix { get; set; }
+        public string Comments { get; set; }
+        public string FinalPrefix => $"{Prefix}-{RegNo}";
+    }
+
+
+
 
 
     public class EmailSignatures

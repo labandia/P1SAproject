@@ -432,7 +432,7 @@
 
                 // 🔍 Search functionality
                 const searchTable = () => {
-                    const query = $('#Summarysearchbox').val().toLowerCase();
+                    const query = $('#searchbox').val().toLowerCase();
 
                     filteredData = dataArray.filter(item =>
                         item.PartNo.toLowerCase().includes(query) || item.DieSerial.toLowerCase().includes(query)
@@ -444,7 +444,7 @@
                 };
 
                 // Add event listener for search input
-                $('#Summarysearchbox').on('input', searchTable);
+                $('#searchbox').on('input', searchTable);
 
               
 

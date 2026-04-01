@@ -424,514 +424,419 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             return Json(formdata, JsonRequestBehavior.AllowGet);
         }
         // ===========  STEP BY STEP  ADD REGISTRATION ===========
+        private RegistrationRequest BuildRequest()
+        {
+            return new RegistrationRequest
+            {
+                RegNo = Request.Form["RegNo"],
+                EmployeeId = Request.Form["Employee_ID"],
+                InspectorId = Request.Form["SelectedInspector"],
+                DepartmentId = Convert.ToInt32(Request.Form["DepartmentID"]),
+                FindJson = Request.Form["FindJson"],
+                Prefix = GetPrefix()
+            };
+        }
+
+        private new ActionResult ValidateRequest(RegistrationRequest req)
+        {
+            if (string.IsNullOrWhiteSpace(req.RegNo) || string.IsNullOrWhiteSpace(req.EmployeeId))
+                return JsonValidationError("Missing required fields.");
+
+            return null;
+        }
+
+        private async Task<(EmailModelV2 employee, EmailModelV2 inspector, ActionResult error)>
+                GetEmails(RegistrationRequest req)
+        {
+            var employee = await _reg.GetEmployeeEmailDetails(req.EmployeeId, 5, req.Prefix);
+            if (employee == null)
+                return (null, null, JsonValidationError("Process owner email not found."));
+
+            var inspector = await _reg.GetEmployeeEmailDetails(req.InspectorId, 4, req.Prefix);
+            if (inspector == null)
+                return (null, null, JsonValidationError("Inspector email not found."));
+
+            return (employee, inspector, null);
+        }
+
+        private (AddFormRegistrationModel model, string pdfPath) BuildModel(RegistrationRequest req)
+        {
+            string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+            string fileName = $"RN_{req.FinalPrefix}_{timestamp}.xlsx";
+            string pdfPath = fileName.Replace(".xlsx", ".pdf");
+
+            var model = new AddFormRegistrationModel
+            {
+                RegNo = req.FinalPrefix,
+                Department_ID = req.DepartmentId,
+                FilePath = pdfPath,
+                PIC_ID = req.EmployeeId,
+                Employee_ID = req.InspectorId
+            };
+
+            return (model, pdfPath);
+        }
+
+
         [HttpPost] 
         public async Task<ActionResult> AddRegist()
         {
             // ===================== STEP 1: Extract Request Data =====================
-            string regNo = Request.Form["RegNo"];
-            string employeeId = Request.Form["Employee_ID"]; // -- Process Owner ID
-            string inspectId = Request.Form["SelectedInspector"]; // -- Select Inspector ID
-            int departmentId = Convert.ToInt32(Request.Form["DepartmentID"]);
-            string findJson = Request.Form["FindJson"];
-            string getprefix = GetPrefix();
-            string finalPrefix = $"{getprefix}-{regNo}";
+            var req = BuildRequest();
 
-            if (string.IsNullOrWhiteSpace(regNo) || string.IsNullOrWhiteSpace(employeeId))
-                return JsonValidationError("Missing required fields: RegNo or Employee_ID.");
+            var validation = ValidateRequest(req);
+            if (validation != null) return validation;
 
-
-            // ===================== STEP 2: Retrieve Required Data =====================
-            var employeeEmail = await _reg.GetEmployeeEmailDetails(employeeId, 5, getprefix);
-            var inspectorEmail = await _reg.GetEmployeeEmailDetails(inspectId, 4, getprefix);
-
-
-            if (employeeEmail == null)
-                return JsonValidationError("Process owner email not found.");
-
-            if (inspectorEmail == null)
-                return JsonValidationError("Inspector email not found.");
+            var (employee, inspector, error) = await GetEmails(req);
+            if (error != null) return error;
 
             // ===================== STEP 3: Prepare File Paths =====================
-            string timestampFile = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-            string excelFileName = $"RN_{finalPrefix}_{timestampFile}.xlsx";
-            string pdfOutputPath = excelFileName.Replace(".xlsx", ".pdf");
+            var (model, _) = BuildModel(req);
 
 
             // ===================== STEP 4: Create Process Object =====================
-            var obj = new AddFormRegistrationModel
-            {
-                RegNo = finalPrefix,
-                Department_ID = departmentId,
-                FilePath = pdfOutputPath,
-                PIC_ID = employeeId,
-                Employee_ID = inspectId
-            };
-
-
-            bool isUpdated = await _reg.AddRegistration(obj, findJson);
-
-            if (!isUpdated)
-                return JsonValidationError("Failed to update process owner information.");
-
+            bool success = await _reg.AddRegistration(model, req.FindJson);
+            if (!success)
+                return JsonValidationError("Failed to update.");
 
             CacheHelper.Remove("Registration");
 
-            return JsonCreated(obj, "INsert Registration Complete");
+            return JsonCreated(model, "Registration No. has Save to the Data");
         }
         [HttpPost]
         public async Task<ActionResult> GenerateRegistration()
         {
             // ===================== STEP 1: Extract Request Data =====================
-            string regNo = Request.Form["RegNo"];
-            string employeeId = Request.Form["Employee_ID"]; // -- Process Owner ID
-            string inspectId = Request.Form["SelectedInspector"]; // -- Select Inspector ID
-            int departmentId = Convert.ToInt32(Request.Form["DepartmentID"]);
-            string findJson = Request.Form["FindJson"];
-            string getprefix = GetPrefix();
-            string finalPrefix = $"{getprefix}-{regNo}";
+            var req = BuildRequest();
 
-            if (string.IsNullOrWhiteSpace(regNo) || string.IsNullOrWhiteSpace(employeeId))
-                return JsonValidationError("Missing required fields: RegNo or Employee_ID.");
+            var validation = ValidateRequest(req);
+            if (validation != null) return validation;
 
+            var (employee, inspector, error) = await GetEmails(req);
+            if (error != null) return error;
 
-            // ===================== STEP 2: Retrieve Required Data =====================
-            var employeeEmail = await _reg.GetEmployeeEmailDetails(employeeId, 5, getprefix);
-            var inspectorEmail = await _reg.GetEmployeeEmailDetails(inspectId, 4, getprefix);
+            var (model, pdfPath) = BuildModel(req);
 
+            string deptName = GlobalUtilities.DepartmentName(req.DepartmentId);
 
-            if (employeeEmail == null)
-                return JsonValidationError("Process owner email not found.");
-
-            if (inspectorEmail == null)
-                return JsonValidationError("Inspector email not found.");
-
-            // ===================== STEP 3: Prepare File Paths =====================
-            string timestampFile = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-            string excelFileName = $"RN_{finalPrefix}_{timestampFile}.xlsx";
-            string pdfOutputPath = excelFileName.Replace(".xlsx", ".pdf");
-
-            // ===================== STEP 4: Create Process Object =====================
-            var obj = new AddFormRegistrationModel
-            {
-                RegNo = finalPrefix,
-                Department_ID = departmentId,
-                FilePath = pdfOutputPath,
-                PIC_ID = employeeId,
-                Employee_ID = inspectId
-            };
-
-            // ===================== STEP 5: Generate Updated PDF =====================
-            string departmentName = GlobalUtilities.DepartmentName(departmentId);
 
             await ExportFiler.SaveFileasPDFV2(
-                obj, findJson,
-                employeeEmail.FullName,
-                inspectorEmail.FullName,
-                departmentName, pdfOutputPath,
-                templatePath,
-                inspectorEmail.Signature,
-                true
-            );
+                 model,
+                 req.FindJson,
+                 employee.FullName,
+                 inspector.FullName,
+                 deptName,
+                 pdfPath,
+                 templatePath,
+                 inspector.Signature,
+                 true
+             );
 
-
-            return JsonCreated(obj, "INsert Registration Complete");
+            return JsonCreated(model, "Generate PDF completed");
         }
         [HttpPost]
         public async Task<ActionResult> SendEmailFromRegistration()
         {
-            // ===================== STEP 1: Extract Request Data =====================
-            string regNo = Request.Form["RegNo"];
-            string employeeId = Request.Form["Employee_ID"]; // -- Process Owner ID
-            string inspectId = Request.Form["SelectedInspector"]; // -- Select Inspector ID
-            int departmentId = Convert.ToInt32(Request.Form["DepartmentID"]);
-            string findJson = Request.Form["FindJson"];
-            string getprefix = GetPrefix();
-            string finalPrefix = $"{getprefix}-{regNo}";
+            var req = BuildRequest();
 
-            if (string.IsNullOrWhiteSpace(regNo) || string.IsNullOrWhiteSpace(employeeId))
-                return JsonValidationError("Missing required fields: RegNo or Employee_ID.");
+            var validation = ValidateRequest(req);
+            if (validation != null) return validation;
 
+            var (employee, inspector, error) = await GetEmails(req);
+            if (error != null) return error;
 
-            // ===================== STEP 2: Retrieve Required Data =====================
-            var employeeEmail = await _reg.GetEmployeeEmailDetails(employeeId, 5, getprefix);
-            var inspectorEmail = await _reg.GetEmployeeEmailDetails(inspectId, 4, getprefix);
+            var (model, _) = BuildModel(req);
 
+            string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/ProcessOwner?Regno={req.FinalPrefix}&mode=1";
 
-            if (employeeEmail == null)
-                return JsonValidationError("Process owner email not found.");
+            string subject = $@"[FOLLOW UP - REGISTRATION REPORT] 'For Review/Submit CounterMeasure' - {req.FinalPrefix}";
 
-            if (inspectorEmail == null)
-                return JsonValidationError("Inspector email not found.");
+            var patrol = await GetRegistrationDetailList(req.FinalPrefix);
+            var findings = await GetFindings(req.FinalPrefix);
 
-            // ===================== STEP 3: Prepare File Paths =====================
-            string timestampFile = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-            string excelFileName = $"RN_{finalPrefix}_{timestampFile}.xlsx";
-            string pdfOutputPath = excelFileName.Replace(".xlsx", ".pdf");
+            string body = PatrolEmailService.CreatePatrolProductionBody(
+               patrol,
+               findings,
+               employee.FullName,
+               subject,
+               processLink,
+               "processowner"
+           );
 
-            // ===================== STEP 4: Create Process Object =====================
-            var obj = new AddFormRegistrationModel
+            var email = new SentEmailModel
             {
-                RegNo = finalPrefix,
-                Department_ID = departmentId,
-                FilePath = pdfOutputPath,
-                PIC_ID = employeeId,
-                Employee_ID = inspectId
-            };
-
-            // ===================== STEP 5: Generate Updated PDF =====================
-            string departmentName = GlobalUtilities.DepartmentName(departmentId);
-
-
-            // ===================== STEP 6: Send Notification Email =====================
-            string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/ProcessOwner?Regno={finalPrefix}&mode=1";
-            string strSubject = $@"[FOLLOW UP - REGISTRATION REPORT] 'For Review/Submit CounterMeasure' - {finalPrefix}";
-            //string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, finalPrefix, processLink);
-
-            var getPatrolView = await GetRegistrationDetailList(finalPrefix);
-            var getFindings = await GetFindings(finalPrefix);
-
-
-            string countermeasureEmail = PatrolEmailService.CreatePatrolProductionBody(
-                getPatrolView,
-                getFindings,
-                employeeEmail.FullName,
-                strSubject,
-                processLink,
-                "processowner"
-             );
-
-
-            var sendEmail = new SentEmailModel
-            {
-                Subject = strSubject,
+                Subject = subject,
                 Sender = strSender,
-                BCC = "",
-                Body = countermeasureEmail,
-                Recipient = employeeEmail.Email
+                Body = body,
+                Recipient = employee.Email
             };
 
-            await EmailService.SendEmailViaSqlDatabase(sendEmail);
+            await EmailService.SendEmailViaSqlDatabase(email);
 
-            return JsonCreated(obj, "INsert Registration Complete");
+            return JsonCreated(model, "Send Email to the process owner");
         }
         // ======================================================
-
-
-        // ORGININAL CODE FOR ADD REGISTRATION
-        [HttpPost]
-        public async Task<ActionResult> AddRegistration()
-        {
-            try
-            {
-                // ===================== STEP 1: Extract Request Data =====================
-                string regNo = Request.Form["RegNo"];
-                string employeeId = Request.Form["Employee_ID"]; // -- Process Owner ID
-                string inspectId = Request.Form["SelectedInspector"]; // -- Select Inspector ID
-                int departmentId = Convert.ToInt32(Request.Form["DepartmentID"]);
-                string findJson = Request.Form["FindJson"];
-                string getprefix = GetPrefix();
-                string finalPrefix = $"{getprefix}-{regNo}";
-
-                if (string.IsNullOrWhiteSpace(regNo) || string.IsNullOrWhiteSpace(employeeId))
-                    return JsonValidationError("Missing required fields: RegNo or Employee_ID.");
-
-
-                // ===================== STEP 2: Retrieve Required Data =====================
-                var employeeEmail = await _reg.GetEmployeeEmailDetails(employeeId, 5, getprefix);
-                var inspectorEmail = await _reg.GetEmployeeEmailDetails(inspectId, 4, getprefix);
-
-
-                if (employeeEmail == null)
-                    return JsonValidationError("Process owner email not found.");
-
-                if (inspectorEmail == null)
-                    return JsonValidationError("Inspector email not found.");
-
-                // ===================== STEP 3: Prepare File Paths =====================
-                string timestampFile = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-                string excelFileName = $"RN_{finalPrefix}_{timestampFile}.xlsx";
-                string pdfOutputPath = excelFileName.Replace(".xlsx", ".pdf");
-
-
-                // ===================== STEP 4: Create Process Object =====================
-                var obj = new AddFormRegistrationModel
-                {
-                    RegNo = finalPrefix,
-                    Department_ID = departmentId,
-                    FilePath = pdfOutputPath,
-                    PIC_ID = employeeId,
-                    Employee_ID = inspectId
-                };
-
-
-                bool isUpdated = await _reg.AddRegistration(obj, findJson);
-
-                if (!isUpdated)
-                    return JsonValidationError("Failed to update process owner information.");
-
-
-                CacheHelper.Remove("Registration");
-
-                // ===================== STEP 5: Generate Updated PDF =====================
-                string departmentName = GlobalUtilities.DepartmentName(departmentId);
-
-                await ExportFiler.SaveFileasPDFV2(
-                    obj, findJson,
-                    employeeEmail.FullName,
-                    inspectorEmail.FullName,
-                    departmentName, pdfOutputPath,
-                    templatePath,
-                    inspectorEmail.Signature,
-                    true
-                );
-
-                // ===================== STEP 6: Send Notification Email =====================
-                string processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/ProcessOwner?Regno={finalPrefix}&mode=1";
-                string strSubject = $@"[FOLLOW UP - REGISTRATION REPORT] 'For Review/Submit CounterMeasure' - {finalPrefix}";
-                //string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, finalPrefix, processLink);
-
-                var getPatrolView = await GetRegistrationDetailList(finalPrefix);
-                var getFindings = await GetFindings(finalPrefix);
-
-
-                string countermeasureEmail = PatrolEmailService.CreatePatrolProductionBody(
-                    getPatrolView,
-                    getFindings,
-                    employeeEmail.FullName,
-                    strSubject,
-                    processLink,
-                    "processowner"
-                 );
-
-
-                var sendEmail = new SentEmailModel
-                {
-                    Subject = strSubject,
-                    Sender = strSender,
-                    BCC = "",
-                    Body = countermeasureEmail,
-                    Recipient = employeeEmail.Email
-                };
-
-                await EmailService.SendEmailViaSqlDatabase(sendEmail);
-
-                return JsonCreated(obj, "Updated successfully.");
-            }
-            catch (Exception ex)
-            {
-                return JsonValidationError("An unexpected error occurred while processing the request." + ex.Message);
-            }
-        }
-
-
-     
-
-        [HttpPost]
-        public async Task<ActionResult> ReturnEmailSubmit(string Regno, string Message, int ReportStatus)
-        {
-            string regNo = Request.Form["RegNo"];
-            string Employee_ID = Request.Form["Employee_ID"];
-            string getprefix = GetPrefix();
-            string finalPrefix = $"{getprefix}-{regNo}";
-
-            var emailList = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
-            var employeeEmail = new EmailModelV2();
-            string processLink = "";
-
-
-            if (ReportStatus == 2)
-            {
-                processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/InspectorsReview?Regno={finalPrefix}&mode=1";
-                employeeEmail = emailList.FirstOrDefault(p => p.Employee_ID == Employee_ID);
-            }
-            else if (ReportStatus == 3)
-            {
-                employeeEmail = emailList.FirstOrDefault(p => p.Employee_ID == Employee_ID);
-            }
-
-
-            // ===================== STEP 8: Send Notification Email =====================
-
-            string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, finalPrefix, processLink);
-
-            var SendEmail = new SentEmailModel
-            {
-                Subject = "Patrol Inspection",
-                Sender = strSender,
-                BCC = "",
-                Body = emailBody,
-                Recipient = employeeEmail.Email
-            };
-
-            await EmailService.SendEmailViaSqlDatabase(SendEmail);
-
-            return JsonCreated(true, "Updated successfully.");
-        }
 
         // =======================================================================
         // =================  SAVE AND SUBMIT BY PROCESS OWNER ===================
         // =======================================================================
-      
+        private ProcessOwnerRequest BuildProcessOwnerRequest()
+        {
+            return new ProcessOwnerRequest
+            {
+                RegNo = Request.Form["RegNo"],
+                FindJson = Request.Form["FindJson"],
+                Comments = Request.Form["PIC_Comments"],
+                Prefix = GetPrefix()
+            };
+        }
+
+        private EmailModelV2 GetEmailByRole(List<EmailModelV2> list, int role, string prefix)
+        {
+            return list.FirstOrDefault(e => e.Position == role && e.DepPrefix == prefix);
+        }
+        private async Task<PatrolRegistrationViewModel> GetRegistration(string regNo, string prefix)
+        {
+            var existRegistration = await _reg.GetRegistrationData(GetPrefix());
+            return existRegistration.SingleOrDefault(r => r.RegNo == prefix);
+        }
+
+        private async Task<string> HandleAttachments(
+            HttpPostedFileBase[] files,
+            string regNo,
+            string existingPaths)
+        {
+            if (files == null || !files.Any())
+                return existingPaths; // No new files, return existing paths
+
+            var newFiles = new List<string>();
+
+            foreach(var file in files.Where(f => f?.ContentLength > 0))
+            {
+                string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                string name = $"CM_{regNo}_{timestamp}{Path.GetExtension(file.FileName)}";
+
+                ExportFiler.SaveFileasExcel(file, name);
+                newFiles.Add(name);
+            }
+
+            if(!newFiles.Any())
+                return existingPaths; // No valid files uploaded, return existing paths
+
+            return string.IsNullOrEmpty(existingPaths)
+                ? string.Join(";", newFiles)
+                : $"{existingPaths};{string.Join(";", newFiles)}";
+        }
+
+        private (string excel, string pdf) GenerateFileName(string regNo)
+        {
+            string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+            string excel = $"RN_{regNo}_{timestamp}.xlsx";
+            string pdf = excel.Replace(".xlsx", ".pdf");
+
+            return (excel, pdf);
+        }
+        private async Task<List<EmailSignatures>> BuildSignatures(dynamic reg, string prefix)
+        {
+            var roles = new Dictionary<string, RoleType>
+            {
+                { reg.PIC_ID, RoleType.PIC },
+                { reg.Inspect_ID, RoleType.Inspector },
+                { reg.Manager_ID, RoleType.Manager },
+                { reg.DivManager_ID, RoleType.DivisionManager }
+            };
+
+            var result = new List<EmailSignatures>();
+
+            foreach (var r in roles)
+            {
+                if (string.IsNullOrEmpty(r.Key)) continue;
+
+                var emp = await _reg.GetEmployeeEmailDetails(r.Key, (int)r.Value, prefix);
+
+                if (emp?.Signature != null)
+                {
+                    result.Add(new EmailSignatures
+                    {
+                        Position = (int)r.Value,
+                        Signature = emp.Signature
+                    });
+                }
+            }
+
+            return result;
+        }
+
+
+        private async Task SendEmailProcess(string regNo,
+            EmailModelV2 manager, string prefix, string link, string sento, string subject)
+        {
+            var patrol = await GetRegistrationDetailList(regNo);
+            var findings = await GetFindings(regNo);
+
+            string body = PatrolEmailService.CreatePatrolProductionBody(
+                  patrol,
+                  findings,
+                  manager.FullName,
+                  subject,
+                  link,
+                  "sendtomanager"
+            );
+
+            await EmailService.SendEmailViaSqlDatabase(new SentEmailModel
+            {
+                Subject = subject,
+                Sender = strSender,
+                Body = body,
+                Recipient = manager.Email
+            });
+        }
+
+
+
+
+
         [HttpPost]
         public async Task<ActionResult> ProcessOwnerSubmission(HttpPostedFileBase[] Attachments)
         {
             try
             {
-                // ===================== STEP 1: Extract Request Data =====================
-                string finalPrefix = Request.Form["RegNo"];
-                string findJson = Request.Form["FindJson"];
-                string getprefix = GetPrefix();
+                var req = BuildProcessOwnerRequest();
+
+                if(string.IsNullOrWhiteSpace(req.RegNo))
+                    return JsonValidationError("Registration number is required.");
 
                 // ===================== STEP 1: Retrieve Required Data =====================
                 var emailList = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
 
                 // SAFE: Use FirstOrDefault to avoid "more than one matching element"
-                var employeeEmail = emailList
-                    .FirstOrDefault(e => e.Position == 3 && e.DepPrefix == getprefix);
-
-                if (employeeEmail == null)
+                var manager = GetEmailByRole(emailList, 3, req.Prefix); 
+                if (manager == null)
                     return JsonValidationError("Employee email not found.");
 
-                var registrationData = await _reg.GetRegistrationData(GetPrefix());
-                var existingReg = registrationData.SingleOrDefault(r => r.RegNo == finalPrefix);
 
+                var existingReg = await GetRegistration(req.RegNo, req.Prefix);
                 if (existingReg == null)
-                    return JsonValidationError($"Registration record not found for RegNo {finalPrefix}.");
+                    return JsonValidationError($"Registration record not found for RegNo {req.Prefix}.");
 
-                string oldAttachmentPaths = existingReg.CounterPath;
-                string previousPdfPath = existingReg.Filepath;
 
 
                 // // ===================== STEP 3: Handle Attachments =====================
-                var newAttachments = new List<string>();
+                var combineAttachments = await HandleAttachments(
+                    Attachments, 
+                    req.RegNo, 
+                    existingReg.CounterPath
+                );
 
-                if (Attachments != null && Attachments.Any())
-                {
-                    foreach (var file in Attachments)
-                    {
-                        if (file?.ContentLength > 0)
-                        {
-                            string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-                            string fileName = $"CM_{finalPrefix}_{timestamp}{Path.GetExtension(file.FileName)}";
-                            Debug.WriteLine("Filename here: " + fileName);
-                            ExportFiler.SaveFileasExcel(file, fileName);
-                            newAttachments.Add(fileName);
-                        }
-                    }
-                }
-
-                // if there is a new File upload, append them to the old/current PatrolPaths 
-                string combinedAttachmentPaths = oldAttachmentPaths;
-
-                // If there is a file
-                if (newAttachments.Count > 0)
-                {
-                    combinedAttachmentPaths = string.IsNullOrEmpty(oldAttachmentPaths)
-                        ? string.Join(";", newAttachments)
-                        : $"{oldAttachmentPaths};{string.Join(";", newAttachments)}";
-                }
-
-                // ===================== STEP 4: Prepare File Paths =====================
-                string timestampFile = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-                string excelFileName = $"RN_{finalPrefix}_{timestampFile}.xlsx";
-                string pdfOutputPath = excelFileName.Replace(".xlsx", ".pdf");
-
+                // ================= FILE =================
+                var (excel, pdf) = GenerateFileName(req.RegNo);
 
                 // ===================== STEP 5: Create Process Object =====================
                 var processObj = new ProcessOwnerForms
                 {
-                    RegNo = Request.Form["RegNo"],
-                    PIC_Comments = Request.Form["PIC_Comments"],
-                    CounterPath = combinedAttachmentPaths,
-                    Filepath = pdfOutputPath,
-                    DepManager_ID = employeeEmail.Employee_ID
+                    RegNo = req.RegNo,
+                    PIC_Comments = req.Comments,
+                    CounterPath = combineAttachments,
+                    Filepath = existingReg.Filepath,
+                    DepManager_ID = manager.Employee_ID
                 };
+
+                Debug.WriteLine($@"RegNo :{processObj.RegNo} - Comments :{processObj.PIC_Comments} - 
+                                Counterpath : {processObj.CounterPath} - FilePath : {processObj.Filepath}
+                                DepartmentID : {processObj.DepManager_ID}");
                 // ===================== STEP 6: Update Records =====================
-                bool isUpdated = await _reg.EditReg_ProcessOwner(processObj, findJson);
+                bool isUpdated = await _reg.EditReg_ProcessOwner(processObj, req.FindJson);
                 if (!isUpdated)
                     return JsonValidationError("Failed to update process owner information.");
 
+            
+                return JsonCreated(true, "Updated Registration Complete.");
+            }
+            catch (Exception ex)
+            {
+                return JsonValidationError("An unexpected error." + ex.Message);
+            }
+        }
+        [HttpPost]
+        public async Task<ActionResult> UpdateRegistrationPDF(HttpPostedFileBase[] Attachments)
+        {
+            try
+            {
+                var req = BuildProcessOwnerRequest();
+
+                if (string.IsNullOrWhiteSpace(req.RegNo))
+                    return JsonValidationError("Registration number is required.");
+
+                // ===================== STEP 1: Retrieve Required Data =====================
+                var emailList = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
+
+                // SAFE: Use FirstOrDefault to avoid "more than one matching element"
+                var manager = GetEmailByRole(emailList, 3, req.Prefix);
+                if (manager == null)
+                    return JsonValidationError("Employee email not found.");
+
+
+                var existingReg = await GetRegistration(req.RegNo, req.Prefix);
+                if (existingReg == null)
+                    return JsonValidationError($"Registration record not found for RegNo {req.Prefix}.");
+
+
+                // ================= FILE =================
+                var (excel, pdf) = GenerateFileName(req.RegNo);
+
 
                 // ===================== STEP 7: Generate Updated PDF =====================
-                var updatedRegData = await _reg.GetRegistrationData(GetPrefix());
-                var updatedReg = updatedRegData.SingleOrDefault(r => r.RegNo == finalPrefix);
-                var updatedFindings = await _reg.GetRegisterFindings(finalPrefix);
+                var updatedReg = await GetRegistration(req.RegNo, req.Prefix);
+                var updatedFindings = await _reg.GetRegisterFindings(req.RegNo);
 
-                // ===================== STEP 7: Build Email Signatures =====================
-                List<EmailSignatures> emailSigns = new List<EmailSignatures>();
+                // ===================== STEP 8: Build Email Signatures =====================
+                var signatures = await BuildSignatures(updatedReg, req.Prefix);
 
-                // Signature of the PIC
-                if (!string.IsNullOrEmpty(updatedReg.PIC_ID))
-                {
-                    var picId = await _reg.GetEmployeeEmailDetails(updatedReg.PIC_ID, 5, getprefix);
-
-                    if (picId != null && !string.IsNullOrEmpty(picId.Signature))
-                    {
-                        emailSigns.Add(new EmailSignatures
-                        {
-                            Position = 5,
-                            Signature = picId.Signature
-                        });
-                    }
-                }
-                // Signature of the Inspector
-                if (!string.IsNullOrEmpty(updatedReg.Inspect_ID))
-                {
-                    var picId = await _reg.GetEmployeeEmailDetails(updatedReg.Inspect_ID, 4, getprefix);
-
-                    if (picId != null && !string.IsNullOrEmpty(picId.Signature))
-                    {
-                        emailSigns.Add(new EmailSignatures
-                        {
-                            Position = 4,
-                            Signature = picId.Signature
-                        });
-                    }
-                }
-
-                //foreach (var sign in emailSigns)
-                //{
-                //    Debug.WriteLine($"Position: {sign.Position}, Signature name: {sign.Signature}");
-                //}
+                // ================= PDF =================
                 await ExportFiler.UpdatePDFRegistration(
                    updatedReg,
                    updatedFindings,
                    emailList,
-                   emailSigns,
-                   previousPdfPath,
-                   excelFileName,
+                   signatures,
+                   existingReg.Filepath,
+                   excel,
                    templatePath
                );
 
-                // ===================== STEP 8: Send Notification Email =====================
+               
+                return JsonCreated(true, "Updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return JsonValidationError("An unexpected error." + ex.Message);
+            }
+        }
+        [HttpPost]
+        public async Task<ActionResult> EmailSendToNext(HttpPostedFileBase[] Attachments)
+        {
+            try
+            {
+                var req = BuildProcessOwnerRequest();
+
+                if (string.IsNullOrWhiteSpace(req.RegNo))
+                    return JsonValidationError("Registration number is required.");
+
+                // ===================== STEP 1: Retrieve Required Data =====================
+                var emailList = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
+
+                // SAFE: Use FirstOrDefault to avoid "more than one matching element"
+                var manager = GetEmailByRole(emailList, 3, req.Prefix);
+                if (manager == null)
+                    return JsonValidationError("Employee email not found.");
+
+                // ===================== STEP 2: Send Notification Email =====================
                 string processLink =
-                     $"http://p1saportalweb.sdp.com/PC/Patrol/ManagerView?Regno={finalPrefix}&mode=1";
-                string strSubject = $@"[PATROL INSPECTION] 'For Review/Verification' - {finalPrefix}";
-
-                var getPatrolView = await GetRegistrationDetailList(finalPrefix);
-                var getFindings = await GetFindings(finalPrefix);
-
-                string InspectorsEmail = PatrolEmailService.CreatePatrolProductionBody(
-                    getPatrolView,
-                    getFindings,
-                    employeeEmail.FullName,
-                    strSubject,
-                    processLink,
-                    "sendtomanager"
-                 );
+                     $"http://p1saportalweb.sdp.com/PC/Patrol/ManagerView?Regno={req.FinalPrefix}&mode=1";
+                string strSubject = $@"[PATROL INSPECTION] 'For Review/Verification' - {req.FinalPrefix}";
 
 
-                var SendEmail = new SentEmailModel
-                {
-                    Subject = strSubject,
-                    Sender = strSender,
-                    BCC = "",
-                    Body = InspectorsEmail,
-                    Recipient = employeeEmail.Email
-                };
-
-
-                await EmailService.SendEmailViaSqlDatabase(SendEmail);
+                // ================= EMAIL =================
+                await SendEmailProcess(req.RegNo, manager, req.Prefix, processLink, "sendtomanager", strSubject);
 
                 return JsonCreated(true, "Updated successfully.");
             }
@@ -940,6 +845,16 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 return JsonValidationError("An unexpected error." + ex.Message);
             }
         }
+
+
+
+
+
+
+
+
+
+
         // =======================================================================
         // ==============  INSPECTOR PROCESS BY APPROVED AND REVISE ==============
         // =======================================================================
@@ -1000,7 +915,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
         //        var updatedFindings = await _reg.GetRegisterFindings(Regno);
 
-                
+
         //        await ExportFiler.UpdatePDFRegistration(
         //            updatedReg,
         //            updatedFindings,
@@ -1009,12 +924,12 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         //            excelFileName,
         //            templatePath
         //        );
-                
+
 
         //        // ===================== STEP 4: Send Notification Email =====================
         //        string processLink =
         //            $"http://p1saportalweb.sdp.com/PC/Patrol/ManagerView?Regno={Regno}&mode=1";
-   
+
         //        string strSubject = $@"[PATROL INSPECTION] 'For Review/Verification' - {Regno}";
 
         //        var getPatrolView = await GetRegistrationDetailList(Regno);
@@ -1553,7 +1468,47 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         }
         // =======================================================================
 
+        [HttpPost]
+        public async Task<ActionResult> ReturnEmailSubmit(string Regno, string Message, int ReportStatus)
+        {
+            string regNo = Request.Form["RegNo"];
+            string Employee_ID = Request.Form["Employee_ID"];
+            string getprefix = GetPrefix();
+            string finalPrefix = $"{getprefix}-{regNo}";
 
+            var emailList = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
+            var employeeEmail = new EmailModelV2();
+            string processLink = "";
+
+
+            if (ReportStatus == 2)
+            {
+                processLink = $"http://p1saportalweb.sdp.com/PC/Patrol/InspectorsReview?Regno={finalPrefix}&mode=1";
+                employeeEmail = emailList.FirstOrDefault(p => p.Employee_ID == Employee_ID);
+            }
+            else if (ReportStatus == 3)
+            {
+                employeeEmail = emailList.FirstOrDefault(p => p.Employee_ID == Employee_ID);
+            }
+
+
+            // ===================== STEP 8: Send Notification Email =====================
+
+            string emailBody = EmailService.RegistrationEmailBody(employeeEmail.FullName, finalPrefix, processLink);
+
+            var SendEmail = new SentEmailModel
+            {
+                Subject = "Patrol Inspection",
+                Sender = strSender,
+                BCC = "",
+                Body = emailBody,
+                Recipient = employeeEmail.Email
+            };
+
+            await EmailService.SendEmailViaSqlDatabase(SendEmail);
+
+            return JsonCreated(true, "Updated successfully.");
+        }
 
         [HttpPost]
         public async Task<ActionResult> DeleteRegistration()
@@ -1772,16 +1727,16 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
             if (strfilepath.StartsWith("CM", StringComparison.OrdinalIgnoreCase))
             {
-                basePath = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Countermeasure\";
+                basePath = @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\PatrolCountermeasure\";
             }
             else if (strfilepath.StartsWith("PF", StringComparison.OrdinalIgnoreCase)
                   || strfilepath.StartsWith("RF", StringComparison.OrdinalIgnoreCase))
             {
-                basePath = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Countermeasure\";
+                basePath = @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\PatrolCountermeasure\RegistrationFiles";
             }
             else
             {
-                basePath = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Registration\";
+                basePath = @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\PatrolCountermeasure\RegistrationFiles\";
             }
 
             var filePath = Path.Combine(basePath, strfilepath);

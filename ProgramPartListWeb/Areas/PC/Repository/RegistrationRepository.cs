@@ -5,6 +5,7 @@ using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -66,6 +67,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
 								ON r.DivManager_ID = div.Employee_ID 
                             WHERE r.RegNo LIKE '%{prefix}%'      
                             ORDER BY DateCreated DESC";
+            Debug.WriteLine(strsql);
             return SqlDataAccess.GetDataAsync<PatrolRegistrationViewModel>(strsql);
         }
         public Task<List<EmailModelV2>> PatrolEmailData()
@@ -115,11 +117,11 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             if (!result) return false;
 
             // ========== 2. INSERT FILES ==========
-            await SqlDataAccess.ExecuteAsync("InserFiles", new
-            {
-                RegNo = reg.RegNo,
-                FilePath = reg.FilePath
-            }, CommandType.StoredProcedure);
+            //await SqlDataAccess.ExecuteAsync("InserFiles", new
+            //{
+            //    RegNo = reg.RegNo,
+            //    FilePath = reg.FilePath
+            //}, CommandType.StoredProcedure);
 
             // ========== 3. INSERT APPROVAL LIST ==========
             await SqlDataAccess.ExecuteAsync(@"
@@ -321,6 +323,15 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             string strsql = "UPDATE Patrol_UserEmail Set Signature =@Signature WHERE Employee_ID =@Employee_ID";
 
             return SqlDataAccess.ExecuteAsync(strsql, new { Signature = fileName, Employee_ID = userID });
+        }
+
+        public Task<bool> InsertFileRawRegistration(string regno, string FilePath)
+        {
+            return SqlDataAccess.ExecuteAsync("InserFiles", new
+            {
+                RegNo = regno,
+                FilePath = FilePath
+            }, CommandType.StoredProcedure);
         }
     }
 }

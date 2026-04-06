@@ -15,6 +15,9 @@ namespace ProgramPartListWeb.Areas.PC.Interface
         Task<EmailModelV2> GetEmployeeEmailDetails(string emp, int pos, string pre);
 
         Task<bool> AddRegistration(AddFormRegistrationModel model, string json);
+
+        Task<bool> InsertFileRawRegistration(string regno, string FilePath);
+
         Task<bool> EditReg_ProcessOwner(ProcessOwnerForms model, string json);
         Task<bool> ApproveByInspector(string RegNo, string Datecon, string newfilepath, string ManagerID);
         Task<bool> ApproveByManager(string RegNo, string comments, string newfilepath, string DepManager);

@@ -865,6 +865,7 @@
     <Content Include="Scripts\chart.js" />
     <Content Include="Scripts\chart.min.js" />
     <Content Include="Scripts\circularProgressBar.min.js" />
+    <Content Include="Scripts\iconify-icon.min.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />
     <Content Include="Scripts\jquery-3.7.1.slim.js" />

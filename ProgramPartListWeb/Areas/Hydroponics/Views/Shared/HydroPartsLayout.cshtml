@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>San Hydro application</title>
 
-
+    <script src="~/Scripts/iconify-icon.min.js"></script>
     <script src="~/Scripts/Shared/bootstrap.bundle.min.js"></script>
     <link href="~/Content/Shared/bootstrap.min.css" rel="stylesheet" />
     @Styles.Render("~/Content/shared-css")
@@ -22,45 +22,60 @@
     <!--========== SIDEBAR ==========-->
     <!-- Sidebar -->
     <div class="sidebar">
-        <div class="logo">
+        @*<div class="logo">
             <div class="logo-text">San <span>Hydro</span> </div>
             <p style="font-weight: 400; font-size: .8rem; margin: 0; margin-top: -.3em; opacity: .6;"><small>Appliance system</small></p>
+        </div>*@
+
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <div class="logo-icon">
+                    <div style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;">
+                        <iconify-icon icon="lucide:hexagon" style="font-size: 20px; color: #169960"></iconify-icon>
+                    </div>
+                </div>
+                <div class="logo-text">
+                    <div class="logo-title">San <span>Hydro</span> </div>
+                    <p style="font-weight: 400; font-size: .8rem; margin: 0; margin-top: -.3em; opacity: .6;"><small>Appliance system</small></p>
+                </div>
+            </div>
         </div>
+
 
         <div class="nav-menu">
 
             <a href="/Hydroponics/Hydro/Orderpage" class="nav-item">
-                <i class="fas fa-box"></i>
+                <iconify-icon icon="lucide:shopping-bag" style="font-size:18px;"></iconify-icon>
                 <span class="nav-text">Manage Orders </span>
             </a>
 
             <a href="/Hydroponics/Hydro/RequestPage" class="nav-item">
-                <i class="fa-solid fa-file-invoice"></i>
+                <iconify-icon icon="lucide:file-text" style="font-size:18px;"></iconify-icon>
                 <span class="nav-text">Manage Request </span>
             </a>
 
             <a href="/Hydroponics/Hydro/Chambers" class="nav-item">
-                <i class="fa-solid fa-x-ray"></i>
+                <iconify-icon icon="lucide:server" style="font-size:18px;"></iconify-icon>
                 <span class="nav-text">Hydroponics Chambers</span>
             </a>
 
 
             <a href="/Hydroponics/Hydro/Inventorylist" class="nav-item">
-                <i class="fas fa-warehouse"></i>
+                <iconify-icon icon="lucide:box" style="font-size:18px;"></iconify-icon>
                 <span class="nav-text">Inventory</span>
             </a>
 
 
             @*<a href="/Hydroponics/Hydro/TransactionHistory" class="nav-item">
-                    <i class="fa-solid fa-clock-rotate-left"></i>
-                    <span class="nav-text">Transaction History</span>
-                </a>*@
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <span class="nav-text">Transaction History</span>
+            </a>*@
             <a href="/Hydroponics/Hydro/UserManage" class="nav-item">
-                <i class="fas fa-users"></i>
+                <iconify-icon icon="lucide:users" style="font-size:18px;"></iconify-icon>
                 <span class="nav-text">Manage Users</span>
             </a>
             <a href="/Hydroponics/Hydro/InventSummary" class="nav-item">
-                <i class="fa-regular fa-chart-bar"></i>
+                <iconify-icon icon="lucide:bar-chart-2" style="font-size:18px;"></iconify-icon>
                 <span class="nav-text">Inventory parts Summary</span>
             </a>
         </div>
@@ -69,7 +84,8 @@
     <!-- Main Content -->
     <div class="main-content">
         <header>
-            <h3 class="page-title" id="titlepage">Hydroponic Chamber</h3>
+            <div class="page-title-area"></div>
+
             <div class="header-controls">
                 <button class="mobile-menu-btn">
                     <i class="fas fa-bars"></i>
@@ -95,10 +111,10 @@
 
                     <!-- Notification Dropdown -->
                     @*<div id="notificationDropdown">
-                            <ul id="stockAlerts">
-                                <li style="padding:10px; text-align:center; color:gray;">No alerts</li>
-                            </ul>
-                        </div>*@
+                    <ul id="stockAlerts">
+                        <li style="padding:10px; text-align:center; color:gray;">No alerts</li>
+                    </ul>
+                </div>*@
 
                     <div class="notification-dropdown dd" id="notificationDropdown">
                         <div class="arrow-up"></div>
@@ -255,28 +271,41 @@
 
                     switch (actionpage) {
                         case "orderpage":
-                            $("#titlepage").html(`<i class="fas fa-clipboard-list"></i> Manage Orders`);
+                            $(".page-title-area").html(`<div class='iconify-Conatiner'>
+                                                             <iconify-icon icon="lucide:shopping-bag" style="font-size:20px;"></iconify-icon>
+                                                        </div>
+                                                        <span class="page-title"> Manage Orders`);
                             break;
                         case "requestpage":
-                            $("#titlepage").html(`<i class="fa-solid fa-file-invoice" ></i> Manage Request`);
+                            $(".page-title-area").html(`<div class='iconify-Conatiner'>
+                                                             <iconify-icon icon="lucide:file-text" style="font-size:20px;"></iconify-icon>
+                                                        </div>
+                                                <span class="page-title"> Manage Request`);
                             break;
                         case "chambers":
-                            $("#titlepage").html(`<i class="fa-solid fa-x-ray"></i>  Hydroponic Chamber`);
+                            $(".page-title-area").html(`<div class='iconify-Conatiner'>
+                                                             <iconify-icon icon="lucide:server" style="font-size:20px;"></iconify-icon>
+                                                        </div>
+                                                <span class="page-title">  Hydroponic Chamber`);
                             break;
                         case "inventorylist":
-                            $("#titlepage").html(`<i class="fa-solid fa-boxes-packing"></i>  Inventory Management`);
+                            $(".page-title-area").html(`<div class='iconify-Conatiner'>
+                                                             <iconify-icon icon="lucide:box" style="font-size:20px;"></iconify-icon>
+                                                        </div>
+                                                <span class="page-title">INVENTORY MANAGEMENT</span>`);
                             break;
-                        case "partlist":
-                            $("#titlepage").html(`<i class="fa-solid fa-table-list"></i> Parts Masterlist`);
-                            break;
-                        case "requeststock":
-                            $("#titlepage").html(`<i class="fas fa-clipboard-list"></i> Manage Stock Requests`);
-                            break;
+                  
                         case "transactionhistory":
-                            $("#titlepage").html(`<i class="fa-solid fa-clock-rotate-left"></i> Transaction History`);
+                            $(".page-title-area").html(`<div class='iconify-Conatiner'>
+                                                             <iconify-icon icon="lucide:box" style="font-size:20px;"></iconify-icon>
+                                                        </div>
+                                                <span class="page-title"> Transaction History`);
                             break;
                         case "usermanage":
-                            $("#titlepage").html(`<i class="fas fa-users"></i>  User Management`);
+                            $(".page-title-area").html(`<div class='iconify-Conatiner'>
+                                                             <iconify-icon icon="lucide:users" style="font-size:20px;"></iconify-icon>
+                                                        </div>
+                                                <span class="page-title">  User Management`);
                             break;
                     }
 

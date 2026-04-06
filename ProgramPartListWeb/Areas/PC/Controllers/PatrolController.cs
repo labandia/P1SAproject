@@ -532,6 +532,10 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                  true
              );
 
+            bool result = await _reg.InsertFileRawRegistration(model.RegNo, model.FilePath);
+
+            if (!result) return JsonValidationError("Failed to Generate PDF.");
+
             return JsonCreated(model, "Generate PDF completed");
         }
         [HttpPost]
@@ -597,7 +601,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
         }
         private async Task<PatrolRegistrationViewModel> GetRegistration(string regNo, string prefix)
         {
-            var existRegistration = await _reg.GetRegistrationData(GetPrefix());
+            var existRegistration = await _reg.GetRegistrationData("P1SA");
             return existRegistration.SingleOrDefault(r => r.RegNo == prefix);
         }
 
@@ -710,7 +714,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 var emailList = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
 
                 // SAFE: Use FirstOrDefault to avoid "more than one matching element"
-                var manager = GetEmailByRole(emailList, 3, req.Prefix); 
+                var manager = GetEmailByRole(emailList, 3, req.Prefix);
                 if (manager == null)
                     return JsonValidationError("Employee email not found.");
 
@@ -722,35 +726,42 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
 
                 // // ===================== STEP 3: Handle Attachments =====================
-                var combineAttachments = await HandleAttachments(
-                    Attachments, 
-                    req.RegNo, 
-                    existingReg.CounterPath
-                );
+                //var combineAttachments = await HandleAttachments(
+                //    Attachments,
+                //    req.RegNo,
+                //    existingReg.CounterPath
+                //);
+
+                //var combineAttachments = await HandleAttachments(
+                //    Attachments,
+                //    req.RegNo,
+                //    ""
+                //);
 
                 // ================= FILE =================
                 var (excel, pdf) = GenerateFileName(req.RegNo);
 
                 // ===================== STEP 5: Create Process Object =====================
-                var processObj = new ProcessOwnerForms
-                {
-                    RegNo = req.RegNo,
-                    PIC_Comments = req.Comments,
-                    CounterPath = combineAttachments,
-                    Filepath = existingReg.Filepath,
-                    DepManager_ID = manager.Employee_ID
-                };
+                //existingReg.Filepath
+                //var processObj = new ProcessOwnerForms
+                //{
+                //    RegNo = req.RegNo,
+                //    PIC_Comments = req.Comments,
+                //    CounterPath = combineAttachments,
+                //    Filepath = "",
+                //    DepManager_ID = "24050006"
+                //};
 
-                Debug.WriteLine($@"RegNo :{processObj.RegNo} - Comments :{processObj.PIC_Comments} - 
-                                Counterpath : {processObj.CounterPath} - FilePath : {processObj.Filepath}
-                                DepartmentID : {processObj.DepManager_ID}");
+                //Debug.WriteLine($@"RegNo :{processObj.RegNo} - Comments :{processObj.PIC_Comments} - 
+                //                Counterpath : {processObj.CounterPath} - FilePath : {processObj.Filepath}
+                //                DepartmentID : {processObj.DepManager_ID}");
                 // ===================== STEP 6: Update Records =====================
-                bool isUpdated = await _reg.EditReg_ProcessOwner(processObj, req.FindJson);
-                if (!isUpdated)
-                    return JsonValidationError("Failed to update process owner information.");
+                //bool isUpdated = await _reg.EditReg_ProcessOwner(processObj, req.FindJson);
+                //if (!isUpdated)
+                //    return JsonValidationError("Failed to update process owner information.");
 
             
-                return JsonCreated(true, "Updated Registration Complete.");
+                return JsonCreated(existingReg, "Updated Registration Complete.");
             }
             catch (Exception ex)
             {

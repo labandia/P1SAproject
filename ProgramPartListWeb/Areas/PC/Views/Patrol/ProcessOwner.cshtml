@@ -266,7 +266,8 @@
 
                 const formData = new FormData(e.target);
                 formData.append('FindJson', this.buildFindings(e.target));
-
+                const data = Object.fromEntries(formData);
+                console.log(data);
                 this.selectedFiles.forEach(file => formData.append("Attachments", file));
 
 
@@ -322,16 +323,6 @@
                             id: "step1",
                             progress: 25,
                             action: () => postMethodPublic('@Url.Action("ProcessOwnerSubmission", "Patrol")', formData)
-                        },
-                        {
-                            id: "step2",
-                            progress: 50,
-                            action: () => postMethodPublic('@Url.Action("GenerateRegistrationV2", "Patrol")', formData)
-                        },
-                        {
-                            id: "step3",
-                            progress: 75,
-                            action: () => postMethodPublic('@Url.Action("SendEmailFromRegistrationV2", "Patrol")', formData)
                         },
                         {
                             id: "step4",

@@ -522,7 +522,7 @@
            // Step 1: Simulate "Saving data..."
            await new Promise(resolve => setTimeout(resolve, 1200)); // 1.2s delay for animation
 
-           let res = await postMethod('@Url.Action("ManagerApproveSubmit", "Patrol")', fomdata);
+           let res = await postMethodPublic('@Url.Action("ManagerApproveSubmit", "Patrol")', fomdata);
            if (res.StatusCode === 201) {
                await new Promise(resolve => setTimeout(resolve, 1000));
                savebtn.innerHTML = originalText;
@@ -611,7 +611,7 @@
 
 
         const GetRegistrationDetails = async () => {
-            let res = await GetMethod('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
+            let res = await GetMethodPublic('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
             if (res && res.Success) {
                  strManagerID = res.data.Manager_ID;
 
@@ -668,7 +668,7 @@
              }
          }
         const GetRegistrationFindingsID = async () => {
-            let res = await GetMethod('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
+            let res = await GetMethodPublic('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
 
              if (res && res.Success) {
                  res.data.forEach(item => {
@@ -679,7 +679,7 @@
          }
         const GetRegistratioFiles = async () => {
              let filesSelect = [];
-            let res = await GetMethod('@Url.Action("GetRegistrationAllFiles", "Patrol")', { Regno: strRegno });
+            let res = await GetMethodPublic('@Url.Action("GetRegistrationAllFiles", "Patrol")', { Regno: strRegno });
              if (res.Success && res) {
                  filesSelect = res.data;
 
@@ -764,7 +764,7 @@
          }
 
         const GetEmailList = async () => {
-            let res = await GetMethod('@Url.Action("GetEmaiRegistration", "Patrol")', {});
+            let res = await GetMethodPublic('@Url.Action("GetEmaiRegistration", "Patrol")', {});
             console.log(res);
              if (res && res.Success) {
                  emailTable = res.data;

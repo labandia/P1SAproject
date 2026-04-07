@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
+using DocumentFormat.OpenXml.Drawing;
 using OfficeOpenXml;
 using ProgramPartListWeb.Areas.PC.Interface;
 using ProgramPartListWeb.Areas.PC.Models;
@@ -19,6 +20,7 @@ using ProgramPartListWeb.Models;
 using ProgramPartListWeb.Utilities;
 using ProgramPartListWeb.Utilities.Common;
 using Spire.Xls;
+using Path = System.IO.Path;
 
 namespace ProgramPartListWeb.Areas.PC.Controllers
 {
@@ -856,7 +858,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
 
                 // ================= EMAIL =================
-                await SendEmailProcess(req.RegNo, manager, req.Prefix, processLink, "sendtomanager", strSubject);
+                await SendEmailProcess(req.RegNo, manager, req.Prefix, processLink, "sendtodivision", strSubject);
 
                 return JsonCreated(true, "Updated successfully.");
             }
@@ -885,23 +887,21 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
                 // ===================== STEP 1: Retrieve Required Data =====================
                 var emailList = await _reg.PatrolEmailData() ?? new List<EmailModelV2>();
-                var employeeEmail = emailList
-                .SingleOrDefault(e => e.Position == 1 && e.DepPrefix == getprefix);
-
-
-                if (employeeEmail == null)
+                // SAFE: Use FirstOrDefault to avoid "more than one matching element"
+                var manager = GetEmailByRole(emailList, 3, getprefix);
+                if (manager == null)
                     return JsonValidationError("Employee email not found.");
 
 
-                var registrationData = await _reg.GetRegistrationData(GetPrefix());
-                string previousPdfPath = registrationData.SingleOrDefault(res => res.RegNo == Regno).Filepath;
+                var existingReg = await _reg.GetRegistrationData(getprefix);
+                string previousPdfPath = existingReg.SingleOrDefault(res => res.RegNo == Regno).Filepath;
 
                 // ===================== STEP 2: Prepare File Paths =====================
-                string timestampFile = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-                string excelFileName = $"RN_{Regno}_{timestampFile}.xlsx";
-                string pdfOutputPath = excelFileName.Replace(".xlsx", ".pdf");
+                var (excel, pdf) = GenerateFileName(Regno);
 
-                bool isUpdated = await _reg.ApproveByDepartment(Regno, Comments, pdfOutputPath, employeeEmail.Employee_ID); // -- ID for the Deparment Manager
+
+                bool isUpdated = await _reg.ApproveByDepartment(Regno, 
+                    Comments, excel, manager.Employee_ID); // -- ID for the Deparment Manager
 
                 if (!isUpdated)
                     return JsonValidationError("Failed to update process owner information.");
@@ -916,57 +916,15 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 // ===================== STEP 7: Build Email Signatures =====================
                 List<EmailSignatures> emailSigns = new List<EmailSignatures>();
 
-                // Signature of the PIC
-                if (!string.IsNullOrEmpty(updatedReg.PIC_ID))
-                {
-                    var picId = await _reg.GetEmployeeEmailDetails(updatedReg.PIC_ID, 5, getprefix);
-
-                    if (picId != null && !string.IsNullOrEmpty(picId.Signature))
-                    {
-                        emailSigns.Add(new EmailSignatures
-                        {
-                            Position = 5,
-                            Signature = picId.Signature
-                        });
-                    }
-                }
-                // Signature of the Inspector
-                if (!string.IsNullOrEmpty(updatedReg.Inspect_ID))
-                {
-                    var picId = await _reg.GetEmployeeEmailDetails(updatedReg.Inspect_ID, 4, getprefix);
-
-                    if (picId != null && !string.IsNullOrEmpty(picId.Signature))
-                    {
-                        emailSigns.Add(new EmailSignatures
-                        {
-                            Position = 4,
-                            Signature = picId.Signature
-                        });
-                    }
-                }
-
-                // Signature of the Manager
-                if (!string.IsNullOrEmpty(updatedReg.Manager_ID))
-                {
-                    var picId = await _reg.GetEmployeeEmailDetails(updatedReg.Manager_ID, 3, getprefix);
-                    if (picId != null && !string.IsNullOrEmpty(picId.Signature))
-                    {
-                        emailSigns.Add(new EmailSignatures
-                        {
-                            Position = 3,
-                            Signature = picId.Signature
-                        });
-                    }
-                }
-
-          
+                var signatures = await BuildSignatures(updatedReg, getprefix);
+    
                 await ExportFiler.UpdatePDFRegistration(
                    updatedReg,
                    updatedFindings,
                    emailList,
                    emailSigns,
                    previousPdfPath,
-                   excelFileName,
+                   excel,
                    templatePath
                );
 
@@ -975,29 +933,9 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
                 string strSubject = $@"[PATROL INSPECTION] 'For Review/Verification' - {Regno}";
 
-                var getPatrolView = await GetRegistrationDetailList(Regno);
-                var getFindings = await GetFindings(Regno);
+                // ================= EMAIL =================
+                await SendEmailProcess(Regno, manager, getprefix, processLink, "sendtodivision", strSubject);
 
-                string ManagersEmail = PatrolEmailService.CreatePatrolProductionBody(
-                    getPatrolView,
-                    getFindings,
-                    employeeEmail.FullName,
-                    strSubject,
-                    processLink,
-                    "sendtodivision"
-                 );
-
-
-                var sendEmail = new SentEmailModel
-                {
-                    Subject = strSubject,
-                    Sender = strSender,
-                    BCC = "",
-                    Body = ManagersEmail,
-                    Recipient = employeeEmail.Email
-                };
-
-                await EmailService.SendEmailViaSqlDatabase(sendEmail);
 
                 return JsonCreated(true, "Updated successfully.");
             }
@@ -1647,7 +1585,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                 return HttpNotFound();
 
             // Determine file extension
-            string fileExtension = Path.GetExtension(filePath).ToLowerInvariant();
+            string fileExtension = System.IO.Path.GetExtension(filePath).ToLowerInvariant();
 
             // Check if it's an Excel file
             if (fileExtension == ".xlsx" || fileExtension == ".xls")
@@ -1657,7 +1595,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
                     : "application/vnd.ms-excel";
 
                 // ✅ Download Excel file
-                return File(filePath, contentType, Path.GetFileName(filePath));
+                return File(filePath, contentType, System.IO.Path.GetFileName(filePath));
             }
 
             // ✅ Default to PDF if not Excel

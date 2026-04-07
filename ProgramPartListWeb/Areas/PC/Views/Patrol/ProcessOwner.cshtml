@@ -323,6 +323,15 @@
                             id: "step1",
                             progress: 25,
                             action: () => postMethodPublic('@Url.Action("ProcessOwnerSubmission", "Patrol")', formData)
+                        },{
+                            id: "step2",
+                            progress: 50,
+                            action: () => postMethodPublic('@Url.Action("UpdateRegistrationPDF", "Patrol")', formData)
+                        },
+                        {
+                            id: "step3",
+                            progress: 75,
+                            action: () => postMethodPublic('@Url.Action("EmailSendToNext", "Patrol")', formData)
                         },
                         {
                             id: "step4",

@@ -18,6 +18,9 @@ namespace ProgramPartListWeb.Areas.PC.Interface
 
         Task<bool> InsertFileRawRegistration(string regno, string FilePath);
 
+        Task<bool> UpdateRegistrationFiles(string RegNo, string Filename);
+
+
         Task<bool> EditReg_ProcessOwner(ProcessOwnerForms model, string json);
         Task<bool> ApproveByInspector(string RegNo, string Datecon, string newfilepath, string ManagerID);
         Task<bool> ApproveByManager(string RegNo, string comments, string newfilepath, string DepManager);

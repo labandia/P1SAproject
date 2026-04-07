@@ -305,7 +305,7 @@ namespace ProgramPartListWeb.Utilities
             try
             {
                 // ✅ Step 1: Define paths
-                string exportFolder = @"\\SDP010F6C\Users\USER\Pictures\Access\Excel\Patrol_Registration\";
+                string exportFolder = @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\PatrolCountermeasure\RegistrationFiles\";
                 string outputPdfPath = Path.Combine(exportFolder, Path.ChangeExtension(outputfilename, ".pdf"));
                 string tempPdfPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".pdf");
 

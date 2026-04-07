@@ -94,7 +94,7 @@ button, a {
     margin: 0 auto;*/
 }
 
-.deleteButton{
+.deleteButton {
     color: #FF3D00;
 }
 /* ------- HEADERS DESIGN -------------*/
@@ -102,38 +102,38 @@ button, a {
     padding: 1.5em;
 }
 
-    .headerplan__container h5{
+    .headerplan__container h5 {
         font-weight: 600;
     }
 
-    .headerplan__boxicon {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-        background: #7360ff;
-        border-radius: 5px;
-    }
+.headerplan__boxicon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: #7360ff;
+    border-radius: 5px;
+}
 
-    .headerplan__actions input[type="date"] {
-        border: 1px solid #808080;
-        padding: 3px 8px;
-        border-radius: 5px;
-    }
+.headerplan__actions input[type="date"] {
+    border: 1px solid #808080;
+    padding: 3px 8px;
+    border-radius: 5px;
+}
 
-    .Monthsummarydisplay h6, .PartnumberSummaryDisplay h6{
-        color: #010202;
-        font-weight: 600;
-    }
+.Monthsummarydisplay h6, .PartnumberSummaryDisplay h6 {
+    color: #010202;
+    font-weight: 600;
+}
 
 /* ------- TABS CLASS -------------*/
-    .tab_box {
-        display: flex;
-        align-items: center;
-        position: relative;
-    }
+.tab_box {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
 
     .tab_box .tab_btn {
         font-size: 14px;
@@ -145,18 +145,18 @@ button, a {
         cursor: pointer;
     }
 
-    .tab_box .tab_btn:first-of-type {
-        width: 170px;
-        padding: 0px 0px 0px 0px;
-    }
+        .tab_box .tab_btn:first-of-type {
+            width: 170px;
+            padding: 0px 0px 0px 0px;
+        }
 
-    .tab_box .tab_btn.active {
-        color: #7360ff;
-    }
+        .tab_box .tab_btn.active {
+            color: #7360ff;
+        }
 
-    .content_box {
-        padding: 10px 0;
-    }
+.content_box {
+    padding: 10px 0;
+}
 
     .content_box .content.active {
         display: block;
@@ -167,45 +167,45 @@ button, a {
         animation: moving .5s ease;
     }
 
-    .content_box .content h2 {
-        margin-bottom: 10px;
-    }
+        .content_box .content h2 {
+            margin-bottom: 10px;
+        }
 
-    .line {
-        width: 150px;
-        height: 3px;
-        position: absolute;
-        top: 52px;
-        left: 0px;
-        background-color: #7360ff;
-        transition: all .3s ease-in-out;
-    }
+.line {
+    width: 150px;
+    height: 3px;
+    position: absolute;
+    top: 52px;
+    left: 0px;
+    background-color: #7360ff;
+    transition: all .3s ease-in-out;
+}
 
-    .EditEndMonthform label{
-        color: #010202;
-        font-weight: 600;
-    }
+.EditEndMonthform label {
+    color: #010202;
+    font-weight: 600;
+}
 
-    .EditEndMonthform hr{
-        margin: 1em 0;
-    }
+.EditEndMonthform hr {
+    margin: 1em 0;
+}
 
-    .EditEndMonthform input{
-        width: 100%;
-        padding: .5em 1em;
-        margin: .5em 0 1em;
-        border-radius: .2em;
-        border: 1px solid #707490;
-        outline: none;
-    }
+.EditEndMonthform input {
+    width: 100%;
+    padding: .5em 1em;
+    margin: .5em 0 1em;
+    border-radius: .2em;
+    border: 1px solid #707490;
+    outline: none;
+}
 
 
 
 
 /* ------- TABLES DESIGN  -------------*/
-    .MainTable {
-        overflow-x: auto;
-    }
+.MainTable {
+    overflow-x: auto;
+}
 
     .MainTable table {
         table-layout: fixed;
@@ -231,10 +231,10 @@ button, a {
         padding: 0 1em;
     }
 
-    .thead-dark {
-        background: hsl(208, 30%, 11%);
-        color: #fff;
-    }
+.thead-dark {
+    background: hsl(208, 30%, 11%);
+    color: #fff;
+}
 
     .thead-dark th {
         font-weight: 400;
@@ -243,19 +243,19 @@ button, a {
         text-align: center;
     }
 
-    .table-striped tbody td{
-        padding: .5em 1em;
-        text-align: center;
-    }
+.table-striped tbody td {
+    padding: .5em 1em;
+    text-align: center;
+}
 
-    .header-row th {
-        background: hsl(208, 30%, 11%);
-        color: #fff;
-        text-align: center;
-        border: 1px solid rgba(50, 50, 93, 0.25);
-        padding: .5em 0;
-        font-weight: 400;
-    }
+.header-row th {
+    background: hsl(208, 30%, 11%);
+    color: #fff;
+    text-align: center;
+    border: 1px solid rgba(50, 50, 93, 0.25);
+    padding: .5em 0;
+    font-weight: 400;
+}
 
 #dashtable tfoot tr td, #Lacktable tfoot tr td, #OrderTable tfoot tr td {
     background: hsl(0, 1%, 78%);
@@ -278,11 +278,11 @@ button, a {
         color: #222;
     }
 
-    #RequestTable {
-        width: 100%;
-        table-layout: fixed;
-        border-collapse: collapse;
-    }
+#RequestTable {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
 
     #RequestTable th {
         text-align: center;
@@ -291,28 +291,27 @@ button, a {
         font-size: .8rem;
     }
 
-    .not-current-year {
-        background-color: hsl(0, 80%, 40%) !important;
-    }
+.not-current-year {
+    background-color: hsl(0, 80%, 40%) !important;
+}
 
-    #RequestTable thead tr {
-        
-        color: #fff;
-    }
+#RequestTable thead tr {
+    color: #fff;
+}
 
     #RequestTable thead tr th {
         font-weight: 500;
     }
 
-    #RequestTable tbody td {
-        padding: .8em 0;
-        cursor: pointer;
-    }
+#RequestTable tbody td {
+    padding: .8em 0;
+    cursor: pointer;
+}
 
-    #dashtable thead tr, #Lacktable thead tr, #OrderTable thead tr {
-        background: hsl(208, 30%, 11%);
-        color: #fff;
-    }
+#dashtable thead tr, #Lacktable thead tr, #OrderTable thead tr {
+    background: hsl(208, 30%, 11%);
+    color: #fff;
+}
 
 #dashtable th, #Lacktable th {
     font-weight: 500;
@@ -394,9 +393,9 @@ button, a {
         }
 
 
-    #BodySummary tr td {
-        text-align: center;
-    }
+#BodySummary tr td {
+    text-align: center;
+}
 
 
 .SummaryPartlist table, .EndMonthSummary table {
@@ -483,36 +482,41 @@ button, a {
     color: #2268d1;
 }
 
-    .paginationPartlocal{
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
+.paginationPartlocal {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
     .paginationPartlocal button {
         border-radius: .2em;
         padding: .3rem .9em;
         transition: background all ease-in-out;
     }
-    .paginationPartlocal button:disabled{
-        color: #222 ;
-        background: #f5f5f5;
-    }
+
+        .paginationPartlocal button:disabled {
+            color: #222;
+            background: #f5f5f5;
+        }
+
         .paginationPartlocal button.active {
             background-color: #7360ff;
             color: white;
         }
-    .paginationPartlocal button:first-child:hover {
-         background: var(--clr-secondary);
-         color: #222;
-    }
-    .paginationPartlocal button:last-child:hover {
-         background: var(--clr-secondary);
-         color: #222;
-    }
-    .paginationPartlocal button:first-child, button i:last-child {
-         font-weight: 800;
-    }
+
+        .paginationPartlocal button:first-child:hover {
+            background: var(--clr-secondary);
+            color: #222;
+        }
+
+        .paginationPartlocal button:last-child:hover {
+            background: var(--clr-secondary);
+            color: #222;
+        }
+
+        .paginationPartlocal button:first-child, button i:last-child {
+            font-weight: 800;
+        }
 
 
 
@@ -570,15 +574,15 @@ button, a {
     }
 
 
-    .custom_modal_title span {
-        font-weight: var(--font-semi-bold);
-        font-size: var(--h3-font-size);
-        color: #010202;
-    }
+.custom_modal_title span {
+    font-weight: var(--font-semi-bold);
+    font-size: var(--h3-font-size);
+    color: #010202;
+}
 
-    .custom_modal_title p {
-        font-size: var(--small-font-size);
-    }
+.custom_modal_title p {
+    font-size: var(--small-font-size);
+}
 
 
 
@@ -702,20 +706,19 @@ button, a {
 
 
 
-    .rowProgressBar{
+.rowProgressBar {
+}
 
-    }
+#rowProgressPercent {
+    color: #010202;
+}
 
-    #rowProgressPercent{
-        color: #010202;
-    }
-   
 
-    progress {
-        width: 300px;
-        height: 10px;
-        appearance: none;
-    }
+progress {
+    width: 300px;
+    height: 10px;
+    appearance: none;
+}
 
     /* For WebKit (Chrome, Safari, newer Edge) */
     progress::-webkit-progress-bar {
@@ -736,36 +739,36 @@ button, a {
 
 
 
-    #status{
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: #010202;
-    }
+#status {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #010202;
+}
 
-    .UploadContainer{
-        width: 100%;
-        height: 30vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: hsl(208, 30%, 11%);
-        border-radius: .5em;
-    }
+.UploadContainer {
+    width: 100%;
+    height: 30vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: hsl(208, 30%, 11%);
+    border-radius: .5em;
+}
 
 
 
-    .Uploadloader {
-        width: 175px;
-        height: 80px;
-        display: block;
-        margin: auto;
-        background-image: radial-gradient(circle 25px at 25px 25px, #FFF 100%, transparent 0), radial-gradient(circle 50px at 50px 50px, #FFF 100%, transparent 0), radial-gradient(circle 25px at 25px 25px, #FFF 100%, transparent 0), linear-gradient(#FFF 50px, transparent 0);
-        background-size: 50px 50px, 100px 76px, 50px 50px, 120px 40px;
-        background-position: 0px 30px, 37px 0px, 122px 30px, 25px 40px;
-        background-repeat: no-repeat;
-        position: relative;
-        box-sizing: border-box;
-    }
+.Uploadloader {
+    width: 175px;
+    height: 80px;
+    display: block;
+    margin: auto;
+    background-image: radial-gradient(circle 25px at 25px 25px, #FFF 100%, transparent 0), radial-gradient(circle 50px at 50px 50px, #FFF 100%, transparent 0), radial-gradient(circle 25px at 25px 25px, #FFF 100%, transparent 0), linear-gradient(#FFF 50px, transparent 0);
+    background-size: 50px 50px, 100px 76px, 50px 50px, 120px 40px;
+    background-position: 0px 30px, 37px 0px, 122px 30px, 25px 40px;
+    background-repeat: no-repeat;
+    position: relative;
+    box-sizing: border-box;
+}
 
     .Uploadloader::after {
         content: '';
@@ -819,7 +822,7 @@ button, a {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1em  1.5em;
+    padding: 1em 1.5em;
     font-weight: 500;
     font-size: .9rem;
     border-top: 1px solid #d4d3d3;

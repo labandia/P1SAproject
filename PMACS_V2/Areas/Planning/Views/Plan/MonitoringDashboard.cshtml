@@ -1,8 +1,13 @@
 ﻿
 @{
     Layout = "~/Areas/Planning/Views/Shared/_PlanningLayout.cshtml";
-
 }
+
+
+
+
+
+
 
 
 <header class="headerplan">
@@ -386,7 +391,7 @@
                     </tbody>
                 </table>
             </div>
-            
+
             <div class="M1loading">
                 <div class="loading-container">
                     <table>
@@ -680,7 +685,7 @@
                     <label>Total Orders: </label>
                     <input type='text' name='CurrentTotalOrdersEdit' id='CurrentTotalOrdersEdit' onkeypress="return restrictChars(event)" />
                     <label>Remaining:</label>
-                    <input type='text' name='CurrentRemainsEdit' id='CurrentRemainsEdit'  />
+                    <input type='text' name='CurrentRemainsEdit' id='CurrentRemainsEdit' />
                     <div class='footer d-flex justify-content-end pt-4 pb-2 gap-2'>
                         <button type='submit' id='saveEditsum'> <i class='fa-regular fa-pen-to-square action_btn'></i> Save</button>
                     </div>
@@ -2292,7 +2297,7 @@
             //}
         });
 
-  
+
             // Initialize table and pagination
             window.changePage = changePage;
         renderTable(currentPage);

@@ -67,7 +67,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
 								ON r.DivManager_ID = div.Employee_ID 
                             WHERE r.RegNo LIKE '%{prefix}%'      
                             ORDER BY DateCreated DESC";
-            Debug.WriteLine(strsql);
+
             return SqlDataAccess.GetDataAsync<PatrolRegistrationViewModel>(strsql);
         }
         public Task<List<EmailModelV2>> PatrolEmailData()
@@ -332,6 +332,12 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                 RegNo = regno,
                 FilePath = FilePath
             }, CommandType.StoredProcedure);
+        }
+
+        public Task<bool> UpdateRegistrationFiles(string RegNo, string FilePath)
+        {
+            return SqlDataAccess.ExecuteAsync($@"UPDATE Patrol_Registration_Files SET FilePath =@FilePath
+                    WHERE RegNo =@RegNo ", new { FilePath, RegNo });
         }
     }
 }

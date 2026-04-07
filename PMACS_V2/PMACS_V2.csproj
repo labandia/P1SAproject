@@ -519,6 +519,7 @@
     <Content Include="Scripts\circularProgressBar.min.js" />
     <Content Include="Scripts\Cryptojs.min.js" />
     <Content Include="Scripts\fontawesome.min.js" />
+    <Content Include="Scripts\iconify-icon.min.js" />
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
     <Content Include="Areas\MoldDie\Views\Mold\_MasterlistModelForms.cshtml" />

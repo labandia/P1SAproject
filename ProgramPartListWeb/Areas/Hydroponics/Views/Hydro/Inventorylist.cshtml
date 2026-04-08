@@ -4,142 +4,151 @@
     Layout = "~/Areas/Hydroponics/Views/Shared/HydroPartsLayout.cshtml";
 }
 
-<div class="actions-bar">
-    <div class="search-inputs">
-        <div class="search-box">
-            <div style="width:16px;height:16px;display:flex;align-items:center;justify-content:center;">
-                <iconify-icon icon="lucide:search" style="font-size:16px;">
-                </iconify-icon>
+
+
+
+
+
+
+
+
+
+    <div class="actions-bar">
+        <div class="search-inputs">
+            <div class="search-box">
+                <div style="width:16px;height:16px;display:flex;align-items:center;justify-content:center;">
+                    <iconify-icon icon="lucide:search" style="font-size:16px;">
+                    </iconify-icon>
+                </div>
+                <input type="text" placeholder="SEARCH HERE ..." id="searchbox">
             </div>
-            <input type="text" placeholder="SEARCH HERE ..." id="searchbox">
-        </div>
 
-        <select id="StockStatusID" class="dropdown">
-            <option value="">-- SELECT STATUS --</option>
-            <option value="Sufficient">Sufficient</option>
-            <option value="Restock">Restock</option>
-            <option value="Out of stocks">Out of Stocks</option>
-        </select>
-
-        <select id="Categoryselect" class="dropdown">
-            <option value="0">-- CATEGORY --</option>
-        </select>
-
-      
-
-
-        @*<div class="select-container">
-            <select id="StockStatusID">
+            <select id="StockStatusID" class="dropdown">
                 <option value="">-- SELECT STATUS --</option>
                 <option value="Sufficient">Sufficient</option>
                 <option value="Restock">Restock</option>
                 <option value="Out of stocks">Out of Stocks</option>
             </select>
-        </div>
-        <div class="select-container">
-            <select id="Categoryselect">
+
+            <select id="Categoryselect" class="dropdown">
                 <option value="0">-- CATEGORY --</option>
             </select>
-        </div>*@
+
+
+
+
+            @*<div class="select-container">
+                    <select id="StockStatusID">
+                        <option value="">-- SELECT STATUS --</option>
+                        <option value="Sufficient">Sufficient</option>
+                        <option value="Restock">Restock</option>
+                        <option value="Out of stocks">Out of Stocks</option>
+                    </select>
+                </div>
+                <div class="select-container">
+                    <select id="Categoryselect">
+                        <option value="0">-- CATEGORY --</option>
+                    </select>
+                </div>*@
+        </div>
+        <div class="action-buttons">
+            <button id="Showadd" class="custbtn custbtn-secondary" type="button">
+                <div style="width:16px;height:16px;display:flex;align-items:center;justify-content:center;">
+                    <iconify-icon icon="lucide:archive" style="font-size:16px;"></iconify-icon>
+                </div>
+                ADD STOCKS
+            </button>
+            <button id="AddItem" class="custbtn custbtn-primary" type="button">
+                <iconify-icon icon="lucide:settings" style="font-size:16px;"></iconify-icon>
+                ADD PARTS
+            </button>
+
+        </div>
     </div>
-    <div class="action-buttons">
-        <button id="Showadd" class="custbtn custbtn-secondary" type="button">
-            <div style="width:16px;height:16px;display:flex;align-items:center;justify-content:center;">
-                <iconify-icon icon="lucide:archive" style="font-size:16px;"></iconify-icon>
+
+    <div class="summary-cards">
+        <div class="cardStock">
+            <div class="card-icon total-items">
+                <i class="fas fa-boxes"></i>
             </div>
-            ADD STOCKS
-        </button>
-        <button id="AddItem" class="custbtn custbtn-primary" type="button">
-            <iconify-icon icon="lucide:settings" style="font-size:16px;"></iconify-icon>
-            ADD PARTS
-        </button>
+            <div class="card-content">
+                <h3 id="Countlist">0</h3>
+                <div class="metric-label">TOTAL PARTS</div>
+            </div>
+        </div>
+        <div class="cardStock">
+            <div class="card-icon low-stock">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="card-content">
+                <h3 id="lowStockItems">0</h3>
+                <div class="metric-label">LOW STOCKS</div>
+            </div>
+        </div>
+        <div class="cardStock">
+            <div class="card-icon out-of-stock">
+                <i class="fas fa-times-circle"></i>
+            </div>
+            <div class="card-content">
+                <h3 id="outOfStockItems">0</h3>
+                <div class="metric-label">OUT OF STOCKS</div>
+            </div>
+        </div>
 
     </div>
-</div>
 
-<div class="summary-cards">
-    <div class="cardStock">
-        <div class="card-icon total-items">
-            <i class="fas fa-boxes"></i>
-        </div>
-        <div class="card-content">
-            <h3 id="Countlist">0</h3>
-            <div class="metric-label">TOTAL PARTS</div>
-        </div>
-    </div>
-    <div class="cardStock">
-        <div class="card-icon low-stock">
-            <i class="fas fa-exclamation-triangle"></i>
-        </div>
-        <div class="card-content">
-            <h3 id="lowStockItems">0</h3>
-            <div class="metric-label">LOW STOCKS</div>
-        </div>
-    </div>
-    <div class="cardStock">
-        <div class="card-icon out-of-stock">
-            <i class="fas fa-times-circle"></i>
-        </div>
-        <div class="card-content">
-            <h3 id="outOfStockItems">0</h3>
-            <div class="metric-label">OUT OF STOCKS</div>
-        </div>
-    </div>
-
-</div>
-
-<div class="data-table-container">
-    <table class="data-table">
-        <thead>
-            <tr>
-                <th>PART NO. / PARTNAME</th>
-                <th>SUPPLIER</th>
-                <th>CURRENT STOCK</th>
-                <th>REQUIRE QTY</th>
-                <th>STATUS</th>
-                <th style="width:60px"></th></tr>
-        </thead>
-        <tbody id="InventorylistData">
-            
-        </tbody>
-    </table>
-</div>
-
-
-
-
-@*<div class="InspecTable">
-        <table>
+    <div class="data-table-container">
+        <table class="data-table">
             <thead>
                 <tr>
-                    <th style="width: 25%; text-align: left; padding-left: 1.5em !important;"><span style="margin-left: .5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  Part No. / Partname</span> </th>
-                    <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
-                    <th> <i class="fa-solid fa-box-open"></i>   <span style="margin-left: .5em;">Current Stock</span>  </th>
-                    <th> <i class="fa-regular fa-square-check"></i> <span style="margin-left: .5em;">Require Qty</span>  </th>
-                    <th style="width: 15%;"> <i class="fa-solid fa-database"></i> <span style="margin-left: .5em;">Status</span>  </th>
-
+                    <th>PART NO. / PARTNAME</th>
+                    <th>SUPPLIER</th>
+                    <th>CURRENT STOCK</th>
+                    <th>REQUIRE QTY</th>
+                    <th>STATUS</th>
+                    <th style="width:60px"></th>
                 </tr>
             </thead>
             <tbody id="InventorylistData">
             </tbody>
         </table>
-    </div>*@
+    </div>
 
 
 
-@Html.Partial("_AddStocksModal")
+
+    @*<div class="InspecTable">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 25%; text-align: left; padding-left: 1.5em !important;"><span style="margin-left: .5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  Part No. / Partname</span> </th>
+                        <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
+                        <th> <i class="fa-solid fa-box-open"></i>   <span style="margin-left: .5em;">Current Stock</span>  </th>
+                        <th> <i class="fa-regular fa-square-check"></i> <span style="margin-left: .5em;">Require Qty</span>  </th>
+                        <th style="width: 15%;"> <i class="fa-solid fa-database"></i> <span style="margin-left: .5em;">Status</span>  </th>
+
+                    </tr>
+                </thead>
+                <tbody id="InventorylistData">
+                </tbody>
+            </table>
+        </div>*@
 
 
 
-@*<script type="module" asp-append-version="true">
-        import { initInventoryPage }
-        from '@Url.Content("~/Scripts/systems/Inventory.js?v=15")';
-
-        initInventoryPage();
-    </script>*@
+    @Html.Partial("_AddStocksModal")
 
 
-<script type="text/javascript">
+
+    @*<script type="module" asp-append-version="true">
+            import { initInventoryPage }
+            from '@Url.Content("~/Scripts/systems/Inventory.js?v=15")';
+
+            initInventoryPage();
+        </script>*@
+
+
+    <script type="text/javascript">
     let IsRestrictRole;
     let Inventlist = [];
     let loadData = [];
@@ -269,7 +278,7 @@
                                         <td data-cell="PartNo">
                                             <div class="part-info">
                                                 <div class="part-image">
-                                                    
+
                                                     <img class="NoImages lazy"
                                                        src='@Url.Content("~/Content/Images/no-image.png")'
                                                        data-src="${imagePath}"
@@ -291,17 +300,17 @@
                                                        ${IsAccessdecrease}
                                                            <div class="stock-value">${qty}</div>
                                                       ${IsAccessIncrement}
-                                                </div>                                     
+                                                </div>
                                          </td>
                                          <td data-cell="WarningLevel" style="font-weight: 600;">${warn}</td>
                                          <td data-cell="Approval" >
-                                          
+
 
                                            <span class="badge ${getStatusClass(row.Status)}"> ${row.Status}</span>
 
                                          </td>
                                          <td data-cell="Delete" >
-                                       
+
                                               <div class="icon-btn-small">
                                                  <button  class='Editbtnbutton' id='editButton_${row.StockID}' ">
                                                     <iconify-icon icon="lucide:pen-square" style="font-size:16px;color: #9aa6b2;"></iconify-icon>
@@ -1040,4 +1049,4 @@
         $('#StockStatusID').on('change', applyFilters);
 
     });
-</script>
+    </script>

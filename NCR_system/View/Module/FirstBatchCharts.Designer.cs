@@ -35,25 +35,50 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.customerChart = new LiveCharts.WinForms.CartesianChart();
             this.cartesianChart1 = new LiveCharts.WinForms.CartesianChart();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.inprocessChart = new LiveCharts.WinForms.CartesianChart();
             this.cartesianChart5 = new LiveCharts.WinForms.CartesianChart();
-            this.label4 = new System.Windows.Forms.Label();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.panel9 = new System.Windows.Forms.Panel();
+            this.panel10 = new System.Windows.Forms.Panel();
+            this.panel11 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.panel12 = new System.Windows.Forms.Panel();
+            this.panel13 = new System.Windows.Forms.Panel();
+            this.panel14 = new System.Windows.Forms.Panel();
+            this.panel15 = new System.Windows.Forms.Panel();
+            this.panel16 = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.panel5.SuspendLayout();
+            this.panel6.SuspendLayout();
+            this.panel7.SuspendLayout();
+            this.panel8.SuspendLayout();
+            this.panel9.SuspendLayout();
+            this.panel10.SuspendLayout();
+            this.panel11.SuspendLayout();
+            this.panel12.SuspendLayout();
+            this.panel13.SuspendLayout();
+            this.panel14.SuspendLayout();
+            this.panel15.SuspendLayout();
+            this.panel16.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel4
             // 
             this.panel4.Controls.Add(this.ShipmentChart);
-            this.panel4.Location = new System.Drawing.Point(670, 308);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(541, 234);
+            this.panel4.Size = new System.Drawing.Size(693, 161);
             this.panel4.TabIndex = 54;
             // 
             // ShipmentChart
@@ -61,16 +86,17 @@
             this.ShipmentChart.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ShipmentChart.Location = new System.Drawing.Point(0, 0);
             this.ShipmentChart.Name = "ShipmentChart";
-            this.ShipmentChart.Size = new System.Drawing.Size(541, 234);
+            this.ShipmentChart.Size = new System.Drawing.Size(693, 161);
             this.ShipmentChart.TabIndex = 0;
             this.ShipmentChart.Text = "cartesianChart2";
             // 
             // panel3
             // 
             this.panel3.Controls.Add(this.rejectedChart);
-            this.panel3.Location = new System.Drawing.Point(56, 308);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(0, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(541, 234);
+            this.panel3.Size = new System.Drawing.Size(693, 161);
             this.panel3.TabIndex = 53;
             // 
             // rejectedChart
@@ -78,7 +104,7 @@
             this.rejectedChart.Dock = System.Windows.Forms.DockStyle.Fill;
             this.rejectedChart.Location = new System.Drawing.Point(0, 0);
             this.rejectedChart.Name = "rejectedChart";
-            this.rejectedChart.Size = new System.Drawing.Size(541, 234);
+            this.rejectedChart.Size = new System.Drawing.Size(693, 161);
             this.rejectedChart.TabIndex = 0;
             this.rejectedChart.Text = "cartesianChart2";
             // 
@@ -86,9 +112,10 @@
             // 
             this.panel1.Controls.Add(this.customerChart);
             this.panel1.Controls.Add(this.cartesianChart1);
-            this.panel1.Location = new System.Drawing.Point(58, 33);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(30, 20);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(562, 203);
+            this.panel1.Size = new System.Drawing.Size(693, 161);
             this.panel1.TabIndex = 49;
             // 
             // customerChart
@@ -96,7 +123,7 @@
             this.customerChart.Dock = System.Windows.Forms.DockStyle.Fill;
             this.customerChart.Location = new System.Drawing.Point(0, 0);
             this.customerChart.Name = "customerChart";
-            this.customerChart.Size = new System.Drawing.Size(562, 203);
+            this.customerChart.Size = new System.Drawing.Size(693, 161);
             this.customerChart.TabIndex = 1;
             this.customerChart.Text = "cartesianChart3";
             // 
@@ -105,35 +132,15 @@
             this.cartesianChart1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cartesianChart1.Location = new System.Drawing.Point(0, 0);
             this.cartesianChart1.Name = "cartesianChart1";
-            this.cartesianChart1.Size = new System.Drawing.Size(562, 203);
+            this.cartesianChart1.Size = new System.Drawing.Size(693, 161);
             this.cartesianChart1.TabIndex = 0;
             this.cartesianChart1.Text = "cartesianChart1";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(666, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(152, 21);
-            this.label5.TabIndex = 48;
-            this.label5.Text = "INPROCESS DEFECT";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(52, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(188, 21);
-            this.label1.TabIndex = 47;
-            this.label1.Text = "CUSTOMER COMPLAINT";
             // 
             // panel2
             // 
             this.panel2.Controls.Add(this.inprocessChart);
             this.panel2.Controls.Add(this.cartesianChart5);
-            this.panel2.Location = new System.Drawing.Point(661, 24);
+            this.panel2.Location = new System.Drawing.Point(851, 96);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(562, 203);
             this.panel2.TabIndex = 50;
@@ -156,45 +163,203 @@
             this.cartesianChart5.TabIndex = 0;
             this.cartesianChart5.Text = "cartesianChart5";
             // 
-            // label4
+            // panel5
             // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(643, 263);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(139, 21);
-            this.label4.TabIndex = 52;
-            this.label4.Text = "SHIPMENT DELAY";
+            this.panel5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(36)))), ((int)(((byte)(62)))));
+            this.panel5.Controls.Add(this.panel6);
+            this.panel5.Controls.Add(this.panel7);
+            this.panel5.Location = new System.Drawing.Point(28, 36);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(753, 251);
+            this.panel5.TabIndex = 55;
+            // 
+            // panel6
+            // 
+            this.panel6.Controls.Add(this.panel1);
+            this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel6.Location = new System.Drawing.Point(0, 50);
+            this.panel6.Name = "panel6";
+            this.panel6.Padding = new System.Windows.Forms.Padding(30, 20, 30, 20);
+            this.panel6.Size = new System.Drawing.Size(753, 201);
+            this.panel6.TabIndex = 1;
+            // 
+            // panel7
+            // 
+            this.panel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(47)))), ((int)(((byte)(76)))));
+            this.panel7.Controls.Add(this.label2);
+            this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel7.Location = new System.Drawing.Point(0, 0);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(753, 50);
+            this.panel7.TabIndex = 0;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.White;
+            this.label2.Location = new System.Drawing.Point(20, 15);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(192, 21);
+            this.label2.TabIndex = 14;
+            this.label2.Text = "CUSTOMER COMPLAINT";
+            // 
+            // panel8
+            // 
+            this.panel8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(36)))), ((int)(((byte)(62)))));
+            this.panel8.Controls.Add(this.panel9);
+            this.panel8.Controls.Add(this.panel11);
+            this.panel8.Location = new System.Drawing.Point(28, 331);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(753, 251);
+            this.panel8.TabIndex = 56;
+            // 
+            // panel9
+            // 
+            this.panel9.Controls.Add(this.panel10);
+            this.panel9.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel9.Location = new System.Drawing.Point(0, 50);
+            this.panel9.Name = "panel9";
+            this.panel9.Padding = new System.Windows.Forms.Padding(30, 20, 30, 20);
+            this.panel9.Size = new System.Drawing.Size(753, 201);
+            this.panel9.TabIndex = 1;
+            // 
+            // panel10
+            // 
+            this.panel10.Controls.Add(this.panel3);
+            this.panel10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel10.Location = new System.Drawing.Point(30, 20);
+            this.panel10.Name = "panel10";
+            this.panel10.Size = new System.Drawing.Size(693, 161);
+            this.panel10.TabIndex = 49;
+            // 
+            // panel11
+            // 
+            this.panel11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(47)))), ((int)(((byte)(76)))));
+            this.panel11.Controls.Add(this.label1);
+            this.panel11.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel11.Location = new System.Drawing.Point(0, 0);
+            this.panel11.Name = "panel11";
+            this.panel11.Size = new System.Drawing.Size(753, 50);
+            this.panel11.TabIndex = 0;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(20, 15);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(117, 21);
+            this.label1.TabIndex = 14;
+            this.label1.Text = "REJECTED LOT";
+            // 
+            // panel12
+            // 
+            this.panel12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel12.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(36)))), ((int)(((byte)(62)))));
+            this.panel12.Controls.Add(this.panel13);
+            this.panel12.Controls.Add(this.panel16);
+            this.panel12.Location = new System.Drawing.Point(803, 331);
+            this.panel12.Name = "panel12";
+            this.panel12.Size = new System.Drawing.Size(753, 251);
+            this.panel12.TabIndex = 57;
+            // 
+            // panel13
+            // 
+            this.panel13.Controls.Add(this.panel14);
+            this.panel13.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel13.Location = new System.Drawing.Point(0, 50);
+            this.panel13.Name = "panel13";
+            this.panel13.Padding = new System.Windows.Forms.Padding(30, 20, 30, 20);
+            this.panel13.Size = new System.Drawing.Size(753, 201);
+            this.panel13.TabIndex = 1;
+            // 
+            // panel14
+            // 
+            this.panel14.Controls.Add(this.panel15);
+            this.panel14.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel14.Location = new System.Drawing.Point(30, 20);
+            this.panel14.Name = "panel14";
+            this.panel14.Size = new System.Drawing.Size(693, 161);
+            this.panel14.TabIndex = 49;
+            // 
+            // panel15
+            // 
+            this.panel15.Controls.Add(this.panel4);
+            this.panel15.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel15.Location = new System.Drawing.Point(0, 0);
+            this.panel15.Name = "panel15";
+            this.panel15.Size = new System.Drawing.Size(693, 161);
+            this.panel15.TabIndex = 53;
+            // 
+            // panel16
+            // 
+            this.panel16.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(47)))), ((int)(((byte)(76)))));
+            this.panel16.Controls.Add(this.label3);
+            this.panel16.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel16.Location = new System.Drawing.Point(0, 0);
+            this.panel16.Name = "panel16";
+            this.panel16.Size = new System.Drawing.Size(753, 50);
+            this.panel16.TabIndex = 0;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(52, 263);
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.Color.White;
+            this.label3.Location = new System.Drawing.Point(20, 15);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(112, 21);
-            this.label3.TabIndex = 51;
-            this.label3.Text = "REJECTED LOT";
+            this.label3.Size = new System.Drawing.Size(145, 21);
+            this.label3.TabIndex = 14;
+            this.label3.Text = "SHIPMENT DELAY";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(847, 51);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(152, 21);
+            this.label5.TabIndex = 48;
+            this.label5.Text = "INPROCESS DEFECT";
             // 
             // FirstBatchCharts
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.panel4);
-            this.Controls.Add(this.panel3);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.panel12);
+            this.Controls.Add(this.panel8);
+            this.Controls.Add(this.panel5);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.panel2);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
             this.Name = "FirstBatchCharts";
-            this.Size = new System.Drawing.Size(1366, 591);
+            this.Size = new System.Drawing.Size(1643, 709);
             this.Load += new System.EventHandler(this.FirstBatchCharts_Load);
             this.panel4.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
+            this.panel5.ResumeLayout(false);
+            this.panel6.ResumeLayout(false);
+            this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
+            this.panel8.ResumeLayout(false);
+            this.panel9.ResumeLayout(false);
+            this.panel10.ResumeLayout(false);
+            this.panel11.ResumeLayout(false);
+            this.panel11.PerformLayout();
+            this.panel12.ResumeLayout(false);
+            this.panel13.ResumeLayout(false);
+            this.panel14.ResumeLayout(false);
+            this.panel15.ResumeLayout(false);
+            this.panel16.ResumeLayout(false);
+            this.panel16.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -209,12 +374,24 @@
         private System.Windows.Forms.Panel panel1;
         private LiveCharts.WinForms.CartesianChart customerChart;
         private LiveCharts.WinForms.CartesianChart cartesianChart1;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panel2;
         private LiveCharts.WinForms.CartesianChart inprocessChart;
         private LiveCharts.WinForms.CartesianChart cartesianChart5;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Panel panel8;
+        private System.Windows.Forms.Panel panel9;
+        private System.Windows.Forms.Panel panel10;
+        private System.Windows.Forms.Panel panel11;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Panel panel12;
+        private System.Windows.Forms.Panel panel13;
+        private System.Windows.Forms.Panel panel14;
+        private System.Windows.Forms.Panel panel15;
+        private System.Windows.Forms.Panel panel16;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label5;
     }
 }

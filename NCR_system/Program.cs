@@ -7,6 +7,7 @@ using NCR_system.View.EditForms;
 using NCR_system.View.Module;
 using System;
 using System.Windows.Forms;
+using NCR_system.View;
 
 namespace NCR_system
 {
@@ -25,9 +26,13 @@ namespace NCR_system
             var services = new ServiceCollection()
             .AddMemoryCache()
             .AddScoped<ICustomerComplaint, CustomerRepository>()
+            .AddScoped<ISummaryNCR, IOverallSummary>()
             .AddScoped<IShipRejected, RejectShipRepository>()
             .AddScoped<IInprocess, InprocessRepository>()
             .AddScoped<INCR, NCR_Repository>()
+            .AddTransient<OverallSummary>()
+            .AddTransient<FirstBatchCharts>()
+            .AddTransient<SecondBatchCharts>()
             .AddTransient<P1SA_NonComformity>()
             .AddTransient<Mainpage>()
             .AddTransient<AddCustomerComplaint>()
@@ -51,7 +56,7 @@ namespace NCR_system
 
             using (var scope = ServiceProvider.CreateScope())
             {
-                var mainForm = scope.ServiceProvider.GetRequiredService<P1SA_NonComformity>();
+                var mainForm = scope.ServiceProvider.GetRequiredService<OverallSummary>();
                 Application.Run(mainForm);
             }
             

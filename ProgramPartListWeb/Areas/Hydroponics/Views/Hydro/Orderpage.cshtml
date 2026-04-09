@@ -77,7 +77,7 @@
             <div class="details-header-action">
                 <div class="details-subtitle">
                     <iconify-icon icon="lucide:calendar" style="font-size: 14px"></iconify-icon>
-                    Target Date on <span id="Tdate">24/11/2023</span>
+                    Order Date : <span id="Tdate">-- N/A --</span>
                 </div>
                 <div>
                     <iconify-icon id="editOrder" icon="lucide:edit" style="font-size: 18px; margin-right: 10px; color: #2381ec;"></iconify-icon>
@@ -449,7 +449,6 @@
 
     // ========================== FIRST SELECTION ================================
     function renderfirstselect(data) {
-        console.log(data);
         const percent = Math.round(parseFloat(data.CompletionPercent) || 0);
         const assemblyPercent = Math.round(parseFloat(data.AssemblyStats) || 0);
 
@@ -471,7 +470,7 @@
 
 
         selectedOrderID = data.OrderID;
-        $("#Tdate").html(data.TargetDate);
+        $("#Tdate").html(data.OrderDate);
         $("#detailTitle").text(data.OrderID);
         $("#CustomerNameValue").text(data.CustomerName);
         $("#PICValue").text(data.PIC);

@@ -39,7 +39,9 @@
     <div id="dashboardContent" class="tab-content">
         <div class="section-header"><h2 class="section-title">📊 Operational Dashboard</h2></div>
         @* ---------------- LACKING PARTS QUANTITY -------------------------*@
-        <table id="Lacktable"></table>
+        <div class="Summarytable-container">
+            <table id="Lacktable" class="table-summary"></table>
+        </div>
         @* -----------------------------------------------------------------*@
 
         @* ---------------- ADDITIONAL LACKING PARTS QUANTITY --------------*@
@@ -243,11 +245,15 @@
     /* =========================================================
        INITIALIZATION
     ========================================================= */
-    $(document).ready(() => {
+    $(document).ready(async () => {
         //bindEvents();
-        LoadfirstAndLastDate();
+        await LoadfirstAndLastDate();
+        // If you want to get values from inputs again
+        state.firstDate = $('#summarystartdate').val();
+        state.LastDate = $('#summaryendDate').val();
 
-
+        console.log(state.firstDate);
+        LoadLackingSummary(state.firstDate, state.LastDate);
     });
 
     async function LoadfirstAndLastDate(){
@@ -255,8 +261,8 @@
         console.log(res);
         if (res?.Success) {
             // Set to Summary Date
-            DOM.dashstart.val(res.Data[0].FirstDate);
-            DOM.dashend.val(res.Data[0].LastDate);
+            $('#summarystartdate').val(res.Data[0].FirstDate);
+            $('#summaryendDate').val(res.Data[0].LastDate);
             // Set to Partnumber
             //this.DOM.partstart.val(res.Data[0].FirstDate);
             //this.DOM.partend.val(res.Data[0].LastDate);
@@ -264,6 +270,37 @@
     }
 
     // ==================== DISPLAY TABLE =========================
+     //M1_Lacking_table
+    async function LoadAdditionalSummary(first, last) {
+        let res = await GetMethodPublic('@Url.Action("GetAdditionalResult", "Plan")', { stardate: first, endDate: last });
+        if (res?.Success) {
+            $(".Dashloading").hide();
+            state.IsDatasuccess = 1;
+            let columndates = res.Header;
+            let getData = res.Data;
+
+            var filteredHeaders = columndates.filter(header => header !== 'Imports');
+
+            //Extract values into a 2D array
+            var arraresult = getData.map(row => {
+                return Object.keys(row)
+                    .filter(key => key !== 'Imports') // Exclude the "Imports" column
+                    .map(key => row[key]); // Extract values
+            });
+
+
+            MonitorDashoardDisplay(filteredHeaders, arraresult);
+            //const tableHeader = document.getElementById("headersummary");
+            //tableHeader.innerHTML = "";
+            //checkNodata(1);
+        } else {
+            state.IsDatasuccess = 0;
+            //checkNodata(0);
+        }
+
+    }
+
+
      async function LoadplanningData(){
         //$(".M1loading").show();
         let res = await GetMethodPublic('@Url.Action("GetPlanningData", "Plan")', {});
@@ -305,9 +342,10 @@
 
     // ==================== DISPLAY OVERALL TABLES =========================
     async function LoadLackingSummary(start, end) {
-        let res = await GetMethodPublic('@Url.Action("GetlackingResults", "Plan")', { stardate: start, endDate: end });
 
-        if (res?.Success) {
+        let res = await GetMethodPublic('@Url.Action("GetlackingResults", "Plan")', { stardate: start, endDate: end });
+        console.log(res);
+        if (res?.StatusCode === 200) {
 
             let columndates = res.Header;
             let getData = res.Data;
@@ -320,7 +358,7 @@
                     .map(key => row[key]); // Extract values
             });
 
-            checkNodata(1);
+            //checkNodata(1);
             LackDashoardDisplay(filteredHeaders, arraresult);
 
 
@@ -329,7 +367,7 @@
         }
     }
 
-    function LackDashboardDisplay(headers, tabledata) {
+    function LackDashoardDisplay(headers, tabledata) {
         const table = document.getElementById("Lacktable");
         table.innerHTML = ""; // Clear previous content
 
@@ -354,11 +392,16 @@
 
             row.forEach((cell, index) => {
                 const td = document.createElement("td");
+                const value = parseInt(cell) || 0;
                 // Check if cell is null
                 if (cell === 0) {
                     td.textContent = 0; // Empty cell
                 } else {
                     td.textContent = cell.toLocaleString(); // Format number with commas
+                }
+                // ✅ apply zero style
+                if (value === 0) {
+                    td.classList.add("text-zero");
                 }
 
                 const hiddenSpan = document.createElement("span");
@@ -370,7 +413,7 @@
 
                 // Add conditional formatting
                 if (index === row.findIndex(val => val !== 0)) {
-                    td.classList.add("highlight-pink");
+                    td.classList.add("cell-orange");
                 }
 
                 tr.appendChild(td);
@@ -392,6 +435,156 @@
 
         // Add click event listener for the entire table
         table.addEventListener("click", event => {
+            const target = event.target;
+
+            // Check if the clicked element is a <td> (cell)
+            if (target.tagName === "TD") {
+                const row = target.closest("tr"); // Find the closest row (tr)
+
+                if (row) {
+                    const rowIndex = Array.from(row.parentNode.children).indexOf(row);  // Get the row index
+                    const colIndex = Array.from(target.parentNode.children).indexOf(target); // Get the column index
+                    let headerValue;
+                    let hiddenValue;
+                    let dateselect;
+                    let newselectdate;
+                    // Get the value of the clicked cell (visible part number)
+                    const cellValue = target.textContent || null;
+
+                    // Get the column header text based on the column index
+                    headerValue = headers[colIndex] || "Unknown Header";
+
+                    // Retrieve the hidden span value
+                    const hiddenSpan = target.querySelector("span");  // Find the hidden <span> within the cell
+
+                    if (hiddenSpan) {
+                        hiddenValue = hiddenSpan.textContent;  // Get the value from the hidden span
+                    }
+
+
+                    newselectdate = headerValue.replaceAll("/", "-");
+
+                    if (!cellValue.startsWith("0")) {
+                        //LoadLackpartnumDetails(newselectdate, hiddenValue);
+                    }
+
+                }
+            }
+        });
+    }
+
+
+    function MonitorDashoardDisplay(headers, tabledata) {
+        const table = document.getElementById("dashtable");
+
+        // Clear existing table content
+        table.innerHTML = "";
+
+        // Create the header row
+        const thead = document.createElement("thead");
+        const headerRow = document.createElement("tr");
+
+        headers.forEach(header => {
+            const th = document.createElement("th");
+            th.textContent = header;
+            headerRow.appendChild(th);
+        });
+
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        const tbody = document.createElement("tbody");
+        const columnSums = new Array(headers.length).fill(0); // Initialize column sums
+
+        tabledata.forEach((row, index1) => {
+            const tr = document.createElement("tr");
+            let rowindex = index1;
+            row.forEach((cell, index) => {
+                const td = document.createElement("td");
+
+                // Check if cell is null
+                if (cell === 0) {
+                    td.textContent = 0; // Empty cell
+                } else {
+                    td.textContent = cell.toLocaleString(); // Format number with commas
+                }
+
+                const hiddenSpan = document.createElement("span");
+                hiddenSpan.textContent = rowindex + 1;
+                hiddenSpan.style.display = "none"; // Keep second part hidden
+                td.appendChild(hiddenSpan);
+
+                columnSums[index] += parseInt(cell) || 0;
+
+                // Add conditional formatting
+                if (index === row.findIndex(val => val !== 0)) {
+                    td.classList.add("highlight-pink");
+                }
+
+                tr.appendChild(td);
+            });
+
+
+
+            tbody.appendChild(tr);
+        });
+
+        table.appendChild(tbody);
+
+        // Create footer row for totals
+        const tfoot = document.createElement("tfoot");
+        const footerRow = document.createElement("tr");
+        columnSums.forEach(sum => {
+            const td = document.createElement("td");
+            td.textContent = sum;
+            footerRow.appendChild(td);
+        });
+        tfoot.appendChild(footerRow);
+        table.appendChild(tfoot);
+
+        // Highlight the last row of each column if the value is not 0
+        //const lastRowIndex = tbody.rows.length - 1;
+        //for (let colIndex = 0; colIndex < headers.length; colIndex++) {
+        //    const cell = tbody.rows[lastRowIndex].cells[colIndex];
+        //    if (parseInt(cell.textContent) !== 0) {
+        //        cell.style.backgroundColor = "#FFD700"; // Highlight with gold color
+        //    }
+        //}
+
+        // Add click event listener for the entire table
+        table.addEventListener("click", event => {
+            const target = event.target;
+
+            if (target.tagName === "TD") {
+                const row = target.closest("tr");
+                if (row) {
+                    const rowIndex = Array.from(row.parentNode.children).indexOf(row);
+                    const colIndex = Array.from(target.parentNode.children).indexOf(target);
+                    const cellValue = target.textContent || null;
+
+                    let headerValue = headers[colIndex] || "Unknown Header";
+                    let hiddenValue;
+                    let dateselect;
+                    let newselectdate;
+
+
+
+
+                    const hiddenSpan = target.querySelector("span");
+                    if (hiddenSpan) hiddenValue = hiddenSpan.textContent;
+
+
+                    const date = new Date();
+                    const year = date.getFullYear();
+                    dateselect = year + '-' + headerValue;
+                    newselectdate = dateselect.replaceAll("/", "-");
+
+                    if (parseInt(cellValue) !== 0) {
+                        LoadpartnumDetails(newselectdate, hiddenValue);
+                    }
+                }
+            }
+        });
     }
 
 

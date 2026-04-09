@@ -166,6 +166,7 @@
     <Compile Include="Interface\INCR.cs" />
     <Compile Include="Interface\IShipRejected.cs" />
     <Compile Include="Interface\ISummary.cs" />
+    <Compile Include="Interface\ISummaryNCR.cs" />
     <Compile Include="Mainpage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -173,6 +174,7 @@
       <DependentUpon>Mainpage.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\NCRModels.cs" />
+    <Compile Include="Models\SummaryNCRModel.cs" />
     <Compile Include="P1SA_NonComformity.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -183,6 +185,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\CustomerRepository.cs" />
     <Compile Include="Repository\InprocessRepository.cs" />
+    <Compile Include="Repository\IOverallSummary.cs" />
     <Compile Include="Repository\NCR_Repository.cs" />
     <Compile Include="Repository\RejectShipRepository.cs" />
     <Compile Include="Utilities\CommonMethods.cs" />
@@ -304,6 +307,12 @@
     <Compile Include="View\Module\Dashboard.Designer.cs">
       <DependentUpon>Dashboard.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Module\FirstBatchCharts.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\Module\FirstBatchCharts.Designer.cs">
+      <DependentUpon>FirstBatchCharts.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Module\Inprocess_control.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -322,11 +331,23 @@
     <Compile Include="View\Module\Rejected.Designer.cs">
       <DependentUpon>Rejected.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Module\SecondBatchCharts.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\Module\SecondBatchCharts.Designer.cs">
+      <DependentUpon>SecondBatchCharts.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Module\ShipRejected.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="View\Module\ShipRejected.Designer.cs">
       <DependentUpon>ShipRejected.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\OverallSummary.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\OverallSummary.Designer.cs">
+      <DependentUpon>OverallSummary.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Mainpage.resx">
       <DependentUpon>Mainpage.cs</DependentUpon>
@@ -400,6 +421,9 @@
     <EmbeddedResource Include="View\Module\Dashboard.resx">
       <DependentUpon>Dashboard.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\Module\FirstBatchCharts.resx">
+      <DependentUpon>FirstBatchCharts.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Module\Inprocess_control.resx">
       <DependentUpon>Inprocess_control.cs</DependentUpon>
     </EmbeddedResource>
@@ -409,8 +433,14 @@
     <EmbeddedResource Include="View\Module\Rejected.resx">
       <DependentUpon>Rejected.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\Module\SecondBatchCharts.resx">
+      <DependentUpon>SecondBatchCharts.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Module\ShipRejected.resx">
       <DependentUpon>ShipRejected.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\OverallSummary.resx">
+      <DependentUpon>OverallSummary.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="packages.config" />

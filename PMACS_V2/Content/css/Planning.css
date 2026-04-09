@@ -197,6 +197,12 @@ button {
     padding: 24px !important;
     flex: 1;
 }
+.cell-orange {
+    background: #f59e0b;
+    color: #222;
+    font-weight: 700;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
 
 
 /* ===================================*/
@@ -206,6 +212,11 @@ button {
     width: 100%;
     min-width: 1100px;
     border-collapse: collapse;
+}
+
+.text-zero {
+    color: #64748b;
+    opacity: 0.4;
 }
 
 /* Keep table container scrollable */
@@ -223,6 +234,9 @@ button {
     white-space: nowrap;
     border-bottom: 1px solid #00000014;
 }
+
+
+
 
 .data-table th {
     background-color: #111827;
@@ -293,3 +307,53 @@ button {
         background-color: #0f1724;
         color: white;
     }
+
+
+
+
+
+/* FOR SUMMARY TABLES */
+.Summarytable-container {
+    width: 100%;
+    overflow-x: auto;
+    background: #ffffff;
+    border: 1px solid #00000014;
+    border-radius: 8px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
+    margin-bottom: 48px;
+}
+
+.Summarytable-container th {
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 12px 16px;
+    border-bottom: 1px solid #00000014;
+    border-right: 1px solid #00000014;
+}
+
+/* table styles: keep original nowrap, colors, cell dimensions exactly as designed */
+.Summarytable-container table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    white-space: nowrap;
+    min-width: 100%;
+}
+
+
+.table-summary th, .table-summary td {
+    padding: 12px 16px;
+    font-size: 13px;
+    text-align: center;
+    white-space: nowrap;
+    border-bottom: 1px solid #00000014;
+}
+
+tfoot{
+    background:red;
+}

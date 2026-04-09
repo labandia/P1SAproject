@@ -495,5 +495,10 @@ namespace NCR_system.View.Module
         {
 
         }
+
+        private void CustomDatagrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }

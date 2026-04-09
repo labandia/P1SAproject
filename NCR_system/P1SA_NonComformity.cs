@@ -1,4 +1,5 @@
 ﻿using NCR_system.Interface;
+using NCR_system.View;
 using NCR_system.View.Module;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,13 @@ namespace NCR_system
         private Rejected _reg;
         private Inprocess_control _inp;
         private NCR_control _ncr;
+        private Dashboard _dash;
 
         private readonly ICustomerComplaint _cust;
         private readonly IShipRejected _shipV;
         private readonly IInprocess _inps;
         private readonly INCR _ncrinter;
+        private readonly ISummaryNCR _overall;
 
         // COLORS
         public readonly Color ActiveBg = Color.FromArgb(37, 99, 235);
@@ -30,14 +33,16 @@ namespace NCR_system
             ICustomerComplaint cust,
             IShipRejected shipV,
             IInprocess inps, 
-            INCR ncrinter)
+            INCR ncrinter, 
+            ISummaryNCR overall)
         {
             InitializeComponent();
 
             _cust = cust;
             _shipV = shipV;
             _inps = inps;
-            _ncrinter = ncrinter;   
+            _ncrinter = ncrinter;
+            _overall = overall; 
         }
 
 
@@ -148,7 +153,8 @@ namespace NCR_system
                 rejectBtn,
                 processbtn,
                 NCRmenu,
-                button2
+                button2, 
+                button3
             };
 
             foreach (var btn in buttons)
@@ -165,6 +171,10 @@ namespace NCR_system
             Application.Exit();
         }
 
-       
+        private void button3_Click(object sender, EventArgs e)
+        {
+            var overform = new OverallSummary(_overall, _ncrinter);
+            overform.ShowDialog();  
+        }
     }
 }

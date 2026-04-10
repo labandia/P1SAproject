@@ -26,8 +26,8 @@ namespace NCR_system.View.AddForms
             if (listdata.Count == 0)
             {
                 button3.Enabled = false;
-                button3.BackColor = Color.Gray;
-                button3.ForeColor = Color.White;
+                button3.BackColor = Color.WhiteSmoke;
+                button3.ForeColor = Color.WhiteSmoke;
             }
         }
 
@@ -35,32 +35,7 @@ namespace NCR_system.View.AddForms
         private async void Save_btn_Click(object sender, EventArgs e)
         {
 
-            if(!FormValid()) return;
-
-            string ImageUpload = await UploadServices.SaveImageFolder(selectedImagepath);
-
-            var obj = new CustomerModel
-            {
-                RegNo = EditRegNo.Text,
-                CustomerName = EditCustomerText.Text,
-                SectionID = selectDepart.SelectedIndex,
-                ModelNo = EditModelText.Text,
-                LotNo = EditLotText.Text,
-                NGQty = Convert.ToInt32(EditNGText.Text),
-                Details = EditProblemText.Text,
-                Status = 1,
-                CCtype = 0,
-                UploadImage = ImageUpload
-            };
-
-            listdata.Add(obj);
-            CustomDatagrid.DataSource = listdata;
-            ResetDisplay();
-            EditRegNo.Focus();
-
-            button3.Enabled = true;
-            button3.BackColor = Color.FromArgb(95, 34, 200);
-            button3.ForeColor = Color.White;
+           
           
         }
 
@@ -79,11 +54,12 @@ namespace NCR_system.View.AddForms
 
         private void AddExternalCC_Load(object sender, EventArgs e)
         {
+            CustomDatagrid.Height = 35;
         }
 
         private void Cancel_btn_Click(object sender, EventArgs e)
         {
-            this.Close();
+           
         }
 
         public bool FormValid()
@@ -135,25 +111,7 @@ namespace NCR_system.View.AddForms
 
         private async void button3_Click(object sender, EventArgs e)
         {
-            try
-            {
-                foreach (var item in listdata)
-                {
-                    await _cus.InsertCustomerData(item, 0);
-                }
-
-                button3.Enabled = false;
-                button3.BackColor = Color.Gray;
-                button3.ForeColor = Color.White;
-
-                MessageBox.Show("Add Data Successfully");
-                DialogResult = DialogResult.OK;
-                Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+           
         }
 
         private void CustomDatagrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -178,6 +136,70 @@ namespace NCR_system.View.AddForms
                     }
                 }
             }
+        }
+
+        private async void Save_btn_Click_1(object sender, EventArgs e)
+        {
+            if (!FormValid()) return;
+
+            string ImageUpload = await UploadServices.SaveImageFolder(selectedImagepath);
+
+            var obj = new CustomerModel
+            {
+                RegNo = EditRegNo.Text,
+                CustomerName = EditCustomerText.Text,
+                SectionID = selectDepart.SelectedIndex,
+                ModelNo = EditModelText.Text,
+                LotNo = EditLotText.Text,
+                NGQty = Convert.ToInt32(EditNGText.Text),
+                Details = EditProblemText.Text,
+                Status = 1,
+                CCtype = 0,
+                UploadImage = ImageUpload
+            };
+
+            listdata.Add(obj);
+
+            CustomDatagrid.Height = 300;
+            CustomDatagrid.BringToFront();
+            CustomDatagrid.DataSource = listdata;
+
+
+            ResetDisplay();
+            EditRegNo.Focus();
+
+            button3.Enabled = true;
+            button3.BackColor = Color.FromArgb(95, 34, 200);
+            button3.ForeColor = Color.White;
+
+        }
+
+        private async void button3_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+                foreach (var item in listdata)
+                {
+                    await _cus.InsertCustomerData(item, 0);
+                }
+
+                button3.Enabled = false;
+                button3.BackColor = Color.Gray;
+                button3.ForeColor = Color.White;
+
+                MessageBox.Show("Add Data Successfully");
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void button12_Click_1(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

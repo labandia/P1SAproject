@@ -10,6 +10,7 @@ using System.Windows.Forms.DataVisualization.Charting;
 using Axis = LiveCharts.Wpf.Axis;
 using System.Linq;
 using NCR_system.View.Module;
+using System.Drawing;
 
 namespace NCR_system.View
 {
@@ -29,11 +30,15 @@ namespace NCR_system.View
             InitializeComponent();
             _overall = overall;
             _ncr = ncr;
+
+
         }
 
       
-        private   void OverallSummary_Load(object sender, EventArgs e)
+        private void OverallSummary_Load(object sender, EventArgs e)
         {
+
+
             if (_first == null)
             {
                 _first = new FirstBatchCharts(_overall);

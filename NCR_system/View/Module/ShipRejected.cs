@@ -31,6 +31,8 @@ namespace NCR_system.View.Module
         private readonly List<string> _statusLabels = new List<string> 
         { "For Circulation", "Close / Completed", "Report OK", "Open" };
 
+        private readonly Dictionary<string, Label> _departmentLabels;
+
 
         public ShipRejected(IShipRejected ship)
         {
@@ -40,6 +42,15 @@ namespace NCR_system.View.Module
 
             sectionfilter.SelectedIndex = 0;
             filteritems.SelectedIndex = 1;
+
+            _departmentLabels = new Dictionary<string, Label>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "Molding", moldval },
+                { "Press", Pressval },
+                { "Rotor", Rotorval },
+                { "Winding", windingval },
+                { "Circuit", Circuitval }
+            };
 
             EnableDoubleBuffering();
             _isInitializing = false;
@@ -120,8 +131,8 @@ namespace NCR_system.View.Module
 
                 RejectedGrid.DataSource = shipList;
 
-                UpdateStatusChart(shipList);
-                UpdatePieChart(pieData);
+                //UpdateStatusChart(shipList);
+                DisplaySectionStats(pieData);
             }
             catch (Exception ex)
             {
@@ -134,100 +145,100 @@ namespace NCR_system.View.Module
             }
         }
 
-        private void UpdateStatusChart(List<RejectShipmentModel> list)
-        {
-            if (list == null || list.Count == 0)
-            {
-                cartesianChart1.Series = new SeriesCollection();
-                return;
-            }
+        //private void UpdateStatusChart(List<RejectShipmentModel> list)
+        //{
+        //    if (list == null || list.Count == 0)
+        //    {
+        //        cartesianChart1.Series = new SeriesCollection();
+        //        return;
+        //    }
 
-            int circulation = 0, report = 0, open = 0;
+        //    int circulation = 0, report = 0, open = 0;
 
-            foreach (var item in list)
-            {
-                switch (item.Status)
-                {
-                    case 3: circulation++; break;
-                    case 2: report++; break;
-                    case 1: open++; break;
-                }
-            }
+        //    foreach (var item in list)
+        //    {
+        //        switch (item.Status)
+        //        {
+        //            case 3: circulation++; break;
+        //            case 2: report++; break;
+        //            case 1: open++; break;
+        //        }
+        //    }
 
-            cartesianChart1.Series = new SeriesCollection
-            {
-                new ColumnSeries
-                {
-                    Title = "Circulation",
-                    Values = new ChartValues<int> { circulation },
-                    DataLabels = true,
-                    Fill = System.Windows.Media.Brushes.Orange,
-                    MaxColumnWidth = 200,
-                    ColumnPadding = 50
-                },
-                new ColumnSeries
-                {
-                    Title = "Report",
-                    Values = new ChartValues<int> { report },
-                    DataLabels = true,
-                    Fill = System.Windows.Media.Brushes.Yellow,
-                    MaxColumnWidth = 200,
-                    ColumnPadding = 50
-                },
-                new ColumnSeries
-                {
-                    Title = "Open",
-                    Values = new ChartValues<int> { open },
-                    DataLabels = true,
-                    Fill = System.Windows.Media.Brushes.Green,
-                    MaxColumnWidth = 200,
-                    ColumnPadding = 50
-                }
-            };
+        //    cartesianChart1.Series = new SeriesCollection
+        //    {
+        //        new ColumnSeries
+        //        {
+        //            Title = "Circulation",
+        //            Values = new ChartValues<int> { circulation },
+        //            DataLabels = true,
+        //            Fill = System.Windows.Media.Brushes.Orange,
+        //            MaxColumnWidth = 200,
+        //            ColumnPadding = 50
+        //        },
+        //        new ColumnSeries
+        //        {
+        //            Title = "Report",
+        //            Values = new ChartValues<int> { report },
+        //            DataLabels = true,
+        //            Fill = System.Windows.Media.Brushes.Yellow,
+        //            MaxColumnWidth = 200,
+        //            ColumnPadding = 50
+        //        },
+        //        new ColumnSeries
+        //        {
+        //            Title = "Open",
+        //            Values = new ChartValues<int> { open },
+        //            DataLabels = true,
+        //            Fill = System.Windows.Media.Brushes.Green,
+        //            MaxColumnWidth = 200,
+        //            ColumnPadding = 50
+        //        }
+        //    };
 
-            cartesianChart1.AxisX.Clear();
+        //    cartesianChart1.AxisX.Clear();
            
 
-            cartesianChart1.AxisY.Clear();
+        //    cartesianChart1.AxisY.Clear();
 
-            cartesianChart1.LegendLocation = LegendLocation.Bottom;
-            cartesianChart1.ForeColor = System.Drawing.Color.White;
+        //    cartesianChart1.LegendLocation = LegendLocation.Bottom;
+        //    cartesianChart1.ForeColor = System.Drawing.Color.White;
 
-            cartesianChart1.DisableAnimations = list.Count > 2000;
-        }
+        //    cartesianChart1.DisableAnimations = list.Count > 2000;
+        //}
 
-        private void UpdatePieChart(List<CustomerTotalModel> cc)
-        {
-            if (cc == null || cc.Count == 0)
-            {
-                pieChart1.Series = new SeriesCollection();
-                return;
-            }
+        //private void UpdatePieChart(List<CustomerTotalModel> cc)
+        //{
+        //    if (cc == null || cc.Count == 0)
+        //    {
+        //        pieChart1.Series = new SeriesCollection();
+        //        return;
+        //    }
 
-            var series = new SeriesCollection();
+        //    var series = new SeriesCollection();
 
-            foreach (var d in cc)
-            {
-                if (d.totalOpen <= 0) continue;
+        //    foreach (var d in cc)
+        //    {
+        //        if (d.totalOpen <= 0) continue;
 
-                series.Add(new PieSeries
-                {
-                    Title = d.DepartmentName,
-                    Values = new ChartValues<int> { d.totalOpen },
-                    DataLabels = true,
-                    Fill = GetDepartmentColor(d.DepartmentName),
-                    LabelPoint = cp => $"{cp.Y} ({cp.Participation:P0})"
-                });
-            }
+        //        series.Add(new PieSeries
+        //        {
+        //            Title = d.DepartmentName,
+        //            Values = new ChartValues<int> { d.totalOpen },
+        //            DataLabels = true,
+        //            Fill = GetDepartmentColor(d.DepartmentName),
+        //            LabelPoint = cp => $"{cp.Y} ({cp.Participation:P0})"
+        //        });
+        //    }
 
-            pieChart1.Series = series;
+        //    pieChart1.Series = series;
 
-            pieChart1.LegendLocation = LegendLocation.Right;
-            pieChart1.InnerRadius = 70;
-            pieChart1.DisableAnimations = cc.Sum(x => x.totalOpen) > 2000;
+        //    pieChart1.LegendLocation = LegendLocation.Right;
+        //    pieChart1.InnerRadius = 70;
+        //    pieChart1.DisableAnimations = cc.Sum(x => x.totalOpen) > 2000;
 
-            pieChart1.Update();
-        }
+        //    pieChart1.Update();
+        //}
 
         private Brush GetDepartmentColor(string dept)
         {
@@ -369,64 +380,89 @@ namespace NCR_system.View.Module
         }
 
 
-        public void DisplayPieChart(List<CustomerTotalModel> cc)
+        //public void DisplayPieChart(List<CustomerTotalModel> cc)
+        //{
+        //    //resetDisplayText();
+
+        //    pieChart1.Width = 650;   
+        //    pieChart1.Height = 450;  
+
+
+        //    if (cc == null || cc.Count == 0)
+        //    {
+        //        pieChart1.Series = new LiveCharts.SeriesCollection();
+        //        return;
+        //    }
+
+        //    var seriesCollection = new LiveCharts.SeriesCollection();
+
+        //    // Department color mapping
+        //    var deptColors = new Dictionary<string, System.Windows.Media.Brush>
+        //    {
+        //        { "Molding", Brushes.DodgerBlue },
+        //        { "Press", Brushes.Orange },
+        //        { "Rotor", Brushes.SeaGreen },
+        //        { "Winding", Brushes.Gold },
+        //        { "Circuit", Brushes.MediumPurple }
+        //    };
+
+        //    foreach (var d in cc)
+        //    {
+        //        if (d.totalOpen <= 0) continue;
+
+        //        var pie = new PieSeries
+        //        {
+        //            Title = d.DepartmentName,
+        //            Values = new ChartValues<int> { d.totalOpen },
+        //            DataLabels = true,
+        //            LabelPoint = chartPoint =>
+        //                $"{chartPoint.SeriesView.Title}\n{chartPoint.Y} ({chartPoint.Participation:P1})",
+        //            FontSize = 12
+        //        };
+
+        //        // Apply custom color if exists
+        //        if (deptColors.ContainsKey(d.DepartmentName))
+        //            pie.Fill = deptColors[d.DepartmentName];
+
+        //        seriesCollection.Add(pie);
+
+        //    }
+
+        //    pieChart1.Series = seriesCollection;
+
+        //    // Doughnut Style
+        //    pieChart1.InnerRadius = 70;
+
+        //    // Animation
+        //    pieChart1.DisableAnimations = false;
+        //    pieChart1.LegendLocation = LegendLocation.Right;
+        //}
+
+        public void DisplaySectionStats(List<CustomerTotalModel> cc)
         {
-            //resetDisplayText();
-
-            pieChart1.Width = 650;   
-            pieChart1.Height = 450;  
-
-
+            moldval.Text = "0";
+            Pressval.Text = "0";
+            Rotorval.Text = "0";
+            windingval.Text = "0";
+            Circuitval.Text = "0";
             if (cc == null || cc.Count == 0)
-            {
-                pieChart1.Series = new LiveCharts.SeriesCollection();
                 return;
-            }
-
-            var seriesCollection = new LiveCharts.SeriesCollection();
-
-            // Department color mapping
-            var deptColors = new Dictionary<string, System.Windows.Media.Brush>
-            {
-                { "Molding", Brushes.DodgerBlue },
-                { "Press", Brushes.Orange },
-                { "Rotor", Brushes.SeaGreen },
-                { "Winding", Brushes.Gold },
-                { "Circuit", Brushes.MediumPurple }
-            };
+            if (_departmentLabels == null)
+                return;
 
             foreach (var d in cc)
             {
-                if (d.totalOpen <= 0) continue;
+                if (d == null)
+                    continue;
 
-                var pie = new PieSeries
+                if (string.IsNullOrWhiteSpace(d.DepartmentName))
+                    continue;
+
+                if (_departmentLabels.TryGetValue(d.DepartmentName, out var label) && label != null)
                 {
-                    Title = d.DepartmentName,
-                    Values = new ChartValues<int> { d.totalOpen },
-                    DataLabels = true,
-                    LabelPoint = chartPoint =>
-                        $"{chartPoint.SeriesView.Title}\n{chartPoint.Y} ({chartPoint.Participation:P1})",
-                    FontSize = 12
-                };
-
-                // Apply custom color if exists
-                if (deptColors.ContainsKey(d.DepartmentName))
-                    pie.Fill = deptColors[d.DepartmentName];
-
-                seriesCollection.Add(pie);
-
+                    label.Text = d.totalOpen.ToString();
+                }
             }
-
-            pieChart1.Series = seriesCollection;
-
-            // Doughnut Style
-            pieChart1.InnerRadius = 70;
-
-            // Animation
-            pieChart1.DisableAnimations = false;
-            pieChart1.LegendLocation = LegendLocation.Right;
         }
-
-        
     }
 }

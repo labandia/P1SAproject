@@ -14,6 +14,6 @@ namespace NCR_system.Interface
         Task<List<SummaryInprocessModel>> GetInprocessSummary();
         Task<List<SummaryInprocessModel>> GetRejectedSummary();
         Task<List<SummaryInprocessModel>> GetShipmentSummary();
-        Task<List<SummaryInprocessModel>> GetNCRRegistrationSummary();
+        Task<List<OverallNCR>> GetNCRRegistrationSummary();
     }
 }

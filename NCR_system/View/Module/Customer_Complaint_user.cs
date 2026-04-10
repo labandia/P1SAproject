@@ -189,7 +189,7 @@ namespace NCR_system.View.Module
                 CustomDatagrid.DataSource = CusList;
                 ConfigureGrid(proc);
 
-                UpdateBarChart(pieData);
+                //UpdateBarChart(pieData);
                 DisplaySectionStats(pieData);
 
             }
@@ -245,84 +245,84 @@ namespace NCR_system.View.Module
         // =========================================================
         // CHARTS DISPLAY
         // =========================================================
-        private void UpdateBarChart(List<CustomerTotalModel> cc)
-        {
-            if (cc == null || cc.Count == 0)
-            {
-                cartesianChart1.Series = new SeriesCollection();
-                return;
-            }
+        //private void UpdateBarChart(List<CustomerTotalModel> cc)
+        //{
+        //    if (cc == null || cc.Count == 0)
+        //    {
+        //        cartesianChart1.Series = new SeriesCollection();
+        //        return;
+        //    }
 
-            var seriesCollection = new SeriesCollection();
-            var labels = new List<string>();
+        //    var seriesCollection = new SeriesCollection();
+        //    var labels = new List<string>();
 
-            foreach (var d in cc)
-            {
-                if (d.totalOpen <= 0) continue;
+        //    foreach (var d in cc)
+        //    {
+        //        if (d.totalOpen <= 0) continue;
 
-                labels.Add(d.DepartmentName);
+        //        labels.Add(d.DepartmentName);
 
-                // Set color per section
-                System.Windows.Media.Brush color = System.Windows.Media.Brushes.Gray;
+        //        // Set color per section
+        //        System.Windows.Media.Brush color = System.Windows.Media.Brushes.Gray;
 
-                switch (d.DepartmentName)
-                {
-                    case "Molding":
-                        color = System.Windows.Media.Brushes.Pink;
-                        break;
+        //        switch (d.DepartmentName)
+        //        {
+        //            case "Molding":
+        //                color = System.Windows.Media.Brushes.Pink;
+        //                break;
 
-                    case "Press":
-                        color = System.Windows.Media.Brushes.Blue;
-                        break;
+        //            case "Press":
+        //                color = System.Windows.Media.Brushes.Blue;
+        //                break;
 
-                    case "Rotor":
-                        color = System.Windows.Media.Brushes.Yellow;
-                        break;
+        //            case "Rotor":
+        //                color = System.Windows.Media.Brushes.Yellow;
+        //                break;
 
-                    case "Winding":
-                        color = System.Windows.Media.Brushes.Green;
-                        break;
+        //            case "Winding":
+        //                color = System.Windows.Media.Brushes.Green;
+        //                break;
 
-                    case "Circuit":
-                        color = System.Windows.Media.Brushes.White;
-                        break;
-                }
+        //            case "Circuit":
+        //                color = System.Windows.Media.Brushes.White;
+        //                break;
+        //        }
 
-                seriesCollection.Add(new ColumnSeries
-                {
-                    Title = d.DepartmentName,
-                    Values = new ChartValues<int> { d.totalOpen },
-                    DataLabels = true,
-                    Fill = color,
-                    MaxColumnWidth = 200,     // control bar width
-                    ColumnPadding = 50,      // space between bars
-                    LabelPoint = point => point.Y.ToString()
-                });
-            }
+        //        seriesCollection.Add(new ColumnSeries
+        //        {
+        //            Title = d.DepartmentName,
+        //            Values = new ChartValues<int> { d.totalOpen },
+        //            DataLabels = true,
+        //            Fill = color,
+        //            MaxColumnWidth = 200,     // control bar width
+        //            ColumnPadding = 50,      // space between bars
+        //            LabelPoint = point => point.Y.ToString()
+        //        });
+        //    }
 
-            cartesianChart1.Series = seriesCollection;
+        //    cartesianChart1.Series = seriesCollection;
 
-            // X Axis
-            cartesianChart1.AxisX.Clear();
-            cartesianChart1.AxisX.Add(new Axis
-            {
-                Title = "",
-                Labels = labels,
-                Foreground = System.Windows.Media.Brushes.White,
-                Separator = new Separator { Step = 1, IsEnabled = false }
-            });
+        //    // X Axis
+        //    cartesianChart1.AxisX.Clear();
+        //    cartesianChart1.AxisX.Add(new Axis
+        //    {
+        //        Title = "",
+        //        Labels = labels,
+        //        Foreground = System.Windows.Media.Brushes.White,
+        //        Separator = new Separator { Step = 1, IsEnabled = false }
+        //    });
 
-            // Y Axis
-            cartesianChart1.AxisY.Clear();
-            cartesianChart1.AxisY.Add(new Axis
-            {
-                Title = "",
-                LabelFormatter = value => value.ToString("N0"),
-                Foreground = System.Windows.Media.Brushes.White
-            });
+        //    // Y Axis
+        //    cartesianChart1.AxisY.Clear();
+        //    cartesianChart1.AxisY.Add(new Axis
+        //    {
+        //        Title = "",
+        //        LabelFormatter = value => value.ToString("N0"),
+        //        Foreground = System.Windows.Media.Brushes.White
+        //    });
 
-            cartesianChart1.DisableAnimations = cc.Sum(x => x.totalOpen) > 2000;
-        }
+        //    cartesianChart1.DisableAnimations = cc.Sum(x => x.totalOpen) > 2000;
+        //}
 
 
 
@@ -385,16 +385,16 @@ namespace NCR_system.View.Module
             bool isCCTypeVisible = proc == 0;
 
             OpenCC.Enabled = isCCTypeVisible == true ? false : true;
-            OpenCC.BackColor = isCCTypeVisible ? Color.FromArgb(30, 36, 62) : Color.FromArgb(51, 153, 255);
-            OpenCC.ForeColor = isCCTypeVisible ? Color.FromArgb(222, 222, 222) : Color.FromArgb(255, 255, 255);
-            OpenCC.FlatAppearance.BorderColor = isCCTypeVisible ? Color.FromArgb(30, 36, 62) : Color.FromArgb(51, 153, 255);
+            OpenCC.BackColor = isCCTypeVisible ? Color.WhiteSmoke : Color.FromArgb(51, 153, 255);
+            OpenCC.ForeColor = isCCTypeVisible ? Color.WhiteSmoke : Color.FromArgb(255, 255, 255);
+            OpenCC.FlatAppearance.BorderColor = isCCTypeVisible ? Color.WhiteSmoke : Color.FromArgb(51, 153, 255);
             OpenCC.Cursor = isCCTypeVisible == false ? Cursors.Hand : Cursors.Default;
 
 
             Externalbtn.Enabled = isCCTypeVisible;
-            Externalbtn.BackColor = isCCTypeVisible  ? Color.FromArgb(51, 153, 255) : Color.FromArgb(30, 36, 62);
-            Externalbtn.ForeColor = isCCTypeVisible ? Color.FromArgb(255, 255, 255) : Color.FromArgb(222, 222, 222);
-            Externalbtn.FlatAppearance.BorderColor = isCCTypeVisible ? Color.FromArgb(51, 153, 255) : Color.FromArgb(30, 36, 62);
+            Externalbtn.BackColor = isCCTypeVisible  ? Color.FromArgb(51, 153, 255) : Color.WhiteSmoke;
+            Externalbtn.ForeColor = isCCTypeVisible ? Color.FromArgb(255, 255, 255) : Color.WhiteSmoke;
+            Externalbtn.FlatAppearance.BorderColor = isCCTypeVisible ? Color.FromArgb(51, 153, 255) : Color.WhiteSmoke;
             Externalbtn.Cursor = isCCTypeVisible  ? Cursors.Hand : Cursors.Default;
 
         }
@@ -499,6 +499,22 @@ namespace NCR_system.View.Module
         private void CustomDatagrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
+        }
+
+        private void panel6_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void MoldLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void searchText_Click(object sender, EventArgs e)
+        {
+            searchText.Text = "";
+            searchText.Focus();
         }
     }
 }

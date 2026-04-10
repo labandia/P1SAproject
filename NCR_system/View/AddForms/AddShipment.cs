@@ -200,5 +200,10 @@ namespace NCR_system.View.AddForms
                 MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void button12_Click_1(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }

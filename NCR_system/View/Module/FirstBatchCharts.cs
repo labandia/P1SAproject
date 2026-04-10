@@ -184,7 +184,7 @@ namespace NCR_system.View.Module
                 MinValue = 0
             });
 
-            rejectedChart.LegendLocation = LiveCharts.LegendLocation.Right;
+            rejectedChart.LegendLocation = LiveCharts.LegendLocation.None;
         }
 
         public void LoadShipmentData()
@@ -225,7 +225,7 @@ namespace NCR_system.View.Module
                 MinValue = 0
             });
 
-            ShipmentChart.LegendLocation = LiveCharts.LegendLocation.Right;
+            ShipmentChart.LegendLocation = LiveCharts.LegendLocation.None;
         }
     }
 }

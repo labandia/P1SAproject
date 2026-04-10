@@ -25,8 +25,8 @@ namespace NCR_system
         private readonly ISummaryNCR _overall;
 
         // COLORS
-        public readonly Color ActiveBg = Color.FromArgb(37, 99, 235);
-        public readonly Color DefaultBg = Color.FromArgb(37, 42, 71);
+        public readonly Color ActiveBg = Color.FromArgb(25, 131, 230);
+        public readonly Color DefaultBg = Color.FromArgb(37, 51, 71);
 
 
         public P1SA_NonComformity(

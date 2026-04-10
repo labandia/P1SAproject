@@ -27,8 +27,8 @@ namespace NCR_system.View.AddForms
             if (listdata.Count == 0)
             {
                 Finalizebtn.Enabled = false;
-                Finalizebtn.BackColor = Color.Gray;
-                Finalizebtn.ForeColor = Color.White;
+                Finalizebtn.BackColor = Color.WhiteSmoke;
+                Finalizebtn.ForeColor = Color.WhiteSmoke;
             }
         }
 
@@ -83,7 +83,7 @@ namespace NCR_system.View.AddForms
 
         private void button12_Click(object sender, EventArgs e)
         {
-            this.Close();
+           
         }
 
         private void NGText_KeyPress(object sender, KeyPressEventArgs e)
@@ -133,29 +133,11 @@ namespace NCR_system.View.AddForms
             ProblemText.ForeColor = Color.Black;
         }
 
+        
+
         private async void button1_Click(object sender, EventArgs e)
         {
-            if (!FormValid()) return;
-          
-            string ImageUpload = await UploadServices.SaveImageFolder(selectedImagepath);
-
-            var obj = new CustomerModel
-            {
-                ModelNo = ModelText.Text,
-                LotNo = LotText.Text,
-                NGQty = Convert.ToInt32(NGText.Text),
-                Status = 1,
-                Details = ProblemText.Text,
-                SectionID = selectDepart.SelectedIndex + 1,
-                CCtype = 1,
-                UploadImage = ImageUpload
-            };
-
-            listdata.Add(obj);
-
-            CustomDatagrid.DataSource = listdata;
-            ResetDisplay();
-            ModelText.Focus();
+       
         }
 
         public void ResetDisplay()
@@ -195,7 +177,8 @@ namespace NCR_system.View.AddForms
             };
 
             listdata.Add(obj);
-
+            CustomDatagrid.Height = 469;
+            CustomDatagrid.BringToFront();
             CustomDatagrid.DataSource = listdata;
             ResetDisplay();
             ModelText.Focus();
@@ -221,6 +204,16 @@ namespace NCR_system.View.AddForms
             {
                 MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void AddCustomerComplaint_Load(object sender, EventArgs e)
+        {
+            CustomDatagrid.Height = 40;
+        }
+
+        private void button12_Click_1(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

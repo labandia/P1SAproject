@@ -146,7 +146,7 @@ namespace NCR_system.View.Module
 
                 InprocessGrid.DataSource = CusList;
 
-                UpdateBarChart(pieData);
+                //UpdateBarChart(pieData);
                 DisplaySectionStats(pieData);
             }
             catch (Exception ex)
@@ -207,84 +207,84 @@ namespace NCR_system.View.Module
         // =========================================================
         // CHARTS DISPLAY
         // =========================================================
-        private void UpdateBarChart(List<CustomerTotalModel> cc)
-        {
-            if (cc == null || cc.Count == 0)
-            {
-                cartesianChart1.Series = new SeriesCollection();
-                return;
-            }
+        //private void UpdateBarChart(List<CustomerTotalModel> cc)
+        //{
+        //    if (cc == null || cc.Count == 0)
+        //    {
+        //        cartesianChart1.Series = new SeriesCollection();
+        //        return;
+        //    }
 
-            var seriesCollection = new SeriesCollection();
-            var labels = new List<string>();
+        //    var seriesCollection = new SeriesCollection();
+        //    var labels = new List<string>();
 
-            foreach (var d in cc)
-            {
-                if (d.totalOpen <= 0) continue;
+        //    foreach (var d in cc)
+        //    {
+        //        if (d.totalOpen <= 0) continue;
 
-                labels.Add(d.DepartmentName);
+        //        labels.Add(d.DepartmentName);
 
-                // Set color per section
-                System.Windows.Media.Brush color = System.Windows.Media.Brushes.Gray;
+        //        // Set color per section
+        //        System.Windows.Media.Brush color = System.Windows.Media.Brushes.Gray;
 
-                switch (d.DepartmentName)
-                {
-                    case "Molding":
-                        color = System.Windows.Media.Brushes.Pink;
-                        break;
+        //        switch (d.DepartmentName)
+        //        {
+        //            case "Molding":
+        //                color = System.Windows.Media.Brushes.Pink;
+        //                break;
 
-                    case "Press":
-                        color = System.Windows.Media.Brushes.Blue;
-                        break;
+        //            case "Press":
+        //                color = System.Windows.Media.Brushes.Blue;
+        //                break;
 
-                    case "Rotor":
-                        color = System.Windows.Media.Brushes.Yellow;
-                        break;
+        //            case "Rotor":
+        //                color = System.Windows.Media.Brushes.Yellow;
+        //                break;
 
-                    case "Winding":
-                        color = System.Windows.Media.Brushes.Green;
-                        break;
+        //            case "Winding":
+        //                color = System.Windows.Media.Brushes.Green;
+        //                break;
 
-                    case "Circuit":
-                        color = System.Windows.Media.Brushes.White;
-                        break;
-                }
+        //            case "Circuit":
+        //                color = System.Windows.Media.Brushes.White;
+        //                break;
+        //        }
 
-                seriesCollection.Add(new ColumnSeries
-                {
-                    Title = d.DepartmentName,
-                    Values = new ChartValues<int> { d.totalOpen },
-                    DataLabels = true,
-                    Fill = color,
-                    MaxColumnWidth = 200,     // control bar width
-                    ColumnPadding = 50,      // space between bars
-                    LabelPoint = point => point.Y.ToString()
-                });
-            }
+        //        seriesCollection.Add(new ColumnSeries
+        //        {
+        //            Title = d.DepartmentName,
+        //            Values = new ChartValues<int> { d.totalOpen },
+        //            DataLabels = true,
+        //            Fill = color,
+        //            MaxColumnWidth = 200,     // control bar width
+        //            ColumnPadding = 50,      // space between bars
+        //            LabelPoint = point => point.Y.ToString()
+        //        });
+        //    }
 
-            cartesianChart1.Series = seriesCollection;
+        //    cartesianChart1.Series = seriesCollection;
 
-            // X Axis
-            cartesianChart1.AxisX.Clear();
-            cartesianChart1.AxisX.Add(new Axis
-            {
-                Title = "Department",
-                Labels = labels,
-                Foreground = System.Windows.Media.Brushes.White,
-                Separator = new Separator { Step = 1, IsEnabled = false }
-            });
+        //    // X Axis
+        //    cartesianChart1.AxisX.Clear();
+        //    cartesianChart1.AxisX.Add(new Axis
+        //    {
+        //        Title = "Department",
+        //        Labels = labels,
+        //        Foreground = System.Windows.Media.Brushes.White,
+        //        Separator = new Separator { Step = 1, IsEnabled = false }
+        //    });
 
-            // Y Axis
-            cartesianChart1.AxisY.Clear();
-            cartesianChart1.AxisY.Add(new Axis
-            {
-                Title = "Total Open",
-                LabelFormatter = value => value.ToString("N0"),
-                Foreground = System.Windows.Media.Brushes.White
-            });
+        //    // Y Axis
+        //    cartesianChart1.AxisY.Clear();
+        //    cartesianChart1.AxisY.Add(new Axis
+        //    {
+        //        Title = "Total Open",
+        //        LabelFormatter = value => value.ToString("N0"),
+        //        Foreground = System.Windows.Media.Brushes.White
+        //    });
 
-            cartesianChart1.DisableAnimations = cc.Sum(x => x.totalOpen) > 2000;
-        }
+        //    cartesianChart1.DisableAnimations = cc.Sum(x => x.totalOpen) > 2000;
+        //}
 
 
 

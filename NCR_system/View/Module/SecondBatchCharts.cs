@@ -19,7 +19,7 @@ namespace NCR_system.View.Module
         private readonly INCR _ncr;
         public List<NCRDatamodel> ncrlist { get; private set; } = new List<NCRDatamodel>();
         public List<NCRDatamodel> recurrist { get; private set; } = new List<NCRDatamodel>();
-        public List<SummaryInprocessModel> summarylist { get; private set; } = new List<SummaryInprocessModel>();
+        public List<OverallNCR> summarylist { get; private set; } = new List<OverallNCR>();
 
         public SecondBatchCharts(ISummaryNCR overall, INCR ncr)
         {

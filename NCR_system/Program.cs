@@ -56,7 +56,7 @@ namespace NCR_system
 
             using (var scope = ServiceProvider.CreateScope())
             {
-                var mainForm = scope.ServiceProvider.GetRequiredService<OverallSummary>();
+                var mainForm = scope.ServiceProvider.GetRequiredService<P1SA_NonComformity>();
                 Application.Run(mainForm);
             }
             

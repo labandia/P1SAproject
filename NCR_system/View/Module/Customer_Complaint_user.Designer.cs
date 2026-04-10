@@ -55,14 +55,6 @@
             this.SelectedProcess = new System.Windows.Forms.ComboBox();
             this.Externalbtn = new System.Windows.Forms.Button();
             this.filteritems = new System.Windows.Forms.ComboBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.cartesianChart1 = new LiveCharts.WinForms.CartesianChart();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.panel9 = new System.Windows.Forms.Panel();
             this.Circuitval = new System.Windows.Forms.Label();
             this.windingval = new System.Windows.Forms.Label();
             this.Rotorval = new System.Windows.Forms.Label();
@@ -70,27 +62,28 @@
             this.moldval = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.MoldLabel = new System.Windows.Forms.Label();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.sectionfilter = new System.Windows.Forms.ComboBox();
             this.searchText = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.panel7 = new System.Windows.Forms.Panel();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.CustomDatagrid)).BeginInit();
-            this.panel5.SuspendLayout();
             this.panel6.SuspendLayout();
+            this.panel5.SuspendLayout();
+            this.panel4.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.panel9.SuspendLayout();
-            this.panel7.SuspendLayout();
             this.SuspendLayout();
             // 
             // CustomDatagrid
@@ -107,9 +100,11 @@
             this.CustomDatagrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.CustomDatagrid.BackgroundColor = System.Drawing.Color.White;
             this.CustomDatagrid.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.CustomDatagrid.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised;
+            this.CustomDatagrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.White;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
@@ -132,14 +127,14 @@
             this.UploadImage});
             dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle9.Padding = new System.Windows.Forms.Padding(6, 5, 6, 5);
             dataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.Gainsboro;
             dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.CustomDatagrid.DefaultCellStyle = dataGridViewCellStyle9;
-            this.CustomDatagrid.Location = new System.Drawing.Point(23, 344);
+            this.CustomDatagrid.Location = new System.Drawing.Point(22, 74);
             this.CustomDatagrid.Name = "CustomDatagrid";
             this.CustomDatagrid.ReadOnly = true;
             dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -153,7 +148,7 @@
             this.CustomDatagrid.RowHeadersVisible = false;
             this.CustomDatagrid.RowTemplate.Height = 35;
             this.CustomDatagrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.CustomDatagrid.Size = new System.Drawing.Size(1306, 388);
+            this.CustomDatagrid.Size = new System.Drawing.Size(1045, 633);
             this.CustomDatagrid.TabIndex = 4;
             this.CustomDatagrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CustomDatagrid_CellContentClick);
             this.CustomDatagrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CustomDatagrid_CellDoubleClick);
@@ -269,9 +264,9 @@
             this.OpenCC.FlatAppearance.MouseDownBackColor = System.Drawing.SystemColors.MenuHighlight;
             this.OpenCC.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.MenuHighlight;
             this.OpenCC.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.OpenCC.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OpenCC.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold);
             this.OpenCC.ForeColor = System.Drawing.Color.White;
-            this.OpenCC.Location = new System.Drawing.Point(1147, 256);
+            this.OpenCC.Location = new System.Drawing.Point(748, 26);
             this.OpenCC.Name = "OpenCC";
             this.OpenCC.Size = new System.Drawing.Size(149, 36);
             this.OpenCC.TabIndex = 6;
@@ -283,15 +278,15 @@
             // 
             this.SelectedProcess.DisplayMember = "External";
             this.SelectedProcess.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.SelectedProcess.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
+            this.SelectedProcess.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SelectedProcess.FormattingEnabled = true;
-            this.SelectedProcess.ItemHeight = 15;
+            this.SelectedProcess.ItemHeight = 17;
             this.SelectedProcess.Items.AddRange(new object[] {
-            "External",
-            "SDC"});
-            this.SelectedProcess.Location = new System.Drawing.Point(351, 279);
+            "Select: External",
+            "Select: SDC"});
+            this.SelectedProcess.Location = new System.Drawing.Point(362, 29);
             this.SelectedProcess.Name = "SelectedProcess";
-            this.SelectedProcess.Size = new System.Drawing.Size(159, 23);
+            this.SelectedProcess.Size = new System.Drawing.Size(159, 25);
             this.SelectedProcess.TabIndex = 7;
             this.SelectedProcess.ValueMember = "External";
             this.SelectedProcess.SelectedIndexChanged += new System.EventHandler(this.SelectedProcess_SelectedIndexChanged);
@@ -304,11 +299,11 @@
             this.Externalbtn.FlatAppearance.MouseDownBackColor = System.Drawing.SystemColors.MenuHighlight;
             this.Externalbtn.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.MenuHighlight;
             this.Externalbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Externalbtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Externalbtn.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold);
             this.Externalbtn.ForeColor = System.Drawing.Color.White;
-            this.Externalbtn.Location = new System.Drawing.Point(974, 256);
+            this.Externalbtn.Location = new System.Drawing.Point(919, 26);
             this.Externalbtn.Name = "Externalbtn";
-            this.Externalbtn.Size = new System.Drawing.Size(157, 36);
+            this.Externalbtn.Size = new System.Drawing.Size(148, 36);
             this.Externalbtn.TabIndex = 8;
             this.Externalbtn.Text = "Add External";
             this.Externalbtn.UseVisualStyleBackColor = false;
@@ -317,282 +312,144 @@
             // filteritems
             // 
             this.filteritems.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.filteritems.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
+            this.filteritems.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.filteritems.FormattingEnabled = true;
             this.filteritems.Items.AddRange(new object[] {
-            "Close",
-            "Open"});
-            this.filteritems.Location = new System.Drawing.Point(537, 279);
+            "Select: Close",
+            "Select: Open"});
+            this.filteritems.Location = new System.Drawing.Point(537, 30);
             this.filteritems.Name = "filteritems";
-            this.filteritems.Size = new System.Drawing.Size(121, 23);
+            this.filteritems.Size = new System.Drawing.Size(121, 25);
             this.filteritems.TabIndex = 11;
             this.filteritems.SelectedIndexChanged += new System.EventHandler(this.filteritems_SelectedIndexChanged);
             // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.ForeColor = System.Drawing.SystemColors.Control;
-            this.label7.Location = new System.Drawing.Point(348, 256);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(98, 15);
-            this.label7.TabIndex = 24;
-            this.label7.Text = "Filter by process :";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.ForeColor = System.Drawing.SystemColors.Control;
-            this.label9.Location = new System.Drawing.Point(534, 256);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(120, 15);
-            this.label9.TabIndex = 25;
-            this.label9.Text = "Filter by Open/Close :";
-            // 
-            // panel5
-            // 
-            this.panel5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(36)))), ((int)(((byte)(62)))));
-            this.panel5.Controls.Add(this.panel6);
-            this.panel5.Controls.Add(this.panel1);
-            this.panel5.Location = new System.Drawing.Point(40, 25);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(1066, 211);
-            this.panel5.TabIndex = 38;
-            // 
-            // panel6
-            // 
-            this.panel6.Controls.Add(this.cartesianChart1);
-            this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel6.Location = new System.Drawing.Point(0, 50);
-            this.panel6.Name = "panel6";
-            this.panel6.Padding = new System.Windows.Forms.Padding(30, 20, 30, 20);
-            this.panel6.Size = new System.Drawing.Size(1066, 161);
-            this.panel6.TabIndex = 1;
-            // 
-            // cartesianChart1
-            // 
-            this.cartesianChart1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cartesianChart1.Location = new System.Drawing.Point(30, 20);
-            this.cartesianChart1.Margin = new System.Windows.Forms.Padding(3, 30, 3, 3);
-            this.cartesianChart1.Name = "cartesianChart1";
-            this.cartesianChart1.Size = new System.Drawing.Size(1006, 121);
-            this.cartesianChart1.TabIndex = 2;
-            this.cartesianChart1.Text = "QuantityChart";
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(47)))), ((int)(((byte)(76)))));
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1066, 50);
-            this.panel1.TabIndex = 0;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(20, 15);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(231, 21);
-            this.label1.TabIndex = 14;
-            this.label1.Text = "Active Open cases by Section";
-            // 
-            // panel9
-            // 
-            this.panel9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(47)))), ((int)(((byte)(76)))));
-            this.panel9.Controls.Add(this.Circuitval);
-            this.panel9.Controls.Add(this.windingval);
-            this.panel9.Controls.Add(this.Rotorval);
-            this.panel9.Controls.Add(this.Pressval);
-            this.panel9.Controls.Add(this.moldval);
-            this.panel9.Controls.Add(this.label11);
-            this.panel9.Controls.Add(this.MoldLabel);
-            this.panel9.Controls.Add(this.button5);
-            this.panel9.Controls.Add(this.button1);
-            this.panel9.Controls.Add(this.label12);
-            this.panel9.Controls.Add(this.button2);
-            this.panel9.Controls.Add(this.button4);
-            this.panel9.Controls.Add(this.label13);
-            this.panel9.Controls.Add(this.label14);
-            this.panel9.Controls.Add(this.button3);
-            this.panel9.Location = new System.Drawing.Point(1124, 25);
-            this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(172, 211);
-            this.panel9.TabIndex = 34;
-            // 
             // Circuitval
             // 
+            this.Circuitval.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Circuitval.AutoSize = true;
-            this.Circuitval.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Circuitval.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.Circuitval.Location = new System.Drawing.Point(47, 174);
+            this.Circuitval.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Circuitval.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.Circuitval.Location = new System.Drawing.Point(63, 26);
             this.Circuitval.Name = "Circuitval";
-            this.Circuitval.Size = new System.Drawing.Size(19, 21);
+            this.Circuitval.Size = new System.Drawing.Size(38, 45);
             this.Circuitval.TabIndex = 49;
             this.Circuitval.Text = "0";
             // 
             // windingval
             // 
+            this.windingval.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.windingval.AutoSize = true;
-            this.windingval.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.windingval.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.windingval.Location = new System.Drawing.Point(122, 110);
+            this.windingval.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.windingval.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.windingval.Location = new System.Drawing.Point(63, 26);
             this.windingval.Name = "windingval";
-            this.windingval.Size = new System.Drawing.Size(19, 21);
+            this.windingval.Size = new System.Drawing.Size(38, 45);
             this.windingval.TabIndex = 48;
             this.windingval.Text = "0";
             // 
             // Rotorval
             // 
+            this.Rotorval.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Rotorval.AutoSize = true;
-            this.Rotorval.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Rotorval.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.Rotorval.Location = new System.Drawing.Point(47, 110);
+            this.Rotorval.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Rotorval.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.Rotorval.Location = new System.Drawing.Point(63, 24);
             this.Rotorval.Name = "Rotorval";
-            this.Rotorval.Size = new System.Drawing.Size(19, 21);
+            this.Rotorval.Size = new System.Drawing.Size(38, 45);
             this.Rotorval.TabIndex = 47;
             this.Rotorval.Text = "0";
             // 
             // Pressval
             // 
+            this.Pressval.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Pressval.AutoSize = true;
-            this.Pressval.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Pressval.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.Pressval.Location = new System.Drawing.Point(122, 45);
+            this.Pressval.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Pressval.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.Pressval.Location = new System.Drawing.Point(65, 26);
             this.Pressval.Name = "Pressval";
-            this.Pressval.Size = new System.Drawing.Size(19, 21);
+            this.Pressval.Size = new System.Drawing.Size(38, 45);
             this.Pressval.TabIndex = 46;
             this.Pressval.Text = "0";
             // 
             // moldval
             // 
+            this.moldval.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.moldval.AutoSize = true;
-            this.moldval.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.moldval.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.moldval.Location = new System.Drawing.Point(47, 45);
+            this.moldval.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.moldval.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.moldval.Location = new System.Drawing.Point(65, 25);
             this.moldval.Name = "moldval";
-            this.moldval.Size = new System.Drawing.Size(19, 21);
+            this.moldval.Size = new System.Drawing.Size(38, 45);
             this.moldval.TabIndex = 45;
             this.moldval.Text = "0";
             // 
             // label11
             // 
+            this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.label11.Location = new System.Drawing.Point(20, 151);
+            this.label11.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.ForeColor = System.Drawing.Color.Black;
+            this.label11.Location = new System.Drawing.Point(53, 14);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(44, 16);
+            this.label11.Size = new System.Drawing.Size(56, 17);
             this.label11.TabIndex = 44;
-            this.label11.Text = "Circuit";
+            this.label11.Text = "CIRCUIT";
             // 
             // MoldLabel
             // 
+            this.MoldLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.MoldLabel.AutoSize = true;
-            this.MoldLabel.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MoldLabel.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.MoldLabel.Location = new System.Drawing.Point(20, 16);
+            this.MoldLabel.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MoldLabel.ForeColor = System.Drawing.Color.Black;
+            this.MoldLabel.Location = new System.Drawing.Point(50, 13);
             this.MoldLabel.Name = "MoldLabel";
-            this.MoldLabel.Size = new System.Drawing.Size(55, 16);
+            this.MoldLabel.Size = new System.Drawing.Size(68, 17);
             this.MoldLabel.TabIndex = 36;
-            this.MoldLabel.Text = "Molding";
-            // 
-            // button5
-            // 
-            this.button5.BackColor = System.Drawing.Color.White;
-            this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button5.Location = new System.Drawing.Point(23, 179);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(15, 13);
-            this.button5.TabIndex = 43;
-            this.button5.UseVisualStyleBackColor = false;
-            // 
-            // button1
-            // 
-            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button1.Location = new System.Drawing.Point(23, 49);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(15, 13);
-            this.button1.TabIndex = 35;
-            this.button1.UseVisualStyleBackColor = false;
+            this.MoldLabel.Text = "MOLDING";
+            this.MoldLabel.Click += new System.EventHandler(this.MoldLabel_Click);
             // 
             // label12
             // 
+            this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.label12.Location = new System.Drawing.Point(95, 85);
+            this.label12.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.ForeColor = System.Drawing.Color.Black;
+            this.label12.Location = new System.Drawing.Point(50, 13);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(54, 16);
+            this.label12.Size = new System.Drawing.Size(63, 17);
             this.label12.TabIndex = 42;
-            this.label12.Text = "Winding";
-            // 
-            // button2
-            // 
-            this.button2.BackColor = System.Drawing.Color.CornflowerBlue;
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button2.Location = new System.Drawing.Point(98, 51);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(15, 13);
-            this.button2.TabIndex = 37;
-            this.button2.UseVisualStyleBackColor = false;
-            // 
-            // button4
-            // 
-            this.button4.BackColor = System.Drawing.Color.Green;
-            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button4.Location = new System.Drawing.Point(98, 115);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(15, 13);
-            this.button4.TabIndex = 41;
-            this.button4.UseVisualStyleBackColor = false;
+            this.label12.Text = "WNDING";
             // 
             // label13
             // 
+            this.label13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.label13.Location = new System.Drawing.Point(95, 16);
+            this.label13.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.ForeColor = System.Drawing.Color.Black;
+            this.label13.Location = new System.Drawing.Point(59, 14);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(36, 16);
+            this.label13.Size = new System.Drawing.Size(45, 17);
             this.label13.TabIndex = 38;
-            this.label13.Text = "Press";
+            this.label13.Text = "PRESS";
             // 
             // label14
             // 
+            this.label14.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.label14.Location = new System.Drawing.Point(20, 85);
+            this.label14.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.ForeColor = System.Drawing.Color.Black;
+            this.label14.Location = new System.Drawing.Point(57, 13);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(37, 16);
+            this.label14.Size = new System.Drawing.Size(49, 17);
             this.label14.TabIndex = 40;
-            this.label14.Text = "Rotor";
-            // 
-            // button3
-            // 
-            this.button3.BackColor = System.Drawing.Color.Yellow;
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button3.Location = new System.Drawing.Point(23, 115);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(15, 13);
-            this.button3.TabIndex = 39;
-            this.button3.UseVisualStyleBackColor = false;
+            this.label14.Text = "ROTOR";
             // 
             // label2
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(20, 745);
+            this.label2.Location = new System.Drawing.Point(21, 722);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(89, 17);
             this.label2.TabIndex = 35;
@@ -603,7 +460,7 @@
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(1240, 745);
+            this.label4.Location = new System.Drawing.Point(978, 722);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(89, 17);
             this.label4.TabIndex = 36;
@@ -613,95 +470,150 @@
             // 
             this.sectionfilter.DropDownHeight = 200;
             this.sectionfilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.sectionfilter.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.sectionfilter.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.sectionfilter.FormattingEnabled = true;
             this.sectionfilter.IntegralHeight = false;
-            this.sectionfilter.ItemHeight = 15;
+            this.sectionfilter.ItemHeight = 17;
             this.sectionfilter.Items.AddRange(new object[] {
-            "-- Filter Section --",
-            "Molding",
-            "Press",
-            "Rotor",
-            "Winding",
-            "Circuit"});
-            this.sectionfilter.Location = new System.Drawing.Point(210, 279);
+            "Select: ALL",
+            "Select: Molding",
+            "Select: Press",
+            "Select: Rotor",
+            "Select: Winding",
+            "Select: Circuit"});
+            this.sectionfilter.Location = new System.Drawing.Point(203, 29);
             this.sectionfilter.MaxDropDownItems = 30;
             this.sectionfilter.Name = "sectionfilter";
-            this.sectionfilter.Size = new System.Drawing.Size(121, 23);
+            this.sectionfilter.Size = new System.Drawing.Size(139, 25);
             this.sectionfilter.TabIndex = 12;
             this.sectionfilter.SelectedIndexChanged += new System.EventHandler(this.sectionfilter_SelectedIndexChanged);
             // 
             // searchText
             // 
-            this.searchText.Location = new System.Drawing.Point(39, 279);
+            this.searchText.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.searchText.Location = new System.Drawing.Point(22, 30);
             this.searchText.Multiline = true;
             this.searchText.Name = "searchText";
             this.searchText.Size = new System.Drawing.Size(157, 23);
             this.searchText.TabIndex = 21;
+            this.searchText.Click += new System.EventHandler(this.searchText_Click);
             // 
-            // label3
+            // panel6
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = System.Drawing.SystemColors.Control;
-            this.label3.Location = new System.Drawing.Point(36, 256);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(46, 15);
-            this.label3.TabIndex = 22;
-            this.label3.Text = "Search ";
+            this.panel6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel6.BackColor = System.Drawing.Color.White;
+            this.panel6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel6.Controls.Add(this.flowLayoutPanel1);
+            this.panel6.Controls.Add(this.label1);
+            this.panel6.Controls.Add(this.panel5);
+            this.panel6.Controls.Add(this.panel4);
+            this.panel6.Controls.Add(this.panel3);
+            this.panel6.Controls.Add(this.panel2);
+            this.panel6.Controls.Add(this.panel1);
+            this.panel6.Location = new System.Drawing.Point(1095, 17);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(233, 604);
+            this.panel6.TabIndex = 50;
+            this.panel6.Paint += new System.Windows.Forms.PaintEventHandler(this.panel6_Paint);
             // 
-            // label5
+            // flowLayoutPanel1
             // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.ForeColor = System.Drawing.SystemColors.Control;
-            this.label5.Location = new System.Drawing.Point(207, 256);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(98, 15);
-            this.label5.TabIndex = 23;
-            this.label5.Text = "Filter by Section :";
+            this.flowLayoutPanel1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(18, 56);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(190, 3);
+            this.flowLayoutPanel1.TabIndex = 51;
             // 
-            // panel7
+            // label1
             // 
-            this.panel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(42)))), ((int)(((byte)(71)))));
-            this.panel7.Controls.Add(this.SelectedProcess);
-            this.panel7.Controls.Add(this.panel5);
-            this.panel7.Controls.Add(this.panel9);
-            this.panel7.Controls.Add(this.label9);
-            this.panel7.Controls.Add(this.OpenCC);
-            this.panel7.Controls.Add(this.Externalbtn);
-            this.panel7.Controls.Add(this.label7);
-            this.panel7.Controls.Add(this.label5);
-            this.panel7.Controls.Add(this.label3);
-            this.panel7.Controls.Add(this.searchText);
-            this.panel7.Controls.Add(this.filteritems);
-            this.panel7.Controls.Add(this.sectionfilter);
-            this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel7.Location = new System.Drawing.Point(0, 0);
-            this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(1352, 329);
-            this.panel7.TabIndex = 34;
-            this.panel7.Paint += new System.Windows.Forms.PaintEventHandler(this.panel7_Paint);
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.Black;
+            this.label1.Location = new System.Drawing.Point(34, 22);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(167, 20);
+            this.label1.TabIndex = 14;
+            this.label1.Text = "Active Cases by Section";
+            // 
+            // panel5
+            // 
+            this.panel5.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel5.Controls.Add(this.label11);
+            this.panel5.Controls.Add(this.Circuitval);
+            this.panel5.Location = new System.Drawing.Point(25, 483);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(185, 79);
+            this.panel5.TabIndex = 54;
+            // 
+            // panel4
+            // 
+            this.panel4.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel4.Controls.Add(this.label12);
+            this.panel4.Controls.Add(this.windingval);
+            this.panel4.Location = new System.Drawing.Point(25, 383);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(185, 79);
+            this.panel4.TabIndex = 53;
+            // 
+            // panel3
+            // 
+            this.panel3.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel3.Controls.Add(this.label14);
+            this.panel3.Controls.Add(this.Rotorval);
+            this.panel3.Location = new System.Drawing.Point(25, 282);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(185, 79);
+            this.panel3.TabIndex = 52;
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel2.Controls.Add(this.label13);
+            this.panel2.Controls.Add(this.Pressval);
+            this.panel2.Location = new System.Drawing.Point(25, 180);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(185, 79);
+            this.panel2.TabIndex = 51;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel1.Controls.Add(this.MoldLabel);
+            this.panel1.Controls.Add(this.moldval);
+            this.panel1.Location = new System.Drawing.Point(24, 80);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(185, 79);
+            this.panel1.TabIndex = 50;
             // 
             // Customer_Complaint_user
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.panel6);
+            this.Controls.Add(this.SelectedProcess);
+            this.Controls.Add(this.OpenCC);
             this.Controls.Add(this.label4);
+            this.Controls.Add(this.Externalbtn);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.panel7);
             this.Controls.Add(this.CustomDatagrid);
+            this.Controls.Add(this.sectionfilter);
+            this.Controls.Add(this.filteritems);
+            this.Controls.Add(this.searchText);
             this.Name = "Customer_Complaint_user";
-            this.Size = new System.Drawing.Size(1352, 786);
+            this.Size = new System.Drawing.Size(1352, 768);
             ((System.ComponentModel.ISupportInitialize)(this.CustomDatagrid)).EndInit();
-            this.panel5.ResumeLayout(false);
             this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
+            this.panel5.ResumeLayout(false);
+            this.panel5.PerformLayout();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.panel9.ResumeLayout(false);
-            this.panel9.PerformLayout();
-            this.panel7.ResumeLayout(false);
-            this.panel7.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -713,9 +625,6 @@
         private System.Windows.Forms.ComboBox SelectedProcess;
         private System.Windows.Forms.Button Externalbtn;
         private System.Windows.Forms.ComboBox filteritems;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Panel panel9;
         private System.Windows.Forms.Label Circuitval;
         private System.Windows.Forms.Label windingval;
         private System.Windows.Forms.Label Rotorval;
@@ -723,19 +632,9 @@
         private System.Windows.Forms.Label moldval;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label MoldLabel;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.Panel panel6;
-        private LiveCharts.WinForms.CartesianChart cartesianChart1;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridViewTextBoxColumn RecordID;
         private System.Windows.Forms.DataGridViewTextBoxColumn DateCreated;
         private System.Windows.Forms.DataGridViewTextBoxColumn SectionID;
@@ -752,8 +651,13 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox sectionfilter;
         private System.Windows.Forms.TextBox searchText;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     }
 }

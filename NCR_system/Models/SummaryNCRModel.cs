@@ -20,4 +20,10 @@ namespace NCR_system.Models
         public string DepartmentName { get; set; }
         public int OpenCase { get; set; }   
     }
+
+    public class OverallNCR
+    {
+        public string SectionName { get; set; }
+        public int OpenTotals { get; set; }
+    }
 }

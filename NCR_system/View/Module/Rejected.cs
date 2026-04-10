@@ -132,7 +132,7 @@ namespace NCR_system.View.Module
                         Debug.WriteLine($"Department: {d.DepartmentName}, Total Open: {d.totalOpen}");
                     }
 
-                    UpdateBarChart(pieData);
+                    //UpdateBarChart(pieData);
                     DisplaySectionStats(pieData);
                 }
 
@@ -148,58 +148,58 @@ namespace NCR_system.View.Module
             }
         }
 
-        private void UpdateBarChart(List<CustomerTotalModel> cc)
-        {
-            if (cc == null || cc.Count == 0)
-            {
-                cartesianChart1.Series = new SeriesCollection();
-                return;
-            }
+        //private void UpdateBarChart(List<CustomerTotalModel> cc)
+        //{
+        //    if (cc == null || cc.Count == 0)
+        //    {
+        //        cartesianChart1.Series = new SeriesCollection();
+        //        return;
+        //    }
 
-            var values = new ChartValues<int>();
-            var labels = new List<string>();
+        //    var values = new ChartValues<int>();
+        //    var labels = new List<string>();
 
-            foreach (var d in cc)
-            {
-                if (d.totalOpen <= 0) continue;
+        //    foreach (var d in cc)
+        //    {
+        //        if (d.totalOpen <= 0) continue;
 
-                values.Add(d.totalOpen);
-                labels.Add(d.DepartmentName);
-            }
+        //        values.Add(d.totalOpen);
+        //        labels.Add(d.DepartmentName);
+        //    }
 
-            cartesianChart1.Series = new SeriesCollection
-            {
-                new ColumnSeries
-                {
-                    Title = "Open Total",
-                    Values = values,
-                    DataLabels = true,
-                    LabelPoint = point => point.Y.ToString()
-                }
-            };
+        //    cartesianChart1.Series = new SeriesCollection
+        //    {
+        //        new ColumnSeries
+        //        {
+        //            Title = "Open Total",
+        //            Values = values,
+        //            DataLabels = true,
+        //            LabelPoint = point => point.Y.ToString()
+        //        }
+        //    };
 
-            // X Axis (Department Names)
-            cartesianChart1.AxisX.Clear();
-            cartesianChart1.AxisX.Add(new Axis
-            {
-                Title = "Department",
-                Labels = labels,
-                Foreground = System.Windows.Media.Brushes.White
-            });
+        //    // X Axis (Department Names)
+        //    cartesianChart1.AxisX.Clear();
+        //    cartesianChart1.AxisX.Add(new Axis
+        //    {
+        //        Title = "Department",
+        //        Labels = labels,
+        //        Foreground = System.Windows.Media.Brushes.White
+        //    });
 
-            // Y Axis (Values)
-            cartesianChart1.AxisY.Clear();
-            cartesianChart1.AxisY.Add(new Axis
-            {
-                Title = "Total Open",
-                LabelFormatter = value => value.ToString("N0"),
-                Foreground = System.Windows.Media.Brushes.White
-            });
+        //    // Y Axis (Values)
+        //    cartesianChart1.AxisY.Clear();
+        //    cartesianChart1.AxisY.Add(new Axis
+        //    {
+        //        Title = "Total Open",
+        //        LabelFormatter = value => value.ToString("N0"),
+        //        Foreground = System.Windows.Media.Brushes.White
+        //    });
 
-            //cartesianChart1.LegendLocation = LegendLocation.Right;
+        //    //cartesianChart1.LegendLocation = LegendLocation.Right;
 
-            cartesianChart1.DisableAnimations = cc.Sum(x => x.totalOpen) > 2000;
-        }
+        //    cartesianChart1.DisableAnimations = cc.Sum(x => x.totalOpen) > 2000;
+        //}
 
 
 
@@ -447,5 +447,9 @@ namespace NCR_system.View.Module
             if (_intialized) return;
             await DisplayRejected(0);
         }
+
+
+       
+
     }
 }

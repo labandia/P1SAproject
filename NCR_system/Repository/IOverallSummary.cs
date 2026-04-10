@@ -91,12 +91,11 @@ namespace NCR_system.Repository
                     ORDER BY s.SectionID ASC;");
         }
 
-        public Task<List<SummaryInprocessModel>> GetNCRRegistrationSummary()
+        public Task<List<OverallNCR>> GetNCRRegistrationSummary()
         {
-            return SqlDataAccess.GetDataAsync<SummaryInprocessModel>(@"SELECT
-	                s.SectionID,
-                    s.DepartmentName AS Section,
-                    SUM(CASE WHEN n.Status = 1 THEN 1 ELSE 0 END) AS OpenCase
+            return SqlDataAccess.GetDataAsync<OverallNCR>(@"SELECT
+                    s.DepartmentName AS SectionName,
+                    SUM(CASE WHEN n.Status = 1 THEN 1 ELSE 0 END) AS OpenTotals
                 FROM PC_Section s
                 LEFT JOIN PC_NCR n
                     ON n.SectionID = s.SectionID

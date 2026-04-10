@@ -46,9 +46,12 @@
             // 
             // chartContent
             // 
+            this.chartContent.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.chartContent.Location = new System.Drawing.Point(1, 133);
             this.chartContent.Name = "chartContent";
-            this.chartContent.Size = new System.Drawing.Size(1347, 617);
+            this.chartContent.Size = new System.Drawing.Size(1347, 614);
             this.chartContent.TabIndex = 47;
             // 
             // overbtn
@@ -80,8 +83,13 @@
             this.Controls.Add(this.overbtn);
             this.Controls.Add(this.chartContent);
             this.Controls.Add(this.label2);
+            this.HelpButton = true;
             this.Name = "OverallSummary";
-            this.Text = "OverallSummary";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.OverallSummary_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

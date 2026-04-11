@@ -30,16 +30,16 @@ namespace NCR_system.View.AddForms
             StatsText.Visible = !process;
             label10.Visible = !process;
 
-            label9.Text = (proc == 0) ? "Create Rejected lot" : "Create Shipment Delay";
-            label12.Text = (proc == 0) ? "Provide details about the Rejected Lot" : "Provide details about the Shipment Delay";
+            label19.Text = (proc == 0) ? "Create Rejected lot" : "Create Shipment Delay";
+            label9.Text = (proc == 0) ? "Provide details about the Rejected Lot" : "Provide details about the Shipment Delay";
             _ship = ship;
             _proc = proc;
 
             if (listdata.Count == 0)
             {
                 button3.Enabled = false;
-                button3.BackColor = Color.Gray;
-                button3.ForeColor = Color.White;
+                button3.BackColor = Color.WhiteSmoke;
+                button3.ForeColor = Color.WhiteSmoke;
             }
         }
 
@@ -155,11 +155,14 @@ namespace NCR_system.View.AddForms
             listdata.Add(obj);
 
             RejectedGrid.DataSource = listdata;
+            RejectedGrid.Height = 469;
+            RejectedGrid.BringToFront();
             ResetDisplay();
             ModelText.Focus();
 
             button3.Enabled = true;
-            button3.BackColor = Color.FromArgb(95, 34, 200);
+            button3.BackColor = Color.FromArgb(25, 131, 230);
+            button3.ForeColor = Color.White;
         }
 
 
@@ -189,8 +192,8 @@ namespace NCR_system.View.AddForms
                 MessageBox.Show("Data saved successfully.");
 
                 button3.Enabled = false;
-                button3.BackColor = Color.Gray;
-                button3.ForeColor = Color.White;
+                button3.BackColor = Color.WhiteSmoke;
+                button3.ForeColor = Color.WhiteSmoke;
 
                 DialogResult = DialogResult.OK;
                 Close();

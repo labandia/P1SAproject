@@ -32,13 +32,7 @@ namespace NCR_system.View.AddForms
         }
 
 
-        private async void Save_btn_Click(object sender, EventArgs e)
-        {
-
-           
-          
-        }
-
+      
         public void ResetDisplay()
         {
             EditRegNo.Text = "";
@@ -57,11 +51,7 @@ namespace NCR_system.View.AddForms
             CustomDatagrid.Height = 35;
         }
 
-        private void Cancel_btn_Click(object sender, EventArgs e)
-        {
-           
-        }
-
+   
         public bool FormValid()
         {
             if (string.IsNullOrWhiteSpace(EditRegNo.Text) ||
@@ -71,7 +61,7 @@ namespace NCR_system.View.AddForms
                 string.IsNullOrWhiteSpace(EditNGText.Text) ||
                 string.IsNullOrWhiteSpace(EditProblemText.Text) ||
                 string.IsNullOrWhiteSpace(EditModelText.Text) ||
-                selectDepart.SelectedIndex == 0)
+                selectDepart.SelectedIndex < 0)
             {
                 MessageBox.Show("Please fill in all required fields.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
@@ -79,16 +69,7 @@ namespace NCR_system.View.AddForms
             return true;
         }
 
-        private void AddImagebtn_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void button12_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
+    
         private void EditNGText_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (char.IsControl(e.KeyChar)) return;
@@ -107,11 +88,6 @@ namespace NCR_system.View.AddForms
                 pictureBox2.Image = Image.FromFile(selectedImagepath);
                 pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
             }
-        }
-
-        private async void button3_Click(object sender, EventArgs e)
-        {
-           
         }
 
         private void CustomDatagrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -160,7 +136,7 @@ namespace NCR_system.View.AddForms
 
             listdata.Add(obj);
 
-            CustomDatagrid.Height = 300;
+            CustomDatagrid.Height = 500;
             CustomDatagrid.BringToFront();
             CustomDatagrid.DataSource = listdata;
 
@@ -184,8 +160,8 @@ namespace NCR_system.View.AddForms
                 }
 
                 button3.Enabled = false;
-                button3.BackColor = Color.Gray;
-                button3.ForeColor = Color.White;
+                button3.BackColor = Color.WhiteSmoke;
+                button3.ForeColor = Color.WhiteSmoke;
 
                 MessageBox.Show("Add Data Successfully");
                 DialogResult = DialogResult.OK;
@@ -197,9 +173,6 @@ namespace NCR_system.View.AddForms
             }
         }
 
-        private void button12_Click_1(object sender, EventArgs e)
-        {
-            Close();
-        }
+        private void button12_Click_1(object sender, EventArgs e) => Close();
     }
 }

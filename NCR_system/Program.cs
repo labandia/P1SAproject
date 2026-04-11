@@ -38,7 +38,6 @@ namespace NCR_system
             .AddTransient<AddCustomerComplaint>()
             .AddTransient<AddShipment>()
             .AddTransient<EditCC_External>()
-            .AddTransient<EditShipments>()
             .AddTransient<EditRejected>()
             .AddTransient<Customer_Complaint_user>()
             .AddTransient<Inprocess_control>()

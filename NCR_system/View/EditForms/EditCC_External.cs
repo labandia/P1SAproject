@@ -16,34 +16,52 @@ namespace NCR_system.View.EditForms
     public partial class EditCC_External : Form
     {
         private readonly ICustomerComplaint _cus;
-        private readonly Customer_Complaint_user _user;
+        public string selectedImagepath = "";
+        public bool isEditImage = false;
         public int storeID;
+        public readonly int currentRecordID;
 
-        public EditCC_External(ICustomerComplaint cus, int RecordID, int type, Customer_Complaint_user user)
+        public EditCC_External(CustomerModel cus, ICustomerComplaint cust)
         {
             InitializeComponent();
-            _cus = cus;
-            _user = user;
-            storeID = RecordID;
-            SetCustomerDetails(RecordID, type);
-        }
+            _cus = cust;
 
-        public async void SetCustomerDetails(int RecordID, int type)
-        {
-            var filterdata = await _cus.GetCustomerDataByID(RecordID);
+            EditRegNo.Text = cus.RegNo;
+            EditRegNo.ReadOnly = true;
+            EditRegNo.BackColor = SystemColors.Window;
 
-            if (filterdata != null)
+            EditCustomerText.Text = cus.CustomerName;
+            EditCustomerText.ReadOnly = true;
+            EditCustomerText.BackColor = SystemColors.Window;
+
+            EditModelText.Text = cus.ModelNo;
+            EditModelText.ReadOnly = true;
+            EditCustomerText.BackColor = SystemColors.Window;
+
+            EditLotText.Text = cus.LotNo;
+            EditLotText.ReadOnly = true;
+            EditLotText.BackColor = SystemColors.Window;
+
+            EditNGText.Text = cus.NGQty.ToString();
+            EditNGText.ReadOnly = true;
+            EditNGText.BackColor = SystemColors.Window;
+
+            EditProblemText.Text = cus.Details;
+            EditProblemText.ReadOnly = true;
+            EditProblemText.BackColor = SystemColors.Window;
+
+            selectDepart.SelectedIndex = cus.SectionID;
+            comboBox1.SelectedIndex = cus.Status == 1 ? 0 : 1;
+
+            if (cus.UploadImage != null && cus.UploadImage != "")
             {
-                EditRegNo.Text = filterdata.RegNo;
-                EditCustomerText.Text = filterdata.CustomerName;
-                EditModelText.Text = filterdata.ModelNo;    
-                EditLotText.Text = filterdata.LotNo;
-                EditNGText.Text = filterdata.NGQty.ToString();
-                EditProblemText.Text = filterdata.Details;
-                selectDepart.SelectedIndex = filterdata.SectionID;
+                selectedImagepath = cus.UploadImage;
+                pictureBox1.Image = System.Drawing.Image.FromFile(cus.UploadImage);
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             }
         }
 
+    
         private async void Save_btn_Click(object sender, EventArgs e)
         {
             bool result = await _cus.UpdateCustomerData(new CustomerModel
@@ -61,7 +79,6 @@ namespace NCR_system.View.EditForms
             if (result)
             {
                 MessageBox.Show("Edit Successfully");
-                await _user.DisplayCustomer(0);
                 this.Close();
             }
         }
@@ -75,5 +92,7 @@ namespace NCR_system.View.EditForms
         {
             
         }
+
+        private void button12_Click(object sender, EventArgs e) => this.Close();    
     }
 }

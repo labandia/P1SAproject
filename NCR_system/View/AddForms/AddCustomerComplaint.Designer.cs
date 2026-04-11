@@ -31,12 +31,12 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddCustomerComplaint));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.Finalizebtn = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -55,19 +55,19 @@
             this.NGText = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.CustomerName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.RegNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.UploadImage = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CCtype = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Details = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NGQty = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LotNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CustomDatagrid = new System.Windows.Forms.DataGridView();
+            this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ModelNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LotNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NGQty = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Details = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SectionID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DateCreated = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.RecordID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CustomDatagrid = new System.Windows.Forms.DataGridView();
+            this.CCtype = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.UploadImage = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RegNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CustomerName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1 = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
@@ -77,6 +77,7 @@
             this.button12 = new System.Windows.Forms.Button();
             this.label19 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CustomDatagrid)).BeginInit();
             this.panel1.SuspendLayout();
@@ -121,7 +122,7 @@
             this.button3.ForeColor = System.Drawing.Color.White;
             this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
             this.button3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button3.Location = new System.Drawing.Point(1061, 635);
+            this.button3.Location = new System.Drawing.Point(1070, 635);
             this.button3.Name = "button3";
             this.button3.Padding = new System.Windows.Forms.Padding(45, 0, 50, 0);
             this.button3.Size = new System.Drawing.Size(257, 48);
@@ -171,9 +172,8 @@
             this.ModelText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ModelText.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.ModelText.Location = new System.Drawing.Point(44, 143);
-            this.ModelText.Multiline = true;
             this.ModelText.Name = "ModelText";
-            this.ModelText.Size = new System.Drawing.Size(267, 35);
+            this.ModelText.Size = new System.Drawing.Size(267, 29);
             this.ModelText.TabIndex = 70;
             this.ModelText.Click += new System.EventHandler(this.ModelText_Click);
             // 
@@ -193,9 +193,8 @@
             this.LotText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.LotText.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.LotText.Location = new System.Drawing.Point(344, 143);
-            this.LotText.Multiline = true;
             this.LotText.Name = "LotText";
-            this.LotText.Size = new System.Drawing.Size(267, 35);
+            this.LotText.Size = new System.Drawing.Size(267, 29);
             this.LotText.TabIndex = 73;
             this.LotText.Click += new System.EventHandler(this.LotText_Click);
             // 
@@ -224,7 +223,7 @@
             this.ProblemText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.ProblemText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(246)))), ((int)(((byte)(247)))), ((int)(((byte)(251)))));
-            this.ProblemText.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.ProblemText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ProblemText.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ProblemText.Location = new System.Drawing.Point(42, 318);
             this.ProblemText.Name = "ProblemText";
@@ -296,9 +295,8 @@
             this.NGText.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.NGText.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.NGText.Location = new System.Drawing.Point(44, 228);
-            this.NGText.Multiline = true;
             this.NGText.Name = "NGText";
-            this.NGText.Size = new System.Drawing.Size(267, 35);
+            this.NGText.Size = new System.Drawing.Size(267, 29);
             this.NGText.TabIndex = 157;
             this.NGText.Click += new System.EventHandler(this.NGText_Click);
             this.NGText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NGText_KeyPress);
@@ -324,136 +322,35 @@
             this.label5.TabIndex = 69;
             this.label5.Text = "MOLD NO / PART NO :";
             // 
-            // CustomerName
-            // 
-            this.CustomerName.DataPropertyName = "CustomerName";
-            this.CustomerName.HeaderText = "CustomerName";
-            this.CustomerName.Name = "CustomerName";
-            this.CustomerName.ReadOnly = true;
-            this.CustomerName.Visible = false;
-            // 
-            // Status
-            // 
-            this.Status.DataPropertyName = "Status";
-            this.Status.HeaderText = "Status";
-            this.Status.Name = "Status";
-            this.Status.ReadOnly = true;
-            this.Status.Visible = false;
-            // 
-            // RegNo
-            // 
-            this.RegNo.DataPropertyName = "RegNo";
-            this.RegNo.HeaderText = "RegNo";
-            this.RegNo.Name = "RegNo";
-            this.RegNo.ReadOnly = true;
-            this.RegNo.Visible = false;
-            // 
-            // UploadImage
-            // 
-            this.UploadImage.DataPropertyName = "UploadImage";
-            this.UploadImage.HeaderText = "UploadImage";
-            this.UploadImage.Name = "UploadImage";
-            this.UploadImage.ReadOnly = true;
-            this.UploadImage.Visible = false;
-            // 
-            // CCtype
-            // 
-            this.CCtype.DataPropertyName = "CCtype";
-            this.CCtype.HeaderText = "CCtype";
-            this.CCtype.Name = "CCtype";
-            this.CCtype.ReadOnly = true;
-            this.CCtype.Visible = false;
-            // 
-            // Details
-            // 
-            this.Details.DataPropertyName = "Details";
-            this.Details.HeaderText = "Details of Problem";
-            this.Details.Name = "Details";
-            this.Details.ReadOnly = true;
-            // 
-            // NGQty
-            // 
-            this.NGQty.DataPropertyName = "NGQty";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.NGQty.DefaultCellStyle = dataGridViewCellStyle1;
-            this.NGQty.HeaderText = "NG Qty";
-            this.NGQty.Name = "NGQty";
-            this.NGQty.ReadOnly = true;
-            // 
-            // LotNo
-            // 
-            this.LotNo.DataPropertyName = "LotNo";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.LotNo.DefaultCellStyle = dataGridViewCellStyle2;
-            this.LotNo.HeaderText = "Lot No.";
-            this.LotNo.Name = "LotNo";
-            this.LotNo.ReadOnly = true;
-            // 
-            // ModelNo
-            // 
-            this.ModelNo.DataPropertyName = "ModelNo";
-            this.ModelNo.HeaderText = "Model No/ Part no.";
-            this.ModelNo.Name = "ModelNo";
-            this.ModelNo.ReadOnly = true;
-            // 
-            // SectionID
-            // 
-            this.SectionID.DataPropertyName = "SectionID";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.SectionID.DefaultCellStyle = dataGridViewCellStyle3;
-            this.SectionID.HeaderText = "Section in charge";
-            this.SectionID.Name = "SectionID";
-            this.SectionID.ReadOnly = true;
-            // 
-            // DateCreated
-            // 
-            this.DateCreated.DataPropertyName = "DateCreated";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.DateCreated.DefaultCellStyle = dataGridViewCellStyle4;
-            this.DateCreated.HeaderText = "Date";
-            this.DateCreated.Name = "DateCreated";
-            this.DateCreated.ReadOnly = true;
-            this.DateCreated.Visible = false;
-            // 
-            // RecordID
-            // 
-            this.RecordID.DataPropertyName = "RecordID";
-            this.RecordID.HeaderText = "RecordID";
-            this.RecordID.Name = "RecordID";
-            this.RecordID.ReadOnly = true;
-            this.RecordID.Visible = false;
-            // 
             // CustomDatagrid
             // 
             this.CustomDatagrid.AllowUserToAddRows = false;
             this.CustomDatagrid.AllowUserToDeleteRows = false;
             this.CustomDatagrid.AllowUserToResizeColumns = false;
             this.CustomDatagrid.AllowUserToResizeRows = false;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.CustomDatagrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
-            this.CustomDatagrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.CustomDatagrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            this.CustomDatagrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.CustomDatagrid.BackgroundColor = System.Drawing.Color.White;
             this.CustomDatagrid.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.CustomDatagrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.CustomDatagrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.CustomDatagrid.ColumnHeadersHeight = 35;
             this.CustomDatagrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.CustomDatagrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.RecordID,
-            this.DateCreated,
-            this.SectionID,
             this.ModelNo,
             this.LotNo,
             this.NGQty,
             this.Details,
+            this.SectionID,
+            this.DateCreated,
             this.CCtype,
             this.UploadImage,
             this.RegNo,
@@ -482,8 +379,122 @@
             this.CustomDatagrid.RowHeadersVisible = false;
             this.CustomDatagrid.RowTemplate.Height = 35;
             this.CustomDatagrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.CustomDatagrid.Size = new System.Drawing.Size(661, 35);
+            this.CustomDatagrid.Size = new System.Drawing.Size(670, 35);
             this.CustomDatagrid.TabIndex = 148;
+            this.CustomDatagrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.CustomDatagrid_CellFormatting);
+            // 
+            // RecordID
+            // 
+            this.RecordID.DataPropertyName = "RecordID";
+            this.RecordID.HeaderText = "RecordID";
+            this.RecordID.Name = "RecordID";
+            this.RecordID.ReadOnly = true;
+            this.RecordID.Visible = false;
+            this.RecordID.Width = 88;
+            // 
+            // ModelNo
+            // 
+            this.ModelNo.DataPropertyName = "ModelNo";
+            this.ModelNo.HeaderText = "Model No/ Part no.";
+            this.ModelNo.Name = "ModelNo";
+            this.ModelNo.ReadOnly = true;
+            this.ModelNo.Width = 162;
+            // 
+            // LotNo
+            // 
+            this.LotNo.DataPropertyName = "LotNo";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.LotNo.DefaultCellStyle = dataGridViewCellStyle3;
+            this.LotNo.HeaderText = "Lot No.";
+            this.LotNo.Name = "LotNo";
+            this.LotNo.ReadOnly = true;
+            this.LotNo.Width = 89;
+            // 
+            // NGQty
+            // 
+            this.NGQty.DataPropertyName = "NGQty";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.NGQty.DefaultCellStyle = dataGridViewCellStyle4;
+            this.NGQty.HeaderText = "NG Qty";
+            this.NGQty.Name = "NGQty";
+            this.NGQty.ReadOnly = true;
+            this.NGQty.Width = 90;
+            // 
+            // Details
+            // 
+            this.Details.DataPropertyName = "Details";
+            this.Details.HeaderText = "Details of Problem";
+            this.Details.Name = "Details";
+            this.Details.ReadOnly = true;
+            this.Details.Width = 156;
+            // 
+            // SectionID
+            // 
+            this.SectionID.DataPropertyName = "SectionID";
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.SectionID.DefaultCellStyle = dataGridViewCellStyle5;
+            this.SectionID.HeaderText = "Section in charge";
+            this.SectionID.Name = "SectionID";
+            this.SectionID.ReadOnly = true;
+            this.SectionID.Width = 149;
+            // 
+            // DateCreated
+            // 
+            this.DateCreated.DataPropertyName = "DateCreated";
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.DateCreated.DefaultCellStyle = dataGridViewCellStyle6;
+            this.DateCreated.HeaderText = "Date";
+            this.DateCreated.Name = "DateCreated";
+            this.DateCreated.ReadOnly = true;
+            this.DateCreated.Visible = false;
+            this.DateCreated.Width = 61;
+            // 
+            // CCtype
+            // 
+            this.CCtype.DataPropertyName = "CCtype";
+            this.CCtype.HeaderText = "CCtype";
+            this.CCtype.Name = "CCtype";
+            this.CCtype.ReadOnly = true;
+            this.CCtype.Visible = false;
+            this.CCtype.Width = 76;
+            // 
+            // UploadImage
+            // 
+            this.UploadImage.DataPropertyName = "UploadImage";
+            this.UploadImage.HeaderText = "UploadImage";
+            this.UploadImage.Name = "UploadImage";
+            this.UploadImage.ReadOnly = true;
+            this.UploadImage.Visible = false;
+            this.UploadImage.Width = 114;
+            // 
+            // RegNo
+            // 
+            this.RegNo.DataPropertyName = "RegNo";
+            this.RegNo.HeaderText = "RegNo";
+            this.RegNo.Name = "RegNo";
+            this.RegNo.ReadOnly = true;
+            this.RegNo.Visible = false;
+            this.RegNo.Width = 74;
+            // 
+            // Status
+            // 
+            this.Status.DataPropertyName = "Status";
+            this.Status.HeaderText = "Status";
+            this.Status.Name = "Status";
+            this.Status.ReadOnly = true;
+            this.Status.Visible = false;
+            this.Status.Width = 71;
+            // 
+            // CustomerName
+            // 
+            this.CustomerName.DataPropertyName = "CustomerName";
+            this.CustomerName.HeaderText = "CustomerName";
+            this.CustomerName.Name = "CustomerName";
+            this.CustomerName.ReadOnly = true;
+            this.CustomerName.Visible = false;
+            this.CustomerName.Width = 128;
             // 
             // panel1
             // 
@@ -496,7 +507,7 @@
             this.panel1.Controls.Add(this.label1);
             this.panel1.Location = new System.Drawing.Point(657, 151);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(661, 453);
+            this.panel1.Size = new System.Drawing.Size(670, 453);
             this.panel1.TabIndex = 188;
             // 
             // button1
@@ -506,7 +517,7 @@
             this.button1.FlatAppearance.BorderSize = 0;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.Location = new System.Drawing.Point(284, 121);
+            this.button1.Location = new System.Drawing.Point(300, 136);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(100, 94);
             this.button1.TabIndex = 156;
@@ -517,7 +528,7 @@
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.ForeColor = System.Drawing.Color.DarkGray;
-            this.label9.Location = new System.Drawing.Point(185, 251);
+            this.label9.Location = new System.Drawing.Point(192, 266);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(305, 20);
             this.label9.TabIndex = 71;
@@ -527,7 +538,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(271, 218);
+            this.label1.Location = new System.Drawing.Point(278, 233);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(119, 20);
             this.label1.TabIndex = 70;
@@ -555,7 +566,7 @@
             this.panel9.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel9.Location = new System.Drawing.Point(0, 0);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(1350, 81);
+            this.panel9.Size = new System.Drawing.Size(1370, 81);
             this.panel9.TabIndex = 190;
             // 
             // button12
@@ -567,7 +578,7 @@
             this.button12.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button12.Image = ((System.Drawing.Image)(resources.GetObject("button12.Image")));
-            this.button12.Location = new System.Drawing.Point(1242, 11);
+            this.button12.Location = new System.Drawing.Point(1262, 11);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(65, 62);
             this.button12.TabIndex = 155;
@@ -597,14 +608,27 @@
             this.label7.TabIndex = 81;
             this.label7.Text = "Provide details about the External Customer complaint";
             // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.ForeColor = System.Drawing.Color.DarkGray;
+            this.label13.Location = new System.Drawing.Point(156, 482);
+            this.label13.Name = "label13";
+            this.label13.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label13.Size = new System.Drawing.Size(68, 17);
+            this.label13.TabIndex = 191;
+            this.label13.Text = "(Optional)";
+            // 
             // AddCustomerComplaint
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ClientSize = new System.Drawing.Size(1350, 729);
+            this.ClientSize = new System.Drawing.Size(1370, 729);
             this.ControlBox = false;
+            this.Controls.Add(this.label13);
             this.Controls.Add(this.panel9);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.button3);
@@ -660,18 +684,6 @@
         private System.Windows.Forms.TextBox NGText;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CustomerName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
-        private System.Windows.Forms.DataGridViewTextBoxColumn RegNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn UploadImage;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CCtype;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Details;
-        private System.Windows.Forms.DataGridViewTextBoxColumn NGQty;
-        private System.Windows.Forms.DataGridViewTextBoxColumn LotNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ModelNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn SectionID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DateCreated;
-        private System.Windows.Forms.DataGridViewTextBoxColumn RecordID;
         public System.Windows.Forms.DataGridView CustomDatagrid;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label9;
@@ -682,5 +694,18 @@
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RecordID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ModelNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn LotNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn NGQty;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Details;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SectionID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DateCreated;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CCtype;
+        private System.Windows.Forms.DataGridViewTextBoxColumn UploadImage;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RegNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CustomerName;
+        private System.Windows.Forms.Label label13;
     }
 }

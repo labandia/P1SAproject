@@ -12,6 +12,7 @@ using System.Diagnostics;
 using NCR_system.View.AddForms;
 using System.IO;
 using NCR_system.View.Details;
+using NCR_system.View.EditForms;
 
 namespace NCR_system.View.Module
 {
@@ -357,7 +358,7 @@ namespace NCR_system.View.Module
 
             var product = (InprocessModel)InprocessGrid.Rows[e.RowIndex].DataBoundItem;
 
-            using (var edit = new InprocessDetails(product, _inp))
+            using (var edit = new EditInprocess(product, _inp))
             {
                 if(edit.ShowDialog(this) == DialogResult.OK)
                 {

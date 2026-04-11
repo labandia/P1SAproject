@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using SeriesCollection = LiveCharts.SeriesCollection;
 using Axis = LiveCharts.Wpf.Axis;
 using NCR_system.View.Details;
+using NCR_system.View.EditForms;
 
 namespace NCR_system.View.Module    
 {
@@ -468,7 +469,7 @@ namespace NCR_system.View.Module
 
             if(item.CCtype == 1)
             {
-                using (var details = new SDCDetails(item, _cust))
+                using (var details = new EditCC_SDC(item, _cust))
                 {
                     if(details.ShowDialog(this) == DialogResult.OK)
                     {
@@ -478,7 +479,7 @@ namespace NCR_system.View.Module
             }
             else
             {
-                using (var details = new CustomerDetails(item, _cust))
+                using (var details = new EditCC_External(item, _cust))
                 {
                     if (details.ShowDialog(this) == DialogResult.OK)
                     {

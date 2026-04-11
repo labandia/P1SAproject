@@ -150,7 +150,8 @@
             this.RejectedGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.RejectedGrid.Size = new System.Drawing.Size(1026, 607);
             this.RejectedGrid.TabIndex = 8;
-            this.RejectedGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.RejectedGrid_CellClick);
+            this.RejectedGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.RejectedGrid_CellContentClick);
+            this.RejectedGrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.RejectedGrid_CellDoubleClick);
             this.RejectedGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.RejectedGrid_CellFormatting);
             // 
             // RecordID

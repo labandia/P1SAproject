@@ -236,7 +236,7 @@
             this.Sectionpanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Sectionpanel.Location = new System.Drawing.Point(0, 63);
             this.Sectionpanel.Name = "Sectionpanel";
-            this.Sectionpanel.Size = new System.Drawing.Size(1366, 686);
+            this.Sectionpanel.Size = new System.Drawing.Size(1366, 666);
             this.Sectionpanel.TabIndex = 3;
             // 
             // P1SA_NonComformity
@@ -244,7 +244,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1366, 749);
+            this.ClientSize = new System.Drawing.Size(1366, 729);
             this.ControlBox = false;
             this.Controls.Add(this.Sectionpanel);
             this.Controls.Add(this.panel1);
@@ -252,7 +252,6 @@
             this.Name = "P1SA_NonComformity";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "-";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.P1SA_NonComformity_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

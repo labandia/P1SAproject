@@ -37,8 +37,8 @@ namespace NCR_system.View.AddForms
             if(listdata.Count == 0)
             {
                 Finalizebtn.Enabled = false;    
-                Finalizebtn.BackColor = Color.Gray;
-                Finalizebtn.ForeColor = Color.White;
+                Finalizebtn.BackColor = Color.WhiteSmoke;
+                Finalizebtn.ForeColor = Color.WhiteSmoke;
             }
 
             Shiftselect.SelectedIndex = 0;  
@@ -104,9 +104,18 @@ namespace NCR_system.View.AddForms
                 listdata.Add(obj);
 
                 InprocessGrid.Columns["RecordID"].Visible = false;
+                InprocessGrid.Height = 469;
                 InprocessGrid.DataSource = listdata;
+                InprocessGrid.BringToFront();
+
+
                 ResetDisplay();
                 EmailText.Focus();
+
+                Finalizebtn.Enabled = true;
+                Finalizebtn.BackColor = Color.FromArgb(95, 34, 200);
+                Finalizebtn.ForeColor = Color.White;
+
             } catch(Exception ex)
             {
                 MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -194,8 +203,8 @@ namespace NCR_system.View.AddForms
                 }
 
                 Finalizebtn.Enabled = false;
-                Finalizebtn.BackColor = Color.Gray;
-                Finalizebtn.ForeColor = Color.White;
+                Finalizebtn.BackColor = Color.WhiteSmoke;
+                Finalizebtn.ForeColor = Color.WhiteSmoke;
 
                 DialogResult = DialogResult.OK;
                 Close();
@@ -252,6 +261,16 @@ namespace NCR_system.View.AddForms
         private void button12_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void Cancel_btn_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void AddInprocess_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

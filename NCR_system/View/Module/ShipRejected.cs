@@ -374,11 +374,6 @@ namespace NCR_system.View.Module
 
 
 
-        private void RejectedGrid_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-           
-        }
-
 
         //public void DisplayPieChart(List<CustomerTotalModel> cc)
         //{
@@ -463,6 +458,40 @@ namespace NCR_system.View.Module
                     label.Text = d.totalOpen.ToString();
                 }
             }
+        }
+
+        private void RejectedGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+           
+        }
+
+        private async void RejectedGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Ignore header double-click
+            if (e.RowIndex < 0)
+                return;
+
+            var row = RejectedGrid.Rows[e.RowIndex];
+            row.Selected = true;
+
+            RejectedGrid.ClearSelection();
+
+            // If you're using DataBoundItem (recommended)
+            var item = row.DataBoundItem as RejectShipmentModel;
+            if (item == null) return;
+
+            if(item.Process == 1)
+            {
+                using (var details = new EditRejected(item, _ship))
+                {
+                    if (details.ShowDialog(this) == DialogResult.OK)
+                    {
+                        await DisplayRejected(1);
+                    }
+                }
+            }
+            
+
         }
     }
 }

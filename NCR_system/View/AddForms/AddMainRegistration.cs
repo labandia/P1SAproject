@@ -56,5 +56,10 @@ namespace NCR_system.View.AddForms
                 pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
             }
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -16,7 +16,6 @@ namespace NCR_system
         private Rejected _reg;
         private Inprocess_control _inp;
         private NCR_control _ncr;
-        private Dashboard _dash;
 
         private readonly ICustomerComplaint _cust;
         private readonly IShipRejected _shipV;

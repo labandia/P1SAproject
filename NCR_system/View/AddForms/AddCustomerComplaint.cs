@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -11,7 +12,6 @@ namespace NCR_system.View.AddForms
     public partial class AddCustomerComplaint : Form
     {
         private readonly ICustomerComplaint _cus;
-
         public string selectedImagepath = "";
 
         BindingList<CustomerModel> listdata = new BindingList<CustomerModel>();
@@ -32,11 +32,7 @@ namespace NCR_system.View.AddForms
             }
         }
 
-        private void Cancel_btn_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-        
+     
         public bool FormValid()
         {
             if (string.IsNullOrWhiteSpace(ModelText.Text) ||
@@ -133,12 +129,6 @@ namespace NCR_system.View.AddForms
             ProblemText.ForeColor = Color.Black;
         }
 
-        
-
-        private async void button1_Click(object sender, EventArgs e)
-        {
-       
-        }
 
         public void ResetDisplay()
         {
@@ -182,6 +172,10 @@ namespace NCR_system.View.AddForms
             CustomDatagrid.DataSource = listdata;
             ResetDisplay();
             ModelText.Focus();
+
+            button3.Enabled = true;
+            button3.BackColor = Color.FromArgb(95, 34, 200);
+            button3.ForeColor = Color.White;
         }
 
         private async void button3_Click(object sender, EventArgs e)
@@ -194,8 +188,8 @@ namespace NCR_system.View.AddForms
                 }
 
                 Finalizebtn.Enabled = false;
-                Finalizebtn.BackColor = Color.Gray;
-                Finalizebtn.ForeColor = Color.White;
+                Finalizebtn.BackColor = Color.WhiteSmoke;
+                Finalizebtn.ForeColor = Color.WhiteSmoke;
 
                 DialogResult = DialogResult.OK;
                 Close();
@@ -214,6 +208,30 @@ namespace NCR_system.View.AddForms
         private void button12_Click_1(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void CustomDatagrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (CustomDatagrid.Columns[e.ColumnIndex].Name == "SectionID")
+            {
+                var sectionMap = new Dictionary<int, string>
+                {
+                    {1, "P1SA MOLDING"},
+                    {2, "P1SA PRESS"},
+                    {3, "P1SA ROTOR"},
+                    {4, "P1SA WINDING"},
+                    {5, "P1SA CIRCUIT"}
+                };
+
+                if (e.Value != null && int.TryParse(e.Value.ToString(), out int sectionID))
+                {
+                    if (sectionMap.TryGetValue(sectionID, out string sectionName))
+                    {
+                        e.Value = sectionName;
+                        e.FormattingApplied = true;
+                    }
+                }
+            }
         }
     }
 }

@@ -28,7 +28,7 @@
     <MinimumRequiredVersion>1.0.0.0</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>37</ApplicationRevision>
+    <ApplicationRevision>38</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -179,6 +179,7 @@
     <Compile Include="Mainpage.Designer.cs">
       <DependentUpon>Mainpage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\MainNCRModel.cs" />
     <Compile Include="Models\NCRModels.cs" />
     <Compile Include="Models\SummaryNCRModel.cs" />
     <Compile Include="P1SA_NonComformity.cs">
@@ -294,12 +295,6 @@
     </Compile>
     <Compile Include="View\EditForms\EditRejected.Designer.cs">
       <DependentUpon>EditRejected.cs</DependentUpon>
-    </Compile>
-    <Compile Include="View\EditForms\EditShipments.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\EditForms\EditShipments.Designer.cs">
-      <DependentUpon>EditShipments.cs</DependentUpon>
     </Compile>
     <Compile Include="View\Module\Customer_Complaint_user.cs">
       <SubType>UserControl</SubType>
@@ -417,9 +412,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\EditForms\EditRejected.resx">
       <DependentUpon>EditRejected.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="View\EditForms\EditShipments.resx">
-      <DependentUpon>EditShipments.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Module\Customer_Complaint_user.resx">
       <DependentUpon>Customer_Complaint_user.cs</DependentUpon>

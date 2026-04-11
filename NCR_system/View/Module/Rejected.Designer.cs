@@ -160,6 +160,7 @@
             this.RejectedGrid.Size = new System.Drawing.Size(1045, 616);
             this.RejectedGrid.TabIndex = 12;
             this.RejectedGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.RejectedGrid_CellClick);
+            this.RejectedGrid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.RejectedGrid_CellDoubleClick);
             this.RejectedGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.RejectedGrid_CellFormatting_1);
             // 
             // RecordID

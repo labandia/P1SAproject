@@ -27,6 +27,7 @@ namespace NCR_system.View.Module
             _ncr = ncr;
             _isInitializing = true;
 
+            catselection.SelectedIndex = 0;
             sectionfilter.SelectedIndex = 0;
             filteritems.SelectedIndex = 0;
             //_departmentLabels = new Dictionary<string, Label>(StringComparer.OrdinalIgnoreCase)
@@ -80,17 +81,17 @@ namespace NCR_system.View.Module
             //InprocessGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
             Setup("Status", 60, 0);
-            Setup("RegNo", 150, 1, DataGridViewAutoSizeColumnMode.None);
-            Setup("DateIssued", 120, 2);
-            Setup("IssueGroup", 100, 3);
-            Setup("SectionID", 120, 4);
-            Setup("ModelNo", 100, 5);
-            Setup("Quantity", 150, 6);
-            Setup("DateRegist", 150, 7);
+            Setup("RegNo", 150, 1, DataGridViewAutoSizeColumnMode.ColumnHeader);
+            Setup("DateIssued", 120, 2, DataGridViewAutoSizeColumnMode.ColumnHeader);
+            Setup("IssueGroup", 100, 3, DataGridViewAutoSizeColumnMode.ColumnHeader);
+            Setup("SectionID", 120, 4, DataGridViewAutoSizeColumnMode.ColumnHeader);
+            Setup("ModelNo", 100, 5, DataGridViewAutoSizeColumnMode.ColumnHeader);
+            Setup("Quantity", 150, 6, DataGridViewAutoSizeColumnMode.ColumnHeader);
+            Setup("DateRegist", 150, 7, DataGridViewAutoSizeColumnMode.ColumnHeader);
 
-            Setup("DateCloseReg", 100, 8);
-            Setup("Contents", 150, 9, DataGridViewAutoSizeColumnMode.Fill);
-            Setup("FilePath", 120, 10, DataGridViewAutoSizeColumnMode.Fill);
+            Setup("DateCloseReg", 100, 8, DataGridViewAutoSizeColumnMode.ColumnHeader);
+            Setup("Contents", 150, 9, DataGridViewAutoSizeColumnMode.ColumnHeader);
+            Setup("FilePath", 120, 10, DataGridViewAutoSizeColumnMode.DisplayedCells);
 
 
             NCRGrid.Columns["DateRegist"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;

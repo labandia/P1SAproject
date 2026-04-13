@@ -11,22 +11,22 @@ namespace NCR_system.Models
         /// <summary>
         /// ALL REQUIRED FOR MAIN NCR
         /// </summary>
-        public int CategoryID { get; set; }
+        public int Category { get; set; }
         public string RegNo { get; set; }
-        private DateTime _DateIssued;
-        private string _IssueGroup;
-        private int _SectionID;
+        public DateTime DateIssued { get; set; }
+        public string IssueGroup { get; set; }
+        public int SectionID { get; set; }
 
-        private string _ModelNo;
-        private int _Quantity;
-        private string _Contents;
+        public string ModelNo { get; set; }
+        public int Quantity { get; set; }
+        public string Contents { get; set; }
 
-        private DateTime _DateRegist;
+        public DateTime DateRegist { get; set; }
         public int ReportStatus { get; set; }
-        private string _FilePath;
-        private string _DateCloseReg;
-        private string _CircularStatus;
-        private int Owners;
+        public string FilePath { get; set; }
+        public string DateCloseReg { get; set; }
+        public string CircularStatus { get; set; }
+        public int Reviewer { get; set; }
 
         /// <summary>
         /// ALL REQUIRED FOR RECURRENCE

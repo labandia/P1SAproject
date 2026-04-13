@@ -127,7 +127,7 @@ namespace NCR_system
 
         private async Task LoadNCR(int data)
         {
-            Button btn = data == 0 ? NCRmenu : button12;
+            Button btn = data == 0 ? NCRmenu : button2;
             SetActiveMenu(btn);
 
             if (_ncr == null)

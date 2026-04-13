@@ -33,6 +33,7 @@ namespace NCR_system.View.EditForms
             currentRecordID = inp.RecordID;
             EmailText.Text = inp.TitleEmail;
             Shiftselect.SelectedIndex = inp.Shift;
+
             LineText.Text = inp.Line;
             DefectText.Text = inp.Defect;
             ModelText.Text = inp.Model;
@@ -44,6 +45,7 @@ namespace NCR_system.View.EditForms
             p1saSelect.SelectedIndex = inp.Status;
             //remarksText.Text = inp.Remarks;
             sectionbox.SelectedIndex = inp.SectionID - 1;
+
             editselectfile.Visible = false;
 
             ReadOnlyText();
@@ -67,8 +69,9 @@ namespace NCR_system.View.EditForms
             ProcText.ReadOnly = true;
             CauseText.ReadOnly = true;
             reportpath.ReadOnly = true;
+            sectionbox.Enabled = false;
+            Shiftselect.Enabled = false;
             //remarksText.ReadOnly = true;
-
 
             //DateEncount.Enabled = false;
             Shiftselect.Enabled = false;

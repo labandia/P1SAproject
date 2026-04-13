@@ -29,7 +29,7 @@ namespace NCR_system.View.Module
 
             catselection.SelectedIndex = 0;
             sectionfilter.SelectedIndex = 0;
-            filteritems.SelectedIndex = 0;
+            filteritems.SelectedIndex = 1;
             //_departmentLabels = new Dictionary<string, Label>(StringComparer.OrdinalIgnoreCase)
             //{
             //    { "Molding", moldval },
@@ -124,9 +124,9 @@ namespace NCR_system.View.Module
                 var Summarydata = _ncr.GetSummaryNCR(procs);
                 var tabledata = _ncr.GetNCRData(
                     search,
-                    catselection.SelectedText,
-                    sectionfilter.SelectedIndex,
+                    catselection.SelectedIndex,
                     filteritems.SelectedIndex,
+                    sectionfilter.SelectedIndex,
                     procs);
 
                 await Task.WhenAll(Summarydata, tabledata);
@@ -214,7 +214,10 @@ namespace NCR_system.View.Module
         // ============================================================
         private async void sectionfilter_SelectedIndexChanged(object sender, EventArgs e) => await HandleFilterChange();
         private async void filteritems_SelectedIndexChanged(object sender, EventArgs e) => await HandleFilterChange();
-        private async void catselection_SelectedIndexChanged(object sender, EventArgs e) => await HandleFilterChange();
+        private async void catselection_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            await HandleFilterChange();
+        }
 
         private async void button1_Click(object sender, EventArgs e)
         {     

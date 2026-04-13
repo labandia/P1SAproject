@@ -7,8 +7,8 @@ namespace NCR_system.Interface
     public interface INCR
     {
         Task<List<NCRDatamodel>> GetSummaryNCR(int type);
-        Task<List<NCRModels>> GetNCRData(string search,
-            string Category,
+        Task<List<MainNCRModel>> GetNCRData(string search,
+            int Category,
             int section,
             int Stats,
             int type);

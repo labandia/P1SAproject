@@ -72,7 +72,7 @@ namespace NCR_system.View.Module
             CustomDatagrid.SuspendLayout();
 
             void Setup(string name, int width, int displayIndex,
-                DataGridViewAutoSizeColumnMode mode = DataGridViewAutoSizeColumnMode.None)
+                DataGridViewAutoSizeColumnMode mode = DataGridViewAutoSizeColumnMode.ColumnHeader)
             {
                 var col = CustomDatagrid.Columns[name];
                 if (col == null) return;
@@ -107,7 +107,7 @@ namespace NCR_system.View.Module
                 Setup("LotNo", 150, 6);
 
                 Setup("NGQty", 100, 7);
-                Setup("Details", 300, 8, DataGridViewAutoSizeColumnMode.Fill);
+                Setup("Details", 300, 8);
 
 
                 

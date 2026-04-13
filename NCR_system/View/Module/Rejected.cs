@@ -71,7 +71,7 @@ namespace NCR_system.View.Module
             RejectedGrid.SuspendLayout();
 
             void Setup(string name, int width, int displayIndex,
-                DataGridViewAutoSizeColumnMode mode = DataGridViewAutoSizeColumnMode.None)
+                DataGridViewAutoSizeColumnMode mode = DataGridViewAutoSizeColumnMode.ColumnHeader)
             {
                 var col = RejectedGrid.Columns[name];
                 if (col == null) return;

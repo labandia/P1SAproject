@@ -3,22 +3,23 @@ using NCR_system.Interface;
 using NCR_system.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace NCR_system.Repository
 {
     internal class NCR_Repository : INCR
     {
-        public async Task<List<NCRModels>> GetNCRData(string search,
-            string Category,
+        public async Task<List<MainNCRModel>> GetNCRData(string search,
+            int Category,
             int stats,
             int section,
             int type)
         {
             string strquery = $@"SELECT RecordID
-                                  ,DateIssued
-                                  ,RegNo
                                   ,Category
+                                  ,RegNo
+                                  ,DateIssued
                                   ,IssueGroup
                                   ,SectionID
                                   ,ModelNo
@@ -28,37 +29,36 @@ namespace NCR_system.Repository
                                   ,CircularStatus
                                   ,DateCloseReg
                                   ,FilePath
-                                  ,Remarkstat
                                   ,Process
                                   ,TargetDate
                                   ,Reviewer
                                   ,DateRegist
-                                  ,UploadImage
                               FROM PC_NCR
                               WHERE IsDelete = 0 AND Process =@Type ";
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add("@Type", type);
 
-            if(Category != "")
+
+            strquery += @" AND Status =@Status";
+            parameters.Add("@Status", stats);
+
+            if (Category != 0)
             {
-                strquery += @" Category =@Category";
+                strquery += @" AND Category =@Category";
                 parameters.Add("@Category", Category);
             }
 
-            if(stats != 0)
-            {
-                strquery += @" Status =@Status";
-                parameters.Add("@Status", stats);
-            }
+            
 
             if (section != 0)
             {
-                strquery += @" SectionID =@SectionID";
+                strquery += @" AND SectionID =@SectionID";
                 parameters.Add("@SectionID", section);
             }
 
-            return await SqlDataAccess.GetDataAsync<NCRModels>(strquery, parameters);
+
+            return await SqlDataAccess.GetDataAsync<MainNCRModel>(strquery, parameters);
         }
 
         public async Task<List<NCRDatamodel>> GetSummaryNCR(int type)
@@ -66,11 +66,11 @@ namespace NCR_system.Repository
             string strsql = $@"SELECT
                                 s.DepartmentName AS Section,
 
-                                SUM(CASE WHEN n.Status = 1 AND n.Category = 'PATROL' THEN 1 ELSE 0 END) AS Patrol,
-                                SUM(CASE WHEN n.Status = 1 AND n.Category = 'INPROCESS' THEN 1 ELSE 0 END) AS Inprocess,
-                                SUM(CASE WHEN n.Status = 1 AND n.Category = 'NEXT PROCESS' THEN 1 ELSE 0 END) AS NextProcess,
-                                SUM(CASE WHEN n.Status = 1 AND n.Category = 'CALIBRATION' THEN 1 ELSE 0 END) AS Calibration,
-                                SUM(CASE WHEN n.Status = 1 AND n.Category = 'DELAY SHIPMENT' THEN 1 ELSE 0 END) AS Shipment_Delay,
+                                SUM(CASE WHEN n.Status = 1 AND n.Category = 1 THEN 1 ELSE 0 END) AS Patrol,
+                                SUM(CASE WHEN n.Status = 1 AND n.Category = 2 THEN 1 ELSE 0 END) AS Inprocess,
+                                SUM(CASE WHEN n.Status = 1 AND n.Category = 3 THEN 1 ELSE 0 END) AS NextProcess,
+                                SUM(CASE WHEN n.Status = 1 AND n.Category = 4 THEN 1 ELSE 0 END) AS Calibration,
+                                SUM(CASE WHEN n.Status = 1 AND n.Category = 5 THEN 1 ELSE 0 END) AS Shipment_Delay,
 
                                 SUM(CASE WHEN n.Status = 1 THEN 1 ELSE 0 END) AS TotalOpen,
 
@@ -83,7 +83,7 @@ namespace NCR_system.Repository
                             LEFT JOIN PC_NCR n
                                 ON n.SectionID = s.SectionID
                                 AND n.IsDelete = 0
-	                            AND n.Process = @Type
+	                            AND n.Process = 0
                             GROUP BY s.DepartmentName, s.SectionID
                             ORDER BY s.SectionID;";
             return await SqlDataAccess.GetDataAsync<NCRDatamodel>(strsql, new { Type = type });

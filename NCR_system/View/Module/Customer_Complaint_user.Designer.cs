@@ -97,7 +97,7 @@
             this.CustomDatagrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.CustomDatagrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.CustomDatagrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.CustomDatagrid.BackgroundColor = System.Drawing.Color.White;
             this.CustomDatagrid.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.CustomDatagrid.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised;
@@ -170,6 +170,7 @@
             this.DateCreated.HeaderText = "Date";
             this.DateCreated.Name = "DateCreated";
             this.DateCreated.ReadOnly = true;
+            this.DateCreated.Width = 73;
             // 
             // SectionID
             // 
@@ -181,6 +182,7 @@
             this.SectionID.HeaderText = "Section in charge";
             this.SectionID.Name = "SectionID";
             this.SectionID.ReadOnly = true;
+            this.SectionID.Width = 149;
             // 
             // ModelNo
             // 
@@ -188,6 +190,7 @@
             this.ModelNo.HeaderText = "Model No/ Part no.";
             this.ModelNo.Name = "ModelNo";
             this.ModelNo.ReadOnly = true;
+            this.ModelNo.Width = 162;
             // 
             // LotNo
             // 
@@ -197,6 +200,7 @@
             this.LotNo.HeaderText = "Lot No.";
             this.LotNo.Name = "LotNo";
             this.LotNo.ReadOnly = true;
+            this.LotNo.Width = 89;
             // 
             // NGQty
             // 
@@ -206,6 +210,7 @@
             this.NGQty.HeaderText = "NG Qty";
             this.NGQty.Name = "NGQty";
             this.NGQty.ReadOnly = true;
+            this.NGQty.Width = 90;
             // 
             // Details
             // 
@@ -213,6 +218,7 @@
             this.Details.HeaderText = "Details of Problem";
             this.Details.Name = "Details";
             this.Details.ReadOnly = true;
+            this.Details.Width = 156;
             // 
             // RegNo
             // 
@@ -223,6 +229,7 @@
             this.RegNo.HeaderText = "Registration No.";
             this.RegNo.Name = "RegNo";
             this.RegNo.ReadOnly = true;
+            this.RegNo.Width = 143;
             // 
             // CustomerName
             // 
@@ -230,6 +237,7 @@
             this.CustomerName.HeaderText = "Customer Name";
             this.CustomerName.Name = "CustomerName";
             this.CustomerName.ReadOnly = true;
+            this.CustomerName.Width = 144;
             // 
             // Status
             // 
@@ -239,6 +247,7 @@
             this.Status.HeaderText = "Status";
             this.Status.Name = "Status";
             this.Status.ReadOnly = true;
+            this.Status.Width = 83;
             // 
             // CCtype
             // 

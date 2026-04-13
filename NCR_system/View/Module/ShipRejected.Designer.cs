@@ -97,7 +97,7 @@
             this.RejectedGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.RejectedGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.RejectedGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.RejectedGrid.BackgroundColor = System.Drawing.Color.White;
             this.RejectedGrid.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.RejectedGrid.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised;
@@ -170,6 +170,7 @@
             this.RegNo.HeaderText = "Registration No.";
             this.RegNo.Name = "RegNo";
             this.RegNo.ReadOnly = true;
+            this.RegNo.Width = 143;
             // 
             // DateIssued
             // 
@@ -179,6 +180,7 @@
             this.DateIssued.HeaderText = "Date Issued";
             this.DateIssued.Name = "DateIssued";
             this.DateIssued.ReadOnly = true;
+            this.DateIssued.Width = 116;
             // 
             // IssueGroup
             // 
@@ -189,6 +191,7 @@
             this.IssueGroup.HeaderText = "Issuing \nSection ";
             this.IssueGroup.Name = "IssueGroup";
             this.IssueGroup.ReadOnly = true;
+            this.IssueGroup.Width = 93;
             // 
             // SectionID
             // 
@@ -206,6 +209,7 @@
             this.ModelNo.HeaderText = "Model No. / Part No.";
             this.ModelNo.Name = "ModelNo";
             this.ModelNo.ReadOnly = true;
+            this.ModelNo.Width = 171;
             // 
             // Quantity
             // 
@@ -215,6 +219,7 @@
             this.Quantity.HeaderText = "Quantity";
             this.Quantity.Name = "Quantity";
             this.Quantity.ReadOnly = true;
+            this.Quantity.Width = 98;
             // 
             // Contents
             // 
@@ -231,6 +236,7 @@
             this.DateCloseReg.HeaderText = "Date Registered";
             this.DateCloseReg.Name = "DateCloseReg";
             this.DateCloseReg.ReadOnly = true;
+            this.DateCloseReg.Width = 141;
             // 
             // Status
             // 
@@ -240,6 +246,7 @@
             this.Status.HeaderText = "Status";
             this.Status.Name = "Status";
             this.Status.ReadOnly = true;
+            this.Status.Width = 83;
             // 
             // Process
             // 

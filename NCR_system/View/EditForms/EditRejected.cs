@@ -29,7 +29,10 @@ namespace NCR_system.View.EditForms
             RegNoText.Text = reg.RegNo;
             ModelText.Text = reg.ModelNo;
             Issuedbox.Text = reg.IssueGroup;
+            Issuedbox.Enabled = false;
             sectionbox.SelectedIndex = reg.SectionID - 1;
+            sectionbox.Enabled = false;
+
             QuanText.Text = reg.Quantity == 0 ? "" : reg.Quantity.ToString();
             StatsText.SelectedIndex = reg.Status == 1 ? 0 : 1;
             ContentText.Text = reg.Contents;

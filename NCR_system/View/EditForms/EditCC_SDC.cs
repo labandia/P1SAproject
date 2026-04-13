@@ -44,7 +44,9 @@ namespace NCR_system.View.EditForms
             EditProblemText.BackColor = SystemColors.Window;
 
             comboBox1.SelectedIndex = cus.Status == 1 ? 0 : 1;
+            comboBox1.Enabled = false;
             selectDepart.SelectedIndex = cus.SectionID;
+            selectDepart.Enabled = false; 
 
             if (cus.UploadImage != null && cus.UploadImage != "")
             {

@@ -34,5 +34,8 @@ namespace NCR_system.Models
         ///
         public string Details { get; set; }
         public int Status { get; set; } 
+
+        public string UploadImage { get; set; }
+        public int Process { get; set;  }
     }
 }

@@ -179,7 +179,8 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         }
 
 
-        public static async Task UpsertDailyAsync(string partNo,
+        public static async Task UpsertDailyAsync(
+           string partNo,
            string date,
            int cycleShot,
            int total,
@@ -191,17 +192,26 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             int NewStats = checkCycle ? 2 : status;
 
 
-
             string sql = @"
-                    INSERT INTO DieMold_Daily
-                    (PartNo, DateInput, CycleShot, Total, MachineNo, Remarks, Mincharge, Status)
-                    VALUES
-                    (@PartNo, @DateInput, @CycleShot, @Total, @MachineNo, @Remarks, @Mincharge, @Status);";
+                INSERT INTO DieMold_Daily
+                (PartNo, DieSerial, DateInput, CycleShot, Total, MachineNo, Remarks, Mincharge, Status)
+                SELECT 
+                    @PartNo, @DieSerial, @DateInput, @CycleShot, @Total, @MachineNo, @Remarks, @Mincharge, @Status
+                WHERE NOT EXISTS (
+                    SELECT 1
+                    FROM DieMold_Daily
+                    WHERE PartNo = @PartNo
+                      AND DieSerial = @DieSerial
+                      AND DateInput = @DateInput
+                );";
+
+
 
             await SqlDataAccess.ExecuteAsync(sql, new
             {
                 PartNo = partNo,
-                DateInput = date,
+                DieSerial = mold.DieSerial,
+                DateInput = DateTime.Parse(date).Date, // 🔥 normalize
                 CycleShot = cycleShot,
                 Total = TotalCycle,
                 MachineNo = mold.MachineNo,
@@ -259,13 +269,13 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         public static async Task<bool> MoldieDieSerialLogic(DieMoldMonitoringModel mold, string dateOnly)
         {
             // Get all related PartNo using DieSerial
-            var partList = await GetPartNoByDieSerial(mold.DieSerial);
+            var partList = (await GetPartNoByDieSerial(mold.DieSerial)).Distinct().ToList();
             if (!partList.Any()) return false;
 
 
             foreach (var part in partList)
             {
-
+                Debug.WriteLine(part);
                 // Get last total BEFORE this date
                 string getLastTotal = @"  
                             SELECT TOP 1 ISNULL(Total, 0)
@@ -273,28 +283,24 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                             INNER JOIN DieMold_MoldingMainParts p 
                             ON d.PartNo = p.PartNo
                             WHERE p.DieSerial = @DieSerial
+                              AND d.PartNo = @PartNo
                               AND d.DateInput < @DateInput
                             ORDER BY DateInput DESC, RecordID DESC";
 
                 int lastTotal = await SqlDataAccess.ExecuteScalarAsync(getLastTotal, new
                 {
                     DieSerial = mold.DieSerial,
+                    PartNo = part,
                     DateInput = mold.DateInput
                 });
 
-                //Debug.WriteLine("Last Cycle Time Die Serial : " + lastTotal);
+                Debug.WriteLine("Last Cycle Time Die Serial : " + lastTotal);
 
                 var history = await GetMasterlistParts(part);
 
- 
-
-                //if (history == null) return false;
+                if (history == null) return false;
                 Debug.WriteLine("Done Getting the Last Record History  ... ");
 
-                if (history == null) return false;
-
-                //if (history == null) return false;
-                Debug.WriteLine(history.Dimension_Quality);
 
                 var (moldtotal, moldstatus) = CalculateTotalAndStatus(
                   lastTotal,
@@ -303,17 +309,17 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                   history.Dimension_Quality);
 
                 Debug.WriteLine("Done Calculating Total and Status ... ");
-                //Debug.WriteLine("New Total ... " + moldtotal);
-                //Debug.WriteLine("New Satus ... " + moldstatus);
+                Debug.WriteLine("New Total ... " + moldtotal);
+                Debug.WriteLine("New Satus ... " + moldstatus);
                 // =====================================================
                 // DAILY MONITORING 
                 // =====================================================
                 await UpsertDailyAsync(part, mold.DateInput, mold.CycleShot, moldtotal, moldstatus, mold);
                 Debug.WriteLine("Done Updating Daily ... ");
 
-                // =====================================================
-                // INSERT MONITOR LOG
-                // =====================================================
+                //// =====================================================
+                //// INSERT MONITOR LOG
+                //// =====================================================
 
                 await UpsertMonitor(part, dateOnly, mold.CycleShot);
 

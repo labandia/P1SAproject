@@ -80,7 +80,8 @@ namespace NCR_system.View.EditForms
             if (result)
             {
                 MessageBox.Show("Data Successfully Updated!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.Close();
+                DialogResult = DialogResult.OK;
+                Close();
             }
         }
 

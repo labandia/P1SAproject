@@ -33,7 +33,6 @@
             this.EditRegNo = new System.Windows.Forms.TextBox();
             this.selectDepart = new System.Windows.Forms.ComboBox();
             this.Save_btn = new System.Windows.Forms.Button();
-            this.Cancel_btn = new System.Windows.Forms.Button();
             this.EditProblemText = new System.Windows.Forms.RichTextBox();
             this.EditNGText = new System.Windows.Forms.TextBox();
             this.EditLotText = new System.Windows.Forms.TextBox();
@@ -43,6 +42,8 @@
             this.label19 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.Editbtn = new System.Windows.Forms.Button();
+            this.button12 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
@@ -51,9 +52,13 @@
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.button12 = new System.Windows.Forms.Button();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // EditCustomerText
@@ -76,6 +81,7 @@
             // 
             // selectDepart
             // 
+            this.selectDepart.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.selectDepart.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.selectDepart.FormattingEnabled = true;
             this.selectDepart.Items.AddRange(new object[] {
@@ -92,35 +98,24 @@
             // 
             // Save_btn
             // 
-            this.Save_btn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(34)))), ((int)(((byte)(200)))));
+            this.Save_btn.BackColor = System.Drawing.Color.WhiteSmoke;
             this.Save_btn.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Save_btn.FlatAppearance.BorderSize = 0;
             this.Save_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Save_btn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Save_btn.ForeColor = System.Drawing.Color.White;
+            this.Save_btn.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Save_btn.ForeColor = System.Drawing.Color.DarkGray;
             this.Save_btn.Image = ((System.Drawing.Image)(resources.GetObject("Save_btn.Image")));
             this.Save_btn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Save_btn.Location = new System.Drawing.Point(388, 627);
+            this.Save_btn.Location = new System.Drawing.Point(340, 615);
             this.Save_btn.Name = "Save_btn";
-            this.Save_btn.Padding = new System.Windows.Forms.Padding(45, 0, 50, 0);
-            this.Save_btn.Size = new System.Drawing.Size(180, 43);
+            this.Save_btn.Padding = new System.Windows.Forms.Padding(50, 0, 40, 0);
+            this.Save_btn.Size = new System.Drawing.Size(237, 43);
             this.Save_btn.TabIndex = 109;
-            this.Save_btn.Text = "Save";
+            this.Save_btn.Text = "Save Changes";
             this.Save_btn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.Save_btn.UseVisualStyleBackColor = false;
+            this.Save_btn.Visible = false;
             this.Save_btn.Click += new System.EventHandler(this.Save_btn_Click);
-            // 
-            // Cancel_btn
-            // 
-            this.Cancel_btn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Cancel_btn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Cancel_btn.Location = new System.Drawing.Point(183, 627);
-            this.Cancel_btn.Name = "Cancel_btn";
-            this.Cancel_btn.Size = new System.Drawing.Size(178, 43);
-            this.Cancel_btn.TabIndex = 108;
-            this.Cancel_btn.Text = "Cancel";
-            this.Cancel_btn.UseVisualStyleBackColor = true;
-            this.Cancel_btn.Click += new System.EventHandler(this.Cancel_btn_Click);
             // 
             // EditProblemText
             // 
@@ -170,7 +165,6 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(478, 29);
             this.comboBox1.TabIndex = 116;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // label9
             // 
@@ -208,22 +202,61 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(246)))), ((int)(((byte)(255)))));
+            this.panel1.Controls.Add(this.tableLayoutPanel1);
+            this.panel1.Controls.Add(this.Editbtn);
             this.panel1.Controls.Add(this.button12);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Controls.Add(this.comboBox1);
             this.panel1.Controls.Add(this.label9);
             this.panel1.Controls.Add(this.Save_btn);
-            this.panel1.Controls.Add(this.Cancel_btn);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel1.ForeColor = System.Drawing.SystemColors.AppWorkspace;
             this.panel1.Location = new System.Drawing.Point(716, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(650, 729);
             this.panel1.TabIndex = 119;
             // 
+            // Editbtn
+            // 
+            this.Editbtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(131)))), ((int)(((byte)(230)))));
+            this.Editbtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Editbtn.FlatAppearance.BorderSize = 0;
+            this.Editbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Editbtn.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
+            this.Editbtn.ForeColor = System.Drawing.Color.White;
+            this.Editbtn.Image = ((System.Drawing.Image)(resources.GetObject("Editbtn.Image")));
+            this.Editbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Editbtn.Location = new System.Drawing.Point(90, 615);
+            this.Editbtn.Name = "Editbtn";
+            this.Editbtn.Padding = new System.Windows.Forms.Padding(60, 0, 50, 0);
+            this.Editbtn.Size = new System.Drawing.Size(237, 43);
+            this.Editbtn.TabIndex = 224;
+            this.Editbtn.Text = "Enable Edit";
+            this.Editbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Editbtn.UseVisualStyleBackColor = false;
+            this.Editbtn.Click += new System.EventHandler(this.Editbtn_Click);
+            // 
+            // button12
+            // 
+            this.button12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button12.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button12.FlatAppearance.BorderSize = 0;
+            this.button12.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.button12.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button12.Image = ((System.Drawing.Image)(resources.GetObject("button12.Image")));
+            this.button12.Location = new System.Drawing.Point(512, 41);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(65, 62);
+            this.button12.TabIndex = 223;
+            this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.button12_Click);
+            // 
             // pictureBox1
             // 
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.pictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(243)))), ((int)(((byte)(245)))));
+            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.ErrorImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.ErrorImage")));
             this.pictureBox1.InitialImage = null;
             this.pictureBox1.Location = new System.Drawing.Point(90, 142);
@@ -302,21 +335,38 @@
             this.label2.TabIndex = 139;
             this.label2.Text = "DETAILS OF THE PROBLEM :";
             // 
-            // button12
+            // tableLayoutPanel1
             // 
-            this.button12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button12.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button12.FlatAppearance.BorderSize = 0;
-            this.button12.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
-            this.button12.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button12.Image = ((System.Drawing.Image)(resources.GetObject("button12.Image")));
-            this.button12.Location = new System.Drawing.Point(512, 44);
-            this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(65, 62);
-            this.button12.TabIndex = 223;
-            this.button12.UseVisualStyleBackColor = true;
-            this.button12.Click += new System.EventHandler(this.button12_Click);
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 80F));
+            this.tableLayoutPanel1.Controls.Add(this.pictureBox2, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.label3, 1, 0);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(291, 57);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(200, 28);
+            this.tableLayoutPanel1.TabIndex = 140;
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Location = new System.Drawing.Point(3, 3);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(34, 22);
+            this.pictureBox2.TabIndex = 0;
+            this.pictureBox2.TabStop = false;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(43, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(154, 20);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "View Mode";
             // 
             // EditCC_External
             // 
@@ -345,9 +395,13 @@
             this.Name = "EditCC_External";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "-";
+            this.Load += new System.EventHandler(this.EditCC_External_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -359,7 +413,6 @@
         private System.Windows.Forms.TextBox EditRegNo;
         private System.Windows.Forms.ComboBox selectDepart;
         private System.Windows.Forms.Button Save_btn;
-        private System.Windows.Forms.Button Cancel_btn;
         private System.Windows.Forms.RichTextBox EditProblemText;
         private System.Windows.Forms.TextBox EditNGText;
         private System.Windows.Forms.TextBox EditLotText;
@@ -378,5 +431,9 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.Button Editbtn;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.Label label3;
     }
 }

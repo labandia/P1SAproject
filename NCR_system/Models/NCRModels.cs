@@ -28,7 +28,7 @@ namespace NCR_system.Models
         private int _RecordID;
         private DateTime _DateIssued;
         private string _RegNo;
-        private string _Category;
+        private int _Category;
         private string _IssueGroup;
         private string _ModelNo;
         private int _Quantity;
@@ -64,7 +64,7 @@ namespace NCR_system.Models
             get => _RegNo;
             set => _RegNo = value;
         }
-        public string Category
+        public int Category
         {
             get => _Category;
             set => _Category = value;

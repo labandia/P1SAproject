@@ -39,7 +39,6 @@
             this.p1saSelect = new System.Windows.Forms.ComboBox();
             this.Shiftselect = new System.Windows.Forms.ComboBox();
             this.reportpath = new System.Windows.Forms.TextBox();
-            this.Save_btn = new System.Windows.Forms.Button();
             this.DateRegText = new System.Windows.Forms.DateTimePicker();
             this.QuanText = new System.Windows.Forms.TextBox();
             this.sectionbox = new System.Windows.Forms.ComboBox();
@@ -47,6 +46,9 @@
             this.EmailText = new System.Windows.Forms.TextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button12 = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
@@ -59,11 +61,10 @@
             this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
-            this.label22 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.button12 = new System.Windows.Forms.Button();
+            this.Editbtn = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -171,25 +172,6 @@
             this.reportpath.Size = new System.Drawing.Size(522, 29);
             this.reportpath.TabIndex = 184;
             // 
-            // Save_btn
-            // 
-            this.Save_btn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(34)))), ((int)(((byte)(200)))));
-            this.Save_btn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Save_btn.FlatAppearance.BorderSize = 0;
-            this.Save_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Save_btn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Save_btn.ForeColor = System.Drawing.Color.White;
-            this.Save_btn.Image = ((System.Drawing.Image)(resources.GetObject("Save_btn.Image")));
-            this.Save_btn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Save_btn.Location = new System.Drawing.Point(149, 590);
-            this.Save_btn.Name = "Save_btn";
-            this.Save_btn.Padding = new System.Windows.Forms.Padding(45, 0, 50, 0);
-            this.Save_btn.Size = new System.Drawing.Size(180, 43);
-            this.Save_btn.TabIndex = 181;
-            this.Save_btn.Text = "Save";
-            this.Save_btn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.Save_btn.UseVisualStyleBackColor = false;
-            // 
             // DateRegText
             // 
             this.DateRegText.CalendarFont = new System.Drawing.Font("Segoe UI", 12F);
@@ -256,18 +238,55 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(246)))), ((int)(((byte)(255)))));
+            this.panel1.Controls.Add(this.Editbtn);
+            this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.button12);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.remarksText);
             this.panel1.Controls.Add(this.label22);
             this.panel1.Controls.Add(this.p1saSelect);
-            this.panel1.Controls.Add(this.Save_btn);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel1.Location = new System.Drawing.Point(925, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(441, 729);
             this.panel1.TabIndex = 203;
+            // 
+            // button12
+            // 
+            this.button12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button12.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button12.FlatAppearance.BorderSize = 0;
+            this.button12.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.button12.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button12.Image = ((System.Drawing.Image)(resources.GetObject("button12.Image")));
+            this.button12.Location = new System.Drawing.Point(338, 33);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(65, 62);
+            this.button12.TabIndex = 221;
+            this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.button12_Click);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.label6.Location = new System.Drawing.Point(61, 437);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(78, 17);
+            this.label6.TabIndex = 219;
+            this.label6.Text = "REMARKS : ";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.label22.Location = new System.Drawing.Point(61, 357);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(92, 17);
+            this.label22.TabIndex = 217;
+            this.label22.Text = "P1SA STATUS :";
             // 
             // label19
             // 
@@ -392,16 +411,6 @@
             this.label4.TabIndex = 215;
             this.label4.Text = "SECTION IN CHARGE :";
             // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.label6.Location = new System.Drawing.Point(61, 437);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(78, 17);
-            this.label6.TabIndex = 219;
-            this.label6.Text = "REMARKS : ";
-            // 
             // label20
             // 
             this.label20.AutoSize = true;
@@ -411,16 +420,6 @@
             this.label20.Size = new System.Drawing.Size(55, 17);
             this.label20.TabIndex = 218;
             this.label20.Text = "CAUSE :";
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.label22.Location = new System.Drawing.Point(61, 357);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(92, 17);
-            this.label22.TabIndex = 217;
-            this.label22.Text = "P1SA STATUS :";
             // 
             // label2
             // 
@@ -432,21 +431,46 @@
             this.label2.TabIndex = 220;
             this.label2.Text = "INVESTIGATION REPORT :";
             // 
-            // button12
+            // Editbtn
             // 
-            this.button12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button12.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button12.FlatAppearance.BorderSize = 0;
-            this.button12.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
-            this.button12.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button12.Image = ((System.Drawing.Image)(resources.GetObject("button12.Image")));
-            this.button12.Location = new System.Drawing.Point(338, 33);
-            this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(65, 62);
-            this.button12.TabIndex = 221;
-            this.button12.UseVisualStyleBackColor = true;
-            this.button12.Click += new System.EventHandler(this.button12_Click);
+            this.Editbtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(131)))), ((int)(((byte)(230)))));
+            this.Editbtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Editbtn.FlatAppearance.BorderSize = 0;
+            this.Editbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Editbtn.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
+            this.Editbtn.ForeColor = System.Drawing.Color.White;
+            this.Editbtn.Image = ((System.Drawing.Image)(resources.GetObject("Editbtn.Image")));
+            this.Editbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Editbtn.Location = new System.Drawing.Point(105, 542);
+            this.Editbtn.Name = "Editbtn";
+            this.Editbtn.Padding = new System.Windows.Forms.Padding(60, 0, 50, 0);
+            this.Editbtn.Size = new System.Drawing.Size(237, 43);
+            this.Editbtn.TabIndex = 226;
+            this.Editbtn.Text = "Enable Edit";
+            this.Editbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Editbtn.UseVisualStyleBackColor = false;
+            this.Editbtn.Click += new System.EventHandler(this.Editbtn_Click);
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button1.FlatAppearance.BorderSize = 0;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.ForeColor = System.Drawing.Color.DarkGray;
+            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
+            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button1.Location = new System.Drawing.Point(105, 614);
+            this.button1.Name = "button1";
+            this.button1.Padding = new System.Windows.Forms.Padding(50, 0, 40, 0);
+            this.button1.Size = new System.Drawing.Size(237, 43);
+            this.button1.TabIndex = 225;
+            this.button1.Text = "Save Changes";
+            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Visible = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // EditInprocess
             // 
@@ -505,7 +529,6 @@
         private System.Windows.Forms.ComboBox p1saSelect;
         private System.Windows.Forms.ComboBox Shiftselect;
         private System.Windows.Forms.TextBox reportpath;
-        private System.Windows.Forms.Button Save_btn;
         private System.Windows.Forms.DateTimePicker DateRegText;
         private System.Windows.Forms.TextBox QuanText;
         private System.Windows.Forms.ComboBox sectionbox;
@@ -530,5 +553,7 @@
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.Button Editbtn;
+        private System.Windows.Forms.Button button1;
     }
 }

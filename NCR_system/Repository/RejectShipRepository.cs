@@ -83,7 +83,6 @@ namespace NCR_system.Repository
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-            Debug.WriteLine($@"Section ID : {sectionID} - Status : {stats} - Process : {proc}");
 
             //string IsStatus = proc == 0 ? "1" : "1, 2, 3";
 
@@ -121,7 +120,6 @@ namespace NCR_system.Repository
                 parameters.Add("@Offset", offset);
                 parameters.Add("@PageSize", pageSize);
             }
-            Debug.WriteLine(strquery);
 
             return await SqlDataAccess.GetDataAsync<RejectShipmentModel>(strquery, parameters);
         }

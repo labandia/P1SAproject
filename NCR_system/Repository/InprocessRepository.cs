@@ -100,7 +100,6 @@ namespace NCR_system.Repository
                 parameters.Add("@PageSize", pageSize);
             }
 
-            Debug.WriteLine(strquery);  
 
             return await SqlDataAccess.GetDataAsync<InprocessModel>(strquery, parameters);
         }

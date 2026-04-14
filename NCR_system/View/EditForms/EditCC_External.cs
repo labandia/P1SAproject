@@ -21,39 +21,47 @@ namespace NCR_system.View.EditForms
         public int storeID;
         public readonly int currentRecordID;
 
+
+        public Color clrdisable = Color.FromArgb(242, 243, 245);
+
         public EditCC_External(CustomerModel cus, ICustomerComplaint cust)
         {
             InitializeComponent();
             _cus = cust;
 
+            storeID = cus.RecordID;
+
             EditRegNo.Text = cus.RegNo;
             EditRegNo.ReadOnly = true;
-            EditRegNo.BackColor = SystemColors.Window;
+            EditRegNo.BackColor = clrdisable; 
 
             EditCustomerText.Text = cus.CustomerName;
             EditCustomerText.ReadOnly = true;
-            EditCustomerText.BackColor = SystemColors.Window;
+            EditCustomerText.BackColor = clrdisable;
 
             EditModelText.Text = cus.ModelNo;
             EditModelText.ReadOnly = true;
-            EditCustomerText.BackColor = SystemColors.Window;
+            EditCustomerText.BackColor = clrdisable;
 
             EditLotText.Text = cus.LotNo;
             EditLotText.ReadOnly = true;
-            EditLotText.BackColor = SystemColors.Window;
+            EditLotText.BackColor = clrdisable;
 
             EditNGText.Text = cus.NGQty.ToString();
             EditNGText.ReadOnly = true;
-            EditNGText.BackColor = SystemColors.Window;
+            EditNGText.BackColor = clrdisable;
 
             EditProblemText.Text = cus.Details;
             EditProblemText.ReadOnly = true;
-            EditProblemText.BackColor = SystemColors.Window;
+            EditProblemText.BackColor = clrdisable;
 
             selectDepart.SelectedIndex = cus.SectionID;
             selectDepart.Enabled = false;
             comboBox1.SelectedIndex = cus.Status == 1 ? 0 : 1;
             comboBox1.Enabled = false;
+
+            EditProblemText.ReadOnly = true;
+            EditProblemText.BackColor = clrdisable;
 
             if (cus.UploadImage != null && cus.UploadImage != "")
             {
@@ -81,20 +89,60 @@ namespace NCR_system.View.EditForms
             if (result)
             {
                 MessageBox.Show("Edit Successfully");
-                this.Close();
+                DialogResult = DialogResult.OK;
+                Close();
             }
         }
+
+        
+
 
         private void Cancel_btn_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void button12_Click(object sender, EventArgs e) => this.Close();
+
+        private void Editbtn_Click(object sender, EventArgs e)
         {
-            
+            EditRegNo.ReadOnly = false;
+            EditRegNo.BackColor = Color.White;
+
+          
+            EditCustomerText.ReadOnly = false;
+            EditCustomerText.BackColor = Color.White;
+            EditModelText.ReadOnly = false;
+            EditModelText.BackColor = Color.White;
+            EditLotText.ReadOnly = false;
+            EditLotText.BackColor = Color.White;
+            EditNGText.ReadOnly = false;
+            EditNGText.BackColor = Color.White;
+            EditProblemText.ReadOnly = false;
+            EditProblemText.BackColor = Color.White;
+  
+            comboBox1.Enabled = true;
+            comboBox1.ForeColor = Color.White;
+            selectDepart.Enabled = true;
+            selectDepart.BackColor = Color.White;
+
+            EditProblemText.ReadOnly = false;
+            EditProblemText.BackColor = Color.White;
+
+            Save_btn.Visible = true;
+            Save_btn.BackColor = Color.FromArgb(25, 131, 230);
+            Save_btn.ForeColor = Color.White;
+
+            Editbtn.Visible = false;
+            Editbtn.BackColor = Color.WhiteSmoke;
+            //Editbtn.ForeColor = Color.DarkGray;
+
         }
 
-        private void button12_Click(object sender, EventArgs e) => this.Close();    
+        private void EditCC_External_Load(object sender, EventArgs e)
+        {
+            Save_btn.Visible = false;
+            Editbtn.Visible = true;
+        }
     }
 }

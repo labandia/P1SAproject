@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Drawing;
 using NCR_system.View.AddForms;
+using NCR_system.Models;
+using NCR_system.View.EditForms;
 
 namespace NCR_system.View.Module
 {
@@ -18,6 +20,7 @@ namespace NCR_system.View.Module
 
         public int depId { get; set; } = 0;
         public int stats { get; set; } = 0;
+        public int selectedProcess { get; set; } = 0;
 
         //private readonly Dictionary<string, Label> _departmentLabels;
 
@@ -121,6 +124,7 @@ namespace NCR_system.View.Module
 
                 NCRTable.SuspendLayout();
 
+                selectedProcess = procs;
                 var Summarydata = _ncr.GetSummaryNCR(procs);
                 var tabledata = _ncr.GetNCRData(
                     search,
@@ -221,7 +225,7 @@ namespace NCR_system.View.Module
 
         private async void button1_Click(object sender, EventArgs e)
         {     
-            using (var form = new AddMainRegistration())
+            using (var form = new AddMainRegistration(_ncr, selectedProcess))
             {
                 form.StartPosition = FormStartPosition.CenterParent;
                 if (form.ShowDialog(this) == DialogResult.OK)
@@ -229,6 +233,22 @@ namespace NCR_system.View.Module
                     await DisplayNCR(0);
                 }
 
+            }
+        }
+
+        private async void NCRGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0)
+                return;
+
+            var product = (MainNCRModel)NCRGrid.Rows[e.RowIndex].DataBoundItem;
+
+            using (var edit = new EditMainRegistration(product, _ncr))
+            {
+                if (edit.ShowDialog(this) == DialogResult.OK)
+                {
+                    //await DisplayRejected();
+                }
             }
         }
     }

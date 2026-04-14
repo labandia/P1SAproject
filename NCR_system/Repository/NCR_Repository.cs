@@ -33,6 +33,7 @@ namespace NCR_system.Repository
                                   ,TargetDate
                                   ,Reviewer
                                   ,DateRegist
+                                  ,UploadImage  
                               FROM PC_NCR
                               WHERE IsDelete = 0 AND Process =@Type ";
 
@@ -61,7 +62,7 @@ namespace NCR_system.Repository
             return await SqlDataAccess.GetDataAsync<MainNCRModel>(strquery, parameters);
         }
 
-        public async Task<List<NCRDatamodel>> GetSummaryNCR(int type)
+        public Task<List<NCRDatamodel>> GetSummaryNCR(int type)
         {
             string strsql = $@"SELECT
                                 s.DepartmentName AS Section,
@@ -86,12 +87,15 @@ namespace NCR_system.Repository
 	                            AND n.Process = 0
                             GROUP BY s.DepartmentName, s.SectionID
                             ORDER BY s.SectionID;";
-            return await SqlDataAccess.GetDataAsync<NCRDatamodel>(strsql, new { Type = type });
+            return  SqlDataAccess.GetDataAsync<NCRDatamodel>(strsql, new { Type = type });
         }
 
         public Task<bool> InsertNCRData(NCRModels ncr)
         {
-            throw new NotImplementedException();
+            return SqlDataAccess.ExecuteAsync($@"INSERT INTO PC_NCR(Category, RegNo, DateIssued, SectionID, ModelNo, Quantity, Contents, Status, 
+                                               CircularStatus,  FilePath, Process, DateRegist, UploadImage)
+                                               VALUES(@Category, @RegNo, @DateIssued, @SectionID, @ModelNo, @Quantity, @Contents, @Status, 
+                                               @CircularStatus,  @FilePath, @Process, @DateRegist, @UploadImage)", ncr);
         }
 
         public Task<bool> UpdateNCRData(NCRModels ncr)

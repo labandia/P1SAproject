@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -48,7 +49,7 @@ namespace NCR_system.View.EditForms
 
             editselectfile.Visible = false;
 
-            ReadOnlyText();
+            ReadOnlyText(true);
 
             if (inp.UploadImage != null && inp.UploadImage != "")
             {
@@ -58,27 +59,39 @@ namespace NCR_system.View.EditForms
             }
         }
 
-        public void ReadOnlyText()
+        public void ReadOnlyText(bool checker)
         {
-            EmailText.ReadOnly = true;
-            LineText.ReadOnly = true;
-            DefectText.ReadOnly = true;
-            LineText.ReadOnly = true;
-            ShopText.ReadOnly = true;
-            QuanText.ReadOnly = true;
-            ProcText.ReadOnly = true;
-            CauseText.ReadOnly = true;
-            reportpath.ReadOnly = true;
-            sectionbox.Enabled = false;
-            Shiftselect.Enabled = false;
-            //remarksText.ReadOnly = true;
+            // Textboxes
+            EmailText.ReadOnly = checker;
+            LineText.ReadOnly = checker;
+            DefectText.ReadOnly = checker;
+            ShopText.ReadOnly = checker;
+            QuanText.ReadOnly = checker;
+            ProcText.ReadOnly = checker;
+            CauseText.ReadOnly = checker;
+            reportpath.ReadOnly = checker;
 
-            //DateEncount.Enabled = false;
-            Shiftselect.Enabled = false;
-            sectionbox.Enabled = false;
-            p1saSelect.Enabled = false;
+            // Controls (disable when readonly)
+            sectionbox.Enabled = !checker;
+            Shiftselect.Enabled = !checker;
+            p1saSelect.Enabled = !checker;
 
-            //foldbtrn.Enabled = false;
+            Debug.WriteLine($@"Checker : {checker}");
+
+            // Save Button
+            button1.Enabled = !checker;
+            button1.BackColor = checker
+                ? Color.WhiteSmoke
+                : Color.FromArgb(25, 131, 230);
+            button1.ForeColor = checker
+                ? Color.DarkGray
+                : Color.White;
+
+            // Edit Button
+            Editbtn.Enabled = checker;
+            Editbtn.BackColor = checker
+                ? Color.WhiteSmoke
+                : Color.FromArgb(25, 131, 230);
         }
 
         private void Shiftselect_SelectedIndexChanged(object sender, EventArgs e)
@@ -87,5 +100,21 @@ namespace NCR_system.View.EditForms
         }
 
         private void button12_Click(object sender, EventArgs e) => Close();
+
+        private void Save_btn_Click(object sender, EventArgs e)
+        {
+          
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+
+        private void Editbtn_Click(object sender, EventArgs e)
+        {
+            ReadOnlyText(false);
+        }
     }
 }

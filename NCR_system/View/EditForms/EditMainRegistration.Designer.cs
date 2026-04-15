@@ -53,16 +53,19 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.button12 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.button1 = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.reportText = new System.Windows.Forms.Label();
             this.circulatText = new System.Windows.Forms.TextBox();
+            this.Modetext = new System.Windows.Forms.Button();
+            this.Editbtn = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // ContentText
             // 
+            this.ContentText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(248)))), ((int)(((byte)(255)))));
             this.ContentText.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.ContentText.Location = new System.Drawing.Point(49, 547);
             this.ContentText.Name = "ContentText";
@@ -82,7 +85,7 @@
             // 
             // QuanText
             // 
-            this.QuanText.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.QuanText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(248)))), ((int)(((byte)(255)))));
             this.QuanText.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.QuanText.Location = new System.Drawing.Point(330, 391);
             this.QuanText.Name = "QuanText";
@@ -91,6 +94,7 @@
             // 
             // Issuedbox
             // 
+            this.Issuedbox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(248)))), ((int)(((byte)(255)))));
             this.Issuedbox.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.Issuedbox.FormattingEnabled = true;
             this.Issuedbox.Items.AddRange(new object[] {
@@ -106,6 +110,7 @@
             // 
             // sectionbox
             // 
+            this.sectionbox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(248)))), ((int)(((byte)(255)))));
             this.sectionbox.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.sectionbox.FormattingEnabled = true;
             this.sectionbox.Items.AddRange(new object[] {
@@ -122,7 +127,7 @@
             // 
             // ModelText
             // 
-            this.ModelText.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.ModelText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(248)))), ((int)(((byte)(255)))));
             this.ModelText.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.ModelText.Location = new System.Drawing.Point(330, 160);
             this.ModelText.Name = "ModelText";
@@ -141,7 +146,7 @@
             // 
             // RegNoText
             // 
-            this.RegNoText.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.RegNoText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(248)))), ((int)(((byte)(255)))));
             this.RegNoText.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.RegNoText.Location = new System.Drawing.Point(49, 160);
             this.RegNoText.Name = "RegNoText";
@@ -273,6 +278,7 @@
             // 
             // CatSelection
             // 
+            this.CatSelection.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(248)))), ((int)(((byte)(255)))));
             this.CatSelection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CatSelection.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.CatSelection.FormattingEnabled = true;
@@ -295,13 +301,15 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(246)))), ((int)(((byte)(255)))));
+            this.panel1.Controls.Add(this.Editbtn);
+            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.Modetext);
             this.panel1.Controls.Add(this.button12);
             this.panel1.Controls.Add(this.pictureBox1);
-            this.panel1.Controls.Add(this.button1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel1.Location = new System.Drawing.Point(747, 0);
+            this.panel1.Location = new System.Drawing.Point(688, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(619, 729);
+            this.panel1.Size = new System.Drawing.Size(678, 729);
             this.panel1.TabIndex = 222;
             // 
             // button12
@@ -313,7 +321,7 @@
             this.button12.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button12.Image = ((System.Drawing.Image)(resources.GetObject("button12.Image")));
-            this.button12.Location = new System.Drawing.Point(516, 33);
+            this.button12.Location = new System.Drawing.Point(575, 33);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(65, 62);
             this.button12.TabIndex = 221;
@@ -326,31 +334,11 @@
             this.pictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(243)))), ((int)(((byte)(245)))));
             this.pictureBox1.ErrorImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.ErrorImage")));
             this.pictureBox1.InitialImage = null;
-            this.pictureBox1.Location = new System.Drawing.Point(62, 165);
+            this.pictureBox1.Location = new System.Drawing.Point(66, 160);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(491, 336);
+            this.pictureBox1.Size = new System.Drawing.Size(540, 370);
             this.pictureBox1.TabIndex = 202;
             this.pictureBox1.TabStop = false;
-            // 
-            // button1
-            // 
-            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(34)))), ((int)(((byte)(200)))));
-            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(179, 547);
-            this.button1.Name = "button1";
-            this.button1.Padding = new System.Windows.Forms.Padding(45, 0, 50, 0);
-            this.button1.Size = new System.Drawing.Size(299, 43);
-            this.button1.TabIndex = 181;
-            this.button1.Text = "Save";
-            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // label5
             // 
@@ -376,12 +364,62 @@
             // 
             // circulatText
             // 
-            this.circulatText.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.circulatText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(248)))), ((int)(((byte)(255)))));
             this.circulatText.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.circulatText.Location = new System.Drawing.Point(50, 474);
             this.circulatText.Name = "circulatText";
             this.circulatText.Size = new System.Drawing.Size(248, 29);
             this.circulatText.TabIndex = 226;
+            // 
+            // Modetext
+            // 
+            this.Modetext.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Modetext.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.Modetext.Location = new System.Drawing.Point(426, 46);
+            this.Modetext.Name = "Modetext";
+            this.Modetext.Size = new System.Drawing.Size(126, 34);
+            this.Modetext.TabIndex = 228;
+            this.Modetext.Text = "VIEW MODE";
+            this.Modetext.UseVisualStyleBackColor = true;
+            // 
+            // Editbtn
+            // 
+            this.Editbtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(131)))), ((int)(((byte)(230)))));
+            this.Editbtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Editbtn.FlatAppearance.BorderSize = 0;
+            this.Editbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Editbtn.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
+            this.Editbtn.ForeColor = System.Drawing.Color.White;
+            this.Editbtn.Image = ((System.Drawing.Image)(resources.GetObject("Editbtn.Image")));
+            this.Editbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Editbtn.Location = new System.Drawing.Point(66, 599);
+            this.Editbtn.Name = "Editbtn";
+            this.Editbtn.Padding = new System.Windows.Forms.Padding(60, 0, 50, 0);
+            this.Editbtn.Size = new System.Drawing.Size(264, 54);
+            this.Editbtn.TabIndex = 230;
+            this.Editbtn.Text = "Enable Edit";
+            this.Editbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Editbtn.UseVisualStyleBackColor = false;
+            this.Editbtn.Click += new System.EventHandler(this.Editbtn_Click);
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button1.FlatAppearance.BorderSize = 0;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.ForeColor = System.Drawing.Color.DarkGray;
+            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
+            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button1.Location = new System.Drawing.Point(349, 599);
+            this.button1.Name = "button1";
+            this.button1.Padding = new System.Windows.Forms.Padding(50, 0, 40, 0);
+            this.button1.Size = new System.Drawing.Size(257, 54);
+            this.button1.TabIndex = 229;
+            this.button1.Text = "Save Changes";
+            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button1.UseVisualStyleBackColor = false;
             // 
             // EditMainRegistration
             // 
@@ -450,9 +488,11 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label reportText;
         private System.Windows.Forms.TextBox circulatText;
+        private System.Windows.Forms.Button Modetext;
+        private System.Windows.Forms.Button Editbtn;
+        private System.Windows.Forms.Button button1;
     }
 }

@@ -28,7 +28,7 @@
     <MinimumRequiredVersion>1.0.0.0</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>38</ApplicationRevision>
+    <ApplicationRevision>39</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -195,6 +195,7 @@
     <Compile Include="Repository\IOverallSummary.cs" />
     <Compile Include="Repository\NCR_Repository.cs" />
     <Compile Include="Repository\RejectShipRepository.cs" />
+    <Compile Include="Utilities\ApplicationColors.cs" />
     <Compile Include="Utilities\CommonMethods.cs" />
     <Compile Include="Utilities\DisplayChartHelper.cs" />
     <Compile Include="Utilities\InputHelper.cs" />

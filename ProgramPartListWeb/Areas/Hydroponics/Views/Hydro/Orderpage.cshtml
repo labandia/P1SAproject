@@ -421,6 +421,7 @@
 
             if (res && res.Success) {
                 requestData = res.data.Data || res.Data || [];
+                
                 const total = res.data?.Total ?? requestData.length;
 
                 if (requestData.length === 0) {
@@ -449,12 +450,13 @@
 
     // ========================== FIRST SELECTION ================================
     function renderfirstselect(data) {
+        console.log(data);
         const percent = Math.round(parseFloat(data.CompletionPercent) || 0);
         const assemblyPercent = Math.round(parseFloat(data.AssemblyStats) || 0);
 
         const partsUI = getStatusUI(percent);
         const assemblyUI = getStatusUI(assemblyPercent);
-
+        console.log(partsUI.text);
 
         // Parts
         $("#PartsStatusValue").text(partsUI.text);
@@ -541,13 +543,13 @@
 
             const daysRemaining = calculateDaysRemaining(row.TargetDate);
 
-            let orderId = "CR-0327265145";
-            let cleanId = orderId.replace("CR-", "");
+            //let orderId = row.OrderID;
+            //let cleanId = orderId.replace("CR-", "");
 
 
             const $row = $(`
                 <tr>
-                    <td><strong>${cleanId}</strong></td>
+                    <td><strong>${row.OrderID}</strong></td>
                     <td>${row.ChamberName ?? "-"}</td>
                     <td>${row.TargetDate ?? "-"}</td>
                     <td><span class="badge ${statsCss}">${statsname}</span></td>
@@ -701,8 +703,9 @@
              confirmButtonText: "Yes, delete it!"
          }).then(async (result) => {
              if (result.isConfirmed) {
-
                  let res = await postMethod('@Url.Action("DeleteManageOrders", "Hydro")', { OrderID: selectedOrderID });
+                 console.log(res);
+
                  if (res?.Success) {
                      Swal.fire({
                          title: "Deleted!",

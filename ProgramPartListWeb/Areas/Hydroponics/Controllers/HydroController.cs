@@ -623,7 +623,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
             if (!result) return JsonPostError("Delete failed.", 500);
 
-            return JsonCreated(result, "Delete Order  Successfully");
+            return JsonCreated(OrderID, "Delete Order  Successfully");
         }
 
 

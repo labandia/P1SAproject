@@ -11,6 +11,7 @@ namespace NCR_system.Utilities
     {
         public static string folderPath = ConfigurationManager.AppSettings["NonConformityImagePath"];
         public static string networkFolder = $@"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\Templates\NCR";
+        public static string noImagePath = Path.Combine(folderPath, "no-photos.png");    
 
         public static async Task<string> SaveImageFolder(string strpath)
         {

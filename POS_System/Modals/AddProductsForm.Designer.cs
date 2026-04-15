@@ -51,11 +51,11 @@
             this.price_error.AutoSize = true;
             this.price_error.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold);
             this.price_error.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.price_error.Location = new System.Drawing.Point(336, 226);
+            this.price_error.Location = new System.Drawing.Point(331, 226);
             this.price_error.Name = "price_error";
-            this.price_error.Size = new System.Drawing.Size(90, 16);
+            this.price_error.Size = new System.Drawing.Size(101, 16);
             this.price_error.TabIndex = 30;
-            this.price_error.Text = "Price required";
+            this.price_error.Text = "Price required * ";
             this.price_error.Visible = false;
             // 
             // prod_error
@@ -63,11 +63,11 @@
             this.prod_error.AutoSize = true;
             this.prod_error.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold);
             this.prod_error.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.prod_error.Location = new System.Drawing.Point(293, 128);
+            this.prod_error.Location = new System.Drawing.Point(274, 128);
             this.prod_error.Name = "prod_error";
-            this.prod_error.Size = new System.Drawing.Size(152, 16);
+            this.prod_error.Size = new System.Drawing.Size(158, 16);
             this.prod_error.TabIndex = 29;
-            this.prod_error.Text = "Product Name Required*";
+            this.prod_error.Text = "Product Name Required * ";
             this.prod_error.Visible = false;
             // 
             // label6
@@ -157,6 +157,7 @@
             this.Cancebtn.TabIndex = 17;
             this.Cancebtn.Text = "Cancel";
             this.Cancebtn.UseVisualStyleBackColor = true;
+            this.Cancebtn.Click += new System.EventHandler(this.Cancebtn_Click);
             // 
             // Savebtn
             // 
@@ -209,11 +210,11 @@
             this.Unit_error.AutoSize = true;
             this.Unit_error.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold);
             this.Unit_error.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.Unit_error.Location = new System.Drawing.Point(327, 324);
+            this.Unit_error.Location = new System.Drawing.Point(321, 324);
             this.Unit_error.Name = "Unit_error";
-            this.Unit_error.Size = new System.Drawing.Size(105, 16);
+            this.Unit_error.Size = new System.Drawing.Size(113, 16);
             this.Unit_error.TabIndex = 122;
-            this.Unit_error.Text = "Unit Cost requied";
+            this.Unit_error.Text = "Unit Cost requied *";
             this.Unit_error.Visible = false;
             // 
             // selectCat_error
@@ -221,11 +222,11 @@
             this.selectCat_error.AutoSize = true;
             this.selectCat_error.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Bold);
             this.selectCat_error.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.selectCat_error.Location = new System.Drawing.Point(321, 418);
+            this.selectCat_error.Location = new System.Drawing.Point(300, 418);
             this.selectCat_error.Name = "selectCat_error";
-            this.selectCat_error.Size = new System.Drawing.Size(126, 16);
+            this.selectCat_error.Size = new System.Drawing.Size(134, 16);
             this.selectCat_error.TabIndex = 123;
-            this.selectCat_error.Text = "Category is required";
+            this.selectCat_error.Text = "Category is required *";
             this.selectCat_error.Visible = false;
             // 
             // AddProductsForm

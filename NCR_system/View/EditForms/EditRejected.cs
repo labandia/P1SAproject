@@ -1,8 +1,10 @@
 ﻿using NCR_system.Interface;
 using NCR_system.Models;
+using NCR_system.Utilities;
 using NCR_system.View.Module;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -22,6 +24,7 @@ namespace NCR_system.View.EditForms
             InitializeComponent();
             _ship = ship;
 
+            Modetext.Text = "View Mode"; 
             label19.Text = (reg.Process == 0) ? "Details of Rejected Lot" : "Details of Shipment Delay";
             label9.Text = (reg.Process == 0) ? "Update Rejected lot  Details" : "Update Shipment Delay Details";
 
@@ -29,13 +32,14 @@ namespace NCR_system.View.EditForms
             RegNoText.Text = reg.RegNo;
             ModelText.Text = reg.ModelNo;
             Issuedbox.Text = reg.IssueGroup;
-            Issuedbox.Enabled = false;
             sectionbox.SelectedIndex = reg.SectionID - 1;
-            sectionbox.Enabled = false;
+   
 
             QuanText.Text = reg.Quantity == 0 ? "" : reg.Quantity.ToString();
             StatsText.SelectedIndex = reg.Status == 1 ? 0 : 1;
             ContentText.Text = reg.Contents;
+
+            ReadOnlyText(true);
 
 
             DateissuedText.Value = DateTime.TryParseExact(
@@ -60,10 +64,25 @@ namespace NCR_system.View.EditForms
                 pictureBox1.Image = System.Drawing.Image.FromFile(reg.UploadImage);
                 pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             }
+            else
+            {
+                pictureBox1.Image = System.Drawing.Image.FromFile(UploadServices.noImagePath);
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            }
         }
 
   
         private async void Save_btn_Click(object sender, EventArgs e)
+        {
+            
+
+        }
+
+        private void Cancel_btn_Click(object sender, EventArgs e) => this.Close();
+
+        private void button12_Click(object sender, EventArgs e) => Close();
+
+        private async void button1_Click(object sender, EventArgs e)
         {
             try
             {
@@ -82,7 +101,7 @@ namespace NCR_system.View.EditForms
                 };
 
                 await _ship.UpdateShipRejectData(obj);
-              
+
                 DialogResult = DialogResult.OK;
                 Close();
             }
@@ -90,16 +109,40 @@ namespace NCR_system.View.EditForms
             {
                 MessageBox.Show(ex.Message, "Update Error");
             }
-
         }
 
-        private void Cancel_btn_Click(object sender, EventArgs e) => this.Close();
-
-        private void EditRejected_Load(object sender, EventArgs e)
+        public void ReadOnlyText(bool ismode)
         {
-           
+            // Textboxes
+            RegNoText.ReadOnly = ismode;
+            ModelText.ReadOnly = ismode;
+            // Textboxes Color
+            RegNoText.BackColor = ismode ? ApplicationColors.PrimaryColor : ApplicationColors.TextColor;
+            ModelText.BackColor = ismode ? ApplicationColors.PrimaryColor : ApplicationColors.TextColor;
+
+            sectionbox.Enabled = !ismode;
+            Issuedbox.Enabled = !ismode;
+
+            // Controls (disable when readonly)
+            sectionbox.Enabled = !ismode;
+
+
+
+            button1.Enabled = !ismode;
+            button1.BackColor = !ismode ? ApplicationColors.BackgroundColor : ApplicationColors.DisableColor;
+            button1.ForeColor = !ismode ? Color.White : Color.DarkGray;
+
+            Editbtn.Enabled = ismode;
+            Editbtn.BackColor = ismode ? ApplicationColors.BackgroundColor : ApplicationColors.DisableColor;
+            Editbtn.ForeColor = ismode ? Color.WhiteSmoke : Color.DarkGray;
+
+            Modetext.Text = ismode ? "View Mode" : "Edit Mode";
+
         }
 
-        private void button12_Click(object sender, EventArgs e) => Close();
+        private void Editbtn_Click(object sender, EventArgs e)
+        {
+            ReadOnlyText(false);
+        }
     }
 }

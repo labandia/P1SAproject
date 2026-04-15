@@ -47,8 +47,11 @@ namespace POS_System.Modals
                     StockQty = int.TryParse(prodStocks.Text, out int stockQty) ? stockQty : 0
                 };
 
+        
                 await productService.UpdateProductAsync(updatedProduct);
 
+
+                DialogResult = DialogResult.OK; // Set the dialog result to OK to indicate success  
                 await _prodform.LoadProductsAsync(); // Refresh the products list in the main form    
                 this.Close(); // Close the edit form 
             }  catch(Exception ex)
@@ -90,6 +93,12 @@ namespace POS_System.Modals
                     e.Handled = true; // Cancel the keypress event
                 }
             }
+        }
+
+        private void Cancebtn_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+            this.Close();   
         }
     }
 }

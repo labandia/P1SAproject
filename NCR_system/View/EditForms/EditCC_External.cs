@@ -1,14 +1,8 @@
 ﻿using NCR_system.Interface;
 using NCR_system.Models;
-using NCR_system.View.Module;
+using NCR_system.Utilities;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NCR_system.View.EditForms
@@ -22,7 +16,6 @@ namespace NCR_system.View.EditForms
         public readonly int currentRecordID;
 
 
-        public Color clrdisable = Color.FromArgb(242, 243, 245);
 
         public EditCC_External(CustomerModel cus, ICustomerComplaint cust)
         {
@@ -32,36 +25,23 @@ namespace NCR_system.View.EditForms
             storeID = cus.RecordID;
 
             EditRegNo.Text = cus.RegNo;
-            EditRegNo.ReadOnly = true;
-            EditRegNo.BackColor = clrdisable; 
 
             EditCustomerText.Text = cus.CustomerName;
-            EditCustomerText.ReadOnly = true;
-            EditCustomerText.BackColor = clrdisable;
 
             EditModelText.Text = cus.ModelNo;
-            EditModelText.ReadOnly = true;
-            EditCustomerText.BackColor = clrdisable;
 
             EditLotText.Text = cus.LotNo;
-            EditLotText.ReadOnly = true;
-            EditLotText.BackColor = clrdisable;
 
             EditNGText.Text = cus.NGQty.ToString();
-            EditNGText.ReadOnly = true;
-            EditNGText.BackColor = clrdisable;
 
             EditProblemText.Text = cus.Details;
-            EditProblemText.ReadOnly = true;
-            EditProblemText.BackColor = clrdisable;
 
             selectDepart.SelectedIndex = cus.SectionID;
             selectDepart.Enabled = false;
             comboBox1.SelectedIndex = cus.Status == 1 ? 0 : 1;
             comboBox1.Enabled = false;
 
-            EditProblemText.ReadOnly = true;
-            EditProblemText.BackColor = clrdisable;
+            ModeForm(true);
 
             if (cus.UploadImage != null && cus.UploadImage != "")
             {
@@ -69,6 +49,12 @@ namespace NCR_system.View.EditForms
                 pictureBox1.Image = System.Drawing.Image.FromFile(cus.UploadImage);
                 pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             }
+            else
+            {
+                pictureBox1.Image = System.Drawing.Image.FromFile(UploadServices.noImagePath);
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            }
+
         }
 
     
@@ -106,43 +92,49 @@ namespace NCR_system.View.EditForms
 
         private void Editbtn_Click(object sender, EventArgs e)
         {
-            EditRegNo.ReadOnly = false;
-            EditRegNo.BackColor = Color.White;
-
-          
-            EditCustomerText.ReadOnly = false;
-            EditCustomerText.BackColor = Color.White;
-            EditModelText.ReadOnly = false;
-            EditModelText.BackColor = Color.White;
-            EditLotText.ReadOnly = false;
-            EditLotText.BackColor = Color.White;
-            EditNGText.ReadOnly = false;
-            EditNGText.BackColor = Color.White;
-            EditProblemText.ReadOnly = false;
-            EditProblemText.BackColor = Color.White;
-  
-            comboBox1.Enabled = true;
-            comboBox1.ForeColor = Color.White;
-            selectDepart.Enabled = true;
-            selectDepart.BackColor = Color.White;
-
-            EditProblemText.ReadOnly = false;
-            EditProblemText.BackColor = Color.White;
-
-            Save_btn.Visible = true;
-            Save_btn.BackColor = Color.FromArgb(25, 131, 230);
-            Save_btn.ForeColor = Color.White;
-
-            Editbtn.Visible = false;
-            Editbtn.BackColor = Color.WhiteSmoke;
-            //Editbtn.ForeColor = Color.DarkGray;
-
+            ModeForm(false);
         }
 
         private void EditCC_External_Load(object sender, EventArgs e)
         {
-            Save_btn.Visible = false;
-            Editbtn.Visible = true;
+            Save_btn.Enabled = false;
+            Editbtn.Enabled = true;
+        }
+
+
+        // Default is True
+        public void ModeForm(bool ismode)
+        {
+            EditRegNo.ReadOnly = ismode;
+            EditRegNo.BackColor = ismode ? ApplicationColors.PrimaryColor  : ApplicationColors.TextColor;
+
+
+            EditCustomerText.ReadOnly = ismode;
+            EditCustomerText.BackColor = ismode ? ApplicationColors.PrimaryColor : ApplicationColors.TextColor;
+            EditModelText.ReadOnly = ismode;
+            EditModelText.BackColor = ismode ? ApplicationColors.PrimaryColor  : ApplicationColors.TextColor;
+            EditLotText.ReadOnly = ismode;
+            EditLotText.BackColor  = ismode ? ApplicationColors.PrimaryColor  : ApplicationColors.TextColor;
+            EditNGText.ReadOnly = ismode;
+            EditNGText.BackColor = ismode ? ApplicationColors.PrimaryColor  : ApplicationColors.TextColor;
+            EditProblemText.ReadOnly = ismode;
+            EditProblemText.BackColor = ismode ? ApplicationColors.PrimaryColor  : ApplicationColors.TextColor;
+
+            comboBox1.Enabled = !ismode;
+            comboBox1.ForeColor = ismode ? ApplicationColors.PrimaryColor  : ApplicationColors.TextColor;
+            selectDepart.Enabled = !ismode;
+            selectDepart.BackColor = ismode ? ApplicationColors.PrimaryColor  : ApplicationColors.TextColor;
+
+
+            Save_btn.Enabled = !ismode;
+            Save_btn.BackColor = !ismode ? ApplicationColors.BackgroundColor : ApplicationColors.DisableColor;
+            Save_btn.ForeColor = !ismode ? Color.White : Color.DarkGray;
+
+            Editbtn.Enabled = ismode;
+            Editbtn.BackColor = ismode ? ApplicationColors.BackgroundColor : ApplicationColors.DisableColor;
+            Editbtn.ForeColor = ismode ? Color.WhiteSmoke : Color.DarkGray;
+
+            Modetext.Text = ismode ? "View Mode" : "Edit Mode";
         }
     }
 }

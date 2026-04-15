@@ -29,10 +29,7 @@ namespace POS_System.Modals
 
         private async void Savebtn_Click(object sender, EventArgs e)
         {
-            if(!ValidationForm())
-            {
-                return;
-            }
+            if(!ValidationForm()) return;
 
 
             var producService = new ProductService();
@@ -149,5 +146,6 @@ namespace POS_System.Modals
             return true;
         }
 
+        private void Cancebtn_Click(object sender, EventArgs e) => Close();
     }
 }

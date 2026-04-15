@@ -30,7 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditRejected));
             this.StatsText = new System.Windows.Forms.ComboBox();
-            this.Save_btn = new System.Windows.Forms.Button();
             this.ContentText = new System.Windows.Forms.RichTextBox();
             this.DateRegText = new System.Windows.Forms.DateTimePicker();
             this.QuanText = new System.Windows.Forms.TextBox();
@@ -40,11 +39,13 @@
             this.DateissuedText = new System.Windows.Forms.DateTimePicker();
             this.RegNoText = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.Modetext = new System.Windows.Forms.Button();
+            this.Editbtn = new System.Windows.Forms.Button();
+            this.label11 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label19 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
@@ -53,48 +54,32 @@
             this.label17 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // StatsText
             // 
+            this.StatsText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(248)))), ((int)(((byte)(255)))));
+            this.StatsText.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.StatsText.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.StatsText.FormattingEnabled = true;
             this.StatsText.Items.AddRange(new object[] {
             "OPEN",
             "CLOSED"});
-            this.StatsText.Location = new System.Drawing.Point(115, 505);
+            this.StatsText.Location = new System.Drawing.Point(60, 539);
             this.StatsText.Name = "StatsText";
-            this.StatsText.Size = new System.Drawing.Size(267, 29);
+            this.StatsText.Size = new System.Drawing.Size(538, 29);
             this.StatsText.TabIndex = 137;
-            // 
-            // Save_btn
-            // 
-            this.Save_btn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(34)))), ((int)(((byte)(200)))));
-            this.Save_btn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.Save_btn.FlatAppearance.BorderSize = 0;
-            this.Save_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.Save_btn.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Save_btn.ForeColor = System.Drawing.Color.White;
-            this.Save_btn.Image = ((System.Drawing.Image)(resources.GetObject("Save_btn.Image")));
-            this.Save_btn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Save_btn.Location = new System.Drawing.Point(370, 619);
-            this.Save_btn.Name = "Save_btn";
-            this.Save_btn.Padding = new System.Windows.Forms.Padding(45, 0, 50, 0);
-            this.Save_btn.Size = new System.Drawing.Size(180, 43);
-            this.Save_btn.TabIndex = 134;
-            this.Save_btn.Text = "Save";
-            this.Save_btn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.Save_btn.UseVisualStyleBackColor = false;
-            this.Save_btn.Click += new System.EventHandler(this.Save_btn_Click);
             // 
             // ContentText
             // 
+            this.ContentText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(248)))), ((int)(((byte)(255)))));
             this.ContentText.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.ContentText.Location = new System.Drawing.Point(50, 521);
             this.ContentText.Name = "ContentText";
-            this.ContentText.Size = new System.Drawing.Size(607, 106);
+            this.ContentText.Size = new System.Drawing.Size(607, 138);
             this.ContentText.TabIndex = 132;
             this.ContentText.Text = "";
             // 
@@ -108,7 +93,7 @@
             // 
             // QuanText
             // 
-            this.QuanText.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.QuanText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(248)))), ((int)(((byte)(255)))));
             this.QuanText.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.QuanText.Location = new System.Drawing.Point(50, 433);
             this.QuanText.Name = "QuanText";
@@ -117,6 +102,7 @@
             // 
             // Issuedbox
             // 
+            this.Issuedbox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(248)))), ((int)(((byte)(255)))));
             this.Issuedbox.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.Issuedbox.FormattingEnabled = true;
             this.Issuedbox.Items.AddRange(new object[] {
@@ -130,6 +116,7 @@
             // 
             // sectionbox
             // 
+            this.sectionbox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(248)))), ((int)(((byte)(255)))));
             this.sectionbox.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.sectionbox.FormattingEnabled = true;
             this.sectionbox.Items.AddRange(new object[] {
@@ -145,7 +132,7 @@
             // 
             // ModelText
             // 
-            this.ModelText.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.ModelText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(248)))), ((int)(((byte)(255)))));
             this.ModelText.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.ModelText.Location = new System.Drawing.Point(364, 155);
             this.ModelText.Name = "ModelText";
@@ -162,7 +149,7 @@
             // 
             // RegNoText
             // 
-            this.RegNoText.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.RegNoText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(248)))), ((int)(((byte)(255)))));
             this.RegNoText.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.RegNoText.Location = new System.Drawing.Point(49, 155);
             this.RegNoText.Name = "RegNoText";
@@ -172,16 +159,80 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(246)))), ((int)(((byte)(255)))));
+            this.panel1.Controls.Add(this.Modetext);
+            this.panel1.Controls.Add(this.Editbtn);
             this.panel1.Controls.Add(this.label11);
+            this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.button12);
             this.panel1.Controls.Add(this.StatsText);
             this.panel1.Controls.Add(this.pictureBox1);
-            this.panel1.Controls.Add(this.Save_btn);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel1.Location = new System.Drawing.Point(716, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(650, 729);
             this.panel1.TabIndex = 138;
+            // 
+            // Modetext
+            // 
+            this.Modetext.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Modetext.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.Modetext.Location = new System.Drawing.Point(385, 57);
+            this.Modetext.Name = "Modetext";
+            this.Modetext.Size = new System.Drawing.Size(126, 34);
+            this.Modetext.TabIndex = 228;
+            this.Modetext.Text = "VIEW MODE";
+            this.Modetext.UseVisualStyleBackColor = true;
+            // 
+            // Editbtn
+            // 
+            this.Editbtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(131)))), ((int)(((byte)(230)))));
+            this.Editbtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Editbtn.FlatAppearance.BorderColor = System.Drawing.Color.Red;
+            this.Editbtn.FlatAppearance.BorderSize = 0;
+            this.Editbtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Editbtn.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold);
+            this.Editbtn.ForeColor = System.Drawing.Color.White;
+            this.Editbtn.Image = ((System.Drawing.Image)(resources.GetObject("Editbtn.Image")));
+            this.Editbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Editbtn.Location = new System.Drawing.Point(60, 605);
+            this.Editbtn.Name = "Editbtn";
+            this.Editbtn.Padding = new System.Windows.Forms.Padding(60, 0, 50, 0);
+            this.Editbtn.Size = new System.Drawing.Size(250, 54);
+            this.Editbtn.TabIndex = 226;
+            this.Editbtn.Text = "Enable Edit";
+            this.Editbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Editbtn.UseVisualStyleBackColor = false;
+            this.Editbtn.Click += new System.EventHandler(this.Editbtn_Click);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.label11.Location = new System.Drawing.Point(57, 499);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(59, 17);
+            this.label11.TabIndex = 149;
+            this.label11.Text = "STATUS :";
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button1.FlatAppearance.BorderSize = 0;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.ForeColor = System.Drawing.Color.DarkGray;
+            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
+            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button1.Location = new System.Drawing.Point(340, 605);
+            this.button1.Name = "button1";
+            this.button1.Padding = new System.Windows.Forms.Padding(70, 0, 40, 0);
+            this.button1.Size = new System.Drawing.Size(258, 54);
+            this.button1.TabIndex = 225;
+            this.button1.Text = "Save Changes";
+            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button12
             // 
@@ -192,7 +243,7 @@
             this.button12.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button12.Image = ((System.Drawing.Image)(resources.GetObject("button12.Image")));
-            this.button12.Location = new System.Drawing.Point(512, 44);
+            this.button12.Location = new System.Drawing.Point(533, 44);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(65, 62);
             this.button12.TabIndex = 223;
@@ -205,9 +256,9 @@
             this.pictureBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(243)))), ((int)(((byte)(245)))));
             this.pictureBox1.ErrorImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.ErrorImage")));
             this.pictureBox1.InitialImage = null;
-            this.pictureBox1.Location = new System.Drawing.Point(90, 142);
+            this.pictureBox1.Location = new System.Drawing.Point(60, 146);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(477, 302);
+            this.pictureBox1.Size = new System.Drawing.Size(538, 316);
             this.pictureBox1.TabIndex = 147;
             this.pictureBox1.TabStop = false;
             // 
@@ -221,28 +272,6 @@
             this.label19.Size = new System.Drawing.Size(233, 30);
             this.label19.TabIndex = 140;
             this.label19.Text = "Details of Rejected Lot";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.ForeColor = System.Drawing.Color.DarkGray;
-            this.label9.Location = new System.Drawing.Point(49, 78);
-            this.label9.Name = "label9";
-            this.label9.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label9.Size = new System.Drawing.Size(175, 17);
-            this.label9.TabIndex = 139;
-            this.label9.Text = "Update Rejected lot  Details";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.label11.Location = new System.Drawing.Point(112, 468);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(59, 17);
-            this.label11.TabIndex = 149;
-            this.label11.Text = "STATUS :";
             // 
             // label12
             // 
@@ -325,6 +354,18 @@
             this.label20.TabIndex = 141;
             this.label20.Text = "REGISTRATION NO :";
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.ForeColor = System.Drawing.Color.DarkGray;
+            this.label9.Location = new System.Drawing.Point(49, 78);
+            this.label9.Name = "label9";
+            this.label9.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label9.Size = new System.Drawing.Size(253, 17);
+            this.label9.TabIndex = 139;
+            this.label9.Text = "Update and Preview Rejected lot  Details";
+            // 
             // EditRejected
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -354,7 +395,6 @@
             this.Name = "EditRejected";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "-";
-            this.Load += new System.EventHandler(this.EditRejected_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -366,7 +406,6 @@
         #endregion
 
         private System.Windows.Forms.ComboBox StatsText;
-        private System.Windows.Forms.Button Save_btn;
         private System.Windows.Forms.RichTextBox ContentText;
         private System.Windows.Forms.DateTimePicker DateRegText;
         private System.Windows.Forms.TextBox QuanText;
@@ -379,7 +418,6 @@
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label13;
@@ -389,5 +427,9 @@
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Button Editbtn;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button Modetext;
     }
 }

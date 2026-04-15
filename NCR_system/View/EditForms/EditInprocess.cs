@@ -1,11 +1,13 @@
 ﻿using NCR_system.Interface;
 using NCR_system.Models;
+using NCR_system.Utilities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,8 +19,10 @@ namespace NCR_system.View.EditForms
     {
         private readonly IInprocess _pro;
         public string selectedImagepath = "";
+        public string currentImagePath = "";
         public readonly int currentRecordID;
 
+        public bool isUpload = false;
         public bool isEditImage = false;
 
         private readonly string[] SectionName =
@@ -45,53 +49,68 @@ namespace NCR_system.View.EditForms
             reportpath.Text = inp.Invest;
             p1saSelect.SelectedIndex = inp.Status;
             //remarksText.Text = inp.Remarks;
-            sectionbox.SelectedIndex = inp.SectionID - 1;
-
-            editselectfile.Visible = false;
+            sectionbox.SelectedIndex = inp.SectionID;
+            Shiftselect.SelectedIndex = inp.Shift;
+            AddImagebtn.Enabled = false;
 
             ReadOnlyText(true);
 
             if (inp.UploadImage != null && inp.UploadImage != "")
             {
                 selectedImagepath = inp.UploadImage;
+                currentImagePath = inp.UploadImage;
                 pictureBox1.Image = System.Drawing.Image.FromFile(inp.UploadImage);
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            }
+            else
+            {
+                pictureBox1.Image = System.Drawing.Image.FromFile(UploadServices.noImagePath);
                 pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             }
         }
 
-        public void ReadOnlyText(bool checker)
+        public void ReadOnlyText(bool ismode)
         {
             // Textboxes
-            EmailText.ReadOnly = checker;
-            LineText.ReadOnly = checker;
-            DefectText.ReadOnly = checker;
-            ShopText.ReadOnly = checker;
-            QuanText.ReadOnly = checker;
-            ProcText.ReadOnly = checker;
-            CauseText.ReadOnly = checker;
-            reportpath.ReadOnly = checker;
+            EmailText.ReadOnly = ismode;
+            ModelText.ReadOnly = ismode;
+            LineText.ReadOnly = ismode;
+            DefectText.ReadOnly = ismode;
+            ShopText.ReadOnly = ismode;
+            QuanText.ReadOnly = ismode;
+            ProcText.ReadOnly = ismode;
+            CauseText.ReadOnly = ismode;
+            reportpath.ReadOnly = ismode;
+
+
+            EmailText.BackColor = ismode ? ApplicationColors.PrimaryColor : ApplicationColors.TextColor;
+            ModelText.BackColor = ismode ? ApplicationColors.PrimaryColor : ApplicationColors.TextColor;
+            LineText.BackColor = ismode ? ApplicationColors.PrimaryColor : ApplicationColors.TextColor;
+            DefectText.BackColor = ismode ? ApplicationColors.PrimaryColor : ApplicationColors.TextColor;
+            ShopText.BackColor = ismode ? ApplicationColors.PrimaryColor : ApplicationColors.TextColor;
+            QuanText.BackColor = ismode ? ApplicationColors.PrimaryColor : ApplicationColors.TextColor;
+            ProcText.BackColor = ismode ? ApplicationColors.PrimaryColor : ApplicationColors.TextColor;
+            CauseText.BackColor = ismode ? ApplicationColors.PrimaryColor : ApplicationColors.TextColor;
+            reportpath.BackColor = ismode ? ApplicationColors.PrimaryColor : ApplicationColors.TextColor;
 
             // Controls (disable when readonly)
-            sectionbox.Enabled = !checker;
-            Shiftselect.Enabled = !checker;
-            p1saSelect.Enabled = !checker;
+            sectionbox.Enabled = !ismode;
+            Shiftselect.Enabled = !ismode;
+            p1saSelect.Enabled = !ismode;
 
-            Debug.WriteLine($@"Checker : {checker}");
+            editselectfile.Enabled = !ismode;
+            AddImagebtn.Enabled = !ismode;
 
-            // Save Button
-            button1.Enabled = !checker;
-            button1.BackColor = checker
-                ? Color.WhiteSmoke
-                : Color.FromArgb(25, 131, 230);
-            button1.ForeColor = checker
-                ? Color.DarkGray
-                : Color.White;
+            button1.Enabled = !ismode;
+            button1.BackColor = !ismode ? ApplicationColors.BackgroundColor : ApplicationColors.DisableColor;
+            button1.ForeColor = !ismode ? Color.White : Color.DarkGray;
 
-            // Edit Button
-            Editbtn.Enabled = checker;
-            Editbtn.BackColor = checker
-                ? Color.WhiteSmoke
-                : Color.FromArgb(25, 131, 230);
+            Editbtn.Enabled = ismode;
+            Editbtn.BackColor = ismode ? ApplicationColors.BackgroundColor : ApplicationColors.DisableColor;
+            Editbtn.ForeColor = ismode ? Color.WhiteSmoke : Color.DarkGray;
+
+            Modetext.Text = ismode ? "View Mode" : "Edit Mode";
+
         }
 
         private void Shiftselect_SelectedIndexChanged(object sender, EventArgs e)
@@ -103,18 +122,108 @@ namespace NCR_system.View.EditForms
 
         private void Save_btn_Click(object sender, EventArgs e)
         {
-          
+
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.OK;
-            Close();
+            try
+            {
+                var obj = new InprocessModel
+                {
+                    TitleEmail = EmailText.Text,
+                    Model = ModelText.Text,
+                    Line = LineText.Text,
+                    Defect = DefectText.Text,
+                    ShopOrder = ShopText.Text,
+                    NGQty = int.TryParse(QuanText.Text, out int qty) ? qty : 0,
+                    ProcEncounter = ProcText.Text,
+                    cause = CauseText.Text,
+                    Invest = reportpath.Text,
+                    Remarks = remarksText.Text,
+                    UploadImage = selectedImagepath,
+                    RecordID = currentRecordID
+                };
+
+
+                bool result = await _pro.UpdateInprocessData(obj);
+
+                if (!result)
+                {
+                    MessageBox.Show("Failed to update record.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (isUpload) DeleteFileExcel(currentImagePath);
+
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error saving record: {ex.Message}");
+            }
         }
 
         private void Editbtn_Click(object sender, EventArgs e)
         {
             ReadOnlyText(false);
+        }
+
+        private void QuanText_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (char.IsControl(e.KeyChar)) return;
+
+            e.Handled = (char.IsDigit(e.KeyChar) || (e.KeyChar == '.' && !QuanText.Text.Contains("."))) ? false : true; // Allow the character
+        }
+
+        private void editselectfile_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Excel Files (*.xlsx;*.xls)|*.xlsx;*.xls";
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string fullPath = openFileDialog.FileName;                 // Full path
+                string fileName = Path.GetFileName(openFileDialog.FileName); // File name only
+                string directory = Path.GetDirectoryName(openFileDialog.FileName); // Folder path
+
+
+                reportpath.Text = "";
+                reportpath.Text = fullPath;
+            }
+        }
+
+        private void AddImagebtn_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                isUpload = true;
+                selectedImagepath = ofd.FileName;
+                pictureBox1.Image = Image.FromFile(selectedImagepath);
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            }
+        }
+
+
+        public void DeleteFileExcel(string filePath)
+        {
+            try
+            {
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                    MessageBox.Show("File deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error deleting file: {ex.Message}");
+            }
+
         }
     }
 }

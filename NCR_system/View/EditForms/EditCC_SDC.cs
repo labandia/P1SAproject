@@ -1,5 +1,6 @@
 ﻿using NCR_system.Interface;
 using NCR_system.Models;
+using NCR_system.Utilities;
 using NCR_system.View.Module;
 using System;
 using System.Collections.Generic;
@@ -28,25 +29,19 @@ namespace NCR_system.View.EditForms
             currentRecordID = cus.RecordID;
 
             EditModelText.Text = cus.ModelNo;
-            EditModelText.ReadOnly = true;
-            EditModelText.BackColor = SystemColors.Window;
 
             EditLotText.Text = cus.LotNo;
-            EditLotText.ReadOnly = true;
-            EditLotText.BackColor = SystemColors.Window;
 
             EditNGText.Text = cus.NGQty.ToString();
-            EditNGText.ReadOnly = true;
-            EditNGText.BackColor = SystemColors.Window;
 
             EditProblemText.Text = cus.Details;
-            EditProblemText.ReadOnly = true;
-            EditProblemText.BackColor = SystemColors.Window;
 
             comboBox1.SelectedIndex = cus.Status == 1 ? 0 : 1;
             comboBox1.Enabled = false;
             selectDepart.SelectedIndex = cus.SectionID;
-            selectDepart.Enabled = false; 
+            selectDepart.Enabled = false;
+
+            ResetForm(true);
 
             if (cus.UploadImage != null && cus.UploadImage != "")
             {
@@ -54,14 +49,44 @@ namespace NCR_system.View.EditForms
                 pictureBox1.Image = System.Drawing.Image.FromFile(cus.UploadImage);
                 pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             }
+            else
+            {
+                pictureBox1.Image = System.Drawing.Image.FromFile(UploadServices.noImagePath);
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            }
 
         }
 
-      
+        public void ResetForm(bool ismode)
+        {
+            EditModelText.ReadOnly = ismode;
+            EditModelText.BackColor = ismode ? ApplicationColors.PrimaryColor : ApplicationColors.TextColor;
+
+            EditLotText.ReadOnly = ismode;
+            EditLotText.BackColor = ismode ? ApplicationColors.PrimaryColor : ApplicationColors.TextColor;
+
+            EditNGText.ReadOnly = ismode;
+            EditNGText.BackColor = ismode ? ApplicationColors.PrimaryColor : ApplicationColors.TextColor;
+
+            EditProblemText.ReadOnly = ismode;
+            EditProblemText.BackColor = ismode ? ApplicationColors.PrimaryColor : ApplicationColors.TextColor;
+
+            Modetext.Text = ismode ? "View Mode" : "Edit Mode";
+        }
+
 
         private void Cancel_btn_Click(object sender, EventArgs e) => this.Close();
 
         private async void Save_btn_Click(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void button12_Click(object sender, EventArgs e) => this.Close();    
+
+       
+
+        private async void button1_Click(object sender, EventArgs e)
         {
             string status = comboBox1.SelectedItem.ToString();
 
@@ -71,8 +96,8 @@ namespace NCR_system.View.EditForms
                 ModelNo = EditModelText.Text,
                 LotNo = EditLotText.Text,
                 NGQty = Convert.ToInt32(EditNGText.Text),
-                Details = EditProblemText.Text, 
-                Status = status == "Open" ? 1 : 0   
+                Details = EditProblemText.Text,
+                Status = status == "Open" ? 1 : 0
             };
 
             bool result = await _cus.UpdateCustomerData(obj, ComplaintUpdateType.WithoutCustomerInfo);
@@ -85,16 +110,10 @@ namespace NCR_system.View.EditForms
             }
         }
 
-        private void selectDepart_SelectedIndexChanged(object sender, EventArgs e)
+        private void Editbtn_Click(object sender, EventArgs e)
         {
-
+            ResetForm(false);
+            Modetext.Text = "Edit Mode";
         }
-
-        private void EditModelText_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button12_Click(object sender, EventArgs e) => this.Close();    
     }
 }

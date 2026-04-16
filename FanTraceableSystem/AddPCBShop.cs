@@ -18,19 +18,78 @@ namespace FanTraceableSystem
         public AddPCBShop()
         {
             InitializeComponent();
+            PCBList = new List<TracePCBModel>();
+        }
+
+        // Constructor for EDIT
+        public AddPCBShop(List<TracePCBModel> existingList)
+        {
+            InitializeComponent();
+
+            // clone to avoid direct reference issues (recommended)
+            PCBList = existingList
+                .Select(x => new TracePCBModel
+                {
+                    PCBShopOrder = x.PCBShopOrder,
+                    Quantity = x.Quantity
+                })
+                .ToList();
         }
 
         private void SaveBtn_Click(object sender, EventArgs e)
         {
+        
+
+
+            PCBList.Clear();
+
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (row.IsNewRow) continue;
+
+                PCBList.Add(new TracePCBModel
+                {
+                    PCBShopOrder = row.Cells["PCBShopOrder"].Value?.ToString(),
+                    Quantity = int.TryParse(row.Cells["Quantity"].Value?.ToString(), out int qty) ? qty : 0
+                });
+            }
+
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
+
+        // this is to add to the datagrid view from the addPCBshop form
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(Shoptext.Text))
+            {
+                MessageBox.Show("PCB Shop Order is required");
+                return;
+            }
+
+
+
+            if (PCBList.Any(x => x.PCBShopOrder == Shoptext.Text))
+            {
+                MessageBox.Show("Duplicate PCB Shop Order");
+                return;
+            }
+
             // Example: collect values from controls
             PCBList.Add(new TracePCBModel
             {
                 PCBShopOrder = Shoptext.Text,
                 Quantity = int.TryParse(textBox1.Text, out int qty) ? qty : 0
             });
+            dataGridView1.DataSource = PCBList.ToList(); // Refresh the grid    
+        }
 
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+        private void AddPCBShop_Load(object sender, EventArgs e)
+        {
+            dataGridView1.AutoGenerateColumns = true;
+
+            dataGridView1.DataSource = null;
+            dataGridView1.DataSource = PCBList;
         }
     }
 }

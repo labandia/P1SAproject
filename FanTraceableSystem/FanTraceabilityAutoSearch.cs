@@ -1,4 +1,5 @@
 ﻿using FanTraceableSystem.Data;
+using FanTraceableSystem.Interface;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,12 +16,15 @@ namespace FanTraceableSystem
     public partial class FanTraceabilityAutoSearch : Form
     {
         //public int 
+        private readonly ITraceable _trac;
+
 
         List<TraceableShopOrderModel> data = new List<TraceableShopOrderModel>();
-
-        public FanTraceabilityAutoSearch()
+        private List<TracePCBModel> _pcbList = new List<TracePCBModel>();
+        public FanTraceabilityAutoSearch(ITraceable trac)
         {
             InitializeComponent();
+            _trac = trac;
         }
 
         private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
@@ -28,7 +32,7 @@ namespace FanTraceableSystem
 
         }
 
-        private void SaveBtn_Click(object sender, EventArgs e)
+        private async void SaveBtn_Click(object sender, EventArgs e)
         {
             try
             {
@@ -47,6 +51,9 @@ namespace FanTraceableSystem
                     PCBIncharge = PCBtextcharge.Text,
                     PCBIssuer = PCBIssuerText.Text
                 };
+
+                bool res = await _trac.AddTraceTransactions(obj, _pcbList);
+
             }
             catch(Exception ex)
             {
@@ -56,27 +63,36 @@ namespace FanTraceableSystem
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Ignore header double-click
-            if (e.RowIndex < 0)
-                return;
+          
+        }
 
-            using (var add = new AddPCBShop())
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+            using (var add = _pcbList.Any()
+               ? new AddPCBShop(_pcbList)   // EDIT MODE
+               : new AddPCBShop())          // ADD MODE
             {
                 if (add.ShowDialog(this) == DialogResult.OK)
                 {
-                    List<TracePCBModel> result = add.PCBList;
+                    _pcbList = add.PCBList;
 
-                    // Example usage
-                    foreach (var item in result)
-                    {
-                        Console.WriteLine($"Order: {item.PCBShopOrder}, Qty: {item.Quantity}");
-                    }
+                    string isAdd = _pcbList.Count > 0 ? $@"({_pcbList.Count})" : ""; 
 
-                    // OPTIONAL: bind to DataGridView
-                    dataGridView1.DataSource = null;
-                    dataGridView1.DataSource = result;
+                    button1.Text = "Add Shop Order " + isAdd;  
                 }
             }
+        }
+
+        private async void filterbtn_Click(object sender, EventArgs e)
+        {
+            string filterText = SearchText.Text.Trim();
+
+            var result = await _trac.TraceableShopOrder(
+                filterText,
+                dateTimePicker2.Checked ? dateTimePicker2.Value.Date : (DateTime?)null,
+                dateTimePicker3.Checked ? dateTimePicker3.Value.Date : (DateTime?)null
+            );
         }
     }
 }

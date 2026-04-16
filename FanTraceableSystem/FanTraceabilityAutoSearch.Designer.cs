@@ -45,6 +45,7 @@
             this.SearchText = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
             this.DatePrepared = new System.Windows.Forms.DateTimePicker();
             this.SaveBtn = new System.Windows.Forms.Button();
             this.PCBIssuerText = new System.Windows.Forms.TextBox();
@@ -55,9 +56,6 @@
             this.label11 = new System.Windows.Forms.Label();
             this.Cardtext = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.PCBShopOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Quantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LotText = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.CustomerText = new System.Windows.Forms.TextBox();
@@ -81,7 +79,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -217,6 +214,7 @@
             this.filterbtn.TabIndex = 28;
             this.filterbtn.Text = "filter";
             this.filterbtn.UseVisualStyleBackColor = true;
+            this.filterbtn.Click += new System.EventHandler(this.filterbtn_Click);
             // 
             // label17
             // 
@@ -257,6 +255,7 @@
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.button1);
             this.panel2.Controls.Add(this.DatePrepared);
             this.panel2.Controls.Add(this.SaveBtn);
             this.panel2.Controls.Add(this.PCBIssuerText);
@@ -267,7 +266,6 @@
             this.panel2.Controls.Add(this.label11);
             this.panel2.Controls.Add(this.Cardtext);
             this.panel2.Controls.Add(this.label10);
-            this.panel2.Controls.Add(this.dataGridView1);
             this.panel2.Controls.Add(this.LotText);
             this.panel2.Controls.Add(this.label9);
             this.panel2.Controls.Add(this.CustomerText);
@@ -291,6 +289,16 @@
             this.panel2.Size = new System.Drawing.Size(332, 668);
             this.panel2.TabIndex = 1;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(35, 360);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(260, 35);
+            this.button1.TabIndex = 29;
+            this.button1.Text = "Add ShopOrder";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // DatePrepared
             // 
             this.DatePrepared.Format = System.Windows.Forms.DateTimePickerFormat.Short;
@@ -301,17 +309,17 @@
             // 
             // SaveBtn
             // 
-            this.SaveBtn.Location = new System.Drawing.Point(43, 619);
+            this.SaveBtn.Location = new System.Drawing.Point(48, 584);
             this.SaveBtn.Name = "SaveBtn";
             this.SaveBtn.Size = new System.Drawing.Size(241, 35);
             this.SaveBtn.TabIndex = 27;
-            this.SaveBtn.Text = "Save";
+            this.SaveBtn.Text = "Finalize Data";
             this.SaveBtn.UseVisualStyleBackColor = true;
             this.SaveBtn.Click += new System.EventHandler(this.SaveBtn_Click);
             // 
             // PCBIssuerText
             // 
-            this.PCBIssuerText.Location = new System.Drawing.Point(115, 586);
+            this.PCBIssuerText.Location = new System.Drawing.Point(121, 536);
             this.PCBIssuerText.Name = "PCBIssuerText";
             this.PCBIssuerText.Size = new System.Drawing.Size(168, 20);
             this.PCBIssuerText.TabIndex = 26;
@@ -320,7 +328,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(35, 588);
+            this.label13.Location = new System.Drawing.Point(41, 538);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(65, 13);
             this.label13.TabIndex = 25;
@@ -328,7 +336,7 @@
             // 
             // PCBtextcharge
             // 
-            this.PCBtextcharge.Location = new System.Drawing.Point(114, 547);
+            this.PCBtextcharge.Location = new System.Drawing.Point(120, 497);
             this.PCBtextcharge.Name = "PCBtextcharge";
             this.PCBtextcharge.Size = new System.Drawing.Size(168, 20);
             this.PCBtextcharge.TabIndex = 24;
@@ -337,7 +345,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(35, 550);
+            this.label12.Location = new System.Drawing.Point(41, 500);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(77, 13);
             this.label12.TabIndex = 23;
@@ -345,7 +353,7 @@
             // 
             // RemarkText
             // 
-            this.RemarkText.Location = new System.Drawing.Point(114, 511);
+            this.RemarkText.Location = new System.Drawing.Point(120, 461);
             this.RemarkText.Name = "RemarkText";
             this.RemarkText.Size = new System.Drawing.Size(168, 20);
             this.RemarkText.TabIndex = 22;
@@ -354,7 +362,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(33, 511);
+            this.label11.Location = new System.Drawing.Point(39, 461);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(51, 13);
             this.label11.TabIndex = 21;
@@ -362,7 +370,7 @@
             // 
             // Cardtext
             // 
-            this.Cardtext.Location = new System.Drawing.Point(114, 473);
+            this.Cardtext.Location = new System.Drawing.Point(120, 423);
             this.Cardtext.Name = "Cardtext";
             this.Cardtext.Size = new System.Drawing.Size(168, 20);
             this.Cardtext.TabIndex = 20;
@@ -371,34 +379,11 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(32, 476);
+            this.label10.Location = new System.Drawing.Point(38, 426);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(79, 13);
             this.label10.TabIndex = 19;
             this.label10.Text = "Card Case No:";
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.PCBShopOrder,
-            this.Quantity});
-            this.dataGridView1.Location = new System.Drawing.Point(25, 348);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(279, 111);
-            this.dataGridView1.TabIndex = 18;
-            this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
-            // 
-            // PCBShopOrder
-            // 
-            this.PCBShopOrder.HeaderText = "PCB Shop Order";
-            this.PCBShopOrder.Name = "PCBShopOrder";
-            // 
-            // Quantity
-            // 
-            this.Quantity.HeaderText = "Quantity";
-            this.Quantity.Name = "Quantity";
             // 
             // LotText
             // 
@@ -564,7 +549,6 @@
             this.panel3.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -584,7 +568,6 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox Cardtext;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.TextBox LotText;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox CustomerText;
@@ -616,7 +599,6 @@
         private System.Windows.Forms.DateTimePicker dateTimePicker2;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button10;
-        private System.Windows.Forms.DataGridViewTextBoxColumn PCBShopOrder;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Quantity;
+        private System.Windows.Forms.Button button1;
     }
 }

@@ -98,6 +98,12 @@
     <Compile Include="Services\AesEncryption.cs" />
     <Compile Include="Services\TraceableService.cs" />
     <Compile Include="Services\ViewExportPDF.cs" />
+    <Compile Include="TraceableHistory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TraceableHistory.Designer.cs">
+      <DependentUpon>TraceableHistory.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="AddPCBShop.resx">
       <DependentUpon>AddPCBShop.cs</DependentUpon>
     </EmbeddedResource>
@@ -113,6 +119,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="TraceableHistory.resx">
+      <DependentUpon>TraceableHistory.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

@@ -10,8 +10,10 @@ namespace FanTraceableSystem.Interface
     public interface ITraceable
     {
         Task<List<TraceableShopOrderModel>> TraceableShopOrder(
-            string search, DateTime startdate, DateTime endDate);
+       string search,
+       DateTime? startDate,
+       DateTime? endDate);
 
-        Task<bool> AddTraceTransactions(TraceableShopOrderModel trac);
+        Task<bool> AddTraceTransactions(TraceableShopOrderModel trac, List<TracePCBModel> pcb);
     }
 }

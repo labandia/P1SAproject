@@ -101,12 +101,12 @@
         <table class="data-table">
             <thead>
                 <tr>
-                    <th>PART NO. / PARTNAME</th>
+                    <th style="width:30%;">PART NO. / PARTNAME</th>
                     <th>SUPPLIER</th>
                     <th>CURRENT STOCK</th>
-                    <th>REQUIRE QTY</th>
-                    <th>STATUS</th>
-                    <th style="width:60px"></th>
+                    <th >REQUIRE QTY</th>
+                    <th >STATUS</th>
+                    <th style="width:80px; text-align: center;"></th>
                 </tr>
             </thead>
             <tbody id="InventorylistData">
@@ -148,7 +148,7 @@
         </script>*@
 
 
-    <script type="text/javascript">
+<script type="text/javascript">
     let IsRestrictRole;
     let Inventlist = [];
     let loadData = [];
@@ -243,8 +243,8 @@
             tableBody.innerHTML = "";
 
             $.each(filteredData, function (index, row) {
-                let qty = formatQuantity(row.CurrentQty, row.Unit);
-                let warn = formatQuantity(row.WarningLevel, row.Unit)
+                let qty = formatQuantity(row.PartID, row.CurrentQty, row.Unit);
+                let warn = formatQuantity(row.PartID, row.WarningLevel, row.Unit)
 
 
                     // Image Display
@@ -275,7 +275,7 @@
                                          data-category="${row.CategoryID}"
                                          class='rowClick' id='editButton_${row.PartID}'>
 
-                                        <td data-cell="PartNo">
+                                        <td data-cell="PartNo" >
                                             <div class="part-info">
                                                 <div class="part-image">
 
@@ -303,7 +303,7 @@
                                                 </div>
                                          </td>
                                          <td data-cell="WarningLevel" style="font-weight: 600;">${warn}</td>
-                                         <td data-cell="Approval" >
+                                         <td data-cell="Approval" style='width: 100px;' >
 
 
                                            <span class="badge ${getStatusClass(row.Status)}"> ${row.Status}</span>
@@ -469,7 +469,6 @@
         e.preventDefault();
         let formData = new FormData(e.target);
         const data = Object.fromEntries(formData);
-
         if (Inventlist.some(res => res.PartNo === data.PartNo)) {
             Swal.fire({
                 icon: "error",
@@ -501,31 +500,32 @@
     editparts.addEventListener('submit', async function (e) {
         e.preventDefault();
         let formData = new FormData(e.target);
-        const data = Object.fromEntries(formData);
+        const data = Object.fromEntries(formData)
         let res = await postMethod('@Url.Action("EditInventoryParts", "Hydro")', formData);
-      if (res && res.Success) {
+
+       if (res?.Success) {
           Swal.fire({
               title: "Success",
               text: res.Message,
               icon: "success",
               showConfirmButton: false,
               timer: 1500
-          }).then(() => {
-              InventoryTable();
-              $("#EditModal").modal('hide');
-          });
-      }
+              }).then(() => {
+                  InventoryTable();
+                  $("#EditModal").modal('hide');
+              });
+          }
 
     });
 
      $("#btnSave").on('click', async function (e) {
          e.preventDefault();
+       
          let formData = new FormData();
          formData.append('Items', JSON.stringify(requestItems));
-
          const data = Object.fromEntries(formData);
-         let res = await postMethod('@Url.Action("AddNewStocks", "Hydro")', formData);
-         if (res && res.Success) {
+         let res = await postMethod('@Url.Action("AddNewStocks", "Hydro")', requestItems);
+         if (res?.Success) {
              Swal.fire({
                  title: "Success",
                  text: res.Message,
@@ -994,17 +994,24 @@
 
     const decimalUnits = ["meter", "meters", "m", "liter", "liters", "l"];
 
-    function formatQuantity(value, unit) {
-        if (!value) return "0";
+    function formatQuantity(ID, value, unit) {
+        const num = Number(value);
 
-        // units that require decimals
-
-        if (decimalUnits.includes(unit.toLowerCase())) {
-            return Number(value).toFixed(1);
+        // check valid number (but allow 0)
+        if (value === null || value === undefined || value === "" || isNaN(num)) {
+            return "0";
         }
 
-        // default: no decimals
-        return parseInt(value);
+        // safe unit handling
+        const u = unit?.toLowerCase?.() || "";
+
+        // decimal cases
+        if (ID === 7 || decimalUnits.includes(u)) {
+            return num.toFixed(1);
+        }
+
+        // default: round instead of truncate
+        return Math.round(num);
     }
 
     function getStepByUnit(unit) {

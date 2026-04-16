@@ -427,36 +427,34 @@
                 if (requestData.length === 0) {
                     const TableData = $("#chamberOrdersTableBody");
                     TableData.empty();
-                    $("#chamberOrdersTableBody").html(`<tr><td colspan="9" style="text-align:center; color:#888;">⚠️ No matching records</td></tr>`);
+                    $("#chamberOrdersTableBody").html(`<tr><td colspan="5" style="text-align:center; color:#888;">⚠️ No matching records</td></tr>`);
                 }
 
 
                 if (total > 0) {
-                    //console.clear();
+                    console.clear();
                     renderfirstselect(requestData[0])
                     renderTable(requestData);
                     renderPagination(total);
                 }
             } else {
-                $("#chamberOrdersTableBody").html(`<tr><td colspan="9" style="text-align:center; color:#888;">⚠️ No matching records</td></tr>`);
+                $("#chamberOrdersTableBody").html(`<tr><td colspan="5" style="text-align:center; color:#888;">⚠️ No matching records</td></tr>`);
             }
         } catch (err) {
             console.error("Error fetching data:", err);
             $("#chamberOrdersTableBody").html(`
-                    <tr><td colspan="9" style="text-align:center; color:red;">Failed to load data</td></tr>
+                    <tr><td colspan="5" style="text-align:center; color:red;">Failed to load data</td></tr>
                 `);
         }
     };
 
     // ========================== FIRST SELECTION ================================
     function renderfirstselect(data) {
-        console.log(data);
         const percent = Math.round(parseFloat(data.CompletionPercent) || 0);
         const assemblyPercent = Math.round(parseFloat(data.AssemblyStats) || 0);
 
         const partsUI = getStatusUI(percent);
         const assemblyUI = getStatusUI(assemblyPercent);
-        console.log(partsUI.text);
 
         // Parts
         $("#PartsStatusValue").text(partsUI.text);
@@ -523,7 +521,6 @@
             let barColor = "#e74c3c"; // red
             if (percent >= 70) barColor = "#27ae60"; // green
             else if (percent >= 40) barColor = "#f39c12"; // yellow
-            console.log(row.RequestStatus);
             let statsCss = "";
             let statsname = "";
 
@@ -704,7 +701,6 @@
          }).then(async (result) => {
              if (result.isConfirmed) {
                  let res = await postMethod('@Url.Action("DeleteManageOrders", "Hydro")', { OrderID: selectedOrderID });
-                 console.log(res);
 
                  if (res?.Success) {
                      Swal.fire({

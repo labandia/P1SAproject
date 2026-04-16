@@ -29,7 +29,7 @@
                 <th> <i class="fa-regular fa-square-check"></i> <span style="margin-left: .5em;">Email Address</span>  </th>
                 <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Roles</span>  </th>
                 <th style="width: 20%;"> <i class="fa-regular fa-comment-dots"></i> <span style="margin-left: .5em;">Status</span>  </th>
-
+                <th></th>
             </tr>
         </thead>
         <tbody id="UserslistData">
@@ -453,7 +453,7 @@
     function loadingDisplay() {
         TableDisplay.empty();
         const loadData = `<tr>
-                            <td colspan='7'>
+                            <td colspan='6'>
                                 <div class='Loadercontainer'>
                                     <span class="loader"></span>
                                     <p id="loadingStepText">Fetching data from the database..</p>

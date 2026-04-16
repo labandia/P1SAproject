@@ -464,16 +464,11 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> AddNewStocks()
+        public async Task<ActionResult> AddNewStocks(List<AddStocksItem> items)
         {
             try
             {
-                //string requestedBy = Request.Form["RequestBy"];   
-                //string remarks = Request.Form["Purpose"];
-                var json = Request.Form["items"];
-
-                var items = Newtonsoft.Json.JsonConvert.DeserializeObject<List<AddStocksItem>>(json);
-
+              
                 bool result = await _hydro.AddStockItem(items);
 
                 if (!result) return JsonPostError("Insert failed.", 500);

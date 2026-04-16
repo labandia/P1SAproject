@@ -572,8 +572,8 @@ header {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    flex: 0 0 200px; /* 🔥 fixed width column */
-    max-width: 200px; /* adjust as needed */
+    flex: 0 0 230px; /* 🔥 fixed width column */
+    max-width: 230px; /* adjust as needed */
 }
 
 /* TEXT */

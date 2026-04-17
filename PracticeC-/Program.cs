@@ -144,7 +144,7 @@ namespace PracticeC_
 
         public static void ConvertstringtoBase64()
         {
-            string connectionString = "Data Source=172.29.3.139;Initial Catalog=PMACS_TEST;Persist Security Info=True;User ID=p1sa;Password=p1sa1234a*";
+            //string connectionString = "Data Source=172.29.3.139;Initial Catalog=PMACS_TEST;Persist Security Info=True;User ID=p1sa;Password=p1sa1234a*";
             //string connectionString = "SoloCoding";
             //string connectionString = "server=DESKTOP-FC0UP1P;User ID=PCsystem;password=p1saprocess;database=P1sa";
             //string connectionString = "server=DESKTOP-FC0UP1P;User ID=PCsystem;password=p1saprocess;database=PMACS_LIVE";
@@ -152,7 +152,7 @@ namespace PracticeC_
             //string connectionString = "server=172.29.3.139;User ID=p1sa;password=p1sa1234a*;database=PRODCONF;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
             //string connectionString = "Data Source=DESKTOP-FC0UP1P;Initial Catalog=Prodcon;Persist Security Info=True;User ID=PCsystem;Password=p1saprocess;";
 
-            //string connectionString = "server=172.29.3.139;User ID=p1sa;password=p1sa1234a*;database=PMACS_LIVE;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
+            string connectionString = "server=172.29.3.139;User ID=p1sa;password=p1sa1234a*;database=PMACS_TEST;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
             //string connectionString = "server=SDP0706ES; User ID = p1sa; password=p1sa1234a*; database=PMACS_LIVE; Pooling=True; Min Pool Size=50; Max Pool Size=100;";
             //string connectionString = "server=DESKTOP-FC0UP1P;User ID=PCsystem;password=p1saprocess;database=P1sa;Pooling=True;Min Pool Size=50;Max Pool Size=100;";
             //string connectionString = "server=DESKTOP-FC0UP1P\\SQLEXPRESS;database=PMACS_LIVE;Integrated Security=True;";
@@ -160,10 +160,10 @@ namespace PracticeC_
             string base64ConnectionString = Convert.ToBase64String(Encoding.UTF8.GetBytes(connectionString));
 
             // Print the encoded connection string
-            //Console.WriteLine($"Base64 Encoded Connection String: {base64ConnectionString}");
+            Console.WriteLine($"Base64 Encoded Connection String: {base64ConnectionString}");
             // Print the encoded connection string
-            string a = DecodeBase64ToString("c2VydmVyPTE3Mi4yOS4zLjEzOTtVc2VyIElEPXAxc2E7cGFzc3dvcmQ9cDFzYTEyMzRhKjtkYXRhYmFzZT1QUk9EQ09ORjtQb29saW5nPVRydWU7TWluIFBvb2wgU2l6ZT01MDtNYXggUG9vbCBTaXplPTEwMDs=");
-            Console.WriteLine($"Base64 Decrypted {a}");
+            string a = DecodeBase64ToString("");
+            //Console.WriteLine($"Base64 Decrypted {a}");
             Console.ReadKey();
         }
 

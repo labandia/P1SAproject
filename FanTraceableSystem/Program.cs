@@ -22,11 +22,14 @@ namespace FanTraceableSystem
             Application.SetCompatibleTextRenderingDefault(false);
             var services = new ServiceCollection();
             services.AddSingleton<ITraceable, TraceableService>();
+            services.AddSingleton<ISummary, SummaryServices>();
             services.AddSingleton<FanTraceabilityAutoSearch>();
+            services.AddSingleton<TraceableHistory>();
+            services.AddSingleton<Form1>();
             services.AddSingleton<AddPCBShop>();
 
             ServiceProvider = services.BuildServiceProvider();
-            var mainForm = ServiceProvider.GetRequiredService<FanTraceabilityAutoSearch>();
+            var mainForm = ServiceProvider.GetRequiredService<Form1>();
             Application.Run(mainForm);
         }
     }

@@ -12,7 +12,9 @@ namespace FanTraceableSystem.Interface
         Task<List<TraceableShopOrderModel>> TraceableShopOrder(
        string search,
        DateTime? startDate,
-       DateTime? endDate);
+       DateTime? endDate, 
+       int isEdit, 
+       int section);
 
         Task<bool> AddTraceTransactions(TraceableShopOrderModel trac, List<TracePCBModel> pcb);
     }

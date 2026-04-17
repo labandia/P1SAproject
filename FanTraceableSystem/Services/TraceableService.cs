@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Dapper;
 using FanTraceableSystem.Data;
 using FanTraceableSystem.Interface;
@@ -15,11 +17,18 @@ namespace FanTraceableSystem.Services
     {
         public async Task<bool> AddTraceTransactions(TraceableShopOrderModel trac, List<TracePCBModel> pcb)
         {
-             if(pcb.Count != 0)
+         
+            if (pcb.Count != 0)
             {
                 foreach(var item in pcb)
                 {
-                    await SqlDataAccess.UpdateInsertQuery($@"INSERT INTO", new
+                    await SqlDataAccess.UpdateInsertQuery($@"INSERT INTO FanTraceability(FinalShopOrder, PCBShopOrder, 
+                                                                Revision, PCBA, DatePrepared, TimeInput, PreparedQuantity, 
+                                                                PreparedBy, Shift, Customer, InspectorName, 
+                                                                CardCaseNo, Remarks, PCBIncharge, PCBIssuer, LotNo, DepartmentID)
+                                                             VALUES(@FinalShopOrder, @PCBShopOrder, @Revision, @PCBA, @DatePrepared, 
+                                                                    @TimeInput, @PreparedQuantity, @PreparedBy, @Shift, @Customer, @InspectorName, 
+                                                                    @CardCaseNo, @Remarks, @PCBIncharge, @PCBIssuer, @LotNo, @DepartmentID)", new
                         {
                             trac.FinalShopOrder,
                             PCBShopOrder  = item.PCBShopOrder,
@@ -27,7 +36,7 @@ namespace FanTraceableSystem.Services
                             trac.PCBA,
                             trac.DatePrepared,
                             trac.TimeInput,
-                            trac.PreparedQuantity,
+                            PreparedQuantity = item.Quantity,
                             trac.PreparedBy,
                             trac.Shift,
                             trac.Customer,
@@ -35,8 +44,9 @@ namespace FanTraceableSystem.Services
                             trac.CardCaseNo,
                             trac.Remarks,
                             trac.PCBIncharge,
-                            trac.PCBIssuer,
-                            Quantity = item.Quantity
+                            trac.PCBIssuer, 
+                            trac.LotNo,
+                            trac.DepartmentID   
                         }
                     );
                 }
@@ -45,41 +55,69 @@ namespace FanTraceableSystem.Services
              return true;
         }
 
-        public Task<List<TraceableShopOrderModel>> TraceableShopOrder(string search,
+        public Task<List<TraceableShopOrderModel>> TraceableShopOrder(
+                string search,
                 DateTime? startDate,
-                DateTime? endDate)
+                DateTime? endDate, 
+                int isEdit, 
+                int section)
         {
-            var sql = @"
-        SELECT *
-        FROM FanTraceability
-        WHERE 1=1
-    ";
+
+            string sql = @"
+                    SELECT RecordId
+                          ,FinalShopOrder
+                          ,PCBShopOrder
+                          ,Revision
+                          ,PCBA
+                          ,DatePrepared
+                          ,FORMAT(TimeInput, 'hh:mm tt') AS TimeInput
+                          ,PreparedQuantity
+                          ,PreparedBy
+                          ,Shift
+                          ,Customer
+                          ,InspectorName
+                          ,CardCaseNo
+                          ,Remarks
+                          ,PCBIncharge
+                          ,PCBIssuer
+                          ,LotNo
+                          ,IsDeleted
+                      FROM FanTraceability
+                      WHERE IsDeleted = 0  ";
 
             var parameters = new DynamicParameters();
+
+            if (section != 0)
+            {
+                sql += " AND DepartmentID =@DepartmentID";
+                parameters.Add("@DepartmentID", section);
+            }
+
 
             // 🔍 Search filter
             if (!string.IsNullOrWhiteSpace(search))
             {
-                sql += " AND (FinalShopOrder LIKE @Search OR PCBShopOrder LIKE @Search)";
-                parameters.Add("@Search", $"%{search}%");
+                sql += " AND FinalShopOrder = @FinalShopOrder";
+                parameters.Add("@FinalShopOrder", search);
             }
 
             // 📅 Start Date filter
-            if (startDate.HasValue)
+            if (startDate.HasValue && isEdit == 1)
             {
                 sql += " AND DatePrepared >= @StartDate";
                 parameters.Add("@StartDate", startDate.Value.Date);
             }
 
             // 📅 End Date filter (inclusive)
-            if (endDate.HasValue)
+            if (endDate.HasValue && isEdit == 1)
             {
                 sql += " AND DatePrepared < DATEADD(DAY, 1, @EndDate)";
                 parameters.Add("@EndDate", endDate.Value.Date);
             }
 
-
-            throw new NotImplementedException();
+            return SqlDataAccess.GetData<TraceableShopOrderModel>(sql, parameters); 
         }
+
+       
     }
 }

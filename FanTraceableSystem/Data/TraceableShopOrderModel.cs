@@ -14,11 +14,11 @@ namespace FanTraceableSystem.Data
         public string Revision { get; set; }
         public string PCBA { get; set; }
         public DateTime DatePrepared { get; set; }
-        public DateTime TimeInput { get; set; } = DateTime.Now;
+        public string TimeInput { get; set; }
         public int PreparedQuantity { get; set; } = 0;
         public string PreparedBy { get; set; }
 
-        public byte? Shift { get; set; }
+        public int? Shift { get; set; }
 
         public string Customer { get; set; }
         public string InspectorName { get; set; }
@@ -28,6 +28,32 @@ namespace FanTraceableSystem.Data
         public string PCBIncharge { get; set; }
         public string PCBIssuer { get; set; }
         public string LotNo { get; set; }
+        public int DepartmentID { get; set; }
+    }
+
+
+    public class SummaryraceableShopOrderModel
+    {
+        public string FinalShopOrder { get; set; }
+        public string PCBShopOrder { get; set; }
+        public string Revision { get; set; }
+        public string PCBA { get; set; }
+        public DateTime DatePrepared { get; set; }
+        public string TimeInput { get; set; }
+        public int PreparedQuantity { get; set; } = 0;
+        public string PreparedBy { get; set; }
+
+        public int? Shift { get; set; }
+
+        public string Customer { get; set; }
+        public string InspectorName { get; set; }
+
+        public string CardCaseNo { get; set; }
+        public string Remarks { get; set; }
+        public string PCBIncharge { get; set; }
+        public string PCBIssuer { get; set; }
+        public string LotNo { get; set; }
+        public int DepartmentID { get; set; }
     }
 
     public class TracePCBModel

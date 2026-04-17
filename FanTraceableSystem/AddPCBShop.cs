@@ -38,9 +38,7 @@ namespace FanTraceableSystem
 
         private void SaveBtn_Click(object sender, EventArgs e)
         {
-        
-
-
+       
             PCBList.Clear();
 
             foreach (DataGridViewRow row in dataGridView1.Rows)
@@ -82,6 +80,11 @@ namespace FanTraceableSystem
                 Quantity = int.TryParse(textBox1.Text, out int qty) ? qty : 0
             });
             dataGridView1.DataSource = PCBList.ToList(); // Refresh the grid    
+
+            textBox1.Text = "";
+            Shoptext.Text = "";
+
+            Shoptext.Focus();
         }
 
         private void AddPCBShop_Load(object sender, EventArgs e)
@@ -90,6 +93,18 @@ namespace FanTraceableSystem
 
             dataGridView1.DataSource = null;
             dataGridView1.DataSource = PCBList;
+        }
+
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (char.IsControl(e.KeyChar)) return;
+
+            e.Handled = (char.IsDigit(e.KeyChar) || (e.KeyChar == '.' && !textBox1.Text.Contains("."))) ? false : true; // Allow the character
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

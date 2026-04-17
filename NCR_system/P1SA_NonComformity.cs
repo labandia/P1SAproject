@@ -11,6 +11,7 @@ namespace NCR_system
 {
     public partial class P1SA_NonComformity : Form
     {
+        private HomeScreen _HH;
         private Customer_Complaint_user _cc;
         private ShipRejected _ship;
         private Rejected _reg;
@@ -52,7 +53,14 @@ namespace NCR_system
             //this.WindowState = FormWindowState.Maximized;
             //this.TopMost = true;
 
-            await LoadCustomerComplaint();
+            //await LoadCustomerComplaint();
+
+            if (_HH == null)
+            {
+                _HH = new HomeScreen();
+                _HH.Dock = DockStyle.Fill;
+                Sectionpanel.Controls.Add(_HH);
+            }
         }
 
         // ===================== BUTTON EVENTS =====================

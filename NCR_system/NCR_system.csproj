@@ -315,6 +315,12 @@
     <Compile Include="View\Module\FirstBatchCharts.Designer.cs">
       <DependentUpon>FirstBatchCharts.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Module\HomeScreen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\Module\HomeScreen.Designer.cs">
+      <DependentUpon>HomeScreen.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Module\Inprocess_control.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -422,6 +428,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\Module\FirstBatchCharts.resx">
       <DependentUpon>FirstBatchCharts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Module\HomeScreen.resx">
+      <DependentUpon>HomeScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Module\Inprocess_control.resx">
       <DependentUpon>Inprocess_control.cs</DependentUpon>

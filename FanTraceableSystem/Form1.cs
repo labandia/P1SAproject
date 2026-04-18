@@ -1,4 +1,5 @@
 ﻿using FanTraceableSystem.Interface;
+using FanTraceableSystem.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -37,7 +38,10 @@ namespace FanTraceableSystem
 
         private void button4_Click(object sender, EventArgs e)
         {
+            if (!AuthHelper.RequiredPassword(1))
+                return;
             SelectionSection(1);
+           
         }
 
         public void SelectionSection(int section)
@@ -48,22 +52,44 @@ namespace FanTraceableSystem
 
         private void button5_Click(object sender, EventArgs e)
         {
+            if (!AuthHelper.RequiredPassword(2))
+                return;
             SelectionSection(2);
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
+            if (!AuthHelper.RequiredPassword(3))
+                return;
             SelectionSection(3);
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
+            if (!AuthHelper.RequiredPassword(4))
+                return;
             SelectionSection(4);
         }
 
         private void button8_Click(object sender, EventArgs e)
         {
+            if (!AuthHelper.RequiredPassword(5))
+                return;
             SelectionSection(5);
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            if (!AuthHelper.RequiredPassword(6))
+                return;
+            SelectionSection(6);
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            if (!AuthHelper.RequiredPassword(7))
+                return;
+            SelectionSection(7);
         }
     }
 }

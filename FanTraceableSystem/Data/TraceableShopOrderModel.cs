@@ -13,11 +13,12 @@ namespace FanTraceableSystem.Data
         public string PCBShopOrder { get; set; }
         public string Revision { get; set; }
         public string PCBA { get; set; }
+        public int PlanQuan { get; set; }
         public DateTime DatePrepared { get; set; }
         public string TimeInput { get; set; }
         public int PreparedQuantity { get; set; } = 0;
         public string PreparedBy { get; set; }
-
+        public string Rev { get; set; }
         public int? Shift { get; set; }
 
         public string Customer { get; set; }
@@ -30,6 +31,8 @@ namespace FanTraceableSystem.Data
         public string LotNo { get; set; }
         public int DepartmentID { get; set; }
     }
+
+
 
 
     public class SummaryraceableShopOrderModel
@@ -58,7 +61,19 @@ namespace FanTraceableSystem.Data
 
     public class TracePCBModel
     {
+        public int RecordId { get; set; }
         public string PCBShopOrder { get; set; }
+        public string Rev { get; set; }
         public int Quantity { get; set; }
+    }
+
+
+    public class EditTracePCBModel
+    {
+        public int RecordId { get; set; }
+        public string PCBShopOrder { get; set; }
+        public string Rev { get; set; }
+        public int Quantity { get; set; }
+        public int isAction { get; set;  } // 0 - for add - 1  for edit  - 2 for delete 
     }
 }

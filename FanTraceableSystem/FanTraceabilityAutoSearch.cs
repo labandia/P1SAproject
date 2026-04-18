@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Excel = Microsoft.Office.Interop.Excel;
 
 
@@ -20,8 +21,13 @@ namespace FanTraceableSystem
 
         private Timer timer;
 
+        // But this is for the Edit
+        public int isFilter = 0;
+
         List<TraceableShopOrderModel> data = new List<TraceableShopOrderModel>();
         private List<TracePCBModel> _pcbList = new List<TracePCBModel>();
+        private List<EditTracePCBModel> _editpcb = new List<EditTracePCBModel>();
+
         public FanTraceabilityAutoSearch(ITraceable trac, int section)
         {
             InitializeComponent();
@@ -37,7 +43,9 @@ namespace FanTraceableSystem
                 {2, "Press Section"},
                 {3, "Rotor Section"},
                 {4, "Winding Section"},
-                {5, "Circuit Section"}
+                {5, "Circuit Section"},
+                {6, "Oilproof Section"},
+                {7, "Harness Section"}
             };
 
             label18.Text = sectionMap.ContainsKey(section)
@@ -71,6 +79,7 @@ namespace FanTraceableSystem
                 {
                     FinalShopOrder = Shoptext.Text,
                     PCBA = PCBText.Text,   
+                    PlanQuan = Convert.ToInt32(PlanQuanText.Text),
                     PCBShopOrder = PCBText.Text,
                     Revision = RevText.Text,
                     DatePrepared = DatePrepared.Value,
@@ -112,20 +121,36 @@ namespace FanTraceableSystem
 
         private void button1_Click(object sender, EventArgs e)
         {
-
-            using (var add = _pcbList.Any()
-               ? new AddPCBShop(_pcbList)   // EDIT MODE
-               : new AddPCBShop())          // ADD MODE
+            if (isFilter == 1)
             {
-                if (add.ShowDialog(this) == DialogResult.OK)
-                {
-                    _pcbList = add.PCBList;
+                //using(var edit = new EditPCBShop(_pcbList))
+                //{
+                //    if (edit.ShowDialog(this) == DialogResult.OK)
+                //    {
+                //        _pcbList = edit.PCBList;
 
-                    string isAdd = _pcbList.Count > 0 ? $@"({_pcbList.Count})" : ""; 
+                //        string isAdd = _pcbList.Count > 0 ? $@"({_pcbList.Count})" : "";
 
-                    button1.Text = "Products Order " + isAdd;  
-                }
+                //        button1.Text = "Add Production Order " + isAdd;
+                //    }
+                //}
             }
+            else
+            {
+                using (var add = _pcbList.Any()
+                   ? new AddPCBShop(_pcbList)   // EDIT MODE
+                   : new AddPCBShop())          // ADD MODE
+                {
+                    if (add.ShowDialog(this) == DialogResult.OK)
+                    {
+                        _pcbList = add.PCBList;
+
+                        string isAdd = _pcbList.Count > 0 ? $@"({_pcbList.Count})" : "";
+
+                        button1.Text = "Add Production Order " + isAdd;
+                    }
+                }
+            } 
         }
 
         // Reset the Data
@@ -153,7 +178,6 @@ namespace FanTraceableSystem
 
             dataGridView2.AutoGenerateColumns = true;
 
-            dataGridView2.DataSource = null;
             dataGridView2.DataSource = result;
 
 
@@ -173,11 +197,11 @@ namespace FanTraceableSystem
                 return false;
             }
 
-            if (string.IsNullOrEmpty(RevText.Text))
-            {
-                MessageBox.Show("Revision is required ");
-                return false;
-            }
+            //if (string.IsNullOrEmpty(RevText.Text))
+            //{
+            //    MessageBox.Show("Revision is required ");
+            //    return false;
+            //}
 
             return true;
         }
@@ -390,7 +414,7 @@ namespace FanTraceableSystem
             PCBtextcharge.Text = "";
             PCBIssuerText.Text = "";    
             _pcbList.Clear();
-            button1.Text = "Products Order ";
+            button1.Text = "Add Production Order ";
         }
 
 
@@ -423,6 +447,79 @@ namespace FanTraceableSystem
         private async void FanTraceabilityAutoSearch_Load(object sender, EventArgs e)
         {
             await dispayData(isEdit);
+        }
+
+        private void tableLayoutPanel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void Shoptext_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Enter) return;
+        }
+
+        private async void Editbtn_Click(object sender, EventArgs e)
+        {
+            isFilter = 1;
+
+            if (string.IsNullOrEmpty(Shoptext.Text))
+            {
+                MessageBox.Show("Required to enter the FinalShop Order");
+                return;
+            }
+
+            var items = await _trac.GetFinalShopOrderDetails(Shoptext.Text);
+
+            if(items.Count != 0)
+            {
+                var filterdata = items.FirstOrDefault();
+
+                if(filterdata != null)
+                {
+                    Debug.WriteLine($@"PCBA {filterdata.PCBA}");
+                    PCBText.Text = filterdata.PCBA;
+                    RevText.Text = filterdata.Revision;
+                    PreparedText.Text = filterdata.PreparedBy;
+                    CustomerText.Text = filterdata.Customer;
+                    LotText.Text = filterdata.LotNo;
+                    Cardtext.Text = filterdata.CardCaseNo;
+                    RemarkText.Text = filterdata.Remarks;
+                    PCBtextcharge.Text = filterdata.PCBIncharge;
+                    PCBIssuerText.Text = filterdata.PCBIssuer;
+                }
+
+                foreach(var i in items)
+                {
+                    _editpcb.Add(new EditTracePCBModel
+                    {
+                        RecordId = i.RecordId,
+                        PCBShopOrder = i.PCBShopOrder,
+                        Quantity = i.PreparedQuantity,
+                        Rev = i.Rev,
+                        isAction = 1
+                    });
+                }
+
+
+                string isAdd = _pcbList.Count > 0 ? $@"({_pcbList.Count})" : "";
+
+                button1.Text = "Add Production Order " + isAdd;
+            }
+
+
+        }
+
+        private void PlanQuanText_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (char.IsControl(e.KeyChar)) return;
+
+            e.Handled = (char.IsDigit(e.KeyChar) || (e.KeyChar == '.' && !PlanQuanText.Text.Contains("."))) ? false : true; // Allow the character
         }
     }
 }

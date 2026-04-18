@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Dapper;
 using FanTraceableSystem.Data;
 using FanTraceableSystem.Interface;
+using Microsoft.Office.Interop.Excel;
 using MSDMonitoring.Data;
 
 namespace FanTraceableSystem.Services
@@ -25,10 +26,10 @@ namespace FanTraceableSystem.Services
                     await SqlDataAccess.UpdateInsertQuery($@"INSERT INTO FanTraceability(FinalShopOrder, PCBShopOrder, 
                                                                 Revision, PCBA, DatePrepared, TimeInput, PreparedQuantity, 
                                                                 PreparedBy, Shift, Customer, InspectorName, 
-                                                                CardCaseNo, Remarks, PCBIncharge, PCBIssuer, LotNo, DepartmentID)
+                                                                CardCaseNo, Remarks, PCBIncharge, PCBIssuer, LotNo, DepartmentID, Rev)
                                                              VALUES(@FinalShopOrder, @PCBShopOrder, @Revision, @PCBA, @DatePrepared, 
                                                                     @TimeInput, @PreparedQuantity, @PreparedBy, @Shift, @Customer, @InspectorName, 
-                                                                    @CardCaseNo, @Remarks, @PCBIncharge, @PCBIssuer, @LotNo, @DepartmentID)", new
+                                                                    @CardCaseNo, @Remarks, @PCBIncharge, @PCBIssuer, @LotNo, @DepartmentID, @Rev)", new
                         {
                             trac.FinalShopOrder,
                             PCBShopOrder  = item.PCBShopOrder,
@@ -46,7 +47,8 @@ namespace FanTraceableSystem.Services
                             trac.PCBIncharge,
                             trac.PCBIssuer, 
                             trac.LotNo,
-                            trac.DepartmentID   
+                            trac.DepartmentID,
+                            trac.Rev
                         }
                     );
                 }
@@ -54,6 +56,8 @@ namespace FanTraceableSystem.Services
 
              return true;
         }
+
+       
 
         public Task<List<TraceableShopOrderModel>> TraceableShopOrder(
                 string search,
@@ -118,6 +122,41 @@ namespace FanTraceableSystem.Services
             return SqlDataAccess.GetData<TraceableShopOrderModel>(sql, parameters); 
         }
 
-       
+        public async Task<List<TraceableShopOrderModel>> GetFinalShopOrderDetails(string Finalorder)
+        {
+            string sql = @"
+                    SELECT  RecordId
+                          ,FinalShopOrder
+                          ,PCBShopOrder
+                          ,Revision
+                          ,PCBA
+                          ,DatePrepared
+                          ,FORMAT(TimeInput, 'hh:mm tt') AS TimeInput
+                          ,PreparedQuantity
+                          ,PreparedBy
+                          ,Shift
+                          ,Customer
+                          ,InspectorName
+                          ,CardCaseNo
+                          ,Remarks
+                          ,PCBIncharge
+                          ,PCBIssuer
+                          ,LotNo
+                          ,IsDeleted
+                      FROM FanTraceability
+                      WHERE IsDeleted = 0   ";
+
+            var parameters = new DynamicParameters();
+
+            // 🔍 Search filter
+            if (!string.IsNullOrWhiteSpace(Finalorder))
+            {
+                sql += " AND FinalShopOrder = @FinalShopOrder";
+                parameters.Add("@FinalShopOrder", Finalorder);
+            }
+
+
+            return await SqlDataAccess.GetData<TraceableShopOrderModel>(sql, parameters);
+        }
     }
 }

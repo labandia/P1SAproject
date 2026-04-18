@@ -67,17 +67,18 @@ namespace FanTraceableSystem
 
 
 
-            if (PCBList.Any(x => x.PCBShopOrder == Shoptext.Text))
-            {
-                MessageBox.Show("Duplicate PCB Shop Order");
-                return;
-            }
+            //if (PCBList.Any(x => x.PCBShopOrder == Shoptext.Text))
+            //{
+            //    MessageBox.Show("Duplicate PCB Shop Order");
+            //    return;
+            //}
 
             // Example: collect values from controls
             PCBList.Add(new TracePCBModel
             {
                 PCBShopOrder = Shoptext.Text,
-                Quantity = int.TryParse(textBox1.Text, out int qty) ? qty : 0
+                Quantity = int.TryParse(textBox1.Text, out int qty) ? qty : 0,
+                Rev = RevText.Text
             });
             dataGridView1.DataSource = PCBList.ToList(); // Refresh the grid    
 

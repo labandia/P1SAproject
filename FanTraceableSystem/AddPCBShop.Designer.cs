@@ -36,9 +36,13 @@
             this.SaveBtn = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.PCBShopOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Quantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.button2 = new System.Windows.Forms.Button();
+            this.RevText = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.RecordId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PCBShopOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Rev = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Quantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -85,7 +89,7 @@
             this.SaveBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SaveBtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SaveBtn.ForeColor = System.Drawing.Color.White;
-            this.SaveBtn.Location = new System.Drawing.Point(288, 251);
+            this.SaveBtn.Location = new System.Drawing.Point(391, 249);
             this.SaveBtn.Name = "SaveBtn";
             this.SaveBtn.Size = new System.Drawing.Size(251, 42);
             this.SaveBtn.TabIndex = 28;
@@ -96,7 +100,7 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
-            this.button1.Location = new System.Drawing.Point(400, 55);
+            this.button1.Location = new System.Drawing.Point(595, 55);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(139, 35);
             this.button1.TabIndex = 29;
@@ -118,14 +122,53 @@
             this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.RecordId,
             this.PCBShopOrder,
+            this.Rev,
             this.Quantity});
             this.dataGridView1.Location = new System.Drawing.Point(35, 114);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersVisible = false;
-            this.dataGridView1.Size = new System.Drawing.Size(504, 111);
+            this.dataGridView1.Size = new System.Drawing.Size(699, 111);
             this.dataGridView1.TabIndex = 30;
+            // 
+            // button2
+            // 
+            this.button2.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
+            this.button2.Location = new System.Drawing.Point(138, 249);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(220, 42);
+            this.button2.TabIndex = 31;
+            this.button2.Text = "Cancel";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // RevText
+            // 
+            this.RevText.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
+            this.RevText.Location = new System.Drawing.Point(391, 62);
+            this.RevText.Name = "RevText";
+            this.RevText.Size = new System.Drawing.Size(165, 23);
+            this.RevText.TabIndex = 33;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
+            this.label3.Location = new System.Drawing.Point(388, 34);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(51, 15);
+            this.label3.TabIndex = 32;
+            this.label3.Text = "Revision";
+            // 
+            // RecordId
+            // 
+            this.RecordId.DataPropertyName = "RecordId";
+            this.RecordId.HeaderText = "RecordId";
+            this.RecordId.Name = "RecordId";
+            this.RecordId.ReadOnly = true;
+            this.RecordId.Visible = false;
             // 
             // PCBShopOrder
             // 
@@ -134,6 +177,13 @@
             this.PCBShopOrder.Name = "PCBShopOrder";
             this.PCBShopOrder.ReadOnly = true;
             // 
+            // Rev
+            // 
+            this.Rev.DataPropertyName = "Rev";
+            this.Rev.HeaderText = "Revision";
+            this.Rev.Name = "Rev";
+            this.Rev.ReadOnly = true;
+            // 
             // Quantity
             // 
             this.Quantity.DataPropertyName = "Quantity";
@@ -141,23 +191,14 @@
             this.Quantity.Name = "Quantity";
             this.Quantity.ReadOnly = true;
             // 
-            // button2
-            // 
-            this.button2.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
-            this.button2.Location = new System.Drawing.Point(35, 251);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(220, 42);
-            this.button2.TabIndex = 31;
-            this.button2.Text = "Cancel";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
             // AddPCBShop
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(585, 322);
+            this.ClientSize = new System.Drawing.Size(765, 322);
             this.ControlBox = false;
+            this.Controls.Add(this.RevText);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.button1);
@@ -186,7 +227,11 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.TextBox RevText;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RecordId;
         private System.Windows.Forms.DataGridViewTextBoxColumn PCBShopOrder;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Rev;
         private System.Windows.Forms.DataGridViewTextBoxColumn Quantity;
     }
 }

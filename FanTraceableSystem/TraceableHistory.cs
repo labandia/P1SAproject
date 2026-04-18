@@ -160,11 +160,13 @@ namespace FanTraceableSystem
             {
                 var sectionMap = new Dictionary<int, string>
                 {
-                    {1, "Rotor"},
-                    {2, "Circuit"},
-                    {3, "Winding"},
-                    {4, "Molding"},
-                    {5, "Press"},
+                    {1, "Molding"},
+                    {2, "Press"},
+                    {3, "Rotor"},
+                    {4, "Winding"},
+                    {5, "Circuit"},
+                    {6, "OilProof"},
+                    {7, "Harness"}
                 };
 
                 if (e.Value != null && int.TryParse(e.Value.ToString(), out int sectionID))

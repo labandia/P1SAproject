@@ -240,8 +240,8 @@ namespace FanTraceableSystem
 
             _paging.HasNextPage = end < totalCount;
 
-            btnPrev.Enabled = _paging.PageNumber > 1;
-            btnNext.Enabled = _paging.HasNextPage;
+            //btnPrev.Enabled = _paging.PageNumber > 1;
+            //btnNext.Enabled = _paging.HasNextPage;
         }
      
 

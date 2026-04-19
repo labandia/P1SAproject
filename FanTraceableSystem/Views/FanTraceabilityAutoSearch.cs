@@ -1,12 +1,13 @@
-﻿using FanTraceableSystem.Data;
-using FanTraceableSystem.Interface;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Xml.Linq;
+using FanTraceableSystem.Data;
+using FanTraceableSystem.Interface;
 using Excel = Microsoft.Office.Interop.Excel;
 
 
@@ -22,34 +23,29 @@ namespace FanTraceableSystem
         private Timer timer;
 
         // But this is for the Edit
+        private bool _isLoading = false;
         public int isFilter = 0;
 
-        List<TraceableShopOrderModel> data = new List<TraceableShopOrderModel>();
+      
+
+        private BindingList<TraceableShopOrderModel> data;
         private List<TracePCBModel> _pcbList = new List<TracePCBModel>();
         private List<EditTracePCBModel> _editpcb = new List<EditTracePCBModel>();
+
+        private readonly PagingState _paging = new PagingState();
 
         public FanTraceabilityAutoSearch(ITraceable trac, int section)
         {
             InitializeComponent();
             _trac = trac;
 
-            shiftText.SelectedIndex = GetShift();
+            shiftText.SelectedIndex = FanTraceabilityCore.GetShift();
             DatePrepared.Value = DateTime.Now;
 
             sectionID = section;    
-            var sectionMap = new Dictionary<int, string>
-            {
-                {1, "Molding Section"},
-                {2, "Press Section"},
-                {3, "Rotor Section"},
-                {4, "Winding Section"},
-                {5, "Circuit Section"},
-                {6, "Oilproof Section"},
-                {7, "Harness Section"}
-            };
-
-            label18.Text = sectionMap.ContainsKey(section)
-                 ? sectionMap[section]
+            
+            label18.Text = FanTraceabilityCore.SectionMap.ContainsKey(section)
+                 ? FanTraceabilityCore.SectionMap[section]
                  : "Final Assy Section";
 
             timer = new Timer();
@@ -58,15 +54,12 @@ namespace FanTraceableSystem
             timer.Start();
         }
 
+
+
         private void Timer_Tick(object sender, EventArgs e)
         {
             TimeText.Text = DateTime.Now.ToString("hh:mm tt");
             TimeText.ReadOnly = true;
-        }
-
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         private async void SaveBtn_Click(object sender, EventArgs e)
@@ -78,8 +71,8 @@ namespace FanTraceableSystem
                 var obj = new TraceableShopOrderModel
                 {
                     FinalShopOrder = Shoptext.Text,
-                    PCBA = PCBText.Text,   
-                    PlanQuan = Convert.ToInt32(PlanQuanText.Text),
+                    PCBA = PCBText.Text,
+                    PlanQuan = int.TryParse(PlanQuanText.Text, out var q) ? q : 0,
                     PCBShopOrder = PCBText.Text,
                     Revision = RevText.Text,
                     DatePrepared = DatePrepared.Value,
@@ -114,10 +107,6 @@ namespace FanTraceableSystem
             }
         }
 
-        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-          
-        }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -160,29 +149,200 @@ namespace FanTraceableSystem
             {
                 return;
             }
-
-            await dispayData(isEdit);
+            await LoadData();
         }
 
-        public async Task dispayData(int isfilter)
+        // ================================================================================
+        // ========================== DATA GRIDVIEW & PAGINATION ==========================
+        // ================================================================================
+        private async void FanTraceabilityAutoSearch_Load(object sender, EventArgs e) => await LoadData();
+
+        private async Task LoadData(bool append = false)
         {
-            string filterText = SearchText.Text;
+            if (_isLoading) return; // prevent double load
+            _isLoading = true;
 
-            var result = await _trac.TraceableShopOrder(
-                filterText,
-                dateTimePicker2.Checked ? dateTimePicker2.Value.Date : (DateTime?)null,
-                dateTimePicker3.Checked ? dateTimePicker3.Value.Date : (DateTime?)null,
-                isfilter, 
-                sectionID
-            );
+            try
+            {
+                var dataTask = _trac.TraceableShopOrder(
+                    SearchText.Text,
+                    dateTimePicker2.Checked ? dateTimePicker2.Value.Date : (DateTime?)null,
+                    dateTimePicker3.Checked ? dateTimePicker3.Value.Date : (DateTime?)null,
+                    isEdit,
+                    sectionID,
+                    _paging.PageNumber, 
+                    _paging.PageSize
+                );
 
-            dataGridView2.AutoGenerateColumns = true;
+                var countTask = _trac.GetTraceableCount(
+                    SearchText.Text,
+                    dateTimePicker2.Checked ? dateTimePicker2.Value.Date : (DateTime?)null,
+                    dateTimePicker3.Checked ? dateTimePicker3.Value.Date : (DateTime?)null,
+                    isEdit,
+                    sectionID
+                 );
 
-            dataGridView2.DataSource = result;
+                await Task.WhenAll(dataTask, countTask);
+
+                var result = dataTask.Result;
+                var totalCount = countTask.Result;
+
+                BindGrid(result, append);   
 
 
-            ArrangeColumns();
+                // Compute range
+                var (start, end, hasNext) = FanTraceabilityCore.CalculatePage(_paging.PageNumber, _paging.PageSize, result.Count, totalCount);
+
+                // Fix when no data
+                if (totalCount == 0)
+                {
+                    start = 0;
+                    end = 0;
+                }
+
+
+                ArrangeColumns();
+                UpdatePaginationUI(result.Count, totalCount);
+
+              
+                _isLoading = false;
+            }
+            finally
+            {
+                _isLoading = false; 
+            }
         }
+        private void BindGrid(List<TraceableShopOrderModel> result, bool append)
+        {
+            if (append)
+            {
+                foreach (var item in result)
+                    data.Add(item);
+            }
+            else
+            {
+                data = new BindingList<TraceableShopOrderModel>(result);
+                dataGridView2.DataSource = data;
+            }
+        }
+        private void UpdatePaginationUI(int returnedCount, int totalCount)
+        {
+            int start = ((_paging.PageNumber - 1) * _paging.PageSize) + 1;
+            int end = start + returnedCount - 1;
+
+            if (totalCount == 0)
+            {
+                start = 0;
+                end = 0;
+            }
+
+            lblEntries.Text = $"Showing {start} to {end} of {totalCount} entries";
+
+            _paging.HasNextPage = end < totalCount;
+
+            btnPrev.Enabled = _paging.PageNumber > 1;
+            btnNext.Enabled = _paging.HasNextPage;
+        }
+     
+
+        public void ArrangeColumns()
+        {
+            dataGridView2.Columns["PCBShopOrder"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridView2.Columns["PCBShopOrder"].DisplayIndex = 0;
+            dataGridView2.Columns["PCBShopOrder"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            dataGridView2.Columns["PCBShopOrder"].Width = 100;
+
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "PCBA", 120);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "PreparedQuantity", 200);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "TimeInput", 100);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "PreparedBy", 120);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "Shift", 120);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "Customer", 120);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "CardCaseNo", 120);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "Remarks", 120);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "PCBIncharge", 120);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "PCBIssuer", 120);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "LotNo", 120);
+        }
+        private void dataGridView2_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (dataGridView2.Columns[e.ColumnIndex].Name == "Shift")
+            {
+                if (e.Value == null) return;
+
+                e.Value = FanTraceabilityCore.FormatShift(e.Value.ToString());
+                e.FormattingApplied = true;
+            }
+        }
+        private async void dataGridView2_Scroll(object sender, ScrollEventArgs e)
+        {
+            if (!_paging.HasNextPage || _isLoading) return;
+
+            int visibleRows = dataGridView2.DisplayedRowCount(false);
+            int firstVisibleRow = dataGridView2.FirstDisplayedScrollingRowIndex;
+
+            // If user scrolls near bottom
+            if (firstVisibleRow + visibleRows >= dataGridView2.RowCount - 5)
+            {
+                _paging.PageNumber++;               // next page
+                await LoadData(append: true); // append data
+            }
+        }
+
+        // ================================================================================
+        // ========================== FORMS AND VALIATION =================================
+        // ================================================================================
+        private async void Editbtn_Click(object sender, EventArgs e)
+        {
+            isFilter = 1;
+
+            if (string.IsNullOrEmpty(Shoptext.Text))
+            {
+                MessageBox.Show("Required to enter the FinalShop Order");
+                return;
+            }
+
+            var items = await _trac.GetFinalShopOrderDetails(Shoptext.Text);
+
+            if (items.Count != 0)
+            {
+                var filterdata = items.FirstOrDefault();
+
+                if (filterdata != null)
+                {
+                    Debug.WriteLine($@"PCBA {filterdata.PCBA}");
+                    PCBText.Text = filterdata.PCBA;
+                    RevText.Text = filterdata.Revision;
+                    PreparedText.Text = filterdata.PreparedBy;
+                    CustomerText.Text = filterdata.Customer;
+                    LotText.Text = filterdata.LotNo;
+                    Cardtext.Text = filterdata.CardCaseNo;
+                    RemarkText.Text = filterdata.Remarks;
+                    PCBtextcharge.Text = filterdata.PCBIncharge;
+                    PCBIssuerText.Text = filterdata.PCBIssuer;
+                }
+
+                foreach (var i in items)
+                {
+                    _editpcb.Add(new EditTracePCBModel
+                    {
+                        RecordId = i.RecordId,
+                        PCBShopOrder = i.PCBShopOrder,
+                        Quantity = i.PreparedQuantity,
+                        Rev = i.Rev,
+                        isAction = 1
+                    });
+                }
+
+
+                string isAdd = _pcbList.Count > 0 ? $@"({_pcbList.Count})" : "";
+
+                button1.Text = "Add Production Order " + isAdd;
+            }
+
+
+        }
+
 
         public bool FormValidation()
         {
@@ -196,124 +356,52 @@ namespace FanTraceableSystem
                 MessageBox.Show("PCBA is required ");
                 return false;
             }
-
-            //if (string.IsNullOrEmpty(RevText.Text))
-            //{
-            //    MessageBox.Show("Revision is required ");
-            //    return false;
-            //}
-
             return true;
         }
-
-        public void ArrangeColumns()
+        public void FormReset()
         {
-            dataGridView2.Columns["PCBShopOrder"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["PCBShopOrder"].DisplayIndex = 0;
-            dataGridView2.Columns["PCBShopOrder"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["PCBShopOrder"].Width = 100;
-
-            dataGridView2.Columns["PCBA"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["PCBA"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["PCBA"].Width = 120;
-
-            dataGridView2.Columns["PreparedQuantity"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["PreparedQuantity"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["PreparedQuantity"].Width = 200;
-
-
-
-            dataGridView2.Columns["TimeInput"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["TimeInput"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["TimeInput"].Width = 100;
-
-        
-
-            dataGridView2.Columns["PreparedBy"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["PreparedBy"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["PreparedBy"].Width = 120;
-
-            dataGridView2.Columns["Shift"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["Shift"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["Shift"].Width = 120;
-
-            dataGridView2.Columns["Customer"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["Customer"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["Customer"].Width = 120;
-
-            dataGridView2.Columns["CardCaseNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["CardCaseNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["CardCaseNo"].Width = 120;
-
-            dataGridView2.Columns["Remarks"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["Remarks"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["Remarks"].Width = 120;
-
-            dataGridView2.Columns["PCBIncharge"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["PCBIncharge"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["PCBIncharge"].Width = 120;
-
-            dataGridView2.Columns["PCBIssuer"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["PCBIssuer"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["PCBIssuer"].Width = 120;
-
-            dataGridView2.Columns["LotNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["LotNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["LotNo"].Width = 120;
+            Shoptext.Text = "";
+            PCBText.Text = "";
+            RevText.Text = "";
+            PreparedText.Text = "";
+            CustomerText.Text = "";
+            LotText.Text = "";
+            Cardtext.Text = "";
+            RemarkText.Text = "";
+            PCBtextcharge.Text = "";
+            PCBIssuerText.Text = "";
+            _pcbList.Clear();
+            button1.Text = "Add Production Order ";
         }
 
-        private void button10_Click(object sender, EventArgs e)
+        // ================================================================================
+        // ========================== FILTERS SEARCH FUNCTIONALITY ========================
+        // ================================================================================
+        private async void btnNext_Click(object sender, EventArgs e)
         {
-            //var openHistory = new TraceableHistory();
-            //openHistory.ShowDialog();   
-
+           
         }
-
-        public int GetShift()
+        private async void btnPrev_Click(object sender, EventArgs e)
         {
-            TimeSpan time = DateTime.Now.TimeOfDay;
-
-            TimeSpan dayStart = new TimeSpan(6, 30, 0);    // 6:30 AM
-            TimeSpan nightStart = new TimeSpan(18, 30, 0); // 6:30 PM
-
-            // Day shift: 6:30 AM to before 6:30 PM
-            if (time >= dayStart && time < nightStart)
-            {
-                return 0; // Day shift
-            }
-
-            // Night shift
-            return 1; // Night shift
+            
         }
-
-        private void dataGridView2_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            if (dataGridView2.Columns[e.ColumnIndex].Name == "Shift")
-            {
-                string checkstats = e.Value.ToString() == "0" ? "DAYSHIFT" : "NIGHTSHIFT";
-                e.Value = checkstats;
-
-                e.FormattingApplied = true;
-            }
-        }
-
         private async void SearchText_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode != Keys.Enter) return;
 
-            await dispayData(isEdit);
+            await LoadData();
         }
-
         private void dateTimePicker3_ValueChanged(object sender, EventArgs e)
         {
             isEdit = 1;
         }
-
         private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
         {
             isEdit = 1;
         }
-
+        // ================================================================================
+        // ========================== EXPORT  DATA  =======================================
+        // ================================================================================
         private async void Exportbtn_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(SearchText.Text))
@@ -328,12 +416,13 @@ namespace FanTraceableSystem
                 dateTimePicker2.Checked ? dateTimePicker2.Value.Date : (DateTime?)null,
                 dateTimePicker3.Checked ? dateTimePicker3.Value.Date : (DateTime?)null,
                 isEdit,
-                sectionID   
+                sectionID, 
+                _paging.PageNumber,
+                _paging.PageSize
             );
 
             ExportToExcel(result, 1);
         }
-
         private void ExportToExcel(List<TraceableShopOrderModel> data, int section)
         {
             try
@@ -401,27 +490,10 @@ namespace FanTraceableSystem
             }
         }
 
-        public void FormReset()
-        {
-            Shoptext.Text = "";
-            PCBText.Text = "";
-            RevText.Text = "";
-            PreparedText.Text = "";
-            CustomerText.Text = "";
-            LotText.Text = "";
-            Cardtext.Text = "";   
-            RemarkText.Text = "";   
-            PCBtextcharge.Text = "";
-            PCBIssuerText.Text = "";    
-            _pcbList.Clear();
-            button1.Text = "Add Production Order ";
-        }
+      
 
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+        private void button2_Click(object sender, EventArgs e) => this.Close();
 
         private void dataGridView2_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -443,83 +515,20 @@ namespace FanTraceableSystem
             MessageBox.Show($"Shop Order: {item.PCBShopOrder}\nPCBA: {item.PCBA}\nRevision: {item.Revision}\nPrepared By: {item.PreparedBy}", "Shop Order Details", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         }
-
-        private async void FanTraceabilityAutoSearch_Load(object sender, EventArgs e)
-        {
-            await dispayData(isEdit);
-        }
-
-        private void tableLayoutPanel2_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
+   
 
         private void Shoptext_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode != Keys.Enter) return;
         }
 
-        private async void Editbtn_Click(object sender, EventArgs e)
-        {
-            isFilter = 1;
-
-            if (string.IsNullOrEmpty(Shoptext.Text))
-            {
-                MessageBox.Show("Required to enter the FinalShop Order");
-                return;
-            }
-
-            var items = await _trac.GetFinalShopOrderDetails(Shoptext.Text);
-
-            if(items.Count != 0)
-            {
-                var filterdata = items.FirstOrDefault();
-
-                if(filterdata != null)
-                {
-                    Debug.WriteLine($@"PCBA {filterdata.PCBA}");
-                    PCBText.Text = filterdata.PCBA;
-                    RevText.Text = filterdata.Revision;
-                    PreparedText.Text = filterdata.PreparedBy;
-                    CustomerText.Text = filterdata.Customer;
-                    LotText.Text = filterdata.LotNo;
-                    Cardtext.Text = filterdata.CardCaseNo;
-                    RemarkText.Text = filterdata.Remarks;
-                    PCBtextcharge.Text = filterdata.PCBIncharge;
-                    PCBIssuerText.Text = filterdata.PCBIssuer;
-                }
-
-                foreach(var i in items)
-                {
-                    _editpcb.Add(new EditTracePCBModel
-                    {
-                        RecordId = i.RecordId,
-                        PCBShopOrder = i.PCBShopOrder,
-                        Quantity = i.PreparedQuantity,
-                        Rev = i.Rev,
-                        isAction = 1
-                    });
-                }
-
-
-                string isAdd = _pcbList.Count > 0 ? $@"({_pcbList.Count})" : "";
-
-                button1.Text = "Add Production Order " + isAdd;
-            }
-
-
-        }
+      
 
         private void PlanQuanText_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (char.IsControl(e.KeyChar)) return;
-
             e.Handled = (char.IsDigit(e.KeyChar) || (e.KeyChar == '.' && !PlanQuanText.Text.Contains("."))) ? false : true; // Allow the character
         }
+
     }
 }

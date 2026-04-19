@@ -64,7 +64,9 @@ namespace FanTraceableSystem.Services
                 DateTime? startDate,
                 DateTime? endDate, 
                 int isEdit, 
-                int section)
+                int section,
+                int pageNumber,
+                int pageSize)
         {
 
             string sql = @"
@@ -86,8 +88,8 @@ namespace FanTraceableSystem.Services
                           ,PCBIssuer
                           ,LotNo
                           ,IsDeleted
-                      FROM FanTraceability
-                      WHERE IsDeleted = 0  ";
+                    FROM FanTraceability
+                    WHERE IsDeleted = 0";
 
             var parameters = new DynamicParameters();
 
@@ -118,6 +120,14 @@ namespace FanTraceableSystem.Services
                 sql += " AND DatePrepared < DATEADD(DAY, 1, @EndDate)";
                 parameters.Add("@EndDate", endDate.Value.Date);
             }
+
+            sql += @"
+                ORDER BY RecordId DESC
+                OFFSET @Offset ROWS
+                FETCH NEXT @PageSize ROWS ONLY";
+
+            parameters.Add("@Offset", (pageNumber - 1) * pageSize);
+            parameters.Add("@PageSize", pageSize);
 
             return SqlDataAccess.GetData<TraceableShopOrderModel>(sql, parameters); 
         }
@@ -157,6 +167,41 @@ namespace FanTraceableSystem.Services
 
 
             return await SqlDataAccess.GetData<TraceableShopOrderModel>(sql, parameters);
+        }
+
+        public Task<int> GetTraceableCount(string search, DateTime? startDate, DateTime? endDate, int isEdit, int section)
+        {
+            string sql = @"SELECT COUNT(*) 
+                   FROM FanTraceability
+                   WHERE IsDeleted = 0";
+
+            var parameters = new DynamicParameters();
+
+            if (section != 0)
+            {
+                sql += " AND DepartmentID = @DepartmentID";
+                parameters.Add("@DepartmentID", section);
+            }
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                sql += " AND FinalShopOrder = @FinalShopOrder";
+                parameters.Add("@FinalShopOrder", search);
+            }
+
+            if (startDate.HasValue && isEdit == 1)
+            {
+                sql += " AND DatePrepared >= @StartDate";
+                parameters.Add("@StartDate", startDate.Value.Date);
+            }
+
+            if (endDate.HasValue && isEdit == 1)
+            {
+                sql += " AND DatePrepared < DATEADD(DAY, 1, @EndDate)";
+                parameters.Add("@EndDate", endDate.Value.Date);
+            }
+
+            return  SqlDataAccess.GetCountData(sql, parameters);
         }
     }
 }

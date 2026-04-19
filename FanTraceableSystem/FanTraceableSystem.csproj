@@ -135,36 +135,37 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddPCBShop.cs">
+    <Compile Include="FanTraceabilityCore.cs" />
+    <Compile Include="Modals\AddPCBShop.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddPCBShop.Designer.cs">
+    <Compile Include="Modals\AddPCBShop.Designer.cs">
       <DependentUpon>AddPCBShop.cs</DependentUpon>
     </Compile>
     <Compile Include="Data\SqlDataAccess.cs" />
     <Compile Include="Data\TraceableShopOrderModel.cs" />
-    <Compile Include="EditPCBShop.cs">
+    <Compile Include="Modals\EditPCBShop.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EditPCBShop.Designer.cs">
+    <Compile Include="Modals\EditPCBShop.Designer.cs">
       <DependentUpon>EditPCBShop.cs</DependentUpon>
     </Compile>
-    <Compile Include="EnterPassword.cs">
+    <Compile Include="Modals\EnterPassword.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EnterPassword.Designer.cs">
+    <Compile Include="Modals\EnterPassword.Designer.cs">
       <DependentUpon>EnterPassword.cs</DependentUpon>
     </Compile>
-    <Compile Include="FanTraceabilityAutoSearch.cs">
+    <Compile Include="Views\FanTraceabilityAutoSearch.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FanTraceabilityAutoSearch.Designer.cs">
+    <Compile Include="Views\FanTraceabilityAutoSearch.Designer.cs">
       <DependentUpon>FanTraceabilityAutoSearch.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form1.cs">
+    <Compile Include="Views\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
+    <Compile Include="Views\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Interface\ISummary.cs" />
@@ -177,25 +178,25 @@
     <Compile Include="Services\SummaryServices.cs" />
     <Compile Include="Services\TraceableService.cs" />
     <Compile Include="Services\ViewExportPDF.cs" />
-    <Compile Include="TraceableHistory.cs">
+    <Compile Include="Views\TraceableHistory.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TraceableHistory.Designer.cs">
+    <Compile Include="Views\TraceableHistory.Designer.cs">
       <DependentUpon>TraceableHistory.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="AddPCBShop.resx">
+    <EmbeddedResource Include="Modals\AddPCBShop.resx">
       <DependentUpon>AddPCBShop.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EditPCBShop.resx">
+    <EmbeddedResource Include="Modals\EditPCBShop.resx">
       <DependentUpon>EditPCBShop.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="EnterPassword.resx">
+    <EmbeddedResource Include="Modals\EnterPassword.resx">
       <DependentUpon>EnterPassword.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FanTraceabilityAutoSearch.resx">
+    <EmbeddedResource Include="Views\FanTraceabilityAutoSearch.resx">
       <DependentUpon>FanTraceabilityAutoSearch.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
+    <EmbeddedResource Include="Views\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -207,7 +208,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="TraceableHistory.resx">
+    <EmbeddedResource Include="Views\TraceableHistory.resx">
       <DependentUpon>TraceableHistory.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="FanTraceableSystem_TemporaryKey.pfx" />

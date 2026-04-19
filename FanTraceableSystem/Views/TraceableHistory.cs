@@ -1,5 +1,4 @@
-﻿using FanTraceableSystem.Interface;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -9,6 +8,8 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using FanTraceableSystem.Data;
+using FanTraceableSystem.Interface;
 
 namespace FanTraceableSystem
 {
@@ -17,7 +18,19 @@ namespace FanTraceableSystem
         private readonly ISummary _summaryService;
         public int isEditmode = 0;
 
-        private System.Windows.Forms.Timer searchTimer = new System.Windows.Forms.Timer();
+        private BindingList<SummaryraceableShopOrderModel> data;
+
+
+        private bool _isLoading = false;
+        public int isFilter = 0;
+
+        private int pageNumber = 1;   // current page
+        private int pageSize = 50;    // rows per page
+        private bool _hasNextPage;     // controls Next button
+
+        private System.Windows.Forms.Timer _searchTimer;
+        private const int _debounceDelay = 500; // milliseconds (adjust if needed)
+
 
         public TraceableHistory(ISummary service)
         {
@@ -25,48 +38,80 @@ namespace FanTraceableSystem
             _summaryService = service;  
             sectionselect.SelectedIndex = 0;
 
-            searchTimer.Interval = 500; // 500ms delay
-            searchTimer.Tick += SearchTimer_Tick;
+            _searchTimer = new System.Windows.Forms.Timer();
+            _searchTimer.Interval = _debounceDelay;
+
+            _searchTimer.Tick += async (s, ev) =>
+            {
+                _searchTimer.Stop();
+
+                pageNumber = 1;          // reset pagination
+                await loadData();        // reload with new search
+            };
         }
 
-        private async void SearchTimer_Tick(object sender, EventArgs e)
-        {
-            searchTimer.Stop();
-
-            isEditmode = 1; // enable filter mode
-            await dispayData(isEditmode);
-        }
+     
 
         private async void TraceableHistory_Load(object sender, EventArgs e)
         {
-            await dispayData(isEditmode);
+            await loadData();
         }
 
-        public async Task dispayData(int isfilter)
+        public async Task loadData(bool append = false)
         {
-            string filterText = string.IsNullOrWhiteSpace(SearchText.Text)
-                   ? null
-                   : SearchText.Text.Trim();
-
-            DateTime? startDate = dateTimePicker2.Checked
-                ? dateTimePicker2.Value.Date
-                : (DateTime?)null;
-
-            DateTime? endDate = dateTimePicker3.Checked
-                ? dateTimePicker3.Value.Date
-                : (DateTime?)null;
+            if (_isLoading) return; // prevent double load
+            _isLoading = true;
 
             var result = await _summaryService.TraceableShopOrderSummary(
-                filterText,
-                startDate,
-                endDate,
-                isfilter,
+                SearchText.Text,
+                dateTimePicker2.Checked ? dateTimePicker2.Value.Date : (DateTime?)null,
+                dateTimePicker3.Checked ? dateTimePicker3.Value.Date : (DateTime?)null,
+                isEditmode,
+                sectionselect.SelectedIndex, 
+                pageNumber,
+                pageSize
+            );
+
+            int totalCount = await _summaryService.GetSummaryCount(
+                SearchText.Text,
+                dateTimePicker2.Checked ? dateTimePicker2.Value.Date : (DateTime?)null,
+                dateTimePicker3.Checked ? dateTimePicker3.Value.Date : (DateTime?)null,
+                isEditmode,
                 sectionselect.SelectedIndex
             );
 
-            dataGridView2.AutoGenerateColumns = true;
-            dataGridView2.DataSource = result;
+
+            if (append && dataGridView2.DataSource is List<SummaryraceableShopOrderModel> existingData)
+            {
+                existingData.AddRange(result);
+                dataGridView2.DataSource = null;
+                dataGridView2.DataSource = existingData;
+            }
+            else
+            {
+                dataGridView2.DataSource = result;
+            }
+
+            // Compute range
+            int start = ((pageNumber - 1) * pageSize) + 1;
+            int end = start + result.Count - 1;
+
+            // Fix when no data
+            if (totalCount == 0)
+            {
+                start = 0;
+                end = 0;
+            }
+
             ArrangeColumns();
+
+            // Pagination buttons
+            lblEntries.Text = $"Showing {start} to {end} of {totalCount} entries";
+
+            _hasNextPage = end < totalCount;
+
+            btnPrev.Enabled = pageNumber > 1;
+            btnNext.Enabled = _hasNextPage;
         }
 
 
@@ -134,7 +179,7 @@ namespace FanTraceableSystem
 
         private async void sectionselect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            await dispayData(1);
+            await loadData();
         }
 
         private async void filterbtn_Click(object sender, EventArgs e)
@@ -145,13 +190,13 @@ namespace FanTraceableSystem
             dateTimePicker2.Checked = false;
             dateTimePicker3.Checked = false;
 
-            await dispayData(isEditmode);
+            await loadData();
         }
 
         private  void SearchText_TextChanged(object sender, EventArgs e)
         {
-            searchTimer.Stop();   // reset timer
-            searchTimer.Start();  // wait again
+            _searchTimer.Stop();  // reset timer
+            _searchTimer.Start(); // start countdown again
         }
 
         private void dataGridView2_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -190,6 +235,11 @@ namespace FanTraceableSystem
                     e.FormattingApplied = true;
                 }
             }
+        }
+
+        private void Exportbtn_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

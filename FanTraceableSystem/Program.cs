@@ -21,16 +21,19 @@ namespace FanTraceableSystem
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             var services = new ServiceCollection();
+            // Services (OK as Singleton)
             services.AddSingleton<ITraceable, TraceableService>();
             services.AddSingleton<ISummary, SummaryServices>();
-            services.AddSingleton<FanTraceabilityAutoSearch>();
-            services.AddSingleton<TraceableHistory>();
-            services.AddSingleton<Form1>();
-            services.AddSingleton<AddPCBShop>();
+
+            // Forms (should be Transient)
+            services.AddTransient<Form1>();
+            services.AddTransient<FanTraceabilityAutoSearch>();
+            services.AddTransient<TraceableHistory>();
+            services.AddTransient<AddPCBShop>();
 
             ServiceProvider = services.BuildServiceProvider();
-            var mainForm = ServiceProvider.GetRequiredService<Form1>();
-            Application.Run(mainForm);
+
+            Application.Run(ServiceProvider.GetRequiredService<Form1>());
         }
     }
 }

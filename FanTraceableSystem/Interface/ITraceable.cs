@@ -10,11 +10,20 @@ namespace FanTraceableSystem.Interface
     public interface ITraceable
     {
         Task<List<TraceableShopOrderModel>> TraceableShopOrder(
-           string search,
-           DateTime? startDate,
-           DateTime? endDate, 
-           int isEdit, 
-           int section);
+             string search,
+             DateTime? startDate,
+             DateTime? endDate,
+             int isEdit,
+             int section,
+             int pageNumber,
+             int pageSize);
+
+        // FOR PAGINATION PURPOSES
+        Task<int> GetTraceableCount(string search,
+             DateTime? startDate,
+             DateTime? endDate,
+             int isEdit,
+             int section);
 
         Task<List<TraceableShopOrderModel>> GetFinalShopOrderDetails(string Finalorder);
 

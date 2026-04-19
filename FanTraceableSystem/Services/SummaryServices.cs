@@ -12,8 +12,48 @@ namespace FanTraceableSystem.Services
 {
     public class SummaryServices : ISummary
     {
+        public Task<int> GetSummaryCount(string search, 
+            DateTime? startDate, DateTime? endDate, 
+            int isEdit, int section)
+        {
+            string sql = @"SELECT COUNT(*) 
+                   FROM FanTraceability
+                   WHERE IsDeleted = 0";
+
+            var parameters = new DynamicParameters();
+
+            if (section != 0)
+            {
+                sql += " AND DepartmentID = @DepartmentID";
+                parameters.Add("@DepartmentID", section);
+            }
+
+            // 🔍 Search filter
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                sql += " AND (FinalShopOrder LIKE @Search OR PCBShopOrder LIKE @Search)";
+                parameters.Add("@Search", $"%{search}%");
+            }
+
+            if (startDate.HasValue && isEdit == 1)
+            {
+                sql += " AND DatePrepared >= @StartDate";
+                parameters.Add("@StartDate", startDate.Value.Date);
+            }
+
+            if (endDate.HasValue && isEdit == 1)
+            {
+                sql += " AND DatePrepared < DATEADD(DAY, 1, @EndDate)";
+                parameters.Add("@EndDate", endDate.Value.Date);
+            }
+
+            return SqlDataAccess.GetCountData(sql, parameters);
+        }
+
         public Task<List<SummaryraceableShopOrderModel>> TraceableShopOrderSummary(string search, 
-            DateTime? startDate, DateTime? endDate, int isEdit, int section)
+            DateTime? startDate, DateTime? endDate, int isEdit, int section,
+             int pageNumber,
+             int pageSize)
         {
 
             string sql = @"
@@ -67,6 +107,14 @@ namespace FanTraceableSystem.Services
                 sql += " AND DatePrepared < DATEADD(DAY, 1, @EndDate)";
                 parameters.Add("@EndDate", endDate.Value.Date);
             }
+
+            sql += @"
+                ORDER BY RecordId DESC
+                OFFSET @Offset ROWS
+                FETCH NEXT @PageSize ROWS ONLY";
+
+            parameters.Add("@Offset", (pageNumber - 1) * pageSize);
+            parameters.Add("@PageSize", pageSize);
 
             return SqlDataAccess.GetData<SummaryraceableShopOrderModel>(sql, parameters);
         }

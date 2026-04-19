@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace FanTraceableSystem.Data
 {
+    public class PagingState
+    {
+        public int PageNumber { get; set; } = 1;
+        public int PageSize { get; set; } = 50;
+        public bool HasNextPage { get; set; }
+    }
+
     public class TraceableShopOrderModel
     {
         public int RecordId { get; set; }

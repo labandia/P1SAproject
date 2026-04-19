@@ -13,6 +13,16 @@ namespace FanTraceableSystem.Interface
               string search,
               DateTime? startDate,
               DateTime? endDate,
-              int isEdit, int section);
+              int isEdit, 
+              int section,
+             int pageNumber,
+             int pageSize);
+
+        // FOR PAGINATION PURPOSES
+        Task<int> GetSummaryCount(string search,
+             DateTime? startDate,
+             DateTime? endDate,
+             int isEdit,
+             int section);
     }
 }

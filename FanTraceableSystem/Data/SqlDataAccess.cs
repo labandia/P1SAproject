@@ -32,7 +32,7 @@ namespace MSDMonitoring.Data
 
                 LogConnectionChoice(machineName, connectionKey);
 
-                return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString);
+                return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["HomeDevelopment"].ConnectionString);
             }
             catch (Exception ex)
             {

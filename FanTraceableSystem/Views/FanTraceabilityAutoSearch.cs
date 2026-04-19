@@ -19,16 +19,18 @@ namespace FanTraceableSystem
         private readonly ITraceable _trac;
         public int isEdit = 0;
         public int sectionID = 0;
+        public int shiftToday = 0;
 
         private Timer timer;
 
         // But this is for the Edit
         private bool _isLoading = false;
         public int isFilter = 0;
+        
 
       
 
-        private BindingList<TraceableShopOrderModel> data;
+        private BindingList<TraceableShopOrderModel> data = new BindingList<TraceableShopOrderModel>();
         private List<TracePCBModel> _pcbList = new List<TracePCBModel>();
         private List<EditTracePCBModel> _editpcb = new List<EditTracePCBModel>();
 
@@ -39,9 +41,11 @@ namespace FanTraceableSystem
             InitializeComponent();
             _trac = trac;
 
-            shiftText.SelectedIndex = FanTraceabilityCore.GetShift();
-            DatePrepared.Value = DateTime.Now;
+            shiftToday = FanTraceabilityCore.GetShift();
+            ShiftLabel.Text = FanTraceabilityCore.GetShift() == 0 ? "DAYSHIFT" : "NIGHTSHIFT";
 
+            DatePrepared.Value = DateTime.Now;
+            DateTodayText.Text = DateTime.Now.ToString("yyyy-MM-dd");
             sectionID = section;    
             
             label18.Text = FanTraceabilityCore.SectionMap.ContainsKey(section)
@@ -58,8 +62,7 @@ namespace FanTraceableSystem
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            TimeText.Text = DateTime.Now.ToString("hh:mm tt");
-            TimeText.ReadOnly = true;
+            TimeText.Text = DateTime.Now.ToString("hh:mm:ss tt");
         }
 
         private async void SaveBtn_Click(object sender, EventArgs e)
@@ -76,7 +79,7 @@ namespace FanTraceableSystem
                     PCBShopOrder = PCBText.Text,
                     Revision = RevText.Text,
                     DatePrepared = DatePrepared.Value,
-                    Shift = shiftText.SelectedIndex,
+                    Shift = shiftToday,
                     TimeInput = TimeText.Text,
                     Customer = CustomerText.Text,
                     LotNo = LotText.Text,
@@ -164,15 +167,16 @@ namespace FanTraceableSystem
 
             try
             {
-                var dataTask = _trac.TraceableShopOrder(
+                var dataTask =  _trac.TraceableShopOrder(
                     SearchText.Text,
                     dateTimePicker2.Checked ? dateTimePicker2.Value.Date : (DateTime?)null,
                     dateTimePicker3.Checked ? dateTimePicker3.Value.Date : (DateTime?)null,
                     isEdit,
                     sectionID,
-                    _paging.PageNumber, 
+                    _paging.PageNumber,
                     _paging.PageSize
                 );
+
 
                 var countTask = _trac.GetTraceableCount(
                     SearchText.Text,
@@ -187,7 +191,7 @@ namespace FanTraceableSystem
                 var result = dataTask.Result;
                 var totalCount = countTask.Result;
 
-                BindGrid(result, append);   
+                BindGrid(result, append);
 
 
                 // Compute range
@@ -204,7 +208,7 @@ namespace FanTraceableSystem
                 ArrangeColumns();
                 UpdatePaginationUI(result.Count, totalCount);
 
-              
+
                 _isLoading = false;
             }
             finally

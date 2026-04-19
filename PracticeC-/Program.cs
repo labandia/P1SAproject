@@ -162,8 +162,8 @@ namespace PracticeC_
             // Print the encoded connection string
             Console.WriteLine($"Base64 Encoded Connection String: {base64ConnectionString}");
             // Print the encoded connection string
-            string a = DecodeBase64ToString("");
-            //Console.WriteLine($"Base64 Decrypted {a}");
+            string a = DecodeBase64ToString("c2VydmVyPURFU0tUT1AtRkMwVVAxUFxTUUxFWFBSRVNTO2RhdGFiYXNlPVBST0RDT047SW50ZWdyYXRlZCBTZWN1cml0eT1UcnVlOw==");
+            Console.WriteLine($"Base64 Decrypted {a}");
             Console.ReadKey();
         }
 

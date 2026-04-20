@@ -283,5 +283,17 @@ namespace FanTraceableSystem.Services
 
             return true;
         }
+
+        public Task<List<FinalTraceabilityModel>> TraceOverallData(
+            string search, 
+            DateTime? startDate,
+            DateTime? endDate, 
+            int isEdit, 
+            int section, 
+            int pageNumber, 
+            int pageSize)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

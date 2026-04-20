@@ -10,6 +10,16 @@ namespace FanTraceableSystem.Interface
 {
     public interface ITraceable
     {
+        // V2  ================
+        Task<List<FinalTraceabilityModel>> TraceOverallData(
+          string search,
+          DateTime? startDate,
+          DateTime? endDate,
+          int isEdit,
+          int section,
+          int pageNumber,
+          int pageSize);
+
         Task<List<TraceableShopOrderModel>> TraceableShopOrder(
              string search,
              DateTime? startDate,

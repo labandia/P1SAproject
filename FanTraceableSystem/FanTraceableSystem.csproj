@@ -135,7 +135,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\TraceabilityFInalAssyModel.cs" />
+    <Compile Include="Data\TraceableSubAssyModel.cs" />
     <Compile Include="FanTraceabilityCore.cs" />
+    <Compile Include="Interface\ISubassy.cs" />
     <Compile Include="Modals\AddPCBShop.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -156,6 +159,7 @@
     <Compile Include="Modals\EnterPassword.Designer.cs">
       <DependentUpon>EnterPassword.cs</DependentUpon>
     </Compile>
+    <Compile Include="Services\ISubassyServices.cs" />
     <Compile Include="Views\FanTraceabilityAutoSearch.cs">
       <SubType>Form</SubType>
     </Compile>

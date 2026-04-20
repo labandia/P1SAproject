@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using FanTraceableSystem.Data;
 using FanTraceableSystem.Interface;
+using static System.Collections.Specialized.BitVector32;
+using Excel = Microsoft.Office.Interop.Excel;
+
 
 namespace FanTraceableSystem
 {
@@ -18,18 +21,20 @@ namespace FanTraceableSystem
         private readonly ISummary _summaryService;
         public int isEditmode = 0;
 
-        private BindingList<SummaryraceableShopOrderModel> data;
+       
 
 
         private bool _isLoading = false;
         public int isFilter = 0;
 
-        private int pageNumber = 1;   // current page
-        private int pageSize = 50;    // rows per page
-        private bool _hasNextPage;     // controls Next button
 
         private System.Windows.Forms.Timer _searchTimer;
         private const int _debounceDelay = 500; // milliseconds (adjust if needed)
+        private Timer timer;
+
+        private BindingList<SummaryraceableShopOrderModel> data;
+
+        private readonly PagingState _paging = new PagingState();
 
 
         public TraceableHistory(ISummary service)
@@ -45,131 +50,183 @@ namespace FanTraceableSystem
             {
                 _searchTimer.Stop();
 
-                pageNumber = 1;          // reset pagination
+                _paging.PageNumber = 1;          // reset pagination
                 await loadData();        // reload with new search
             };
+
+            timer = new Timer();
+            timer.Interval = 1000; // 1 second
+            timer.Tick += Timer_Tick;
+            timer.Start();
         }
 
-     
-
-        private async void TraceableHistory_Load(object sender, EventArgs e)
+        private void Timer_Tick(object sender, EventArgs e)
         {
-            await loadData();
+            TimeText.Text = DateTime.Now.ToString("hh:mm:ss tt");
         }
 
+        // ================================================================================
+        // ========================== DATA GRIDVIEW & PAGINATION ==========================
+        // ================================================================================
+
+        private async void TraceableHistory_Load(object sender, EventArgs e) => await loadData();
         public async Task loadData(bool append = false)
         {
             if (_isLoading) return; // prevent double load
             _isLoading = true;
 
-            var result = await _summaryService.TraceableShopOrderSummary(
-                SearchText.Text,
-                dateTimePicker2.Checked ? dateTimePicker2.Value.Date : (DateTime?)null,
-                dateTimePicker3.Checked ? dateTimePicker3.Value.Date : (DateTime?)null,
-                isEditmode,
-                sectionselect.SelectedIndex, 
-                pageNumber,
-                pageSize
-            );
-
-            int totalCount = await _summaryService.GetSummaryCount(
-                SearchText.Text,
-                dateTimePicker2.Checked ? dateTimePicker2.Value.Date : (DateTime?)null,
-                dateTimePicker3.Checked ? dateTimePicker3.Value.Date : (DateTime?)null,
-                isEditmode,
-                sectionselect.SelectedIndex
-            );
-
-
-            if (append && dataGridView2.DataSource is List<SummaryraceableShopOrderModel> existingData)
+            try
             {
-                existingData.AddRange(result);
-                dataGridView2.DataSource = null;
-                dataGridView2.DataSource = existingData;
+                var dataTask = _summaryService.TraceableShopOrderSummary(
+                      SearchText.Text,
+                      dateTimePicker2.Checked ? dateTimePicker2.Value.Date : (DateTime?)null,
+                      dateTimePicker3.Checked ? dateTimePicker3.Value.Date : (DateTime?)null,
+                      isEditmode,
+                      sectionselect.SelectedIndex,
+                      _paging.PageNumber,
+                      _paging.PageSize
+                );
+
+                var countTask = _summaryService.GetSummaryCount(
+                    SearchText.Text,
+                    dateTimePicker2.Checked ? dateTimePicker2.Value.Date : (DateTime?)null,
+                    dateTimePicker3.Checked ? dateTimePicker3.Value.Date : (DateTime?)null,
+                    isEditmode,
+                    sectionselect.SelectedIndex
+                );
+
+
+                await Task.WhenAll(dataTask, countTask);
+
+                var result = dataTask.Result;
+                var totalCount = countTask.Result;
+
+                BindGrid(result, append);
+                UpdatePaginationUI(result.Count, totalCount);
+                ArrangeColumns();
+
+            }
+            finally
+            {
+                _isLoading = false;
+            }   
+
+        }
+        private void BindGrid(List<SummaryraceableShopOrderModel> result, bool append)
+        {
+            if (append)
+            {
+                foreach (var item in result)
+                    data.Add(item);
             }
             else
             {
-                dataGridView2.DataSource = result;
+                data = new BindingList<SummaryraceableShopOrderModel>(result);
+                dataGridView2.DataSource = data;
             }
+        }
+        private void UpdatePaginationUI(int returnedCount, int totalCount)
+        {
+            int start = ((_paging.PageNumber - 1) * _paging.PageSize) + 1;
+            int end = start + returnedCount - 1;
 
-            // Compute range
-            int start = ((pageNumber - 1) * pageSize) + 1;
-            int end = start + result.Count - 1;
-
-            // Fix when no data
             if (totalCount == 0)
             {
                 start = 0;
                 end = 0;
             }
 
-            ArrangeColumns();
-
-            // Pagination buttons
             lblEntries.Text = $"Showing {start} to {end} of {totalCount} entries";
 
-            _hasNextPage = end < totalCount;
+            _paging.HasNextPage = end < totalCount;
 
-            btnPrev.Enabled = pageNumber > 1;
-            btnNext.Enabled = _hasNextPage;
+            btnPrev.Enabled = _paging.PageNumber > 1;
+            btnNext.Enabled = _paging.HasNextPage;
         }
-
-
         public void ArrangeColumns()
         {
+            dataGridView2.Columns["FinalShopOrder"].DisplayIndex = 0;
+
+
             dataGridView2.Columns["PCBShopOrder"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["PCBShopOrder"].DisplayIndex = 0;
             dataGridView2.Columns["PCBShopOrder"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["PCBShopOrder"].Width = 100;
+            dataGridView2.Columns["PCBShopOrder"].Width = 120;
 
-            dataGridView2.Columns["PCBA"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["PCBA"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["PCBA"].Width = 120;
-
-            dataGridView2.Columns["PreparedQuantity"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["PreparedQuantity"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["PreparedQuantity"].Width = 200;
-
-
-
-            dataGridView2.Columns["TimeInput"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["TimeInput"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["TimeInput"].Width = 100;
-
-
-
-            dataGridView2.Columns["PreparedBy"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["PreparedBy"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["PreparedBy"].Width = 120;
-
-            dataGridView2.Columns["Shift"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["Shift"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["Shift"].Width = 120;
-
-            dataGridView2.Columns["Customer"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["Customer"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["Customer"].Width = 120;
-
-            dataGridView2.Columns["CardCaseNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["CardCaseNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["CardCaseNo"].Width = 120;
-
-            dataGridView2.Columns["Remarks"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["Remarks"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["Remarks"].Width = 120;
-
-            dataGridView2.Columns["PCBIncharge"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["PCBIncharge"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["PCBIncharge"].Width = 120;
-
-            dataGridView2.Columns["PCBIssuer"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["PCBIssuer"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["PCBIssuer"].Width = 120;
-
-            dataGridView2.Columns["LotNo"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["LotNo"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["LotNo"].Width = 120;
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "PCBA", 120);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "PreparedQuantity", 200);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "TimeInput", 100);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "PreparedBy", 120);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "Shift", 120);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "Customer", 120);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "CardCaseNo", 120);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "Remarks", 120);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "PCBIncharge", 120);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "PCBIssuer", 120);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "LotNo", 120);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "DepartmentID", 120);
         }
+        private async void dataGridView2_Scroll(object sender, ScrollEventArgs e)
+        {
+            if (!_paging.HasNextPage || _isLoading) return;
+
+            int visibleRows = dataGridView2.DisplayedRowCount(false);
+            int firstVisibleRow = dataGridView2.FirstDisplayedScrollingRowIndex;
+
+            if (firstVisibleRow + visibleRows >= dataGridView2.RowCount - 5)
+            {
+                _paging.PageNumber++;
+                await loadData(append: true); // ✅ append ONLY here
+            }
+        }
+        private void dataGridView2_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.Value == null || string.IsNullOrWhiteSpace(e.Value.ToString()))
+            {
+                e.Value = "--";
+                e.FormattingApplied = true;
+            }
+
+
+            if (dataGridView2.Columns[e.ColumnIndex].Name == "Shift")
+            {
+                if (e.Value == null) return;
+
+                e.Value = FanTraceabilityCore.FormatShift(e.Value.ToString());
+                e.FormattingApplied = true;
+            }
+
+
+            if (dataGridView2.Columns[e.ColumnIndex].Name == "DepartmentID")
+            {
+                if (e.Value != null && int.TryParse(e.Value.ToString(), out int sectionID))
+                {
+                    e.Value = FanTraceabilityCore.SectionMap.ContainsKey(sectionID)
+                    ? FanTraceabilityCore.SectionMap[sectionID]
+                    : "Final Assy Section";
+
+                    e.FormattingApplied = true;
+                }
+            }
+        }
+
+        // ================================================================================
+        // ========================== FILTERS SEARCH FUNCTIONALITY ========================
+        // ================================================================================
+        private async void btnNext_Click(object sender, EventArgs e)
+        {
+            if (!_paging.HasNextPage) return;
+
+            _paging.PageNumber++;
+            await loadData(false);
+        }
+        private async void btnPrev_Click(object sender, EventArgs e)
+        {
+            if (_paging.PageNumber <= 1) return;
+
+            _paging.PageNumber--;
+            await loadData(false);     // ❗ replace
+        }
+
 
         private void button12_Click(object sender, EventArgs e)
         {
@@ -177,10 +234,7 @@ namespace FanTraceableSystem
             this.Close();
         }
 
-        private async void sectionselect_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            await loadData();
-        }
+        private async void sectionselect_SelectedIndexChanged(object sender, EventArgs e) => await loadData();
 
         private async void filterbtn_Click(object sender, EventArgs e)
         {
@@ -199,47 +253,187 @@ namespace FanTraceableSystem
             _searchTimer.Start(); // start countdown again
         }
 
-        private void dataGridView2_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+
+
+        // ================================================================================
+        // ========================== EXPORT  DATA  =======================================
+        // ================================================================================
+        private async void Exportbtn_Click(object sender, EventArgs e)
         {
-            if (dataGridView2.Columns[e.ColumnIndex].Name == "DepartmentID")
+            List<ExportTraceableShopOrderModel> Exportdata = new List<ExportTraceableShopOrderModel>();
+
+            var result = await _summaryService.TraceableShopOrderSummary(
+                     SearchText.Text,
+                     dateTimePicker2.Checked ? dateTimePicker2.Value.Date : (DateTime?)null,
+                     dateTimePicker3.Checked ? dateTimePicker3.Value.Date : (DateTime?)null,
+                     isEditmode,
+                     sectionselect.SelectedIndex,
+                     _paging.PageNumber,
+                     _paging.PageSize
+               );
+
+            foreach (var items in result)
             {
-                var sectionMap = new Dictionary<int, string>
+                Exportdata.Add(new ExportTraceableShopOrderModel
                 {
-                    {1, "Molding"},
-                    {2, "Press"},
-                    {3, "Rotor"},
-                    {4, "Winding"},
-                    {5, "Circuit"},
-                    {6, "OilProof"},
-                    {7, "Harness"}
+                    FinalShopOrder = items.FinalShopOrder,
+                    PCBShopOrder = items.PCBShopOrder,
+                    PCBA = items.PCBA,
+                    Revision = items.Revision,
+                    PlanQuan = items.PlanQuan,
+                    DatePrepared = items.DatePrepared.ToString("yyyy-MM-dd"),
+                    TimeInput = items.TimeInput,
+                    PreparedBy = items.PreparedBy,
+                    PreparedQuantity = items.PreparedQuantity,
+                    Shift = FanTraceabilityCore.FormatShift(items.Shift?.ToString() ?? ""),
+                    Rev = items.Rev,
+                    Customer = items.Customer,
+                    CardCaseNo = items.CardCaseNo,
+                    Remarks = items.Remarks,
+                    PCBIncharge = items.PCBIncharge,
+                    PCBIssuer = items.PCBIssuer,
+                    LotNo = items.LotNo,
+                    DepartmentID = FanTraceabilityCore.SectionMap.ContainsKey(items.DepartmentID)
+                                 ? FanTraceabilityCore.SectionMap[items.DepartmentID]
+                                 : "Final Assy Section"
+                });
+            }
+
+
+            ExportToExcel(Exportdata);
+        }
+
+
+        private void ExportToExcel(List<ExportTraceableShopOrderModel> data)
+        {
+            var headerMap = new Dictionary<string, string>
+            {
+                { "FinalShopOrder", "Final ShopOrder" },
+                { "PCBShopOrder", "ShopOrder" },
+                { "PreparedBy", "Prepared By" },
+                { "Revision", "Revision" },
+                { "PCBA", "Item No." },
+                { "PlanQuan", "Plan Quantity" },
+                { "DatePrepared", "Date Prepared" },
+                { "TimeInput", "Time" },
+                { "PreparedQuantity", "Prepared Quantity" },
+                { "Rev", "Rev" },
+                { "Customer", "Customer" },
+                { "CardCaseNo", "Model Type" },
+                { "Remarks", "Remarks" },
+                { "PCBIncharge", "Incharge" },
+                { "PCBIssuer", "Issuer" },
+                { "LotNo", "Lot No" },
+                { "DepartmentID", "Section" }
+            };
+
+            try
+            {
+                Excel.Application excelApp = new Excel.Application();
+                Excel.Workbook workbook = excelApp.Workbooks.Add(Type.Missing);
+                Excel.Worksheet worksheet = workbook.ActiveSheet;
+                worksheet.Name = "Sub Assy FanTraceability";
+
+                var properties = typeof(ExportTraceableShopOrderModel).GetProperties();
+                int colCount = properties.Length;
+                int rowCount = data.Count();
+
+                // ✅ Set column width (adjust as needed)
+                worksheet.Columns.ColumnWidth = 20;
+
+                // Insert headers
+                for (int i = 0; i < colCount; i++)
+                {
+                    string propName = properties[i].Name;
+                    worksheet.Cells[1, i + 1] = headerMap.ContainsKey(propName)
+                        ? headerMap[propName]
+                        : propName;
+                }
+
+                // ✅ FORCE TEXT FORMAT for specific columns
+                for (int i = 0; i < colCount; i++)
+                {
+                    string propName = properties[i].Name;
+
+                    if (propName == "FinalShopOrder" || propName == "PCBShopOrder")
+                    {
+                        Excel.Range colRange = worksheet.Columns[i + 1];
+                        colRange.NumberFormat = "@"; // TEXT
+                    }
+                }
+
+                // ✅ Header Styling
+                Excel.Range headerRange = worksheet.Range[
+                    worksheet.Cells[1, 1],
+                    worksheet.Cells[1, colCount]
+                ];
+
+                headerRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightSkyBlue);
+                headerRange.Font.Bold = true;
+                headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                headerRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
+                headerRange.RowHeight = 20;
+                headerRange.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+
+                // Freeze header row
+                worksheet.Application.ActiveWindow.SplitRow = 1;
+                worksheet.Application.ActiveWindow.FreezePanes = true;
+
+                object[,] dataArray = new object[rowCount, colCount];
+
+                // Adding data rows
+                int row = 0;
+                foreach (var item in data)
+                {
+                    for (int col = 0; col < colCount; col++)
+                    {
+                        var value = properties[col].GetValue(item, null);
+                        dataArray[row, col] = value?.ToString();
+                    }
+                    row++;
+                }
+
+                // ✅ Insert data
+                Excel.Range dataRange = worksheet.Range[
+                    worksheet.Cells[2, 1],
+                    worksheet.Cells[rowCount + 1, colCount]
+                ];
+                dataRange.Value = dataArray;
+
+                // Optional: add borders to data
+                dataRange.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+                dataRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                dataRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
+
+                SaveFileDialog saveFileDialog = new SaveFileDialog
+                {
+                    Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*",
+                    FilterIndex = 1,
+                    RestoreDirectory = true
                 };
 
-                if (e.Value != null && int.TryParse(e.Value.ToString(), out int sectionID))
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    if (sectionMap.TryGetValue(sectionID, out string sectionName))
-                    {
-                        e.Value = sectionName;
-                    }
-                    else
-                    {
-                        // 🔹 Default fallback
-                        e.Value = "Final Assy";
-                    }
+                    string savedFilePath = saveFileDialog.FileName;
+                    workbook.SaveAs(savedFilePath);
+                    workbook.Close();
+                    excelApp.Quit();
 
-                    e.FormattingApplied = true;
+                    MessageBox.Show("Export Successful");
+
+                    // Reopen the saved file
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = savedFilePath,
+                        UseShellExecute = true
+                    });
                 }
-                else
-                {
-                    // 🔹 If null or invalid, also default
-                    e.Value = "Final Assy";
-                    e.FormattingApplied = true;
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
             }
         }
 
-        private void Exportbtn_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

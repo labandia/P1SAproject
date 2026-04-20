@@ -13,22 +13,27 @@ namespace FanTraceableSystem
 {
     public partial class EditPCBShop : Form
     {
-        public List<EditTracePCBModel> PCBList { get; private set; } = new List<EditTracePCBModel>();
+        public BindingList<EditTracePCBModel> PCBList = new BindingList<EditTracePCBModel>();
 
         // Constructor for EDIT
-        public EditPCBShop(List<EditTracePCBModel> existingList)
+        public EditPCBShop(BindingList<EditTracePCBModel> existingList)
         {
             InitializeComponent();
 
             // clone to avoid direct reference issues (recommended)
-            PCBList = existingList
-                .Select(x => new EditTracePCBModel
+            PCBList = new BindingList<EditTracePCBModel>(
+                existingList.Select(x => new EditTracePCBModel
                 {
                     RecordId = x.RecordId,
                     PCBShopOrder = x.PCBShopOrder,
-                    Quantity = x.Quantity
-                })
-                .ToList();
+                    Quantity = x.Quantity,
+                    LotNo = x.LotNo,
+                    Line = x.Line,
+                    PCBIssuer = x.PCBIssuer,
+                    Rev = x.Rev,
+                    isAction = 1 // 👈 mark existing as EDIT by default (important)
+                }).ToList()
+            );
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -40,24 +45,23 @@ namespace FanTraceableSystem
             }
 
 
-
-            if (PCBList.Any(x => x.PCBShopOrder == Shoptext.Text))
-            {
-                MessageBox.Show("Duplicate PCB Shop Order");
-                return;
-            }
-
             // Example: collect values from controls
-            //PCBList.Add(new TracePCBModel
-            //{
-            //    PCBShopOrder = Shoptext.Text,
-            //    Quantity = int.TryParse(textBox1.Text, out int qty) ? qty : 0,
-            //    Rev = RevText.Text
-            //});
+            PCBList.Add(new EditTracePCBModel
+            {
+                PCBShopOrder = Shoptext.Text,
+                Quantity = int.TryParse(QuanText.Text, out int qty) ? qty : 0,
+                Rev = RevText.Text,
+                LotNo = LotNotext.Text,
+                Line = LineText.Text,
+                PCBIssuer = IssuerText.Text,
+                isAction = 0
+            });
             dataGridView1.DataSource = PCBList.ToList(); // Refresh the grid    
 
-            textBox1.Text = "";
+            QuanText.Text = "";
             Shoptext.Text = "";
+            LotNotext.Text = "";
+
 
             Shoptext.Focus();
         }
@@ -76,11 +80,17 @@ namespace FanTraceableSystem
             {
                 if (row.IsNewRow) continue;
 
-                //PCBList.Add(new TracePCBModel
-                //{
-                //    PCBShopOrder = row.Cells["PCBShopOrder"].Value?.ToString(),
-                //    Quantity = int.TryParse(row.Cells["Quantity"].Value?.ToString(), out int qty) ? qty : 0
-                //});
+                PCBList.Add(new EditTracePCBModel
+                {
+                    RecordId = int.TryParse(row.Cells["RecordId"].Value?.ToString(), out int id) ? id : 0,
+                    Rev = row.Cells["Rev"].Value?.ToString(),
+                    PCBShopOrder = row.Cells["PCBShopOrder"].Value?.ToString(),
+                    PCBIssuer = row.Cells["PCBIssuer"].Value?.ToString(),   
+                    LotNo = row.Cells["LotNo"].Value?.ToString(),
+                    Line = row.Cells["Line"].Value?.ToString(),
+                    Quantity = int.TryParse(row.Cells["Quantity"].Value?.ToString(), out int qty) ? qty : 0,
+                    isAction = int.TryParse(row.Cells["IsAction"].Value?.ToString(), out int act) ? act : 0,
+                });
             }
 
             this.DialogResult = DialogResult.OK;
@@ -93,6 +103,51 @@ namespace FanTraceableSystem
 
             dataGridView1.DataSource = null;
             dataGridView1.DataSource = PCBList;
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RevText_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            var row = dataGridView1.Rows[e.RowIndex].DataBoundItem as EditTracePCBModel;
+            if (row == null) return;
+
+            if (row.isAction == 0)
+            {
+                // newly added → keep as ADD
+                return;
+            }
+
+            // existing row → mark as edited
+            row.isAction = 1;
+        }
+
+        private void dataGridView1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (dataGridView1.IsCurrentCellDirty)
+            {
+                dataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
         }
     }
 }

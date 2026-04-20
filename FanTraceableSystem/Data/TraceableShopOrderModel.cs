@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,9 +28,8 @@ namespace FanTraceableSystem.Data
         public string PreparedBy { get; set; }
         public string Rev { get; set; }
         public int? Shift { get; set; }
-
+        public string Line { get; set; }
         public string Customer { get; set; }
-        public string InspectorName { get; set; }
 
         public string CardCaseNo { get; set; }
         public string Remarks { get; set; }
@@ -39,7 +39,29 @@ namespace FanTraceableSystem.Data
         public int DepartmentID { get; set; }
     }
 
+    public class ExportTraceableShopOrderModel
+    {
+        public string FinalShopOrder { get; set; }
+        public string PCBShopOrder { get; set; }
+        public string PreparedBy { get; set; }
+        public string Revision { get; set; }
+        public string PCBA { get; set; }
+        public int PlanQuan { get; set; }
+        public string DatePrepared { get; set; }
+        public string TimeInput { get; set; }
+        public int PreparedQuantity { get; set; } = 0;
+        public string Rev { get; set; }
+        public string Shift { get; set; }
 
+        public string Customer { get; set; }
+
+        public string CardCaseNo { get; set; }
+        public string Remarks { get; set; }
+        public string PCBIncharge { get; set; }
+        public string PCBIssuer { get; set; }
+        public string LotNo { get; set; }
+        public string DepartmentID { get; set; }
+    }
 
 
     public class SummaryraceableShopOrderModel
@@ -50,13 +72,13 @@ namespace FanTraceableSystem.Data
         public string PCBA { get; set; }
         public DateTime DatePrepared { get; set; }
         public string TimeInput { get; set; }
+        public string Rev { get; set; }
         public int PreparedQuantity { get; set; } = 0;
         public string PreparedBy { get; set; }
-
+        public int PlanQuan { get; set; }
         public int? Shift { get; set; }
 
         public string Customer { get; set; }
-        public string InspectorName { get; set; }
 
         public string CardCaseNo { get; set; }
         public string Remarks { get; set; }
@@ -69,8 +91,11 @@ namespace FanTraceableSystem.Data
     public class TracePCBModel
     {
         public int RecordId { get; set; }
+        public string LotNo { get; set; }
         public string PCBShopOrder { get; set; }
         public string Rev { get; set; }
+        public string PCBIssuer { get; set; }
+        public string Line { get; set; }
         public int Quantity { get; set; }
     }
 
@@ -79,8 +104,12 @@ namespace FanTraceableSystem.Data
     {
         public int RecordId { get; set; }
         public string PCBShopOrder { get; set; }
+        public string LotNo { get; set; }
         public string Rev { get; set; }
+        public string Line { get; set; }
         public int Quantity { get; set; }
+        public string PCBIssuer { get; set; }
         public int isAction { get; set;  } // 0 - for add - 1  for edit  - 2 for delete 
     }
+
 }

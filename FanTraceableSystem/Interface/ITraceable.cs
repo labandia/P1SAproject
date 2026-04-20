@@ -1,6 +1,7 @@
 ﻿using FanTraceableSystem.Data;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,5 +29,7 @@ namespace FanTraceableSystem.Interface
         Task<List<TraceableShopOrderModel>> GetFinalShopOrderDetails(string Finalorder);
 
         Task<bool> AddTraceTransactions(TraceableShopOrderModel trac, List<TracePCBModel> pcb);
+
+        Task<bool> EditTraceTransaction(TraceableShopOrderModel trac, BindingList<EditTracePCBModel> pcb);
     }
 }

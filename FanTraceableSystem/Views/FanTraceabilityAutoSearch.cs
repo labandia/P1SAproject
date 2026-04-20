@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using FanTraceableSystem.Data;
 using FanTraceableSystem.Interface;
+using static System.Collections.Specialized.BitVector32;
 using Excel = Microsoft.Office.Interop.Excel;
 
 
@@ -21,6 +22,8 @@ namespace FanTraceableSystem
         public int sectionID = 0;
         public int shiftToday = 0;
 
+        public int isEditMode = 0; // By Default is in Add Mode, when click the Edit Button it will change to Edit Mode
+
         private Timer timer;
 
         // But this is for the Edit
@@ -32,7 +35,7 @@ namespace FanTraceableSystem
 
         private BindingList<TraceableShopOrderModel> data = new BindingList<TraceableShopOrderModel>();
         private List<TracePCBModel> _pcbList = new List<TracePCBModel>();
-        private List<EditTracePCBModel> _editpcb = new List<EditTracePCBModel>();
+        private BindingList<EditTracePCBModel> _editpcb = new BindingList<EditTracePCBModel>();
 
         private readonly PagingState _paging = new PagingState();
 
@@ -67,6 +70,12 @@ namespace FanTraceableSystem
 
         private async void SaveBtn_Click(object sender, EventArgs e)
         {
+            if(isEditMode == 1)
+            {
+                EditTraceAbility();
+                return;
+            }
+
             if (!FormValidation()) return;
 
             try
@@ -82,11 +91,9 @@ namespace FanTraceableSystem
                     Shift = shiftToday,
                     TimeInput = TimeText.Text,
                     Customer = CustomerText.Text,
-                    LotNo = LotText.Text,
                     CardCaseNo = Cardtext.Text,
                     Remarks = RemarkText.Text,
                     PCBIncharge = PCBtextcharge.Text,
-                    PCBIssuer = PCBIssuerText.Text,
                     PreparedBy = PreparedText.Text,
                     DepartmentID = sectionID    
                 };
@@ -96,7 +103,10 @@ namespace FanTraceableSystem
                 if (res)
                 {
                     MessageBox.Show("Shop Order added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    SearchText.Text = Shoptext.Text;
                     FormReset();
+                    await LoadData();
+
                 }
                 else
                 {
@@ -105,6 +115,51 @@ namespace FanTraceableSystem
 
             }
             catch(Exception ex)
+            {
+                Debug.WriteLine("Error" + ex.Message);
+            }
+        }
+
+
+        public async void EditTraceAbility()
+        {
+            try
+            {
+                var obj = new TraceableShopOrderModel
+                {
+                    FinalShopOrder = Shoptext.Text,
+                    PCBA = PCBText.Text,
+                    PlanQuan = int.TryParse(PlanQuanText.Text, out var q) ? q : 0,
+                    PCBShopOrder = PCBText.Text,
+                    Revision = RevText.Text,
+                    DatePrepared = DatePrepared.Value,
+                    Shift = shiftToday,
+                    TimeInput = TimeText.Text,
+                    Customer = CustomerText.Text,
+                    CardCaseNo = Cardtext.Text,
+                    Remarks = RemarkText.Text,
+                    PCBIncharge = PCBtextcharge.Text,
+                    PreparedBy = PreparedText.Text,
+                    DepartmentID = sectionID
+                };
+
+                bool res = await _trac.EditTraceTransaction(obj, _editpcb);
+
+                if (res)
+                {
+                    MessageBox.Show("Shop Order added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    SearchText.Text = Shoptext.Text;
+                    FormReset();
+                    await LoadData();
+
+                }
+                else
+                {
+                    MessageBox.Show("Failed to add Shop Order.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+            }
+            catch (Exception ex)
             {
                 Debug.WriteLine("Error" + ex.Message);
             }
@@ -145,14 +200,38 @@ namespace FanTraceableSystem
             } 
         }
 
+        private void button3_Click(object sender, EventArgs e)
+        {
+            using (var edit = new EditPCBShop(_editpcb))
+            {
+                if (edit.ShowDialog(this) == DialogResult.OK)
+                {
+                    _editpcb = edit.PCBList;
+
+                    foreach(var items in _editpcb)
+                    {
+                        Debug.WriteLine($@"RecordID : {items.RecordId} - 
+                                        PCBShopOrder : {items.PCBShopOrder} - 
+                                        IsAction : {items.isAction} -
+                                        Line : {items.Line} - 
+                                        Issuer : {items.PCBIssuer}");
+                    }
+                    //string isAdd = _editpcb.Count > 0 ? $@"({_editpcb.Count})" : "";
+
+                    //button1.Text = "Edit Production Order " + isAdd;
+                }
+            }
+        }
+
         // Reset the Data
         private async void filterbtn_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(SearchText.Text))
-            {
-                return;
-            }
-            await LoadData();
+            if (string.IsNullOrEmpty(SearchText.Text)) return;
+
+            _paging.PageNumber = 1;   // ✅ Reset page
+            data.Clear();             // optional cleanup
+
+            await LoadData();         // replace data
         }
 
         // ================================================================================
@@ -192,24 +271,8 @@ namespace FanTraceableSystem
                 var totalCount = countTask.Result;
 
                 BindGrid(result, append);
-
-
-                // Compute range
-                var (start, end, hasNext) = FanTraceabilityCore.CalculatePage(_paging.PageNumber, _paging.PageSize, result.Count, totalCount);
-
-                // Fix when no data
-                if (totalCount == 0)
-                {
-                    start = 0;
-                    end = 0;
-                }
-
-
-                ArrangeColumns();
                 UpdatePaginationUI(result.Count, totalCount);
-
-
-                _isLoading = false;
+                ArrangeColumns();
             }
             finally
             {
@@ -244,15 +307,16 @@ namespace FanTraceableSystem
 
             _paging.HasNextPage = end < totalCount;
 
-            //btnPrev.Enabled = _paging.PageNumber > 1;
-            //btnNext.Enabled = _paging.HasNextPage;
+            Prevbtn.Enabled = _paging.PageNumber > 1;
+            nextbtn.Enabled = _paging.HasNextPage;
         }
      
 
         public void ArrangeColumns()
         {
+            dataGridView2.Columns["FinalShopOrder"].DisplayIndex = 0;
+
             dataGridView2.Columns["PCBShopOrder"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["PCBShopOrder"].DisplayIndex = 0;
             dataGridView2.Columns["PCBShopOrder"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             dataGridView2.Columns["PCBShopOrder"].Width = 100;
 
@@ -285,11 +349,10 @@ namespace FanTraceableSystem
             int visibleRows = dataGridView2.DisplayedRowCount(false);
             int firstVisibleRow = dataGridView2.FirstDisplayedScrollingRowIndex;
 
-            // If user scrolls near bottom
             if (firstVisibleRow + visibleRows >= dataGridView2.RowCount - 5)
             {
-                _paging.PageNumber++;               // next page
-                await LoadData(append: true); // append data
+                _paging.PageNumber++;
+                await LoadData(append: true); // ✅ append ONLY here
             }
         }
 
@@ -319,11 +382,9 @@ namespace FanTraceableSystem
                     RevText.Text = filterdata.Revision;
                     PreparedText.Text = filterdata.PreparedBy;
                     CustomerText.Text = filterdata.Customer;
-                    LotText.Text = filterdata.LotNo;
                     Cardtext.Text = filterdata.CardCaseNo;
                     RemarkText.Text = filterdata.Remarks;
                     PCBtextcharge.Text = filterdata.PCBIncharge;
-                    PCBIssuerText.Text = filterdata.PCBIssuer;
                 }
 
                 foreach (var i in items)
@@ -369,11 +430,9 @@ namespace FanTraceableSystem
             RevText.Text = "";
             PreparedText.Text = "";
             CustomerText.Text = "";
-            LotText.Text = "";
             Cardtext.Text = "";
             RemarkText.Text = "";
             PCBtextcharge.Text = "";
-            PCBIssuerText.Text = "";
             _pcbList.Clear();
             button1.Text = "Add Production Order ";
         }
@@ -381,18 +440,11 @@ namespace FanTraceableSystem
         // ================================================================================
         // ========================== FILTERS SEARCH FUNCTIONALITY ========================
         // ================================================================================
-        private async void btnNext_Click(object sender, EventArgs e)
-        {
-           
-        }
-        private async void btnPrev_Click(object sender, EventArgs e)
-        {
-            
-        }
+   
         private async void SearchText_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode != Keys.Enter) return;
-
+            _paging.PageNumber = 1;   // ✅ Reset page
             await LoadData();
         }
         private void dateTimePicker3_ValueChanged(object sender, EventArgs e)
@@ -408,15 +460,11 @@ namespace FanTraceableSystem
         // ================================================================================
         private async void Exportbtn_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(SearchText.Text))
-            {
-                return;
-            }
-
-            string filterText = SearchText.Text;
+            if (string.IsNullOrEmpty(SearchText.Text)) return;   
+            List<ExportTraceableShopOrderModel> Exportdata = new List<ExportTraceableShopOrderModel>();
 
             var result = await _trac.TraceableShopOrder(
-                filterText,
+                SearchText.Text,
                 dateTimePicker2.Checked ? dateTimePicker2.Value.Date : (DateTime?)null,
                 dateTimePicker3.Checked ? dateTimePicker3.Value.Date : (DateTime?)null,
                 isEdit,
@@ -425,26 +473,110 @@ namespace FanTraceableSystem
                 _paging.PageSize
             );
 
-            ExportToExcel(result, 1);
+            foreach(var items in result)
+            {
+                Exportdata.Add(new ExportTraceableShopOrderModel
+                {
+                   FinalShopOrder =  items.FinalShopOrder,
+                   PCBShopOrder = items.PCBShopOrder,
+                   PCBA = items.PCBA,
+                   Revision = items.Revision,
+                   PlanQuan = items.PlanQuan,
+                   DatePrepared = items.DatePrepared.ToString("yyyy-MM-dd"),
+                   TimeInput = items.TimeInput,
+                   PreparedBy = items.PreparedBy,
+                   PreparedQuantity = items.PreparedQuantity,  
+                   Shift = FanTraceabilityCore.FormatShift(items.Shift?.ToString() ?? ""),
+                   Rev = items.Rev,
+                   Customer = items.Customer,
+                   CardCaseNo = items.CardCaseNo,
+                   Remarks = items.Remarks,
+                   PCBIncharge = items.PCBIncharge,
+                   PCBIssuer = items.PCBIssuer,
+                   LotNo = items.LotNo,
+                   DepartmentID = FanTraceabilityCore.SectionMap.ContainsKey(items.DepartmentID)
+                                 ? FanTraceabilityCore.SectionMap[items.DepartmentID]
+                                 : "Final Assy Section"
+                });
+            }
+            
+
+            ExportToExcel(Exportdata);
         }
-        private void ExportToExcel(List<TraceableShopOrderModel> data, int section)
+        private void ExportToExcel(List<ExportTraceableShopOrderModel> data)
         {
+            var headerMap = new Dictionary<string, string>
+            {
+                { "FinalShopOrder", "Final ShopOrder" },
+                { "PCBShopOrder", "ShopOrder" },
+                { "PreparedBy", "Prepared By" },
+                { "Revision", "Revision" },
+                { "PCBA", "Item No." },
+                { "PlanQuan", "Plan Quantity" },
+                { "DatePrepared", "Date Prepared" },
+                { "TimeInput", "Time" },
+                { "PreparedQuantity", "Prepared Quantity" },
+                { "Rev", "Rev" },
+                { "Customer", "Customer" },
+                { "CardCaseNo", "Model Type" },
+                { "Remarks", "Remarks" },
+                { "PCBIncharge", "Incharge" },
+                { "PCBIssuer", "Issuer" },
+                { "LotNo", "Lot No" },
+                { "DepartmentID", "Section" }
+            };
+
             try
             {
                 Excel.Application excelApp = new Excel.Application();
                 Excel.Workbook workbook = excelApp.Workbooks.Add(Type.Missing);
                 Excel.Worksheet worksheet = workbook.ActiveSheet;
-                worksheet.Name = "Exported Data";
+                worksheet.Name = "Sub Assy FanTraceability";
 
-                var properties = typeof(TraceableShopOrderModel).GetProperties();
+                var properties = typeof(ExportTraceableShopOrderModel).GetProperties();
                 int colCount = properties.Length;
                 int rowCount = data.Count();
+
+                // ✅ Set column width (adjust as needed)
+                worksheet.Columns.ColumnWidth = 20;
 
                 // Insert headers
                 for (int i = 0; i < colCount; i++)
                 {
-                    worksheet.Cells[1, i + 1] = properties[i].Name;
+                    string propName = properties[i].Name;
+                    worksheet.Cells[1, i + 1] = headerMap.ContainsKey(propName)
+                        ? headerMap[propName]
+                        : propName;
                 }
+
+                // ✅ FORCE TEXT FORMAT for specific columns
+                for (int i = 0; i < colCount; i++)
+                {
+                    string propName = properties[i].Name;
+
+                    if (propName == "FinalShopOrder" || propName == "PCBShopOrder")
+                    {
+                        Excel.Range colRange = worksheet.Columns[i + 1];
+                        colRange.NumberFormat = "@"; // TEXT
+                    }
+                }
+
+                // ✅ Header Styling
+                Excel.Range headerRange = worksheet.Range[
+                    worksheet.Cells[1, 1],
+                    worksheet.Cells[1, colCount]
+                ];
+
+                headerRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightSkyBlue);
+                headerRange.Font.Bold = true;
+                headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                headerRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
+                headerRange.RowHeight = 20;
+                headerRange.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+
+                // Freeze header row
+                worksheet.Application.ActiveWindow.SplitRow = 1;
+                worksheet.Application.ActiveWindow.FreezePanes = true;
 
                 object[,] dataArray = new object[rowCount, colCount];
 
@@ -455,14 +587,22 @@ namespace FanTraceableSystem
                     for (int col = 0; col < colCount; col++)
                     {
                         var value = properties[col].GetValue(item, null);
-                        dataArray[row, col] = section != 2 ? "'" + value?.ToString() : value?.ToString();
+                        dataArray[row, col] = value?.ToString();
                     }
                     row++;
                 }
 
-                // Assign data in one go for better performance
-                Excel.Range dataRange = worksheet.Range[worksheet.Cells[2, 1], worksheet.Cells[rowCount + 1, colCount]];
+                // ✅ Insert data
+                Excel.Range dataRange = worksheet.Range[
+                    worksheet.Cells[2, 1],
+                    worksheet.Cells[rowCount + 1, colCount]
+                ];
                 dataRange.Value = dataArray;
+
+                // Optional: add borders to data
+                dataRange.Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+                dataRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                dataRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
 
                 SaveFileDialog saveFileDialog = new SaveFileDialog
                 {
@@ -516,17 +656,60 @@ namespace FanTraceableSystem
             if (item == null) return;
 
 
-            MessageBox.Show($"Shop Order: {item.PCBShopOrder}\nPCBA: {item.PCBA}\nRevision: {item.Revision}\nPrepared By: {item.PreparedBy}", "Shop Order Details", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //MessageBox.Show($"Shop Order: {item.PCBShopOrder}\nPCBA: {item.PCBA}\nRevision: {item.Revision}\nPrepared By: {item.PreparedBy}", "Shop Order Details", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         }
-   
 
-        private void Shoptext_KeyDown(object sender, KeyEventArgs e)
+
+        private async void Shoptext_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode != Keys.Enter) return;
-        }
 
-      
+            var editShopOrder = await _trac.GetFinalShopOrderDetails(Shoptext.Text);
+
+            var filterdata = editShopOrder.FirstOrDefault();    
+            if (filterdata == null) return;
+
+            PCBText.Text = filterdata.PCBA;
+            PlanQuanText.Text = filterdata.PlanQuan.ToString(); 
+            RevText.Text = filterdata.Revision; 
+            CustomerText.Text = filterdata.Customer;
+
+            Cardtext.Text = filterdata.CardCaseNo;
+            RemarkText.Text = filterdata.Remarks;
+            PCBtextcharge.Text = filterdata.PCBIncharge;
+            PreparedText.Text = filterdata.PreparedBy;
+
+
+            _editpcb = new BindingList<EditTracePCBModel>(
+                editShopOrder.Select(i => new EditTracePCBModel
+                {
+                    RecordId = i.RecordId,
+                    PCBShopOrder = i.PCBShopOrder,
+                    Quantity = i.PreparedQuantity,
+                    Rev = i.Rev,
+                    LotNo = i.LotNo,
+                    Line = i.Line,
+                    isAction = 0
+                }).ToList()
+             );
+
+            string isAdd = _editpcb.Count > 0 ? $@"({_editpcb.Count})" : "";
+
+            isEditMode = 1;
+            button1.Visible = false;
+            button3.Visible = true;
+            button3.Text = "Edit Production Order " + isAdd;
+            button3.BringToFront();
+
+            //MessageBox.Show($"Shop Order: {filterdata.PCBShopOrder}\nPCBA: {filterdata.PCBA}\nRevision: {filterdata.Revision}\nPrepared By: {filterdata.PreparedBy}", "Shop Order Details", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //foreach (var items in editShopOrder)
+            //{
+
+            //    MessageBox.Show($"Shop Order: {items.PCBShopOrder}\nPCBA: {items.PCBA}\nRevision: {items.Revision}\nPrepared By: {items.PreparedBy}", "Shop Order Details", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //}
+
+        }
 
         private void PlanQuanText_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -534,5 +717,22 @@ namespace FanTraceableSystem
             e.Handled = (char.IsDigit(e.KeyChar) || (e.KeyChar == '.' && !PlanQuanText.Text.Contains("."))) ? false : true; // Allow the character
         }
 
+        private async void nextbtn_Click(object sender, EventArgs e)
+        {
+            if (!_paging.HasNextPage) return;
+
+            _paging.PageNumber++;
+            await LoadData(false);
+        }
+
+        private async void Prevbtn_Click(object sender, EventArgs e)
+        {
+            if (_paging.PageNumber <= 1) return;
+
+            _paging.PageNumber--;
+            await LoadData(false);     // ❗ replace
+        }
+
+       
     }
 }

@@ -31,8 +31,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TraceableHistory));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -46,28 +46,13 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
             this.SearchText = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.button12 = new System.Windows.Forms.Button();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
-            this.RecordId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FinalShopOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PCBShopOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Revision = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PCBA = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DatePreparedV2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TimeInput = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PreparedQuantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PreparedBy = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Shift = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Customer = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.InspectorName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CardCaseNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Remarks = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PCBIncharge = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PCBIssuer = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LotNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DepartmentID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sectionselect = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.dateTimePicker3 = new System.Windows.Forms.DateTimePicker();
@@ -81,8 +66,26 @@
             this.filterbtn = new System.Windows.Forms.Button();
             this.btnNext = new System.Windows.Forms.Button();
             this.btnPrev = new System.Windows.Forms.Button();
-            this.label21 = new System.Windows.Forms.Label();
             this.lblEntries = new System.Windows.Forms.Label();
+            this.TimeText = new System.Windows.Forms.Label();
+            this.RecordId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FinalShopOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PCBShopOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PlanQuan = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Revision = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PCBA = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DatePreparedV2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TimeInput = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PreparedQuantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PreparedBy = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Shift = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Customer = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CardCaseNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Remarks = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PCBIncharge = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PCBIssuer = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LotNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DepartmentID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -130,6 +133,9 @@
             this.dataGridView2.AllowUserToResizeRows = false;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
             this.dataGridView2.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            this.dataGridView2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView2.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.dataGridView2.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -149,6 +155,7 @@
             this.RecordId,
             this.FinalShopOrder,
             this.PCBShopOrder,
+            this.PlanQuan,
             this.Revision,
             this.PCBA,
             this.DatePreparedV2,
@@ -157,209 +164,38 @@
             this.PreparedBy,
             this.Shift,
             this.Customer,
-            this.InspectorName,
             this.CardCaseNo,
             this.Remarks,
             this.PCBIncharge,
             this.PCBIssuer,
             this.LotNo,
             this.DepartmentID});
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle16.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            dataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView2.DefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle19.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            dataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView2.DefaultCellStyle = dataGridViewCellStyle19;
             this.dataGridView2.Location = new System.Drawing.Point(22, 140);
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.ReadOnly = true;
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle17.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView2.RowHeadersDefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle20.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle20.SelectionBackColor = System.Drawing.Color.Gainsboro;
+            dataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView2.RowHeadersDefaultCellStyle = dataGridViewCellStyle20;
             this.dataGridView2.RowHeadersVisible = false;
             this.dataGridView2.RowTemplate.Height = 35;
             this.dataGridView2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView2.Size = new System.Drawing.Size(1300, 539);
             this.dataGridView2.TabIndex = 157;
             this.dataGridView2.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView2_CellFormatting);
-            // 
-            // RecordId
-            // 
-            this.RecordId.DataPropertyName = "RecordId";
-            this.RecordId.HeaderText = "RecordId";
-            this.RecordId.Name = "RecordId";
-            this.RecordId.ReadOnly = true;
-            this.RecordId.Visible = false;
-            this.RecordId.Width = 87;
-            // 
-            // FinalShopOrder
-            // 
-            this.FinalShopOrder.DataPropertyName = "FinalShopOrder";
-            this.FinalShopOrder.HeaderText = "Final Shop Order";
-            this.FinalShopOrder.Name = "FinalShopOrder";
-            this.FinalShopOrder.ReadOnly = true;
-            this.FinalShopOrder.Width = 135;
-            // 
-            // PCBShopOrder
-            // 
-            this.PCBShopOrder.DataPropertyName = "PCBShopOrder";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.PCBShopOrder.DefaultCellStyle = dataGridViewCellStyle3;
-            this.PCBShopOrder.HeaderText = "Shop Order";
-            this.PCBShopOrder.Name = "PCBShopOrder";
-            this.PCBShopOrder.ReadOnly = true;
-            this.PCBShopOrder.Width = 103;
-            // 
-            // Revision
-            // 
-            this.Revision.DataPropertyName = "Revision";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Revision.DefaultCellStyle = dataGridViewCellStyle4;
-            this.Revision.HeaderText = "Revision";
-            this.Revision.Name = "Revision";
-            this.Revision.ReadOnly = true;
-            this.Revision.Width = 83;
-            // 
-            // PCBA
-            // 
-            this.PCBA.DataPropertyName = "PCBA";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.PCBA.DefaultCellStyle = dataGridViewCellStyle5;
-            this.PCBA.HeaderText = "Item No";
-            this.PCBA.Name = "PCBA";
-            this.PCBA.ReadOnly = true;
-            this.PCBA.Width = 83;
-            // 
-            // DatePreparedV2
-            // 
-            this.DatePreparedV2.DataPropertyName = "DatePrepared";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.DatePreparedV2.DefaultCellStyle = dataGridViewCellStyle6;
-            this.DatePreparedV2.HeaderText = "Date Prepared";
-            this.DatePreparedV2.Name = "DatePreparedV2";
-            this.DatePreparedV2.ReadOnly = true;
-            this.DatePreparedV2.Width = 120;
-            // 
-            // TimeInput
-            // 
-            this.TimeInput.DataPropertyName = "TimeInput";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.TimeInput.DefaultCellStyle = dataGridViewCellStyle7;
-            this.TimeInput.HeaderText = "Time";
-            this.TimeInput.Name = "TimeInput";
-            this.TimeInput.ReadOnly = true;
-            this.TimeInput.Width = 62;
-            // 
-            // PreparedQuantity
-            // 
-            this.PreparedQuantity.DataPropertyName = "PreparedQuantity";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.PreparedQuantity.DefaultCellStyle = dataGridViewCellStyle8;
-            this.PreparedQuantity.HeaderText = "Prepared Quantity";
-            this.PreparedQuantity.Name = "PreparedQuantity";
-            this.PreparedQuantity.ReadOnly = true;
-            this.PreparedQuantity.Width = 145;
-            // 
-            // PreparedBy
-            // 
-            this.PreparedBy.DataPropertyName = "PreparedBy";
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.PreparedBy.DefaultCellStyle = dataGridViewCellStyle9;
-            this.PreparedBy.HeaderText = "Prepared By:";
-            this.PreparedBy.Name = "PreparedBy";
-            this.PreparedBy.ReadOnly = true;
-            this.PreparedBy.Width = 110;
-            // 
-            // Shift
-            // 
-            this.Shift.DataPropertyName = "Shift";
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Shift.DefaultCellStyle = dataGridViewCellStyle10;
-            this.Shift.HeaderText = "Shift";
-            this.Shift.Name = "Shift";
-            this.Shift.ReadOnly = true;
-            this.Shift.Width = 60;
-            // 
-            // Customer
-            // 
-            this.Customer.DataPropertyName = "Customer";
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Customer.DefaultCellStyle = dataGridViewCellStyle11;
-            this.Customer.HeaderText = "Customer";
-            this.Customer.Name = "Customer";
-            this.Customer.ReadOnly = true;
-            this.Customer.Width = 92;
-            // 
-            // InspectorName
-            // 
-            this.InspectorName.DataPropertyName = "InspectorName";
-            this.InspectorName.HeaderText = "Inspector Name";
-            this.InspectorName.Name = "InspectorName";
-            this.InspectorName.ReadOnly = true;
-            this.InspectorName.Width = 130;
-            // 
-            // CardCaseNo
-            // 
-            this.CardCaseNo.DataPropertyName = "CardCaseNo";
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.CardCaseNo.DefaultCellStyle = dataGridViewCellStyle12;
-            this.CardCaseNo.HeaderText = "Card Case No.";
-            this.CardCaseNo.Name = "CardCaseNo";
-            this.CardCaseNo.ReadOnly = true;
-            this.CardCaseNo.Width = 118;
-            // 
-            // Remarks
-            // 
-            this.Remarks.DataPropertyName = "Remarks";
-            this.Remarks.HeaderText = "Remarks";
-            this.Remarks.Name = "Remarks";
-            this.Remarks.ReadOnly = true;
-            this.Remarks.Width = 85;
-            // 
-            // PCBIncharge
-            // 
-            this.PCBIncharge.DataPropertyName = "PCBIncharge";
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.PCBIncharge.DefaultCellStyle = dataGridViewCellStyle13;
-            this.PCBIncharge.HeaderText = "In-charge";
-            this.PCBIncharge.Name = "PCBIncharge";
-            this.PCBIncharge.ReadOnly = true;
-            this.PCBIncharge.Width = 91;
-            // 
-            // PCBIssuer
-            // 
-            this.PCBIssuer.DataPropertyName = "PCBIssuer";
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.PCBIssuer.DefaultCellStyle = dataGridViewCellStyle14;
-            this.PCBIssuer.HeaderText = "Issuer";
-            this.PCBIssuer.Name = "PCBIssuer";
-            this.PCBIssuer.ReadOnly = true;
-            this.PCBIssuer.Width = 69;
-            // 
-            // LotNo
-            // 
-            this.LotNo.DataPropertyName = "LotNo";
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.LotNo.DefaultCellStyle = dataGridViewCellStyle15;
-            this.LotNo.HeaderText = "Lot No";
-            this.LotNo.Name = "LotNo";
-            this.LotNo.ReadOnly = true;
-            this.LotNo.Width = 74;
-            // 
-            // DepartmentID
-            // 
-            this.DepartmentID.DataPropertyName = "DepartmentID";
-            this.DepartmentID.HeaderText = "Section ";
-            this.DepartmentID.Name = "DepartmentID";
-            this.DepartmentID.ReadOnly = true;
-            this.DepartmentID.Width = 81;
+            this.dataGridView2.Scroll += new System.Windows.Forms.ScrollEventHandler(this.dataGridView2_Scroll);
             // 
             // sectionselect
             // 
@@ -432,6 +268,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.TimeText);
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.label15);
             this.panel1.Controls.Add(this.button12);
@@ -443,7 +280,6 @@
             // 
             // button1
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.button1.FlatAppearance.BorderSize = 0;
             this.button1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
@@ -468,17 +304,23 @@
             // 
             // Exportbtn
             // 
+            this.Exportbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Exportbtn.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Exportbtn.Image = ((System.Drawing.Image)(resources.GetObject("Exportbtn.Image")));
+            this.Exportbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Exportbtn.Location = new System.Drawing.Point(1215, 99);
             this.Exportbtn.Name = "Exportbtn";
+            this.Exportbtn.Padding = new System.Windows.Forms.Padding(15, 0, 10, 0);
             this.Exportbtn.Size = new System.Drawing.Size(98, 27);
             this.Exportbtn.TabIndex = 166;
             this.Exportbtn.Text = "Export";
+            this.Exportbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.Exportbtn.UseVisualStyleBackColor = true;
             this.Exportbtn.Click += new System.EventHandler(this.Exportbtn_Click);
             // 
             // filterbtn
             // 
+            this.filterbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.filterbtn.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.filterbtn.Location = new System.Drawing.Point(1068, 99);
             this.filterbtn.Name = "filterbtn";
@@ -490,9 +332,10 @@
             // 
             // btnNext
             // 
+            this.btnNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnNext.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnNext.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNext.Location = new System.Drawing.Point(1224, 690);
+            this.btnNext.Location = new System.Drawing.Point(1224, 689);
             this.btnNext.Name = "btnNext";
             this.btnNext.Padding = new System.Windows.Forms.Padding(20, 0, 25, 0);
             this.btnNext.Size = new System.Drawing.Size(98, 27);
@@ -500,12 +343,14 @@
             this.btnNext.Text = "Next";
             this.btnNext.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnNext.UseVisualStyleBackColor = true;
+            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
             // 
             // btnPrev
             // 
+            this.btnPrev.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnPrev.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnPrev.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnPrev.Location = new System.Drawing.Point(1096, 690);
+            this.btnPrev.Location = new System.Drawing.Point(1127, 689);
             this.btnPrev.Name = "btnPrev";
             this.btnPrev.Padding = new System.Windows.Forms.Padding(20, 0, 25, 0);
             this.btnPrev.Size = new System.Drawing.Size(91, 27);
@@ -513,19 +358,11 @@
             this.btnPrev.Text = "Prev";
             this.btnPrev.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnPrev.UseVisualStyleBackColor = true;
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label21.Location = new System.Drawing.Point(1198, 697);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(14, 15);
-            this.label21.TabIndex = 168;
-            this.label21.Text = "0";
+            this.btnPrev.Click += new System.EventHandler(this.btnPrev_Click);
             // 
             // lblEntries
             // 
+            this.lblEntries.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblEntries.AutoSize = true;
             this.lblEntries.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEntries.Location = new System.Drawing.Point(23, 696);
@@ -533,6 +370,196 @@
             this.lblEntries.Size = new System.Drawing.Size(148, 15);
             this.lblEntries.TabIndex = 167;
             this.lblEntries.Text = "Showing 1 to 3 of 3 Entries";
+            // 
+            // TimeText
+            // 
+            this.TimeText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.TimeText.AutoSize = true;
+            this.TimeText.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TimeText.Location = new System.Drawing.Point(1170, 24);
+            this.TimeText.Name = "TimeText";
+            this.TimeText.Size = new System.Drawing.Size(81, 20);
+            this.TimeText.TabIndex = 171;
+            this.TimeText.Text = "00:00:00 --";
+            // 
+            // RecordId
+            // 
+            this.RecordId.DataPropertyName = "RecordId";
+            this.RecordId.HeaderText = "RecordId";
+            this.RecordId.Name = "RecordId";
+            this.RecordId.ReadOnly = true;
+            this.RecordId.Visible = false;
+            this.RecordId.Width = 87;
+            // 
+            // FinalShopOrder
+            // 
+            this.FinalShopOrder.DataPropertyName = "FinalShopOrder";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Teal;
+            this.FinalShopOrder.DefaultCellStyle = dataGridViewCellStyle3;
+            this.FinalShopOrder.HeaderText = "Final Shop Order";
+            this.FinalShopOrder.Name = "FinalShopOrder";
+            this.FinalShopOrder.ReadOnly = true;
+            this.FinalShopOrder.Width = 135;
+            // 
+            // PCBShopOrder
+            // 
+            this.PCBShopOrder.DataPropertyName = "PCBShopOrder";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.PCBShopOrder.DefaultCellStyle = dataGridViewCellStyle4;
+            this.PCBShopOrder.HeaderText = "Shop Order";
+            this.PCBShopOrder.Name = "PCBShopOrder";
+            this.PCBShopOrder.ReadOnly = true;
+            this.PCBShopOrder.Width = 103;
+            // 
+            // PlanQuan
+            // 
+            this.PlanQuan.DataPropertyName = "PlanQuan";
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.PlanQuan.DefaultCellStyle = dataGridViewCellStyle5;
+            this.PlanQuan.HeaderText = "Plan Quantity";
+            this.PlanQuan.Name = "PlanQuan";
+            this.PlanQuan.ReadOnly = true;
+            this.PlanQuan.Width = 116;
+            // 
+            // Revision
+            // 
+            this.Revision.DataPropertyName = "Revision";
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Revision.DefaultCellStyle = dataGridViewCellStyle6;
+            this.Revision.HeaderText = "Revision";
+            this.Revision.Name = "Revision";
+            this.Revision.ReadOnly = true;
+            this.Revision.Width = 83;
+            // 
+            // PCBA
+            // 
+            this.PCBA.DataPropertyName = "PCBA";
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.PCBA.DefaultCellStyle = dataGridViewCellStyle7;
+            this.PCBA.HeaderText = "Item No";
+            this.PCBA.Name = "PCBA";
+            this.PCBA.ReadOnly = true;
+            this.PCBA.Width = 83;
+            // 
+            // DatePreparedV2
+            // 
+            this.DatePreparedV2.DataPropertyName = "DatePrepared";
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.DatePreparedV2.DefaultCellStyle = dataGridViewCellStyle8;
+            this.DatePreparedV2.HeaderText = "Date Prepared";
+            this.DatePreparedV2.Name = "DatePreparedV2";
+            this.DatePreparedV2.ReadOnly = true;
+            this.DatePreparedV2.Width = 120;
+            // 
+            // TimeInput
+            // 
+            this.TimeInput.DataPropertyName = "TimeInput";
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.TimeInput.DefaultCellStyle = dataGridViewCellStyle9;
+            this.TimeInput.HeaderText = "Time";
+            this.TimeInput.Name = "TimeInput";
+            this.TimeInput.ReadOnly = true;
+            this.TimeInput.Width = 62;
+            // 
+            // PreparedQuantity
+            // 
+            this.PreparedQuantity.DataPropertyName = "PreparedQuantity";
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.PreparedQuantity.DefaultCellStyle = dataGridViewCellStyle10;
+            this.PreparedQuantity.HeaderText = "Prepared Quantity";
+            this.PreparedQuantity.Name = "PreparedQuantity";
+            this.PreparedQuantity.ReadOnly = true;
+            this.PreparedQuantity.Width = 145;
+            // 
+            // PreparedBy
+            // 
+            this.PreparedBy.DataPropertyName = "PreparedBy";
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.PreparedBy.DefaultCellStyle = dataGridViewCellStyle11;
+            this.PreparedBy.HeaderText = "Prepared By:";
+            this.PreparedBy.Name = "PreparedBy";
+            this.PreparedBy.ReadOnly = true;
+            this.PreparedBy.Width = 110;
+            // 
+            // Shift
+            // 
+            this.Shift.DataPropertyName = "Shift";
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Shift.DefaultCellStyle = dataGridViewCellStyle12;
+            this.Shift.HeaderText = "Shift";
+            this.Shift.Name = "Shift";
+            this.Shift.ReadOnly = true;
+            this.Shift.Width = 60;
+            // 
+            // Customer
+            // 
+            this.Customer.DataPropertyName = "Customer";
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Customer.DefaultCellStyle = dataGridViewCellStyle13;
+            this.Customer.HeaderText = "Customer";
+            this.Customer.Name = "Customer";
+            this.Customer.ReadOnly = true;
+            this.Customer.Width = 92;
+            // 
+            // CardCaseNo
+            // 
+            this.CardCaseNo.DataPropertyName = "CardCaseNo";
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.CardCaseNo.DefaultCellStyle = dataGridViewCellStyle14;
+            this.CardCaseNo.HeaderText = "Model type";
+            this.CardCaseNo.Name = "CardCaseNo";
+            this.CardCaseNo.ReadOnly = true;
+            this.CardCaseNo.Width = 102;
+            // 
+            // Remarks
+            // 
+            this.Remarks.DataPropertyName = "Remarks";
+            this.Remarks.HeaderText = "Remarks";
+            this.Remarks.Name = "Remarks";
+            this.Remarks.ReadOnly = true;
+            this.Remarks.Width = 85;
+            // 
+            // PCBIncharge
+            // 
+            this.PCBIncharge.DataPropertyName = "PCBIncharge";
+            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.PCBIncharge.DefaultCellStyle = dataGridViewCellStyle15;
+            this.PCBIncharge.HeaderText = "In-charge";
+            this.PCBIncharge.Name = "PCBIncharge";
+            this.PCBIncharge.ReadOnly = true;
+            this.PCBIncharge.Width = 91;
+            // 
+            // PCBIssuer
+            // 
+            this.PCBIssuer.DataPropertyName = "PCBIssuer";
+            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.PCBIssuer.DefaultCellStyle = dataGridViewCellStyle16;
+            this.PCBIssuer.HeaderText = "Issuer";
+            this.PCBIssuer.Name = "PCBIssuer";
+            this.PCBIssuer.ReadOnly = true;
+            this.PCBIssuer.Width = 69;
+            // 
+            // LotNo
+            // 
+            this.LotNo.DataPropertyName = "LotNo";
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.LotNo.DefaultCellStyle = dataGridViewCellStyle17;
+            this.LotNo.HeaderText = "Lot No";
+            this.LotNo.Name = "LotNo";
+            this.LotNo.ReadOnly = true;
+            this.LotNo.Width = 74;
+            // 
+            // DepartmentID
+            // 
+            this.DepartmentID.DataPropertyName = "DepartmentID";
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.DepartmentID.DefaultCellStyle = dataGridViewCellStyle18;
+            this.DepartmentID.HeaderText = "Section ";
+            this.DepartmentID.Name = "DepartmentID";
+            this.DepartmentID.ReadOnly = true;
+            this.DepartmentID.Width = 81;
             // 
             // TraceableHistory
             // 
@@ -542,7 +569,6 @@
             this.ControlBox = false;
             this.Controls.Add(this.btnNext);
             this.Controls.Add(this.btnPrev);
-            this.Controls.Add(this.label21);
             this.Controls.Add(this.lblEntries);
             this.Controls.Add(this.Exportbtn);
             this.Controls.Add(this.filterbtn);
@@ -584,9 +610,14 @@
         private System.Windows.Forms.Button Exportbtn;
         private System.Windows.Forms.Button filterbtn;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnNext;
+        private System.Windows.Forms.Button btnPrev;
+        private System.Windows.Forms.Label lblEntries;
+        private System.Windows.Forms.Label TimeText;
         private System.Windows.Forms.DataGridViewTextBoxColumn RecordId;
         private System.Windows.Forms.DataGridViewTextBoxColumn FinalShopOrder;
         private System.Windows.Forms.DataGridViewTextBoxColumn PCBShopOrder;
+        private System.Windows.Forms.DataGridViewTextBoxColumn PlanQuan;
         private System.Windows.Forms.DataGridViewTextBoxColumn Revision;
         private System.Windows.Forms.DataGridViewTextBoxColumn PCBA;
         private System.Windows.Forms.DataGridViewTextBoxColumn DatePreparedV2;
@@ -595,16 +626,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn PreparedBy;
         private System.Windows.Forms.DataGridViewTextBoxColumn Shift;
         private System.Windows.Forms.DataGridViewTextBoxColumn Customer;
-        private System.Windows.Forms.DataGridViewTextBoxColumn InspectorName;
         private System.Windows.Forms.DataGridViewTextBoxColumn CardCaseNo;
         private System.Windows.Forms.DataGridViewTextBoxColumn Remarks;
         private System.Windows.Forms.DataGridViewTextBoxColumn PCBIncharge;
         private System.Windows.Forms.DataGridViewTextBoxColumn PCBIssuer;
         private System.Windows.Forms.DataGridViewTextBoxColumn LotNo;
         private System.Windows.Forms.DataGridViewTextBoxColumn DepartmentID;
-        private System.Windows.Forms.Button btnNext;
-        private System.Windows.Forms.Button btnPrev;
-        private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.Label lblEntries;
     }
 }

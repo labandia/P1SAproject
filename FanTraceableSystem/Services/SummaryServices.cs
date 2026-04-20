@@ -4,6 +4,7 @@ using FanTraceableSystem.Interface;
 using MSDMonitoring.Data;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -61,13 +62,14 @@ namespace FanTraceableSystem.Services
                           ,PCBShopOrder
                           ,Revision
                           ,PCBA
+                          ,PlanQuan   
+                          ,Rev
                           ,DatePrepared
                           ,FORMAT(TimeInput, 'hh:mm tt') AS TimeInput
                           ,PreparedQuantity
                           ,PreparedBy
                           ,Shift
                           ,Customer
-                          ,InspectorName
                           ,CardCaseNo
                           ,Remarks
                           ,PCBIncharge
@@ -115,6 +117,7 @@ namespace FanTraceableSystem.Services
 
             parameters.Add("@Offset", (pageNumber - 1) * pageSize);
             parameters.Add("@PageSize", pageSize);
+
 
             return SqlDataAccess.GetData<SummaryraceableShopOrderModel>(sql, parameters);
         }

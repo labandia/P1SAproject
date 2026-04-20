@@ -47,8 +47,10 @@ namespace FanTraceableSystem
 
                 PCBList.Add(new TracePCBModel
                 {
+                    LotNo = row.Cells["LotNo"].Value?.ToString(),
                     PCBShopOrder = row.Cells["PCBShopOrder"].Value?.ToString(),
-                    Quantity = int.TryParse(row.Cells["Quantity"].Value?.ToString(), out int qty) ? qty : 0
+                    Quantity = int.TryParse(row.Cells["Quantity"].Value?.ToString(), out int qty) ? qty : 0,
+                    Rev = row.Cells["Rev"].Value?.ToString()    
                 });
             }
 
@@ -61,7 +63,7 @@ namespace FanTraceableSystem
         {
             if (string.IsNullOrWhiteSpace(Shoptext.Text))
             {
-                MessageBox.Show("PCB Shop Order is required");
+                MessageBox.Show("Shop Order is required");
                 return;
             }
 
@@ -76,14 +78,22 @@ namespace FanTraceableSystem
             // Example: collect values from controls
             PCBList.Add(new TracePCBModel
             {
+                LotNo = LotText.Text,
                 PCBShopOrder = Shoptext.Text,
+                PCBIssuer = IssuerText.Text,    
                 Quantity = int.TryParse(textBox1.Text, out int qty) ? qty : 0,
+                Line = LineText.Text,
                 Rev = RevText.Text
             });
             dataGridView1.DataSource = PCBList.ToList(); // Refresh the grid    
 
             textBox1.Text = "";
             Shoptext.Text = "";
+            LotText.Text = "";
+            textBox1.Text = ""; 
+            RevText.Text = "";  
+            LineText.Text = "";
+            IssuerText.Text = "";
 
             Shoptext.Focus();
         }

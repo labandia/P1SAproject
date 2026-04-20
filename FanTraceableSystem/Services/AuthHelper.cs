@@ -17,7 +17,7 @@ namespace FanTraceableSystem.Services
                 {1, "Molding" },
                 {2, "Press" },
                 {3, "Rotor" },
-                {4, "Winding" },
+                {4, "winding" },
                 {5, "Circuit" },
                 {6, "Oilproof" },
                 {7, "Harness" }
@@ -44,11 +44,20 @@ namespace FanTraceableSystem.Services
 
 
                     // ✅ Match password for that section
-                    if (dialog.EnteredPassword == correctpassword)
+                    if (string.Equals(
+                        dialog.EnteredPassword?.Trim(),
+                        correctpassword,
+                        StringComparison.OrdinalIgnoreCase))
+                    {
                         return true;
+                    }
 
-                    // Wrong retry 
-                    MessageBox.Show("Wrong password. Try again");
+                    MessageBox.Show(
+                          "Wrong password. Try again.",
+                          "Authentication Failed",
+                          MessageBoxButtons.OK,
+                          MessageBoxIcon.Error
+                      );
                 }
             }
 

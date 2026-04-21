@@ -17,34 +17,35 @@ namespace FanTraceableSystem.Services
             DateTime? startDate, DateTime? endDate, 
             int isEdit, int section)
         {
-            string sql = @"SELECT COUNT(*) 
-                   FROM FanTraceability
-                   WHERE IsDeleted = 0";
+            string sql = @"SELECT  COUNT(*)
+                           FROM FanTraceabilityFinal f
+	                       LEFT JOIN FanTraceabilitySub s ON s.FinalShopOrder = f.FinalShopOrder
+                           WHERE f.IsDeletedFinal = 0 AND ShopOrder IS NOT NULL ";
 
             var parameters = new DynamicParameters();
 
             if (section != 0)
             {
-                sql += " AND DepartmentID = @DepartmentID";
+                sql += " AND f.DepartmentID = @DepartmentID";
                 parameters.Add("@DepartmentID", section);
             }
 
             // 🔍 Search filter
             if (!string.IsNullOrWhiteSpace(search))
             {
-                sql += " AND (FinalShopOrder LIKE @Search OR PCBShopOrder LIKE @Search)";
+                sql += " AND (f.FinalShopOrder LIKE @Search OR s.ShopOrder LIKE @Search)";
                 parameters.Add("@Search", $"%{search}%");
             }
 
             if (startDate.HasValue && isEdit == 1)
             {
-                sql += " AND DatePrepared >= @StartDate";
+                sql += " AND f.DatePrepared >= @StartDate";
                 parameters.Add("@StartDate", startDate.Value.Date);
             }
 
             if (endDate.HasValue && isEdit == 1)
             {
-                sql += " AND DatePrepared < DATEADD(DAY, 1, @EndDate)";
+                sql += " AND f.DatePrepared < DATEADD(DAY, 1, @EndDate)";
                 parameters.Add("@EndDate", endDate.Value.Date);
             }
 
@@ -58,33 +59,35 @@ namespace FanTraceableSystem.Services
         {
 
             string sql = @"
-                    SELECT FinalShopOrder
-                          ,PCBShopOrder
-                          ,Revision
-                          ,PCBA
-                          ,PlanQuan   
-                          ,Rev
-                          ,DatePrepared
-                          ,FORMAT(TimeInput, 'hh:mm tt') AS TimeInput
-                          ,PreparedQuantity
-                          ,PreparedBy
-                          ,Shift
-                          ,Customer
-                          ,CardCaseNo
-                          ,Remarks
-                          ,PCBIncharge
-                          ,PCBIssuer
-                          ,LotNo
-                          ,IsDeleted,DepartmentID
-                      FROM FanTraceability
-                      WHERE IsDeleted = 0 
+                    SELECT  f.RecordId
+                           ,f.FinalShopOrder
+                           ,s.ShopOrder
+                           ,f.Revision
+                           ,f.ItemNo, PlanQuan, Line
+                           ,DatePrepared
+                           ,FORMAT(TimeInput, 'hh:mm tt') AS TimeInput
+                           ,PreparedQuantity
+                           ,PreparedBy
+                           ,Shift
+                           ,Customer
+                           ,f.Modeltype
+                           ,Remarks
+                           ,f.Incharge
+                           ,f.FinalIssuedby
+                           ,LotNo
+		                   ,s.Rev
+                           ,f.IsDeletedFinal
+		                   ,f.DepartmentID
+                       FROM FanTraceabilityFinal f
+	                   LEFT JOIN FanTraceabilitySub s ON s.FinalShopOrder = f.FinalShopOrder
+                       WHERE f.IsDeletedFinal = 0 AND ShopOrder IS NOT NULL
                 ";
 
             var parameters = new DynamicParameters();
 
             if(section != 0)
             {
-                sql += " AND DepartmentID =@DepartmentID";
+                sql += " AND f.DepartmentID =@DepartmentID";
                 parameters.Add("@DepartmentID", section);
             }
 
@@ -92,26 +95,26 @@ namespace FanTraceableSystem.Services
             // 🔍 Search filter
             if (!string.IsNullOrWhiteSpace(search))
             {
-                sql += " AND (FinalShopOrder LIKE @Search OR PCBShopOrder LIKE @Search)";
+                sql += " AND (f.FinalShopOrder LIKE @Search OR s.ShopOrder LIKE @Search)";
                 parameters.Add("@Search", $"%{search}%");
             }
 
             // 📅 Start Date filter
             if (startDate.HasValue && isEdit == 1)
             {
-                sql += " AND DatePrepared >= @StartDate";
+                sql += " AND f.DatePrepared >= @StartDate";
                 parameters.Add("@StartDate", startDate.Value.Date);
             }
 
             // 📅 End Date filter (inclusive)
             if (endDate.HasValue && isEdit == 1)
             {
-                sql += " AND DatePrepared < DATEADD(DAY, 1, @EndDate)";
+                sql += " AND f.DatePrepared < DATEADD(DAY, 1, @EndDate)";
                 parameters.Add("@EndDate", endDate.Value.Date);
             }
 
             sql += @"
-                ORDER BY RecordId DESC
+                ORDER BY f.RecordId DESC
                 OFFSET @Offset ROWS
                 FETCH NEXT @PageSize ROWS ONLY";
 

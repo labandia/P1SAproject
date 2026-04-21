@@ -145,7 +145,7 @@
             this.button4.Padding = new System.Windows.Forms.Padding(0, 0, 0, 5);
             this.button4.Size = new System.Drawing.Size(310, 144);
             this.button4.TabIndex = 6;
-            this.button4.Text = "Mold Frame";
+            this.button4.Text = "Molding";
             this.button4.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.button4.UseVisualStyleBackColor = false;
             this.button4.Click += new System.EventHandler(this.button4_Click);
@@ -162,7 +162,7 @@
             this.button5.Padding = new System.Windows.Forms.Padding(0, 0, 0, 5);
             this.button5.Size = new System.Drawing.Size(310, 144);
             this.button5.TabIndex = 7;
-            this.button5.Text = "Aluminum Frame";
+            this.button5.Text = "Press";
             this.button5.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.button5.UseVisualStyleBackColor = false;
             this.button5.Click += new System.EventHandler(this.button5_Click);
@@ -179,7 +179,7 @@
             this.button6.Padding = new System.Windows.Forms.Padding(0, 0, 0, 5);
             this.button6.Size = new System.Drawing.Size(310, 144);
             this.button6.TabIndex = 8;
-            this.button6.Text = "Impeller ";
+            this.button6.Text = "Rotor";
             this.button6.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.button6.UseVisualStyleBackColor = false;
             this.button6.Click += new System.EventHandler(this.button6_Click);

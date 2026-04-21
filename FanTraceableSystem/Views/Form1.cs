@@ -15,13 +15,15 @@ namespace FanTraceableSystem
     public partial class Form1 : Form
     {
         private readonly ITraceable _trac;
+        private readonly ISubassy _sub;
         private readonly ISummary _summary;
 
-        public Form1(ITraceable traceable, ISummary sum)
+        public Form1(ITraceable traceable, ISummary sum, ISubassy sub)
         {
             InitializeComponent();
             _trac = traceable;
-            _summary = sum; 
+            _summary = sum;
+            _sub = sub; 
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -44,11 +46,7 @@ namespace FanTraceableSystem
            
         }
 
-        public void SelectionSection(int section)
-        {
-            var openinput = new FanTraceabilityAutoSearch(_trac, section);
-            openinput.ShowDialog();
-        }
+      
 
         private void button5_Click(object sender, EventArgs e)
         {
@@ -90,6 +88,17 @@ namespace FanTraceableSystem
             if (!AuthHelper.RequiredPassword(7))
                 return;
             SelectionSection(7);
+        }
+
+
+        public void SelectionSection(int section)
+        {
+            var openinput = new FanTraceabilityAutoSearch(_trac, _sub, section);
+
+            openinput.Owner = this;   // set current form as parent
+            openinput.Show();
+
+            this.Hide(); // or Close() depending on your flow
         }
     }
 }

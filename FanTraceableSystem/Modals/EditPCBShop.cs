@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -13,23 +14,23 @@ namespace FanTraceableSystem
 {
     public partial class EditPCBShop : Form
     {
-        public BindingList<EditTracePCBModel> PCBList = new BindingList<EditTracePCBModel>();
+        public BindingList<TraceableSubAssyModel> subassy = new BindingList<TraceableSubAssyModel>();
 
         // Constructor for EDIT
-        public EditPCBShop(BindingList<EditTracePCBModel> existingList)
+        public EditPCBShop(BindingList<TraceableSubAssyModel> existingList)
         {
             InitializeComponent();
 
             // clone to avoid direct reference issues (recommended)
-            PCBList = new BindingList<EditTracePCBModel>(
-                existingList.Select(x => new EditTracePCBModel
+            subassy = new BindingList<TraceableSubAssyModel>(
+                existingList.Select(x => new TraceableSubAssyModel
                 {
-                    RecordId = x.RecordId,
-                    PCBShopOrder = x.PCBShopOrder,
-                    Quantity = x.Quantity,
+                    SubAssyID = x.SubAssyID,
+                    ShopOrder = x.ShopOrder,
+                    PreparedQuantity = x.PreparedQuantity,
                     LotNo = x.LotNo,
                     Line = x.Line,
-                    PCBIssuer = x.PCBIssuer,
+                    SubAssyIssued = x.SubAssyIssued,
                     Rev = x.Rev,
                     isAction = 1 // 👈 mark existing as EDIT by default (important)
                 }).ToList()
@@ -46,22 +47,24 @@ namespace FanTraceableSystem
 
 
             // Example: collect values from controls
-            PCBList.Add(new EditTracePCBModel
+            subassy.Add(new TraceableSubAssyModel
             {
-                PCBShopOrder = Shoptext.Text,
-                Quantity = int.TryParse(QuanText.Text, out int qty) ? qty : 0,
+                ShopOrder = Shoptext.Text,
+                PreparedQuantity = int.TryParse(QuanText.Text, out int qty) ? qty : 0,
                 Rev = RevText.Text,
                 LotNo = LotNotext.Text,
                 Line = LineText.Text,
-                PCBIssuer = IssuerText.Text,
+                SubAssyIssued = IssuerText.Text,
                 isAction = 0
             });
-            dataGridView1.DataSource = PCBList.ToList(); // Refresh the grid    
+            dataGridView1.DataSource = subassy.ToList(); // Refresh the grid    
 
             QuanText.Text = "";
             Shoptext.Text = "";
             LotNotext.Text = "";
-
+            RevText.Text = "";
+            LineText.Text = "";
+            IssuerText.Text = "";
 
             Shoptext.Focus();
         }
@@ -74,24 +77,24 @@ namespace FanTraceableSystem
         private void SaveBtn_Click(object sender, EventArgs e)
         {
 
-            PCBList.Clear();
 
-            foreach (DataGridViewRow row in dataGridView1.Rows)
-            {
-                if (row.IsNewRow) continue;
+            //foreach (DataGridViewRow row in dataGridView1.Rows)
+            //{
+            //    if (row.IsNewRow) continue;
 
-                PCBList.Add(new EditTracePCBModel
-                {
-                    RecordId = int.TryParse(row.Cells["RecordId"].Value?.ToString(), out int id) ? id : 0,
-                    Rev = row.Cells["Rev"].Value?.ToString(),
-                    PCBShopOrder = row.Cells["PCBShopOrder"].Value?.ToString(),
-                    PCBIssuer = row.Cells["PCBIssuer"].Value?.ToString(),   
-                    LotNo = row.Cells["LotNo"].Value?.ToString(),
-                    Line = row.Cells["Line"].Value?.ToString(),
-                    Quantity = int.TryParse(row.Cells["Quantity"].Value?.ToString(), out int qty) ? qty : 0,
-                    isAction = int.TryParse(row.Cells["IsAction"].Value?.ToString(), out int act) ? act : 0,
-                });
-            }
+
+            //    subassy.Add(new TraceableSubAssyModel
+            //    {
+            //        SubAssyID = int.TryParse(row.Cells["SubAssyID"].Value?.ToString(), out int id) ? id : 0,
+            //        Rev = row.Cells["Rev"].Value?.ToString(),
+            //        ShopOrder = row.Cells["ShopOrder"].Value?.ToString(),
+            //        SubAssyIssued = row.Cells["SubAssyIssued"].Value?.ToString(),
+            //        LotNo = row.Cells["LotNo"].Value?.ToString(),
+            //        Line = row.Cells["Line"].Value?.ToString(),
+            //        PreparedQuantity = int.TryParse(row.Cells["PreparedQuantity"].Value?.ToString(), out int qty) ? qty : 0,
+            //        isAction = int.TryParse(row.Cells["IsAction"].Value?.ToString(), out int act) ? act : 0,
+            //    });
+            //}
 
             this.DialogResult = DialogResult.OK;
             this.Close();
@@ -102,7 +105,7 @@ namespace FanTraceableSystem
             dataGridView1.AutoGenerateColumns = true;
 
             dataGridView1.DataSource = null;
-            dataGridView1.DataSource = PCBList;
+            dataGridView1.DataSource = subassy;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -148,6 +151,16 @@ namespace FanTraceableSystem
             {
                 dataGridView1.CommitEdit(DataGridViewDataErrorContexts.Commit);
             }
+        }
+
+        private void LineText_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -53,6 +53,24 @@
             this.label14 = new System.Windows.Forms.Label();
             this.button12 = new System.Windows.Forms.Button();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.RecordId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FinalShopOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ShopOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PlanQuan = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Revision = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ItemNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DatePreparedV2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.TimeInput = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PreparedQuantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PreparedBy = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Shift = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Customer = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Modeltype = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Remarks = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Incharge = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FinalIssuedby = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LotNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DepartmentID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sectionselect = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.dateTimePicker3 = new System.Windows.Forms.DateTimePicker();
@@ -60,6 +78,7 @@
             this.label17 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.TimeText = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.label15 = new System.Windows.Forms.Label();
             this.Exportbtn = new System.Windows.Forms.Button();
@@ -67,25 +86,6 @@
             this.btnNext = new System.Windows.Forms.Button();
             this.btnPrev = new System.Windows.Forms.Button();
             this.lblEntries = new System.Windows.Forms.Label();
-            this.TimeText = new System.Windows.Forms.Label();
-            this.RecordId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FinalShopOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PCBShopOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PlanQuan = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Revision = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PCBA = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DatePreparedV2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TimeInput = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PreparedQuantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PreparedBy = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Shift = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Customer = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CardCaseNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Remarks = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PCBIncharge = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PCBIssuer = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LotNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DepartmentID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -154,20 +154,20 @@
             this.dataGridView2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.RecordId,
             this.FinalShopOrder,
-            this.PCBShopOrder,
+            this.ShopOrder,
             this.PlanQuan,
             this.Revision,
-            this.PCBA,
+            this.ItemNo,
             this.DatePreparedV2,
             this.TimeInput,
             this.PreparedQuantity,
             this.PreparedBy,
             this.Shift,
             this.Customer,
-            this.CardCaseNo,
+            this.Modeltype,
             this.Remarks,
-            this.PCBIncharge,
-            this.PCBIssuer,
+            this.Incharge,
+            this.FinalIssuedby,
             this.LotNo,
             this.DepartmentID});
             dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -196,6 +196,185 @@
             this.dataGridView2.TabIndex = 157;
             this.dataGridView2.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView2_CellFormatting);
             this.dataGridView2.Scroll += new System.Windows.Forms.ScrollEventHandler(this.dataGridView2_Scroll);
+            // 
+            // RecordId
+            // 
+            this.RecordId.DataPropertyName = "RecordId";
+            this.RecordId.HeaderText = "RecordId";
+            this.RecordId.Name = "RecordId";
+            this.RecordId.ReadOnly = true;
+            this.RecordId.Visible = false;
+            this.RecordId.Width = 87;
+            // 
+            // FinalShopOrder
+            // 
+            this.FinalShopOrder.DataPropertyName = "FinalShopOrder";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Teal;
+            this.FinalShopOrder.DefaultCellStyle = dataGridViewCellStyle3;
+            this.FinalShopOrder.HeaderText = "Final Shop Order";
+            this.FinalShopOrder.Name = "FinalShopOrder";
+            this.FinalShopOrder.ReadOnly = true;
+            this.FinalShopOrder.Width = 135;
+            // 
+            // ShopOrder
+            // 
+            this.ShopOrder.DataPropertyName = "ShopOrder";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ShopOrder.DefaultCellStyle = dataGridViewCellStyle4;
+            this.ShopOrder.HeaderText = "Shop Order";
+            this.ShopOrder.Name = "ShopOrder";
+            this.ShopOrder.ReadOnly = true;
+            this.ShopOrder.Width = 103;
+            // 
+            // PlanQuan
+            // 
+            this.PlanQuan.DataPropertyName = "PlanQuan";
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.PlanQuan.DefaultCellStyle = dataGridViewCellStyle5;
+            this.PlanQuan.HeaderText = "Plan Quantity";
+            this.PlanQuan.Name = "PlanQuan";
+            this.PlanQuan.ReadOnly = true;
+            this.PlanQuan.Width = 116;
+            // 
+            // Revision
+            // 
+            this.Revision.DataPropertyName = "Revision";
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Revision.DefaultCellStyle = dataGridViewCellStyle6;
+            this.Revision.HeaderText = "Revision";
+            this.Revision.Name = "Revision";
+            this.Revision.ReadOnly = true;
+            this.Revision.Width = 83;
+            // 
+            // ItemNo
+            // 
+            this.ItemNo.DataPropertyName = "ItemNo";
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ItemNo.DefaultCellStyle = dataGridViewCellStyle7;
+            this.ItemNo.HeaderText = "Item No";
+            this.ItemNo.Name = "ItemNo";
+            this.ItemNo.ReadOnly = true;
+            this.ItemNo.Width = 83;
+            // 
+            // DatePreparedV2
+            // 
+            this.DatePreparedV2.DataPropertyName = "DatePrepared";
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.DatePreparedV2.DefaultCellStyle = dataGridViewCellStyle8;
+            this.DatePreparedV2.HeaderText = "Date Prepared";
+            this.DatePreparedV2.Name = "DatePreparedV2";
+            this.DatePreparedV2.ReadOnly = true;
+            this.DatePreparedV2.Width = 120;
+            // 
+            // TimeInput
+            // 
+            this.TimeInput.DataPropertyName = "TimeInput";
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.TimeInput.DefaultCellStyle = dataGridViewCellStyle9;
+            this.TimeInput.HeaderText = "Time";
+            this.TimeInput.Name = "TimeInput";
+            this.TimeInput.ReadOnly = true;
+            this.TimeInput.Width = 62;
+            // 
+            // PreparedQuantity
+            // 
+            this.PreparedQuantity.DataPropertyName = "PreparedQuantity";
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.PreparedQuantity.DefaultCellStyle = dataGridViewCellStyle10;
+            this.PreparedQuantity.HeaderText = "Prepared Quantity";
+            this.PreparedQuantity.Name = "PreparedQuantity";
+            this.PreparedQuantity.ReadOnly = true;
+            this.PreparedQuantity.Width = 145;
+            // 
+            // PreparedBy
+            // 
+            this.PreparedBy.DataPropertyName = "PreparedBy";
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.PreparedBy.DefaultCellStyle = dataGridViewCellStyle11;
+            this.PreparedBy.HeaderText = "Prepared By:";
+            this.PreparedBy.Name = "PreparedBy";
+            this.PreparedBy.ReadOnly = true;
+            this.PreparedBy.Width = 110;
+            // 
+            // Shift
+            // 
+            this.Shift.DataPropertyName = "Shift";
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Shift.DefaultCellStyle = dataGridViewCellStyle12;
+            this.Shift.HeaderText = "Shift";
+            this.Shift.Name = "Shift";
+            this.Shift.ReadOnly = true;
+            this.Shift.Width = 60;
+            // 
+            // Customer
+            // 
+            this.Customer.DataPropertyName = "Customer";
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Customer.DefaultCellStyle = dataGridViewCellStyle13;
+            this.Customer.HeaderText = "Customer";
+            this.Customer.Name = "Customer";
+            this.Customer.ReadOnly = true;
+            this.Customer.Width = 92;
+            // 
+            // Modeltype
+            // 
+            this.Modeltype.DataPropertyName = "Modeltype";
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Modeltype.DefaultCellStyle = dataGridViewCellStyle14;
+            this.Modeltype.HeaderText = "Model type";
+            this.Modeltype.Name = "Modeltype";
+            this.Modeltype.ReadOnly = true;
+            this.Modeltype.Width = 102;
+            // 
+            // Remarks
+            // 
+            this.Remarks.DataPropertyName = "Remarks";
+            this.Remarks.HeaderText = "Remarks";
+            this.Remarks.Name = "Remarks";
+            this.Remarks.ReadOnly = true;
+            this.Remarks.Width = 85;
+            // 
+            // Incharge
+            // 
+            this.Incharge.DataPropertyName = "Incharge";
+            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.Incharge.DefaultCellStyle = dataGridViewCellStyle15;
+            this.Incharge.HeaderText = "In-charge";
+            this.Incharge.Name = "Incharge";
+            this.Incharge.ReadOnly = true;
+            this.Incharge.Width = 91;
+            // 
+            // FinalIssuedby
+            // 
+            this.FinalIssuedby.DataPropertyName = "FinalIssuedby";
+            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.FinalIssuedby.DefaultCellStyle = dataGridViewCellStyle16;
+            this.FinalIssuedby.HeaderText = "Issuer";
+            this.FinalIssuedby.Name = "FinalIssuedby";
+            this.FinalIssuedby.ReadOnly = true;
+            this.FinalIssuedby.Width = 69;
+            // 
+            // LotNo
+            // 
+            this.LotNo.DataPropertyName = "LotNo";
+            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.LotNo.DefaultCellStyle = dataGridViewCellStyle17;
+            this.LotNo.HeaderText = "Lot No";
+            this.LotNo.Name = "LotNo";
+            this.LotNo.ReadOnly = true;
+            this.LotNo.Width = 74;
+            // 
+            // DepartmentID
+            // 
+            this.DepartmentID.DataPropertyName = "DepartmentID";
+            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.DepartmentID.DefaultCellStyle = dataGridViewCellStyle18;
+            this.DepartmentID.HeaderText = "Section ";
+            this.DepartmentID.Name = "DepartmentID";
+            this.DepartmentID.ReadOnly = true;
+            this.DepartmentID.Width = 81;
             // 
             // sectionselect
             // 
@@ -277,6 +456,17 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1350, 68);
             this.panel1.TabIndex = 164;
+            // 
+            // TimeText
+            // 
+            this.TimeText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.TimeText.AutoSize = true;
+            this.TimeText.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TimeText.Location = new System.Drawing.Point(1170, 24);
+            this.TimeText.Name = "TimeText";
+            this.TimeText.Size = new System.Drawing.Size(81, 20);
+            this.TimeText.TabIndex = 171;
+            this.TimeText.Text = "00:00:00 --";
             // 
             // button1
             // 
@@ -371,196 +561,6 @@
             this.lblEntries.TabIndex = 167;
             this.lblEntries.Text = "Showing 1 to 3 of 3 Entries";
             // 
-            // TimeText
-            // 
-            this.TimeText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.TimeText.AutoSize = true;
-            this.TimeText.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TimeText.Location = new System.Drawing.Point(1170, 24);
-            this.TimeText.Name = "TimeText";
-            this.TimeText.Size = new System.Drawing.Size(81, 20);
-            this.TimeText.TabIndex = 171;
-            this.TimeText.Text = "00:00:00 --";
-            // 
-            // RecordId
-            // 
-            this.RecordId.DataPropertyName = "RecordId";
-            this.RecordId.HeaderText = "RecordId";
-            this.RecordId.Name = "RecordId";
-            this.RecordId.ReadOnly = true;
-            this.RecordId.Visible = false;
-            this.RecordId.Width = 87;
-            // 
-            // FinalShopOrder
-            // 
-            this.FinalShopOrder.DataPropertyName = "FinalShopOrder";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Teal;
-            this.FinalShopOrder.DefaultCellStyle = dataGridViewCellStyle3;
-            this.FinalShopOrder.HeaderText = "Final Shop Order";
-            this.FinalShopOrder.Name = "FinalShopOrder";
-            this.FinalShopOrder.ReadOnly = true;
-            this.FinalShopOrder.Width = 135;
-            // 
-            // PCBShopOrder
-            // 
-            this.PCBShopOrder.DataPropertyName = "PCBShopOrder";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.PCBShopOrder.DefaultCellStyle = dataGridViewCellStyle4;
-            this.PCBShopOrder.HeaderText = "Shop Order";
-            this.PCBShopOrder.Name = "PCBShopOrder";
-            this.PCBShopOrder.ReadOnly = true;
-            this.PCBShopOrder.Width = 103;
-            // 
-            // PlanQuan
-            // 
-            this.PlanQuan.DataPropertyName = "PlanQuan";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.PlanQuan.DefaultCellStyle = dataGridViewCellStyle5;
-            this.PlanQuan.HeaderText = "Plan Quantity";
-            this.PlanQuan.Name = "PlanQuan";
-            this.PlanQuan.ReadOnly = true;
-            this.PlanQuan.Width = 116;
-            // 
-            // Revision
-            // 
-            this.Revision.DataPropertyName = "Revision";
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Revision.DefaultCellStyle = dataGridViewCellStyle6;
-            this.Revision.HeaderText = "Revision";
-            this.Revision.Name = "Revision";
-            this.Revision.ReadOnly = true;
-            this.Revision.Width = 83;
-            // 
-            // PCBA
-            // 
-            this.PCBA.DataPropertyName = "PCBA";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.PCBA.DefaultCellStyle = dataGridViewCellStyle7;
-            this.PCBA.HeaderText = "Item No";
-            this.PCBA.Name = "PCBA";
-            this.PCBA.ReadOnly = true;
-            this.PCBA.Width = 83;
-            // 
-            // DatePreparedV2
-            // 
-            this.DatePreparedV2.DataPropertyName = "DatePrepared";
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.DatePreparedV2.DefaultCellStyle = dataGridViewCellStyle8;
-            this.DatePreparedV2.HeaderText = "Date Prepared";
-            this.DatePreparedV2.Name = "DatePreparedV2";
-            this.DatePreparedV2.ReadOnly = true;
-            this.DatePreparedV2.Width = 120;
-            // 
-            // TimeInput
-            // 
-            this.TimeInput.DataPropertyName = "TimeInput";
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.TimeInput.DefaultCellStyle = dataGridViewCellStyle9;
-            this.TimeInput.HeaderText = "Time";
-            this.TimeInput.Name = "TimeInput";
-            this.TimeInput.ReadOnly = true;
-            this.TimeInput.Width = 62;
-            // 
-            // PreparedQuantity
-            // 
-            this.PreparedQuantity.DataPropertyName = "PreparedQuantity";
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.PreparedQuantity.DefaultCellStyle = dataGridViewCellStyle10;
-            this.PreparedQuantity.HeaderText = "Prepared Quantity";
-            this.PreparedQuantity.Name = "PreparedQuantity";
-            this.PreparedQuantity.ReadOnly = true;
-            this.PreparedQuantity.Width = 145;
-            // 
-            // PreparedBy
-            // 
-            this.PreparedBy.DataPropertyName = "PreparedBy";
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.PreparedBy.DefaultCellStyle = dataGridViewCellStyle11;
-            this.PreparedBy.HeaderText = "Prepared By:";
-            this.PreparedBy.Name = "PreparedBy";
-            this.PreparedBy.ReadOnly = true;
-            this.PreparedBy.Width = 110;
-            // 
-            // Shift
-            // 
-            this.Shift.DataPropertyName = "Shift";
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Shift.DefaultCellStyle = dataGridViewCellStyle12;
-            this.Shift.HeaderText = "Shift";
-            this.Shift.Name = "Shift";
-            this.Shift.ReadOnly = true;
-            this.Shift.Width = 60;
-            // 
-            // Customer
-            // 
-            this.Customer.DataPropertyName = "Customer";
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Customer.DefaultCellStyle = dataGridViewCellStyle13;
-            this.Customer.HeaderText = "Customer";
-            this.Customer.Name = "Customer";
-            this.Customer.ReadOnly = true;
-            this.Customer.Width = 92;
-            // 
-            // CardCaseNo
-            // 
-            this.CardCaseNo.DataPropertyName = "CardCaseNo";
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.CardCaseNo.DefaultCellStyle = dataGridViewCellStyle14;
-            this.CardCaseNo.HeaderText = "Model type";
-            this.CardCaseNo.Name = "CardCaseNo";
-            this.CardCaseNo.ReadOnly = true;
-            this.CardCaseNo.Width = 102;
-            // 
-            // Remarks
-            // 
-            this.Remarks.DataPropertyName = "Remarks";
-            this.Remarks.HeaderText = "Remarks";
-            this.Remarks.Name = "Remarks";
-            this.Remarks.ReadOnly = true;
-            this.Remarks.Width = 85;
-            // 
-            // PCBIncharge
-            // 
-            this.PCBIncharge.DataPropertyName = "PCBIncharge";
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.PCBIncharge.DefaultCellStyle = dataGridViewCellStyle15;
-            this.PCBIncharge.HeaderText = "In-charge";
-            this.PCBIncharge.Name = "PCBIncharge";
-            this.PCBIncharge.ReadOnly = true;
-            this.PCBIncharge.Width = 91;
-            // 
-            // PCBIssuer
-            // 
-            this.PCBIssuer.DataPropertyName = "PCBIssuer";
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.PCBIssuer.DefaultCellStyle = dataGridViewCellStyle16;
-            this.PCBIssuer.HeaderText = "Issuer";
-            this.PCBIssuer.Name = "PCBIssuer";
-            this.PCBIssuer.ReadOnly = true;
-            this.PCBIssuer.Width = 69;
-            // 
-            // LotNo
-            // 
-            this.LotNo.DataPropertyName = "LotNo";
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.LotNo.DefaultCellStyle = dataGridViewCellStyle17;
-            this.LotNo.HeaderText = "Lot No";
-            this.LotNo.Name = "LotNo";
-            this.LotNo.ReadOnly = true;
-            this.LotNo.Width = 74;
-            // 
-            // DepartmentID
-            // 
-            this.DepartmentID.DataPropertyName = "DepartmentID";
-            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.DepartmentID.DefaultCellStyle = dataGridViewCellStyle18;
-            this.DepartmentID.HeaderText = "Section ";
-            this.DepartmentID.Name = "DepartmentID";
-            this.DepartmentID.ReadOnly = true;
-            this.DepartmentID.Width = 81;
-            // 
             // TraceableHistory
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -585,6 +585,7 @@
             this.Name = "TraceableHistory";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "TraceableHistory";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.TraceableHistory_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.panel1.ResumeLayout(false);
@@ -616,20 +617,20 @@
         private System.Windows.Forms.Label TimeText;
         private System.Windows.Forms.DataGridViewTextBoxColumn RecordId;
         private System.Windows.Forms.DataGridViewTextBoxColumn FinalShopOrder;
-        private System.Windows.Forms.DataGridViewTextBoxColumn PCBShopOrder;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ShopOrder;
         private System.Windows.Forms.DataGridViewTextBoxColumn PlanQuan;
         private System.Windows.Forms.DataGridViewTextBoxColumn Revision;
-        private System.Windows.Forms.DataGridViewTextBoxColumn PCBA;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ItemNo;
         private System.Windows.Forms.DataGridViewTextBoxColumn DatePreparedV2;
         private System.Windows.Forms.DataGridViewTextBoxColumn TimeInput;
         private System.Windows.Forms.DataGridViewTextBoxColumn PreparedQuantity;
         private System.Windows.Forms.DataGridViewTextBoxColumn PreparedBy;
         private System.Windows.Forms.DataGridViewTextBoxColumn Shift;
         private System.Windows.Forms.DataGridViewTextBoxColumn Customer;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CardCaseNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Modeltype;
         private System.Windows.Forms.DataGridViewTextBoxColumn Remarks;
-        private System.Windows.Forms.DataGridViewTextBoxColumn PCBIncharge;
-        private System.Windows.Forms.DataGridViewTextBoxColumn PCBIssuer;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Incharge;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FinalIssuedby;
         private System.Windows.Forms.DataGridViewTextBoxColumn LotNo;
         private System.Windows.Forms.DataGridViewTextBoxColumn DepartmentID;
     }

@@ -14,13 +14,13 @@ namespace FanTraceableSystem.Data
         public bool HasNextPage { get; set; }
     }
 
-    public class TraceableShopOrderModel
+    public class TraceableOverAllSummaryModel
     {
         public int RecordId { get; set; }
         public string FinalShopOrder { get; set; }
-        public string PCBShopOrder { get; set; }
+        public string ShopOrder { get; set; }
         public string Revision { get; set; }
-        public string PCBA { get; set; }
+        public string ItemNo { get; set; }
         public int PlanQuan { get; set; }
         public DateTime DatePrepared { get; set; }
         public string TimeInput { get; set; }
@@ -31,10 +31,11 @@ namespace FanTraceableSystem.Data
         public string Line { get; set; }
         public string Customer { get; set; }
 
-        public string CardCaseNo { get; set; }
+        public string Modeltype { get; set; }
         public string Remarks { get; set; }
-        public string PCBIncharge { get; set; }
-        public string PCBIssuer { get; set; }
+        public string Incharge { get; set; }
+        public string FinalIssuedby { get; set; }
+        public string SubAssyIssued { get; set; }
         public string LotNo { get; set; }
         public int DepartmentID { get; set; }
     }
@@ -42,10 +43,10 @@ namespace FanTraceableSystem.Data
     public class ExportTraceableShopOrderModel
     {
         public string FinalShopOrder { get; set; }
-        public string PCBShopOrder { get; set; }
+        public string ShopOrder { get; set; }
         public string PreparedBy { get; set; }
         public string Revision { get; set; }
-        public string PCBA { get; set; }
+        public string ItemNo { get; set; }
         public int PlanQuan { get; set; }
         public string DatePrepared { get; set; }
         public string TimeInput { get; set; }
@@ -55,10 +56,10 @@ namespace FanTraceableSystem.Data
 
         public string Customer { get; set; }
 
-        public string CardCaseNo { get; set; }
+        public string Modeltype { get; set; }
         public string Remarks { get; set; }
-        public string PCBIncharge { get; set; }
-        public string PCBIssuer { get; set; }
+        public string Incharge { get; set; }
+        public string FinalIssuedby { get; set; }
         public string LotNo { get; set; }
         public string DepartmentID { get; set; }
     }
@@ -67,9 +68,9 @@ namespace FanTraceableSystem.Data
     public class SummaryraceableShopOrderModel
     {
         public string FinalShopOrder { get; set; }
-        public string PCBShopOrder { get; set; }
+        public string ShopOrder { get; set; }
         public string Revision { get; set; }
-        public string PCBA { get; set; }
+        public string ItemNo { get; set; }
         public DateTime DatePrepared { get; set; }
         public string TimeInput { get; set; }
         public string Rev { get; set; }
@@ -80,10 +81,10 @@ namespace FanTraceableSystem.Data
 
         public string Customer { get; set; }
 
-        public string CardCaseNo { get; set; }
+        public string Modeltype { get; set; }
         public string Remarks { get; set; }
-        public string PCBIncharge { get; set; }
-        public string PCBIssuer { get; set; }
+        public string Incharge { get; set; }
+        public string FinalIssuedby { get; set; }
         public string LotNo { get; set; }
         public int DepartmentID { get; set; }
     }

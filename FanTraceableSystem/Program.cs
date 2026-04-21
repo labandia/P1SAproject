@@ -23,6 +23,7 @@ namespace FanTraceableSystem
             var services = new ServiceCollection();
             // Services (OK as Singleton)
             services.AddSingleton<ITraceable, TraceableService>();
+            services.AddSingleton<ISubassy, ISubassyServices>();
             services.AddSingleton<ISummary, SummaryServices>();
 
             // Forms (should be Transient)

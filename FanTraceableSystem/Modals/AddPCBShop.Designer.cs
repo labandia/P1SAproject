@@ -40,12 +40,6 @@
             this.SaveBtn = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.RecordId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PCBShopOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LotNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Quantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Rev = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PCBIssuer = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.button2 = new System.Windows.Forms.Button();
             this.RevText = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -55,22 +49,38 @@
             this.label5 = new System.Windows.Forms.Label();
             this.LineText = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button12 = new System.Windows.Forms.Button();
+            this.label15 = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.SubAssyID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FinalShopOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ShopOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LotNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.PreparedQuantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Rev = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Line = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SubAssyIssued = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.IsAction = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // Shoptext
             // 
-            this.Shoptext.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
-            this.Shoptext.Location = new System.Drawing.Point(55, 90);
+            this.Shoptext.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.Shoptext.Location = new System.Drawing.Point(34, 125);
             this.Shoptext.Name = "Shoptext";
-            this.Shoptext.Size = new System.Drawing.Size(224, 23);
+            this.Shoptext.Size = new System.Drawing.Size(282, 25);
             this.Shoptext.TabIndex = 3;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
-            this.label1.Location = new System.Drawing.Point(52, 62);
+            this.label1.Location = new System.Drawing.Point(31, 97);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(65, 15);
             this.label1.TabIndex = 2;
@@ -78,10 +88,10 @@
             // 
             // textBox1
             // 
-            this.textBox1.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
-            this.textBox1.Location = new System.Drawing.Point(55, 254);
+            this.textBox1.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.textBox1.Location = new System.Drawing.Point(34, 274);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(224, 23);
+            this.textBox1.Size = new System.Drawing.Size(282, 25);
             this.textBox1.TabIndex = 5;
             this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
             // 
@@ -89,7 +99,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
-            this.label2.Location = new System.Drawing.Point(52, 226);
+            this.label2.Location = new System.Drawing.Point(31, 246);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(56, 15);
             this.label2.TabIndex = 4;
@@ -101,7 +111,7 @@
             this.SaveBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SaveBtn.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SaveBtn.ForeColor = System.Drawing.Color.White;
-            this.SaveBtn.Location = new System.Drawing.Point(1046, 583);
+            this.SaveBtn.Location = new System.Drawing.Point(1071, 22);
             this.SaveBtn.Name = "SaveBtn";
             this.SaveBtn.Size = new System.Drawing.Size(251, 42);
             this.SaveBtn.TabIndex = 28;
@@ -114,10 +124,10 @@
             this.button1.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
             this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(55, 563);
+            this.button1.Location = new System.Drawing.Point(33, 546);
             this.button1.Name = "button1";
-            this.button1.Padding = new System.Windows.Forms.Padding(70, 0, 80, 0);
-            this.button1.Size = new System.Drawing.Size(225, 47);
+            this.button1.Padding = new System.Windows.Forms.Padding(100, 0, 100, 0);
+            this.button1.Size = new System.Drawing.Size(283, 47);
             this.button1.TabIndex = 29;
             this.button1.Text = "Add";
             this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -148,12 +158,15 @@
             this.dataGridView1.ColumnHeadersHeight = 35;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.RecordId,
-            this.PCBShopOrder,
+            this.SubAssyID,
+            this.FinalShopOrder,
+            this.ShopOrder,
             this.LotNo,
-            this.Quantity,
+            this.PreparedQuantity,
             this.Rev,
-            this.PCBIssuer});
+            this.Line,
+            this.SubAssyIssued,
+            this.IsAction});
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 8.25F);
@@ -162,7 +175,7 @@
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle3;
-            this.dataGridView1.Location = new System.Drawing.Point(333, 62);
+            this.dataGridView1.Location = new System.Drawing.Point(347, 61);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -176,56 +189,13 @@
             this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.RowTemplate.Height = 35;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(964, 480);
+            this.dataGridView1.Size = new System.Drawing.Size(991, 541);
             this.dataGridView1.TabIndex = 30;
-            // 
-            // RecordId
-            // 
-            this.RecordId.DataPropertyName = "RecordId";
-            this.RecordId.HeaderText = "RecordId";
-            this.RecordId.Name = "RecordId";
-            this.RecordId.ReadOnly = true;
-            this.RecordId.Visible = false;
-            // 
-            // PCBShopOrder
-            // 
-            this.PCBShopOrder.DataPropertyName = "PCBShopOrder";
-            this.PCBShopOrder.HeaderText = "Shop Order";
-            this.PCBShopOrder.Name = "PCBShopOrder";
-            this.PCBShopOrder.ReadOnly = true;
-            // 
-            // LotNo
-            // 
-            this.LotNo.DataPropertyName = "LotNo";
-            this.LotNo.HeaderText = "LotNo";
-            this.LotNo.Name = "LotNo";
-            this.LotNo.ReadOnly = true;
-            // 
-            // Quantity
-            // 
-            this.Quantity.DataPropertyName = "Quantity";
-            this.Quantity.HeaderText = "Quantity";
-            this.Quantity.Name = "Quantity";
-            this.Quantity.ReadOnly = true;
-            // 
-            // Rev
-            // 
-            this.Rev.DataPropertyName = "Rev";
-            this.Rev.HeaderText = "Revision";
-            this.Rev.Name = "Rev";
-            this.Rev.ReadOnly = true;
-            // 
-            // PCBIssuer
-            // 
-            this.PCBIssuer.DataPropertyName = "PCBIssuer";
-            this.PCBIssuer.HeaderText = "PCBIssuer";
-            this.PCBIssuer.Name = "PCBIssuer";
-            this.PCBIssuer.ReadOnly = true;
             // 
             // button2
             // 
-            this.button2.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
-            this.button2.Location = new System.Drawing.Point(792, 583);
+            this.button2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
+            this.button2.Location = new System.Drawing.Point(813, 22);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(220, 42);
             this.button2.TabIndex = 31;
@@ -235,35 +205,35 @@
             // 
             // RevText
             // 
-            this.RevText.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
-            this.RevText.Location = new System.Drawing.Point(53, 336);
+            this.RevText.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.RevText.Location = new System.Drawing.Point(34, 348);
             this.RevText.Name = "RevText";
-            this.RevText.Size = new System.Drawing.Size(224, 23);
+            this.RevText.Size = new System.Drawing.Size(282, 25);
             this.RevText.TabIndex = 33;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
-            this.label3.Location = new System.Drawing.Point(50, 308);
+            this.label3.Location = new System.Drawing.Point(31, 321);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(114, 15);
+            this.label3.Size = new System.Drawing.Size(54, 15);
             this.label3.TabIndex = 32;
-            this.label3.Text = "Revision (for Circuit)";
+            this.label3.Text = "Revision ";
             // 
             // LotText
             // 
-            this.LotText.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
-            this.LotText.Location = new System.Drawing.Point(54, 168);
+            this.LotText.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.LotText.Location = new System.Drawing.Point(34, 196);
             this.LotText.Name = "LotText";
-            this.LotText.Size = new System.Drawing.Size(224, 23);
+            this.LotText.Size = new System.Drawing.Size(282, 25);
             this.LotText.TabIndex = 45;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
-            this.label4.Location = new System.Drawing.Point(51, 140);
+            this.label4.Location = new System.Drawing.Point(31, 168);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(49, 15);
             this.label4.TabIndex = 44;
@@ -271,17 +241,17 @@
             // 
             // IssuerText
             // 
-            this.IssuerText.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
-            this.IssuerText.Location = new System.Drawing.Point(52, 493);
+            this.IssuerText.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.IssuerText.Location = new System.Drawing.Point(34, 425);
             this.IssuerText.Name = "IssuerText";
-            this.IssuerText.Size = new System.Drawing.Size(224, 23);
+            this.IssuerText.Size = new System.Drawing.Size(282, 25);
             this.IssuerText.TabIndex = 47;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
-            this.label5.Location = new System.Drawing.Point(49, 460);
+            this.label5.Location = new System.Drawing.Point(31, 395);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(66, 15);
             this.label5.TabIndex = 46;
@@ -289,21 +259,153 @@
             // 
             // LineText
             // 
-            this.LineText.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
-            this.LineText.Location = new System.Drawing.Point(54, 416);
+            this.LineText.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.LineText.Location = new System.Drawing.Point(34, 495);
             this.LineText.Name = "LineText";
-            this.LineText.Size = new System.Drawing.Size(224, 23);
+            this.LineText.Size = new System.Drawing.Size(282, 25);
             this.LineText.TabIndex = 51;
+            this.LineText.Visible = false;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
-            this.label7.Location = new System.Drawing.Point(51, 389);
+            this.label7.Location = new System.Drawing.Point(31, 466);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(35, 15);
             this.label7.TabIndex = 50;
             this.label7.Text = "Line :";
+            this.label7.Visible = false;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.button3);
+            this.panel1.Controls.Add(this.button12);
+            this.panel1.Controls.Add(this.label15);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1350, 55);
+            this.panel1.TabIndex = 52;
+            // 
+            // button3
+            // 
+            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button3.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button3.FlatAppearance.BorderSize = 0;
+            this.button3.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.button3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
+            this.button3.Location = new System.Drawing.Point(1269, 6);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(53, 43);
+            this.button3.TabIndex = 157;
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // button12
+            // 
+            this.button12.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button12.FlatAppearance.BorderSize = 0;
+            this.button12.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.button12.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.button12.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button12.Image = ((System.Drawing.Image)(resources.GetObject("button12.Image")));
+            this.button12.Location = new System.Drawing.Point(18, 11);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(36, 31);
+            this.button12.TabIndex = 157;
+            this.button12.UseVisualStyleBackColor = true;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.Location = new System.Drawing.Point(59, 17);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(145, 20);
+            this.label15.TabIndex = 1;
+            this.label15.Text = "Add Product Orders";
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.White;
+            this.panel2.Controls.Add(this.SaveBtn);
+            this.panel2.Controls.Add(this.button2);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel2.Location = new System.Drawing.Point(0, 608);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(1350, 76);
+            this.panel2.TabIndex = 158;
+            // 
+            // SubAssyID
+            // 
+            this.SubAssyID.DataPropertyName = "SubAssyID";
+            this.SubAssyID.HeaderText = "SubAssyID";
+            this.SubAssyID.Name = "SubAssyID";
+            this.SubAssyID.ReadOnly = true;
+            this.SubAssyID.Visible = false;
+            // 
+            // FinalShopOrder
+            // 
+            this.FinalShopOrder.DataPropertyName = "FinalShopOrder";
+            this.FinalShopOrder.HeaderText = "FinalShopOrder";
+            this.FinalShopOrder.Name = "FinalShopOrder";
+            this.FinalShopOrder.ReadOnly = true;
+            this.FinalShopOrder.Visible = false;
+            // 
+            // ShopOrder
+            // 
+            this.ShopOrder.DataPropertyName = "ShopOrder";
+            this.ShopOrder.HeaderText = "Shop Order";
+            this.ShopOrder.Name = "ShopOrder";
+            this.ShopOrder.ReadOnly = true;
+            // 
+            // LotNo
+            // 
+            this.LotNo.DataPropertyName = "LotNo";
+            this.LotNo.HeaderText = "LotNo";
+            this.LotNo.Name = "LotNo";
+            this.LotNo.ReadOnly = true;
+            // 
+            // PreparedQuantity
+            // 
+            this.PreparedQuantity.DataPropertyName = "PreparedQuantity";
+            this.PreparedQuantity.HeaderText = "Quantity";
+            this.PreparedQuantity.Name = "PreparedQuantity";
+            this.PreparedQuantity.ReadOnly = true;
+            // 
+            // Rev
+            // 
+            this.Rev.DataPropertyName = "Rev";
+            this.Rev.HeaderText = "Revision";
+            this.Rev.Name = "Rev";
+            this.Rev.ReadOnly = true;
+            // 
+            // Line
+            // 
+            this.Line.DataPropertyName = "Line";
+            this.Line.HeaderText = "Line";
+            this.Line.Name = "Line";
+            this.Line.ReadOnly = true;
+            this.Line.Visible = false;
+            // 
+            // SubAssyIssued
+            // 
+            this.SubAssyIssued.DataPropertyName = "SubAssyIssued";
+            this.SubAssyIssued.HeaderText = "Issuer By";
+            this.SubAssyIssued.Name = "SubAssyIssued";
+            this.SubAssyIssued.ReadOnly = true;
+            // 
+            // IsAction
+            // 
+            this.IsAction.DataPropertyName = "IsAction";
+            this.IsAction.HeaderText = "IsAction";
+            this.IsAction.Name = "IsAction";
+            this.IsAction.ReadOnly = true;
+            this.IsAction.Visible = false;
             // 
             // AddPCBShop
             // 
@@ -311,6 +413,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1350, 684);
             this.ControlBox = false;
+            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.LineText);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.IssuerText);
@@ -319,10 +423,8 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.RevText);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.button2);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.SaveBtn);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.Shoptext);
@@ -332,6 +434,9 @@
             this.Text = "Products Order";
             this.Load += new System.EventHandler(this.AddPCBShop_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -353,13 +458,21 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox IssuerText;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.DataGridViewTextBoxColumn RecordId;
-        private System.Windows.Forms.DataGridViewTextBoxColumn PCBShopOrder;
-        private System.Windows.Forms.DataGridViewTextBoxColumn LotNo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Quantity;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Rev;
-        private System.Windows.Forms.DataGridViewTextBoxColumn PCBIssuer;
         private System.Windows.Forms.TextBox LineText;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SubAssyID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FinalShopOrder;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ShopOrder;
+        private System.Windows.Forms.DataGridViewTextBoxColumn LotNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn PreparedQuantity;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Rev;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Line;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SubAssyIssued;
+        private System.Windows.Forms.DataGridViewTextBoxColumn IsAction;
     }
 }

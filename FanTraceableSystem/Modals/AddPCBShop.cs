@@ -13,44 +13,46 @@ namespace FanTraceableSystem
 {
     public partial class AddPCBShop : Form
     {
-        public List<TracePCBModel> PCBList { get; private set; } = new List<TracePCBModel>();
+        public List<TraceableSubAssyModel> subassy { get; private set; } = new List<TraceableSubAssyModel>();
 
         public AddPCBShop()
         {
             InitializeComponent();
-            PCBList = new List<TracePCBModel>();
+            subassy = new List<TraceableSubAssyModel>();
         }
 
         // Constructor for EDIT
-        public AddPCBShop(List<TracePCBModel> existingList)
+        public AddPCBShop(List<TraceableSubAssyModel> existingList)
         {
             InitializeComponent();
 
             // clone to avoid direct reference issues (recommended)
-            PCBList = existingList
-                .Select(x => new TracePCBModel
+            subassy = existingList
+                .Select(x => new TraceableSubAssyModel
                 {
-                    PCBShopOrder = x.PCBShopOrder,
-                    Quantity = x.Quantity
+                    ShopOrder = x.ShopOrder,
+                    PreparedQuantity = x.PreparedQuantity
                 })
                 .ToList();
         }
 
         private void SaveBtn_Click(object sender, EventArgs e)
         {
-       
-            PCBList.Clear();
+
+            subassy.Clear();
 
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
                 if (row.IsNewRow) continue;
 
-                PCBList.Add(new TracePCBModel
+                subassy.Add(new TraceableSubAssyModel
                 {
+                    ShopOrder = row.Cells["ShopOrder"].Value?.ToString(),
                     LotNo = row.Cells["LotNo"].Value?.ToString(),
-                    PCBShopOrder = row.Cells["PCBShopOrder"].Value?.ToString(),
-                    Quantity = int.TryParse(row.Cells["Quantity"].Value?.ToString(), out int qty) ? qty : 0,
-                    Rev = row.Cells["Rev"].Value?.ToString()    
+                    Line = row.Cells["Line"].Value?.ToString(),
+                    PreparedQuantity = int.TryParse(row.Cells["PreparedQuantity"].Value?.ToString(), out int qty) ? qty : 0,
+                    Rev = row.Cells["Rev"].Value?.ToString(),
+                    SubAssyIssued = row.Cells["SubAssyIssued"].Value?.ToString()
                 });
             }
 
@@ -76,16 +78,16 @@ namespace FanTraceableSystem
             //}
 
             // Example: collect values from controls
-            PCBList.Add(new TracePCBModel
+            subassy.Add(new TraceableSubAssyModel
             {
+                ShopOrder = Shoptext.Text,
                 LotNo = LotText.Text,
-                PCBShopOrder = Shoptext.Text,
-                PCBIssuer = IssuerText.Text,    
-                Quantity = int.TryParse(textBox1.Text, out int qty) ? qty : 0,
+                SubAssyIssued = IssuerText.Text,    
+                PreparedQuantity = int.TryParse(textBox1.Text, out int qty) ? qty : 0,
                 Line = LineText.Text,
                 Rev = RevText.Text
             });
-            dataGridView1.DataSource = PCBList.ToList(); // Refresh the grid    
+            dataGridView1.DataSource = subassy.ToList(); // Refresh the grid    
 
             textBox1.Text = "";
             Shoptext.Text = "";
@@ -103,7 +105,7 @@ namespace FanTraceableSystem
             dataGridView1.AutoGenerateColumns = true;
 
             dataGridView1.DataSource = null;
-            dataGridView1.DataSource = PCBList;
+            dataGridView1.DataSource = subassy;
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -114,6 +116,11 @@ namespace FanTraceableSystem
         }
 
         private void button2_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
         {
             this.Close();
         }

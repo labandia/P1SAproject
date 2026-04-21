@@ -10,17 +10,7 @@ namespace FanTraceableSystem.Interface
 {
     public interface ITraceable
     {
-        // V2  ================
-        Task<List<FinalTraceabilityModel>> TraceOverallData(
-          string search,
-          DateTime? startDate,
-          DateTime? endDate,
-          int isEdit,
-          int section,
-          int pageNumber,
-          int pageSize);
-
-        Task<List<TraceableShopOrderModel>> TraceableShopOrder(
+        Task<List<TraceableOverAllSummaryModel>> TraceableShopOrder(
              string search,
              DateTime? startDate,
              DateTime? endDate,
@@ -36,10 +26,11 @@ namespace FanTraceableSystem.Interface
              int isEdit,
              int section);
 
-        Task<List<TraceableShopOrderModel>> GetFinalShopOrderDetails(string Finalorder);
+       
 
-        Task<bool> AddTraceTransactions(TraceableShopOrderModel trac, List<TracePCBModel> pcb);
+        Task<FinalTraceabilityModel> TraceAbilityFinalAssy(string final, int depart);
+        Task<bool> AddTraceTransactions(FinalTraceabilityModel final, List<TraceableSubAssyModel> sub);
 
-        Task<bool> EditTraceTransaction(TraceableShopOrderModel trac, BindingList<EditTracePCBModel> pcb);
+        Task<bool> EditTraceTransaction(FinalTraceabilityModel final, BindingList<TraceableSubAssyModel> sub);
     }
 }

@@ -312,5 +312,23 @@ namespace MSDMonitoring.Data
 
             return resultData;
         }
+
+        public static async Task<T> ExecuteScalarAsync<T>(string query, object parameters = null)
+        {
+            try
+            {
+                using (IDbConnection con = GetConnection(ConnectionString()))
+                {
+                    return await con.ExecuteScalarAsync<T>(query, parameters);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return default;
+            }
+        }
+
+
     }
 }

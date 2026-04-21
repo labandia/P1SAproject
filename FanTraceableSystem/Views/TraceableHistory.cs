@@ -148,20 +148,20 @@ namespace FanTraceableSystem
             dataGridView2.Columns["FinalShopOrder"].DisplayIndex = 0;
 
 
-            dataGridView2.Columns["PCBShopOrder"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridView2.Columns["PCBShopOrder"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridView2.Columns["PCBShopOrder"].Width = 120;
+            dataGridView2.Columns["ShopOrder"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridView2.Columns["ShopOrder"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            dataGridView2.Columns["ShopOrder"].Width = 120;
 
-            FanTraceabilityCore.ConfigureColumn(dataGridView2, "PCBA", 120);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "ItemNo", 120);
             FanTraceabilityCore.ConfigureColumn(dataGridView2, "PreparedQuantity", 200);
             FanTraceabilityCore.ConfigureColumn(dataGridView2, "TimeInput", 100);
             FanTraceabilityCore.ConfigureColumn(dataGridView2, "PreparedBy", 120);
             FanTraceabilityCore.ConfigureColumn(dataGridView2, "Shift", 120);
             FanTraceabilityCore.ConfigureColumn(dataGridView2, "Customer", 120);
-            FanTraceabilityCore.ConfigureColumn(dataGridView2, "CardCaseNo", 120);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "Modeltype", 120);
             FanTraceabilityCore.ConfigureColumn(dataGridView2, "Remarks", 120);
-            FanTraceabilityCore.ConfigureColumn(dataGridView2, "PCBIncharge", 120);
-            FanTraceabilityCore.ConfigureColumn(dataGridView2, "PCBIssuer", 120);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "Incharge", 120);
+            FanTraceabilityCore.ConfigureColumn(dataGridView2, "FinalIssuedby", 120);
             FanTraceabilityCore.ConfigureColumn(dataGridView2, "LotNo", 120);
             FanTraceabilityCore.ConfigureColumn(dataGridView2, "DepartmentID", 120);
         }
@@ -277,8 +277,8 @@ namespace FanTraceableSystem
                 Exportdata.Add(new ExportTraceableShopOrderModel
                 {
                     FinalShopOrder = items.FinalShopOrder,
-                    PCBShopOrder = items.PCBShopOrder,
-                    PCBA = items.PCBA,
+                    ShopOrder = items.ShopOrder,
+                    ItemNo = items.ItemNo,
                     Revision = items.Revision,
                     PlanQuan = items.PlanQuan,
                     DatePrepared = items.DatePrepared.ToString("yyyy-MM-dd"),
@@ -288,10 +288,10 @@ namespace FanTraceableSystem
                     Shift = FanTraceabilityCore.FormatShift(items.Shift?.ToString() ?? ""),
                     Rev = items.Rev,
                     Customer = items.Customer,
-                    CardCaseNo = items.CardCaseNo,
+                    Modeltype = items.Modeltype,
                     Remarks = items.Remarks,
-                    PCBIncharge = items.PCBIncharge,
-                    PCBIssuer = items.PCBIssuer,
+                    Incharge = items.Incharge,
+                    FinalIssuedby = items.FinalIssuedby,
                     LotNo = items.LotNo,
                     DepartmentID = FanTraceabilityCore.SectionMap.ContainsKey(items.DepartmentID)
                                  ? FanTraceabilityCore.SectionMap[items.DepartmentID]
@@ -309,20 +309,20 @@ namespace FanTraceableSystem
             var headerMap = new Dictionary<string, string>
             {
                 { "FinalShopOrder", "Final ShopOrder" },
-                { "PCBShopOrder", "ShopOrder" },
+                { "ShopOrder", "ShopOrder" },
                 { "PreparedBy", "Prepared By" },
                 { "Revision", "Revision" },
-                { "PCBA", "Item No." },
+                { "ItemNo", "Item No." },
                 { "PlanQuan", "Plan Quantity" },
                 { "DatePrepared", "Date Prepared" },
                 { "TimeInput", "Time" },
                 { "PreparedQuantity", "Prepared Quantity" },
                 { "Rev", "Rev" },
                 { "Customer", "Customer" },
-                { "CardCaseNo", "Model Type" },
+                { "Modeltype", "Model Type" },
                 { "Remarks", "Remarks" },
-                { "PCBIncharge", "Incharge" },
-                { "PCBIssuer", "Issuer" },
+                { "Incharge", "Incharge" },
+                { "FinalIssuedby", "Issuer" },
                 { "LotNo", "Lot No" },
                 { "DepartmentID", "Section" }
             };
@@ -355,7 +355,7 @@ namespace FanTraceableSystem
                 {
                     string propName = properties[i].Name;
 
-                    if (propName == "FinalShopOrder" || propName == "PCBShopOrder")
+                    if (propName == "FinalShopOrder" || propName == "ShopOrder")
                     {
                         Excel.Range colRange = worksheet.Columns[i + 1];
                         colRange.NumberFormat = "@"; // TEXT

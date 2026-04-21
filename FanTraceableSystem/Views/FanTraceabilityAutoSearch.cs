@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
@@ -19,26 +20,25 @@ namespace FanTraceableSystem
         //public int 
         private readonly ITraceable _trac;
         private readonly ISubassy _sub;
-        public int isEdit = 0;
-        public int sectionID = 0;
-        public int shiftToday = 0;
 
-        public int isEditMode = 0; // By Default is in Add Mode, when click the Edit Button it will change to Edit Mode
+        private BindingList<TraceableOverAllSummaryModel> data 
+            = new BindingList<TraceableOverAllSummaryModel>();
 
-        private Timer timer;
+        private readonly PagingState _paging = new PagingState();
 
-        // But this is for the Edit
         private bool _isLoading = false;
-        public int isFilter = 0;
-        public int finalId = 0;
 
-      
-
-        private BindingList<TraceableOverAllSummaryModel> data = new BindingList<TraceableOverAllSummaryModel>();
         private List<TraceableSubAssyModel> subassyform = new List<TraceableSubAssyModel>();
         private BindingList<TraceableSubAssyModel> _editpcb = new BindingList<TraceableSubAssyModel>();
 
-        private readonly PagingState _paging = new PagingState();
+        public int isEdit = 0;
+        public int sectionID = 0;
+        public int shiftToday = 0;
+        public int isEditMode = 0; // By Default is in Add Mode, when click the Edit Button it will change to Edit Mode
+        // But this is for the Edit
+        public int isFilter = 0;
+        public int finalId = 0;
+        private Timer timer;
 
         public FanTraceabilityAutoSearch(ITraceable trac, ISubassy sub,  int section)
         {
@@ -57,10 +57,18 @@ namespace FanTraceableSystem
                  ? FanTraceabilityCore.SectionMap[section]
                  : "Final Assy Section";
 
+            // ✅ Bind ONCE
+            dataGridView2.DataSource = data;
+
             timer = new Timer();
             timer.Interval = 1000; // 1 second
             timer.Tick += Timer_Tick;
             timer.Start();
+
+            // ✅ Smooth UI (reduce flicker)
+            typeof(DataGridView).InvokeMember("DoubleBuffered",
+                BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty,
+                null, dataGridView2, new object[] { true });
         }
 
 
@@ -72,16 +80,20 @@ namespace FanTraceableSystem
 
         private async void SaveBtn_Click(object sender, EventArgs e)
         {
-            if(isEditMode == 1)
-            {
-                EditTraceAbility();
-                return;
-            }
+           
 
             if (!FormValidation()) return;
 
+            ToggleUI(false);
+
             try
             {
+                if (isEditMode == 1)
+                {
+                    EditTraceAbility();
+                    return;
+                }
+
                 var finaobj = new FinalTraceabilityModel
                 {
                     FinalShopOrder = Shoptext.Text,
@@ -117,35 +129,19 @@ namespace FanTraceableSystem
                 }
 
             }
-            catch(Exception ex)
+            finally
             {
-                Debug.WriteLine("Error" + ex.Message);
+                ToggleUI(true);
             }
         }
 
 
-        public async void EditTraceAbility()
+        public async Task EditTraceAbility()
         {
             try
             {
-                var finaobj = new FinalTraceabilityModel
-                {
-                    RecordId = finalId,
-                    FinalShopOrder = Shoptext.Text,
-                    Revision = RevText.Text,
-                    ItemNo = PCBText.Text,
-                    PlanQuan = int.TryParse(PlanQuanText.Text, out var q) ? q : 0,
-                    DatePrepared = DatePrepared.Value,
-                    PreparedBy = PreparedText.Text,
-                    Shift = shiftToday,
-                    TimeInput = TimeText.Text,
-                    Customer = CustomerText.Text,
-                    Modeltype = Cardtext.Text,
-                    Remarks = RemarkText.Text,
-                    Incharge = PCBtextcharge.Text,
-                    FinalIssuedby = PCBtextcharge.Text,
-                    DepartmentID = sectionID
-                };
+                var finaobj = BuildFinalObject();
+
 
                 bool res = await _trac.EditTraceTransaction(finaobj, _editpcb);
 
@@ -293,16 +289,11 @@ namespace FanTraceableSystem
         }
         private void BindGrid(List<TraceableOverAllSummaryModel> result, bool append)
         {
-            if (append)
-            {
-                foreach (var item in result)
-                    data.Add(item);
-            }
-            else
-            {
-                data = new BindingList<TraceableOverAllSummaryModel>(result);
-                dataGridView2.DataSource = data;
-            }
+            if (!append)
+                data.Clear();
+
+            foreach (var item in result)
+                data.Add(item);
         }
         private void UpdatePaginationUI(int returnedCount, int totalCount)
         {
@@ -354,19 +345,7 @@ namespace FanTraceableSystem
                 e.FormattingApplied = true;
             }
         }
-        private async void dataGridView2_Scroll(object sender, ScrollEventArgs e)
-        {
-            if (!_paging.HasNextPage || _isLoading) return;
-
-            int visibleRows = dataGridView2.DisplayedRowCount(false);
-            int firstVisibleRow = dataGridView2.FirstDisplayedScrollingRowIndex;
-
-            if (firstVisibleRow + visibleRows >= dataGridView2.RowCount - 5)
-            {
-                _paging.PageNumber++;
-                await LoadData(append: true); // ✅ append ONLY here
-            }
-        }
+      
 
         // ================================================================================
         // ========================== FORMS AND VALIATION =================================
@@ -476,48 +455,52 @@ namespace FanTraceableSystem
         // ================================================================================
         private async void Exportbtn_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(SearchText.Text)) return;   
-            List<ExportTraceableShopOrderModel> Exportdata = new List<ExportTraceableShopOrderModel>();
+            if (string.IsNullOrEmpty(SearchText.Text)) return;
 
-            var result = await _trac.TraceableShopOrder(
-                SearchText.Text,
-                dateTimePicker2.Checked ? dateTimePicker2.Value.Date : (DateTime?)null,
-                dateTimePicker3.Checked ? dateTimePicker3.Value.Date : (DateTime?)null,
-                isEdit,
-                sectionID, 
-                _paging.PageNumber,
-                _paging.PageSize
-            );
+            ToggleUI(false);
 
-            foreach(var items in result)
+            try
             {
-                Exportdata.Add(new ExportTraceableShopOrderModel
-                {
-                   FinalShopOrder =  items.FinalShopOrder,
-                   ShopOrder = items.ShopOrder,
-                   ItemNo = items.ItemNo,
-                   Revision = items.Revision,
-                   PlanQuan = items.PlanQuan,
-                   DatePrepared = items.DatePrepared.ToString("yyyy-MM-dd"),
-                   TimeInput = items.TimeInput,
-                   PreparedBy = items.PreparedBy,
-                   PreparedQuantity = items.PreparedQuantity,  
-                   Shift = FanTraceabilityCore.FormatShift(items.Shift?.ToString() ?? ""),
-                   Rev = items.Rev,
-                   Customer = items.Customer,
-                   Modeltype = items.Modeltype,
-                   Remarks = items.Remarks,
-                   Incharge = items.Incharge,
-                   FinalIssuedby = items.FinalIssuedby,
-                   LotNo = items.LotNo,
-                   DepartmentID = FanTraceabilityCore.SectionMap.ContainsKey(items.DepartmentID)
-                                 ? FanTraceabilityCore.SectionMap[items.DepartmentID]
-                                 : "Final Assy Section"
-                });
-            }
-            
+                var result = await _trac.TraceableShopOrder(
+                     SearchText.Text,
+                     dateTimePicker2.Checked ? dateTimePicker2.Value.Date : (DateTime?)null,
+                     dateTimePicker3.Checked ? dateTimePicker3.Value.Date : (DateTime?)null,
+                     isEdit,
+                     sectionID,
+                     _paging.PageNumber,
+                     _paging.PageSize
+                 );
 
-            ExportToExcel(Exportdata);
+                var exportData = result.Select(items => new ExportTraceableShopOrderModel
+                {
+                    FinalShopOrder = items.FinalShopOrder,
+                    ShopOrder = items.ShopOrder,
+                    ItemNo = items.ItemNo,
+                    Revision = items.Revision,
+                    PlanQuan = items.PlanQuan,
+                    DatePrepared = items.DatePrepared.ToString("yyyy-MM-dd"),
+                    TimeInput = items.TimeInput,
+                    PreparedBy = items.PreparedBy,
+                    PreparedQuantity = items.PreparedQuantity,
+                    Shift = FanTraceabilityCore.FormatShift(items.Shift?.ToString() ?? ""),
+                    Rev = items.Rev,
+                    Customer = items.Customer,
+                    Modeltype = items.Modeltype,
+                    Remarks = items.Remarks,
+                    Incharge = items.Incharge,
+                    FinalIssuedby = items.FinalIssuedby,
+                    LotNo = items.LotNo,
+                    DepartmentID = FanTraceabilityCore.SectionMap.ContainsKey(items.DepartmentID)
+                                     ? FanTraceabilityCore.SectionMap[items.DepartmentID]
+                                     : "Final Assy Section"
+                }).ToList();
+
+                await Task.Run(() => ExportToExcel(exportData)); // 🔥 FIX     
+            }
+            finally
+            {
+                ToggleUI(true);
+            }
         }
         private void ExportToExcel(List<ExportTraceableShopOrderModel> data)
         {
@@ -817,6 +800,39 @@ namespace FanTraceableSystem
         private void PlanQuanText_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private FinalTraceabilityModel BuildFinalObject()
+        {
+            return new FinalTraceabilityModel
+            {
+                RecordId = finalId,
+                FinalShopOrder = Shoptext.Text,
+                Revision = RevText.Text,
+                ItemNo = PCBText.Text,
+                PlanQuan = int.TryParse(PlanQuanText.Text, out var q) ? q : 0,
+                DatePrepared = DatePrepared.Value,
+                PreparedBy = PreparedText.Text,
+                Shift = shiftToday,
+                TimeInput = TimeText.Text,
+                Customer = CustomerText.Text,
+                Modeltype = Cardtext.Text,
+                Remarks = RemarkText.Text,
+                Incharge = PCBtextcharge.Text,
+                FinalIssuedby = PCBtextcharge.Text,
+                DepartmentID = sectionID
+            };
+        }
+
+
+        private void ToggleUI(bool enabled)
+        {
+            Cursor = enabled ? Cursors.Default : Cursors.WaitCursor;
+
+            SaveBtn.Enabled = enabled;
+            nextbtn.Enabled = enabled && _paging.HasNextPage;
+            Prevbtn.Enabled = enabled && _paging.PageNumber > 1;
+            filterbtn.Enabled = enabled;
         }
     }
 }

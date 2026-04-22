@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Dapper;
 using FanTraceableSystem.Data;
 using FanTraceableSystem.Interface;
+using Microsoft.Office.Interop.Excel;
 using MSDMonitoring.Data;
 
 namespace FanTraceableSystem.Services
@@ -17,7 +18,7 @@ namespace FanTraceableSystem.Services
                 string search,
                 DateTime? startDate,
                 DateTime? endDate, 
-                int isEdit, 
+                int isSearch, 
                 int section,
                 int pageNumber,
                 int pageSize)
@@ -50,8 +51,7 @@ namespace FanTraceableSystem.Services
                     FROM FanTraceabilityFinal f
                     LEFT JOIN FanTraceabilitySub s  
                         ON f.RecordId = s.FinalId
-                        AND s.ShopOrder IS NOT NULL   
-                    WHERE f.IsDeletedFinal = 0 ";
+                    WHERE f.IsDeletedFinal = 0 AND s.ShopOrder IS NOT NULL ";
 
             var parameters = new DynamicParameters();
 
@@ -62,25 +62,35 @@ namespace FanTraceableSystem.Services
             }
 
 
-            // 🔍 Search filter
-            if (!string.IsNullOrWhiteSpace(search))
+            // 🔍 Search by FinalShopOrder filter (only if isSearch is 1)
+            if (!string.IsNullOrWhiteSpace(search) && isSearch == 1)
             {
                 sql += " AND f.FinalShopOrder = @FinalShopOrder";
                 parameters.Add("@FinalShopOrder", search);
             }
 
-            // 📅 Start Date filter
-            if (startDate.HasValue)
+            // 🔍 Search By ShopOrder filter (only if isSearch is 2)
+            if (!string.IsNullOrWhiteSpace(search) && isSearch == 2)
             {
-                sql += " AND f.DatePrepared >= @StartDate";
-                parameters.Add("@StartDate", startDate.Value.Date);
+                sql += " AND s.ShopOrder = @ShopOrder";
+                parameters.Add("@ShopOrder", search);
             }
 
-            // 📅 End Date filter (inclusive)
-            if (endDate.HasValue)
+            if(isSearch == 0)
             {
-                sql += " AND f.DatePrepared < DATEADD(DAY, 1, @EndDate)";
-                parameters.Add("@EndDate", endDate.Value.Date);
+                // 📅 Start Date filter
+                if (startDate.HasValue)
+                {
+                    sql += " AND f.DatePrepared >= @StartDate";
+                    parameters.Add("@StartDate", startDate.Value.Date);
+                }
+
+                // 📅 End Date filter (inclusive)
+                if (endDate.HasValue)
+                {
+                    sql += " AND f.DatePrepared < DATEADD(DAY, 1, @EndDate)";
+                    parameters.Add("@EndDate", endDate.Value.Date);
+                }
             }
 
             sql += @"
@@ -94,7 +104,58 @@ namespace FanTraceableSystem.Services
             return SqlDataAccess.GetData<TraceableOverAllSummaryModel>(sql, parameters); 
         }
 
+        public Task<List<TraceableOverAllSummaryModel>> TraceSearchByShopOrder(string shopOrder, int selectsearch)
+        {
+            string sql = @"
+                     SELECT  
+                           f.RecordId,
+                           f.FinalShopOrder,
+                           s.ShopOrder,
+                           f.Revision,
+                           f.ItemNo,
+                           f.PlanQuan,
+                           s.Line,
+                           f.DatePrepared,
+                           FORMAT(f.TimeInput, 'hh:mm tt') AS TimeInput,
+                           s.PreparedQuantity,
+                           f.PreparedBy,
+                           f.Shift,
+                           f.Customer,
+                           f.Modeltype,
+                           f.Remarks,
+                           f.Incharge,
+                           f.FinalIssuedby,
+                           s.LotNo,
+                           s.Rev,
+                           f.IsDeletedFinal,
+                           f.DepartmentID,
+                           s.SubAssyIssued
+                    FROM FanTraceabilityFinal f
+                    LEFT JOIN FanTraceabilitySub s  
+                        ON f.RecordId = s.FinalId
+                        AND s.ShopOrder IS NOT NULL   
+                    WHERE f.IsDeletedFinal = 0 ";
 
+
+            var parameters = new DynamicParameters();
+
+            // 🔍 Search filter
+            if (!string.IsNullOrWhiteSpace(shopOrder) && selectsearch == 0)
+            {
+                sql += " AND f.FinalShopOrder = @FinalShopOrder";
+                parameters.Add("@FinalShopOrder", shopOrder);
+            }
+
+            if (!string.IsNullOrWhiteSpace(shopOrder) && selectsearch == 1)
+            {
+                sql += " AND s.ShopOrder = @ShopOrder";
+                parameters.Add("@ShopOrder", shopOrder);
+            }
+
+            return SqlDataAccess.GetData<TraceableOverAllSummaryModel>(sql, parameters);
+        }
+
+        // FOR SEARCH FINAL ASSY  DETAILS 
         public async Task<FinalTraceabilityModel> TraceAbilityFinalAssy(string final, int depart)
         {
             var data = await SqlDataAccess.GetData<FinalTraceabilityModel>(
@@ -123,12 +184,15 @@ namespace FanTraceableSystem.Services
 
     
 
+
+        // FOR PAGINATION DISPLAY TOTAL COUNT DATA
         public Task<int> GetTraceableCount(string search, DateTime? startDate, DateTime? endDate, int isEdit, int section)
         {
             string sql = @"SELECT  COUNT(*)
                        FROM FanTraceabilityFinal f
 	                   LEFT JOIN FanTraceabilitySub s ON s.FinalShopOrder = f.FinalShopOrder
-                       WHERE f.IsDeletedFinal = 0 AND ShopOrder IS NOT NULL ";
+                       AND s.ShopOrder IS NOT NULL
+                       WHERE f.IsDeletedFinal = 0  ";
 
             var parameters = new DynamicParameters();
 
@@ -160,7 +224,7 @@ namespace FanTraceableSystem.Services
         }
 
 
-        public async Task<bool> AddTraceTransactions(FinalTraceabilityModel trac, List<TraceableSubAssyModel> pcb)
+        public async Task<bool> AddTraceTransactions(FinalTraceabilityModel trac, BindingList<TraceableSubAssyModel> pcb)
         {
             try
             {
@@ -180,8 +244,8 @@ namespace FanTraceableSystem.Services
                     foreach (var items in pcb)
                     {
                         await SqlDataAccess.UpdateInsertQuery($@"INSERT INTO FanTraceabilitySub
-                        (FinalId, FinalShopOrder, ShopOrder, PreparedQuantity, LotNo, Line, SubAssyIssued, DepartmentID)
-                        VALUES(@FinalId, @FinalShopOrder, @ShopOrder, @PreparedQuantity, @LotNo, @Line, @SubAssyIssued, @DepartmentID)", new
+                        (FinalId, FinalShopOrder, ShopOrder, PreparedQuantity, LotNo, Line, SubAssyIssued, DepartmentID, Rev)
+                        VALUES(@FinalId, @FinalShopOrder, @ShopOrder, @PreparedQuantity, @LotNo, @Line, @SubAssyIssued, @DepartmentID, @Rev)", new
                         {
                             FinalId = finalId,
                             trac.FinalShopOrder,
@@ -190,7 +254,8 @@ namespace FanTraceableSystem.Services
                             items.PreparedQuantity,
                             items.Line,
                             items.SubAssyIssued,
-                            trac.DepartmentID
+                            trac.DepartmentID, 
+                            items.Rev
                         });
                     }
                 }
@@ -202,7 +267,7 @@ namespace FanTraceableSystem.Services
                 return false;
             }
         }
-        public async Task<bool> EditTraceTransaction(FinalTraceabilityModel trac, BindingList<TraceableSubAssyModel> pcb)
+        public async Task<bool> EditTraceTransaction(FinalTraceabilityModel trac, BindingList<TraceableSubAssyModel> pcb, string currentShop)
         {
             await SqlDataAccess.UpdateInsertQuery($@"UPDATE FanTraceabilityFinal SET Revision =@Revision, 
                 ItemNo =@ItemNo, PreparedBy =@PreparedBy, Customer =@Customer, Modeltype =@Modeltype, Remarks =@Remarks,  
@@ -224,35 +289,54 @@ namespace FanTraceableSystem.Services
 
             if (pcb.Count != 0)
             {
-                foreach(var items in pcb)
+                foreach (var items in pcb)
                 {
-                    if(items.isAction == 0)
+                    //Debug.WriteLine("Current Shop : " + currentShop + " ISCHANGE : " + items.isChangeShop);
+                    //
+                    if (items.isAction == 1)
                     {
-                        await SqlDataAccess.UpdateInsertQuery($@"INSERT INTO FanTraceabilitySub(FinalShopOrder, ShopOrder, 
-                        PreparedQuantity, LotNo, Line, SubAssyIssued, Rev)
-                        VALUES(@FinalShopOrder, @ShopOrder, @PreparedQuantity, @LotNo, @Line, @SubAssyIssued, @Rev)", new
+                        await SqlDataAccess.UpdateInsertQuery($@"INSERT INTO FanTraceabilitySub
+                            (FinalShopOrder, ShopOrder, PreparedQuantity, LotNo, Line, SubAssyIssued, Rev, FinalId, DepartmentID)
+                            VALUES(@FinalShopOrder, @ShopOrder, @PreparedQuantity, @LotNo, @Line, @SubAssyIssued, @Rev, @FinalId, @DepartmentID)", new
                         {
                             trac.FinalShopOrder,
                             items.ShopOrder,
                             items.LotNo,
                             items.PreparedQuantity,
                             items.Line,
-                            items.SubAssyIssued
+                            items.Rev,
+                            items.SubAssyIssued,
+                            trac.DepartmentID,
+                            FinalId = trac.RecordId
                         });
                     }
-                    else
+                    else if (items.isAction == 2)
                     {
-                        await SqlDataAccess.UpdateInsertQuery($@"UPDATE FanTraceabilitySub
-                                                SET ShopOrder =@ShopOrder, 
-                                                     Line =@Line,
-                                                     Rev = @Rev,
-                                                     LotNo = @LotNo,
-                                                     SubAssyIssued = @SubAssyIssued,
-                                                     PreparedQuantity = @PreparedQuantity
-                                                WHERE FinalId = @FinalId", new
+
+                        Debug.WriteLine($@"FinalShop : {items.ShopOrder} - 
+                                    Lot No : {items.LotNo} - 
+                                    PreparedQuantity : {items.PreparedQuantity} - 
+                                    Line : {items.Line} - 
+                                    Rev : {items.Rev} - 
+                                    Action : {items.isAction} - 
+                                  ");
+
+             
+
+                        await SqlDataAccess.UpdateInsertQuery($@"
+                                UPDATE FanTraceabilitySub
+                                SET 
+                                    ShopOrder = @ShopOrder, 
+                                    Line = @Line,
+                                    Rev = @Rev,
+                                    LotNo = @LotNo,
+                                    SubAssyIssued = @SubAssyIssued,
+                                    PreparedQuantity = @PreparedQuantity
+                                WHERE SubAssyID = @SubAssyID",
+                        new
                         {
-                            FinalId = trac.RecordId,
-                            items.ShopOrder,
+                            items.SubAssyID,
+                            items.ShopOrder, // new shop order
                             items.Line,
                             items.Rev,
                             items.LotNo,
@@ -264,15 +348,13 @@ namespace FanTraceableSystem.Services
             }
             else
             {
-                
+
             }
 
 
             return true;
         }
 
-      
-
-       
+        
     }
 }

@@ -100,14 +100,14 @@ namespace FanTraceableSystem.Services
             }
 
             // 📅 Start Date filter
-            if (startDate.HasValue && isEdit == 1)
+            if (startDate.HasValue)
             {
                 sql += " AND f.DatePrepared >= @StartDate";
                 parameters.Add("@StartDate", startDate.Value.Date);
             }
 
             // 📅 End Date filter (inclusive)
-            if (endDate.HasValue && isEdit == 1)
+            if (endDate.HasValue)
             {
                 sql += " AND f.DatePrepared < DATEADD(DAY, 1, @EndDate)";
                 parameters.Add("@EndDate", endDate.Value.Date);

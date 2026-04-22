@@ -19,6 +19,12 @@ namespace FanTraceableSystem.Services
             { subassy});
         }
 
+        public Task<bool> CheckShopOrder(string ShopOrder)
+        {
+            return SqlDataAccess.Checkdata($@"SELECT COUNT(1) FROM FanTraceabilitySub 
+                WHERE ShopOrder = @ShopOrder", new { ShopOrder = ShopOrder });
+        }
+
         public Task<List<TraceableSubAssyModel>> GetSubAssyDatalist(string finalShopOrder)
         {
              return SqlDataAccess.GetData<TraceableSubAssyModel>($@"

@@ -53,6 +53,21 @@
             this.label14 = new System.Windows.Forms.Label();
             this.button12 = new System.Windows.Forms.Button();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.sectionselect = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.dateTimePicker3 = new System.Windows.Forms.DateTimePicker();
+            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.TimeText = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.label15 = new System.Windows.Forms.Label();
+            this.Exportbtn = new System.Windows.Forms.Button();
+            this.filterbtn = new System.Windows.Forms.Button();
+            this.btnNext = new System.Windows.Forms.Button();
+            this.btnPrev = new System.Windows.Forms.Button();
+            this.lblEntries = new System.Windows.Forms.Label();
             this.RecordId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FinalShopOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ShopOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -71,21 +86,6 @@
             this.FinalIssuedby = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LotNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DepartmentID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.sectionselect = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.dateTimePicker3 = new System.Windows.Forms.DateTimePicker();
-            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.TimeText = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.label15 = new System.Windows.Forms.Label();
-            this.Exportbtn = new System.Windows.Forms.Button();
-            this.filterbtn = new System.Windows.Forms.Button();
-            this.btnNext = new System.Windows.Forms.Button();
-            this.btnPrev = new System.Windows.Forms.Button();
-            this.lblEntries = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -192,10 +192,197 @@
             this.dataGridView2.RowHeadersVisible = false;
             this.dataGridView2.RowTemplate.Height = 35;
             this.dataGridView2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView2.Size = new System.Drawing.Size(1300, 539);
+            this.dataGridView2.Size = new System.Drawing.Size(1300, 543);
             this.dataGridView2.TabIndex = 157;
             this.dataGridView2.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView2_CellFormatting);
             this.dataGridView2.Scroll += new System.Windows.Forms.ScrollEventHandler(this.dataGridView2_Scroll);
+            // 
+            // sectionselect
+            // 
+            this.sectionselect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.sectionselect.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.sectionselect.FormattingEnabled = true;
+            this.sectionselect.Items.AddRange(new object[] {
+            "Select : ALL",
+            "Select : Molding",
+            "Select : Press",
+            "Select : Rotor",
+            "Select : Winding",
+            "Select : Circuit",
+            "Select : OliProof",
+            "Select : Harness"});
+            this.sectionselect.Location = new System.Drawing.Point(192, 100);
+            this.sectionselect.Name = "sectionselect";
+            this.sectionselect.Size = new System.Drawing.Size(162, 25);
+            this.sectionselect.TabIndex = 158;
+            this.sectionselect.SelectedIndexChanged += new System.EventHandler(this.sectionselect_SelectedIndexChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(189, 82);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(47, 15);
+            this.label1.TabIndex = 159;
+            this.label1.Text = "Section";
+            // 
+            // dateTimePicker3
+            // 
+            this.dateTimePicker3.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dateTimePicker3.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dateTimePicker3.Location = new System.Drawing.Point(562, 101);
+            this.dateTimePicker3.Name = "dateTimePicker3";
+            this.dateTimePicker3.Size = new System.Drawing.Size(160, 25);
+            this.dateTimePicker3.TabIndex = 163;
+            // 
+            // dateTimePicker2
+            // 
+            this.dateTimePicker2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dateTimePicker2.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dateTimePicker2.Location = new System.Drawing.Point(372, 100);
+            this.dateTimePicker2.Name = "dateTimePicker2";
+            this.dateTimePicker2.Size = new System.Drawing.Size(160, 25);
+            this.dateTimePicker2.TabIndex = 162;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label17.Location = new System.Drawing.Point(538, 104);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(18, 13);
+            this.label17.TabIndex = 161;
+            this.label17.Text = "to";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label16.Location = new System.Drawing.Point(369, 82);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(82, 15);
+            this.label16.TabIndex = 160;
+            this.label16.Text = "Date Prepared";
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.Controls.Add(this.TimeText);
+            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.label15);
+            this.panel1.Controls.Add(this.button12);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1350, 68);
+            this.panel1.TabIndex = 164;
+            // 
+            // TimeText
+            // 
+            this.TimeText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.TimeText.AutoSize = true;
+            this.TimeText.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TimeText.Location = new System.Drawing.Point(1170, 24);
+            this.TimeText.Name = "TimeText";
+            this.TimeText.Size = new System.Drawing.Size(81, 20);
+            this.TimeText.TabIndex = 171;
+            this.TimeText.Text = "00:00:00 --";
+            // 
+            // button1
+            // 
+            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button1.FlatAppearance.BorderSize = 0;
+            this.button1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.button1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
+            this.button1.Location = new System.Drawing.Point(21, 18);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(36, 31);
+            this.button1.TabIndex = 158;
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.Location = new System.Drawing.Point(62, 24);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(370, 20);
+            this.label15.TabIndex = 1;
+            this.label15.Text = "Sub Assy Traceability Auto Search System (Summary)";
+            // 
+            // Exportbtn
+            // 
+            this.Exportbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.Exportbtn.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Exportbtn.Image = ((System.Drawing.Image)(resources.GetObject("Exportbtn.Image")));
+            this.Exportbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Exportbtn.Location = new System.Drawing.Point(1224, 99);
+            this.Exportbtn.Name = "Exportbtn";
+            this.Exportbtn.Padding = new System.Windows.Forms.Padding(15, 0, 10, 0);
+            this.Exportbtn.Size = new System.Drawing.Size(98, 27);
+            this.Exportbtn.TabIndex = 166;
+            this.Exportbtn.Text = "Export";
+            this.Exportbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Exportbtn.UseVisualStyleBackColor = true;
+            this.Exportbtn.Click += new System.EventHandler(this.Exportbtn_Click);
+            // 
+            // filterbtn
+            // 
+            this.filterbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.filterbtn.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.filterbtn.Location = new System.Drawing.Point(1087, 98);
+            this.filterbtn.Name = "filterbtn";
+            this.filterbtn.Size = new System.Drawing.Size(122, 27);
+            this.filterbtn.TabIndex = 165;
+            this.filterbtn.Text = "Reset";
+            this.filterbtn.UseVisualStyleBackColor = true;
+            this.filterbtn.Click += new System.EventHandler(this.filterbtn_Click);
+            // 
+            // btnNext
+            // 
+            this.btnNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnNext.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnNext.Image = ((System.Drawing.Image)(resources.GetObject("btnNext.Image")));
+            this.btnNext.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnNext.Location = new System.Drawing.Point(1215, 689);
+            this.btnNext.Name = "btnNext";
+            this.btnNext.Padding = new System.Windows.Forms.Padding(15, 0, 20, 0);
+            this.btnNext.Size = new System.Drawing.Size(107, 27);
+            this.btnNext.TabIndex = 170;
+            this.btnNext.Text = "Next";
+            this.btnNext.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnNext.UseVisualStyleBackColor = true;
+            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
+            // 
+            // btnPrev
+            // 
+            this.btnPrev.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnPrev.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPrev.Image = ((System.Drawing.Image)(resources.GetObject("btnPrev.Image")));
+            this.btnPrev.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnPrev.Location = new System.Drawing.Point(1101, 689);
+            this.btnPrev.Name = "btnPrev";
+            this.btnPrev.Padding = new System.Windows.Forms.Padding(20, 0, 20, 0);
+            this.btnPrev.Size = new System.Drawing.Size(108, 27);
+            this.btnPrev.TabIndex = 169;
+            this.btnPrev.Text = "Prev";
+            this.btnPrev.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnPrev.UseVisualStyleBackColor = true;
+            this.btnPrev.Click += new System.EventHandler(this.btnPrev_Click);
+            // 
+            // lblEntries
+            // 
+            this.lblEntries.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblEntries.AutoSize = true;
+            this.lblEntries.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblEntries.Location = new System.Drawing.Point(23, 696);
+            this.lblEntries.Name = "lblEntries";
+            this.lblEntries.Size = new System.Drawing.Size(169, 17);
+            this.lblEntries.TabIndex = 167;
+            this.lblEntries.Text = "Showing 1 to 3 of 3 Entries";
             // 
             // RecordId
             // 
@@ -213,10 +400,10 @@
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Teal;
             this.FinalShopOrder.DefaultCellStyle = dataGridViewCellStyle3;
-            this.FinalShopOrder.HeaderText = "Final Shop Order";
+            this.FinalShopOrder.HeaderText = "Customer Shop Order";
             this.FinalShopOrder.Name = "FinalShopOrder";
             this.FinalShopOrder.ReadOnly = true;
-            this.FinalShopOrder.Width = 135;
+            this.FinalShopOrder.Width = 166;
             // 
             // ShopOrder
             // 
@@ -375,191 +562,6 @@
             this.DepartmentID.Name = "DepartmentID";
             this.DepartmentID.ReadOnly = true;
             this.DepartmentID.Width = 81;
-            // 
-            // sectionselect
-            // 
-            this.sectionselect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.sectionselect.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.sectionselect.FormattingEnabled = true;
-            this.sectionselect.Items.AddRange(new object[] {
-            "Select : ALL",
-            "Select : Molding",
-            "Select : Press",
-            "Select : Rotor",
-            "Select : Winding",
-            "Select : Circuit",
-            "Select : OliProof",
-            "Select : Harness"});
-            this.sectionselect.Location = new System.Drawing.Point(192, 100);
-            this.sectionselect.Name = "sectionselect";
-            this.sectionselect.Size = new System.Drawing.Size(162, 25);
-            this.sectionselect.TabIndex = 158;
-            this.sectionselect.SelectedIndexChanged += new System.EventHandler(this.sectionselect_SelectedIndexChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(189, 82);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(47, 15);
-            this.label1.TabIndex = 159;
-            this.label1.Text = "Section";
-            // 
-            // dateTimePicker3
-            // 
-            this.dateTimePicker3.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dateTimePicker3.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dateTimePicker3.Location = new System.Drawing.Point(562, 101);
-            this.dateTimePicker3.Name = "dateTimePicker3";
-            this.dateTimePicker3.Size = new System.Drawing.Size(160, 25);
-            this.dateTimePicker3.TabIndex = 163;
-            // 
-            // dateTimePicker2
-            // 
-            this.dateTimePicker2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dateTimePicker2.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dateTimePicker2.Location = new System.Drawing.Point(372, 100);
-            this.dateTimePicker2.Name = "dateTimePicker2";
-            this.dateTimePicker2.Size = new System.Drawing.Size(160, 25);
-            this.dateTimePicker2.TabIndex = 162;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label17.Location = new System.Drawing.Point(538, 104);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(18, 13);
-            this.label17.TabIndex = 161;
-            this.label17.Text = "to";
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.Location = new System.Drawing.Point(369, 82);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(82, 15);
-            this.label16.TabIndex = 160;
-            this.label16.Text = "Date Prepared";
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.Controls.Add(this.TimeText);
-            this.panel1.Controls.Add(this.button1);
-            this.panel1.Controls.Add(this.label15);
-            this.panel1.Controls.Add(this.button12);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1350, 68);
-            this.panel1.TabIndex = 164;
-            // 
-            // TimeText
-            // 
-            this.TimeText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.TimeText.AutoSize = true;
-            this.TimeText.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TimeText.Location = new System.Drawing.Point(1170, 24);
-            this.TimeText.Name = "TimeText";
-            this.TimeText.Size = new System.Drawing.Size(81, 20);
-            this.TimeText.TabIndex = 171;
-            this.TimeText.Text = "00:00:00 --";
-            // 
-            // button1
-            // 
-            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
-            this.button1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.Location = new System.Drawing.Point(21, 18);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(36, 31);
-            this.button1.TabIndex = 158;
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(62, 24);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(370, 20);
-            this.label15.TabIndex = 1;
-            this.label15.Text = "Sub Assy Traceability Auto Search System (Summary)";
-            // 
-            // Exportbtn
-            // 
-            this.Exportbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Exportbtn.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Exportbtn.Image = ((System.Drawing.Image)(resources.GetObject("Exportbtn.Image")));
-            this.Exportbtn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Exportbtn.Location = new System.Drawing.Point(1215, 99);
-            this.Exportbtn.Name = "Exportbtn";
-            this.Exportbtn.Padding = new System.Windows.Forms.Padding(15, 0, 10, 0);
-            this.Exportbtn.Size = new System.Drawing.Size(98, 27);
-            this.Exportbtn.TabIndex = 166;
-            this.Exportbtn.Text = "Export";
-            this.Exportbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.Exportbtn.UseVisualStyleBackColor = true;
-            this.Exportbtn.Click += new System.EventHandler(this.Exportbtn_Click);
-            // 
-            // filterbtn
-            // 
-            this.filterbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.filterbtn.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.filterbtn.Location = new System.Drawing.Point(1068, 99);
-            this.filterbtn.Name = "filterbtn";
-            this.filterbtn.Size = new System.Drawing.Size(122, 27);
-            this.filterbtn.TabIndex = 165;
-            this.filterbtn.Text = "Reset";
-            this.filterbtn.UseVisualStyleBackColor = true;
-            this.filterbtn.Click += new System.EventHandler(this.filterbtn_Click);
-            // 
-            // btnNext
-            // 
-            this.btnNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnNext.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnNext.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNext.Location = new System.Drawing.Point(1224, 689);
-            this.btnNext.Name = "btnNext";
-            this.btnNext.Padding = new System.Windows.Forms.Padding(20, 0, 25, 0);
-            this.btnNext.Size = new System.Drawing.Size(98, 27);
-            this.btnNext.TabIndex = 170;
-            this.btnNext.Text = "Next";
-            this.btnNext.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnNext.UseVisualStyleBackColor = true;
-            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
-            // 
-            // btnPrev
-            // 
-            this.btnPrev.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnPrev.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPrev.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnPrev.Location = new System.Drawing.Point(1127, 689);
-            this.btnPrev.Name = "btnPrev";
-            this.btnPrev.Padding = new System.Windows.Forms.Padding(20, 0, 25, 0);
-            this.btnPrev.Size = new System.Drawing.Size(91, 27);
-            this.btnPrev.TabIndex = 169;
-            this.btnPrev.Text = "Prev";
-            this.btnPrev.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnPrev.UseVisualStyleBackColor = true;
-            this.btnPrev.Click += new System.EventHandler(this.btnPrev_Click);
-            // 
-            // lblEntries
-            // 
-            this.lblEntries.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblEntries.AutoSize = true;
-            this.lblEntries.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblEntries.Location = new System.Drawing.Point(23, 696);
-            this.lblEntries.Name = "lblEntries";
-            this.lblEntries.Size = new System.Drawing.Size(148, 15);
-            this.lblEntries.TabIndex = 167;
-            this.lblEntries.Text = "Showing 1 to 3 of 3 Entries";
             // 
             // TraceableHistory
             // 

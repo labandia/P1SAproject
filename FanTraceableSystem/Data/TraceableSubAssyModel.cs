@@ -16,6 +16,7 @@ namespace FanTraceableSystem.Data
         public string LotNo { get; set; }   
         public string Line { get; set; }
         public string SubAssyIssued { get; set; }
+
         public int isAction { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using FanTraceableSystem.Data;
+using FanTraceableSystem.Interface;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,12 +15,18 @@ namespace FanTraceableSystem
 {
     public partial class EditPCBShop : Form
     {
+        private readonly ISubassy _sub;
         public BindingList<TraceableSubAssyModel> subassy = new BindingList<TraceableSubAssyModel>();
+        private string _originalShopOrder;
+
+        private readonly HashSet<string> _shopCache = new HashSet<string>();
+
 
         // Constructor for EDIT
-        public EditPCBShop(BindingList<TraceableSubAssyModel> existingList)
+        public EditPCBShop(BindingList<TraceableSubAssyModel> existingList, ISubassy sub)
         {
             InitializeComponent();
+            _sub = sub;
 
             // clone to avoid direct reference issues (recommended)
             subassy = new BindingList<TraceableSubAssyModel>(
@@ -32,18 +39,33 @@ namespace FanTraceableSystem
                     Line = x.Line,
                     SubAssyIssued = x.SubAssyIssued,
                     Rev = x.Rev,
-                    isAction = 1 // 👈 mark existing as EDIT by default (important)
+                    isAction = 0 // 👈 mark existing as EDIT by default (important)
                 }).ToList()
             );
         }
 
-        private void button1_Click(object sender, EventArgs e)
+
+        // =========================
+        // ➕ ADD NEW ROW (FAST)
+        // =========================
+        private async void button1_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(Shoptext.Text))
             {
                 MessageBox.Show("PCB Shop Order is required");
                 return;
             }
+
+            bool result = await _sub.CheckShopOrder(Shoptext.Text);
+
+            if (result)
+            {
+                MessageBox.Show("Shop Order is Exist in the Database.");
+                Shoptext.Clear();
+                Shoptext.Focus();
+                return;
+            }
+
 
 
             // Example: collect values from controls
@@ -55,7 +77,7 @@ namespace FanTraceableSystem
                 LotNo = LotNotext.Text,
                 Line = LineText.Text,
                 SubAssyIssued = IssuerText.Text,
-                isAction = 0
+                isAction = 1
             });
             dataGridView1.DataSource = subassy.ToList(); // Refresh the grid    
 
@@ -128,21 +150,39 @@ namespace FanTraceableSystem
 
         }
 
-        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private async void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
+            //if (e.RowIndex < 0) return;
+
+            //var row = dataGridView1.Rows[e.RowIndex].DataBoundItem as TraceableSubAssyModel;
+            //if (row == null) return;
+
+            //// Always mark as edited when changed
+            //row.isAction = 2;
+
             if (e.RowIndex < 0) return;
 
-            var row = dataGridView1.Rows[e.RowIndex].DataBoundItem as EditTracePCBModel;
+            var row = dataGridView1.Rows[e.RowIndex].DataBoundItem as TraceableSubAssyModel;
             if (row == null) return;
 
-            if (row.isAction == 0)
+            if (dataGridView1.Columns[e.ColumnIndex].Name == "ShopOrder")
             {
-                // newly added → keep as ADD
-                return;
+                string newValue = row.ShopOrder;
+                Debug.WriteLine(newValue);
+                bool result = await _sub.CheckShopOrder(newValue);
+                Debug.WriteLine(result);
+                if(!result)
+                {
+                    MessageBox.Show("Shop Order is Already  Exist to the other Section");
+                    row.ShopOrder = _originalShopOrder; // Revert to original if invalid
+                    return;
+                }
+                //row.isChangeShop = newValue;
+                //MessageBox.Show($"Old: {_originalShopOrder} → New: {newValue}");
+                // You can use _originalShopOrder for your SQL WHERE if needed
             }
 
-            // existing row → mark as edited
-            row.isAction = 1;
+            row.isAction = 2;
         }
 
         private void dataGridView1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
@@ -158,9 +198,32 @@ namespace FanTraceableSystem
 
         }
 
-        private void label7_Click(object sender, EventArgs e)
+        private void QuanText_KeyPress(object sender, KeyPressEventArgs e)
         {
+            if (char.IsControl(e.KeyChar)) return;
 
+            e.Handled = (char.IsDigit(e.KeyChar) || (e.KeyChar == '.' && !QuanText.Text.Contains("."))) ? false : true; // Allow the character
+        }
+
+        private void dataGridView1_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            if (dataGridView1.Columns[e.ColumnIndex].Name == "ShopOrder")
+            {
+                _originalShopOrder = dataGridView1.Rows[e.RowIndex].Cells["ShopOrder"].Value?.ToString();
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void ToggleUI(bool enabled)
+        {
+            this.Enabled = enabled;
+            this.Cursor = enabled ? Cursors.Default : Cursors.WaitCursor;
         }
     }
 }

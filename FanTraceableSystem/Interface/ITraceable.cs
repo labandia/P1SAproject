@@ -19,6 +19,8 @@ namespace FanTraceableSystem.Interface
              int pageNumber,
              int pageSize);
 
+        Task<List<TraceableOverAllSummaryModel>> TraceSearchByShopOrder(string shopOrder, int selectsearch);
+
         // FOR PAGINATION PURPOSES
         Task<int> GetTraceableCount(string search,
              DateTime? startDate,
@@ -29,8 +31,8 @@ namespace FanTraceableSystem.Interface
        
 
         Task<FinalTraceabilityModel> TraceAbilityFinalAssy(string final, int depart);
-        Task<bool> AddTraceTransactions(FinalTraceabilityModel final, List<TraceableSubAssyModel> sub);
+        Task<bool> AddTraceTransactions(FinalTraceabilityModel final, BindingList<TraceableSubAssyModel> sub);
 
-        Task<bool> EditTraceTransaction(FinalTraceabilityModel final, BindingList<TraceableSubAssyModel> sub);
+        Task<bool> EditTraceTransaction(FinalTraceabilityModel final, BindingList<TraceableSubAssyModel> sub, string currentShop);
     }
 }

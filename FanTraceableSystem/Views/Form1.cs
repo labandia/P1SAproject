@@ -100,5 +100,10 @@ namespace FanTraceableSystem
 
             this.Hide(); // or Close() depending on your flow
         }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

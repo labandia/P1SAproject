@@ -26,7 +26,7 @@
     <MinimumRequiredVersion>1.0.0.2</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>33</ApplicationRevision>
+    <ApplicationRevision>52</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -158,6 +158,13 @@
     <Compile Include="Modals\EnterPassword.Designer.cs">
       <DependentUpon>EnterPassword.cs</DependentUpon>
     </Compile>
+    <Compile Include="Modals\SystemUpdaterNotification.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Modals\SystemUpdaterNotification.Designer.cs">
+      <DependentUpon>SystemUpdaterNotification.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Services\ClickOnceUpdateManager.cs" />
     <Compile Include="Services\ISubassyServices.cs" />
     <Compile Include="Views\FanTraceabilityAutoSearch.cs">
       <SubType>Form</SubType>
@@ -195,6 +202,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Modals\EnterPassword.resx">
       <DependentUpon>EnterPassword.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Modals\SystemUpdaterNotification.resx">
+      <DependentUpon>SystemUpdaterNotification.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\FanTraceabilityAutoSearch.resx">
       <DependentUpon>FanTraceabilityAutoSearch.cs</DependentUpon>

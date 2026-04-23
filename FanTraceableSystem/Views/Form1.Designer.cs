@@ -58,18 +58,18 @@
             // 
             // button1
             // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.button1.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold);
             this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.Location = new System.Drawing.Point(1088, 90);
+            this.button1.Location = new System.Drawing.Point(1334, 0);
             this.button1.Name = "button1";
             this.button1.Padding = new System.Windows.Forms.Padding(0, 0, 0, 20);
-            this.button1.Size = new System.Drawing.Size(146, 55);
+            this.button1.Size = new System.Drawing.Size(16, 16);
             this.button1.TabIndex = 0;
             this.button1.Text = "Shop Orders Data";
             this.button1.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
@@ -94,7 +94,7 @@
             this.label15.AutoSize = true;
             this.label15.BackColor = System.Drawing.Color.Transparent;
             this.label15.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(759, 235);
+            this.label15.Location = new System.Drawing.Point(760, 235);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(264, 65);
             this.label15.TabIndex = 2;
@@ -105,11 +105,11 @@
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(122)))), ((int)(((byte)(99)))), ((int)(((byte)(255)))));
-            this.label1.Location = new System.Drawing.Point(762, 355);
+            this.label1.Location = new System.Drawing.Point(761, 355);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(407, 47);
+            this.label1.Size = new System.Drawing.Size(427, 50);
             this.label1.TabIndex = 3;
             this.label1.Text = "AUTO SEARCH SYSTEM";
             // 
@@ -248,7 +248,7 @@
             this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.DimGray;
-            this.label2.Location = new System.Drawing.Point(767, 465);
+            this.label2.Location = new System.Drawing.Point(767, 500);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(157, 17);
             this.label2.TabIndex = 160;
@@ -261,7 +261,7 @@
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.DimGray;
-            this.label3.Location = new System.Drawing.Point(767, 503);
+            this.label3.Location = new System.Drawing.Point(767, 526);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(297, 17);
             this.label3.TabIndex = 161;
@@ -276,9 +276,9 @@
             this.label4.ForeColor = System.Drawing.Color.DimGray;
             this.label4.Location = new System.Drawing.Point(358, 690);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(158, 17);
+            this.label4.Size = new System.Drawing.Size(190, 17);
             this.label4.TabIndex = 162;
-            this.label4.Text = "AWAITING USER INPUT...";
+            this.label4.Text = "AWAITING USER INPUT--------";
             // 
             // panel1
             // 
@@ -385,7 +385,7 @@
             this.label6.AutoSize = true;
             this.label6.BackColor = System.Drawing.Color.Transparent;
             this.label6.Font = new System.Drawing.Font("Segoe UI", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(759, 290);
+            this.label6.Location = new System.Drawing.Point(760, 290);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(355, 65);
             this.label6.TabIndex = 170;
@@ -415,6 +415,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Sub Assy Traceability Auto Search System";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);

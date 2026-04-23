@@ -34,5 +34,8 @@ namespace FanTraceableSystem.Interface
         Task<bool> AddTraceTransactions(FinalTraceabilityModel final, BindingList<TraceableSubAssyModel> sub);
 
         Task<bool> EditTraceTransaction(FinalTraceabilityModel final, BindingList<TraceableSubAssyModel> sub, string currentShop);
+
+        Task<List<ProcessModel>> GetProcessesByDepartment(int departmentId);
+
     }
 }

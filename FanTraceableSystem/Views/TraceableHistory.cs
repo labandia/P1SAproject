@@ -4,13 +4,10 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using FanTraceableSystem.Data;
 using FanTraceableSystem.Interface;
-using static System.Collections.Specialized.BitVector32;
 using Excel = Microsoft.Office.Interop.Excel;
 
 
@@ -31,8 +28,12 @@ namespace FanTraceableSystem
         private System.Windows.Forms.Timer _searchTimer;
         private const int _debounceDelay = 500; // milliseconds (adjust if needed)
         private Timer timer;
+        private Timer _filterTimer;
 
-        private BindingList<SummaryraceableShopOrderModel> data;
+        //private BindingList<SummaryraceableShopOrderModel> data = 
+        //    new BindingList<SummaryraceableShopOrderModel>();
+
+        private readonly BindingSource _bindingSource = new BindingSource();
 
         private readonly PagingState _paging = new PagingState();
 
@@ -42,6 +43,11 @@ namespace FanTraceableSystem
             InitializeComponent();
             _summaryService = service;  
             sectionselect.SelectedIndex = 0;
+
+            dataGridView2.AutoGenerateColumns = true;
+            dataGridView2.DataSource = _bindingSource;
+            EnableDoubleBuffering(dataGridView2);
+
 
             _searchTimer = new System.Windows.Forms.Timer();
             _searchTimer.Interval = _debounceDelay;
@@ -58,6 +64,24 @@ namespace FanTraceableSystem
             timer.Interval = 1000; // 1 second
             timer.Tick += Timer_Tick;
             timer.Start();
+
+            _filterTimer = new Timer();
+            _filterTimer.Interval = 400; // 400ms delay
+            _filterTimer.Tick += async (s, e) =>
+            {
+                _filterTimer.Stop();
+
+                _paging.PageNumber = 1;
+                await loadData();
+            };
+
+        }
+
+        public static void EnableDoubleBuffering(DataGridView dgv)
+        {
+            typeof(DataGridView)
+                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                .SetValue(dgv, true, null);
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -75,8 +99,12 @@ namespace FanTraceableSystem
             if (_isLoading) return; // prevent double load
             _isLoading = true;
 
+
             try
             {
+                dataGridView2.SuspendLayout();
+
+
                 var dataTask = _summaryService.TraceableShopOrderSummary(
                       SearchText.Text,
                       dateTimePicker2.Checked ? dateTimePicker2.Value.Date : (DateTime?)null,
@@ -109,20 +137,20 @@ namespace FanTraceableSystem
             finally
             {
                 _isLoading = false;
+                dataGridView2.ResumeLayout();
             }   
 
         }
         private void BindGrid(List<SummaryraceableShopOrderModel> result, bool append)
         {
-            if (append)
+            if (append && _bindingSource.DataSource is List<SummaryraceableShopOrderModel> existing)
             {
-                foreach (var item in result)
-                    data.Add(item);
+                existing.AddRange(result);
+                _bindingSource.ResetBindings(false);
             }
             else
             {
-                data = new BindingList<SummaryraceableShopOrderModel>(result);
-                dataGridView2.DataSource = data;
+                _bindingSource.DataSource = result;
             }
         }
         private void UpdatePaginationUI(int returnedCount, int totalCount)
@@ -165,19 +193,7 @@ namespace FanTraceableSystem
             FanTraceabilityCore.ConfigureColumn(dataGridView2, "LotNo", 120);
             FanTraceabilityCore.ConfigureColumn(dataGridView2, "DepartmentID", 120);
         }
-        private async void dataGridView2_Scroll(object sender, ScrollEventArgs e)
-        {
-            if (!_paging.HasNextPage || _isLoading) return;
-
-            int visibleRows = dataGridView2.DisplayedRowCount(false);
-            int firstVisibleRow = dataGridView2.FirstDisplayedScrollingRowIndex;
-
-            if (firstVisibleRow + visibleRows >= dataGridView2.RowCount - 5)
-            {
-                _paging.PageNumber++;
-                await loadData(append: true); // ✅ append ONLY here
-            }
-        }
+        
         private void dataGridView2_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.Value == null || string.IsNullOrWhiteSpace(e.Value.ToString()))
@@ -228,10 +244,7 @@ namespace FanTraceableSystem
         }
 
 
-        private void button12_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+        private void button12_Click(object sender, EventArgs e) => this.Close();
 
         private async void sectionselect_SelectedIndexChanged(object sender, EventArgs e) => await loadData();
 
@@ -259,47 +272,53 @@ namespace FanTraceableSystem
         // ================================================================================
         private async void Exportbtn_Click(object sender, EventArgs e)
         {
-            List<ExportTraceableShopOrderModel> Exportdata = new List<ExportTraceableShopOrderModel>();
+            ToggleUI(false);
 
-            var result = await _summaryService.TraceableShopOrderSummary(
-                     SearchText.Text,
-                     dateTimePicker2.Checked ? dateTimePicker2.Value.Date : (DateTime?)null,
-                     dateTimePicker3.Checked ? dateTimePicker3.Value.Date : (DateTime?)null,
-                     isEditmode,
-                     sectionselect.SelectedIndex,
-                     _paging.PageNumber,
-                     _paging.PageSize
+            try
+            {
+                List<ExportTraceableShopOrderModel> Exportdata = new List<ExportTraceableShopOrderModel>();
+
+                var result = await _summaryService.TraceableShopOrderSummary(
+                         SearchText.Text,
+                         dateTimePicker2.Checked ? dateTimePicker2.Value.Date : (DateTime?)null,
+                         dateTimePicker3.Checked ? dateTimePicker3.Value.Date : (DateTime?)null,
+                         isEditmode,
+                         sectionselect.SelectedIndex,
+                         _paging.PageNumber,
+                         _paging.PageSize
+                   );
+
+                var exportData = await Task.Run(() =>
+                   result.Select(items => new ExportTraceableShopOrderModel
+                   {
+                       FinalShopOrder = items.FinalShopOrder,
+                       ShopOrder = items.ShopOrder,
+                       ItemNo = items.ItemNo,
+                       ProcessName = items.ProcessName,
+                       PlanQuan = items.PlanQuan,
+                       DatePrepared = items.DatePrepared.ToString("yyyy-MM-dd"),
+                       TimeInput = items.TimeInput,
+                       PreparedBy = items.PreparedBy,
+                       PreparedQuantity = items.PreparedQuantity,
+                       Shift = FanTraceabilityCore.FormatShift(items.Shift?.ToString() ?? ""),
+                       Rev = items.Rev,
+                       Customer = items.Customer,
+                       Modeltype = items.Modeltype,
+                       Remarks = items.Remarks,
+                       Incharge = items.Incharge,
+                       FinalIssuedby = items.FinalIssuedby,
+                       LotNo = items.LotNo,
+                       DepartmentID = FanTraceabilityCore.SectionMap.ContainsKey(items.DepartmentID)
+                           ? FanTraceabilityCore.SectionMap[items.DepartmentID]
+                           : "Final Assy Section"
+                   }).ToList()
                );
 
-            foreach (var items in result)
-            {
-                Exportdata.Add(new ExportTraceableShopOrderModel
-                {
-                    FinalShopOrder = items.FinalShopOrder,
-                    ShopOrder = items.ShopOrder,
-                    ItemNo = items.ItemNo,
-                    Revision = items.Revision,
-                    PlanQuan = items.PlanQuan,
-                    DatePrepared = items.DatePrepared.ToString("yyyy-MM-dd"),
-                    TimeInput = items.TimeInput,
-                    PreparedBy = items.PreparedBy,
-                    PreparedQuantity = items.PreparedQuantity,
-                    Shift = FanTraceabilityCore.FormatShift(items.Shift?.ToString() ?? ""),
-                    Rev = items.Rev,
-                    Customer = items.Customer,
-                    Modeltype = items.Modeltype,
-                    Remarks = items.Remarks,
-                    Incharge = items.Incharge,
-                    FinalIssuedby = items.FinalIssuedby,
-                    LotNo = items.LotNo,
-                    DepartmentID = FanTraceabilityCore.SectionMap.ContainsKey(items.DepartmentID)
-                                 ? FanTraceabilityCore.SectionMap[items.DepartmentID]
-                                 : "Final Assy Section"
-                });
+
+                ExportToExcel(exportData);
             }
+            finally { ToggleUI(true); }
 
-
-            ExportToExcel(Exportdata);
         }
 
 
@@ -434,5 +453,40 @@ namespace FanTraceableSystem
             }
         }
 
+        private void ToggleUI(bool enabled)
+        {
+            this.Enabled = enabled;
+            Cursor = enabled ? Cursors.Default : Cursors.WaitCursor;
+        }
+
+        private void dateTimePicker3_ValueChanged(object sender, EventArgs e)
+        {
+            TriggerDateFilter();
+        }
+
+        private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
+        {
+            TriggerDateFilter();
+        }
+
+
+        private void TriggerDateFilter()
+        {
+            // Only apply filter if at least one is checked
+            //if (!dateTimePicker2.Checked && !dateTimePicker3.Checked)
+            //{
+            //    isEdit = 0;
+            //}
+            //else
+            //{
+            //    isEdit = 1;
+            //}
+
+            // Restart debounce timer
+            _filterTimer.Stop();
+            _filterTimer.Start();
+        }
+
+      
     }
 }

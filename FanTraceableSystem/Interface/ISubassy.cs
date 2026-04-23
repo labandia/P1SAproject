@@ -9,7 +9,7 @@ namespace FanTraceableSystem.Interface
 {
     public interface ISubassy
     {
-        Task<List<TraceableSubAssyModel>> GetSubAssyDatalist(string finalShopOrder);
+        Task<List<TraceableSubAssyModel>> GetSubAssyDatalist(int finalid);
         Task<bool> CheckShopOrder(string finalShopOrder);   
         Task<bool> AddSubAssy(TraceableSubAssyModel subassy);
         Task<bool> UpdateSubAssy(TraceableSubAssyModel subassy);

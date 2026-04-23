@@ -6,10 +6,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Linq;
 using FanTraceableSystem.Data;
 using FanTraceableSystem.Interface;
-using static System.Collections.Specialized.BitVector32;
 using Excel = Microsoft.Office.Interop.Excel;
 
 
@@ -37,7 +35,6 @@ namespace FanTraceableSystem
         public int shiftToday = 0;
         public int isEditMode = 0; // By Default is in Add Mode, when click the Edit Button it will change to Edit Mode
         // But this is for the Edit
-        public int isFilter = 0;
         public int finalId = 0;
         private Timer timer;
         private Timer _filterTimer;
@@ -109,7 +106,6 @@ namespace FanTraceableSystem
                 var finaobj = new FinalTraceabilityModel
                 {
                     FinalShopOrder = Shoptext.Text,
-                    Revision = RevText.Text,
                     ItemNo = PCBText.Text,
                     PlanQuan = int.TryParse(PlanQuanText.Text, out var q) ? q : 0,
                     DatePrepared = DatePrepared.Value,
@@ -121,7 +117,8 @@ namespace FanTraceableSystem
                     Remarks = RemarkText.Text,
                     Incharge = PCBtextcharge.Text,
                     FinalIssuedby = PCBtextcharge.Text,
-                    DepartmentID = sectionID
+                    DepartmentID = sectionID,
+                    ProcessId = processSpecs.SelectedValue != null ? (int)processSpecs.SelectedValue : 0
                 };
 
 
@@ -163,7 +160,6 @@ namespace FanTraceableSystem
                     SearchText.Text = Shoptext.Text;
                     Shoptext.Text = "";
                     PCBText.Text = "";
-                    RevText.Text = "";
                     PreparedText.Text = "";
                     CustomerText.Text = "";
                     PlanQuanText.Text = "";
@@ -196,36 +192,19 @@ namespace FanTraceableSystem
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (isFilter == 1)
-            {
-                //using(var edit = new EditPCBShop(_pcbList))
-                //{
-                //    if (edit.ShowDialog(this) == DialogResult.OK)
-                //    {
-                //        _pcbList = edit.PCBList;
-
-                //        string isAdd = _pcbList.Count > 0 ? $@"({_pcbList.Count})" : "";
-
-                //        button1.Text = "Add Production Order " + isAdd;
-                //    }
-                //}
-            }
-            else
-            {
-                using (var add = subassyform.Any()
+            using (var add = subassyform.Any()
                    ? new AddPCBShop(subassyform)   // EDIT MODE
                    : new AddPCBShop(_sub))          // ADD MODE
+            {
+                if (add.ShowDialog(this) == DialogResult.OK)
                 {
-                    if (add.ShowDialog(this) == DialogResult.OK)
-                    {
-                        subassyform = add.subassy;
+                    subassyform = add.subassy;
 
-                        string isAdd = subassyform.Count > 0 ? $@"({subassyform.Count})" : "";
+                    string isAdd = subassyform.Count > 0 ? $@"({subassyform.Count})" : "";
 
-                        button1.Text = "Add Production Order " + isAdd;
-                    }
+                    button1.Text = "Add Production Order " + isAdd;
                 }
-            } 
+            }
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -292,10 +271,15 @@ namespace FanTraceableSystem
                     sectionID
                  );
 
-                await Task.WhenAll(dataTask, countTask);
+                var processTask = _trac.GetProcessesByDepartment(sectionID);
+
+                await Task.WhenAll(dataTask, countTask, processTask);
 
                 var result = dataTask.Result;
                 var totalCount = countTask.Result;
+                var processes = processTask.Result;
+
+                PopulateProcess(processes);
 
                 BindGrid(result, append);
                 UpdatePaginationUI(result.Count, totalCount);
@@ -305,6 +289,17 @@ namespace FanTraceableSystem
             {
                 _isLoading = false; 
             }
+        }
+
+        public void PopulateProcess(List<ProcessModel> processes)
+        {
+            processSpecs.DataSource = null;
+
+            processSpecs.DataSource = processes;
+            processSpecs.DisplayMember = "ProcessName"; // shown in UI
+            processSpecs.ValueMember = "ProcessId";     // actual value
+
+            processSpecs.SelectedIndex = 0; // no default (or 0 if you want first)
         }
 
         private async Task ShopOrderLoadData(bool append = false)
@@ -414,7 +409,6 @@ namespace FanTraceableSystem
         {
             Shoptext.Text = "";
             PCBText.Text = "";
-            RevText.Text = "";
             PreparedText.Text = "";
             CustomerText.Text = "";
             PlanQuanText.Text = "";
@@ -507,7 +501,7 @@ namespace FanTraceableSystem
                     FinalShopOrder = items.FinalShopOrder,
                     ShopOrder = items.ShopOrder,
                     ItemNo = items.ItemNo,
-                    Revision = items.Revision,
+                    ProcessName = items.ProcessName,
                     PlanQuan = items.PlanQuan,
                     DatePrepared = items.DatePrepared.ToString("yyyy-MM-dd"),
                     TimeInput = items.TimeInput,
@@ -702,7 +696,7 @@ namespace FanTraceableSystem
             Shoptext.Text = finalassyDetails.FinalShopOrder;
             PCBText.Text = finalassyDetails.ItemNo;
             PlanQuanText.Text = finalassyDetails.PlanQuan.ToString();
-            RevText.Text = finalassyDetails.Revision;
+            processSpecs.SelectedValue = finalassyDetails.ProcessId;
             CustomerText.Text = finalassyDetails.Customer;
 
             Cardtext.Text = finalassyDetails.Modeltype;
@@ -711,7 +705,7 @@ namespace FanTraceableSystem
             PreparedText.Text = finalassyDetails.PreparedBy;
             textBox1.Text = finalassyDetails.FinalIssuedby;
 
-            var subassydata = await _sub.GetSubAssyDatalist(item.FinalShopOrder);
+            var subassydata = await _sub.GetSubAssyDatalist(finalassyDetails.RecordId);
 
             if (subassydata != null)
             {
@@ -765,7 +759,7 @@ namespace FanTraceableSystem
             finalId = finalassyDetails.RecordId;
             PCBText.Text = finalassyDetails.ItemNo;
             PlanQuanText.Text = finalassyDetails.PlanQuan.ToString();
-            RevText.Text = finalassyDetails.Revision;
+            processSpecs.SelectedValue = finalassyDetails.ProcessId;    
             CustomerText.Text = finalassyDetails.Customer;
 
             Cardtext.Text = finalassyDetails.Modeltype;
@@ -774,7 +768,7 @@ namespace FanTraceableSystem
             PreparedText.Text = finalassyDetails.PreparedBy;
             textBox1.Text = finalassyDetails.FinalIssuedby;
 
-            var subassydata = await _sub.GetSubAssyDatalist(Shoptext.Text);
+            var subassydata = await _sub.GetSubAssyDatalist(finalassyDetails.RecordId);
 
             if(subassydata != null)
             {
@@ -812,6 +806,8 @@ namespace FanTraceableSystem
 
         private async void nextbtn_Click(object sender, EventArgs e)
         {
+            MessageBox.Show($@"Selected Process : " + processSpecs.SelectedValue);
+
             if (!_paging.HasNextPage) return;
 
             _paging.PageNumber++;
@@ -832,7 +828,7 @@ namespace FanTraceableSystem
             {
                 RecordId = finalId,
                 FinalShopOrder = Shoptext.Text,
-                Revision = RevText.Text,
+                ProcessId = processSpecs.SelectedValue != null ? (int)processSpecs.SelectedValue : 0,
                 ItemNo = PCBText.Text,
                 PlanQuan = int.TryParse(PlanQuanText.Text, out var q) ? q : 0,
                 DatePrepared = DatePrepared.Value,
@@ -863,5 +859,15 @@ namespace FanTraceableSystem
         {
             FormReset();
         }
+
+        private void FanTraceabilityAutoSearch_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (this.Owner != null)
+            {
+                this.Owner.Show(); // bring parent back
+            }
+        }
+
+       
     }
 }

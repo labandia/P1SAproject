@@ -1,12 +1,8 @@
 ﻿using FanTraceableSystem.Interface;
+using FanTraceableSystem.Modals;
 using FanTraceableSystem.Services;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Deployment.Application;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -23,7 +19,9 @@ namespace FanTraceableSystem
             InitializeComponent();
             _trac = traceable;
             _summary = sum;
-            _sub = sub; 
+            _sub = sub;
+
+            //StartVersionCheck();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -33,9 +31,9 @@ namespace FanTraceableSystem
         }
 
         private void button1_Click(object sender, EventArgs e)
-        {   
-            //var openinput = new FanTraceabilityAutoSearch(_trac);
-            //openinput.ShowDialog();
+        {
+            SystemUpdaterNotification updater = new SystemUpdaterNotification();
+            updater.ShowDialog();
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -104,6 +102,84 @@ namespace FanTraceableSystem
         private void pictureBox1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void ShowPopup(string message)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => ShowPopup(message)));
+                return;
+            }
+
+            var notif = new SystemUpdaterNotification();
+            notif.Show();
+        }
+
+
+        private async Task<string> CheckClickOnceUpdate()
+        {
+            if (!ApplicationDeployment.IsNetworkDeployed)
+                return null; // Not installed via ClickOnce
+
+            try
+            {
+                var deployment = ApplicationDeployment.CurrentDeployment;
+
+                // Check for update (async wrapper)
+                var updateInfo = await Task.Run(() => deployment.CheckForDetailedUpdate());
+
+                if (updateInfo.UpdateAvailable)
+                {
+                    // Optional: you can log instead of notify
+                    Console.WriteLine($"Updating to {updateInfo.AvailableVersion}...");
+
+                    // Silent update (no UI)
+                    deployment.Update();
+
+                    // Restart safely on UI thread
+                    Invoke(new Action(() =>
+                    {
+                        Application.Restart();
+                    }));
+
+                    return $"New version available!\nCurrent: {updateInfo}\nLatest: {updateInfo}";
+                }
+            }
+            catch (DeploymentDownloadException)
+            {
+                return "Cannot check for updates (network issue)";
+            }
+            catch (InvalidDeploymentException)
+            {
+                return "Invalid ClickOnce deployment";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+
+            return null;
+        }
+
+        private async void StartVersionCheck()
+        {
+            while (true)
+            {
+                var result = await CheckClickOnceUpdate();
+
+                if (!string.IsNullOrEmpty(result))
+                {
+                    ShowPopup(result); // your notification form
+                }
+
+                await Task.Delay(60000); // check every 1 minute
+            }
+        }
+
+        private async void Form1_Load(object sender, EventArgs e)
+        {
+            //await ClickOnceUpdateManager.CheckAndUpdateAsync(ShowPopup);
         }
     }
 }

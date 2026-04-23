@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace FanTraceableSystem.Data
 {
+
     public class PagingState
     {
         public int PageNumber { get; set; } = 1;
@@ -14,12 +15,21 @@ namespace FanTraceableSystem.Data
         public bool HasNextPage { get; set; }
     }
 
+    public class ProcessModel
+    {
+        public int ProcessId { get; set; }
+        public string ProcessName { get; set; }
+        public int DepartmentID { get; set; }
+    }
+
+
+
     public class TraceableOverAllSummaryModel
     {
         public int RecordId { get; set; }
         public string FinalShopOrder { get; set; }
         public string ShopOrder { get; set; }
-        public string Revision { get; set; }
+        public string ProcessName { get; set; }
         public string ItemNo { get; set; }
         public int PlanQuan { get; set; }
         public DateTime DatePrepared { get; set; }
@@ -45,7 +55,7 @@ namespace FanTraceableSystem.Data
         public string FinalShopOrder { get; set; }
         public string ShopOrder { get; set; }
         public string PreparedBy { get; set; }
-        public string Revision { get; set; }
+        public string ProcessName { get; set; }
         public string ItemNo { get; set; }
         public int PlanQuan { get; set; }
         public string DatePrepared { get; set; }
@@ -69,7 +79,7 @@ namespace FanTraceableSystem.Data
     {
         public string FinalShopOrder { get; set; }
         public string ShopOrder { get; set; }
-        public string Revision { get; set; }
+        public string ProcessName { get; set; }
         public string ItemNo { get; set; }
         public DateTime DatePrepared { get; set; }
         public string TimeInput { get; set; }
@@ -118,7 +128,6 @@ namespace FanTraceableSystem.Data
     {
         public int RecordId { get; set; }
         public string FinalShopOrder { get; set; }
-        public string Revision { get; set; }
         public string ItemNo { get; set; }
         public int PlanQuan { get; set; }
         public DateTime DatePrepared { get; set; }
@@ -131,6 +140,7 @@ namespace FanTraceableSystem.Data
         public string Incharge { get; set; }
         public string FinalIssuedby { get; set; }
         public int DepartmentID { get; set; }
+        public int ProcessId { get; set; }
     }
 
 

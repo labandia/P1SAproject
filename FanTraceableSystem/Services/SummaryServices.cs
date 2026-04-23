@@ -20,6 +20,7 @@ namespace FanTraceableSystem.Services
             string sql = @"SELECT  COUNT(*)
                            FROM FanTraceabilityFinal f
 	                       LEFT JOIN FanTraceabilitySub s ON s.FinalShopOrder = f.FinalShopOrder
+                           INNER JOIN FanTraceabilityProcess p ON p.ProcessId = f.ProcessId
                            WHERE f.IsDeletedFinal = 0 AND ShopOrder IS NOT NULL ";
 
             var parameters = new DynamicParameters();
@@ -62,7 +63,7 @@ namespace FanTraceableSystem.Services
                     SELECT  f.RecordId
                            ,f.FinalShopOrder
                            ,s.ShopOrder
-                           ,f.Revision
+                           ,p.ProcessName   
                            ,f.ItemNo, PlanQuan, Line
                            ,DatePrepared
                            ,FORMAT(TimeInput, 'hh:mm tt') AS TimeInput
@@ -80,6 +81,7 @@ namespace FanTraceableSystem.Services
 		                   ,f.DepartmentID
                        FROM FanTraceabilityFinal f
 	                   LEFT JOIN FanTraceabilitySub s ON s.FinalShopOrder = f.FinalShopOrder
+                       INNER JOIN FanTraceabilityProcess p ON p.ProcessId = f.ProcessId  
                        WHERE f.IsDeletedFinal = 0 AND ShopOrder IS NOT NULL
                 ";
 

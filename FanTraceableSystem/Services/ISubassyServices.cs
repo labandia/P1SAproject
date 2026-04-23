@@ -25,12 +25,13 @@ namespace FanTraceableSystem.Services
                 WHERE ShopOrder = @ShopOrder", new { ShopOrder = ShopOrder });
         }
 
-        public Task<List<TraceableSubAssyModel>> GetSubAssyDatalist(string finalShopOrder)
+        public Task<List<TraceableSubAssyModel>> GetSubAssyDatalist(int finalid)
         {
              return SqlDataAccess.GetData<TraceableSubAssyModel>($@"
-                SELECT * FROM FanTraceabilitySub 
-                WHERE FinalShopOrder = @FinalShopOrder", 
-                new { FinalShopOrder = finalShopOrder });
+                SELECT SubAssyID, FinalShopOrder, ShopOrder, PreparedQuantity, LotNo, Line, SubAssyIssued, Rev
+                FROM FanTraceabilitySub 
+                WHERE FinalId = @FinalId", 
+                new { FinalId = finalid });
         }
 
         public Task<bool> RemoveSubAssy(int id)

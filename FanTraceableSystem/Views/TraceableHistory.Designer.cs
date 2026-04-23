@@ -72,7 +72,7 @@
             this.FinalShopOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ShopOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.PlanQuan = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Revision = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ProcessName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ItemNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DatePreparedV2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TimeInput = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -156,7 +156,7 @@
             this.FinalShopOrder,
             this.ShopOrder,
             this.PlanQuan,
-            this.Revision,
+            this.ProcessName,
             this.ItemNo,
             this.DatePreparedV2,
             this.TimeInput,
@@ -195,7 +195,6 @@
             this.dataGridView2.Size = new System.Drawing.Size(1300, 543);
             this.dataGridView2.TabIndex = 157;
             this.dataGridView2.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView2_CellFormatting);
-            this.dataGridView2.Scroll += new System.Windows.Forms.ScrollEventHandler(this.dataGridView2_Scroll);
             // 
             // sectionselect
             // 
@@ -235,6 +234,7 @@
             this.dateTimePicker3.Name = "dateTimePicker3";
             this.dateTimePicker3.Size = new System.Drawing.Size(160, 25);
             this.dateTimePicker3.TabIndex = 163;
+            this.dateTimePicker3.ValueChanged += new System.EventHandler(this.dateTimePicker3_ValueChanged);
             // 
             // dateTimePicker2
             // 
@@ -244,6 +244,7 @@
             this.dateTimePicker2.Name = "dateTimePicker2";
             this.dateTimePicker2.Size = new System.Drawing.Size(160, 25);
             this.dateTimePicker2.TabIndex = 162;
+            this.dateTimePicker2.ValueChanged += new System.EventHandler(this.dateTimePicker2_ValueChanged);
             // 
             // label17
             // 
@@ -425,15 +426,15 @@
             this.PlanQuan.ReadOnly = true;
             this.PlanQuan.Width = 116;
             // 
-            // Revision
+            // ProcessName
             // 
-            this.Revision.DataPropertyName = "Revision";
+            this.ProcessName.DataPropertyName = "ProcessName";
             dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Revision.DefaultCellStyle = dataGridViewCellStyle6;
-            this.Revision.HeaderText = "Revision";
-            this.Revision.Name = "Revision";
-            this.Revision.ReadOnly = true;
-            this.Revision.Width = 83;
+            this.ProcessName.DefaultCellStyle = dataGridViewCellStyle6;
+            this.ProcessName.HeaderText = "Item Name";
+            this.ProcessName.Name = "ProcessName";
+            this.ProcessName.ReadOnly = true;
+            this.ProcessName.Width = 101;
             // 
             // ItemNo
             // 
@@ -480,10 +481,10 @@
             this.PreparedBy.DataPropertyName = "PreparedBy";
             dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             this.PreparedBy.DefaultCellStyle = dataGridViewCellStyle11;
-            this.PreparedBy.HeaderText = "Prepared By:";
+            this.PreparedBy.HeaderText = "Prepared By";
             this.PreparedBy.Name = "PreparedBy";
             this.PreparedBy.ReadOnly = true;
-            this.PreparedBy.Width = 110;
+            this.PreparedBy.Width = 107;
             // 
             // Shift
             // 
@@ -621,7 +622,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn FinalShopOrder;
         private System.Windows.Forms.DataGridViewTextBoxColumn ShopOrder;
         private System.Windows.Forms.DataGridViewTextBoxColumn PlanQuan;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Revision;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ProcessName;
         private System.Windows.Forms.DataGridViewTextBoxColumn ItemNo;
         private System.Windows.Forms.DataGridViewTextBoxColumn DatePreparedV2;
         private System.Windows.Forms.DataGridViewTextBoxColumn TimeInput;

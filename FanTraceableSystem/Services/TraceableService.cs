@@ -25,11 +25,11 @@ namespace FanTraceableSystem.Services
         {
 
             string sql = @"
-                     SELECT  
+                      SELECT  
                            f.RecordId,
                            f.FinalShopOrder,
                            s.ShopOrder,
-                           f.Revision,
+                           p.ProcessName,
                            f.ItemNo,
                            f.PlanQuan,
                            s.Line,
@@ -49,8 +49,8 @@ namespace FanTraceableSystem.Services
                            f.DepartmentID,
                            s.SubAssyIssued
                     FROM FanTraceabilityFinal f
-                    LEFT JOIN FanTraceabilitySub s  
-                        ON f.RecordId = s.FinalId
+                    LEFT JOIN FanTraceabilitySub s ON f.RecordId = s.FinalId
+                    INNER JOIN FanTraceabilityProcess p ON p.ProcessId = f.ProcessId
                     WHERE f.IsDeletedFinal = 0 AND s.ShopOrder IS NOT NULL ";
 
             var parameters = new DynamicParameters();
@@ -133,7 +133,8 @@ namespace FanTraceableSystem.Services
                     FROM FanTraceabilityFinal f
                     LEFT JOIN FanTraceabilitySub s  
                         ON f.RecordId = s.FinalId
-                        AND s.ShopOrder IS NOT NULL   
+                        AND s.ShopOrder IS NOT NULL  
+                    INNER JOIN FanTraceabilityProcess p ON p.ProcessId = f.ProcessId
                     WHERE f.IsDeletedFinal = 0 ";
 
 
@@ -173,7 +174,8 @@ namespace FanTraceableSystem.Services
                    Modeltype,
                    Remarks,
                    Incharge,
-                   FinalIssuedby
+                   FinalIssuedby, 
+                   processId
               FROM FanTraceabilityFinal 
               WHERE FinalShopOrder = @FinalShopOrder 
                     AND DepartmentID =@DepartmentID",
@@ -192,6 +194,7 @@ namespace FanTraceableSystem.Services
                        FROM FanTraceabilityFinal f
 	                   LEFT JOIN FanTraceabilitySub s ON s.FinalShopOrder = f.FinalShopOrder
                        AND s.ShopOrder IS NOT NULL
+                       INNER JOIN FanTraceabilityProcess p ON p.ProcessId = f.ProcessId
                        WHERE f.IsDeletedFinal = 0  ";
 
             var parameters = new DynamicParameters();
@@ -230,12 +233,12 @@ namespace FanTraceableSystem.Services
             {
                 var finalId = await SqlDataAccess.ExecuteScalarAsync<int>(@"
                 INSERT INTO FanTraceabilityFinal
-                (FinalShopOrder, PlanQuan, Revision, ItemNo, DatePrepared, TimeInput, PreparedBy, Shift, Customer, Modeltype,
-                 Incharge, Remarks, FinalIssuedby, DepartmentID)
+                (FinalShopOrder, PlanQuan, ItemNo, DatePrepared, TimeInput, PreparedBy, Shift, Customer, Modeltype,
+                 Incharge, Remarks, FinalIssuedby, DepartmentID, ProcessId)
                 OUTPUT INSERTED.RecordId
                 VALUES
-                (@FinalShopOrder, @PlanQuan, @Revision, @ItemNo, @DatePrepared, @TimeInput, @PreparedBy, @Shift, @Customer, @Modeltype,
-                 @Incharge, @Remarks, @FinalIssuedby, @DepartmentID)",
+                (@FinalShopOrder, @PlanQuan, @ItemNo, @DatePrepared, @TimeInput, @PreparedBy, @Shift, @Customer, @Modeltype,
+                 @Incharge, @Remarks, @FinalIssuedby, @DepartmentID, @ProcessId)",
                 trac);
 
                 // if the input has a Sub Assy Data
@@ -269,12 +272,12 @@ namespace FanTraceableSystem.Services
         }
         public async Task<bool> EditTraceTransaction(FinalTraceabilityModel trac, BindingList<TraceableSubAssyModel> pcb, string currentShop)
         {
-            await SqlDataAccess.UpdateInsertQuery($@"UPDATE FanTraceabilityFinal SET Revision =@Revision, 
+            await SqlDataAccess.UpdateInsertQuery($@"UPDATE FanTraceabilityFinal SET ProcessId =@ProcessId, 
                 ItemNo =@ItemNo, PreparedBy =@PreparedBy, Customer =@Customer, Modeltype =@Modeltype, Remarks =@Remarks,  
                 Incharge =@Incharge, FinalIssuedby =@FinalIssuedby WHERE RecordId =@RecordId", new
             {
                 trac.RecordId,
-                trac.Revision,
+                trac.ProcessId,
                 trac.ItemNo,
                 trac.PreparedBy,
                 trac.Customer,
@@ -355,6 +358,11 @@ namespace FanTraceableSystem.Services
             return true;
         }
 
-        
+        public Task<List<ProcessModel>> GetProcessesByDepartment(int departmentId)
+        {
+             return SqlDataAccess.GetData<ProcessModel>(@"SELECT ProcessId, ProcessName, 
+                      DepartmentID FROM FanTraceabilityProcess WHERE DepartmentID = @DepartmentID",
+                new { DepartmentID = departmentId });   
+        }
     }
 }

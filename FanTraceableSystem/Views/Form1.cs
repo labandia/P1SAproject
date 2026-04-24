@@ -166,7 +166,7 @@ namespace FanTraceableSystem
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            label4.Text = "Version" + GetPublishedVersion();
+            label4.Text = "Version : " + GetPublishedVersion();
         }
 
         protected override async void OnFormClosing(FormClosingEventArgs e)

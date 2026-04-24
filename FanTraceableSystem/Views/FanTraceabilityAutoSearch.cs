@@ -151,7 +151,7 @@ namespace FanTraceableSystem
 
                 if (res)
                 {
-                    MessageBox.Show("Shop Order added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Customer shop order has been added successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     SearchText.Text = Shoptext.Text;
                     FormReset();
                     await LoadData();
@@ -159,7 +159,7 @@ namespace FanTraceableSystem
                 }
                 else
                 {
-                    MessageBox.Show("Failed to add Shop Order.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Failed to Add Customer Shop Order.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
             }
@@ -181,7 +181,7 @@ namespace FanTraceableSystem
 
                 if (res)
                 {
-                    MessageBox.Show("Edit Data successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Data updated successfully.!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     SearchText.Text = Shoptext.Text;
                     Shoptext.Text = "";
                     PCBText.Text = "";
@@ -239,16 +239,7 @@ namespace FanTraceableSystem
                 if (edit.ShowDialog(this) == DialogResult.OK)
                 {
                     _editpcb = edit.subassy;
-
-                    Debug.WriteLine("============ Edited Sub Assy List: ==============");   
-
-                    //foreach (var items in _editpcb)
-                    //{
-                    //    Debug.WriteLine($@"FinalShop : {items.ShopOrder} - Lot No : {items.LotNo} - {items.PreparedQuantity} - {items.Line} - Action : {items.isAction}");
-                    //}
-
                     string isAdd = _editpcb.Count > 0 ? $@"({_editpcb.Count})" : "";
-
                     button3.Text = "Edit" + isAdd;
                 }
             }
@@ -424,9 +415,11 @@ namespace FanTraceableSystem
         public bool FormValidation()
         {
             if(string.IsNullOrEmpty(Shoptext.Text) || string.IsNullOrEmpty(PCBText.Text)) {
-                MessageBox.Show("Shop Order is required");
+                errorshop.Visible = true;
                 return false;   
             }
+
+            errorshop.Visible = false;
 
             return true;
         }
@@ -757,10 +750,6 @@ namespace FanTraceableSystem
                 button3.Text = "Edit " + isAdd;
                 button3.BringToFront();
             }
-
-
-
-
         }
 
 
@@ -831,8 +820,6 @@ namespace FanTraceableSystem
 
         private async void nextbtn_Click(object sender, EventArgs e)
         {
-            MessageBox.Show($@"Selected Process : " + processSpecs.SelectedValue);
-
             if (!_paging.HasNextPage) return;
 
             _paging.PageNumber++;
@@ -844,7 +831,7 @@ namespace FanTraceableSystem
             if (_paging.PageNumber <= 1) return;
 
             _paging.PageNumber--;
-            await LoadData(false);     // ❗ replace
+            await LoadData(false);    
         }
 
         private FinalTraceabilityModel BuildFinalObject()
@@ -891,11 +878,6 @@ namespace FanTraceableSystem
             {
                 this.Owner.Show(); // bring parent back
             }
-        }
-
-        private void panel3_Paint(object sender, PaintEventArgs e)
-        {
-
         }
     }
 }

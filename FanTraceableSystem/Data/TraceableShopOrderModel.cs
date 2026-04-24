@@ -99,29 +99,7 @@ namespace FanTraceableSystem.Data
         public int DepartmentID { get; set; }
     }
 
-    public class TracePCBModel
-    {
-        public int RecordId { get; set; }
-        public string LotNo { get; set; }
-        public string PCBShopOrder { get; set; }
-        public string Rev { get; set; }
-        public string PCBIssuer { get; set; }
-        public string Line { get; set; }
-        public int Quantity { get; set; }
-    }
 
-
-    public class EditTracePCBModel
-    {
-        public int RecordId { get; set; }
-        public string PCBShopOrder { get; set; }
-        public string LotNo { get; set; }
-        public string Rev { get; set; }
-        public string Line { get; set; }
-        public int Quantity { get; set; }
-        public string PCBIssuer { get; set; }
-        public int isAction { get; set;  } // 0 - for add - 1  for edit  - 2 for delete 
-    }
 
 
     public class FinalTraceabilityModel

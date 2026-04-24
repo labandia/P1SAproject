@@ -313,13 +313,36 @@ namespace MSDMonitoring.Data
             return resultData;
         }
 
-        public static async Task<T> ExecuteScalarAsync<T>(string query, object parameters = null)
+        public static async Task<T> ExecuteScalarAsync<T>(
+                 string command,
+                 object parameters = null,
+                 bool? isStoredProcedure = null)
         {
             try
             {
                 using (IDbConnection con = GetConnection(ConnectionString()))
                 {
-                    return await con.ExecuteScalarAsync<T>(query, parameters);
+                    CommandType cmdType;
+
+                    if (isStoredProcedure.HasValue)
+                    {
+                        cmdType = isStoredProcedure.Value
+                            ? CommandType.StoredProcedure
+                            : CommandType.Text;
+                    }
+                    else
+                    {
+                        // Optional auto-detect (safer than your original)
+                        cmdType = IsLikelyStoredProcedure(command)
+                            ? CommandType.StoredProcedure
+                            : CommandType.Text;
+                    }
+
+                    return await con.ExecuteScalarAsync<T>(
+                        command,
+                        parameters,
+                        commandType: cmdType
+                    );
                 }
             }
             catch (Exception ex)
@@ -330,5 +353,39 @@ namespace MSDMonitoring.Data
         }
 
 
+        public static async Task<T> ExecuteScalarReturnVal<T>(
+          string command,
+          object parameters = null,
+          bool isStoredProcedure = false)
+        {
+            try
+            {
+                using (IDbConnection con = GetConnection(ConnectionString()))
+                {
+                    return await con.QuerySingleAsync<T>(
+                        command,
+                        parameters,
+                        commandType: isStoredProcedure
+                            ? CommandType.StoredProcedure
+                            : CommandType.Text
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return default;
+            }
+        }
+
+
+
+        private static bool IsLikelyStoredProcedure(string command)
+        {
+            if (string.IsNullOrWhiteSpace(command)) return false;
+
+            // Detect "ProcName" or "dbo.ProcName"
+            return Regex.IsMatch(command, @"^[a-zA-Z_]\w*(\.[a-zA-Z_]\w*)?$");
+        }
     }
 }

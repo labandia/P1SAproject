@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using System.Net;
-using System.Linq;
-using System.Windows.Forms;
 
-namespace FanTraceableSystem.Services
+namespace PracticeC_.UsableCode
 {
-    public static class AddressServices
+    public static class IPAddress
     {
+        // GET SEGMENT OF IP ADDRESS    
+        // SAMPLE 192.168.X.1  WHERE X IS THE SEGMENT WE WANT TO GET    
         public static int GetIpAddresSegment()
         {
             int octet = 0;
@@ -28,5 +29,6 @@ namespace FanTraceableSystem.Services
             return octet;
 
         }
+
     }
 }

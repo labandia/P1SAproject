@@ -54,7 +54,7 @@ namespace FanTraceableSystem.Services
 
         private async Task RunAsync(CancellationToken token)
         {
-            OnLog?.Invoke("Updater started.");
+            OnLog?.Invoke("Checking for Updates ...");
 
             while (!token.IsCancellationRequested)
             {

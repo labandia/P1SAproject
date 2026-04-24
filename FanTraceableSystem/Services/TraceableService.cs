@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Dapper;
 using FanTraceableSystem.Data;
 using FanTraceableSystem.Interface;
-using Microsoft.Office.Interop.Excel;
 using MSDMonitoring.Data;
 
 namespace FanTraceableSystem.Services
@@ -159,38 +158,16 @@ namespace FanTraceableSystem.Services
         // FOR SEARCH FINAL ASSY  DETAILS 
         public async Task<FinalTraceabilityModel> TraceAbilityFinalAssy(string final, int depart)
         {
-            var data = await SqlDataAccess.GetData<FinalTraceabilityModel>(
-              @"SELECT 
-                   RecordId, 
-                   FinalShopOrder,
-                   PlanQuan,
-                   Revision,  
-                   ItemNo,    
-                   DatePrepared,
-                   TimeInput,
-                   PreparedBy,
-                   Shift,
-                   Customer,
-                   Modeltype,
-                   Remarks,
-                   Incharge,
-                   FinalIssuedby, 
-                   processId
-              FROM FanTraceabilityFinal 
-              WHERE FinalShopOrder = @FinalShopOrder 
-                    AND DepartmentID =@DepartmentID",
-            new { FinalShopOrder = final, DepartmentID = depart });
+            var data = await SqlDataAccess.GetData<FinalTraceabilityModel>(@"FinalAssyStore",
+                    new { FinalShopOrder = final, DepartmentID = depart });
 
             return data.FirstOrDefault();
         }
 
-    
-
-
         // FOR PAGINATION DISPLAY TOTAL COUNT DATA
         public Task<int> GetTraceableCount(string search, DateTime? startDate, DateTime? endDate, int isEdit, int section)
         {
-            string sql = @"SELECT  COUNT(*)
+            string sql = @"SELECT COUNT(*)
                        FROM FanTraceabilityFinal f
 	                   LEFT JOIN FanTraceabilitySub s ON s.FinalShopOrder = f.FinalShopOrder
                        AND s.ShopOrder IS NOT NULL
@@ -357,7 +334,6 @@ namespace FanTraceableSystem.Services
 
             return true;
         }
-
         public Task<List<ProcessModel>> GetProcessesByDepartment(int departmentId)
         {
              return SqlDataAccess.GetData<ProcessModel>(@"SELECT ProcessId, ProcessName, 

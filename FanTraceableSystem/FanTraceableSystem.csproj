@@ -26,7 +26,7 @@
     <MinimumRequiredVersion>1.0.0.2</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>52</ApplicationRevision>
+    <ApplicationRevision>86</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -65,7 +65,7 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>pcb-board.ico</ApplicationIcon>
+    <ApplicationIcon>traceability.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -164,6 +164,7 @@
     <Compile Include="Modals\SystemUpdaterNotification.Designer.cs">
       <DependentUpon>SystemUpdaterNotification.cs</DependentUpon>
     </Compile>
+    <Compile Include="Services\BackgroundUpdateService.cs" />
     <Compile Include="Services\ClickOnceUpdateManager.cs" />
     <Compile Include="Services\ISubassyServices.cs" />
     <Compile Include="Views\FanTraceabilityAutoSearch.cs">
@@ -253,6 +254,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="pcb-board.ico" />
+    <Content Include="traceability.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

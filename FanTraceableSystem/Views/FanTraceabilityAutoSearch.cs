@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using FanTraceableSystem.Data;
 using FanTraceableSystem.Interface;
+using FanTraceableSystem.Services;
 using Excel = Microsoft.Office.Interop.Excel;
 
 
@@ -15,6 +16,8 @@ namespace FanTraceableSystem
 {
     public partial class FanTraceabilityAutoSearch : Form
     {
+        private BackgroundUpdateService _updater;
+
         //public int 
         private readonly ITraceable _trac;
         private readonly ISubassy _sub;
@@ -74,10 +77,32 @@ namespace FanTraceableSystem
                 await LoadData();
             };
 
+            SystemUpdaterNotification_Load();
+
             // ✅ Smooth UI (reduce flicker)
             typeof(DataGridView).InvokeMember("DoubleBuffered",
                 BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty,
                 null, dataGridView2, new object[] { true });
+        }
+
+        public void SystemUpdaterNotification_Load()
+        {
+            _updater = new BackgroundUpdateService(
+                @"\\sdp01034s\SYSTEM EXECUTABLE\P1SA-PC_System\SystemVersion\SubAssyVersion.txt",
+                TimeSpan.FromSeconds(5) // change to minutes in production
+            );
+
+            _updater.OnLog += msg =>
+            {
+                System.Diagnostics.Debug.WriteLine(msg);
+            };
+
+            _updater.OnUpdateStarted += (current, next) =>
+            {
+                System.Diagnostics.Debug.WriteLine($"Updating {current} → {next}");
+            };
+
+            _updater.Start();
         }
 
 
@@ -868,6 +893,9 @@ namespace FanTraceableSystem
             }
         }
 
-       
+        private void panel3_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

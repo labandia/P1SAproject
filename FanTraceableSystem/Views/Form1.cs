@@ -3,6 +3,7 @@ using FanTraceableSystem.Modals;
 using FanTraceableSystem.Services;
 using System;
 using System.Deployment.Application;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -10,6 +11,11 @@ namespace FanTraceableSystem
 {
     public partial class Form1 : Form
     {
+        private BackgroundUpdateService _updater;
+
+        private System.Windows.Forms.Timer _updateTimer;
+        private bool _isCheckingUpdate = false;
+
         private readonly ITraceable _trac;
         private readonly ISubassy _sub;
         private readonly ISummary _summary;
@@ -21,7 +27,22 @@ namespace FanTraceableSystem
             _summary = sum;
             _sub = sub;
 
-            //StartVersionCheck();
+            _updater = new BackgroundUpdateService(
+               @"\\sdp01034s\SYSTEM EXECUTABLE\P1SA-PC_System\SystemVersion\SubAssyVersion.txt",
+               TimeSpan.FromSeconds(5) // change to minutes in production
+           );
+
+            _updater.OnLog += msg =>
+            {
+                System.Diagnostics.Debug.WriteLine(msg);
+            };
+
+            _updater.OnUpdateStarted += (current, next) =>
+            {
+                System.Diagnostics.Debug.WriteLine($"Updating {current} → {next}");
+            };
+
+            _updater.Start();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -99,11 +120,6 @@ namespace FanTraceableSystem
             this.Hide(); // or Close() depending on your flow
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void ShowPopup(string message)
         {
             if (InvokeRequired)
@@ -112,74 +128,80 @@ namespace FanTraceableSystem
                 return;
             }
 
-            var notif = new SystemUpdaterNotification();
-            notif.Show();
+            //MessageBox.Show("Update System Completed");
+            //var notif = new SystemUpdaterNotification();
+            //notif.Show();
         }
 
-
-        private async Task<string> CheckClickOnceUpdate()
+        private void StartVersionCheck()
         {
-            if (!ApplicationDeployment.IsNetworkDeployed)
-                return null; // Not installed via ClickOnce
+            _updateTimer = new System.Windows.Forms.Timer();
+            _updateTimer.Interval = 5000; // 5 seconds
 
-            try
+            _updateTimer.Tick += async (s, e) =>
             {
-                var deployment = ApplicationDeployment.CurrentDeployment;
+                // 🚫 Prevent overlapping calls
+                if (_isCheckingUpdate) return;
 
-                // Check for update (async wrapper)
-                var updateInfo = await Task.Run(() => deployment.CheckForDetailedUpdate());
-
-                if (updateInfo.UpdateAvailable)
+                try
                 {
-                    // Optional: you can log instead of notify
-                    Console.WriteLine($"Updating to {updateInfo.AvailableVersion}...");
+                    _isCheckingUpdate = true;
 
-                    // Silent update (no UI)
-                    deployment.Update();
-
-                    // Restart safely on UI thread
-                    Invoke(new Action(() =>
+                    await ClickOnceUpdateManager.CheckAndUpdateAsync(msg =>
                     {
-                        Application.Restart();
-                    }));
+                        Debug.WriteLine(msg);
 
-                    return $"New version available!\nCurrent: {updateInfo}\nLatest: {updateInfo}";
+                        // Optional UI notification
+                        // ShowPopup(msg);
+                    });
                 }
-            }
-            catch (DeploymentDownloadException)
-            {
-                return "Cannot check for updates (network issue)";
-            }
-            catch (InvalidDeploymentException)
-            {
-                return "Invalid ClickOnce deployment";
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
-
-            return null;
-        }
-
-        private async void StartVersionCheck()
-        {
-            while (true)
-            {
-                var result = await CheckClickOnceUpdate();
-
-                if (!string.IsNullOrEmpty(result))
+                finally
                 {
-                    ShowPopup(result); // your notification form
+                    _isCheckingUpdate = false;
                 }
+            };
 
-                await Task.Delay(60000); // check every 1 minute
-            }
+            _updateTimer.Start();
         }
 
-        private async void Form1_Load(object sender, EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
-            //await ClickOnceUpdateManager.CheckAndUpdateAsync(ShowPopup);
+            label4.Text = "Version" + GetPublishedVersion();
+        }
+
+        protected override async void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (_updater != null)
+                await _updater.StopAsync();
+
+            base.OnFormClosing(e);
+        }
+
+
+        public string GetPublishedVersion()
+        {
+            if (ApplicationDeployment.IsNetworkDeployed)
+            {
+                Version version = ApplicationDeployment.CurrentDeployment.CurrentVersion;
+                return version.ToString();
+            }
+
+            return "Not a ClickOnce deployed application";
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+           Application.Exit();    
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

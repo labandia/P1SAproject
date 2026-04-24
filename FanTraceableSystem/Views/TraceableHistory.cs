@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using FanTraceableSystem.Data;
 using FanTraceableSystem.Interface;
+using FanTraceableSystem.Services;
 using Excel = Microsoft.Office.Interop.Excel;
 
 
@@ -15,6 +16,8 @@ namespace FanTraceableSystem
 {
     public partial class TraceableHistory : Form
     {
+        private BackgroundUpdateService _updater;
+
         private readonly ISummary _summaryService;
         public int isEditmode = 0;
 
@@ -75,7 +78,30 @@ namespace FanTraceableSystem
                 await loadData();
             };
 
+            SystemUpdaterNotification_Load();
+
         }
+
+        public void SystemUpdaterNotification_Load()
+        {
+            _updater = new BackgroundUpdateService(
+                @"\\sdp01034s\SYSTEM EXECUTABLE\P1SA-PC_System\SystemVersion\SubAssyVersion.txt",
+                TimeSpan.FromSeconds(5) // change to minutes in production
+            );
+
+            _updater.OnLog += msg =>
+            {
+                System.Diagnostics.Debug.WriteLine(msg);
+            };
+
+            _updater.OnUpdateStarted += (current, next) =>
+            {
+                System.Diagnostics.Debug.WriteLine($"Updating {current} → {next}");
+            };
+
+            _updater.Start();
+        }
+
 
         public static void EnableDoubleBuffering(DataGridView dgv)
         {

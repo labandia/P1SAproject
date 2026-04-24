@@ -345,7 +345,7 @@
             this.filterbtn.Padding = new System.Windows.Forms.Padding(20, 0, 25, 0);
             this.filterbtn.Size = new System.Drawing.Size(113, 27);
             this.filterbtn.TabIndex = 28;
-            this.filterbtn.Text = "filter";
+            this.filterbtn.Text = "Reset";
             this.filterbtn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.filterbtn.UseVisualStyleBackColor = true;
             this.filterbtn.Click += new System.EventHandler(this.filterbtn_Click);

@@ -248,12 +248,12 @@ namespace FanTraceableSystem
         // Reset the Data
         private async void filterbtn_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(SearchText.Text)) return;
+            dateTimePicker2.Value = DateTime.Now;
+            dateTimePicker3.Value = DateTime.Now;
+          
+            data.Clear();           
 
-            _paging.PageNumber = 1;   // ✅ Reset page
-            data.Clear();             // optional cleanup
-
-            await LoadData();         // replace data
+            await LoadData();      
         }
 
         // ================================================================================

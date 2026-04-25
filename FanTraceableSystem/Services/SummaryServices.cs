@@ -71,7 +71,7 @@ namespace FanTraceableSystem.Services
                            ,f.Modeltype
                            ,Remarks
                            ,f.Incharge
-                           ,f.FinalIssuedby
+                           ,s.SubAssyIssued
                            ,LotNo
 		                   ,s.Rev
                            ,f.IsDeletedFinal

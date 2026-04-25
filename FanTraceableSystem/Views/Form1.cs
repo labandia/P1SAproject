@@ -48,7 +48,10 @@ namespace FanTraceableSystem
         private void button2_Click(object sender, EventArgs e)
         {
             var openinput = new TraceableHistory(_summary);
-            openinput.ShowDialog();
+
+            this.Hide();
+            openinput.ShowDialog(); // waits until closed
+            this.Show(); // comes back automatically
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -114,10 +117,9 @@ namespace FanTraceableSystem
         {
             var openinput = new FanTraceabilityAutoSearch(_trac, _sub, section);
 
-            openinput.Owner = this;   // set current form as parent
-            openinput.Show();
-
-            this.Hide(); // or Close() depending on your flow
+            this.Hide();
+            openinput.ShowDialog(); // waits until closed
+            this.Show(); // comes back automatically
         }
 
         private void ShowPopup(string message)

@@ -332,7 +332,7 @@ namespace FanTraceableSystem
                        Modeltype = items.Modeltype,
                        Remarks = items.Remarks,
                        Incharge = items.Incharge,
-                       FinalIssuedby = items.FinalIssuedby,
+                       SubAssyIssued = items.SubAssyIssued,
                        LotNo = items.LotNo,
                        DepartmentID = FanTraceabilityCore.SectionMap.ContainsKey(items.DepartmentID)
                            ? FanTraceabilityCore.SectionMap[items.DepartmentID]
@@ -366,7 +366,7 @@ namespace FanTraceableSystem
                 { "Modeltype", "Model Type" },
                 { "Remarks", "Remarks" },
                 { "Incharge", "Incharge" },
-                { "FinalIssuedby", "Issuer" },
+                { "SubAssyIssued", "Issuer" },
                 { "LotNo", "Lot No" },
                 { "DepartmentID", "Section" }
             };

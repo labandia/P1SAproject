@@ -31,8 +31,8 @@ namespace FanTraceableSystem
         private void submitbtn_Click(object sender, EventArgs e)
         {
             if(string.IsNullOrEmpty(txtPassword.Text)) return;
-
             EnteredPassword = txtPassword.Text;
+
             this.DialogResult = DialogResult.OK;
             this.Close();
         }

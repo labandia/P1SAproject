@@ -69,7 +69,7 @@ namespace FanTraceableSystem.Data
         public string Modeltype { get; set; }
         public string Remarks { get; set; }
         public string Incharge { get; set; }
-        public string FinalIssuedby { get; set; }
+        public string SubAssyIssued { get; set; }
         public string LotNo { get; set; }
         public string DepartmentID { get; set; }
     }
@@ -94,7 +94,7 @@ namespace FanTraceableSystem.Data
         public string Modeltype { get; set; }
         public string Remarks { get; set; }
         public string Incharge { get; set; }
-        public string FinalIssuedby { get; set; }
+        public string SubAssyIssued { get; set; }
         public string LotNo { get; set; }
         public int DepartmentID { get; set; }
     }

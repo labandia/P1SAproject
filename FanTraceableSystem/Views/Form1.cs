@@ -191,19 +191,9 @@ namespace FanTraceableSystem
             return "Not a ClickOnce deployed application";
         }
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
         private void button12_Click(object sender, EventArgs e)
         {
            Application.Exit();    
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

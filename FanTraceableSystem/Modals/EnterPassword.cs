@@ -7,6 +7,8 @@ namespace FanTraceableSystem
     {
 
         public string EnteredPassword { get; private set; }
+        private bool _isProcessing = false;
+        private bool _isSubmitting = false;
 
         public EnterPassword()
         {
@@ -15,11 +17,13 @@ namespace FanTraceableSystem
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode != Keys.Enter) return;
+            if (e.KeyCode != Keys.Enter || _isProcessing) return;
+
+            txtPassword.Enabled = false; // 🚫 stop input immediately
+            e.SuppressKeyPress = true;
 
             EnteredPassword = txtPassword.Text;
             this.DialogResult = DialogResult.OK;
-            this.Close();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -30,7 +34,13 @@ namespace FanTraceableSystem
 
         private void submitbtn_Click(object sender, EventArgs e)
         {
-            if(string.IsNullOrEmpty(txtPassword.Text)) return;
+            if (_isSubmitting) return;
+
+            if (string.IsNullOrWhiteSpace(txtPassword.Text)) return;
+
+            _isSubmitting = true;                 // 🚫 prevent double submit
+            submitbtn.Enabled = false;            // optional: block UI interaction
+
             EnteredPassword = txtPassword.Text;
 
             this.DialogResult = DialogResult.OK;

@@ -109,6 +109,7 @@ namespace FanTraceableSystem
 
         private void Timer_Tick(object sender, EventArgs e)
         {
+            ShiftLabel.Text = FanTraceabilityCore.GetShift() == 0 ? "DAYSHIFT" : "NIGHTSHIFT";
             TimeText.Text = DateTime.Now.ToString("hh:mm:ss tt");
         }
 

@@ -23,6 +23,8 @@ using ProgramPartListWeb.Areas.Rotor.Interface;
 using Unity.Lifetime;
 using System.Data.SqlClient;
 using ProgramPartListWeb.Helper;
+using ProgramPartListWeb.Areas.P1SA;
+using ProgramPartListWeb.Areas.P1SA.Services;
 
 namespace ProgramPartListWeb
 {
@@ -134,6 +136,7 @@ namespace ProgramPartListWeb
             // Services (Usually stateless → Singleton)
             container.RegisterType<ICategory, CategoryServices>(new ContainerControlledLifetimeManager());
             container.RegisterType<IRotorRegistration, RegistrationServices>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IP1SAEmployee, EmployeeServices>(new ContainerControlledLifetimeManager());
             container.RegisterType<IMaskMasterlist, MetalMaskServices>(new ContainerControlledLifetimeManager());
             container.RegisterType<IMetalMast_Transaction, MetalMaskTransactionServices>(new ContainerControlledLifetimeManager());
             container.RegisterType<IStockAlertService, StockAlertService>(new ContainerControlledLifetimeManager());

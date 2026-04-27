@@ -265,7 +265,6 @@
             this.label4.Size = new System.Drawing.Size(64, 25);
             this.label4.TabIndex = 162;
             this.label4.Text = "0.0.0.0";
-            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // label5
             // 
@@ -360,7 +359,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(160, 2);
             this.panel1.TabIndex = 171;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // panel2
             // 

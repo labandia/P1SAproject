@@ -672,7 +672,10 @@
     <Compile Include="Areas\Hydroponics\Repository\StockAlertService.cs" />
     <Compile Include="Areas\Hydroponics\Repository\StockpartsRepository.cs" />
     <Compile Include="Areas\P1SA\Controllers\ManpowerController.cs" />
+    <Compile Include="Areas\P1SA\Interface\IP1SAEmployee.cs" />
+    <Compile Include="Areas\P1SA\Models\P1SAEmployeesModel.cs" />
     <Compile Include="Areas\P1SA\P1SAAreaRegistration.cs" />
+    <Compile Include="Areas\P1SA\Services\EmployeeServices.cs" />
     <Compile Include="Areas\PC\Controllers\NotificationController.cs" />
     <Compile Include="Areas\PC\Controllers\PatrolController.cs" />
     <Compile Include="Areas\PC\Interface\IInspector.cs" />

@@ -1,0 +1,24 @@
+﻿
+<div class="modal fade modal-m" id="loadingmodal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="uploadcontent">
+                @*<div class="uploadicon">
+                        <i class="fa-solid fa-download"></i>
+                    </div>*@
+                <div class="UploadContainer">
+                    <span class="Uploadloader"></span>
+                </div>
+
+
+                @*<span>Uploading Data ...</span>*@
+                <p id="status"></p>
+
+                <progress id="rowProgressBar" value="0" max="100" style="width: 300px;"></progress>
+                <span id="rowProgressPercent">0%</span>
+                <div id="excelRowDisplay" style="margin-top:10px; font-family: monospace;"></div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -529,9 +529,10 @@
         const regNo = data.RegistrationNo?.trim();
 
         // Validate format: must end with YYMMDD
-        const regex = /^(\d{2})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/;
+        const regex = /(\d{2})(0[1-9]|1[0-2])(0[1-9]|[12][0-9]|3[01])$/;
 
-        if (!regex.test(datePart)) {
+
+        if (!regex.test(regNo)) {
             alert("Invalid date format in Registration No (YYMMDD)");
             return;
         }

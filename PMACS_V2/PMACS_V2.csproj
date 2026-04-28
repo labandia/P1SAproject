@@ -523,6 +523,9 @@
     <Content Include="Scripts\jquery-3.7.0.js" />
     <Content Include="Scripts\jquery-3.7.0.min.js" />
     <Content Include="Areas\MoldDie\Views\Mold\_MasterlistModelForms.cshtml" />
+    <Content Include="Areas\Planning\Views\Plan\_EndMonthInputs.cshtml" />
+    <Content Include="Areas\Planning\Views\Plan\_PartnumberViews.cshtml" />
+    <Content Include="Areas\Planning\Views\Plan\_UploadDialog.cshtml" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />

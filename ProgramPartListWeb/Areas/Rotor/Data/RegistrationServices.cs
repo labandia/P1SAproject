@@ -183,10 +183,10 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
         public Task<List<string>> GetRegistrationYear()
         {
             return SqlDataAccess.StringListAsync($@"SELECT 
-                            YEAR(DateCreated) AS GetYear
-                        FROM Registration
-                        GROUP BY YEAR(DateCreated)
-                        ORDER BY [GetYear] DESC;");
+                    CAST('20' + SUBSTRING(RegistrationNo, CHARINDEX('-', RegistrationNo) + 1, 2) AS INT) AS GetYear
+                FROM Registration
+                GROUP BY SUBSTRING(RegistrationNo, CHARINDEX('-', RegistrationNo) + 1, 2)
+                ORDER BY GetYear DESC;");
         }
     }
 }

@@ -419,23 +419,26 @@ namespace PMACS_V2.Areas.Planning.Controllers
         [HttpPost]
         public async Task<JsonResult> UploadFiledetails(HttpPostedFileBase uploadedFile)
         {
+            //1: Checks if there is Any Excel file Uploaded
             if (uploadedFile != null && uploadedFile.ContentLength > 0)
             {
                 string checkDatenow = DateTime.Now.ToString("yyyy-MM-dd");
                 string uploadPath = Server.MapPath("~/Content/Excel/");
 
+                // 2:  If folder doesnt exist Create a new one
                 if (!Directory.Exists(uploadPath))
                     Directory.CreateDirectory(uploadPath);
 
                 try
                 {
+                    // 3:  Rename the file name into a Unique One
                     string uniqueFileName = Path.GetFileNameWithoutExtension(uploadedFile.FileName) + "_" +
                                             Guid.NewGuid() + Path.GetExtension(uploadedFile.FileName);
+                    // 4:  The save to the Excel folder 
                     string filePath = Path.Combine(uploadPath, uniqueFileName);
                     uploadedFile.SaveAs(filePath);
 
-                    string sheetName = "Mat'l Prob Sum (over 8wks)";
-                    var datalist = await ImportExcelByList(filePath, sheetName);
+                    var datalist = await ImportExcelByList(filePath, "Mat'l Prob Sum (over 8wks)");
                     bool result = await _pl.InsertDataExcelFile(datalist, checkDatenow);
 
                     if (System.IO.File.Exists(filePath))
@@ -517,20 +520,26 @@ namespace PMACS_V2.Areas.Planning.Controllers
         {
             return await Task.Run(() =>
             {
+                // Create a new List blaml Variable
                 var resultList = new List<M1ExcelData>();
                 ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
 
                 using (var package = new ExcelPackage(new FileInfo(filePath)))
                 {
+                    // 1:  Select the Worksheet given by the worksheet parameter
                     var worksheet = package.Workbook.Worksheets[sheetName];
+                    // 2:  Check if theres is Existing worksheet under the name 
                     if (worksheet == null)
                         throw new Exception("Worksheet not found: " + sheetName);
 
+                    // 3:  Get the Last row 
                     int lastRow = worksheet.Dimension.End.Row - 1;
                     int counter = 0;    
 
+                    // 4:  Starts the loop at the second Row data
                     for (int row = 2; row <= lastRow; row++)
                     {
+                        // Get the First Cell Value
                         var firstCell = worksheet.Cells[row, 1].Text;
                         if (string.IsNullOrWhiteSpace(firstCell))
                             break; // Stop loop if first cell is blank

@@ -38,7 +38,7 @@ namespace ProgramPartListWeb.Areas.Rotor.Controllers
            int pageNumber, 
            int pageSize)
         {
-            Debug.WriteLine($@"search {search} - Months : {monthfilter} - Year: {yearint} - cat {catID} - DepId - {depID}");
+            //Debug.WriteLine($@"search {search} - Months : {monthfilter} - Year: {yearint} - cat {catID} - DepId - {depID}");
             var result = await _reg.GetRegistrationsList(search, monthfilter, yearint, catID, depID, pageNumber, pageSize);
 
             if (result == null || !result.Items.Any()) return JsonNotFound("No Tranasctioon Data.");

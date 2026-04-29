@@ -774,3 +774,24 @@ tr {
     overflow-y: auto;
     min-height: 0; /* Important for flex children */
 }
+
+
+
+.responsive-table {
+    overflow-x: auto;
+    overflow-y: visible;
+    position: relative;
+}
+
+.responsive-table thead th {
+    position: sticky;
+    top: 0;
+    background-color: var(--gray-light);
+    z-index: 20;
+    box-shadow: 0 1px 0 var(--gray-light);
+}
+
+/* Ensure proper z-index for dropdowns */
+.responsive-table tbody tr {
+    position: relative;
+}

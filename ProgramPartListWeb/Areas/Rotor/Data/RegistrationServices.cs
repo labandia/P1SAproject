@@ -4,6 +4,7 @@ using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -115,11 +116,26 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
 
             if (monthfilter != 0 && intyear != 0)
             {
-                strquery += "AND MONTH(r.DateCreated) = @Month AND YEAR(r.DateCreated) = @strYear";
-                countQuery += "AND MONTH(DateCreated) = @Month AND YEAR(DateCreated) = @strYear ";
+                strquery += @"
+                    AND RegMonth = @Month
+                    AND RegYear = @strYear ";
+
+                countQuery += @"
+                    AND RegMonth = @Month
+                    AND RegYear = @strYear ";
+
                 parameters.Add("@Month", monthfilter);
                 parameters.Add("@strYear", intyear);
             }
+
+
+            //if (monthfilter != 0 && intyear != 0)
+            //{
+            //    strquery += "AND MONTH(r.DateCreated) = @Month AND YEAR(r.DateCreated) = @strYear";
+            //    countQuery += "AND MONTH(DateCreated) = @Month AND YEAR(DateCreated) = @strYear ";
+            //    parameters.Add("@Month", monthfilter);
+            //    parameters.Add("@strYear", intyear);
+            //}
 
             // Filter By Area 
             if (catID != 0)
@@ -183,10 +199,10 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
         public Task<List<string>> GetRegistrationYear()
         {
             return SqlDataAccess.StringListAsync($@"SELECT 
-                    CAST('20' + SUBSTRING(RegistrationNo, CHARINDEX('-', RegistrationNo) + 1, 2) AS INT) AS GetYear
-                FROM Registration
-                GROUP BY SUBSTRING(RegistrationNo, CHARINDEX('-', RegistrationNo) + 1, 2)
-                ORDER BY GetYear DESC;");
+                        RegYear as GetYear
+                    FROM Registration
+                    GROUP BY RegYear
+                    ORDER BY RegYear DESC;");
         }
     }
 }

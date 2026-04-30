@@ -75,7 +75,14 @@ namespace FanTraceableSystem.Services
                 parameters.Add("@ShopOrder", search);
             }
 
-            if(isSearch == 0)
+            // 🔍 Search By Partnumber filter (only if isSearch is 3)
+            if (!string.IsNullOrWhiteSpace(search) && isSearch == 3)
+            {
+                sql += " AND f.ItemNo = @ItemNo";
+                parameters.Add("@ItemNo", search);
+            }
+
+            if (isSearch == 0)
             {
                 // 📅 Start Date filter
                 if (startDate.HasValue)

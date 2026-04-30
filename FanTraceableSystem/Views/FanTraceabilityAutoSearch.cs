@@ -461,10 +461,13 @@ namespace FanTraceableSystem
             if (shopfilter.SelectedIndex == 0)
             {
                 isEdit = 1;
+            }else if(shopfilter.SelectedIndex == 1)
+            {
+                isEdit = 2;
             }
             else
             {
-                isEdit = 2;
+                isEdit = 3;
             }
 
             await LoadData();

@@ -34,6 +34,16 @@ namespace FanTraceableSystem
 
             ServiceProvider = services.BuildServiceProvider();
 
+            IUpdateRepository repo = new UpdateRepository();
+
+            // MUST happen first
+            BackgroundUpdateService.Initialize(repo);
+
+
+            // then start service
+            BackgroundUpdateService.Instance.Start();
+
+
             Application.Run(ServiceProvider.GetRequiredService<Form1>());
         }
     }

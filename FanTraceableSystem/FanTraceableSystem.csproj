@@ -28,7 +28,7 @@
     <MinimumRequiredVersion>1.0.0.2</MinimumRequiredVersion>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>90</ApplicationRevision>
+    <ApplicationRevision>96</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -148,8 +148,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\TraceableSubAssyModel.cs" />
+    <Compile Include="Data\VersionDB.cs" />
+    <Compile Include="Data\VersionModel.cs" />
     <Compile Include="FanTraceabilityCore.cs" />
     <Compile Include="Interface\ISubassy.cs" />
+    <Compile Include="Interface\IUpdateRepository.cs" />
     <Compile Include="Modals\AddPCBShop.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -179,6 +182,7 @@
     <Compile Include="Services\BackgroundUpdateService.cs" />
     <Compile Include="Services\ClickOnceUpdateManager.cs" />
     <Compile Include="Services\ISubassyServices.cs" />
+    <Compile Include="Services\UpdateRepository.cs" />
     <Compile Include="Views\FanTraceabilityAutoSearch.cs">
       <SubType>Form</SubType>
     </Compile>

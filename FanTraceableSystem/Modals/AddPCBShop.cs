@@ -1,9 +1,11 @@
 ﻿using FanTraceableSystem.Data;
 using FanTraceableSystem.Interface;
+using FanTraceableSystem.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -160,5 +162,22 @@ namespace FanTraceableSystem
 
         private void button2_Click(object sender, EventArgs e) => this.Close();
         private void button3_Click(object sender, EventArgs e) => this.Close();
+
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            BackgroundUpdateService.Instance.OnLog += HandleUpdateLog;
+        }
+        private void HandleUpdateLog(string msg)
+        {
+            Debug.WriteLine(msg);
+        }
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            BackgroundUpdateService.Instance.OnLog -= HandleUpdateLog;
+            base.OnFormClosing(e);
+        }
     }
 }

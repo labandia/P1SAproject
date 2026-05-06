@@ -1,84 +1,69 @@
-﻿
-@{
-    Layout = null;
-}
-
-<!DOCTYPE html>
-
-<html>
-<head>
+﻿<head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="~/Content/Images/online-job-portal.ico">
     <title>P1SA Web portal</title>
     <link href="~/Content/css/Main.css" rel="stylesheet" />
     <link href="~/Content/Shared/Site.min.css" rel="stylesheet" />
     @*<script src="~/Scripts/all.min.js"></script>*@
 </head>
-<body>
 
+<header>
+    <div class="CustomContainer">
+        <div class="HeadTitle">
+            <span>Production 1 Sub Assembly Web Portal</span>
+            <div class="HeadTitle__action">
 
+                <a href="#" data-pdf-url="/P1SAportalweb/ViewPDF?strfilepath=InstallDesktop.pdf" class="open-pdf-link">
+                    <span>How to set as Desktop</span>
+                    <i class="fa-solid fa-paperclip"></i>
+                </a>
 
+            </div>
+        </div>
+    </div>
+</header>
 
-    <header>
-        <div class="CustomContainer">
-            <div class="HeadTitle">
-                <span>Production 1 Sub Assembly Web Portal</span>
-                <div class="HeadTitle__action">
-
-                    <a href="#" data-pdf-url="/P1SAportalweb/ViewPDF?strfilepath=InstallDesktop.pdf" class="open-pdf-link">
-                        <span>How to set as Desktop</span>
-                        <i class="fa-solid fa-paperclip"></i>
-                    </a>
+<section style="margin: 2em 0 5em;">
+    <div class="CustomContainer">
+        <div class="Maincontainer">
+            <aside class="sidebar">
+                <div class="filter-group">
+                    <h4>Filter projects</h4>
+                    <small>Categories section</small>
+                    <hr />
+                    <label><input type="checkbox" id="allCheckbox" name="schedule" value="0" checked> All</label>
+                    <label><input type="checkbox" class="childCheckbox" name="schedule" value="1" checked> Molding</label>
+                    <label><input type="checkbox" class="childCheckbox" name="schedule" value="2" checked> Press</label>
+                    <label><input type="checkbox" class="childCheckbox" name="schedule" value="3" checked> Rotor</label>
+                    <label><input type="checkbox" class="childCheckbox" name="schedule" value="4" checked> Winding</label>
+                    <label><input type="checkbox" class="childCheckbox" name="schedule" value="5" checked> Circuit</label>
+                    <label><input type="checkbox" class="childCheckbox" name="schedule" value="6" checked> Others</label>
 
                 </div>
-            </div>
-        </div>
-    </header>
+            </aside>
 
-    <section style="margin: 2em 0 5em;">
-        <div class="CustomContainer">
-            <div class="Maincontainer">
-                <aside class="sidebar">
-                    <div class="filter-group">
-                        <h4>Filter projects</h4>
-                        <small>Categories section</small>
-                        <hr />
-                        <label><input type="checkbox" id="allCheckbox" name="schedule" value="0" checked> All</label>
-                        <label><input type="checkbox" class="childCheckbox" name="schedule" value="1" checked> Molding</label>
-                        <label><input type="checkbox" class="childCheckbox" name="schedule" value="2" checked> Press</label>
-                        <label><input type="checkbox" class="childCheckbox" name="schedule" value="3" checked> Rotor</label>
-                        <label><input type="checkbox" class="childCheckbox" name="schedule" value="4" checked> Winding</label>
-                        <label><input type="checkbox" class="childCheckbox" name="schedule" value="5" checked> Circuit</label>
-                        <label><input type="checkbox" class="childCheckbox" name="schedule" value="6" checked> Others</label>
+            <main class="Webs">
 
+                <section class="Webs_header">
+                    <h2>Select a system project</h2>
+                    <div class="Webs_search">
+                        <input type="text" placeholder="Search here ...">
+                        <div class="line"></div>
+                        <i class="fa-solid fa-magnifying-glass"></i>
                     </div>
-                </aside>
+                </section>
 
-                <main class="Webs">
+                <div class="Web_contain" id="Web_contain">
 
-                    <section class="Webs_header">
-                        <h2>Select a system project</h2>
-                        <div class="Webs_search">
-                            <input type="text" placeholder="Search here ...">
-                            <div class="line"></div>
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </div>
-                    </section>
-
-                    <div class="Web_contain" id="Web_contain">
-
-                    </div>
-                </main>
+                </div>
+            </main>
 
 
-            </div>
         </div>
-    </section>
+    </div>
+</section>
 
- 
 
-
-</body>
-</html>
 
 
 <script type="module">
@@ -89,7 +74,7 @@
         initLazyImages
     } from '@Url.Content("~/Scripts/modules/index.js?v=2")';
 
-   
+
     const scheduleCheckboxes = document.querySelectorAll('input[name="schedule"]');
 
     const getSelectedCategories = () => {

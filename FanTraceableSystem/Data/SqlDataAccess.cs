@@ -19,19 +19,6 @@ namespace MSDMonitoring.Data
         {
             try
             {
-                string machineName = Environment.MachineName.ToLower();
-                string connectionKey = "";
-
-                if (machineName == "desktop-fc0up1p") //  Home production
-                    connectionKey = "HomeDevelopment";
-                else if (machineName == "sdp04003c") //  Test production
-                    connectionKey = "TestDevelopment";
-                else
-                    connectionKey = "LiveDevelopment";
-
-
-                LogConnectionChoice(machineName, connectionKey);
-
                 return AesEncryption.DecodeBase64ToString(ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString);
             }
             catch (Exception ex)

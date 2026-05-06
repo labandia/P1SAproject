@@ -11,7 +11,6 @@ namespace FanTraceableSystem
 {
     public partial class Form1 : Form
     {
-        private BackgroundUpdateService _updater;
 
         private System.Windows.Forms.Timer _updateTimer;
         private bool _isCheckingUpdate = false;
@@ -27,22 +26,6 @@ namespace FanTraceableSystem
             _summary = sum;
             _sub = sub;
 
-            _updater = new BackgroundUpdateService(
-               @"\\sdp01034s\SYSTEM EXECUTABLE\P1SA-PC_System\SystemVersion\SubAssyVersion.txt",
-               TimeSpan.FromSeconds(5) // change to minutes in production
-           );
-
-            _updater.OnLog += msg =>
-            {
-                System.Diagnostics.Debug.WriteLine(msg);
-            };
-
-            _updater.OnUpdateStarted += (current, next) =>
-            {
-                System.Diagnostics.Debug.WriteLine($"Updating {current} → {next}");
-            };
-
-            _updater.Start();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -166,18 +149,7 @@ namespace FanTraceableSystem
             _updateTimer.Start();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            label4.Text = "Version : " + GetPublishedVersion();
-        }
-
-        protected override async void OnFormClosing(FormClosingEventArgs e)
-        {
-            if (_updater != null)
-                await _updater.StopAsync();
-
-            base.OnFormClosing(e);
-        }
+      
 
 
         public string GetPublishedVersion()
@@ -195,5 +167,26 @@ namespace FanTraceableSystem
         {
            Application.Exit();    
         }
+
+      
+
+      
+        protected override void OnLoad(EventArgs e)
+        {
+            label4.Text = "Version : " + GetPublishedVersion();
+            base.OnLoad(e);
+
+            BackgroundUpdateService.Instance.OnLog += HandleUpdateLog;
+        }
+        private void HandleUpdateLog(string msg)
+        {
+            Debug.WriteLine(msg);
+        }
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            BackgroundUpdateService.Instance.OnLog -= HandleUpdateLog;
+            base.OnFormClosing(e);
+        }
+        
     }
 }

@@ -1,5 +1,6 @@
 ﻿using FanTraceableSystem.Data;
 using FanTraceableSystem.Interface;
+using FanTraceableSystem.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -224,6 +225,23 @@ namespace FanTraceableSystem
         {
             this.Enabled = enabled;
             this.Cursor = enabled ? Cursors.Default : Cursors.WaitCursor;
+        }
+
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            BackgroundUpdateService.Instance.OnLog += HandleUpdateLog;
+        }
+        private void HandleUpdateLog(string msg)
+        {
+            Debug.WriteLine(msg);
+        }
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            BackgroundUpdateService.Instance.OnLog -= HandleUpdateLog;
+            base.OnFormClosing(e);
         }
     }
 }

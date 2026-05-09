@@ -14,7 +14,7 @@ using System.Windows.Forms;
 
 namespace FanTraceableSystem
 {
-    public partial class AddPCBShop : Form
+    public partial class AddPCBShop : CustomForm
     {
         private readonly ISubassy _sub;
 

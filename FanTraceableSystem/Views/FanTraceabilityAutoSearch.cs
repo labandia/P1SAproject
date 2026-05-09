@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Deployment.Application;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -15,7 +14,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 namespace FanTraceableSystem
 {
-    public partial class FanTraceabilityAutoSearch : Form
+    public partial class FanTraceabilityAutoSearch : CustomForm
     {
 
         //public int 
@@ -892,21 +891,5 @@ namespace FanTraceableSystem
 
 
 
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-
-            BackgroundUpdateService.Instance.OnLog += HandleUpdateLog;
-        }
-        private void HandleUpdateLog(string msg)
-        {
-            Debug.WriteLine(msg);
-        }
-        protected override void OnFormClosing(FormClosingEventArgs e)
-        {
-            BackgroundUpdateService.Instance.OnLog -= HandleUpdateLog;
-            base.OnFormClosing(e);
-        }
     }
 }

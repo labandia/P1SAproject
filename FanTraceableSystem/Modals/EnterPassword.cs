@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace FanTraceableSystem
 {
-    public partial class EnterPassword : Form
+    public partial class EnterPassword : CustomForm
     {
 
         public string EnteredPassword { get; private set; }

@@ -14,7 +14,7 @@ using System.Windows.Forms;
 
 namespace FanTraceableSystem
 {
-    public partial class EditPCBShop : Form
+    public partial class EditPCBShop : CustomForm
     {
         private readonly ISubassy _sub;
         public BindingList<TraceableSubAssyModel> subassy = new BindingList<TraceableSubAssyModel>();

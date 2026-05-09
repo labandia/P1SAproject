@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace FanTraceableSystem.Modals
 {
-    public partial class SystemUpdaterNotification : Form
+    public partial class SystemUpdaterNotification : CustomForm
     {
         public SystemUpdaterNotification()
         {

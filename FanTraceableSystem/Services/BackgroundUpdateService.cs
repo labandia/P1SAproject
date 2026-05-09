@@ -16,12 +16,19 @@ namespace FanTraceableSystem.Services
     {
         private static BackgroundUpdateService _instance;
 
+        public static bool IsInitialized => _instance != null;
+
+
         public event Action<string> OnLog;
         public event Action<Version, Version> OnUpdateStarted;
         public event Action OnUpdateCompleted;
 
+
         public static void Initialize(IUpdateRepository repository)
         {
+            if (_instance != null)
+                return;
+
             _instance = new BackgroundUpdateService(repository);
         }
 

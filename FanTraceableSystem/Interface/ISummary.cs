@@ -24,5 +24,13 @@ namespace FanTraceableSystem.Interface
              DateTime? endDate,
              int isEdit,
              int section);
+
+
+        Task<List<SummaryraceableShopOrderModel>> ExportShopOrderSummary(
+             string search,
+             int section,
+              DateTime? startDate,
+              DateTime? endDate
+            );
     }
 }

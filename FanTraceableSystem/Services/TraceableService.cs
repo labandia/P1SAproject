@@ -24,33 +24,33 @@ namespace FanTraceableSystem.Services
         {
 
             string sql = @"
-                      SELECT  
-                           f.RecordId,
-                           f.FinalShopOrder,
-                           s.ShopOrder,
-                           p.ProcessName,
-                           f.ItemNo,
-                           f.PlanQuan,
-                           s.Line,
-                           f.DatePrepared,
-                           FORMAT(f.TimeInput, 'hh:mm tt') AS TimeInput,
-                           s.PreparedQuantity,
-                           f.PreparedBy,
-                           f.Shift,
-                           f.Customer,
-                           f.Modeltype,
-                           f.Remarks,
-                           f.Incharge,
-                           s.SubAssyIssued,
-                           s.LotNo,
-                           s.Rev,
-                           f.IsDeletedFinal,
-                           f.DepartmentID,
-                           s.SubAssyIssued
-                    FROM FanTraceabilityFinal f
-                    LEFT JOIN FanTraceabilitySub s ON f.RecordId = s.FinalId
-                    INNER JOIN FanTraceabilityProcess p ON p.ProcessId = f.ProcessId
-                    WHERE f.IsDeletedFinal = 0 AND s.ShopOrder IS NOT NULL ";
+                         SELECT  
+                            f.RecordId,
+                            f.FinalShopOrder,
+                            s.ShopOrder,
+                            p.ProcessName,
+                            f.ItemNo,
+                            f.PlanQuan,
+                            s.Line,
+                            s.SubDatePrepared as DatePrepared,
+                            FORMAT(s.SubTimeInput , 'hh:mm tt') AS TimeInput,
+                            s.PreparedQuantity,
+                            f.PreparedBy,
+                            f.Shift,
+                            f.Customer,
+                            f.Modeltype,
+                            f.Remarks,
+                            f.Incharge,
+                            s.SubAssyIssued,
+                            s.LotNo,
+                            s.Rev,
+                            f.IsDeletedFinal,
+                            f.DepartmentID,
+                            s.SubAssyIssued
+                     FROM FanTraceabilityFinal f
+                     LEFT JOIN FanTraceabilitySub s ON f.RecordId = s.FinalId
+                     INNER JOIN FanTraceabilityProcess p ON p.ProcessId = f.ProcessId
+                     WHERE f.IsDeletedFinal = 0 AND s.ShopOrder IS NOT NULL ";
 
             var parameters = new DynamicParameters();
 
@@ -87,14 +87,14 @@ namespace FanTraceableSystem.Services
                 // 📅 Start Date filter
                 if (startDate.HasValue)
                 {
-                    sql += " AND f.DatePrepared >= @StartDate";
+                    sql += " AND s.SubDatePrepared >= @StartDate";
                     parameters.Add("@StartDate", startDate.Value.Date);
                 }
 
                 // 📅 End Date filter (inclusive)
                 if (endDate.HasValue)
                 {
-                    sql += " AND f.DatePrepared < DATEADD(DAY, 1, @EndDate)";
+                    sql += " AND s.SubDatePrepared < DATEADD(DAY, 1, @EndDate)";
                     parameters.Add("@EndDate", endDate.Value.Date);
                 }
             }
@@ -121,8 +121,8 @@ namespace FanTraceableSystem.Services
                            f.ItemNo,
                            f.PlanQuan,
                            s.Line,
-                           f.DatePrepared,
-                           FORMAT(f.TimeInput, 'hh:mm tt') AS TimeInput,
+                           s.SubDatePrepared as DatePrepared,
+                           FORMAT(s.SubTimeInput, 'hh:mm tt') AS TimeInput,
                            s.PreparedQuantity,
                            f.PreparedBy,
                            f.Shift,
@@ -197,13 +197,13 @@ namespace FanTraceableSystem.Services
 
             if (startDate.HasValue && isEdit == 1)
             {
-                sql += " AND f.DatePrepared >= @StartDate";
+                sql += " AND s.SubDatePrepared >= @StartDate";
                 parameters.Add("@StartDate", startDate.Value.Date);
             }
 
             if (endDate.HasValue && isEdit == 1)
             {
-                sql += " AND f.DatePrepared < DATEADD(DAY, 1, @EndDate)";
+                sql += " AND s.SubDatePrepared < DATEADD(DAY, 1, @EndDate)";
                 parameters.Add("@EndDate", endDate.Value.Date);
             }
 
@@ -231,8 +231,8 @@ namespace FanTraceableSystem.Services
                     foreach (var items in pcb)
                     {
                         await SqlDataAccess.UpdateInsertQuery($@"INSERT INTO FanTraceabilitySub
-                        (FinalId, FinalShopOrder, ShopOrder, PreparedQuantity, LotNo, Line, SubAssyIssued, DepartmentID, Rev)
-                        VALUES(@FinalId, @FinalShopOrder, @ShopOrder, @PreparedQuantity, @LotNo, @Line, @SubAssyIssued, @DepartmentID, @Rev)", new
+                        (FinalId, FinalShopOrder, ShopOrder, PreparedQuantity, LotNo, Line, SubAssyIssued, DepartmentID, Rev, SubDatePrepared, SubTimeInput)
+                        VALUES(@FinalId, @FinalShopOrder, @ShopOrder, @PreparedQuantity, @LotNo, @Line, @SubAssyIssued, @DepartmentID, @Rev, @SubDatePrepared, @SubTimeInput)", new
                         {
                             FinalId = finalId,
                             trac.FinalShopOrder,
@@ -242,7 +242,9 @@ namespace FanTraceableSystem.Services
                             items.Line,
                             items.SubAssyIssued,
                             trac.DepartmentID, 
-                            items.Rev
+                            items.Rev,
+                            SubDatePrepared = trac.DatePrepared,
+                            SubTimeInput = trac.TimeInput
                         });
                     }
                 }
@@ -258,7 +260,7 @@ namespace FanTraceableSystem.Services
         {
             await SqlDataAccess.UpdateInsertQuery($@"UPDATE FanTraceabilityFinal SET ProcessId =@ProcessId, 
                 ItemNo =@ItemNo, PreparedBy =@PreparedBy, Customer =@Customer, Modeltype =@Modeltype, Remarks =@Remarks,  
-                Incharge =@Incharge, FinalIssuedby =@FinalIssuedby WHERE RecordId =@RecordId", new
+                Incharge =@Incharge, FinalIssuedby =@FinalIssuedby  WHERE RecordId =@RecordId", new
             {
                 trac.RecordId,
                 trac.ProcessId,
@@ -274,7 +276,7 @@ namespace FanTraceableSystem.Services
 
 
 
-            if (pcb.Count != 0)
+            if (pcb.Any())
             {
                 foreach (var items in pcb)
                 {
@@ -282,9 +284,12 @@ namespace FanTraceableSystem.Services
                     //
                     if (items.isAction == 1)
                     {
+                        var now = DateTime.Now;
+
                         await SqlDataAccess.UpdateInsertQuery($@"INSERT INTO FanTraceabilitySub
-                            (FinalShopOrder, ShopOrder, PreparedQuantity, LotNo, Line, SubAssyIssued, Rev, FinalId, DepartmentID)
-                            VALUES(@FinalShopOrder, @ShopOrder, @PreparedQuantity, @LotNo, @Line, @SubAssyIssued, @Rev, @FinalId, @DepartmentID)", new
+                            (FinalShopOrder, ShopOrder, PreparedQuantity, LotNo, Line, SubAssyIssued, Rev, FinalId, DepartmentID, SubDatePrepared, SubTimeInput)
+                            VALUES(@FinalShopOrder, @ShopOrder, @PreparedQuantity, @LotNo, @Line, 
+                            @SubAssyIssued, @Rev, @FinalId, @DepartmentID, @SubDatePrepared, @SubTimeInput)", new
                         {
                             trac.FinalShopOrder,
                             items.ShopOrder,
@@ -294,21 +299,15 @@ namespace FanTraceableSystem.Services
                             items.Rev,
                             items.SubAssyIssued,
                             trac.DepartmentID,
-                            FinalId = trac.RecordId
+                            FinalId = trac.RecordId,
+                            SubDatePrepared = now.Date,   // stores only date
+                            SubTimeInput = now            // stores full datetime
                         });
                     }
                     else if (items.isAction == 2)
                     {
 
-                        Debug.WriteLine($@"FinalShop : {items.ShopOrder} - 
-                                    Lot No : {items.LotNo} - 
-                                    PreparedQuantity : {items.PreparedQuantity} - 
-                                    Line : {items.Line} - 
-                                    Rev : {items.Rev} - 
-                                    Action : {items.isAction} - 
-                                  ");
 
-             
 
                         await SqlDataAccess.UpdateInsertQuery($@"
                                 UPDATE FanTraceabilitySub

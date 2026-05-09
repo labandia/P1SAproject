@@ -306,15 +306,12 @@ namespace FanTraceableSystem
             {
                 List<ExportTraceableShopOrderModel> Exportdata = new List<ExportTraceableShopOrderModel>();
 
-                var result = await _summaryService.TraceableShopOrderSummary(
+                var result = await _summaryService.ExportShopOrderSummary(
                          SearchText.Text,
-                         dateTimePicker2.Checked ? dateTimePicker2.Value.Date : (DateTime?)null,
-                         dateTimePicker3.Checked ? dateTimePicker3.Value.Date : (DateTime?)null,
-                         isEditmode,
                          sectionselect.SelectedIndex,
-                         _paging.PageNumber,
-                         _paging.PageSize
-                   );
+                         dateTimePicker2.Checked ? dateTimePicker2.Value.Date : (DateTime?)null,
+                         dateTimePicker3.Checked ? dateTimePicker3.Value.Date : (DateTime?)null
+                );
 
                 var exportData = await Task.Run(() =>
                    result.Select(items => new ExportTraceableShopOrderModel

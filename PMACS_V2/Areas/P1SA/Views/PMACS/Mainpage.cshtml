@@ -148,7 +148,7 @@
 
 
     const LoadUsers = async () => {
-        let res = await getMethod('@Url.Action("GetFullnameList", "PMACS")', {});
+        let res = await GetMethodPublic('@Url.Action("GetFullnameList", "PMACS")', {});
         if (res && res.Success) {
             loadData = res.Data;
             loadData = loadData.map(function (item) {
@@ -253,6 +253,7 @@
     $("#loginsubmit").submit(function (e) {
         e.preventDefault();
         var formData = new FormData(e.target);
+        formData.append("proj", 10);
         loginfunc(formData);
     });
 
@@ -267,12 +268,14 @@
     const loginfunc = async (formData) => {
         var errorMsg = document.getElementById('error-msg');
         let data = Object.fromEntries(formData);
-
+        console.log(data);
              // Check the inputs validation
         if (validateform()) {
-                const savebtn = document.querySelector("#submitbtn");
-                savebtn.innerHTML = "<div class='buttonloading'></div>";
-               let res = await postMethod('/Auth/Authenticate', data);
+               const savebtn = document.querySelector("#submitbtn");
+               savebtn.innerHTML = "<div class='buttonloading'></div>";
+               let res = await postMethodPublic('/Auth/Authenticate', formData);
+               console.log(res);
+
                if (res?.Success) {
                      setTimeout(() => {
                          Swal.fire({
@@ -314,7 +317,7 @@
                          savebtn.innerHTML = "<span class='textload'><i class='fa-solid fa-right-to-bracket'></i> Login</span>"
                      }, 1000);
                  }           
-             }
+          }
     };
     function validateform() {
         // for the input fields

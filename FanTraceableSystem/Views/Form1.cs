@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace FanTraceableSystem
 {
-    public partial class Form1 : Form
+    public partial class Form1 : CustomForm
     {
 
         private System.Windows.Forms.Timer _updateTimer;
@@ -168,25 +168,9 @@ namespace FanTraceableSystem
            Application.Exit();    
         }
 
-      
-
-      
-        protected override void OnLoad(EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
             label4.Text = "Version : " + GetPublishedVersion();
-            base.OnLoad(e);
-
-            BackgroundUpdateService.Instance.OnLog += HandleUpdateLog;
         }
-        private void HandleUpdateLog(string msg)
-        {
-            Debug.WriteLine(msg);
-        }
-        protected override void OnFormClosing(FormClosingEventArgs e)
-        {
-            BackgroundUpdateService.Instance.OnLog -= HandleUpdateLog;
-            base.OnFormClosing(e);
-        }
-        
     }
 }

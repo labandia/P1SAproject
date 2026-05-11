@@ -41,6 +41,10 @@ namespace FanTraceableSystem
         private Timer timer;
         private Timer _filterTimer;
 
+        // FOR Progress Bar 
+       
+
+
         public FanTraceabilityAutoSearch(ITraceable trac, ISubassy sub,  int section)
         {
             InitializeComponent();
@@ -76,7 +80,11 @@ namespace FanTraceableSystem
                 await LoadData();
             };
 
-            SystemUpdaterNotification_Load();
+            progressBar1.Minimum = 0;
+            progressBar1.Maximum = 100;
+            progressBar1.Value = 0;
+            progressBar1.Visible = false;
+            progressBar1.Style = ProgressBarStyle.Continuous;
 
             // ✅ Smooth UI (reduce flicker)
             typeof(DataGridView).InvokeMember("DoubleBuffered",
@@ -84,25 +92,7 @@ namespace FanTraceableSystem
                 null, dataGridView2, new object[] { true });
         }
 
-        public void SystemUpdaterNotification_Load()
-        {
-            //_updater = new BackgroundUpdateService(
-            //    @"\\sdp01034s\SYSTEM EXECUTABLE\P1SA-PC_System\SystemVersion\SubAssyVersion.txt",
-            //    TimeSpan.FromSeconds(5) // change to minutes in production
-            //);
-
-            //_updater.OnLog += msg =>
-            //{
-            //    System.Diagnostics.Debug.WriteLine(msg);
-            //};
-
-            //_updater.OnUpdateStarted += (current, next) =>
-            //{
-            //    System.Diagnostics.Debug.WriteLine($"Updating {current} → {next}");
-            //};
-
-            //_updater.Start();
-        }
+        
 
 
 
@@ -114,8 +104,7 @@ namespace FanTraceableSystem
 
         private async void SaveBtn_Click(object sender, EventArgs e)
         {
-           
-
+       
             if (!FormValidation()) return;
 
             ToggleUI(false);
@@ -266,6 +255,8 @@ namespace FanTraceableSystem
             if (_isLoading) return; // prevent double load
             _isLoading = true;
 
+            StartLoading();
+
             try
             {
                 var dataTask =  _trac.TraceableShopOrder(
@@ -292,17 +283,23 @@ namespace FanTraceableSystem
                 await Task.WhenAll(dataTask, countTask, processTask);
 
                 var result = dataTask.Result;
+                UpdateProgress(33);
                 var totalCount = countTask.Result;
+                UpdateProgress(66);
                 var processes = processTask.Result;
+                UpdateProgress(90);
 
                 PopulateProcess(processes);
 
                 BindGrid(result, append);
                 UpdatePaginationUI(result.Count, totalCount);
                 ArrangeColumns();
+
+                UpdateProgress(100);
             }
             finally
             {
+                StopLoading();
                 _isLoading = false; 
             }
         }
@@ -889,7 +886,22 @@ namespace FanTraceableSystem
             Application.Exit();
         }
 
+        private void StartLoading()
+        {
+            progressBar1.Visible = true;
+            progressBar1.Value = 0;
+        }
 
+        private void UpdateProgress(int value)
+        {
+            progressBar1.Value = Math.Min(value, progressBar1.Maximum);
+        }
+
+        private void StopLoading()
+        {
+            progressBar1.Value = 100;
+            progressBar1.Visible = false;
+        }
 
     }
 }

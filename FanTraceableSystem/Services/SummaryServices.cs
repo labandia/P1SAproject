@@ -20,8 +20,8 @@ namespace FanTraceableSystem.Services
                            ,s.ShopOrder
                            ,p.ProcessName   
                            ,f.ItemNo, PlanQuan, Line
-                           ,s.SubDatePrepared as DatePrepared
-                           ,FORMAT(s.SubTimeInput , 'hh:mm tt') AS TimeInput
+                           ,f.DatePrepared
+                           ,FORMAT(f.TimeInput , 'hh:mm tt') AS TimeInput
                            ,PreparedQuantity
                            ,PreparedBy
                            ,Shift
@@ -59,14 +59,14 @@ namespace FanTraceableSystem.Services
             // 📅 Start Date filter
             if (startDate.HasValue)
             {
-                sql += " AND s.SubDatePrepared >= @StartDate";
+                sql += " AND f.DatePrepared >= @StartDate";
                 parameters.Add("@StartDate", startDate.Value.Date);
             }
 
             // 📅 End Date filter (inclusive)
             if (endDate.HasValue)
             {
-                sql += " AND s.SubDatePrepared < DATEADD(DAY, 1, @EndDate)";
+                sql += " AND f.DatePrepared < DATEADD(DAY, 1, @EndDate)";
                 parameters.Add("@EndDate", endDate.Value.Date);
             }
 
@@ -101,13 +101,13 @@ namespace FanTraceableSystem.Services
 
             if (startDate.HasValue)
             {
-                sql += " AND s.SubDatePrepared >= @StartDate";
+                sql += " AND f.DatePrepared >= @StartDate";
                 parameters.Add("@StartDate", startDate.Value.Date);
             }
 
             if (endDate.HasValue)
             {
-                sql += " AND s.SubDatePrepared < DATEADD(DAY, 1, @EndDate)";
+                sql += " AND f.DatePrepared < DATEADD(DAY, 1, @EndDate)";
                 parameters.Add("@EndDate", endDate.Value.Date);
             }
 
@@ -126,8 +126,8 @@ namespace FanTraceableSystem.Services
                            ,s.ShopOrder
                            ,p.ProcessName   
                            ,f.ItemNo, PlanQuan, Line
-                           ,s.SubDatePrepared as DatePrepared
-                           ,FORMAT(s.SubTimeInput , 'hh:mm tt') AS TimeInput
+                           ,f.DatePrepared
+                           ,FORMAT(f.TimeInput , 'hh:mm tt') AS TimeInput
                            ,PreparedQuantity
                            ,PreparedBy
                            ,Shift
@@ -165,14 +165,14 @@ namespace FanTraceableSystem.Services
             // 📅 Start Date filter
             if (startDate.HasValue)
             {
-                sql += " AND s.SubDatePrepared >= @StartDate";
+                sql += " AND f.DatePrepared >= @StartDate";
                 parameters.Add("@StartDate", startDate.Value.Date);
             }
 
             // 📅 End Date filter (inclusive)
             if (endDate.HasValue)
             {
-                sql += " AND s.SubDatePrepared < DATEADD(DAY, 1, @EndDate)";
+                sql += " AND f.DatePrepared < DATEADD(DAY, 1, @EndDate)";
                 parameters.Add("@EndDate", endDate.Value.Date);
             }
 

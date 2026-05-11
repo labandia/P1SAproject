@@ -497,17 +497,6 @@ namespace FanTraceableSystem
 
         private void TriggerDateFilter()
         {
-            // Only apply filter if at least one is checked
-            //if (!dateTimePicker2.Checked && !dateTimePicker3.Checked)
-            //{
-            //    isEdit = 0;
-            //}
-            //else
-            //{
-            //    isEdit = 1;
-            //}
-
-            // Restart debounce timer
             _filterTimer.Stop();
             _filterTimer.Start();
         }

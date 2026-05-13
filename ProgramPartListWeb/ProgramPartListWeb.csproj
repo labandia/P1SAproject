@@ -672,7 +672,7 @@
     <Compile Include="Areas\Hydroponics\Repository\StockAlertService.cs" />
     <Compile Include="Areas\Hydroponics\Repository\StockpartsRepository.cs" />
     <Compile Include="Areas\P1SA\Controllers\ManpowerController.cs" />
-    <Compile Include="Areas\P1SA\Interface\IP1SAEmployee.cs" />
+    <Compile Include="Areas\P1SA\Interface\IP1SAEmployeeRepository.cs" />
     <Compile Include="Areas\P1SA\Models\P1SAEmployeesModel.cs" />
     <Compile Include="Areas\P1SA\P1SAAreaRegistration.cs" />
     <Compile Include="Areas\P1SA\Services\EmployeeServices.cs" />
@@ -864,6 +864,7 @@
     <Content Include="Areas\PC\Views\Shared\_LoaderUpload.cshtml" />
     <Content Include="Areas\PC\Views\Shared\_StepRegister.cshtml" />
     <Content Include="Areas\Rotor\Views\Register\_ModalRegistration.cshtml" />
+    <Content Include="Areas\P1SA\Views\Manpower\EmployeeDetails.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <Content Include="Content\Uploads\PCFY-81013Form1L.xlsx" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />

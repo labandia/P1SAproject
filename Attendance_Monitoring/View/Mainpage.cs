@@ -65,15 +65,9 @@ namespace Attendance_Monitoring
 
         private void Employ_Click(object sender, EventArgs e)
         {
-            //EmployeeManage em = new EmployeeManage();
-            //em.Show();
             var mainpage = _serviceProvider.GetRequiredService<EmployeeManage>();
-            // Show the main form
             mainpage.Show();
-            // Hide the login form (optional)
             this.Hide();
-
-
             Visible=false;
         }
 
@@ -157,26 +151,13 @@ namespace Attendance_Monitoring
             }
            
 
-
-        //  DateTime timeIn = Convert.ToDateTime("2024-08-04 05:30:25.230");
-          
-
-
-            
-
-
-        //  TimeSpan timeInSpan = timeIn.TimeOfDay;
-        //  MessageBox.Show("Date Time span: " + timeInSpan.ToString(@"hh\:mm\:ss"));
-
             DateTime currentDate = DateTime.Now.Date; // Gets today's date without the time
             MessageBox.Show("Date today: " + currentDate.ToString("yyyy-MM-dd"));
-            //TimeSpan currentTime = DateTime.Now.TimeOfDay;
-            //MessageBox.Show("Date today: " + currentTime.ToString(@"hh\:mm\:ss"));
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void button3_Click_1(object sender, EventArgs e)
         {
-           
+            Attendanceform(4, "final_summary");
         }
     }
 }

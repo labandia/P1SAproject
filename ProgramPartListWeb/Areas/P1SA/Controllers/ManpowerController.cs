@@ -1,5 +1,6 @@
 ﻿using ProgramPartListWeb.Areas.Hydroponics.Interface;
 using ProgramPartListWeb.Areas.Hydroponics.Models;
+using ProgramPartListWeb.Areas.P1SA.Interface;
 using ProgramPartListWeb.Areas.P1SA.Models;
 using ProgramPartListWeb.Controllers;
 using ProgramPartListWeb.Helper;
@@ -14,9 +15,9 @@ namespace ProgramPartListWeb.Areas.P1SA.Controllers
 {
     public class ManpowerController : ExtendController
     {
-        private readonly IP1SAEmployee _emp;
+        private readonly IP1SAEmployeeRepository _emp;
 
-        public ManpowerController(IP1SAEmployee emp)
+        public ManpowerController(IP1SAEmployeeRepository emp)
         {
             _emp = emp;
         }
@@ -31,10 +32,14 @@ namespace ProgramPartListWeb.Areas.P1SA.Controllers
         public async Task<ActionResult> GetEmployeelist(
                     string search,
                     int depid = 0,
+                    int gender = 0,
+                    int pos = 0,
+                    int agency = 0,
+                    int status = 0,
                     int page = 1,
                     int pageSize = 10)
         {
-            var data = await _emp.GetEmployees(search, depid, page, pageSize);
+            var data = await _emp.GetEmployees(search, depid, gender,pos, agency, status, page, pageSize);
 
             if (data == null)
                 JsonNotFound("No Data found");
@@ -42,31 +47,31 @@ namespace ProgramPartListWeb.Areas.P1SA.Controllers
             return JsonSuccess(data, "Retrieved data successfully");
         }
 
-        [HttpPost]
-        public async Task<ActionResult> AddEmployeeList(P1SAEmployeesInputModel mode)
-        {
-            bool result = await _emp.CreateEmployee(mode);
+        //[HttpPost]
+        //public async Task<ActionResult> AddEmployeeList(P1SAEmployeesInputModel mode)
+        //{
+        //    bool result = await _emp.CreateEmployee(mode);
 
-            if (!result) JsonValidationError("Input Validation error");
+        //    if (!result) JsonValidationError("Input Validation error");
 
-            return JsonCreated(mode, "Add Employee Records Successfully");
-        }
+        //    return JsonCreated(mode, "Add Employee Records Successfully");
+        //}
 
-        [HttpPost]
-        public async Task<ActionResult> EditEmployeeList(P1SAEmployeesInputModel mode)
-        {
-            bool result = await _emp.UpdateEmployee(mode);
+        //[HttpPost]
+        //public async Task<ActionResult> EditEmployeeList(P1SAEmployeesInputModel mode)
+        //{
+        //    bool result = await _emp.UpdateEmployee(mode);
 
-            if (!result) JsonValidationError("Input Validation error");
+        //    if (!result) JsonValidationError("Input Validation error");
 
-            return JsonCreated(mode, "Data Modified Successfully");
-        }
-
-
+        //    return JsonCreated(mode, "Data Modified Successfully");
+        //}
 
 
 
 
+        // GET: P1SA/Manpower/EmployeeDetails/24050006
+        public ActionResult EmployeeDetails(string EmployeeCode) => View();
         // GET: P1SA/Manpower/ManageEmployee
         public ActionResult ManageEmployee() => View();
         // GET: P1SA/Manpower

@@ -7,15 +7,15 @@
 @*<div class="decorator-bar"><span>// SYS.OP.LEADS</span><span>LAT: 45.92</span><span>LONG: -12.03</span><div class="tech-line flex-1"></div><span>[ STATUS: ONLINE ]</span></div>*@
 
 <div class="page-header">
-    <div class="page-title-container"><div class="title-accent-block"></div><h1 class="page-title">EMPLOYEE_DATA_LIST</h1></div>
+    <div class="page-title-container"><div class="title-accent-block"></div><h1 class="page-title">EMPLOYEE DATA LIST</h1></div>
     <button class="tech-button default" data-media-type="banani-button"><div style="width:16px;height:16px;display:flex;align-items:center;justify-content:center"><iconify-icon icon="lucide:download" style="font-size:16px;color:inherit"></iconify-icon></div> EXPORT_LOG</button>
 </div>
 
 <div class="filters-bar">
-   
+
     <div class="filter-dropdowns">
         <select id="GenderID" class="tech-dropdown">
-            <option value="">GENDER : ALL</option>
+            <option value="2">GENDER : ALL</option>
             <option value="0">MALE</option>
             <option value="1">FEMALE</option>
         </select>
@@ -39,17 +39,26 @@
         </select>
 
 
-        
+
 
     </div>
     <div class="spacer"></div>
     <div class="search-small">
         <div style="width:14px;height:14px;display:flex;align-items:center;justify-content:center">
-        <iconify-icon icon="lucide:search" style="font-size:14px;color:inherit"></iconify-icon></div>
+            <iconify-icon icon="lucide:search" style="font-size:14px;color:inherit"></iconify-icon>
+        </div>
         <span>SEARCH_NAME</span>
-    
+
     </div>
-    <div class="tech-dropdown sort-dropdown" data-media-type="banani-button"><span class="label">SORT:</span> RECENT_UPD<div style="width:16px;height:16px;display:flex;align-items:center;justify-content:center"><iconify-icon icon="lucide:chevron-down" style="font-size:16px;color:inherit"></iconify-icon></div></div>
+
+    <select id="StatusID" class="tech-dropdown">
+        <option value="0">SORT : Active</option>
+        <option value="1">SORT : AWOL</option>
+        <option value="2">SORT : Resigned</option>
+    </select>
+
+
+  
 </div>
 
 <div class="results-info"><div class="tech-line"></div><span class="results-text">SHOWING_INDEX: 01-10 OF 56</span><div class="tech-line flex-1"></div><div class="pagination-controls"><div class="pag-btn disabled" data-media-type="banani-button">&lt; PREV</div><div class="pag-btn" data-media-type="banani-button">NEXT &gt;</div></div></div>
@@ -111,17 +120,48 @@
         }
 
         bindEvents() {
+            document.getElementById("GenderID")
+                .addEventListener("change", () => {
+                    this.currentPage = 1;
+                    this.LoadEmployeeData();
+                });
 
+            document.getElementById("AffiliID")
+                .addEventListener("change", () => {
+                    this.currentPage = 1;
+                    this.LoadEmployeeData();
+                });
+
+            document.getElementById("AgencyID")
+                .addEventListener("change", () => {
+                    this.currentPage = 1;
+                    this.LoadEmployeeData();
+                });
+
+            document.getElementById("StatusID")
+                .addEventListener("change", () => {
+                    this.currentPage = 1;
+                    this.LoadEmployeeData();
+                });
         }
 
         /* ================= LOAD DATA ================= */
         async LoadEmployeeData() {
+            const gender = document.getElementById("GenderID").value;
+            const pos = document.getElementById("AffiliID").value;
+            const agency = document.getElementById("AgencyID").value;
+            const status = document.getElementById("StatusID").value;
+
             const objparams = {
                 search: "",
                 depid: 3,
+                gender: gender,
+                pos: pos,
+                agency: agency,
+                status: status,
                 page: this.currentPage,
                 pageSize: this.pageSize
-            }
+            };
 
             try {
 
@@ -162,6 +202,7 @@
             data.forEach(row => {
 
                 const tr = document.createElement("tr");
+                tr.style.cursor = "pointer";
 
                 tr.innerHTML = `  <tr>
                                 <td>
@@ -220,6 +261,9 @@
                             </tr>
                      `;
 
+                  tr.addEventListener("click", () => {
+                    window.location.href = `/P1SA/Manpower/EmployeeDetails?EmployeeCode=${row.EmployeeCode}`;
+                  });
 
                   fragment.appendChild(tr);
             });

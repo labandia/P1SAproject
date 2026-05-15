@@ -283,7 +283,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
 
 
             // Now get the total count
-            int TotalRecords = await SqlDataAccess.ExecuteScalarAsync(countQuery, parameters);
+            int TotalRecords = await SqlDataAccess.ExecuteScalarAsync<int>(countQuery, parameters);
 
             return new PagedResult<MetalMaskTransaction>
             {

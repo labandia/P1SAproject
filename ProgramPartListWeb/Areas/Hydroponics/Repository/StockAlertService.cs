@@ -117,7 +117,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                 VALUES (@Title);
                                 SELECT CAST(SCOPE_IDENTITY() as int);";
 
-                    notifiResult = await SqlDataAccess.ExecuteScalarAsync(Mainsql, new { Title = "Low / Critical Stock Alert" });
+                    notifiResult = await SqlDataAccess.ExecuteScalarAsync<int>(Mainsql, new { Title = "Low / Critical Stock Alert" });
 
 
 

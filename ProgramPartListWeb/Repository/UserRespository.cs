@@ -61,7 +61,7 @@ namespace ProgramPartListWeb.Data
 
                 // Get User ID
                 string getUserId = @"SELECT User_ID FROM Users WHERE Employee_ID = @Employee_ID";
-                int? userId = await SqlDataAccess.ExecuteScalarAsync(getUserId, new { reg.Employee_ID });
+                int? userId = await SqlDataAccess.ExecuteScalarAsync<int>(getUserId, new { reg.Employee_ID });
 
                 if (userId == null)
                     return false;
@@ -134,7 +134,7 @@ namespace ProgramPartListWeb.Data
                 const string getUserIdQuery =
                     "SELECT User_ID FROM Users WHERE Employee_ID = @Employee_ID";
 
-                int? userId = await SqlDataAccess.ExecuteScalarAsync(
+                int? userId = await SqlDataAccess.ExecuteScalarAsync<int>(
                     getUserIdQuery,
                     new { reg.Employee_ID });
 

@@ -90,35 +90,35 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
             parameters.Add("@Prefix", prefix);
 
-            // Filter By ChamberType
-            if (chamberType != 0)
-            {
-                strsql += " AND o.ChamberID = @ChamberID";
-                parameters.Add("@ChamberID", chamberType);
-            }
+            //// Filter By ChamberType
+            //if (chamberType != 0)
+            //{
+            //    strsql += " AND o.ChamberID = @ChamberID";
+            //    parameters.Add("@ChamberID", chamberType);
+            //}
 
 
-            // Filter By Request Status
-            if (requesStats != "all")
-            {
-                strsql += " AND o.RequestStatus = @requesStats";
-                parameters.Add("@requesStats", requesStats);
-            }
+            //// Filter By Request Status
+            //if (requesStats != "all")
+            //{
+            //    strsql += " AND o.RequestStatus = @requesStats";
+            //    parameters.Add("@requesStats", requesStats);
+            //}
 
 
-            // Filter Start Date
-            if (!string.IsNullOrEmpty(startDate))
-            {
-                strsql += " AND o.OrderDate >= @StartDate";
-                parameters.Add("@StartDate", startDate);
-            }
+            //// Filter Start Date
+            //if (!string.IsNullOrEmpty(startDate))
+            //{
+            //    strsql += " AND o.OrderDate >= @StartDate";
+            //    parameters.Add("@StartDate", startDate);
+            //}
 
-            // Filter End Date
-            if (!string.IsNullOrEmpty(endDate))
-            {
-                strsql += " AND o.OrderDate <= @EndDate";
-                parameters.Add("@EndDate", endDate);
-            }
+            //// Filter End Date
+            //if (!string.IsNullOrEmpty(endDate))
+            //{
+            //    strsql += " AND o.OrderDate <= @EndDate";
+            //    parameters.Add("@EndDate", endDate);
+            //}
 
 
 
@@ -134,6 +134,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         {
             string strsql = $@"SELECT
                                 o.OrderDetailID,
+                                i.PartID,
 	                            i.PartNo,
 	                            i.PartName,
 	                            c.CategoryName,
@@ -285,7 +286,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
                     // Get current stock
                     string stockQuery = "SELECT CurrentQty FROM Hydro_Stocks WHERE PartID = @PartID";
-                    double currentQty = await SqlDataAccess.ExecuteScalarAsync(stockQuery, new { PartID = cham.PartID });
+                    double currentQty = await SqlDataAccess.ExecuteScalarAsync<double>(stockQuery, new { PartID = cham.PartID });
 
                     // Determine how much can be used
                     double qtyToUse = Math.Min(currentQty, requiredQty);
@@ -331,32 +332,60 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             return result;
         }
 
-        public async Task<bool> UpdatesRequestMaterials(string OrderID, string partno, double allocated)
+        public async Task<bool> UpdatesRequestMaterials(string OrderID, int partID, double allocated)
         {
-            string strsql = $@"UPDATE Hydro_OrderDetails
-                                    SET QtyUsed = 
-                                        CASE 
-                                            WHEN QtyUsed + @QtyUsed > RequiredQty THEN RequiredQty
-                                            ELSE QtyUsed + @QtyUsed
-                                        END
-                                    WHERE OrderID = @OrderID AND PartNo =@PartNo;";
+            string getQtySql = @"
+                SELECT 
+                    CASE
+                        WHEN QtyUsed + @QtyUsed > RequiredQty 
+                            THEN RequiredQty - QtyUsed
+                        ELSE @QtyUsed
+                    END
+                FROM Hydro_OrderDetails
+                WHERE OrderID = @OrderID
+                  AND PartID = @PartID";
 
-            bool result = await SqlDataAccess.ExecuteAsync(strsql, new { OrderID = OrderID, PartNo = partno, QtyUsed = allocated });
+            double actualUsed = await SqlDataAccess.ExecuteScalarAsync<double>(
+                getQtySql,
+                new { OrderID = OrderID, PartID = partID, QtyUsed = allocated });
+
+            if (actualUsed <= 0)
+                return false;
+
+            // Update order details
+            string updateOrderSql = @"
+                UPDATE Hydro_OrderDetails
+                SET QtyUsed = QtyUsed + @QtyUsed
+                WHERE OrderID = @OrderID
+                  AND PartID = @PartID;";
+
+            bool result = await SqlDataAccess.ExecuteAsync(
+                updateOrderSql,
+                new
+                {
+                    OrderID = OrderID,
+                    PartID = partID,
+                    QtyUsed = actualUsed
+                });
 
             if (result)
             {
+                // Update stocks using actual quantity only
+                string updateStocksSql = @"
+            UPDATE Hydro_Stocks
+            SET CurrentQty = CASE
+                                WHEN CurrentQty - @QtyUsed < 0 THEN 0
+                                ELSE CurrentQty - @QtyUsed
+                             END
+            WHERE PartID = @PartID;";
 
-                // Updates the Current Stocks
-                string updateStocks = $@"
-                                UPDATE Hydro_Stocks
-                                SET CurrentQty = 
-                                    CASE 
-                                        WHEN CurrentQty - @QtyUsed < 0 THEN 0.0
-                                        ELSE CurrentQty - @QtyUsed
-                                    END
-                                WHERE PartNo =@PartNo";
-
-                await SqlDataAccess.ExecuteAsync(updateStocks, new { PartNo = partno, QtyUsed = allocated });
+                await SqlDataAccess.ExecuteAsync(
+                    updateStocksSql,
+                    new
+                    {
+                        PartID = partID,
+                        QtyUsed = actualUsed
+                    });
             }
 
             return result;
@@ -393,7 +422,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         {
             // BEFORE DELETE GET ALL THE DETAILS OF ORDER ID PARTS
             // 1. Check if order exists
-            var exists = await SqlDataAccess.ExecuteScalarAsync(
+            var exists = await SqlDataAccess.ExecuteScalarAsync<int>(
                 "SELECT COUNT(1) FROM Hydro_OrderDetails WHERE OrderID = @OrderID",
                 new { OrderID });
 

@@ -539,9 +539,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             }, "Load Request List");
         }
 
-    
 
-        [JwtAuthorize]
+        [HttpGet]
         public async Task<ActionResult> GetMainRequestList(string orderID)
         {
             var data = await _chambers.GetRequestList(0, "CR", "", "", "") ?? new List<RequestChambersModel>();
@@ -552,7 +551,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
             return JsonSuccess(filterdata, "Load Request List");
         }
 
-        [JwtAuthorize]
+        [HttpGet]
         public async Task<ActionResult> GetRequestDetails(string orderID)
         {
 
@@ -589,17 +588,18 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Controllers
 
                 foreach (var item in allo)
                 {
-                    await _chambers.UpdatesRequestMaterials(item.OrderID, item.PartNo, item.allocated);
+                    await _chambers.UpdatesRequestMaterials(item.OrderID, item.PartID, item.allocated);
                     ID = item.OrderID;
                 }
 
                 var data = await _chambers.GetRequestList(0, "CR", "", "", "") ?? new List<RequestChambersModel>();
-                double completionrate = data.SingleOrDefault(res => res.OrderID == ID).CompletionPercent;
+                var order = data.SingleOrDefault(res => res.OrderID == ID);
+                double completionrate = order?.CompletionPercent ?? 0;
 
-                if(completionrate == 100)
+                if (completionrate == 100)
                 {
                     await _chambers.UpdateRequestStatus(ID, "Completed", "", "", 0);
-                } 
+                }
 
 
                 return Json(new { Success = true, Message = "Allocations saved successfully" });

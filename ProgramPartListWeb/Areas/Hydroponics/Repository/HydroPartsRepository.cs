@@ -36,7 +36,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
 
 
-            int partID = await SqlDataAccess.ExecuteScalarAsync(insertPartQuery, partParaers);
+            int partID = await SqlDataAccess.ExecuteScalarAsync<int>(insertPartQuery, partParaers);
 
             if (partID <= 0)
             {

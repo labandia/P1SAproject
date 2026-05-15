@@ -233,19 +233,23 @@ namespace ProgramPartListWeb.Helper
             }
         }
         // -------------------- GET THE TOTAL COUNT --------------------
-        public static async Task<int> ExecuteScalarAsync(string query,
-            object parameters = null,
-            CommandType commandType = CommandType.Text)
+        public static async Task<T> ExecuteScalarAsync<T>(
+             string query,
+             object parameters = null,
+             CommandType commandType = CommandType.Text)
         {
             try
             {
                 using (var con = CreateConnection())
-                    return await con.ExecuteScalarAsync<int>(query, parameters, commandType: commandType);
+                    return await con.ExecuteScalarAsync<T>(
+                        query,
+                        parameters,
+                        commandType: commandType);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex, $"ExecuteScalarAsync failed. Query: {query}");
-                return 0;
+                return default(T);
             }
         }
 

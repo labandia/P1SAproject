@@ -185,7 +185,7 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
             var items = await SqlDataAccess.GetDataAsync<RotorRegistrationModel>(strquery, parameters);
 
             // Now get the total count
-            int TotalRecords = await SqlDataAccess.ExecuteScalarAsync(countQuery, parameters);
+            int TotalRecords = await SqlDataAccess.ExecuteScalarAsync<int>(countQuery, parameters);
 
             return new PagedResult<RotorRegistrationModel>
             {

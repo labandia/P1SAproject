@@ -173,7 +173,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
     public class AllocationRequest
     {
         private string _OrderID;
-        private string _PartNo;
+        private int _PartID;
         private double _allocated;
 
         public string OrderID
@@ -182,10 +182,10 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Models
             set => _OrderID = value;
         }
 
-        public string PartNo
+        public int PartID
         {
-            get => _PartNo;
-            set => _PartNo = value;
+            get => _PartID;
+            set => _PartID = value;
         }
 
         public double allocated

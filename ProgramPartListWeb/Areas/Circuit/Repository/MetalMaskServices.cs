@@ -80,7 +80,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
            
             var items = await SqlDataAccess.GetDataAsync<MetalMaskModel>(strquery, parameters);
 
-            int TotalRecords = await SqlDataAccess.ExecuteScalarAsync(countstring, parameters);
+            int TotalRecords = await SqlDataAccess.ExecuteScalarAsync<int>(countstring, parameters);
 
             return new PagedResult<MetalMaskModel>
             {
@@ -271,7 +271,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                 parameters.Add("@PageSize", pageSize);
             }
             var items = await SqlDataAccess.GetDataAsync<MetalMaskPWBModel>(strquery, parameters);
-            int TotalRecords = await SqlDataAccess.ExecuteScalarAsync(countstring, parameters);
+            int TotalRecords = await SqlDataAccess.ExecuteScalarAsync<int>(countstring, parameters);
 
             return new PagedResult<MetalMaskPWBModel>
             {

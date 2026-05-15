@@ -34,7 +34,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Interface
 
         Task<bool> DeleteRequestOrder(string OrderID);  
       
-        Task<bool> UpdatesRequestMaterials(string OrderID, string partno, double allocated);
+        Task<bool> UpdatesRequestMaterials(string OrderID, int partID, double allocated);
 
 
         Task<bool> AdditionalChambers(AddPartsChamberModel add);

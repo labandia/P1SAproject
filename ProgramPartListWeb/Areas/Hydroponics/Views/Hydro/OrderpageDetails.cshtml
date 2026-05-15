@@ -250,7 +250,7 @@
 
 
     const RequestMain = async () => {
-        let res = await GetMethod('@Url.Action("GetMainRequestList", "Hydro")', { orderID: ID });
+        let res = await GetMethodPublic('@Url.Action("GetMainRequestList", "Hydro")', { orderID: ID });
         if (res && res.Success) {
             let status = res.data.RequestStatus;
             $("#ChamberName").text(`Chamber selected : ${res.data.ChamberName}`);
@@ -288,11 +288,12 @@
     }
 
     // Populate the required parts table
-     const populateRequiredTable = async () => {
+    const populateRequiredTable = async () => {
 
-         let res = await GetMethod('@Url.Action("GetRequestDetails", "Hydro")', { orderID: ID });
+         let res = await GetMethodPublic('@Url.Action("GetRequestDetails", "Hydro")', { orderID: ID });
         if (res && res.Success) {
             requestData = res.data;
+            console.log(requestData);
             // FROM COMPLETE DATAW
             let CompletedData = requestData.filter(res => res.MaterialStatus === "COMPLETED");
             let NotCompletedData = requestData.filter(res => res.MaterialStatus === "INCOMPLETED");
@@ -318,6 +319,7 @@
             tbody.innerHTML = '';
             NotCompletedData.forEach(part => {
                 const row = document.createElement('tr');
+                row.setAttribute('data-ID', part.PartID);
                 row.setAttribute('data-part', part.PartNo);
                 row.setAttribute('data-remain', part.RemainQty);
                 row.setAttribute('data-required', part.RequiredQty);
@@ -384,29 +386,29 @@
     function handleRequiredTableClick(e) {
         const row = e.target.closest('tr');
         if (!row) return;
-
-        const partNumber = row.getAttribute('data-part');
+        const partID = row.getAttribute('data-ID');
         const required = parseFloat(row.getAttribute('data-required'));
         const available = parseFloat(row.getAttribute('data-available'));
         const remainTable = parseFloat(row.getAttribute('data-remain'));
 
         // Check if part can be allocated
         if (available === 0) {
-            alert(`Part ${partNumber} is out of stock and cannot be allocated.`);
+            alert(`Part is out of stock and cannot be allocated.`);
             return;
         }
 
-        allocatePart(partNumber, required, available, remainTable);
+        allocatePart(partID, required, available, remainTable);
     }
     // Allocate a part to the order
-    function allocatePart(partNumber, required, available, remainTable) {
-
-        const partData = requestData.find(p => p.PartNo === partNumber);
+    function allocatePart(partID, required, available, remainTable) {
+        console.log("ID : " + partID);
+        const partData = requestData.find(p => p.PartID === parseInt(partID));
+        console.log(partData);
         if (!partData) return;
 
         // Initialize if not already allocated
-        if (!allocatedParts[partNumber]) {
-            allocatedParts[partNumber] = 0;
+        if (!allocatedParts[partID]) {
+            allocatedParts[partID] = 0;
         }
 
 
@@ -419,13 +421,13 @@
         const maxAllocatable = Math.min(remainQty, availableQty);
         // Check if we can allocate more
         if (maxAllocatable > 0) {
-            allocatedParts[partNumber] = roundToStep(maxAllocatable);
+            allocatedParts[partID] = roundToStep(maxAllocatable);
             updateAllocatedTable();
             updateRequiredTableStyles();
             //updateCounts();
             //updateProgress();
         } else {
-            alert(`Cannot allocate more of ${partData.PartNo}. Maximum available: ${Math.min(required, available)}`);
+            alert(`Cannot allocate more of ${partData.PartID}. Maximum available: ${Math.min(required, available)}`);
         }
     }
 
@@ -439,23 +441,24 @@
         const tbody = document.querySelector('#allocatedTable tbody');
         tbody.innerHTML = '';
 
-        for (const partNumber in allocatedParts) {
-            if (allocatedParts[partNumber] > 0) {
-                const partData = requestData.find(p => p.PartNo === partNumber);
+        for (const PartID in allocatedParts) {
+
+            if (allocatedParts[PartID] > 0) {
+                const partData = requestData.find(p => p.PartID === parseInt(PartID));
                 const row = document.createElement('tr');
 
-
+            
                 row.innerHTML = `
-                      <td>0</td>
+                      <td> ${partData.PartID}</td>
                      <td style='text-align: left;'>
                         ${partData.PartNo}
                      </td>
-                     <td  class="qty-cell">${allocatedParts[partNumber]}</td>
+                     <td  class="qty-cell">${allocatedParts[PartID]}</td>
                      <td>
                          <div class="action-buttons">
-                             <button class="btn btn-remove" onclick="removePart('${partNumber}')"><i class="fa-regular fa-circle-xmark"></i></button>
-                             <button class="btn btn-decrement" onclick="decrementPart('${partNumber}')"><i class="fa-solid fa-minus"></i></button>
-                             <button class="btn btn-increment" onclick="incrementPart('${partNumber}')"><i class="fa-solid fa-plus"></i></button>
+                             <button class="btn btn-remove" onclick="removePart('${PartID}')"><i class="fa-regular fa-circle-xmark"></i></button>
+                             <button class="btn btn-decrement" onclick="decrementPart('${PartID}')"><i class="fa-solid fa-minus"></i></button>
+                             <button class="btn btn-increment" onclick="incrementPart('${PartID}')"><i class="fa-solid fa-plus"></i></button>
 
                          </div>
                      </td>
@@ -521,8 +524,8 @@
 
 
      // Action functions for allocated parts
-     function removePart(partNumber) {
-         delete allocatedParts[partNumber];
+     function removePart(partID) {
+         delete allocatedParts[partID];
 
          updateAllocatedTable();
          updateRequiredTableStyles();
@@ -537,34 +540,34 @@
          TableDisplay.append(loadData);
      }
 
-    function incrementPart(partnum) {
-        const partData = requestData.find(p => p.PartNo === partnum);
+    function incrementPart(partID) {
+        const partData = requestData.find(p => p.PartID === parseInt(partID));
          if (!partData) return;
 
          const remain = partData.RemainQty;
          const available = partData.CurrentQty;
-         const allocated = allocatedParts[partnum] || 0;
+        const allocated = allocatedParts[partID] || 0;
          if (allocated < remain && allocated < available) {
-             allocatedParts[partnum]++;
+             allocatedParts[partID]++;
 
              updateAllocatedTable();
              updateRequiredTableStyles();
              //updateCounts();
              //updateProgress();
          } else {
-             alert(`Cannot allocate more of ${partData.PartNo}. Maximum: ${Math.min(remain, available)}`);
+             alert(`Cannot allocate more of ${partData.partID}. Maximum: ${Math.min(remain, available)}`);
          }
      }
 
-    function decrementPart(partnum) {
-        if (allocatedParts[partnum] > 1) {
-            allocatedParts[partnum]--;
+    function decrementPart(partID) {
+        if (allocatedParts[partID] > 1) {
+            allocatedParts[partID]--;
              updateAllocatedTable();
              updateRequiredTableStyles();
              //updateCounts();
              //updateProgress();
          } else {
-            removePart(partnum);
+            removePart(partID);
          }
      }
      // Get lengths for all orders
@@ -664,22 +667,18 @@
         const rows = document.querySelectorAll("#requiredTable tbody tr");
 
         rows.forEach(row => {
+            const ID = row.getAttribute('data-ID');
             const partNumber = row.getAttribute('data-part');
             const required = parseFloat(row.getAttribute('data-required'));
             const available = parseFloat(row.getAttribute('data-available'));
             const remainTable = parseFloat(row.getAttribute('data-remain'));
 
             if (available > 0 && remainTable > 0) {
-                allocatePart(partNumber, required, available, remainTable);
+                allocatePart(ID, required, available, remainTable);
             }
         });
-
-
-
-
-
-
     });
+
     function roundToStep(val) {
         return Math.round(val * 100) / 100;
     }
@@ -694,10 +693,10 @@
             if (cells.length >= 3) {
                 const PartNo = cells[1].textContent.trim() || '';
                 const allocated = parseFloat(cells[2].textContent.trim()) || 0;
-
+                const partID = cells[0].textContent.trim() || '';
                 result.push({
                     OrderID: ID,
-                    PartNo: PartNo,
+                    PartID: partID,
                     allocated: allocated
                 });
             }
@@ -713,7 +712,7 @@
          formData.append('RequestStatus', e.target.value);
 
          let data = Object.fromEntries(formData);
-          let res = await postMethod('@Url.Action("ChangeStatusRequest", "Hydro")', formData);
+          let res = await postMethodPublic('@Url.Action("ChangeStatusRequest", "Hydro")', formData);
          if (res && res.Success) {
               Swal.fire({
                   title: "Success",

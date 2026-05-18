@@ -1,17 +1,131 @@
-﻿
-@{
-    Layout = null;
-}
-
-<!DOCTYPE html>
-
-<html>
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Operational Role Selection | Access Portal</title>
+    <!-- Preconnect & Fonts: identical to original but streamlined -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@100;200;300;400;500;600;700;800;900&family=Geist:wght@100;200;300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@100;200;300;400;500;600;700&family=IBM+Plex+Sans:wght@100;200;300;400;500;600;700&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Nunito:wght@200;300;400;500;600;700;800;900&family=PT+Serif:wght@400;700&family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&family=Shantell+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Iconify CDN -->
+    <script src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
+    <link href="~/Content/css/ManpowerSelect.css" rel="stylesheet" />
 </head>
-<body>
-    <div> 
+<body class="bg-background font-body antialiased">
+    <div class="fullscreen-root">
+        <!-- main flex container that ensures full viewport centering + background pattern -->
+        <div class="screen-adaptive flex flex-col relative overflow-hidden bg-background">
+            <!-- subtle grid pattern exactly as original -->
+            <div class="absolute inset-0 pointer-events-none opacity-20 bg-grid-pattern"></div>
+
+            <!-- main content area: responsive full width, max width container to preserve layout harmony -->
+            <div class="relative z-10 w-full max-w-6xl mx-auto px-8 py-8">
+                <div class="text-center mb-12">
+                    <div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-2 flex items-center justify-center gap-2">
+                        <iconify-icon icon="lucide:shield-check" class="block text-primary size-[14px]"></iconify-icon>
+                        <span>ACCESS GRANTED / AWAITING ROLE ASSIGNMENT</span>
+                    </div>
+                    <h1 class="text-3xl font-bold uppercase tracking-widest">
+                        <span>P1 MANPOWER SYSTEM</span>
+                    </h1>
+                </div>
+
+                <!-- 3-COLUMN GRID (preserved exactly as original) with fluid fitting -->
+                <div class="grid grid-cols-3 gap-8">
+                    <!-- SDP TRAINERS CARD -->
+                    <button class="bg-white border-2 border-border hover:border-primary group transition-all p-8 flex flex-col items-center text-center relative shadow-sm h-full role-card" data-media-type="banani-button">
+                        <div class="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity text-primary">
+                            <iconify-icon icon="lucide:arrow-up-right" class="block size-[24px]"></iconify-icon>
+                        </div>
+                        <div class="size-20 bg-muted/50 border border-border group-hover:bg-primary/10 group-hover:border-primary/30 flex items-center justify-center text-foreground group-hover:text-primary transition-colors mb-6 rounded-sm">
+                            <iconify-icon icon="lucide:graduation-cap" class="block size-[32px]"></iconify-icon>
+                        </div>
+                        <h2 class="text-xl font-bold uppercase tracking-widest mb-4 group-hover:text-primary transition-colors">
+                            <span>TECHNICAL TRAINERS</span>
+                        </h2>
+                        <div class="text-xs text-muted-foreground leading-relaxed uppercase tracking-wider mb-8">
+                            <span>MANAGE SDP SIDE: EMPLOYEE LIST, ASSIGN DEPARTMENTS AND TASK PROCESS, AND ATTENDANCE. NO ACCESS OF SUBCON STAFF.</span>
+                        </div>
+                        <div class="mt-auto pt-6 border-t border-border w-full flex justify-between items-center">
+                            <div class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                                <span>USERS ONLINE: 42</span>
+                            </div>
+                            <div class="text-[10px] font-bold text-primary flex items-center gap-2">
+                                <span class="relative flex h-2 w-2">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                                </span>
+                                <span>SYSTEM OPTIMAL</span>
+                            </div>
+                        </div>
+                    </button>
+
+                    <!-- SUBCON HR CARD (accent variant) -->
+                    <button class="bg-white border-2 border-border hover:border-accent group transition-all p-8 flex flex-col items-center text-center relative shadow-sm h-full role-card" data-media-type="banani-button">
+                        <div class="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity text-accent">
+                            <iconify-icon icon="lucide:arrow-up-right" class="block size-[24px]"></iconify-icon>
+                        </div>
+                        <div class="size-20 bg-muted/50 border border-border group-hover:bg-accent/10 group-hover:border-accent/30 flex items-center justify-center text-foreground group-hover:text-accent transition-colors mb-6 rounded-sm">
+                            <iconify-icon icon="lucide:users" class="block size-[32px]"></iconify-icon>
+                        </div>
+                        <h2 class="text-xl font-bold uppercase tracking-widest mb-4 group-hover:text-accent transition-colors">
+                            <span>PRODUCTION</span>
+                        </h2>
+                        <div class="text-xs text-muted-foreground leading-relaxed uppercase tracking-wider mb-8">
+                            <span>OWN SUBCON PROCESS: ADD, EDIT, AND NOTIFY. STRICT DATA ISOLATION — NO ACCESS TO SDP DATA.</span>
+                        </div>
+                        <div class="mt-auto pt-6 border-t border-border w-full flex justify-between items-center">
+                            <div class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                                <span>USERS ONLINE: 18</span>
+                            </div>
+                            <div class="text-[10px] font-bold text-accent flex items-center gap-2">
+                                <span class="relative flex h-2 w-2">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+                                </span>
+                                <span>SYSTEM OPTIMAL</span>
+                            </div>
+                        </div>
+                    </button>
+
+                    <!-- SYSTEM ADMIN CARD (high clearance) -->
+                    <button class="bg-white border-2 border-border hover:border-foreground group transition-all p-8 flex flex-col items-center text-center relative shadow-sm h-full role-card" data-media-type="banani-button">
+                        <div class="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity text-foreground">
+                            <iconify-icon icon="lucide:arrow-up-right" class="block size-[24px]"></iconify-icon>
+                        </div>
+                        <div class="size-20 bg-muted/50 border border-border group-hover:bg-foreground/5 group-hover:border-foreground/30 flex items-center justify-center text-foreground transition-colors mb-6 rounded-sm">
+                            <iconify-icon icon="lucide:shield-alert" class="block size-[32px]"></iconify-icon>
+                        </div>
+                        <h2 class="text-xl font-bold uppercase tracking-widest mb-4 transition-colors">
+                            <span>SYSTEM ADMIN</span>
+                        </h2>
+                        <div class="text-xs text-muted-foreground leading-relaxed uppercase tracking-wider mb-8">
+                            <span>FULL UNRESTRICTED ACCESS. MANAGE ALL DOMAINS, OVERRIDE PERMISSIONS, AND AUDIT ALL PROCESSES.</span>
+                        </div>
+                        <div class="mt-auto pt-6 border-t border-border w-full flex justify-between items-center">
+                            <div class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                                <span>USERS ONLINE: 3</span>
+                            </div>
+                            <div class="text-[10px] font-bold text-foreground flex items-center gap-2">
+                                <span class="relative flex h-2 w-2">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-foreground opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-foreground"></span>
+                                </span>
+                                <span>HIGH CLEARANCE</span>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
+    <!-- ensure iconify handles any dynamic icons -->
+    <script>
+        // optional: safe fallback for iconify if needed but already loaded
+        if (typeof IconifyIcon === 'undefined') {
+            console.log("Iconify ready");
+        }
+    </script>
 </body>
 </html>

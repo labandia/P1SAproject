@@ -13,5 +13,10 @@ namespace ProgramPartListWeb.Areas.Admin.Controllers
         {
             return View();
         }
+
+        public ActionResult SystemVersions()
+        {
+            return View();  
+        }
     }
 }

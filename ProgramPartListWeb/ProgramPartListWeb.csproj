@@ -749,12 +749,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\css\AdminDesign.css" />
     <Content Include="Content\css\HydroDesign.css" />
     <Content Include="Content\css\HydroDesign.min.css">
       <DependentUpon>HydroDesign.css</DependentUpon>
     </Content>
     <Content Include="Content\css\HydroLogin.css" />
     <Content Include="Content\css\ManpowerDesign.css" />
+    <Content Include="Content\css\ManpowerLogin.css" />
+    <Content Include="Content\css\ManpowerSelect.css" />
     <Content Include="Content\css\MetalMask.css" />
     <Content Include="Content\css\OrderDetails.css" />
     <Content Include="Content\css\Patrolforms.css" />
@@ -865,6 +868,12 @@
     <Content Include="Areas\PC\Views\Shared\_StepRegister.cshtml" />
     <Content Include="Areas\Rotor\Views\Register\_ModalRegistration.cshtml" />
     <Content Include="Areas\P1SA\Views\Manpower\EmployeeDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\_AdminLayout.cshtml" />
+    <Content Include="Areas\Admin\Views\Dashboard\SystemVersions.cshtml" />
+    <Content Include="Areas\P1SA\Views\Manpower\Productions.cshtml" />
+    <Content Include="Areas\P1SA\Views\Shared\_ProductionLayout.cshtml" />
+    <Content Include="Areas\P1SA\Views\Manpower\EmployeeProductionDetails.cshtml" />
+    <Content Include="Areas\P1SA\Views\Manpower\LoginPage.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <Content Include="Content\Uploads\PCFY-81013Form1L.xlsx" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
@@ -1078,8 +1087,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Data\" />
-    <Folder Include="Areas\Admin\Views\Dashboard\" />
-    <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Areas\P1SA\Data\" />
     <Folder Include="Areas\Press\Data\" />
   </ItemGroup>

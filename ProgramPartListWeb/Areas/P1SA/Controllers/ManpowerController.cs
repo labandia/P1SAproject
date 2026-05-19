@@ -110,7 +110,7 @@ namespace ProgramPartListWeb.Areas.P1SA.Controllers
         public ActionResult EmployeeDetails(int EmployeeId) => View();
 
         // GET: P1SA/Manpower/EmployeeDetails/24050006
-        public ActionResult EmployeeProductionDetails(int EmployeeId) => View();
+        public ActionResult EmployeeProductionDetails(int EmployeeId, int role) => View();
         // GET: P1SA/Manpower/ManageEmployee
         public ActionResult ManageEmployee() => View();
 

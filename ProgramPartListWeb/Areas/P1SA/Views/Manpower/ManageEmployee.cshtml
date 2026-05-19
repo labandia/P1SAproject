@@ -267,7 +267,7 @@
                      `;
 
                   tr.addEventListener("click", () => {
-                    window.location.href = `/P1SA/Manpower/EmployeeDetails?EmployeeCode=${row.EmployeeCode}`;
+                      window.location.href = `/P1SA/Manpower/EmployeeProductionDetails?EmployeeId=${row.EmployeeId}&role=0`;
                   });
 
                   fragment.appendChild(tr);

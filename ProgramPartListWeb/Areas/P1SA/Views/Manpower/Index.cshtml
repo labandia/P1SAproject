@@ -34,7 +34,7 @@
                 <!-- 3-COLUMN GRID (preserved exactly as original) with fluid fitting -->
                 <div class="grid grid-cols-3 gap-8">
                     <!-- SDP TRAINERS CARD -->
-                    <button class="bg-white border-2 border-border hover:border-primary group transition-all p-8 flex flex-col items-center text-center relative shadow-sm h-full role-card" data-media-type="banani-button">
+                    <button id="SDPSelection" class="bg-white border-2 border-border hover:border-primary group transition-all p-8 flex flex-col items-center text-center relative shadow-sm h-full role-card" data-media-type="banani-button">
                         <div class="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity text-primary">
                             <iconify-icon icon="lucide:arrow-up-right" class="block size-[24px]"></iconify-icon>
                         </div>
@@ -62,7 +62,7 @@
                     </button>
 
                     <!-- SUBCON HR CARD (accent variant) -->
-                    <button class="bg-white border-2 border-border hover:border-accent group transition-all p-8 flex flex-col items-center text-center relative shadow-sm h-full role-card" data-media-type="banani-button">
+                    <button id="SubConSelection" class="bg-white border-2 border-border hover:border-accent group transition-all p-8 flex flex-col items-center text-center relative shadow-sm h-full role-card" data-media-type="banani-button">
                         <div class="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity text-accent">
                             <iconify-icon icon="lucide:arrow-up-right" class="block size-[24px]"></iconify-icon>
                         </div>
@@ -90,7 +90,7 @@
                     </button>
 
                     <!-- SYSTEM ADMIN CARD (high clearance) -->
-                    <button class="bg-white border-2 border-border hover:border-foreground group transition-all p-8 flex flex-col items-center text-center relative shadow-sm h-full role-card" data-media-type="banani-button">
+                    <button id="SysAdminSelection" class="bg-white border-2 border-border hover:border-foreground group transition-all p-8 flex flex-col items-center text-center relative shadow-sm h-full role-card" data-media-type="banani-button">
                         <div class="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity text-foreground">
                             <iconify-icon icon="lucide:arrow-up-right" class="block size-[24px]"></iconify-icon>
                         </div>
@@ -122,10 +122,29 @@
     </div>
     <!-- ensure iconify handles any dynamic icons -->
     <script>
+        const sdpbtn = document.getElementById('SDPSelection');
+        const subconbtn = document.getElementById('SubConSelection');
+        const sysadminbtn = document.getElementById('SysAdminSelection');
+
+        sdpbtn.addEventListener('click', () => {
+            window.location.href = '/P1SA/Manpower/LoginPage?role=0';
+        });
+
+        subconbtn.addEventListener('click', () => {
+             window.location.href = '/P1SA/Manpower/LoginPage?role=1';
+        });
+
+        sysadminbtn.addEventListener('click', () => {
+             window.location.href = '/P1SA/Manpower/LoginPage?role=2';
+        });
+
         // optional: safe fallback for iconify if needed but already loaded
         if (typeof IconifyIcon === 'undefined') {
             console.log("Iconify ready");
         }
+
+
+
     </script>
 </body>
 </html>

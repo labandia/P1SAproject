@@ -1,17 +1,29 @@
 ﻿
 @{
-    ViewBag.Title = "ManageEmployee";
-    Layout = "~/Areas/P1SA/Views/Shared/_ManpowerLayout.cshtml";
+    ViewBag.Title = "Productions";
+    Layout = "~/Areas/P1SA/Views/Shared/_ProductionLayout.cshtml";
 }
 
 @*<div class="decorator-bar"><span>// SYS.OP.LEADS</span><span>LAT: 45.92</span><span>LONG: -12.03</span><div class="tech-line flex-1"></div><span>[ STATUS: ONLINE ]</span></div>*@
 
 <div class="page-header">
-    <div class="page-title-container"><div class="title-accent-block"></div><h1 class="page-title">EMPLOYEE DATA LIST</h1></div>
-    <button class="tech-button default" data-media-type="banani-button">
-    <div style="width:16px;height:16px;display:flex;align-items:center;justify-content:center">
-        <iconify-icon icon="lucide:download" style="font-size:16px;color:inherit"></iconify-icon>
-    </div> EXPORT_LOG</button>
+    <div class="page-title-container"><div class="title-accent-block"></div><h1 class="page-title">PRODUCTION DATA LIST</h1></div>
+
+
+    <div class="flex gap-2">
+        <button class="tech-button orange" data-media-type="banani-button">
+            <div style="width:16px;height:16px;display:flex;align-items:center;justify-content:center">
+                <iconify-icon icon="lucide:zap" style="font-size:16px;color:inherit"></iconify-icon>
+            </div> IMPORT_CSV
+        </button>
+
+        <button class="tech-button default" data-media-type="banani-button">
+            <div style="width:16px;height:16px;display:flex;align-items:center;justify-content:center">
+                <iconify-icon icon="lucide:download" style="font-size:16px;color:inherit"></iconify-icon>
+            </div> EXPORT_LOG
+        </button>
+    </div>
+   
 
 </div>
 
@@ -24,19 +36,9 @@
             <option value="1">FEMALE</option>
         </select>
 
-        <select id="AffiliID" class="tech-dropdown">
-            <option value="0">POSITION : ALL</option>
-            <option value="1">SUPERVISOR</option>
-            <option value="2">JUNIOR SUPERVISOR</option>
-            <option value="3">LEADER</option>
-            <option value="4">TECHNICAL TRAINER</option>
-            <option value="5">PRODUCTION OPERATOR</option>
-            <option value="6">SDP</option>
-        </select>
 
         <select id="AgencyID" class="tech-dropdown">
             <option value="0">COMPANY : ALL</option>
-            <option value="1">SDP</option>
             <option value="2">TMS(Techinics MS)</option>
             <option value="3">SynergyOne</option>
             <option value="4">Onesource</option>
@@ -47,7 +49,7 @@
 
     </div>
     <div class="spacer"></div>
-    
+
 
     <div class="search-small">
         <div style="width:14px;height:14px;display:flex;align-items:center;justify-content:center">
@@ -63,7 +65,7 @@
     </select>
 
 
-  
+
 </div>
 
 <div class="results-info" id="results-info">
@@ -78,7 +80,6 @@
         <div class="pag-btn" id="nextBtn">NEXT &gt;</div>
     </div>
 </div>
-
 
 <div class="tech-table-container">
     <div class="table-corner tl"></div><div class="table-corner tr"></div><div class="table-corner bl"></div><div class="table-corner br"></div>
@@ -107,7 +108,6 @@
             </tr>
         </thead>
         <tbody id="EmployeeBody">
-          
         </tbody>
     </table>
 </div>
@@ -143,11 +143,6 @@
                     this.LoadEmployeeData();
                 });
 
-            document.getElementById("AffiliID")
-                .addEventListener("change", () => {
-                    this.currentPage = 1;
-                    this.LoadEmployeeData();
-                });
 
             document.getElementById("AgencyID")
                 .addEventListener("change", () => {
@@ -166,14 +161,13 @@
                     this.currentPage = 1;
                     this.LoadEmployeeData();
                 });
+            
         }
 
         /* ================= LOAD DATA ================= */
         async LoadEmployeeData() {
             let searchText = document.getElementById("searchinput").value.trim();
-
             const gender = document.getElementById("GenderID").value;
-            const pos = document.getElementById("AffiliID").value;
             const agency = document.getElementById("AgencyID").value;
             const status = document.getElementById("StatusID").value;
 
@@ -181,10 +175,10 @@
                 search: searchText,
                 depid: 3,
                 gender: gender,
-                pos: pos,
+                pos: "",
                 agency: agency,
                 status: status,
-                role: 0,
+                role: 1,
                 page: this.currentPage,
                 pageSize: this.pageSize
             };
@@ -192,7 +186,7 @@
             try {
 
                 const res = await getMethod('@Url.Action("GetEmployeelist", "Manpower")', objparams);
-
+                console.log(res);
                 if (!res?.Success) {
                     this.renderEmpty();
                     return;
@@ -214,7 +208,7 @@
 
 
         renderTable(data) {
-            console.log(data);
+           
 
             this.tbody.innerHTML = "";
 
@@ -228,7 +222,6 @@
             data.forEach(row => {
 
                 const tr = document.createElement("tr");
-
                 tr.style.cursor = "pointer";
 
                 tr.innerHTML = `  <tr>
@@ -240,12 +233,12 @@
                                       </div>
                                   </div>
                                 </td>
-                                    
+
                                 <td>
                                  <div  class="source-text">${row.Gender ? 'FEMALE' : 'MALE'}</div>
                                 </td>
 
-                                <td> 
+                                <td>
                                   <div class="contact-cell">
                                     <span>
                                       <div style="width:14px;height:14px;display:flex;align-items:center;justify-content:center;margin-right:8px">
@@ -260,7 +253,7 @@
                                    </span>
                                  </div>
                                </td>
-   
+
                              <td>
                                <div class="contact-cell">
                                    <span>
@@ -281,7 +274,7 @@
                                 <td>
                                   <span class="status-text success">${row.StatusName}</span>
                                 </td>
-    
+
                                 <td>
                                   <span class="source-text">${row.CategoryName}</span>
                                 </td>
@@ -299,7 +292,7 @@
 
         }
 
-        
+
         renderEmpty() {
             this.tbody.innerHTML = `<tr>
                  <td colspan="5" style="text-align:center;color:#999">
@@ -316,10 +309,9 @@
          </tr>`;
         }
 
-
         renderPagination(totalItems) {
             const totalPages = Math.ceil(totalItems / this.pageSize);
-
+       
 
             const startItem = totalItems === 0
                 ? 0
@@ -361,6 +353,7 @@
                 }
             });
         }
+
 
     }
 

@@ -1,0 +1,489 @@
+﻿
+@{
+    ViewBag.Title = "SystemVersions";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="flex w-full h-full min-h-[800px] bg-[#f5f5f5] font-body text-[#1d1d1f]">
+    <div class="w-64 border-r border-[#e5e5e5] flex flex-col bg-[#f5f5f5]/80 shrink-0">
+        <div class="p-4 flex items-center gap-2">
+            <div class="flex gap-1.5 px-2 mb-4">
+                <div class="w-3 h-3 rounded-full bg-[#ff5f56] border border-[#e0443e]"></div>
+                <div class="w-3 h-3 rounded-full bg-[#ffbd2e] border border-[#dea123]"></div>
+                <div class="w-3 h-3 rounded-full bg-[#27c93f] border border-[#1aab29]"></div>
+            </div>
+        </div>
+        <div class="px-3 pb-3">
+            <div class="bg-white border border-[#e5e5e5] rounded-md flex items-center px-2 py-1.5 shadow-sm">
+                <iconify-icon icon="lucide:search"
+                              class="block text-[#86868b] size-[14px]"
+                              style="font-size: 14px"></iconify-icon>
+                <div class="ml-2 text-[13px] text-[#86868b]">
+                    <span data-file="/screens/new_screen1.jsx" data-idx="0">Search devices...</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex-1 overflow-y-hidden px-3 space-y-0.5">
+            <div class="flex items-center justify-between px-3 py-1.5 rounded-md hover:bg-[#e5e5e5]/50 text-[#1d1d1f]">
+                <div class="flex items-center gap-2">
+                    <iconify-icon icon="lucide:box"
+                                  class="block text-primary size-[14px]"
+                                  style="font-size: 14px"></iconify-icon><span class="text-[13px] font-medium">
+                        <span data-file="/screens/new_screen1.jsx" data-idx="1">Fleet Overview</span>
+                    </span>
+                </div>
+            </div>
+            <div class="flex items-center justify-between px-3 py-1.5 rounded-md bg-primary text-white">
+                <div class="flex items-center gap-2">
+                    <iconify-icon icon="lucide:monitor"
+                                  class="block text-white size-[14px]"
+                                  style="font-size: 14px"></iconify-icon><span class="text-[13px] font-medium">
+                        <span data-file="/screens/new_screen1.jsx" data-idx="2">All Devices</span>
+                    </span>
+                </div>
+                <span class="text-[11px] px-1.5 rounded-full bg-white/20 text-white">1,248</span>
+            </div>
+            <div class="flex items-center justify-between px-3 py-1.5 rounded-md hover:bg-[#e5e5e5]/50 text-[#1d1d1f]">
+                <div class="flex items-center gap-2">
+                    <iconify-icon icon="lucide:refresh-cw"
+                                  class="block text-primary size-[14px]"
+                                  style="font-size: 14px"></iconify-icon><span class="text-[13px] font-medium">
+                        <span data-file="/screens/new_screen1.jsx" data-idx="3">Software Update</span>
+                    </span>
+                </div>
+            </div>
+            <div class="flex items-center justify-between px-3 py-1.5 rounded-md hover:bg-[#e5e5e5]/50 text-[#1d1d1f]">
+                <div class="flex items-center gap-2">
+                    <iconify-icon icon="lucide:shield"
+                                  class="block text-primary size-[14px]"
+                                  style="font-size: 14px"></iconify-icon><span class="text-[13px] font-medium">
+                        <span data-file="/screens/new_screen1.jsx" data-idx="4">Security Policies</span>
+                    </span>
+                </div>
+            </div>
+            <div class="flex items-center justify-between px-3 py-1.5 rounded-md hover:bg-[#e5e5e5]/50 text-[#1d1d1f]">
+                <div class="flex items-center gap-2">
+                    <iconify-icon icon="lucide:users"
+                                  class="block text-primary size-[14px]"
+                                  style="font-size: 14px"></iconify-icon><span class="text-[13px] font-medium">
+                        <span data-file="/screens/new_screen1.jsx" data-idx="5">User Groups</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex-1 bg-white flex flex-col min-w-0">
+        <div class="h-14 border-b border-[#e5e5e5] flex items-center justify-between px-6 bg-white shrink-0">
+            <div class="flex items-center gap-4">
+                <iconify-icon icon="lucide:chevron-left"
+                              class="block text-[#d1d1d6] size-[16px]"
+                              style="font-size: 16px"></iconify-icon><iconify-icon icon="lucide:chevron-right"
+                                                                                   class="block text-[#d1d1d6] size-[16px]"
+                                                                                   style="font-size: 16px"></iconify-icon>
+                <h1 class="font-semibold text-sm ml-2">
+                    <span data-file="/screens/new_screen1.jsx" data-idx="6">All Devices</span>
+                </h1>
+            </div>
+            <img src="https://storage.googleapis.com/banani-avatars/avatar/male/35-50/North American/2"
+                 class="w-7 h-7 rounded-full" />
+        </div>
+        <div class="flex-1 flex flex-col p-8 overflow-hidden">
+            <div class="flex items-center justify-between mb-6 shrink-0">
+                <div>
+                    <h2 class="text-2xl font-semibold mb-1">
+                        <span data-file="/screens/new_screen1.jsx" data-idx="7">Manage Versions</span>
+                    </h2>
+                    <p class="text-[13px] text-[#86868b]">
+                        <span data-file="/screens/new_screen1.jsx" data-idx="8">
+                            Assign target OS versions to individual devices or
+                            groups.
+                        </span>
+                    </p>
+                </div>
+                <div class="flex gap-3">
+                    <button class="inline-flex items-center justify-center font-medium transition-colors rounded-lg border border-border bg-transparent text-foreground hover:bg-muted/50 h-8 px-3 text-sm h-8 text-[13px] border-[#e5e5e5]"
+                            data-media-type="banani-button">
+                        <span data-file="/screens/new_screen1.jsx" data-idx="9">Export CSV</span>
+                    </button><button class="inline-flex items-center justify-center font-medium transition-colors rounded-lg bg-primary text-primary-foreground hover:opacity-90 h-8 px-3 text-sm h-8 text-[13px] bg-primary text-white shadow-sm px-4"
+                                     data-media-type="banani-button">
+                        <span data-file="/screens/new_screen1.jsx" data-idx="10">Deploy Changes</span>
+                    </button>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 mb-4 shrink-0">
+                <div class="border border-[#e5e5e5] bg-white rounded-md px-3 py-1.5 flex items-center gap-2 shadow-sm cursor-pointer hover:bg-[#fafafa]"
+                     data-media-type="banani-button">
+                    <iconify-icon icon="lucide:filter"
+                                  class="block text-[#86868b] size-[14px]"
+                                  style="font-size: 14px"></iconify-icon><span class="text-[13px] font-medium">
+                        <span data-file="/screens/new_screen1.jsx" data-idx="11">Status: All</span>
+                    </span><iconify-icon icon="lucide:chevron-down"
+                                         class="block text-[#86868b] ml-1 size-[14px]"
+                                         style="font-size: 14px"></iconify-icon>
+                </div>
+                <div class="border border-[#e5e5e5] bg-white rounded-md px-3 py-1.5 flex items-center gap-2 shadow-sm cursor-pointer hover:bg-[#fafafa]"
+                     data-media-type="banani-button">
+                    <iconify-icon icon="lucide:folder"
+                                  class="block text-[#86868b] size-[14px]"
+                                  style="font-size: 14px"></iconify-icon><span class="text-[13px] font-medium">
+                        <span data-file="/screens/new_screen1.jsx" data-idx="12">Group: Engineering</span>
+                    </span><iconify-icon icon="lucide:chevron-down"
+                                         class="block text-[#86868b] ml-1 size-[14px]"
+                                         style="font-size: 14px"></iconify-icon>
+                </div>
+                <div class="border border-[#e5e5e5] bg-white rounded-md px-3 py-1.5 flex items-center gap-2 shadow-sm cursor-pointer hover:bg-[#fafafa]"
+                     data-media-type="banani-button">
+                    <iconify-icon icon="lucide:monitor"
+                                  class="block text-[#86868b] size-[14px]"
+                                  style="font-size: 14px"></iconify-icon><span class="text-[13px] font-medium">
+                        <span data-file="/screens/new_screen1.jsx" data-idx="13">OS: macOS</span>
+                    </span><iconify-icon icon="lucide:chevron-down"
+                                         class="block text-[#86868b] ml-1 size-[14px]"
+                                         style="font-size: 14px"></iconify-icon>
+                </div>
+                <div class="ml-auto flex items-center text-[13px] text-[#86868b]">
+                    <span class="mr-2">
+                        <span data-file="/screens/new_screen1.jsx" data-idx="14">1 selected</span>
+                    </span><a class="text-primary hover:underline cursor-pointer"
+                              data-media-type="banani-button">
+                        <span data-file="/screens/new_screen1.jsx" data-idx="15">Clear selection</span>
+                    </a>
+                </div>
+            </div>
+            <div class="border border-[#e5e5e5] rounded-lg overflow-hidden flex flex-col flex-1 shadow-sm">
+                <div class="overflow-y-auto flex-1 bg-[#fafafa]">
+                    <table class="w-full text-left text-[13px] border-collapse">
+                        <thead class="sticky top-0 bg-[#f5f5f5] border-b border-[#e5e5e5] z-10 shadow-sm">
+                            <tr>
+                                <th class="px-4 py-2.5 w-10">
+                                    <div class="w-4 h-4 border border-[#d1d1d6] rounded bg-primary flex items-center justify-center">
+                                        <iconify-icon icon="lucide:minus"
+                                                      class="block text-white size-[12px]"
+                                                      style="font-size: 12px"></iconify-icon>
+                                    </div>
+                                </th>
+                                <th class="px-4 py-2.5 font-medium text-[#86868b]">
+                                    <span data-file="/screens/new_screen1.jsx" data-idx="16">Device Name</span>
+                                </th>
+                                <th class="px-4 py-2.5 font-medium text-[#86868b]">
+                                    <span data-file="/screens/new_screen1.jsx" data-idx="17">Assigned User</span>
+                                </th>
+                                <th class="px-4 py-2.5 font-medium text-[#86868b]">
+                                    <span data-file="/screens/new_screen1.jsx" data-idx="18">Current Version</span>
+                                </th>
+                                <th class="px-4 py-2.5 font-medium text-[#86868b]">
+                                    <span data-file="/screens/new_screen1.jsx" data-idx="19">Target Version</span>
+                                </th>
+                                <th class="px-4 py-2.5 font-medium text-[#86868b]">
+                                    <span data-file="/screens/new_screen1.jsx" data-idx="20">Status</span>
+                                </th>
+                                <th class="px-4 py-2.5 font-medium text-[#86868b] text-right">
+                                    <span data-file="/screens/new_screen1.jsx" data-idx="21">Actions</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-[#e5e5e5]">
+                            <tr class="hover:bg-[#fafafa] transition-colors bg-[#f0f7ff] hover:bg-[#e6f2ff]">
+                                <td class="px-4 py-3">
+                                    <div class="w-4 h-4 border rounded flex items-center justify-center bg-primary border-primary">
+                                        <iconify-icon icon="lucide:check"
+                                                      class="block text-white size-[12px]"
+                                                      style="font-size: 12px"></iconify-icon>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center gap-2.5">
+                                        <iconify-icon icon="lucide:monitor"
+                                                      class="block text-[#86868b] size-[16px]"
+                                                      style="font-size: 16px"></iconify-icon><span class="font-semibold text-[13px]">Design-iMac-Pro</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-[#515154]">Alex Rivera</td>
+                                <td class="px-4 py-3 font-mono text-[12px] text-[#515154]">
+                                    14.3.1
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="border border-[#e5e5e5] bg-white rounded px-2.5 py-1 flex items-center justify-between w-[140px] shadow-sm cursor-pointer hover:border-[#d1d1d6]"
+                                         data-media-type="banani-button">
+                                        <span class="font-medium text-[#1d1d1f] truncate pr-2">14.4 (Latest)</span><iconify-icon icon="lucide:chevron-down"
+                                                                                                                                 class="block text-[#86868b] shrink-0 size-[14px]"
+                                                                                                                                 style="font-size: 14px"></iconify-icon>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#fff8e1] text-[#f57f17] bg-[#fff8e1] text-[#f57f17]">
+                                        <span data-file="/screens/new_screen1.jsx"
+                                              data-idx="24">Update Ready</span>
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-right">
+                                    <button class="inline-flex items-center justify-center font-medium transition-colors rounded-lg bg-transparent text-foreground hover:bg-muted h-8 px-3 text-sm h-7 px-2 text-[#86868b] hover:text-[#1d1d1f]"
+                                            data-media-type="banani-button">
+                                        <iconify-icon icon="lucide:more-horizontal"
+                                                      class="block size-[16px]"
+                                                      style="font-size: 16px"></iconify-icon>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-[#fafafa] transition-colors">
+                                <td class="px-4 py-3">
+                                    <div class="w-4 h-4 border rounded flex items-center justify-center border-[#d1d1d6] bg-white"></div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center gap-2.5">
+                                        <iconify-icon icon="lucide:monitor"
+                                                      class="block text-[#86868b] size-[16px]"
+                                                      style="font-size: 16px"></iconify-icon><span class="font-semibold text-[13px]">Dev-MBP-14</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-[#515154]">Sam Chen</td>
+                                <td class="px-4 py-3 font-mono text-[12px] text-[#515154]">
+                                    14.4
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="border border-[#e5e5e5] bg-white rounded px-2.5 py-1 flex items-center justify-between w-[140px] shadow-sm cursor-pointer hover:border-[#d1d1d6]"
+                                         data-media-type="banani-button">
+                                        <span class="font-medium text-[#1d1d1f] truncate pr-2">14.4 (Latest)</span><iconify-icon icon="lucide:chevron-down"
+                                                                                                                                 class="block text-[#86868b] shrink-0 size-[14px]"
+                                                                                                                                 style="font-size: 14px"></iconify-icon>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#e8f5e9] text-[#2e7d32] bg-[#e8f5e9] text-[#2e7d32]">
+                                        <span data-file="/screens/new_screen1.jsx"
+                                              data-idx="23">Up to date</span>
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-right">
+                                    <button class="inline-flex items-center justify-center font-medium transition-colors rounded-lg bg-transparent text-foreground hover:bg-muted h-8 px-3 text-sm h-7 px-2 text-[#86868b] hover:text-[#1d1d1f]"
+                                            data-media-type="banani-button">
+                                        <iconify-icon icon="lucide:more-horizontal"
+                                                      class="block size-[16px]"
+                                                      style="font-size: 16px"></iconify-icon>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-[#fafafa] transition-colors">
+                                <td class="px-4 py-3">
+                                    <div class="w-4 h-4 border rounded flex items-center justify-center border-[#d1d1d6] bg-white"></div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center gap-2.5">
+                                        <iconify-icon icon="lucide:monitor"
+                                                      class="block text-[#86868b] size-[16px]"
+                                                      style="font-size: 16px"></iconify-icon><span class="font-semibold text-[13px]">Sales-MBA-13</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-[#515154]">Jordan Lee</td>
+                                <td class="px-4 py-3 font-mono text-[12px] text-[#515154]">
+                                    13.6.5
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="border border-[#e5e5e5] bg-white rounded px-2.5 py-1 flex items-center justify-between w-[140px] shadow-sm cursor-pointer hover:border-[#d1d1d6]"
+                                         data-media-type="banani-button">
+                                        <span class="font-medium text-[#1d1d1f] truncate pr-2">14.4 (Latest)</span><iconify-icon icon="lucide:chevron-down"
+                                                                                                                                 class="block text-[#86868b] shrink-0 size-[14px]"
+                                                                                                                                 style="font-size: 14px"></iconify-icon>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-muted text-muted-foreground">
+                                        <span data-file="/screens/new_screen1.jsx"
+                                              data-idx="26">Deferred</span>
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-right">
+                                    <button class="inline-flex items-center justify-center font-medium transition-colors rounded-lg bg-transparent text-foreground hover:bg-muted h-8 px-3 text-sm h-7 px-2 text-[#86868b] hover:text-[#1d1d1f]"
+                                            data-media-type="banani-button">
+                                        <iconify-icon icon="lucide:more-horizontal"
+                                                      class="block size-[16px]"
+                                                      style="font-size: 16px"></iconify-icon>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-[#fafafa] transition-colors">
+                                <td class="px-4 py-3">
+                                    <div class="w-4 h-4 border rounded flex items-center justify-center border-[#d1d1d6] bg-white"></div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center gap-2.5">
+                                        <iconify-icon icon="lucide:monitor"
+                                                      class="block text-[#86868b] size-[16px]"
+                                                      style="font-size: 16px"></iconify-icon><span class="font-semibold text-[13px]">Exec-MBP-16</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-[#515154]">Taylor Swift</td>
+                                <td class="px-4 py-3 font-mono text-[12px] text-[#515154]">
+                                    14.2
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="border border-[#e5e5e5] bg-white rounded px-2.5 py-1 flex items-center justify-between w-[140px] shadow-sm cursor-pointer hover:border-[#d1d1d6]"
+                                         data-media-type="banani-button">
+                                        <span class="font-medium text-[#1d1d1f] truncate pr-2">14.3.1 (Stable)</span><iconify-icon icon="lucide:chevron-down"
+                                                                                                                                   class="block text-[#86868b] shrink-0 size-[14px]"
+                                                                                                                                   style="font-size: 14px"></iconify-icon>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#ffebee] text-[#c62828] bg-[#ffebee] text-[#c62828]">
+                                        <span data-file="/screens/new_screen1.jsx"
+                                              data-idx="25">Failed</span>
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-right">
+                                    <button class="inline-flex items-center justify-center font-medium transition-colors rounded-lg bg-transparent text-foreground hover:bg-muted h-8 px-3 text-sm h-7 px-2 text-[#86868b] hover:text-[#1d1d1f]"
+                                            data-media-type="banani-button">
+                                        <iconify-icon icon="lucide:more-horizontal"
+                                                      class="block size-[16px]"
+                                                      style="font-size: 16px"></iconify-icon>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-[#fafafa] transition-colors">
+                                <td class="px-4 py-3">
+                                    <div class="w-4 h-4 border rounded flex items-center justify-center border-[#d1d1d6] bg-white"></div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center gap-2.5">
+                                        <iconify-icon icon="lucide:monitor"
+                                                      class="block text-[#86868b] size-[16px]"
+                                                      style="font-size: 16px"></iconify-icon><span class="font-semibold text-[13px]">Eng-MacStudio</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-[#515154]">Chris Evans</td>
+                                <td class="px-4 py-3 font-mono text-[12px] text-[#515154]">
+                                    14.4
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="border border-[#e5e5e5] bg-white rounded px-2.5 py-1 flex items-center justify-between w-[140px] shadow-sm cursor-pointer hover:border-[#d1d1d6]"
+                                         data-media-type="banani-button">
+                                        <span class="font-medium text-[#1d1d1f] truncate pr-2">14.4 (Latest)</span><iconify-icon icon="lucide:chevron-down"
+                                                                                                                                 class="block text-[#86868b] shrink-0 size-[14px]"
+                                                                                                                                 style="font-size: 14px"></iconify-icon>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#e8f5e9] text-[#2e7d32] bg-[#e8f5e9] text-[#2e7d32]">
+                                        <span data-file="/screens/new_screen1.jsx"
+                                              data-idx="23">Up to date</span>
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-right">
+                                    <button class="inline-flex items-center justify-center font-medium transition-colors rounded-lg bg-transparent text-foreground hover:bg-muted h-8 px-3 text-sm h-7 px-2 text-[#86868b] hover:text-[#1d1d1f]"
+                                            data-media-type="banani-button">
+                                        <iconify-icon icon="lucide:more-horizontal"
+                                                      class="block size-[16px]"
+                                                      style="font-size: 16px"></iconify-icon>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-[#fafafa] transition-colors">
+                                <td class="px-4 py-3">
+                                    <div class="w-4 h-4 border rounded flex items-center justify-center border-[#d1d1d6] bg-white"></div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center gap-2.5">
+                                        <iconify-icon icon="lucide:monitor"
+                                                      class="block text-[#86868b] size-[16px]"
+                                                      style="font-size: 16px"></iconify-icon><span class="font-semibold text-[13px]">Mktg-iMac-24</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-[#515154]">Morgan Davis</td>
+                                <td class="px-4 py-3 font-mono text-[12px] text-[#515154]">
+                                    14.3
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="border border-[#e5e5e5] bg-white rounded px-2.5 py-1 flex items-center justify-between w-[140px] shadow-sm cursor-pointer hover:border-[#d1d1d6]"
+                                         data-media-type="banani-button">
+                                        <span class="font-medium text-[#1d1d1f] truncate pr-2">14.4 (Latest)</span><iconify-icon icon="lucide:chevron-down"
+                                                                                                                                 class="block text-[#86868b] shrink-0 size-[14px]"
+                                                                                                                                 style="font-size: 14px"></iconify-icon>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#fff8e1] text-[#f57f17] bg-[#fff8e1] text-[#f57f17]">
+                                        <span data-file="/screens/new_screen1.jsx"
+                                              data-idx="24">Update Ready</span>
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-right">
+                                    <button class="inline-flex items-center justify-center font-medium transition-colors rounded-lg bg-transparent text-foreground hover:bg-muted h-8 px-3 text-sm h-7 px-2 text-[#86868b] hover:text-[#1d1d1f]"
+                                            data-media-type="banani-button">
+                                        <iconify-icon icon="lucide:more-horizontal"
+                                                      class="block size-[16px]"
+                                                      style="font-size: 16px"></iconify-icon>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-[#fafafa] transition-colors">
+                                <td class="px-4 py-3">
+                                    <div class="w-4 h-4 border rounded flex items-center justify-center border-[#d1d1d6] bg-white"></div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center gap-2.5">
+                                        <iconify-icon icon="lucide:monitor"
+                                                      class="block text-[#86868b] size-[16px]"
+                                                      style="font-size: 16px"></iconify-icon><span class="font-semibold text-[13px]">Support-MBA-M1</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-[#515154]">Casey Smith</td>
+                                <td class="px-4 py-3 font-mono text-[12px] text-[#515154]">
+                                    14.3.1
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="border border-[#e5e5e5] bg-white rounded px-2.5 py-1 flex items-center justify-between w-[140px] shadow-sm cursor-pointer hover:border-[#d1d1d6]"
+                                         data-media-type="banani-button">
+                                        <span class="font-medium text-[#1d1d1f] truncate pr-2">14.4 (Latest)</span><iconify-icon icon="lucide:chevron-down"
+                                                                                                                                 class="block text-[#86868b] shrink-0 size-[14px]"
+                                                                                                                                 style="font-size: 14px"></iconify-icon>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#fff8e1] text-[#f57f17] bg-[#fff8e1] text-[#f57f17]">
+                                        <span data-file="/screens/new_screen1.jsx"
+                                              data-idx="24">Update Ready</span>
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-right">
+                                    <button class="inline-flex items-center justify-center font-medium transition-colors rounded-lg bg-transparent text-foreground hover:bg-muted h-8 px-3 text-sm h-7 px-2 text-[#86868b] hover:text-[#1d1d1f]"
+                                            data-media-type="banani-button">
+                                        <iconify-icon icon="lucide:more-horizontal"
+                                                      class="block size-[16px]"
+                                                      style="font-size: 16px"></iconify-icon>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="bg-white border-t border-[#e5e5e5] p-3 flex items-center justify-between text-[13px] shrink-0">
+                    <div class="text-[#86868b]">
+                        <span data-file="/screens/new_screen1.jsx" data-idx="22">Showing 1-7 of 1,248 devices</span>
+                    </div>
+                    <div class="flex gap-1">
+                        <button class="inline-flex items-center justify-center font-medium transition-colors rounded-lg border border-border bg-transparent text-foreground hover:bg-muted/50 h-8 px-3 text-sm h-7 px-2 border-[#e5e5e5]"
+                                data-media-type="banani-button">
+                            <iconify-icon icon="lucide:chevron-left"
+                                          class="block size-[14px]"
+                                          style="font-size: 14px"></iconify-icon>
+                        </button><button class="inline-flex items-center justify-center font-medium transition-colors rounded-lg border border-border bg-transparent text-foreground hover:bg-muted/50 h-8 px-3 text-sm h-7 px-3 border-[#e5e5e5] bg-[#f5f5f5]"
+                                         data-media-type="banani-button">
+                            1
+                        </button><button class="inline-flex items-center justify-center font-medium transition-colors rounded-lg border border-border bg-transparent text-foreground hover:bg-muted/50 h-8 px-3 text-sm h-7 px-3 border-[#e5e5e5]"
+                                         data-media-type="banani-button">
+                            2
+                        </button><button class="inline-flex items-center justify-center font-medium transition-colors rounded-lg border border-border bg-transparent text-foreground hover:bg-muted/50 h-8 px-3 text-sm h-7 px-3 border-[#e5e5e5]"
+                                         data-media-type="banani-button">
+                            3
+                        </button><span class="px-2 py-1 text-[#86868b]">...</span><button class="inline-flex items-center justify-center font-medium transition-colors rounded-lg border border-border bg-transparent text-foreground hover:bg-muted/50 h-8 px-3 text-sm h-7 px-2 border-[#e5e5e5]"
+                                                                                          data-media-type="banani-button">
+                            <iconify-icon icon="lucide:chevron-right"
+                                          class="block size-[14px]"
+                                          style="font-size: 14px"></iconify-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -29,7 +29,6 @@ namespace ProgramPartListWeb.Areas.P1SA.Controllers
         //-----------------------------------------------------------------------------------------
         //---------------------------- P1SA EMPLOYEEMANAGEMENT ------------------------------------
         //-----------------------------------------------------------------------------------------
-        // List of All Employees with Inluding Production Operators 
         [HttpGet]   
         public async Task<ActionResult> GetEmployeelist(
                     string search,
@@ -38,35 +37,31 @@ namespace ProgramPartListWeb.Areas.P1SA.Controllers
                     int pos = 0,
                     int agency = 0,
                     int status = 0,
+                    int role = 0,
                     int page = 1,
                     int pageSize = 10)
         {
-            var data = await _emp.GetEmployees(search, depid, gender,pos, agency, status, page, pageSize);
+          
+
+            var data = role == 0 
+                    ? await _emp.GetEmployees(search, depid, gender,pos, agency, status, page, pageSize)
+                    : await _emp.GetProductionEmployees(search, gender, agency, status, page, pageSize);
+
+            int totalCount = await _emp.GetActualCountEmployee(depid, agency, status, gender);
+
 
             if (data == null)
                 JsonNotFound("No Data found");
 
-            return JsonSuccess(data, "Retrieved data successfully");
-        }
-        // List of Employee for Production Operators
-        [HttpGet]
-        public async Task<ActionResult> GetProductionEmployeelist(
-                    string search,
-                    int depid = 0,
-                    int gender = 0,
-                    int pos = 0,
-                    int agency = 0,
-                    int status = 0,
-                    int page = 1,
-                    int pageSize = 10)
-        {
-            var data = await _emp.GetProductionEmployees(search, gender, agency, status, page, pageSize);
+            var finaldata = new
+            {
+                payload = data,
+                Total = totalCount
+            };
 
-            if (data == null)
-                JsonNotFound("No Data found");
-
-            return JsonSuccess(data, "Retrieved data successfully");
+            return JsonSuccess(finaldata, "Retrieved data successfully");
         }
+       
 
         // Get the Employees Details    
         [HttpGet]
@@ -103,8 +98,11 @@ namespace ProgramPartListWeb.Areas.P1SA.Controllers
         //    return JsonCreated(mode, "Data Modified Successfully");
         //}
 
+        // GET: P1SA/Manpower/NewlyHiredpage
+        public ActionResult Dashboard() => View();
 
-
+        // GET: P1SA/Manpower/NewlyHiredpage
+        public ActionResult NewlyHiredpage() => View();
 
         // GET: P1SA/Manpower/EmployeeDetails/24050006
         public ActionResult EmployeeDetails(int EmployeeId) => View();

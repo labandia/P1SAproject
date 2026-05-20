@@ -1,0 +1,170 @@
+﻿
+@{
+    ViewBag.Title = "EmployeeProductionDetails";
+    Layout = "~/Areas/P1SA/Views/Shared/_ProductionLayout.cshtml";
+    var empID = Request.QueryString["employeeID"];
+}
+
+<input type="hidden" id="employID" value="@empID" />
+
+<div class="relative z-10 max-w-6xl mx-auto w-full ">
+
+    <div class="flex items-center gap-3 text-xs mb-8 font-bold tracking-wider">
+        <button class="flex items-center gap-2 text-muted-foreground hover:text-foreground uppercase" id="Backbtn">
+            <iconify-icon icon="lucide:arrow-left" class="block size-[14px]"></iconify-icon>
+            <span>BACK TO DIRECTORY</span>
+        </button>
+        <span class="text-border">/</span>
+        <span class="text-primary uppercase">EMPLOYEE PROFILE</span>
+    </div>
+
+
+    <div class="flex gap-8 items-start">
+        <!-- Left panel -->
+        <div class="w-[340px] flex flex-col gap-6 shrink-0">
+            <div class="bg-white border border-border flex flex-col relative shadow-sm">
+
+                <div class="absolute top-0 bottom-0 left-0 w-1.5 bg-primary"></div>
+                <div class="p-6 pl-8">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-1">GLOBAL IDENTIFIER</div>
+                            <div class="text-lg font-bold"><span id="EmployeeID">894-X-7741</span></div>
+                        </div>
+                        <div class="text-primary">
+                            <iconify-icon icon="lucide:fingerprint" class="block size-[24px]"></iconify-icon>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4 items-start mb-8">
+                        <img src="https://storage.googleapis.com/banani-avatars/avatar/female/18-25/European/4" class="w-16 h-20 object-cover grayscale border border-border">
+                        <div class="flex flex-col gap-3">
+                            <div>
+                                <div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-0.5">NAME</div>
+                                <div class="text-xs font-bold uppercase" id="UserFullname">ELARA VANCE</div>
+                            </div>
+                            <div>
+                                <div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-0.5">DEPARTMENT </div>
+                                <div class="text-xs font-bold uppercase"><span id="Department">QUANTUM SYSTEMS LEAD</span></div>
+                            </div>
+
+                            <div>
+                                <div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-0.5">LENGTH OF SERVICE</div>
+                                <div class="text-xs font-bold uppercase">6 YEARS 4 MONTHS</div>
+                            </div>
+                            <div>
+                                <div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-0.5">STATUS</div>
+                                <div class="text-xs font-bold text-primary uppercase" id="StatusName">ACTIVE DUTY</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border border-border bg-muted p-4 mb-4">
+                        <div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-1">EMAIL</div>
+                        <div class="text-xs">elara.vance@nexus-secure.net</div>
+                    </div>
+                    <div class="border border-border bg-muted p-4 mb-8">
+                        <div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-1">ADDRESS</div>
+                        <div class="text-xs leading-relaxed">214 Meridian Habitat, Sector 4, Neo City, CA 94016</div>
+                    </div>
+                    <div class="flex justify-between items-end border-t border-border pt-6">
+                        <div class="flex flex-col gap-1">
+                            <div class="flex h-8 items-end gap-[2px]">
+                                <div class="bg-foreground h-full" style="width:2px"></div>
+                                <div class="bg-foreground h-full" style="width:4px"></div>
+                                <div class="bg-foreground h-full" style="width:8px"></div>
+                                <div class="bg-foreground h-full" style="width:2px"></div>
+                                <div class="bg-foreground h-full" style="width:6px"></div>
+                                <div class="bg-foreground h-full" style="width:2px"></div>
+                                <div class="bg-foreground h-full" style="width:2px"></div>
+                                <div class="bg-foreground h-full" style="width:8px"></div>
+                                <div class="bg-foreground h-full" style="width:4px"></div>
+                                <div class="bg-foreground h-full" style="width:2px"></div>
+                                <div class="bg-foreground h-full" style="width:2px"></div>
+                                <div class="bg-foreground h-full" style="width:6px"></div>
+                                <div class="bg-foreground h-full" style="width:4px"></div>
+                                <div class="bg-foreground h-full" style="width:2px"></div>
+                                <div class="bg-foreground h-full" style="width:8px"></div>
+                                <div class="bg-foreground h-full" style="width:2px"></div>
+                                <div class="bg-foreground h-full" style="width:4px"></div>
+                                <div class="bg-foreground h-full" style="width:2px"></div>
+                                <div class="bg-foreground h-full" style="width:2px"></div>
+                                <div class="bg-foreground h-full" style="width:6px"></div>
+                            </div>
+                        </div>
+
+                        <div class="text-[8px] text-muted-foreground uppercase font-bold tracking-widest text-right max-w-[100px]">SCANNABLE AUTHENTICATION</div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="bg-white border border-border p-6 shadow-sm"><div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-4">PERSONNEL ACTIONS</div><div class="flex gap-4"><button class="flex-1 bg-primary text-primary-foreground py-3 text-xs font-bold uppercase tracking-widest flex justify-center items-center gap-2 hover:bg-primary/90 transition-colors shadow-sm"><iconify-icon icon="lucide:lock" class="block size-[14px]"></iconify-icon><span>REVOKE ACCESS</span></button><button class="flex-1 border border-border bg-muted/50 text-foreground py-3 text-xs font-bold uppercase tracking-widest flex justify-center items-center gap-2 hover:bg-muted transition-colors shadow-sm"><iconify-icon icon="lucide:refresh-cw" class="block size-[14px]"></iconify-icon><span>UPDATE ID</span></button></div></div>
+        </div>
+        <!-- Right panels -->
+        <div class="flex-1 flex flex-col gap-6">
+            <div class="bg-white border border-border p-6 shadow-sm"><div class="flex justify-between items-center mb-6"><div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">ATTENDANCE OVERVIEW</div><button><iconify-icon icon="lucide:maximize" class="block size-[14px]"></iconify-icon></button></div><div class="flex gap-0 border-b border-border mb-6"><button class="px-4 py-2 border-b-2 border-primary text-primary text-[10px] font-bold uppercase tracking-widest flex items-center gap-2"><iconify-icon icon="lucide:calendar" class="block size-[14px]"></iconify-icon><span>ATTENDANCE MONITOR</span></button><button class="px-4 py-2 border-b-2 border-transparent text-muted-foreground hover:text-foreground text-[10px] font-bold uppercase tracking-widest flex items-center gap-2"><iconify-icon icon="lucide:calendar-off" class="block size-[14px]"></iconify-icon><span>ABSENCE MONITOR</span></button></div><div class="grid grid-cols-3 gap-6 mb-8"><div class="border border-border bg-muted/30 p-6 flex flex-col justify-center"><div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-4">PRESENT DAYS</div><div class="text-4xl font-bold mb-2">218</div><div class="text-[10px] text-muted-foreground">Current annual total</div></div><div class="border border-border bg-muted/30 p-6 flex flex-col justify-center"><div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-4">LATE CHECK-INS</div><div class="text-4xl font-bold mb-2">04</div><div class="text-[10px] text-muted-foreground">Last 90 days</div></div><div class="border border-border bg-muted/30 p-6 flex flex-col justify-center"><div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-4">ABSENCE DAYS</div><div class="text-4xl font-bold mb-2">07</div><div class="text-[10px] text-muted-foreground">Approved + unplanned</div></div></div><div class="flex flex-col gap-4"><div class="border border-primary bg-primary/5 flex items-center justify-between p-4 text-xs font-bold uppercase tracking-wider"><div class="flex items-center gap-8 text-muted-foreground"><span class="w-24">MON - 08 JAN</span><span class="text-foreground">CHECKED IN 08:01 / CHECKED OUT 17:15</span></div><div class="bg-primary text-primary-foreground px-3 py-1 rounded-full text-[10px] tracking-widest">ON TIME</div></div><div class="border border-primary bg-primary/5 flex items-center justify-between p-4 text-xs font-bold uppercase tracking-wider"><div class="flex items-center gap-8 text-muted-foreground"><span class="w-24">TUE - 09 JAN</span><span class="text-foreground">CHECKED IN 07:56 / CHECKED OUT 18:30</span></div><div class="bg-primary text-primary-foreground px-3 py-1 rounded-full text-[10px] tracking-widest">PRESENT</div></div><div class="border border-accent bg-accent/5 flex items-center justify-between p-4 text-xs font-bold uppercase tracking-wider"><div class="flex items-center gap-8 text-muted-foreground"><span class="w-24">WED - 10 JAN</span><span class="text-foreground">NO CHECK-IN DETECTED / LOGGED 10:14</span></div><div class="bg-accent text-accent-foreground px-3 py-1 rounded-full text-[10px] tracking-widest">FLAGGED</div></div><div class="border border-primary bg-primary/5 flex items-center justify-between p-4 text-xs font-bold uppercase tracking-wider"><div class="flex items-center gap-8 text-muted-foreground"><span class="w-24">THU - 11 JAN</span><span class="text-foreground">CHECKED IN 08:12 / REMOTE WORK</span></div><div class="bg-primary text-primary-foreground px-3 py-1 rounded-full text-[10px] tracking-widest">REMOTE</div></div></div></div>
+            <div class="bg-white border border-border p-6 shadow-sm"><div class="flex justify-between items-center mb-6"><div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">EMPLOYEE DETAILS</div><button><iconify-icon icon="lucide:info" class="block size-[14px]"></iconify-icon></button></div><div class="grid grid-cols-2 gap-6"><div class="border border-border bg-muted/30 p-4"><div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-2">BUSINESS EMAIL</div><div class="text-xs font-bold">elara.vance@nexus-secure.net</div></div><div class="border border-border bg-muted/30 p-4"><div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-2">RESIDENCE ZONE</div><div class="text-xs font-bold">Sector 4, Neo City, CA 94016</div></div></div></div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="module" asp-append-version="true">
+    import {
+        getMethod,
+        postMethod
+    } from '@Url.Content("~/Scripts/modules/index.js")';
+
+    class EmployeeDetailsController {
+        constructor() {
+            this.init();
+        }
+
+        async init() {
+            this.bindEvents();
+
+            await this.fetchEmployeeData();
+        }
+
+        bindEvents() {
+            document.getElementById("Backbtn")
+                .addEventListener("click", () => {
+                    window.location.href = `/P1SA/Manpower/Productions`;
+                });
+
+
+
+        }
+
+        async fetchEmployeeData() {
+            try {
+                const ID = document.getElementById('employID').value;
+                const res = await getMethod('@Url.Action("GetEmployeeDetails", "Manpower")', { employeeID: ID });
+                console.log(res);
+                if (!res?.Success) {
+                    return;
+                }
+
+                this.populateEmployeeDetails(res.data);
+            } catch (error) {
+                console.error('Error fetching employee data:', error);
+            }
+        }
+
+        populateEmployeeDetails(data) {
+            // Populate the employee details in the UI using the fetched data
+            // For example:
+            document.querySelector('#EmployeeID').textContent = data.EmployeeCode;
+            document.querySelector('#UserFullname').textContent = data.FullName;
+            document.querySelector('#Department').textContent = data.DepartmentName;
+            document.querySelector('#StatusName').textContent = data.StatusName;
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const req = new EmployeeDetailsController();
+        req.init();
+    });
+</script>

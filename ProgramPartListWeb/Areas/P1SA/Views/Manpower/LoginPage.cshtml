@@ -1,0 +1,133 @@
+﻿@{
+    ViewBag.Title = "ManageEmployee";
+    Layout = null;
+    var roleid = Request.QueryString["role"];
+
+}
+
+<input type="hidden" id="roleid" value="@roleid" />
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>LoginPage</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@100;200;300;400;500;600;700&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="~/Content/css/ManpowerLogin.css" rel="stylesheet" />
+
+    <!-- Iconify (same CDN) -->
+    <script src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
+</head>
+<body>
+    <div class="login-container">
+        <!-- grid background pattern -->
+        <div class="grid-pattern"></div>
+
+        <div class="card-wrapper">
+            <div class="login-card">
+                <div class="card-accent-bar"></div>
+                <div class="card-inner">
+
+                    <!-- logo / hexagon -->
+                    <div class="logo-wrapper">
+                        <div class="logo-square">
+                            <div class="logo-icon">
+                                <iconify-icon icon="lucide:hexagon"></iconify-icon>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- titles -->
+                    <div class="section-title">
+                        <div class="terminal-badge">P1 Manpower Data</div>
+                        <h1 class="main-title">SYSTEM LOGIN</h1>
+                    </div>
+
+                    <!-- form fields -->
+                    <div class="gap-6" style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2rem;">
+                        <!-- operative id -->
+                        <div class="form-group">
+                            <label class="form-label">OPERATIVE ID</label>
+                            <div class="input-field">
+                                <span class="input-icon">
+                                    <iconify-icon icon="lucide:user"></iconify-icon>
+                                </span>
+                                <input class="input-text" placeholder="UI-ID" />
+                            </div>
+                        </div>
+
+                        <!-- security passcode with reset & eye toggle -->
+                        <div class="form-group">
+                            <div class="flex-between">
+                                <label class="form-label">SECURITY PASSCODE</label>
+                                <a href="#" class="reset-link">RESET?</a>
+                            </div>
+                            <div class="input-field password-row">
+                                <div style="display: flex; align-items: center;">
+                                    <span class="input-icon">
+                                        <iconify-icon icon="lucide:key"></iconify-icon>
+                                    </span>
+
+                                    <input type="password" class="password-dots" placeholder="********" />
+                                </div>
+                                <button type="button" class="eye-button" id="togglePassBtn" aria-label="Toggle password visibility">
+                                    <iconify-icon icon="lucide:eye-off"></iconify-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- authenticate button -->
+                    <button class="auth-button" id="loginBtn">
+                        <span>AUTHENTICATE</span>
+                        <iconify-icon icon="lucide:arrow-right"></iconify-icon>
+                    </button>
+
+                    <!-- footer with signal bars & secure connection -->
+                    <div class="card-footer">
+                        <div class="signal-bars">
+                            <div style="--width: 2px; --height: 4px;" class="signal-bar"></div>
+                            <div style="--width: 4px; --height: 8px;" class="signal-bar"></div>
+                            <div style="--width: 8px; --height: 16px;" class="signal-bar"></div>
+                            <div style="--width: 2px; --height: 4px;" class="signal-bar"></div>
+                            <div style="--width: 6px; --height: 12px;" class="signal-bar"></div>
+                            <div style="--width: 2px; --height: 4px;" class="signal-bar"></div>
+                            <div style="--width: 2px; --height: 4px;" class="signal-bar"></div>
+                            <div style="--width: 8px; --height: 16px;" class="signal-bar"></div>
+                            <div style="--width: 4px; --height: 8px;" class="signal-bar"></div>
+                            <div style="--width: 2px; --height: 4px;" class="signal-bar"></div>
+                            <div style="--width: 2px; --height: 4px;" class="signal-bar"></div>
+                            <div style="--width: 6px; --height: 12px;" class="signal-bar"></div>
+                            <div style="--width: 4px; --height: 8px;" class="signal-bar"></div>
+                            <div style="--width: 2px; --height: 4px;" class="signal-bar"></div>
+                        </div>
+                        <div class="secure-text">SECURE CONNECTION</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        let logbtn = document.getElementById('loginBtn');
+
+        if (logbtn) {
+            logbtn.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                let roles = document.getElementById("roleid").value;
+
+                if (parseInt(roles) === 0) {
+                    window.location.href = '/P1SA/Manpower/ManageEmployee';
+                } else {
+                    window.location.href = '/P1SA/Manpower/Productions';
+                }
+                
+            });
+        }
+    </script>
+</body>
+</html>

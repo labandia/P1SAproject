@@ -653,6 +653,13 @@
     <Compile Include="Areas\Circuit\Repository\MetalMaskServices.cs" />
     <Compile Include="Areas\Circuit\Repository\MetalMaskTransactionServices.cs" />
     <Compile Include="Areas\Circuit\Repository\PlanScheduleRepository.cs" />
+    <Compile Include="Areas\Final\Controllers\AssemblyController.cs" />
+    <Compile Include="Areas\Final\FinalAreaRegistration.cs" />
+    <Compile Include="Areas\Final\Interface\IManufacturing.cs" />
+    <Compile Include="Areas\Final\Interface\IUploadServices.cs" />
+    <Compile Include="Areas\Final\Model\FinaManufacturingOrder.cs" />
+    <Compile Include="Areas\Final\Services\ManufacuringServices.cs" />
+    <Compile Include="Areas\Final\Services\UploadServices.cs" />
     <Compile Include="Areas\Hydroponics\Controllers\HydroController.cs" />
     <Compile Include="Areas\Hydroponics\Controllers\StockController.cs" />
     <Compile Include="Areas\Hydroponics\HydroponicsAreaRegistration.cs" />
@@ -725,6 +732,7 @@
     <Compile Include="Utilities\Common\ResultMessageResponce.cs" />
     <Compile Include="Utilities\DataAccess\NetworkHelper.cs" />
     <Compile Include="Utilities\DataAccess\NetworkShareAccesser.cs" />
+    <Compile Include="Utilities\DataAccess\SqlDataAcess_Test.cs" />
     <Compile Include="Utilities\Security\AesEncryption.cs" />
     <Compile Include="Utilities\Caching\CacheHelper.cs" />
     <Compile Include="Utilities\Compression\CompressResponseAttribute.cs" />
@@ -750,6 +758,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\AdminDesign.css" />
+    <Content Include="Content\css\FinalAssembly.css" />
     <Content Include="Content\css\HydroDesign.css" />
     <Content Include="Content\css\HydroDesign.min.css">
       <DependentUpon>HydroDesign.css</DependentUpon>
@@ -877,6 +886,11 @@
     <Content Include="Areas\P1SA\Views\Manpower\NewlyHiredpage.cshtml" />
     <Content Include="Areas\P1SA\Views\Manpower\Dashboard.cshtml" />
     <Content Include="Areas\P1SA\Views\Manpower\AddNewEmployee.cshtml" />
+    <Content Include="Areas\Final\Views\web.config" />
+    <Content Include="Areas\Final\Views\Assembly\Dashboard.cshtml" />
+    <Content Include="Areas\Final\Views\Shared\_FinalAssemblyLayout.cshtml" />
+    <Content Include="Areas\Final\Views\Assembly\ShopOrderLine.cshtml" />
+    <Content Include="Areas\Final\Views\Assembly\UploaData.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <Content Include="Content\Uploads\PCFY-81013Form1L.xlsx" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
@@ -1090,6 +1104,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Final\Data\" />
     <Folder Include="Areas\P1SA\Data\" />
     <Folder Include="Areas\Press\Data\" />
   </ItemGroup>

@@ -3,9 +3,28 @@
     ViewBag.Title = "EmployeeProductionDetails";
     Layout = "~/Areas/P1SA/Views/Shared/_ProductionLayout.cshtml";
     var empID = Request.QueryString["employeeID"];
+    var roles = Request.QueryString["role"];
+
+    // Change layout based on role
+    if (!string.IsNullOrEmpty(roles))
+    {
+        switch (roles.ToLower())
+        {
+            case "0":
+                Layout = "~/Areas/P1SA/Views/Shared/_ManpowerLayout.cshtml";
+                break;
+
+            case "1":
+                Layout = "~/Areas/P1SA/Views/Shared/_ProductionLayout.cshtml";
+                break;
+        }
+    }
+
+
 }
 
 <input type="hidden" id="employID" value="@empID" />
+<input type="hidden" id="rolesID" value="@roles" />
 
 <div class="relative z-10 max-w-6xl mx-auto w-full ">
 
@@ -131,7 +150,12 @@
         bindEvents() {
             document.getElementById("Backbtn")
                 .addEventListener("click", () => {
-                    window.location.href = `/P1SA/Manpower/Productions`;
+                    let selectedrole = document.getElementById("rolesID");
+                    if (parseInt(selectedrole.value) === 0) {
+                        window.location.href = `/P1SA/Manpower/ManageEmployee`;
+                    } else {
+                        window.location.href = `/P1SA/Manpower/Productions`;
+                    }
                 });
 
 

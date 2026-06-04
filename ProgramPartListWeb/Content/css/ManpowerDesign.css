@@ -71,6 +71,11 @@
     box-sizing: border-box;
 }
 
+#searchinput{
+    border: none;
+    outline: none;
+}
+
 html, body {
     width: 100%;
     height: 100%;
@@ -1668,4 +1673,143 @@ button {
 
 .hover\:text-foreground:hover {
     color: var(--color-foreground);
+}
+
+
+
+
+
+
+
+
+
+
+
+.form-container {
+    max-width: 72rem;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    border-left: 1px solid #cbd5e1;
+    border-right: 1px solid #cbd5e1;
+    min-height: 100%;
+    padding-bottom: 3rem;
+}
+
+
+
+.form-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #cbd5e1;
+    padding: 1.5rem;
+    background: rgba(226, 232, 240, 0.2);
+}
+
+
+.form-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #cbd5e1;
+    padding: 1.5rem;
+    background: rgba(226, 232, 240, 0.2);
+}
+
+.title-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.form-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+
+.req-id {
+    font-size: 11px;
+    font-family: monospace;
+    color: #64748b;
+}
+
+/* card style */
+.card-outline {
+    border: 1px solid #cbd5e1;
+    background: white;
+    padding: 4px;
+}
+
+.card-inner {
+    border: 1px solid #cbd5e1;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* section headers */
+.section {
+    width: 100%;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid #cbd5e1;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.section-code {
+    color: #ff5e3a;
+    font-weight: 700;
+    font-size: 11px;
+}
+
+.section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #111827;
+}
+
+
+
+/* grid utilities */
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.field-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    color: #64748b;
+    letter-spacing: 0.025em;
 }

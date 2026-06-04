@@ -4,5 +4,147 @@
     Layout = "~/Areas/P1SA/Views/Shared/_ManpowerLayout.cshtml";
 }
 
-<h2>AddNewEmployee</h2>
+<div class="form-container">
+    <div class="form-header">
+        <div class="title-group"><div class="accent-line"></div><h1 class="form-title">ADD EMPLOYEE DATA</h1></div>
+        <div class="req-id">REQ_ID: 994-A</div>
+    </div>
+    <div style="padding: 2rem;">
+        <div class="card-outline">
+            <div class="card-inner">
+                <!-- SECTION 01 - EMPLOYEE IDENTITY & PROFILE -->
+                <section class="section">
+                    <div class="section-header"><span class="section-code">// 01</span><h2 class="section-title">EMPLOYEE IDENTITY & PROFILE</h2></div>
+                    <div class="grid-2">
+                        <div class="field">
+                            <label class="field-label">EMPLOYEE CODE (UNIQUE)</label>
+                            <input type="text" class="file-input" placeholder="EMP-####" />
+                        </div>
+                        <div class="field">
+                            <label class="field-label">FULL NAME (LAST, FIRST)</label>
+                         
+                            <input type="text" class="file-input" placeholder="INPUT_DATA..." />
+                        </div>
+                    </div>
+                    <div class="grid-3" style="margin-top: 1rem;">
+                        <div class="field">
+                            <label class="field-label">GENDER</label>
 
+                            <select class="field-input select-style">
+                                <option> -- </option>
+                                <option>Male</option>
+                                <option>Female</option>
+                            </select>
+                          
+                         </div>
+                        <div class="field">
+                            <label class="field-label">DATE OF BIRTH</label>
+                            <input type="date" />
+                        </div>
+
+                        <div class="field">
+                            <label class="field-label">BLOOD TYPE</label>
+                            <select class="field-input">
+                                <option value="A+">A+</option>
+                                <option value="B+">B+</option>
+                                <option value="O+">O+</option>
+                                <option value="AB+">AB+</option>
+                            </select>
+                          
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 02 - EMPLOYMENT DETAILS -->
+                <section class="section">
+                    <div class="section-header"><span class="section-code">// 02</span><h2 class="section-title">EMPLOYMENT & ORGANIZATION</h2></div>
+                    <div class="grid-2">
+
+                        <div class="field">
+                            <label class="field-label">DATE HIRED (ONBOARD)</label>
+                            <input type="date" class="field-input select-style" placeholder="YYYY-MM-DD" />                         
+                        </div>
+
+                     
+                        <div class="field">
+                            <label class="field-label">DEPARTMENT</label>
+                            <select>
+
+                            </select>
+                            <div class="field-input select-style">
+                                <span>--</span>
+                                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polyline points="6 9 12 15 18 9"></polyline></svg>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="grid-3" style="margin-top: 1rem;">
+                        <div class="field">
+                            <label class="field-label">AGENCY NAME</label>
+                            <div class="field-input"><span>agency / direct hire</span>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="field-label">POSITION CLASS (POS_CLASS)</label>
+                                <div class="field-input select-style"><span>--</span>
+                                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polyline points="6 9 12 15 18 9"></polyline></svg>
+                                </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="field-label">EMPLOYMENT CATEGORY</label>
+                                <div class="field-input select-style"><span>--</span>
+                                <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                </div>
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- SECTION 03 - CONTACT & ADDRESS -->
+                <section class="section">
+                    <div class="section-header"><span class="section-code">// 03</span><h2 class="section-title">CONTACT & LOCATION</h2></div>
+                    <div class="grid-2">
+                        <div class="field"><label class="field-label">PHONE (PRIMARY)</label><div class="field-input"><span>+63 9xx xxx xxxx</span></div></div>
+                        <div class="field"><label class="field-label">CONTACT NO (EMERGENCY)</label><div class="field-input"><span>alternate number</span></div></div>
+                    </div>
+                    <div class="grid-2" style="margin-top: 1rem;">
+                        <div class="field"><label class="field-label">EMAIL (SYS_EMAIL)</label><div class="field-input"><span>user@domain.com</span></div></div>
+                        <div class="field"><label class="field-label">FACEBOOK ACCOUNT</label><div class="field-input"><span>facebook.com/username</span></div></div>
+                    </div>
+                    <div class="grid-2" style="margin-top: 1rem;">
+                        <div class="field"><label class="field-label">PRESENT ADDRESS</label><div class="field-input"><span>street, city, province</span></div></div>
+                        <div class="field"><label class="field-label">REGION</label><div class="field-input"><span>NCR / Region IV-A / etc.</span></div></div>
+                    </div>
+                </section>
+
+                <!-- SECTION 04 - ADDITIONAL DEMOGRAPHICS & IMAGE -->
+                <section class="section">
+                    <div class="section-header"><span class="section-code">// 04</span><h2 class="section-title">ADDITIONAL INFO & PROFILE IMAGE</h2></div>
+                    <div class="grid-3">
+                        <div class="field"><label class="field-label">CIVIL STATUS</label><div class="field-input select-style"><span>--</span><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"></polyline></svg></div></div>
+                        <div class="field"><label class="field-label">PICKUP POINT</label><div class="field-input"><span>office / terminal / landmark</span></div></div>
+                        <div class="field"><label class="field-label">IMAGE PROFILE</label><div class="field-input select-style"><span>upload or URL</span><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="2" width="20" height="20" rx="2.18"></rect><circle cx="8.5" cy="8.5" r="2.5"></circle><path d="M21 15l-5-4-3 3-4-4-5 5"></path></svg></div></div>
+                    </div>
+                    <div class="grid-2" style="margin-top: 0.5rem;">
+                        <div class="field"><label class="field-label">ORG_AFFILIATION</label><div class="field-input select-style"><span>--</span><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"></polyline></svg></div></div>
+                        <div class="field"><label class="field-label">STATUS</label><div class="field-input"><span>ACTIVE / RESIGNED / ONBOARD</span></div></div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <div class="form-footer">
+            <div class="status-badge">STATUS: PENDING_INPUT</div>
+            <div class="button-group">
+                <button class="btn-outline">ABORT</button>
+                <button class="btn-commit"><svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>COMMIT_DATA</button>
+            </div>
+        </div>
+    </div>
+</div>

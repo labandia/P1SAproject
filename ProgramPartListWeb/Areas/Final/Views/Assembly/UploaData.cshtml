@@ -1,0 +1,90 @@
+﻿
+@{
+    Layout = null;
+}
+
+
+
+
+<div id="SummaryOutdisplay">
+    <div class="TrackTable">
+        <table>
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Shop Order </th>
+                    <th>Part No.</th>
+                    <th>Model </th>
+                    <th>PCB</th>
+                    <th>IMP </th>
+                    <th>LW</th>
+                    <th>MF</th>
+                    <th>FP</th>
+                    <th>FA</th>
+                    <th>WC</th>
+                    <th>Qty</th>
+                    <th>Plan Start</th>
+                    <th>Dispatch Date</th>
+                    <th>Bush Natural</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="ShopOrderSummaryOut">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="pagination" style="display: flex; align-items:center; justify-content: center; padding: 1em; "></div>
+
+
+
+
+
+<script type="module" asp-append-version="true">
+    import {
+        getMethod,
+        postMethod
+    } from '@Url.Content("~/Scripts/modules/index.js")';
+
+
+    class UploadDataController {
+
+
+        constructor() {
+           
+        }
+
+        async init() {
+
+            this.bindEvents();
+        }
+
+        bindEvents() {
+
+        }
+        /* ================= LOAD DATA ================= */
+        async LoadUploadDataList() {
+
+            try {
+
+                const res = await getMethod('@Url.Action("GetListActiveShopOrders", "Assembly")', {});
+
+                if (!res?.Success) return;
+                const apiData = res.data ?? [];
+                console.log(apiData);
+            }
+            catch (err) {
+                console.error(err);
+            }
+        }
+
+
+       
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const controller = new UploadDataController();
+        controller.init();
+    });
+</script>

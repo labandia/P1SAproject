@@ -26,6 +26,9 @@ using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Areas.P1SA;
 using ProgramPartListWeb.Areas.P1SA.Services;
 using ProgramPartListWeb.Areas.P1SA.Interface;
+using ProgramPartListWeb.Areas.Final;
+using ProgramPartListWeb.Areas.Final.Services;
+using ProgramPartListWeb.Areas.Final.Interface;
 
 namespace ProgramPartListWeb
 {
@@ -134,6 +137,7 @@ namespace ProgramPartListWeb
             container.RegisterType<IPartsList, PartsMasterlistRepository>(new ContainerControlledLifetimeManager());
             container.RegisterType<IStocksparts, StockpartsRepository>(new ContainerControlledLifetimeManager());
 
+
             // Services (Usually stateless → Singleton)
             container.RegisterType<ICategory, CategoryServices>(new ContainerControlledLifetimeManager());
             container.RegisterType<IRotorRegistration, RegistrationServices>(new ContainerControlledLifetimeManager());
@@ -141,6 +145,8 @@ namespace ProgramPartListWeb
             container.RegisterType<IMaskMasterlist, MetalMaskServices>(new ContainerControlledLifetimeManager());
             container.RegisterType<IMetalMast_Transaction, MetalMaskTransactionServices>(new ContainerControlledLifetimeManager());
             container.RegisterType<IStockAlertService, StockAlertService>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IManufacturing, ManufacuringServices>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IUploadServices, UploadServices>(new ContainerControlledLifetimeManager());
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }

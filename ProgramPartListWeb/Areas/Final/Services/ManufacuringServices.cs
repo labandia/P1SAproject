@@ -72,7 +72,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
         {
             try
             {
-                string query = $@"SELECT {SelectColumns} FROM FanTraceabilityManufacturingOrder s WHERE OrderStatus = 1 ";
+                string query = $@"SELECT {SelectColumns} FROM FanTraceabilityManufacturingOrder s WHERE OrderStatus = 2 ";
 
                 var getData = await SqlDataAcess_Test.GetDataAsync<FanTraceabilityManufacturingOrder>(query);
 
@@ -130,7 +130,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                 SELECT COUNT(*) 
                                 FROM FanTraceabilityFinal f
                                 WHERE f.DepartmentID = 5
-                                  AND f.FinalShopOrder = mo.FinalShopOrder  -- ← mo. alias added
+                                  AND f.FinalShopOrder = mo.FinalShopOrder  
                             ) = 1 
                             THEN 'CE' 
                         END AS Circuit
@@ -141,7 +141,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                 SELECT COUNT(*) 
                                 FROM FanTraceabilityFinal f
                                 WHERE f.DepartmentID = 3
-                                  AND f.FinalShopOrder = mo.FinalShopOrder  -- ← mo. alias added
+                                  AND f.FinalShopOrder = mo.FinalShopOrder 
                             ) = 1 
                             THEN 'BF' 
                         END AS Rotor
@@ -151,7 +151,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                 SELECT COUNT(*) 
                                 FROM FanTraceabilityFinal f
                                 WHERE f.DepartmentID = 4
-                                  AND f.FinalShopOrder = mo.FinalShopOrder  -- ← mo. alias added
+                                  AND f.FinalShopOrder = mo.FinalShopOrder  
                             ) = 1 
                             THEN 'FG' 
                         END AS Winding
@@ -162,7 +162,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                 SELECT COUNT(*) 
                                 FROM FanTraceabilityFinal f
                                 WHERE f.DepartmentID = 1
-                                  AND f.FinalShopOrder = mo.FinalShopOrder  -- ← mo. alias added
+                                  AND f.FinalShopOrder = mo.FinalShopOrder 
                             ) = 1 
                             THEN 'AG' 
                         END AS Molding
@@ -172,7 +172,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                 SELECT COUNT(*) 
                                 FROM FanTraceabilityFinal f
                                 WHERE f.DepartmentID = 2
-                                  AND f.FinalShopOrder = mo.FinalShopOrder  -- ← mo. alias added
+                                  AND f.FinalShopOrder = mo.FinalShopOrder  
                             ) = 1 
                             THEN 'AF' 
                         END AS press
@@ -182,7 +182,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                 SELECT COUNT(*) 
                                 FROM FanTraceabilityFinal f
                                 WHERE f.DepartmentID = 7
-                                  AND f.FinalShopOrder = mo.FinalShopOrder  -- ← mo. alias added
+                                  AND f.FinalShopOrder = mo.FinalShopOrder  
                             ) = 1 
                             THEN 'HD' 
                         END AS final

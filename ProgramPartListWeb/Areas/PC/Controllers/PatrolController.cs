@@ -607,7 +607,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
             return existRegistration.SingleOrDefault(r => r.RegNo == regNo);
         }
 
-        private async Task<string> HandleAttachments(
+        private string HandleAttachments(
             HttpPostedFileBase[] files,
             string regNo,
             string existingPaths)
@@ -740,7 +740,7 @@ namespace ProgramPartListWeb.Areas.PC.Controllers
 
 
                 //  ===================== STEP 3: Handle Attachments =====================
-                var combineAttachments = await HandleAttachments(
+                var combineAttachments =  HandleAttachments(
                     Attachments,
                     req.RegNo,
                     existingReg.CounterPath

@@ -150,5 +150,20 @@ namespace ProgramPartListWeb.Areas.Final.Model
 
     }
 
+    public class UploadRowDto
+    {
+        public string ShopOrder { get; set; }
+        public string PartNo { get; set; }
+        public string Model { get; set; }
+        public string Wc { get; set; }
+        public int Qty { get; set; }
+        public string PlanStart { get; set; }
+        public RowResult Result { get; set; }
+    }
 
+    public class RowResult
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; }
+    }
 }

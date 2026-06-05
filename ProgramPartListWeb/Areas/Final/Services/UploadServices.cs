@@ -1,8 +1,10 @@
 ﻿using ProgramPartListWeb.Areas.Final.Interface;
 using ProgramPartListWeb.Areas.Final.Model;
 using ProgramPartListWeb.Helper;
+using ProgramPartListWeb.Utilities.DataAccess;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -18,7 +20,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
         {
             try
             {
-                string query = $@"SELECT
+                string query = $@"SELECT TOP 20
                                     U.RecordID,
                                     U.FinalShopOrder,
 	                                U.ItemNo,
@@ -42,24 +44,25 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                 INNER JOIN FanTraceabilityManufacturingOrder O
                                     ON U.FinalShopOrder = O.FinalShopOrder ";
 
-                 return  await SqlDataAccess.GetDataAsync<UploadProductionRecord>(query, new { });
+                 return  await SqlDataAcess_Test.GetDataAsync<UploadProductionRecord>(query, new { });
                
             }
             catch (Exception ex)
             {
+                Debug.WriteLine(ex.Message);
                 return new List<UploadProductionRecord>();
             }
         }
         public async Task<(int totalrecords, int totalChanges)> GetNumberofUpdatedRecords()
         {
-            int totalRecords = await SqlDataAccess.ExecuteScalarAsync<int>(
+            int totalRecords = await SqlDataAcess_Test.ExecuteScalarAsync<int>(
                 @"SELECT COUNT(*) AS TotalRecords
                     FROM FanTraceabilityManufacturingUploadData U
                     INNER JOIN FanTraceabilityManufacturingOrder O
                         ON U.FinalShopOrder = O.FinalShopOrder;");
 
 
-            int totalchanges = await SqlDataAccess.ExecuteScalarAsync<int>(
+            int totalchanges = await SqlDataAcess_Test.ExecuteScalarAsync<int>(
                 @"SELECT COUNT(*) AS UpdatedCount
                     FROM FanTraceabilityManufacturingUploadData U
                     INNER JOIN FanTraceabilityManufacturingOrder O
@@ -74,7 +77,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
         //===================================================================
         public Task<bool> CheckApprovalForUploadedData(int recordID, bool check)
         {
-            return SqlDataAccess.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingUploadData 
+            return SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingUploadData 
                  SET IsApproved = @IsApproved WHERE RecordID = @RecordID", new
             {
                 RecordID = recordID,
@@ -83,7 +86,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
         }
         public async Task UploadDataToDatabase(ProductionRecord model)
         {
-            await SqlDataAccess.ExecuteAsync($@"INSERT INTO FanTraceabilityManufacturingUploadData 
+            await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO FanTraceabilityManufacturingUploadData 
                    (Line, FinalShopOrder, ItemNo, Model, WC, PlanQty, PlanStartDate, DispatchDate, Note, FinalFinishedDate,
                    FAStatus, ShipmentDate, ShipmentMode, WithSR, OrderRemarks, OrderStatus)
                    VALUES (@Line, @FinalShopOrder, @ItemNo, @Model, @WC, @PlanQty, @PlanStartDate, @DispatchDate, 
@@ -230,7 +233,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
         public async Task<bool> TransferDataUploadtoMain()
         {
-            var getApproveData = await SqlDataAccess.GetDataAsync<UploadDataModel>(@"SELECT RecordID
+            var getApproveData = await SqlDataAcess_Test.GetDataAsync<UploadDataModel>(@"SELECT RecordID
                                   ,Line
                                   ,FinalShopOrder
                                   ,ItemNo
@@ -260,20 +263,20 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 if (item.IsApproved)
                 {
                     // Updates the main table if the Approval is checked
-                    await SqlDataAccess.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingOrder SET 
+                    await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingOrder SET 
                         PlanQty =@PlanQty, PlanStartDate =@PlanStartDate WHERE FinalShopOrder =@FinalShopOrder", item);
 
                 }
                 else
                 {
                     // 
-                    int isCount = await SqlDataAccess.ExecuteScalarAsync<int>(
+                    int isCount = await SqlDataAcess_Test.ExecuteScalarAsync<int>(
                         @"SELECT COUNT(1) FROM FanTraceabilityManufacturingOrder 
                         WHERE FinalShopOrder = @FinalShopOrder", new { item.FinalShopOrder });
 
                     if (isCount == 0)
                     {
-                        await SqlDataAccess.ExecuteAsync($@"INSERT INTO FanTraceabilityManufacturingOrder (Line, FinalShopOrder, ItemNo, Model, WC, PlanQty, PlanStartDate, DispatchDate, Note, FinalFinishedDate,
+                        await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO FanTraceabilityManufacturingOrder (Line, FinalShopOrder, ItemNo, Model, WC, PlanQty, PlanStartDate, DispatchDate, Note, FinalFinishedDate,
                             FAStatus, ShipmentDate, ShipmentMode, WithSR, OrderRemarks, OrderStatus)
                             VALUES
                             (@Line, @FinalShopOrder, @ItemNo, @Model, @WC, @PlanQty, @PlanStartDate, @DispatchDate,
@@ -285,7 +288,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
 
             // After transfer, you might want to clear the upload table or mark records as processed
-            await SqlDataAccess.ExecuteAsync(@"DELETE FROM FanTraceabilityManufacturingUploadData", new { });
+            await SqlDataAcess_Test.ExecuteAsync(@"DELETE FROM FanTraceabilityManufacturingUploadData", new { });
 
 
             return true;

@@ -41,6 +41,7 @@
         </div>
     </header>
 
+    <section style="padding:40px;"></section>
 
     <!-- ── CARDS GRID ─────────────────────────────────── -->
     <div class="cards-section">
@@ -131,7 +132,7 @@
         }
 
         async init() {
-            this.updateClock();                          // ← immediate render, no blank flash
+            this.updateClock();                         
             setInterval(() => this.updateClock(), 1000);
 
 
@@ -341,7 +342,8 @@
 
             const timeText = now.toLocaleTimeString('en-US', {
                 hour: '2-digit',
-                minute: '2-digit'
+                minute: '2-digit',
+                second: '2-digit'
             });
 
             const dateElement = document.getElementById('currentDate');

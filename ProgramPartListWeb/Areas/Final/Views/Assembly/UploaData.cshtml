@@ -1,41 +1,193 @@
 ﻿
 @{
-    Layout = null;
+    Layout = "~/Areas/Final/Views/Shared/_FinalAssemblyLayout.cshtml";
 }
+@Html.AntiForgeryToken()
+<!-- MAIN PANEL -->
+<div class="main-content">
+    <div class="top-bar flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <iconify-icon icon="lucide:chevron-left" style="font-size: 16px; color: #d1d1d6;"></iconify-icon>
+            <h1 class="font-semibold text-sm ml-2">Back to the Dashboard</h1>
+        </div>
+
+        <div class="ml-auto flex items-center gap-2 text-sm" style="color:#86868b;">
+            <div class="window-dots">
+                <div class="dot-red"></div>
+                <div class="dot-yellow"></div>
+                <div class="dot-green"></div>
+            </div>
+
+
+            <span id="selectedCount">0 selected</span>
+
+            <a href="#" id="clearSelectionBtn"
+               style="color: var(--color-primary); text-decoration: none;">
+                Clear selection
+            </a>
+        </div>
+
+    </div>
+
+    <div class="inner-main">
+        <!-- header section -->
+        <div class="flex justify-between items-center mb-6">
+            <div class="flex items-center gap-lg-3">
+                <div>
+                    <h2 class="text-xl font-semibold mb-1" style="font-size: 24px;">Final Assembly Upload Data</h2>
+                    <p class="text-sm" style="color:#86868b;">Data Upload For the Final Assembly </p>
+                </div>
+
+                <!-- filters bar -->
+                <div class="flex items-center gap-3 mb-4 flex-wrap">
+                    <select id="filterdata" class=" filter-chip text-sm font-medium">
+                        <option value="0">For Approval</option>
+                        <option value="1">All Data</option>
+                    </select>
+
+
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <button id="uploadbtn"
+                        class="btn-outline"
+                        style="height: 32px;"
+                        data-upload-url="@Url.Action("ImportUpload", "Assembly")">
+                    Import CSV
+                </button>
+                <button id="btn-proceed" class="btn-primary" style="height: 32px; background:#277eff;">Deploy Changes</button>
+            </div>
+        </div>
 
 
 
-
-<div id="SummaryOutdisplay">
-    <div class="TrackTable">
-        <table>
-            <thead>
-                <tr>
-                    <th>Status</th>
-                    <th>Shop Order </th>
-                    <th>Part No.</th>
-                    <th>Model </th>
-                    <th>PCB</th>
-                    <th>IMP </th>
-                    <th>LW</th>
-                    <th>MF</th>
-                    <th>FP</th>
-                    <th>FA</th>
-                    <th>WC</th>
-                    <th>Qty</th>
-                    <th>Plan Start</th>
-                    <th>Dispatch Date</th>
-                    <th>Bush Natural</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="ShopOrderSummaryOut">
-            </tbody>
-        </table>
+        <div class="devices-table-wrapper">
+            <div class="table-scroll">
+                <table class="devices-table">
+                    <thead>
+                        <tr>
+                            <th style="width:44px;">
+                                <input type="checkbox" id="selectAllRows" />
+                            </th>
+                         
+                            <th>Shop Order </th>
+                            <th style="text-align: center;">Part No.</th>
+                            <th style="text-align: center;">Model </th>
+                            <th style="text-align: center;">WC</th>
+                            <th style="text-align: center;">Qty</th>
+                            <th style="text-align: center;">Current Plan Quantity</th>
+                            <th style="text-align: center;">Upload Plan Quantity</th>
+                            <th style="text-align: center;">Current Plan Date</th>
+                            <th style="text-align: center;">Upload Plan Date</th>
+                            <th style="text-align: center;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <!-- pagination footer -->
+            <div class="flex justify-between items-center p-3 border-t" style="border-top: 1px solid #e5e5e5; background: white;">
+                <div class="text-sm" style="color:#86868b;">Showing 1-7 of 1,248 devices</div>
+                <div class="flex gap-1">
+                    <button class="pagination-btn"><iconify-icon icon="lucide:chevron-left" style="font-size: 14px;"></iconify-icon></button>
+                    <button class="pagination-btn pagination-active">1</button>
+                    <button class="pagination-btn">2</button>
+                    <button class="pagination-btn">3</button>
+                    <span class="px-2 py-1 text-muted-foreground">...</span>
+                    <button class="pagination-btn"><iconify-icon icon="lucide:chevron-right" style="font-size: 14px;"></iconify-icon></button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<div id="pagination" style="display: flex; align-items:center; justify-content: center; padding: 1em; "></div>
+
+
+
+
+
+<!-- Bootstrap Modal (dynamic, shown on load) -->
+<div class="modal fade" id="uploadStatusModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="true">
+    <div class="modal-dialog modal-dialog-centered upload-modal-dialog">
+        <div class="modal-content custom-modal-card">
+            <!-- entire content replicates original UploadStatusModal without Tailwind -->
+            <div class="modal-body-custom">
+
+                <!-- header: icon, title, close button -->
+                <div class="modal-header-custom">
+                    <div class="header-left">
+                        <div class="icon-badge">
+                            <span style="display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" color="var(--primary)">
+                                    <path d="M12 13v8m-8-6.101A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path>
+                                    <path d="m8 17l4-4l4 4"></path>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="title-section">
+                            <h2>Upload in Progress</h2>
+                            <p><span id="modalFileName">filename</span> • <span id="modalFileMeta"></span></p>
+                        </div>
+                    </div>
+                    <button type="button" class="close-btn-custom" data-bs-dismiss="modal" aria-label="Close">
+                        <span style="display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 6L6 18M6 6l12 12"></path>
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+
+                <!-- progress bar + stats -->
+                <div class="progress-card">
+                    <div class="progress-label-row">
+                        <span class="progress-label">Uploading files...</span>
+                        <span class="progress-percent" id="modalProgressPct">0%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stat-item"><span class="stat-dot green"></span><span class="stat-text"><strong>2</strong> Completed</span></div>
+                        <div class="stat-item"><span class="stat-dot primary"></span><span class="stat-text"><strong>2</strong> Uploading</span></div>
+                        <div class="stat-item"><span class="stat-dot gray"></span><span class="stat-text"><strong>1</strong> Queued</span></div>
+                        <div class="stat-item"><span class="stat-dot red"></span><span class="stat-text"><strong>1</strong> Failed</span></div>
+                    </div>
+                </div>
+
+                <!-- file table (identical data, no tailwind) -->
+                <table class="file-table">
+                    <thead>
+                        <tr>
+                            <th>Shop Order</th>
+                            <th>Part No</th>
+                            <th>Model </th>
+                            <th>WC</th>
+                            <th>Plan Start</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+
+                <!-- footer actions (Cancel, Retry, Background) -->
+                <div class="modal-footer-custom">
+                    <div>
+                        <span>Completed</span>
+                        <p>Row 0 of 0 ✔ 0 ✘ 0</p>
+                    </div>
+                    <button type="button" class="btn-outline-muted" id="cancelUploadBtn">Cancel Upload</button>
+                    <div class="action-group">
+                        <button type="button" class="btn-secondary-custom" id="retryFailedBtn">Cancel Upload</button>
+                        <button type="button" class="btn-primary-custom" id="continueBgBtn">Continue in Background</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -48,43 +200,338 @@
     } from '@Url.Content("~/Scripts/modules/index.js")';
 
 
-    class UploadDataController {
+  class UploadDataController {
 
+     constructor() {
+        this.filterData = [];
+        this.uploadUrl = document.getElementById('uploadbtn').dataset.uploadUrl;
 
-        constructor() {
-           
-        }
-
-        async init() {
-
-            this.bindEvents();
-        }
-
-        bindEvents() {
-
-        }
-        /* ================= LOAD DATA ================= */
-        async LoadUploadDataList() {
-
-            try {
-
-                const res = await getMethod('@Url.Action("GetListActiveShopOrders", "Assembly")', {});
-
-                if (!res?.Success) return;
-                const apiData = res.data ?? [];
-                console.log(apiData);
-            }
-            catch (err) {
-                console.error(err);
-            }
-        }
-
-
-       
+        this.progressModal = new bootstrap.Modal(document.getElementById('uploadStatusModal'), {
+            backdrop: 'static',
+            keyboard: false
+        });
+        this.tbody     = document.querySelector('.devices-table tbody');
+        this.fileInput = this._createFileInput();
+        this._xhr      = null;
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const controller = new UploadDataController();
-        controller.init();
-    });
+    async init() {
+        this.bindEvents();
+        await this.LoadUploadDataList();
+    }
+
+    bindEvents() {
+        document.getElementById('uploadbtn').addEventListener('click', () => {
+            this.fileInput.click();
+        });
+
+        document.getElementById('filterdata').addEventListener('change', ()=>{
+            alert("asdd");
+        });
+
+        this.fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            this.fileInput.value = '';
+            await this.beginUpload(file);
+        });
+
+        document.getElementById('cancelUploadBtn').addEventListener('click', () => {
+            if (this._xhr) { this._xhr.abort(); this._xhr = null; }
+            this.progressModal.hide();
+        });
+
+        document.getElementById('btn-proceed').addEventListener('click', () =>{
+            alert("CLICKABLE");
+        });
+
+        document.getElementById('continueBgBtn').addEventListener('click', () => {
+            this.progressModal.hide();
+        });
+
+
+        document.addEventListener('change', async (e) => {
+
+                if (!e.target.classList.contains('row-checkbox'))
+                    return;
+
+                const id = e.target.dataset.id;
+                const isApproved = e.target.checked;
+                this.updateSelectedCount();
+
+                try {
+
+                    await postMethod(
+                        '@Url.Action("UpdateUploadApproval", "Assembly")',
+                        {
+                            recordID: id,
+                            check: isApproved
+                        });
+
+                } catch (err) {
+
+                    console.error(err);
+
+                    // revert checkbox if save failed
+                    e.target.checked = !isApproved;
+                    this.updateSelectedCount();
+                }
+         });
+    }
+
+    /* ================= LOAD DATA ================= */
+    async LoadUploadDataList() {
+        try {
+            const res = await getMethod('@Url.Action("GetUploadData", "Assembly")', {});
+            if (!res?.Success) return;
+            const approvedCount = res.data.filter(x => x.IsApproved === true).length;
+
+            document.getElementById("btn-proceed").disabled = approvedCount === 0;
+
+            console.log(`Loaded ${res.data.length} records, ${approvedCount} approved.`);
+
+            console.log(res.data);
+            this.renderTable(res.data ?? []);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    /* ================= RENDER MAIN TABLE ================= */
+    renderTable(data) {
+        if (!this.tbody) return;
+
+        if (data.length === 0) {
+            this.tbody.innerHTML = `
+                <tr>
+                    <td colspan="11" style="text-align:center; padding:32px; color:#86868b;">
+                        No data available.
+                    </td>
+                </tr>`;
+            return;
+        }
+
+        this.tbody.innerHTML = data.map(row => `
+            <tr>
+               <td>
+                    <input type="checkbox"
+                           class="row-checkbox"
+                           data-id="${row.RecordID}"
+                           ${row.IsApproved == 1 ? 'checked' : ''} />
+                </td>
+                <td>
+                    <div class="flex items-center gap-2">
+                        <iconify-icon icon="lucide:monitor" style="font-size:16px; color:#86868b;"></iconify-icon>
+                        <span class="font-semibold">${this.escape(row.FinalShopOrder)}</span>
+                    </div>
+                </td>
+                <td style="color:#515154; text-align:center;">${this.escape(row.ItemNo)}</td>
+                <td style="color:#515154;">${this.escape(row.Model)}</td>
+                <td style="color:#515154;">${this.escape(row.WC)}</td>
+                <td style="color:#515154; text-align:center;">${this.escape(row.PlanQty)}</td>
+                <td style="color:#515154; text-align:center;">${this.escape(row.UploadPlanQty)}</td>
+                <td style="color:#515154; text-align:center;">${this.escape(row.OrderPlanQty)}</td>
+                <td style="color:#515154; text-align:center;">${this.escape(row.UploadPlanStartDate)}</td>
+                <td style="color:#515154; text-align:center;">${this.escape(row.OrderPlanStartDate)}</td>
+                <td style="text-align:center;">
+                    <span class="badge ${this.statusUploadClass(row.StatusCheck)}">
+                        ${this.escape(row.StatusCheck)}
+                    </span>
+                </td>
+            </tr>`).join('');
+    }
+
+        updateSelectedCount() {
+            const count =
+                document.querySelectorAll('.row-checkbox:checked').length;
+
+            const label = document.getElementById('selectedCount');
+
+            document.getElementById("btn-proceed").disabled = count === 0;
+
+            if (label) {
+                label.textContent = `${count} selected`;
+            }
+        }
+
+        statusUploadClass(stats) {
+            const map = { 'SAME': 'badge-update-ready', 'UPDATED': 'badge-uptodate' };
+            return map[stats] ?? 'badge-uptodate';
+        }
+
+        /* ================= FILE INPUT ================= */
+        _createFileInput() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.csv,.xlsx,.xls';
+            input.style.display = 'none';
+            document.body.appendChild(input);
+            return input;
+        }
+
+    /* ================= UPLOAD FLOW ================= */
+      async beginUpload(file) {
+
+        const ext  = file.name.split('.').pop().toUpperCase();
+        const size = this._formatSize(file.size);
+
+        document.getElementById('modalFileName').textContent = file.name;
+        document.getElementById('modalFileMeta').textContent = `${ext} · ${size}`;
+
+        this._setProgress(0);
+        this._updateFooter(0, 0, 0, 0);
+        this._updateStats(0, 0, 0, 0);
+        document.querySelector('#uploadStatusModal .file-table tbody').innerHTML = '';
+
+        this.progressModal.show();
+
+        try {
+            const result = await this._uploadFile(file);
+            if (result.Success) {
+                this._renderRows(result.data ?? []);
+                await this.LoadUploadDataList();
+            } else {
+                this._showUploadError(result.Message ?? 'Upload failed.');
+            }
+        } catch (err) {
+            if (err.message !== 'aborted') {
+                this._showUploadError('Unexpected error: ' + err.message);
+            }
+        }
+    }
+
+    /* ================= XHR ================= */
+      _uploadFile(file) {
+          return new Promise((resolve, reject) => {
+              const formData = new FormData();
+              formData.append('file', file);
+
+              const xhr = new XMLHttpRequest();
+              this._xhr = xhr;
+
+              xhr.upload.addEventListener('progress', (e) => {
+                  if (!e.lengthComputable) return;
+                  const pct = Math.round((e.loaded / e.total) * 100);
+                  this._setProgress(pct);
+              });
+
+              xhr.addEventListener('load', () => {
+                  this._xhr = null;
+                  if (xhr.status < 200 || xhr.status >= 300) {
+                      reject(new Error(`Server error (${xhr.status})`));
+                      return;
+                  }
+                  try {
+                      const result = JSON.parse(xhr.responseText);
+                      if (result.Success) {
+                          this._setProgress(100);
+                          resolve(result);
+                      } else {
+                          this._showUploadError(result.Message ?? 'Upload failed.');
+                          reject(new Error(result.Message));
+                      }
+                  } catch (e) {
+                      reject(new Error('Invalid server response'));
+                  }
+              });
+
+              xhr.addEventListener('error', () => { this._xhr = null; reject(new Error('Network error')); });
+              xhr.addEventListener('abort', () => { this._xhr = null; reject(new Error('aborted')); });
+
+              // ✅ xhr.open() MUST come first
+              xhr.open('POST', this.uploadUrl);
+
+              // ✅ setRequestHeader AFTER open()
+              const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                  ?? document.querySelector('meta[name="__RequestVerificationToken"]')?.getAttribute('content');
+              if (token) {
+                  xhr.setRequestHeader('RequestVerificationToken', token);
+              }
+
+              xhr.send(formData);
+          });
+      }
+
+    /* ================= PROGRESS BAR ================= */
+    _setProgress(pct) {
+        const fill  = document.querySelector('#uploadStatusModal .progress-card .progress-fill');
+        const label = document.querySelector('#uploadStatusModal .progress-card .progress-label');
+
+        if (fill)  fill.style.width  = `${pct}%`;
+        if (label) label.textContent = pct >= 100 ? 'Processing rows...' : 'Uploading file...';
+
+        document.getElementById('modalProgressPct').textContent = `${pct}%`;
+    }
+
+    /* ================= RENDER MODAL ROWS ================= */
+      _renderRows(rows) {
+          const tbody = document.querySelector('#uploadStatusModal .file-table tbody');
+          tbody.innerHTML = '';
+
+          let success = 0, failed = 0;
+
+          rows.forEach((row, i) => {
+              const ok = row.result?.success ?? true;
+              if (ok) success++; else failed++;
+
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+            <td>${this.escape(row.shopOrder)}</td>
+            <td>${this.escape(row.partNo)}</td>
+            <td>${this.escape(row.model)}</td>
+            <td>${this.escape(row.wc)}</td>
+            <td>${this.escape(row.planStart)}</td>
+            <td>
+                <span class="status-badge ${ok ? 'done' : 'failed'}">
+                    <span class="status-dot"></span>
+                    ${ok ? 'Imported' : (row.result?.message ?? 'Failed')}
+                </span>
+            </td>`;
+              tbody.appendChild(tr);
+
+              this._updateFooter(rows.length, i + 1, success, failed);
+          });
+
+          this._updateStats(success, 0, 0, failed);
+          this._setProgress(100);
+      }
+
+    /* ================= HELPERS ================= */
+    _updateFooter(total, current, success, failed) {
+        const footer = document.querySelector('#uploadStatusModal .modal-footer-custom p');
+        if (footer) footer.innerHTML = `Row ${current} of ${total} &nbsp;✔ ${success} &nbsp;✘ ${failed}`;
+    }
+
+    _updateStats(completed, uploading, queued, failed) {
+        const items = document.querySelectorAll('#uploadStatusModal .stat-item .stat-text');
+        if (items.length < 4) return;
+        items[0].innerHTML = `<strong>${completed}</strong> Completed`;
+        items[1].innerHTML = `<strong>${uploading}</strong> Uploading`;
+        items[2].innerHTML = `<strong>${queued}</strong> Queued`;
+        items[3].innerHTML = `<strong>${failed}</strong> Failed`;
+    }
+
+    _showUploadError(message) {
+        const label = document.querySelector('#uploadStatusModal .progress-card .progress-label');
+        if (label) { label.textContent = message; label.style.color = '#dc2626'; }
+        this._updateStats(0, 0, 0, 1);
+    }
+
+    _formatSize(bytes) {
+        if (bytes < 1024)        return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    escape(str) {
+        const d = document.createElement('div');
+        d.textContent = str ?? '';
+        return d.innerHTML;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const controller = new UploadDataController();
+    controller.init();
+});
 </script>

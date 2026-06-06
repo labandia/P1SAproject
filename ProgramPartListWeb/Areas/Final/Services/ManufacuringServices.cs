@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.InkML;
 using ProgramPartListWeb.Areas.Final.Model;
 using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Utilities.DataAccess;
@@ -53,13 +54,31 @@ namespace ProgramPartListWeb.Areas.Final.Services
             throw new NotImplementedException();
         }
 
+        //  Get all the Final ShopOrder of Each Section but return only the number
         public async Task<string> GetAlreadyDoneShopOrdersBySection(string finalorder)
         {
-            string query = $@"  SELECT 
-                        CAST(DepartmentID AS VARCHAR(10)) AS DepartmentValue
-                    FROM [PMACS_TEST].[dbo].[FanTraceabilityFinal]
-                    WHERE FinalShopOrder = @FinalShopOrder
-                      AND DepartmentID IN (1,2,3,4,5,6,7, 8)";
+            string query = $@"WITH Departments AS
+                            (
+                                SELECT 1 AS DepartmentID
+                                UNION ALL SELECT 2
+                            )
+                            SELECT DepartmentID
+                            FROM Departments
+                            WHERE EXISTS
+                            (
+                                SELECT 1
+                                FROM FanTraceabilityFinal
+                                WHERE FinalShopOrder = @FinalShopOrder
+                                  AND DepartmentID IN (1,2)
+                            )
+
+                            UNION
+
+                            SELECT DepartmentID
+                            FROM FanTraceabilityFinal
+                            WHERE FinalShopOrder = @FinalShopOrder
+                              AND DepartmentID IN (3,4,5,6,7,8)
+                            ORDER BY DepartmentID;";
             var GetData = await SqlDataAcess_Test.GetDataAsync<string>(query, new { FinalShopOrder = finalorder });
 
             return string.Join(",",
@@ -68,6 +87,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                          .OrderBy(x => int.Parse(x)));
         }
 
+        //  DISPLAY FOR THE FINAL DASHBOARD
         public async Task<List<FanTraceabilityManufacturingOrder>> GetListofActiveShopOrders()
         {
             try
@@ -103,90 +123,93 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 return new List<FanTraceabilityManufacturingOrder>();
             }
         }
-
+        //  GET THE LIST DETAILS BY LINE 
         public async Task<List<FanTraceabilityManufacturingOrder>> GetListofShopOrdersByLine(string Linename)
         {
             try
             {
-                string query = $@"SELECT  mo.RecordID
-                       ,mo.Line
-                       ,mo.FinalShopOrder
-                       ,mo.ItemNo
-                       ,mo.Model
-                       ,mo.WC
-                       ,mo.PlanQty
-                       ,mo.PlanStartDate
-                       ,mo.DispatchDate
-                       ,mo.Note
-                       ,mo.FinalFinishedDate
-                       ,mo.FAStatus
-                       ,mo.ShipmentDate
-                       ,mo.ShipmentMode
-                       ,mo.WithSR
-                       ,mo.OrderRemarks
-                       ,mo.OrderStatus
-                       ,CASE 
-                            WHEN (
-                                SELECT COUNT(*) 
+                string query = $@"SELECT
+                        mo.RecordID,
+                        mo.Line,
+                        mo.FinalShopOrder,
+                        mo.ItemNo,
+                        mo.Model,
+                        mo.WC,
+                        mo.PlanQty,
+                        mo.PlanStartDate,
+                        mo.DispatchDate,
+                        mo.Note,
+                        mo.FinalFinishedDate,
+                        mo.FAStatus,
+                        mo.ShipmentDate,
+                        mo.ShipmentMode,
+                        mo.WithSR,
+                        mo.OrderRemarks,
+                        mo.OrderStatus,
+
+                        CASE
+                            WHEN EXISTS (
+                                SELECT 1
                                 FROM FanTraceabilityFinal f
                                 WHERE f.DepartmentID = 5
-                                  AND f.FinalShopOrder = mo.FinalShopOrder  
-                            ) = 1 
-                            THEN 'CE' 
-                        END AS Circuit
-	                      ,
-		  
-		                  CASE 
-                            WHEN (
-                                SELECT COUNT(*) 
+                                  AND f.FinalShopOrder = mo.FinalShopOrder
+                            )
+                            THEN 'CE'
+                        END AS Circuit,
+
+                        CASE
+                            WHEN EXISTS (
+                                SELECT 1
                                 FROM FanTraceabilityFinal f
                                 WHERE f.DepartmentID = 3
-                                  AND f.FinalShopOrder = mo.FinalShopOrder 
-                            ) = 1 
-                            THEN 'BF' 
-                        END AS Rotor
+                                  AND f.FinalShopOrder = mo.FinalShopOrder
+                            )
+                            THEN 'BF'
+                        END AS Rotor,
 
-		                   ,CASE 
-                            WHEN (
-                                SELECT COUNT(*) 
+                        CASE
+                            WHEN EXISTS (
+                                SELECT 1
                                 FROM FanTraceabilityFinal f
                                 WHERE f.DepartmentID = 4
-                                  AND f.FinalShopOrder = mo.FinalShopOrder  
-                            ) = 1 
-                            THEN 'FG' 
-                        END AS Winding
+                                  AND f.FinalShopOrder = mo.FinalShopOrder
+                            )
+                            THEN 'FG'
+                        END AS Winding,
 
-
-		                   ,CASE 
-                            WHEN (
-                                SELECT COUNT(*) 
+                        -- DepartmentID 1 OR 2  Show both AG and AF
+                        CASE
+                            WHEN EXISTS (
+                                SELECT 1
                                 FROM FanTraceabilityFinal f
-                                WHERE f.DepartmentID = 1
-                                  AND f.FinalShopOrder = mo.FinalShopOrder 
-                            ) = 1 
-                            THEN 'AG' 
-                        END AS Molding
+                                WHERE f.FinalShopOrder = mo.FinalShopOrder
+                                  AND f.DepartmentID IN (1, 2)
+                            )
+                            THEN 'AG'
+                        END AS Molding,
 
-		                ,CASE 
-                            WHEN (
-                                SELECT COUNT(*) 
+                        CASE
+                            WHEN EXISTS (
+                                SELECT 1
                                 FROM FanTraceabilityFinal f
-                                WHERE f.DepartmentID = 2
-                                  AND f.FinalShopOrder = mo.FinalShopOrder  
-                            ) = 1 
-                            THEN 'AF' 
-                        END AS press
+                                WHERE f.FinalShopOrder = mo.FinalShopOrder
+                                  AND f.DepartmentID IN (1, 2)
+                            )
+                            THEN 'AF'
+                        END AS Press,
 
-		                ,CASE 
-                            WHEN (
-                                SELECT COUNT(*) 
+                        CASE
+                            WHEN EXISTS (
+                                SELECT 1
                                 FROM FanTraceabilityFinal f
                                 WHERE f.DepartmentID = 7
-                                  AND f.FinalShopOrder = mo.FinalShopOrder  
-                            ) = 1 
-                            THEN 'HD' 
-                        END AS final
-                FROM FanTraceabilityManufacturingOrder mo  WHERE mo.Line =@Line ";
+                                  AND f.FinalShopOrder = mo.FinalShopOrder
+                            )
+                            THEN 'HD'
+                        END AS Final
+
+                    FROM FanTraceabilityManufacturingOrder mo
+                    WHERE  mo.Line =@Line ";
 
                 var getData = await SqlDataAcess_Test.GetDataAsync<FanTraceabilityManufacturingOrder>(query, new { Line = Linename });
                 return getData;
@@ -217,9 +240,20 @@ namespace ProgramPartListWeb.Areas.Final.Services
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateStatusShopOrder(int id, int status)
+        public async Task<bool> UpdateStatusShopOrder(int id, int status)
         {
-            throw new NotImplementedException();
+            Debug.WriteLine($@"HERE");
+            Debug.WriteLine($@"RecordID : {id} - OrderStatus : {status} ");
+            // if the status of the id is 2 change 0
+            // but if it clicks to the other 0 status but has a Already has 2 On the records automically change the current to 0 and new t
+            return await SqlDataAccess.ExecuteAsync($@"
+                UPDATE FanTraceabilityManufacturingOrder SET OrderStatus =@OrderStatus 
+                WHERE RecordID =@RecordID", new
+            {
+                RecordID = id,
+                OrderStatus = status
+            });
+
         }
 
         public async Task UploadDataToDatabase(ProductionRecord model)
@@ -229,9 +263,9 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                ? ps
                                : (DateTime?)null;
 
-            var dispatchDate = DateTime.TryParse(model.DispatchDate, out var dd)
-                ? dd
-                : (DateTime?)null;
+            //var dispatchDate = DateTime.TryParse(model.DispatchDate, out var dd)
+            //    ? dd
+            //    : (DateTime?)null;
 
             // STEP 1: Check existing ShopOrder
             var existing = await SqlDataAcess_Test.ExecuteScalarAsync<ProductionRecord>(
@@ -276,7 +310,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         @WC,
                         @PlanQty,
                         @PlanStartDate,
-                        @DispatchDate,
+                        @DispatchDate,UpdateStatusShopOrder
                         @Note,
                         @FinalFinishedDate,
                         @FAStatus,
@@ -295,7 +329,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         model.WC,
                         PlanQty = model.Qty,
                         PlanStartDate = planStartDate,
-                        DispatchDate = dispatchDate,
+                        DispatchDate = model.DispatchDate,
                         Note = model.Note ?? string.Empty,
                         FinalFinishedDate = (DateTime?)null,
                         FAStatus = "Not Started",

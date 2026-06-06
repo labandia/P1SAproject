@@ -1734,3 +1734,143 @@ svg.icon-stroke {
         background-color: #28a745;
         transform: scale(1);
     }
+
+
+
+
+
+
+@keyframes fadeInRow {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+
+
+
+
+
+.table-container {
+    overflow-x: auto;
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #d2d2d7;
+    background: #ffffff;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1300px;
+}
+
+    .data-table th, .data-table td {
+        padding: 10px 12px;
+        font-size: 13px;
+        text-align: left;
+        vertical-align: middle;
+        border-bottom: 1px solid #d2d2d7;
+    }
+
+    .data-table th {
+        background: #f5f5f7;
+        font-size: 11px;
+        font-weight: 600;
+        color: #86868b;
+        white-space: nowrap;
+    }
+
+
+.selectedLine {
+    display: inline-block;
+    width: 40px;
+    height: 24px;
+    border-radius: 10px;
+    background: #e5e5ea;
+    border: 1px solid #d2d2d7;
+}
+
+
+
+.sectionbadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #222;
+}
+.badge-molding {
+    background: rgba(0, 176, 240);
+}
+
+.badge-press {
+    background: rgba(191, 191, 191);
+}
+
+.badge-winding {
+    background: rgba(153, 102, 255);
+}
+
+.badge-rotor {
+    background: rgba(148, 169, 219);
+}
+
+.badge-circuit {
+    background: rgba(169,208,142);
+}
+
+.badge-final {
+    background: rgba(255, 192, 0);
+}
+
+.bg-row-highlight {
+    background-color: #e3f0fd;
+}
+
+
+
+
+.selectedbadge {
+    display: inline-block;
+    width: 40px;
+    height: 24px;
+    border-radius: 10px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    background: #e5e5ea;
+}
+
+
+.selectedProcess {
+    background: #0071e3;
+    border: 1px solid #d2d2d7;
+    color: #ffffff;
+}
+
+.selectedNext {
+    background: #ff9f0a;
+    border: 1px solid #ff9f0a;
+    color: #ffffff;
+}
+
+.selectedDone {
+    background: #e5e5ea;
+    border: 1px solid #d2d2d7;
+    color: #ffffff;
+}

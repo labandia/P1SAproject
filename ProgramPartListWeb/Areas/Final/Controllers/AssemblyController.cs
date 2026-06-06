@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using OfficeOpenXml;
 using ProgramPartListWeb.Areas.Final.Interface;
 using ProgramPartListWeb.Areas.Final.Model;
@@ -13,6 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Windows.Threading;
 
 namespace ProgramPartListWeb.Areas.Final.Controllers
 {
@@ -52,6 +54,24 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
 
             return JsonSuccess(res);
         }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateStatusLine(int recordID, int orderstats)
+        {
+            try
+            {
+                Debug.WriteLine($"RecordID : {recordID} - OrderStatus : {orderstats}");
+                bool res = await _manu.UpdateStatusShopOrder(recordID, orderstats);
+                if (!res) return JsonError("Error Updated");
+                return JsonSuccess(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
+
         //=====================================================
         //============== UPLOAD DATA MANAGEMENT  ==============
         //=====================================================
@@ -77,36 +97,405 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             return JsonSuccess("Approval status updated successfully.");
         }
 
+        [HttpPost]
+        public async Task<ActionResult> FinalProcessUpload()
+        {
+            bool result = await _upload.TransferDataUploadtoMain();
+
+            if (!result) return JsonError("");
+
+            return JsonSuccess(result);
+        }
+
+
+
+
 
         [HttpPost]
-        public async Task<JsonResult> ImportUpload()
-        {
-            //var file = Request.Form.Files.GetFile("file");
+        public async Task<JsonResult> ImportUpload(HttpPostedFileBase file)
+        {        
+            if (file == null || file.ContentLength == 0)
+                return Json(new { Success = false, Message = "No file uploaded." });
 
-            //System.Diagnostics.Debug.WriteLine("File: " + (file?.FileName ?? "NULL"));
-
-            //if (file == null || file.Length == 0)
-            //    return Json(new { Success = false, Message = "No file received." });
-
-            //var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
-            //if (ext != ".csv" && ext != ".xlsx" && ext != ".xls")
-            //    return Json(new { Success = false, Message = "Unsupported file type." });
+            var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+            if (ext != ".csv" && ext != ".xlsx" && ext != ".xls")
+                return Json(new { Success = false, Message = "Unsupported file type." });
 
             try
             {
-                //var rows = aswait ParseExcelAsync(file);
-                return Json(new
+                string uploadPath = Server.MapPath("~/Content/Excel/");
+                string uniqueName = Path.GetFileNameWithoutExtension(file.FileName)
+                                  + "_" + Guid.NewGuid() + ext;
+                string filePath = Path.Combine(uploadPath, uniqueName);
+
+                if (!Directory.Exists(uploadPath))
+                    Directory.CreateDirectory(uploadPath);
+
+                file.SaveAs(filePath);
+
+                string jobId = Guid.NewGuid().ToString();
+
+                var state = new UploadJobState
                 {
-                    Success = true,
-                    Message = " rows imported successfully.",
-                    data = Array.Empty<UploadRowDto>() // replace with actual data  
+                    Status = "processing",
+                    Total = 0,
+                    Current = 0,
+                    Success = 0,
+                    Failed = 0,
+                    LastSent = 0,
+                    Rows = new List<UploadRowResult>()
+                };
+
+                // ✅ store in HttpRuntime.Cache — accessible from background threads
+                HttpRuntime.Cache.Insert(
+                    "job_" + jobId,
+                    state,
+                    null,
+                    DateTime.Now.AddMinutes(30),  // auto expire after 30 min
+                    System.Web.Caching.Cache.NoSlidingExpiration
+                );
+
+                // start background processing
+                var mapPath = Server.MapPath("~/Content/Excel/");
+                System.Threading.Tasks.Task.Run(() =>
+                {
+                    ProcessExcelJob(jobId, filePath);
                 });
+
+                return Json(new { Success = true, JobId = jobId });
             }
             catch (Exception ex)
             {
                 return Json(new { Success = false, Message = ex.Message });
             }
         }
+
+        [HttpGet]
+        public JsonResult ImportProgress(string jobId)
+        {
+            var state = HttpRuntime.Cache["job_" + jobId] as UploadJobState;
+
+            if (state == null)
+                return Json(new { Success = false, Message = "Job not found." }, JsonRequestBehavior.AllowGet);
+
+            List<UploadRowResult> newRows;
+
+            // ✅ lock to prevent race condition between background thread and poll
+            lock (state)
+            {
+                newRows = state.Rows.Skip(state.LastSent).ToList();
+                state.LastSent += newRows.Count;
+            }
+
+            return Json(new
+            {
+                Success = true,
+                state.Status,
+                state.Total,
+                state.Current,
+                state.Failed,
+                state.Message,
+                Rows = newRows
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        private async void ProcessExcelJob(string jobId, string filePath)
+        {
+            var state = HttpRuntime.Cache["job_" + jobId] as UploadJobState;
+            if (state == null) return;
+
+            try
+            {
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+                using (var package = new ExcelPackage(new System.IO.FileInfo(filePath)))
+                {
+                    var sheet = package.Workbook.Worksheets[0];
+                    int rowCount = sheet.Dimension?.Rows ?? 0;
+
+                    // count total non-empty rows first
+                    int total = 0;
+                    for (int r = 2; r <= rowCount; r++)
+                        if (sheet.Cells[r, 2].Value != null) total++;
+
+                    lock (state) { state.Total = total; }
+
+                    for (int r = 2; r <= rowCount; r++)
+                    {
+                        if (sheet.Cells[r, 2].Value == null) continue;
+
+                        try
+                        {
+                            Debug.WriteLine($@"ShipmentDate : {GetCell(sheet, r, 12)} Mode : {GetCell(sheet, r, 13)} ");
+
+
+                            var rowResult = new UploadRowResult
+                            {
+                                ShopOrder = GetCell(sheet, r, 2),
+                                PartNo = GetCell(sheet, r, 3),
+                                Model = GetCell(sheet, r, 4),
+                                Wc = GetCell(sheet, r, 5),
+                                PlanStart = GetCellAsDate(sheet, r, 7),
+                                IsSuccess = true,
+                                Message = "OK"
+                            };
+
+
+                            var obj = new ProductionRecord
+                            {
+                                Model = GetCell(sheet, r, 4),
+                                ShopOrder = GetCell(sheet, r, 2),
+                                Line = GetCell(sheet, r, 1),
+                                PartNo = GetCell(sheet, r, 3),
+                                WC = GetCell(sheet, r, 5),
+                                Qty = Convert.ToInt32(GetCell(sheet, r, 6)),
+                                PlanStart = GetCellAsDate(sheet, r, 7),
+                                DispatchDate = GetCell(sheet, r, 8),
+                                Note = GetCell(sheet, r, 9),
+                                IfsFinish = GetCellAsDate(sheet, r, 10),
+                                FaStatus = GetCell(sheet, r, 11),
+                                Shipment = GetCellAsDate(sheet, r, 12),
+                                Mode = GetCell(sheet, r, 13),
+                                WithSr = GetCell(sheet, r, 14),
+                                Remarks = GetCell(sheet, r, 15),
+                            };
+
+                            // save to DB here if needed
+                            await _upload.UploadDataToDatabase(obj);
+                            // _service.SaveRow(rowResult);
+
+                            lock (state)
+                            {
+                                state.Current++;
+                                state.Success++;
+                                state.Rows.Add(rowResult);
+                            }
+
+                            System.Threading.Thread.Sleep(80);
+                        }
+                        catch (Exception ex)
+                        {
+                            lock (state)
+                            {
+                                state.Current++;
+                                state.Failed++;
+                                state.Rows.Add(new UploadRowResult
+                                {
+                                    ShopOrder = GetCell(sheet, r, 2),
+                                    PartNo = GetCell(sheet, r, 3),
+                                    Model = GetCell(sheet, r, 4),
+                                    Wc = GetCell(sheet, r, 5),
+                                    PlanStart = "",
+                                    IsSuccess = false,
+                                    Message = ex.Message
+                                });
+                            }
+                        }
+                    }
+                }
+
+                lock (state) { state.Status = "done"; }
+            }
+            catch (Exception ex)
+            {
+                lock (state)
+                {
+                    state.Status = "error";
+                    state.Message = ex.Message;
+                }
+            }
+            finally
+            {
+                if (System.IO.File.Exists(filePath))
+                    System.IO.File.Delete(filePath);
+            }
+        }
+
+
+        private DateTime? CustomCellDate(ExcelWorksheet sheet, int row, int col)
+        {
+            var value = sheet.Cells[row, col].Value;
+
+            if (value == null)
+                return null;
+
+            if (value is DateTime dt)
+                return dt;
+
+            if (double.TryParse(value.ToString(), out double oa))
+                return DateTime.FromOADate(oa);
+
+            if (DateTime.TryParse(value.ToString(), out dt))
+                return dt;
+
+            return null;
+        }
+
+
+
+        [HttpGet]
+        [OutputCache(NoStore = true, Duration = 0)]
+        public async Task ImportUploadStream(string fileName)
+        {
+            // ✅ reconstruct full path server-side — never trust client path
+            string uploadPath = Server.MapPath("~/Content/Excel/");
+            string filePath = Path.Combine(uploadPath, fileName);
+
+            System.Diagnostics.Debug.WriteLine("FileName received: " + (fileName ?? "NULL"));
+            System.Diagnostics.Debug.WriteLine("FilePath resolved: " + filePath);
+            System.Diagnostics.Debug.WriteLine("File exists: " + System.IO.File.Exists(filePath));
+
+            if (string.IsNullOrEmpty(fileName)
+                || fileName.Contains("..") // ✅ prevent path traversal
+                || !System.IO.File.Exists(filePath))
+            {
+                Response.StatusCode = 400;
+                Response.ContentType = "application/json";
+                Response.Write(JsonConvert.SerializeObject(new { error = "File not found." }));
+                Response.End();
+                return;
+            }
+
+            // ✅ set headers first
+            Response.Clear();
+            Response.ContentType = "text/event-stream";
+            Response.Charset = "";
+            Response.Headers["Cache-Control"] = "no-cache, no-store";
+            Response.Headers["X-Accel-Buffering"] = "no";
+            Response.Headers["Connection"] = "keep-alive";
+            Response.Headers["Content-Encoding"] = "identity";
+            Response.Buffer = false;
+            Response.BufferOutput = false;
+            Response.Flush();
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            try
+            {
+                using (var package = new ExcelPackage(new System.IO.FileInfo(filePath)))
+                {
+                    var sheet = package.Workbook.Worksheets[0];
+                    int rowCount = sheet.Dimension?.Rows ?? 0;
+                    int total = rowCount - 1;
+                    int current = 0;
+                    int success = 0;
+                    int failed = 0;
+
+                    for (int r = 2; r <= rowCount; r++)
+                    {
+                        if (sheet.Cells[r, 2].Value == null) continue;
+
+                        current++;
+
+                        try
+                        {
+                            var row = new
+                            {
+                                shopOrder = GetCell(sheet, r, 2),
+                                partNo = GetCell(sheet, r, 3),
+                                model = GetCell(sheet, r, 4),
+                                wc = GetCell(sheet, r, 5),
+                                planStart = GetCellAsDate(sheet, r, 7),
+                                result = new { success = true, message = "OK" }
+                            };
+
+                            success++;
+
+                            Response.Write("data: " + JsonConvert.SerializeObject(new
+                            {
+                                type = "row",
+                                current,
+                                total,
+                                success,
+                                failed,
+                                row
+                            }) + "\n\n");
+
+                            Response.Flush();
+                            await Task.Delay(100);
+                        }
+                        catch (Exception ex)
+                        {
+                            failed++;
+
+                            Response.Write("data: " + JsonConvert.SerializeObject(new
+                            {
+                                type = "row",
+                                current,
+                                total,
+                                success,
+                                failed,
+                                row = new
+                                {
+                                    shopOrder = GetCell(sheet, r, 2),
+                                    partNo = GetCell(sheet, r, 3),
+                                    model = GetCell(sheet, r, 4),
+                                    wc = GetCell(sheet, r, 5),
+                                    planStart = "",
+                                    result = new { success = false, message = ex.Message }
+                                }
+                            }) + "\n\n");
+
+                            Response.Flush();
+                            await Task.Delay(100);
+                        }
+                    }
+
+                    Response.Write("data: " + JsonConvert.SerializeObject(new
+                    {
+                        type = "done",
+                        current,
+                        total,
+                        success,
+                        failed,
+                        message = success + " rows imported successfully."
+                    }) + "\n\n");
+
+                    Response.Flush();
+                }
+            }
+            finally
+            {
+                if (System.IO.File.Exists(filePath))
+                    System.IO.File.Delete(filePath);
+            }
+        }
+
+
+        private async Task<List<UploadRowDto>> ParseExcelAsync(string filePath)
+        {
+            var rows = new List<UploadRowDto>();
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            using (var package = new ExcelPackage(new System.IO.FileInfo(filePath)))
+            {
+                var sheet = package.Workbook.Worksheets[0];
+                int rowCount = sheet.Dimension?.Rows ?? 0;
+
+                if (rowCount < 2)
+                    throw new Exception("File is empty or has no data rows.");
+
+                for (int r = 2; r <= rowCount; r++)
+                {
+                    if (sheet.Cells[r, 2].Value == null) continue;
+
+                    rows.Add(new UploadRowDto
+                    {
+                        ShopOrder = GetCell(sheet, r, 2),
+                        PartNo = GetCell(sheet, r, 3),
+                        Model = GetCell(sheet, r, 4),
+                        Wc = GetCell(sheet, r, 5),
+                        Qty = int.TryParse(GetCell(sheet, r, 6), out var q) ? q : 0,
+                        PlanStart = GetCellAsDate(sheet, r, 7),
+                        Result = new RowResult { Success = true, Message = "OK" }
+                    });
+                }
+            }
+
+            return await Task.FromResult(rows);
+        }
+
 
 
 

@@ -1,13 +1,10 @@
 ﻿using ProgramPartListWeb.Areas.Final.Interface;
 using ProgramPartListWeb.Areas.Final.Model;
-using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Utilities.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace ProgramPartListWeb.Areas.Final.Services
 {
@@ -100,14 +97,14 @@ namespace ProgramPartListWeb.Areas.Final.Services
                        model.WC,
                        PlanQty = model.Qty,
                        PlanStartDate = DateTime.TryParse(model.PlanStart, out var ps) ? ps : (DateTime?)null,
-                       DispatchDate = DateTime.TryParse(model.DispatchDate, out var dd) ? dd : (DateTime?)null,
+                       DispatchDate = model.DispatchDate,
                        Note = model.Note ?? string.Empty,
-                       FinalFinishedDate = (DateTime?)null,
-                       FAStatus = "Not Started",
-                       ShipmentDate = DateTime.Now.AddDays(7), // Placeholder
-                       ShipmentMode = "TBD", // Placeholder
-                       WithSR = false,
-                       OrderRemarks = string.Empty,
+                       FinalFinishedDate = DateTime.TryParse(model.IfsFinish, out var ifs) ? ifs : (DateTime?)null,
+                       FAStatus = model.FaStatus,
+                       ShipmentDate = DateTime.TryParse(model.Shipment, out var ship) ? ship : (DateTime?)null,
+                       ShipmentMode = model.Mode, 
+                       WithSR = model.WithSr,
+                       OrderRemarks = model.Remarks,
                        OrderStatus = 1
                    });
 

@@ -166,4 +166,30 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public bool Success { get; set; }
         public string Message { get; set; }
     }
+
+
+
+
+    public class UploadJobState
+    {
+        public string Status { get; set; }
+        public int Total { get; set; }
+        public int Current { get; set; }
+        public int Success { get; set; }
+        public int Failed { get; set; }
+        public int LastSent { get; set; }
+        public string Message { get; set; }
+        public List<UploadRowResult> Rows { get; set; }
+    }
+
+    public class UploadRowResult
+    {
+        public string ShopOrder { get; set; }
+        public string PartNo { get; set; }
+        public string Model { get; set; }
+        public string Wc { get; set; }
+        public string PlanStart { get; set; }
+        public bool IsSuccess { get; set; }
+        public string Message { get; set; }
+    }
 }

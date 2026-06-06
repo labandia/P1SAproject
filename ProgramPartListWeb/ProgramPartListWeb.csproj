@@ -891,6 +891,7 @@
     <Content Include="Areas\Final\Views\Shared\_FinalAssemblyLayout.cshtml" />
     <Content Include="Areas\Final\Views\Assembly\ShopOrderLine.cshtml" />
     <Content Include="Areas\Final\Views\Assembly\UploaData.cshtml" />
+    <Content Include="Areas\Final\Views\Assembly\_UploadDataDialog.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <Content Include="Content\Uploads\PCFY-81013Form1L.xlsx" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
@@ -1105,6 +1106,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Final\Data\" />
+    <Folder Include="Areas\Final\Views\Modal\" />
     <Folder Include="Areas\P1SA\Data\" />
     <Folder Include="Areas\Press\Data\" />
   </ItemGroup>

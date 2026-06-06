@@ -1,6 +1,6 @@
 ﻿
 @{
-    Layout = null;
+    Layout = "~/Areas/Final/Views/Shared/_FinalAssemblyLayout.cshtml";
     var strLine = Request.QueryString["line"];
 }
 
@@ -8,6 +8,74 @@
 <input type="hidden" id="strLine" value="@strLine" />
 
 
+
+<div class="top-bar flex justify-between items-center">
+    <div class="flex items-center gap-4">
+        <iconify-icon icon="lucide:chevron-left" style="font-size: 16px; color: #d1d1d6;"></iconify-icon>
+        <h1 class="font-semibold text-sm ml-2">Back to the Dashboard</h1>
+    </div>
+
+    <div class="ml-auto flex items-center gap-2 text-sm" style="color:#86868b;">
+        <div class="window-dots">
+            <div class="dot-red"></div>
+            <div class="dot-yellow"></div>
+            <div class="dot-green"></div>
+        </div>
+
+
+        <span id="selectedCount">0 selected</span>
+
+        <a href="#" id="clearSelectionBtn"
+           style="color: var(--color-primary); text-decoration: none;">
+            Clear selection
+        </a>
+    </div>
+
+</div>
+
+
+
+
+<div class="inner-main">
+    <select id="filterdata" class=" filter-chip text-sm font-medium">
+        <option value="UPDATED">All</option>
+        <option value="UPDATED">Complete</option>
+        <option value="SAME">In Process</option>
+        <option value="SAME">Next Process</option>
+    </select>
+
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Final Shop Order/ Partno / Model</th>
+                    <th>PCB</th>
+                    <th>IMP</th>
+                    <th>LW</th>
+                    <th>MF</th>
+                    <th>FP</th>
+                    <th>FA</th>
+                    <th>WC</th>
+                    <th>QTY</th>
+                    <th>Plan Start</th>
+                    <th>Dispatch</th>
+                    <th>Note</th>
+                    <th>IFS Finish Date</th>
+                    <th>FA Status</th>
+                    <th>Shipment</th>
+                    <th>Mode</th>
+                    <th>WITH SR</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+ 
 
 
 
@@ -19,16 +87,42 @@
 
     class ShopOrderListController {
         constructor() {
+            this.tbody = document.querySelector('.data-table tbody');
             this.strLine = document.getElementById('strLine').value;
             this.currentPage = 1;
             this.pageSize = 10;
             this.totalPages = 0;
             this.totalRecords = 0;
-            this.init();
         }
 
         async init() {
+            this.bindEvents();
             await this.LoadLineShopOrderList();
+        }
+
+        bindEvents() {
+            this.tbody.addEventListener('click', async (e) => {
+
+                const badge = e.target.closest('button.selectedbadge');
+                if (!badge) return;
+
+                e.stopPropagation();
+
+                const row = badge.closest('tr');
+                const id = parseInt(row.dataset.id);
+                const orderStatus = parseInt(row.dataset.orderStatus);
+
+                // Only allow transition from 1 → 2
+                if (orderStatus === 2 || orderStatus === 3) return;
+
+                const success = await this.updateOrderStatus(id, orderStatus);
+                if (!success) return;
+
+                // Update local state and re-render row
+                row.dataset.orderStatus = '2';
+                badge.className = 'selectedbadge selectedProcess';
+                row.classList.add('bg-row-highlight');
+            });
         }
 
         async LoadLineShopOrderList() {
@@ -36,43 +130,112 @@
                 const res = await getMethod('@Url.Action("LineShopOrderData", "Assembly")', {
                     Linename: this.strLine
                 });
-
+                console.log(res);
                 if (!res?.Success) return;
-                console.log(res.data);
+
+                this.renderTable(res.data);
 
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         }
 
-        renderTable(records) {
-            const tableBody = document.getElementById('ShopOrderSummaryOut');
-            tableBody.innerHTML = '';
-            records.forEach(record => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${record.status}</td>
-                    <td>${record.shopOrder}</td>
-                    <td>${record.partNo}</td>
-                    <td>${record.model}</td>
-                    <td>${record.pcb}</td>
-                    <td>${record.imp}</td>
-                    <td>${record.lw}</td>
-                    <td>${record.mf}</td>
-                    <td>${record.fp}</td>
-                    <td>${record.fa}</td>
-                    <td>${record.wc}</td>
-                    <td>${record.qty}</td>
-                    <td>${record.planStart}</td>
-                    <td>${record.dispatchDate}</td>
-                    <td>${record.bushNatural}</td>
-                    <td><button class="action-btn" data-id="${record.id}">Action</button></td>
-                `;
-                tableBody.appendChild(row);
-            });
+        renderTable(data) {
+            if (!this.tbody) return;
+
+            if (data.length === 0) {
+                this.tbody.innerHTML = `
+                <tr>
+                    <td colspan="15" style="text-align:center; padding:32px; color:#86868b;">
+                        No data available.
+                    </td>
+                </tr>`;
+                return;
+            }
+
+            this.tbody.innerHTML = data.map(row => {
+                let circuit = row.Circuit ? '<span class="sectionbadge badge-circuit">CE</span>' : '-';
+                let rotor = row.Rotor ? '<span class="sectionbadge badge-rotor">BF</span>' : '-';
+                let molding = row.Molding ? '<span class="sectionbadge badge-molding">AG</span>' : '-';
+                let press = row.Press ? '<span class="sectionbadge badge-press">AF</span>' : '-';
+                let winding = row.Winding ? '<span class="sectionbadge badge-winding">FG</span>' : '-';
+                let final = row.final ? '<span class="sectionbadge badge-final">HD</span>' : '-';
+
+                const orderStatus = parseInt(row.OrderStatus);
+                let highlighted = row.OrderStatus == 2 ? 'bg-row-highlight' : '';
+
+                let selecthighlight = '';
+
+                switch (orderStatus) {
+                    case 2:
+                        selecthighlight = 'selectedProcess'
+                        break;
+                    case 1:
+                        selecthighlight = 'selectedNext'
+                        break;
+                    case 3:
+                        selecthighlight = 'selectedDone'
+                        break;
+                    default:
+                        selecthighlight = ''
+                        break;
+                }
+                return `
+              <tr class='${highlighted}' data-order-status="${orderStatus}" data-id="${row.RecordID}">
+                     <td><button class="selectedbadge ${selecthighlight}" ${row.OrderStatus === 2 || row.OrderStatus === 3 ? 'disabled' : ''}></button></td>
+                      <td>
+                        <span class="text-primary font-medium">${row.FinalShopOrder}</span>
+                        <p>${row.ItemNo}</p>
+                        <span >${row.Model}</span>
+                      </td>
+                      <td>${circuit}</td>
+                      <td>${rotor}</td>
+                      <td>${winding}</td>
+                      <td>${molding}</td>
+                      <td>${press}</td>
+                      <td>${final}</td>
+                      <td>${row.WC}</td>
+                      <td>${row.PlanQty}</td>
+                        <td>${this.formatDate(row.PlanStartDate)}</td>
+                        <td>${this.formatDate(row.DispatchDate)}</td>
+                        <td>${row.Note || ''}</td>
+                        <td>${this.formatDate(row.FinalFinishedDate)}</td>
+                        <td>${row.FAStatus || ''}</td>
+                        <td>${this.formatDate(row.ShipmentDate)}</td>
+                        <td>${row.ShipmentMode || ''}</td>
+                        <td>${row.WithSR || ''}</td>
+                </tr>`
+
+            }).join('');
+        }
+
+        formatDate(dateString) {
+            if (!dateString) return '';
+
+            const timestamp = parseInt(dateString.match(/\d+/)[0]);
+            const date = new Date(timestamp);
+
+            return date.toLocaleDateString('en-US');
         }
 
 
+        async updateOrderStatus(id, orderstatus) {
+             try {
+
+                 const res = await postMethod('@Url.Action("UpdateStatusLine", "Assembly")', {
+                     recordID : id,
+                     orderstats: orderstatus
+                 });
+                  console.log(res);
+
+                  //if (res.Success) {
+                  //    await this.LoadLineShopOrderList();
+                  //}
+
+             } catch (err) {
+                  console.error(err);
+             }
+        }
 
     }
 

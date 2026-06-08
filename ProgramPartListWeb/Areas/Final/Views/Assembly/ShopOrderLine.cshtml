@@ -1,6 +1,6 @@
 ﻿
 @{
-    Layout = "~/Areas/Final/Views/Shared/_FinalAssemblyLayout.cshtml";
+    Layout = "~/Areas/Final/Views/Shared/_ManageLayout.cshtml";
     var strLine = Request.QueryString["line"];
 }
 
@@ -9,73 +9,73 @@
 
 
 
-<div class="top-bar flex justify-between items-center">
-    <div class="flex items-center gap-4">
-        <iconify-icon icon="lucide:chevron-left" style="font-size: 16px; color: #d1d1d6;"></iconify-icon>
-        <h1 class="font-semibold text-sm ml-2">Back to the Dashboard</h1>
-    </div>
+<div class="page-header">
+    <div class="breadcrumb-card">
+        <a href="#" id="navdata" class="breadcrumb-link">
+            <iconify-icon icon="lucide:house" width="16"></iconify-icon>
+            Manage Data
+        </a>
 
-    <div class="ml-auto flex items-center gap-2 text-sm" style="color:#86868b;">
-        <div class="window-dots">
-            <div class="dot-red"></div>
-            <div class="dot-yellow"></div>
-            <div class="dot-green"></div>
+
+    </div>
+    <div class="action-buttons">
+        <div class="search-input">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.34-4.34" /></svg>
+            <span>Search here ....</span>
         </div>
 
+        <select id="filterdata" class=" filter-chip text-sm font-medium">
+            <option value="UPDATED">All</option>
+            <option value="UPDATED">Complete</option>
+            <option value="SAME">In Process</option>
+            <option value="SAME">Next Process</option>
+        </select>
 
-        <span id="selectedCount">0 selected</span>
-
-        <a href="#" id="clearSelectionBtn"
-           style="color: var(--color-primary); text-decoration: none;">
-            Clear selection
-        </a>
     </div>
-
 </div>
 
 
 
 
-<div class="inner-main">
-    <select id="filterdata" class=" filter-chip text-sm font-medium">
-        <option value="UPDATED">All</option>
-        <option value="UPDATED">Complete</option>
-        <option value="SAME">In Process</option>
-        <option value="SAME">Next Process</option>
-    </select>
 
-    <div class="table-container">
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Status</th>
-                    <th>Final Shop Order/ Partno / Model</th>
-                    <th>PCB</th>
-                    <th>IMP</th>
-                    <th>LW</th>
-                    <th>MF</th>
-                    <th>FP</th>
-                    <th>FA</th>
-                    <th>WC</th>
-                    <th>QTY</th>
-                    <th>Plan Start</th>
-                    <th>Dispatch</th>
-                    <th>Note</th>
-                    <th>IFS Finish Date</th>
-                    <th>FA Status</th>
-                    <th>Shipment</th>
-                    <th>Mode</th>
-                    <th>WITH SR</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-
+<div class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Status</th>
+                <th>Final Shop Order/ Partno / Model</th>
+                <th>PCB</th>
+                <th>IMP</th>
+                <th>LW</th>
+                <th>MF</th>
+                <th>FP</th>
+                <th>FA</th>
+                <th>WC</th>
+                <th>QTY</th>
+                <th>Plan Start</th>
+                <th>Dispatch</th>
+                <th>Note</th>
+                <th>IFS Finish Date</th>
+                <th>FA Status</th>
+                <th>Shipment</th>
+                <th>Mode</th>
+                <th>WITH SR</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
 </div>
 
- 
+
+
+
+
+
+navdata
+
+
+
 
 
 
@@ -101,28 +101,44 @@
         }
 
         bindEvents() {
-            this.tbody.addEventListener('click', async (e) => {
+                // First column button click
+                this.tbody.addEventListener('click', async (e) => {
 
-                const badge = e.target.closest('button.selectedbadge');
-                if (!badge) return;
+                    const badge = e.target.closest('button.selectedbadge');
+                    if (!badge) return;
 
-                e.stopPropagation();
+                    e.stopPropagation();
 
-                const row = badge.closest('tr');
-                const id = parseInt(row.dataset.id);
-                const orderStatus = parseInt(row.dataset.orderStatus);
+                    const row = badge.closest('tr');
+                    const id = parseInt(row.dataset.id);
+                    const orderStatus = parseInt(row.dataset.orderStatus);
 
-                // Only allow transition from 1 → 2
-                if (orderStatus === 2 || orderStatus === 3) return;
+                    if (orderStatus === 2 || orderStatus === 3) return;
 
-                const success = await this.updateOrderStatus(id, orderStatus);
-                if (!success) return;
+                    const success = await this.updateOrderStatus(id, orderStatus);
+                    if (!success) return;
 
-                // Update local state and re-render row
-                row.dataset.orderStatus = '2';
-                badge.className = 'selectedbadge selectedProcess';
-                row.classList.add('bg-row-highlight');
-            });
+                    row.dataset.orderStatus = '2';
+                    badge.className = 'selectedbadge selectedProcess';
+                    row.classList.add('bg-row-highlight');
+                });
+
+                // Row click navigation
+                this.tbody.addEventListener('click', (e) => {
+
+                    // Ignore clicks on first column button
+                    if (e.target.closest('button.selectedbadge')) {
+                        return;
+                    }
+
+                    const row = e.target.closest('tr');
+                    if (!row) return;
+
+                    const id = row.dataset.id;
+
+                    window.location.href =
+                        `@Url.Action("ShopOrderDetails", "Assembly")?id=${id}`;
+                });
         }
 
         async LoadLineShopOrderList() {

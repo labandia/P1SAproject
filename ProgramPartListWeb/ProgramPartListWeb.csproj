@@ -658,6 +658,7 @@
     <Compile Include="Areas\Final\Interface\IManufacturing.cs" />
     <Compile Include="Areas\Final\Interface\IUploadServices.cs" />
     <Compile Include="Areas\Final\Model\FinaManufacturingOrder.cs" />
+    <Compile Include="Areas\Final\Model\P1TraceablityModel.cs" />
     <Compile Include="Areas\Final\Services\ManufacuringServices.cs" />
     <Compile Include="Areas\Final\Services\UploadServices.cs" />
     <Compile Include="Areas\Hydroponics\Controllers\HydroController.cs" />
@@ -892,6 +893,8 @@
     <Content Include="Areas\Final\Views\Assembly\ShopOrderLine.cshtml" />
     <Content Include="Areas\Final\Views\Assembly\UploaData.cshtml" />
     <Content Include="Areas\Final\Views\Assembly\_UploadDataDialog.cshtml" />
+    <Content Include="Areas\Final\Views\Shared\_ManageLayout.cshtml" />
+    <Content Include="Areas\Final\Views\Assembly\ShopOrderDetails.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <Content Include="Content\Uploads\PCFY-81013Form1L.xlsx" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />

@@ -6,7 +6,7 @@
 
 
 <header class="InspectHead flex_space">
-    <h4 >Plan Schedule</h4>
+    <h4>Plan Schedule</h4>
     <div class="searchinputContainer">
         <i class="fa-solid fa-magnifying-glass"></i>
         <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
@@ -47,7 +47,7 @@
 
 
 
-@*<script type="text/javascript">
+<script type="text/javascript">
     let TableDisplay = $("#PlanScheduleData");
 
 
@@ -55,7 +55,7 @@
         loadingDisplay();
 
         Loadingsteps(async () => {
-            let res = await fetchData('@Url.Action("GetScheduleSeries", "ProgramPartList")', {});
+            let res = await GetMethodPublic('@Url.Action("GetScheduleSeries", "ProgramPartList")', {});
             if (res && res.Success) {
                 let hasValidData = false;
                 plandata = res.Data;
@@ -250,4 +250,4 @@
     $(document).ready(() => {
         LoadPageData();
     });
-</script>*@
+</script>

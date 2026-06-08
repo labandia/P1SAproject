@@ -67,8 +67,7 @@
 
 
 
-<script src="~/Scripts/bootstrap.min.js"></script>
-<script src="~/Scripts/Popper.min.js"></script>
+
 <script src="~/Scripts/html5-qrcode.min.js"></script>
 <script type="text/javascript">
     const searchID = document.getElementById("searchReelID");
@@ -94,14 +93,14 @@
 
     // =================== LOADS THE DATA FOR SEARCHING ===================================
     const SeriesDataTable = async () => {
-        let res = await fetchData('@Url.Action("GetScheduleSeries", "ProgramPartList")', {});
+        let res = await GetMethodPublic('@Url.Action("GetScheduleSeries", "ProgramPartList")', {});
         if (res && res.Success) {
             plandata = res.Data;
         }
     };
     // =================== LOAD THE COMPONENTS PART LIST DATA =============================
     const LoadComponentsPartlist = async (params) => {
-        let res = await FetchAuthenticate('@Url.Action("GetparlistData", "ProgramPartList")', { intval: params });
+        let res = await GetMethodPublic('@Url.Action("GetparlistData", "ProgramPartList")', { intval: params });
 
         if (res && res.Success) {
             partlistTemp = res.Data;
@@ -112,7 +111,7 @@
       console.log("Series ID :" + params);
       summarylistTemp = [];
 
-      let res = await FetchAuthenticate('@Url.Action("GetSummmaryComponentlist", "ProgramPartList")', { intval: params });
+        let res = await GetMethodPublic('@Url.Action("GetSummmaryComponentlist", "ProgramPartList")', { intval: params });
       if (res && res.Success) {
           let data = res.Data;
           //console.log("EHRE");
@@ -126,7 +125,7 @@
 
     // =================== LOAD THE SUPPLER LIST ===========================================
     const LoadSupplierList = async (partnum) => {
-        let res = await FetchAuthenticate('@Url.Action("GetSupplierListID", "ProgramPartList")', { partText: partnum });
+        let res = await GetMethodPublic('@Url.Action("GetSupplierListID", "ProgramPartList")', { partText: partnum });
 
          if (res && res.Success) {
              let select = $("#Supplierselect");

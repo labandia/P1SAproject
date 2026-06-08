@@ -6,9 +6,9 @@
 
 <div class="dashboard">
     <!-- ── HEADER ─────────────────────────────────────── -->
-    <header class="header">
-        <div class="header-left">
-            <div class="header-logo">
+    <header class="dasheader">
+        <div class="dasheader-left">
+            <div class="dasheader-logo">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                      stroke="currentColor" stroke-width="2.667" stroke-linecap="round" stroke-linejoin="round"
                      style="color:var(--color-primary-foreground)">
@@ -16,12 +16,11 @@
                 </svg>
             </div>
             <div>
-                <p class="header-subtitle">Manufacturing Intelligence</p>
-                <h1 class="header-title">Final Assembly Schedule Performance and Tracking Dashboard</h1>
+                <p class="dasheader-subtitle">Manufacturing Intelligence</p>
+                <h1 class="dasheader-title">Final Assembly Schedule Performance and Tracking Dashboard</h1>
             </div>
         </div>
-        <div class="header-right">
-            <a href="/Final/Assembly/UploaData">Upload Data</a>
+        <div class="dasheader-right">
 
             <div class="badge badge-muted">
                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
@@ -318,6 +317,7 @@
 
 
                 card.addEventListener('click', () => {
+                    localStorage.setItem("LineSet", item.Line);
                     window.location.href =
                         '@Url.Action("ShopOrderLine", "Assembly")?Line=' +
                         encodeURIComponent(item.Line);

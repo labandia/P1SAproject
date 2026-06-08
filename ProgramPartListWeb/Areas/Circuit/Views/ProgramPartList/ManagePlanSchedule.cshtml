@@ -71,7 +71,7 @@
 @*=================================================================================*@
 @*====================== ADD PLAN SCHEDULE ========================================*@
 @*=================================================================================*@
-<div class="modal fade modal-xl" id="addseriesmodal" tabindex="-1"  role="dialog" data-bs-backdrop="static">
+<div class="modal fade modal-xl" id="addseriesmodal" tabindex="-1" role="dialog" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body modalwrap">
@@ -84,20 +84,20 @@
                 </div>
 
                 @*<div class="custom_modal_header">
-                <div class="custom_modal__icon">
-                    <div class="custom_icon_container">
-                        <i class="fa-solid fa-plus"></i>
-                    </div>
-                    <div class="custom_modal_title">
-                        <span>Add new Series data</span>
-                        <p>Fill all the required input</p>
-                    </div>
-                </div>
+                        <div class="custom_modal__icon">
+                            <div class="custom_icon_container">
+                                <i class="fa-solid fa-plus"></i>
+                            </div>
+                            <div class="custom_modal_title">
+                                <span>Add new Series data</span>
+                                <p>Fill all the required input</p>
+                            </div>
+                        </div>
 
-                <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>*@
+                        <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>*@
 
 
                 <form method="post" enctype="multipart/form-data" class="addformcontainer" id="AddSeriesdata" autocomplete="off">
@@ -188,8 +188,8 @@
                 </form>
             </div>
         </div>
-</div>
     </div>
+</div>
 
 
 @*=================================================================================*@
@@ -338,7 +338,6 @@
 
     // Open the add model for the series
     seriesmodel.addEventListener('click', function () {
-        alert("Dadasd");
         $("#addseriesmodal").modal("show");
     });
     // Save Series data functionality
@@ -514,7 +513,7 @@
                                      </label>
                                  </div>
                             </td>
-                           
+
                             <td data-cell="Details"  >
                                 <button type='button' class='Editbtnbutton text-primary bg-white' id='Editbtnbutton_${rowData.Series_ID}' >
                                   <i class="fa-regular fa-pen-to-square"></i>

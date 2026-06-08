@@ -173,7 +173,7 @@
     const editsupplier = document.getElementById("Editrequestforms");
 
     const LoadsupplierData = async () => {
-       
+
           let res = await FetchAuthenticate('@Url.Action("GetSupplierList", "ProgramPartList")', {});
           if (res && res.Success) {
                 supplyarray = res.Data;

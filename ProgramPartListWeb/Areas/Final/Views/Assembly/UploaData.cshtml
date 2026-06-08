@@ -1,110 +1,87 @@
 ﻿
 @{
-    Layout = "~/Areas/Final/Views/Shared/_FinalAssemblyLayout.cshtml";
+    Layout = "~/Areas/Final/Views/Shared/_ManageLayout.cshtml";
 }
 @Html.AntiForgeryToken()
 <!-- MAIN PANEL -->
-<div class="main-content">
-    <div class="top-bar flex justify-between items-center">
-        <div class="flex items-center gap-4">
-            <iconify-icon icon="lucide:chevron-left" style="font-size: 16px; color: #d1d1d6;"></iconify-icon>
-            <h1 class="font-semibold text-sm ml-2">Back to the Dashboard</h1>
+<span id="selectedCount">0 selected</span>
+
+<a href="#" id="clearSelectionBtn"
+   style="color: var(--color-primary); text-decoration: none;">
+    Clear selection
+</a>
+
+<!-- header section -->
+<div class="flex justify-between items-center mb-6">
+    <div class="flex items-center gap-lg-3">
+        <div>
+            <h2 class="text-xl font-semibold mb-1" style="font-size: 24px;">Final Assembly Upload Data</h2>
+            <p class="text-sm" style="color:#86868b;">Data Upload For the Final Assembly </p>
         </div>
 
-        <div class="ml-auto flex items-center gap-2 text-sm" style="color:#86868b;">
-            <div class="window-dots">
-                <div class="dot-red"></div>
-                <div class="dot-yellow"></div>
-                <div class="dot-green"></div>
-            </div>
+        <!-- filters bar -->
+        <div class="flex items-center gap-3 mb-4 flex-wrap">
+            <select id="filterdata" class=" filter-chip text-sm font-medium">
+                <option value="UPDATED">For Approval</option>
+                <option value="SAME">All Data</option>
+            </select>
 
 
-            <span id="selectedCount">0 selected</span>
-
-            <a href="#" id="clearSelectionBtn"
-               style="color: var(--color-primary); text-decoration: none;">
-                Clear selection
-            </a>
         </div>
-
     </div>
-
-    <div class="inner-main">
-        <!-- header section -->
-        <div class="flex justify-between items-center mb-6">
-            <div class="flex items-center gap-lg-3">
-                <div>
-                    <h2 class="text-xl font-semibold mb-1" style="font-size: 24px;">Final Assembly Upload Data</h2>
-                    <p class="text-sm" style="color:#86868b;">Data Upload For the Final Assembly </p>
-                </div>
-
-                <!-- filters bar -->
-                <div class="flex items-center gap-3 mb-4 flex-wrap">
-                    <select id="filterdata" class=" filter-chip text-sm font-medium">
-                        <option value="UPDATED">For Approval</option>
-                        <option value="SAME">All Data</option>
-                    </select>
-
-
-                </div>
-            </div>
-            <div class="flex gap-3">
-                <button id="uploadbtn"
-                        class="btn-outline"
-                        style="height: 32px;"
-                        data-upload-url="@Url.Action("ImportUpload",   "Assembly")"
-                        data-stream-url="@Url.Action("ImportUploadStream", "Assembly")"
-                        data-progress-url="@Url.Action("ImportProgress", "Assembly")">
-                    Import CSV
-                </button>
-                <button id="btn-proceed" class="btn-primary" style="height: 32px; background:#277eff;">Deploy Changes</button>
-            </div>
-        </div>
-
-
-
-        <div class="devices-table-wrapper">
-            <div class="table-scroll">
-                <table class="devices-table">
-                    <thead>
-                        <tr>
-                            <th style="width:44px;">
-                                <input type="checkbox" id="selectAllRows" />
-                            </th>
-
-                            <th>Shop Order </th>
-                            <th style="text-align: center;">Part No.</th>
-                            <th style="text-align: center;">Model </th>
-                            <th style="text-align: center;">WC</th>
-                            <th style="text-align: center;">Qty</th>
-                            <th style="text-align: center;">Current Plan Quantity</th>
-                            <th style="text-align: center;">Upload Plan Quantity</th>
-                            <th style="text-align: center;">Current Plan Date</th>
-                            <th style="text-align: center;">Upload Plan Date</th>
-                            <th style="text-align: center;">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-            <!-- pagination footer -->
-            <div class="flex justify-between items-center p-3 border-t" style="border-top: 1px solid #e5e5e5; background: white;">
-                <div class="text-sm" style="color:#86868b;">Showing 1-7 of 1,248 devices</div>
-                <div class="flex gap-1">
-                    <button class="pagination-btn"><iconify-icon icon="lucide:chevron-left" style="font-size: 14px;"></iconify-icon></button>
-                    <button class="pagination-btn pagination-active">1</button>
-                    <button class="pagination-btn">2</button>
-                    <button class="pagination-btn">3</button>
-                    <span class="px-2 py-1 text-muted-foreground">...</span>
-                    <button class="pagination-btn"><iconify-icon icon="lucide:chevron-right" style="font-size: 14px;"></iconify-icon></button>
-                </div>
-            </div>
-        </div>
+    <div class="flex gap-3">
+        <button id="uploadbtn"
+                class="btn-outline"
+                style="height: 32px;"
+                data-upload-url="@Url.Action("ImportUpload",   "Assembly")"
+                data-stream-url="@Url.Action("ImportUploadStream", "Assembly")"
+                data-progress-url="@Url.Action("ImportProgress", "Assembly")">
+            Import CSV
+        </button>
+        <button id="btn-proceed" class="btn-primary" style="height: 32px; background:#277eff;">Deploy Changes</button>
     </div>
 </div>
 
 
+
+<div class="devices-table-wrapper">
+    <div class="table-scroll">
+        <table class="devices-table">
+            <thead>
+                <tr>
+                    <th style="width:44px;">
+                        <input type="checkbox" id="selectAllRows" />
+                    </th>
+
+                    <th>Shop Order </th>
+                    <th style="text-align: center;">Part No.</th>
+                    <th style="text-align: center;">Model </th>
+                    <th style="text-align: center;">WC</th>
+                    <th style="text-align: center;">Qty</th>
+                    <th style="text-align: center;">Current Plan Quantity</th>
+                    <th style="text-align: center;">Upload Plan Quantity</th>
+                    <th style="text-align: center;">Current Plan Date</th>
+                    <th style="text-align: center;">Upload Plan Date</th>
+                    <th style="text-align: center;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <!-- pagination footer -->
+    <div class="flex justify-between items-center p-3 border-t" style="border-top: 1px solid #e5e5e5; background: white;">
+        <div class="text-sm" style="color:#86868b;">Showing 1-7 of 1,248 devices</div>
+        <div class="flex gap-1">
+            <button class="pagination-btn"><iconify-icon icon="lucide:chevron-left" style="font-size: 14px;"></iconify-icon></button>
+            <button class="pagination-btn pagination-active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+            <span class="px-2 py-1 text-muted-foreground">...</span>
+            <button class="pagination-btn"><iconify-icon icon="lucide:chevron-right" style="font-size: 14px;"></iconify-icon></button>
+        </div>
+    </div>
+</div>
 
 @Html.Partial("_UploadDataDialog")
 

@@ -55,13 +55,69 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             return JsonSuccess(res);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> SelectedShopOrderData(int RecordID)
+        {
+            try
+            {
+                Debug.WriteLine("GetID" + RecordID);
+                var res = await _manu.GetShopderDetails(RecordID);
+                if (res == null)
+                    return JsonNotFound("No Manpower data found");
+
+                return JsonSuccess(res);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+
+        }
+
+
+        [HttpGet]
+        public async Task<ActionResult> GetTraceabilityData(string shopOrder)
+        {
+            try
+            {
+                var res = await _manu.TraceableShopOrderSummary(shopOrder);
+                if (res == null)
+                    return JsonNotFound("No Manpower data found");
+
+                return JsonSuccess(res);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
+
         [HttpPost]
         public async Task<ActionResult> UpdateStatusLine(int recordID, int orderstats)
         {
             try
             {
-                Debug.WriteLine($"RecordID : {recordID} - OrderStatus : {orderstats}");
-                bool res = await _manu.UpdateStatusShopOrder(recordID, orderstats);
+                int changeStats = orderstats == 0 ? 1 : 0;
+                //Debug.WriteLine($"RecordID : {recordID} - OrderStatus : {orderstats}");
+                var res = await _manu.UpdateStatusShopOrder(recordID, changeStats);
+                if (!res) return JsonError("Error Updated");
+                return JsonSuccess(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
+        [HttpPost]
+        public async Task<ActionResult> UpdateAssemblyStats(
+            int RecordID, string FAStatus, DateTime ShipmentDate, string Mode, string WithSR, string Remarks)
+        {
+            try
+            {
+                var res = await _manu.UpdateAssemblyStatus(RecordID, FAStatus, ShipmentDate, Mode, WithSR, Remarks);
                 if (!res) return JsonError("Error Updated");
                 return JsonSuccess(true);
             }
@@ -570,5 +626,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         public ActionResult UploaData() => View();
         // GET: Final/ShopOrderLine/{line}
         public ActionResult ShopOrderLine(string line) => View();
+        // GET: Final/ShopOrderDetails/{id}
+        public ActionResult ShopOrderDetails(int id) => View();
     }
 }

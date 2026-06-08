@@ -96,7 +96,7 @@
         e.preventDefault();
         $("#uploadmodal").modal("show");
     });
-  
+
 
     const DisplayComponentsOut = async() => {
         let res = await FetchAuthenticate('@Url.Action("GetComponentOutList", "ProgramPartList")', {});
@@ -106,7 +106,7 @@
             setData.empty();
 
             TablePagination(res.Data, 'ComponentsData', 'PaginationContainer', 100, 5);
-           
+
             $(".tableseriesNoData").hide();
         } else {
             $(".tableseriesNoData").show();
@@ -136,7 +136,7 @@
 
             for (let i = startIndex; i < endIndex; i++) {
                 const rowData = filteredData[i];
-    
+
                 const rowHtml = `
                  <tr class='row_${i} rowClick' id='editButton_${i}'>
                      <td data-cell="ComponentsName" style="text-align: left; padding-left: 2em; font-weight: 600;">${rowData.ComponentsName}</td>
@@ -146,7 +146,7 @@
                      <td data-cell="Reel_ID" >${rowData.Reel_ID}</td>
                  </tr>`;
 
-            
+
                 tableBody.innerHTML += rowHtml;
             }
 

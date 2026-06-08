@@ -1,0 +1,374 @@
+﻿
+
+@{
+    Layout = "~/Areas/Final/Views/Shared/_ManageLayout.cshtml";
+    var intID = Request.QueryString["id"];
+}
+
+
+<input type="hidden" id="intID" value="@intID" />
+
+<div class="content-row">
+    <!-- Main content panel -->
+    <div class="main-panel">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb-card">
+            <a href="#" class="breadcrumb-link" id="navcont">
+                <iconify-icon icon="lucide:house" width="16"></iconify-icon>
+                Manage Data
+            </a>
+
+            <span class="breadcrumb-separator">/</span>
+
+            <span class="breadcrumb-current" id="modelText">
+                Shop Order Details
+            </span>
+        </div>
+
+        <!-- Shop Order Details Card -->
+        <div class="details-card">
+            <div class="Shopcard-header">
+                <div class="Shopcard-dot"></div>
+                <span class="Shopcard-header-text">Shop Order Details</span>
+            </div>
+            <div class="Shopcard-body">
+                <div class="details-row">
+                    <div class="detail-item">
+                        <span class="detail-label" >Final Shop Order</span>
+                        <a class="detail-link" id="finalShopOrderText">508066410630</a>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Part No</span>
+                        <span class="detail-value" id="partnoText">00454139-01</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Model</span>
+                        <span class="detail-value" style="font-family:var(--font-mono)" id="ModelText">9A0612G4D031-3P, SDC FC</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Quantity</span>
+                        <span class="detail-value" id="QuanText">400</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label" >Line</span>
+                        <span class="detail-value" id="LineText">OP</span>
+                    </div>
+                </div>
+                <div style="border-top:1px solid var(--border)"></div>
+                <div class="details-row">
+                    <div class="detail-item">
+                        <span class="detail-label">Plan Quantity</span>
+                        <span class="detail-value" id="PlanText">20/05/2026</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Dispatch Date</span>
+                        <span class="detail-value" id="DispatchText">05/22/2026 06:44</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">WC</span>
+                        <span class="detail-value" id="WCText">FFACM</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">IFS Finish Date</span>
+                        <span class="detail-value" id="IFSText">04/22/2026</span>
+                    </div>
+                </div>
+                <div style="border-top:1px solid var(--border)"></div>
+                <div class="notes-row">
+                    <div class="notes-icon"><span class="icon-inline" style="width:12px;height:12px;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /><path d="M14 2v5a1 1 0 0 0 1 1h5M10 9H8m8 4H8m8 4H8" /></svg></span> Notes</div>
+                    <span class="detail-value" id="finalShopOrderText">GA200+1A27+OVN+CAULK+L603</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Traceability Table -->
+        <div>
+            <div class="trace-header">
+                <span class="trace-title">Production 1 Traceability</span>
+               
+            </div>
+            <div class="devices-table-wrapper">
+                <div class="table-scroll">
+                    <table class="devices-table">
+                        <thead>
+                            <tr>
+                         
+                                <th>Section </th>
+                                <th style="text-align: center;">Shop Order</th>
+                                <th style="text-align: center;">Item Name </th>
+                                <th style="text-align: center;">Item No.</th>
+                                <th style="text-align: center;">Plan Quantity</th>
+                                <th style="text-align: center;">Customer</th>
+                                <th style="text-align: center;">Model type</th>
+                                <th style="text-align: center;">Issuer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="right-panel">
+        <div class="panel-header"><div class="panel-header-line"></div><span class="panel-header-title">Assembly Status</span></div>
+
+        <form method="post" id="EditFinalAsembly">
+            <div class="field-group">
+                <span class="field-label">Final Assembly Status</span>
+               <input  type="text" placeholder="Enter Final Assembly Status" id="FAStatus"/>
+            </div>
+            <div class="field-group">
+                <span class="field-label">Shipment Date</span>
+                <input type="date" placeholder="Enter Final Assembly Status" id="ShipmentDate" />
+            </div>
+            @*<div class="field-group">
+                <span class="field-label">Mode</span>
+                <input type="text" placeholder="Enter Final Assembly Status" id="ShipmentMode" />
+            </div>*@
+            <div class="field-group">
+                <span class="field-label">With SR</span>
+                <input type="text" placeholder="Enter SR" id="WithSR" />
+            </div>
+            <div class="field-group">
+                <span class="field-label">Remarks</span>
+                <textarea  placeholder="Enter Remarks" id="Remarks" > </textarea>
+            </div>
+            <button class="save-btn">
+                <span class="icon-inline" style="width:13px;height:13px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" /><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7M7 3v4a1 1 0 0 0 1 1h7" /></svg>
+                    </span> Save Changes</button>
+        </form>
+  
+    </div>
+</div>
+
+
+
+
+<script type="module" asp-append-version="true">
+    import {
+        getMethod,
+        postMethod
+    } from '@Url.Content("~/Scripts/modules/index.js")';
+
+    class ShopOrderDetailsController {
+        constructor() {
+            this.tbody = document.querySelector('.devices-table tbody');
+            this.recordID = document.getElementById('intID').value;
+            this.strLine = "";
+            this.intRecord = 0;
+            this.navget = document.getElementById('navcont');
+        }
+
+        async init() {
+            await this.LoadDetailsinfo();
+            this.bindEvents();
+        }
+
+        bindEvents() {
+            this.navget.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.location.href = `@Url.Action("ShopOrderLine", "Assembly")?Line=${this.strLine}`;
+            });
+
+            const form = document.getElementById('EditFinalAsembly');
+            form.addEventListener('submit', (e) => this.HandleSubmit(e));
+        }
+
+        async LoadDetailsinfo() {
+            try {
+                const res = await getMethod('@Url.Action("SelectedShopOrderData", "Assembly")', {
+                    RecordID: this.recordID
+                });
+                if (!res?.Success) return;
+                const data = res.data;
+                this.strLine = data.Line;
+                console.log(data);
+                document.getElementById("finalShopOrderText").textContent = data.FinalShopOrder;
+                document.getElementById("partnoText").textContent = data.ItemNo;
+                document.getElementById("ModelText").textContent = data.Model;
+                document.getElementById("QuanText").textContent = data.PlanQty;
+                document.getElementById("LineText").textContent = data.Line;
+
+                document.getElementById("PlanText").textContent = data.PlanQty;
+                document.getElementById("DispatchText").textContent = data.DispatchDate;
+                document.getElementById("WCText").textContent = data.WC;
+                document.getElementById("IFSText").textContent = this.formatDate(data.FinalFinishedDate);
+
+                document.getElementById('modelText').textContent = data.Model
+
+                // Fill up the form
+                document.getElementById("FAStatus").value = data.FAStatus;
+                document.getElementById("ShipmentDate").value = this.SetFormDate(data.PlanStartDate);
+                //document.getElementById("FAStatus").value = data.PlanQty;
+                document.getElementById("WithSR").value = data.WithSR;
+                document.getElementById("Remarks").value = data.Note;
+
+                this.LoadTraceAbility(data.FinalShopOrder);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        async LoadTraceAbility(shoporder) {
+            try {
+              const res = await getMethod('@Url.Action("GetTraceabilityData", "Assembly")', {
+                  shopOrder: shoporder
+              });
+
+              if (!res?.Success) return;
+                const data = res.data;
+                //console.log(data);
+                this.renderTable(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+
+        async HandleSubmit(e) {
+            e.preventDefault();
+            const formData = {
+                RecordID: this.recordID,
+                FAStatus: document.getElementById('FAStatus').value,
+                ShipmentDate: document.getElementById('ShipmentDate').value,
+                Mode: document.getElementById('ShipmentMode').value,
+                WithSR: document.getElementById('WithSR').value,
+                Remarks: document.getElementById('Remarks').value
+            };
+
+            await this.EditAssemblyStatus(formData);
+        }
+
+        async EditAssemblyStatus(formdata) {
+            const savebtn = document.querySelector('#EditFinalAsembly .save-btn');
+            savebtn.innerHTML = '<span>Saving...</span>';
+            savebtn.disabled = true;
+
+            const originalText = savebtn.innerHTML;
+
+            try {
+
+           
+
+
+                const res = await postMethod('@Url.Action("UpdateAssemblyStatus", "Assembly")', formData);
+
+                if (res?.Success) {
+                    alert('Assembly status updated successfully!');
+                    // Optionally reload data to reflect changes
+                    //await this.LoadDetailsinfo();
+                } else {
+                    alert('Error: ' + (response?.Message || 'Could not save data.'));
+                }
+            } catch (error) {
+                console.error('Save error:', error);
+                alert('An error occurred while saving.');
+            } finally {
+                // Restore button state
+                const saveBtn = document.querySelector('#EditFinalAsembly .save-btn');
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+            }
+        }
+
+        formatDate(dateString) {
+            if (!dateString) return '';
+
+            const timestamp = parseInt(dateString.match(/\d+/)[0]);
+            const date = new Date(timestamp);
+
+            return date.toLocaleDateString('en-US');
+        }
+
+        SetFormDate(aspNetDate) {
+            if (!aspNetDate) return '';
+
+            const match = aspNetDate.match(/\d+/);
+            if (!match) return '';
+
+            const date = new Date(parseInt(match[0]));
+            return date.toISOString().split('T')[0];
+        }
+
+
+        /* ================= RENDER MAIN TABLE ================= */
+        renderTable(data) {
+            if (!this.tbody) return;
+
+            if (data.length === 0) {
+                this.tbody.innerHTML = `
+             <tr>
+                 <td colspan="8" style="text-align:center; padding:32px; color:#86868b;">
+                     No data available.
+                 </td>
+             </tr>`;
+                return;
+            }
+
+            const sectionMap = {
+                1: "Molding",
+                2: "Press",
+                3: "Rotor",
+                4: "Winding",
+                5: "Circuit",
+                7: "Final Assembly"
+            };
+
+            //const sectionMap = {
+            //    1: ['badge-molding', 'AG'],
+            //    2: ['badge-press', 'AF'],
+            //    3: ['badge-rotor', 'BF'],
+            //    4: ['badge-winding', 'WF'],
+            //    5: ['badge-circuit', 'CE']
+            //};
+
+            const sectionCode = {
+                1: "AG",
+                2: "AF",
+                3: "BF",
+                4: "FG",
+                5: "CE",
+                7: "HD"
+            };
+
+
+            this.tbody.innerHTML = data.map(row => `
+         <tr>
+
+             <td>
+                 <div class="flex items-center gap-2">
+                     <span class="font-semibold">${this.escape(sectionCode[row.DepartmentID])}</span>
+                     <span class="font-semibold">${this.escape(sectionMap[row.DepartmentID])}</span>
+                 </div>
+             </td>
+             <td style="color:#515154; text-align:center;">${this.escape(row.ShopOrder)}</td>
+             <td style="color:#515154;">${this.escape(row.ProcessName)}</td>
+             <td style="color:#515154; text-align:center;">${this.escape(row.ItemNo)}</td>
+             <td style="color:#515154; text-align:center;">${this.escape(row.PreparedQuantity)}</td>
+             <td style="color:#515154; text-align:center;">${this.escape(row.Customer)}</td>
+             <td style="color:#515154; text-align:center;">${this.escape(row.Modeltype)}</td>
+             <td style="color:#515154; text-align:center;">${this.escape(row.SubAssyIssued)}</td>
+
+         </tr>`).join('');
+        }
+
+        escape(str) {
+            const d = document.createElement('div');
+            d.textContent = str ?? '';
+            return d.innerHTML;
+        }
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const controller = new ShopOrderDetailsController();
+        controller.init();
+    });
+</script>
+
+
+

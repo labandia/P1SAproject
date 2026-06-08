@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Bibliography;
+﻿using Dapper;
+using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.InkML;
 using ProgramPartListWeb.Areas.Final.Model;
 using ProgramPartListWeb.Helper;
@@ -221,6 +222,21 @@ namespace ProgramPartListWeb.Areas.Final.Services
             }
         }
 
+        public Task<bool> SelectOnlineShopOrders(int recordID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<FanTraceabilityManufacturingOrder> GetShopderDetails(int id)
+        {
+            string strsql = $@"SELECT TOP 1 {SelectColumns} FROM  FanTraceabilityManufacturingOrder s
+                  WHERE s.RecordID =@RecordID  ";
+            return SqlDataAcess_Test.GetSingleAsync<FanTraceabilityManufacturingOrder>(strsql, new
+            {
+                RecordID = id
+            });
+        }
+
         public Task<bool> NextModelProcess(string shop, string newLine)
         {
             return SqlDataAcess_Test.ExecuteAsync(@"UPDATE FanTraceabilityManufacturingOrderSAMPLE", new
@@ -235,10 +251,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
             throw new NotImplementedException();
         }
 
-        public Task<bool> SelectOnlineShopOrders(int recordID)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         public async Task<bool> UpdateStatusShopOrder(int id, int status)
         {
@@ -246,7 +259,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
             Debug.WriteLine($@"RecordID : {id} - OrderStatus : {status} ");
             // if the status of the id is 2 change 0
             // but if it clicks to the other 0 status but has a Already has 2 On the records automically change the current to 0 and new t
-            return await SqlDataAccess.ExecuteAsync($@"
+            return await SqlDataAcess_Test.ExecuteAsync($@"
                 UPDATE FanTraceabilityManufacturingOrder SET OrderStatus =@OrderStatus 
                 WHERE RecordID =@RecordID", new
             {
@@ -376,7 +389,66 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 });
         }
 
+        public Task<List<P1TraceablityModel>> TraceableShopOrderSummary(string shopOrder)
+        {
+            string sql = @"
+                WITH CTE AS
+                (
+                    SELECT
+                        f.RecordId,
+                        f.FinalShopOrder,
+                        s.ShopOrder,
+                        p.ProcessName,
+                        f.ItemNo,
+                        f.PlanQuan,
+                        f.DatePrepared,
+                        CONVERT(varchar(8), f.TimeInput, 108) AS TimeInput,
+                        s.PreparedQuantity,
+                        f.PreparedBy,
+                        f.Shift,
+                        f.Customer,
+                        f.Modeltype,
+                        f.Remarks,
+                        f.Incharge,
+                        s.SubAssyIssued,
+                        s.LotNo,
+                        s.Rev,
+                        f.IsDeletedFinal,
+                        f.DepartmentID,
+                        ROW_NUMBER() OVER
+                        (
+                            PARTITION BY f.DepartmentID
+                            ORDER BY f.RecordId DESC
+                        ) AS RN
+                    FROM FanTraceabilityFinal f
+                    LEFT JOIN FanTraceabilitySub s
+                        ON s.FinalId = f.RecordId
+                    INNER JOIN FanTraceabilityProcess p
+                        ON p.ProcessId = f.ProcessId
+                    WHERE f.IsDeletedFinal = 0
+                      AND s.ShopOrder IS NOT NULL
+                      AND f.FinalShopOrder = @FinalShopOrder
+                )
+                SELECT *
+                FROM CTE
+                WHERE RN = 1;";
+            var parameters = new DynamicParameters();
 
+            parameters.Add("@FinalShopOrder", shopOrder);
 
+            return SqlDataAcess_Test.GetDataAsync<P1TraceablityModel>(sql, parameters);
+        }
+
+        public Task<bool> UpdateAssemblyStatus(int recordID, string finalassy, DateTime shipdate, string mode, string WithSR, string remarks)
+        {
+            return SqlDataAcess_Test.ExecuteAsync(@"UPDATE FanTraceabilityManufacturingOrder SET FAStatus =@FAStatus, ShipmentDate =@ShipmentDate
+                    Remarks =@Remarks WHERE RecordID =@RecordID", new
+            {
+                FAStatus = finalassy,
+                ShipmentDate = shipdate,
+                Remarks = remarks,  
+                RecordID = recordID
+            });
+        }
     }
 }

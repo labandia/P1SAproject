@@ -4,13 +4,6 @@
 }
 @Html.AntiForgeryToken()
 <!-- MAIN PANEL -->
-<span id="selectedCount">0 selected</span>
-
-<a href="#" id="clearSelectionBtn"
-   style="color: var(--color-primary); text-decoration: none;">
-    Clear selection
-</a>
-
 <!-- header section -->
 <div class="flex justify-between items-center mb-6">
     <div class="flex items-center gap-lg-3">
@@ -21,27 +14,38 @@
 
         <!-- filters bar -->
         <div class="flex items-center gap-3 mb-4 flex-wrap">
-            <select id="filterdata" class=" filter-chip text-sm font-medium">
-                <option value="UPDATED">For Approval</option>
-                <option value="SAME">All Data</option>
-            </select>
+           
 
 
         </div>
     </div>
     <div class="flex gap-3">
+        <select id="filterdata" class=" filter-chip text-sm font-medium">
+            <option value="UPDATED">For Approval</option>
+            <option value="SAME">All Data</option>
+        </select>
         <button id="uploadbtn"
                 class="btn-outline"
                 style="height: 32px;"
                 data-upload-url="@Url.Action("ImportUpload",   "Assembly")"
                 data-stream-url="@Url.Action("ImportUploadStream", "Assembly")"
                 data-progress-url="@Url.Action("ImportProgress", "Assembly")">
+            <iconify-icon icon="ic:round-upload" width="16"></iconify-icon>     
             Import CSV
         </button>
-        <button id="btn-proceed" class="btn-primary" style="height: 32px; background:#277eff;">Deploy Changes</button>
+        <button id="btn-proceed" class="btn-primary" style="height: 32px; background:#277eff;">
+            <iconify-icon icon="gg:push-down" width="16"></iconify-icon>
+            Deploy Changes
+        </button>
     </div>
 </div>
 
+@*<span id="selectedCount">0 selected</span>
+
+<a href="#" id="clearSelectionBtn"
+   style="color: var(--color-primary); text-decoration: none;">
+    Clear selection
+</a>*@
 
 
 <div class="devices-table-wrapper">
@@ -49,11 +53,11 @@
         <table class="devices-table">
             <thead>
                 <tr>
-                    <th style="width:44px;">
+                    <th class='fixedcolumn' style="width:44px;">
                         <input type="checkbox" id="selectAllRows" />
                     </th>
 
-                    <th>Shop Order </th>
+                    <th class="uploadedheader">Shop Order </th>
                     <th style="text-align: center;">Part No.</th>
                     <th style="text-align: center;">Model </th>
                     <th style="text-align: center;">WC</th>
@@ -243,13 +247,13 @@
 
         this.tbody.innerHTML = data.map(row => `
             <tr>
-               <td>
+               <td class='fixedrow'>
                     <input type="checkbox"
                            class="row-checkbox"
                            data-id="${row.RecordID}"
                            ${row.IsApproved == 1 ? 'checked' : ''} />
                 </td>
-                <td>
+                <td class="uploadedData">
                     <div class="flex items-center gap-2">
                         <iconify-icon icon="lucide:monitor" style="font-size:16px; color:#86868b;"></iconify-icon>
                         <span class="font-semibold">${this.escape(row.FinalShopOrder)}</span>
@@ -279,9 +283,9 @@
 
             document.getElementById("btn-proceed").disabled = count === 0;
 
-            if (label) {
-                label.textContent = `${count} selected`;
-            }
+            //if (label) {
+            //    label.textContent = `${count} selected`;
+            //}
         }
 
         statusUploadClass(stats) {

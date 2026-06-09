@@ -28,8 +28,7 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
                         Desciprtion = @Desciprtion,
                         Remarks = @Remarks,
                         CategoryID = @CategoryID,
-                        DepartmentID = @DepartmentID,
-                        DateCreated = GETDATE()
+                        DepartmentID = @DepartmentID
                     WHERE RegistrationNo = @RegistrationNo;
                 END
                 ELSE IF NOT EXISTS (
@@ -40,8 +39,7 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
                 BEGIN
                     INSERT INTO Registration
                     (
-                        RegistrationNo,
-                        DateCreated,
+                        RegistrationNo
                         Desciprtion,
                         Remarks,
                         CategoryID,
@@ -50,7 +48,6 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
                     VALUES
                     (
                         LTRIM(RTRIM(@RegistrationNo)),
-                        @DateCreated,
                         @Desciprtion,
                         @Remarks,
                         @CategoryID,

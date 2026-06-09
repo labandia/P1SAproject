@@ -8,6 +8,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>FINAL ASSEMBLY SCHEDULE PERFORMANCE AND TRACKING DASHBOARD </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+
     <script src="~/Scripts/Shared/bootstrap.bundle.min.js"></script>
     <script src="~/Scripts/iconify-icon.min.js"></script>
     <link href="~/Content/Shared/bootstrap.min.css" rel="stylesheet" />
@@ -26,7 +31,7 @@
                 <div class="logo-icon">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z" /></svg>
                 </div>
-                <span class="logo-text">Final Assembly Schedule Performance</span>
+                <span class="logo-text">Final Assembly Schedule Performance and Tracking Data</span>
             </div>
 
           
@@ -37,12 +42,9 @@
                 <button class="icon-btn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.268 21a2 2 0 0 0 3.464 0m-10.47-5.674A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" /></svg>
                 </button>
-                <button class="icon-btn">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" 
-                         stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" />
-                    <path d="M8 2v4m8-4v4M3 10h18" /></svg>
+                <button class="icon-btn" id="ExitDash">
+                    <iconify-icon icon="solar:exit-bold" width="20"></iconify-icon>
                 </button>
-                <div class="divider"></div>
                 
             </div>
 
@@ -105,6 +107,12 @@
             window.location.href =
                 '@Url.Action("ShopOrderLine", "Assembly")?Line=' +
                 encodeURIComponent(getLine);
+        });
+
+        document.getElementById("ExitDash").addEventListener("click", (e) => {
+            e.preventDefault();
+             window.location.href =
+                 '@Url.Action("Dashboard", "Assembly")';
         });
     </script>
 </body>

@@ -12,7 +12,9 @@ namespace ProgramPartListWeb.Areas.Final
         Task AutoUpdateShopOrderLine();
 
         Task<List<FanTraceabilityManufacturingOrder>> GetListofActiveShopOrders();
-        Task<List<FanTraceabilityManufacturingOrder>> GetListofShopOrdersByLine(string Linename);
+        Task<List<FanTraceabilityManufacturingOrder>> GetListofShopOrdersByLine(
+            string Linename, string searchtext = "", int orderstatus = 0);
+
         Task<FanTraceabilityManufacturingOrder> GetShopderDetails(int id);
         Task<string> GetAlreadyDoneShopOrdersBySection(string finalorder);
         Task<bool> SelectOnlineShopOrders(int recordID);
@@ -27,7 +29,9 @@ namespace ProgramPartListWeb.Areas.Final
         Task<bool> CheckCurrentStatusChange(int record);
 
 
-        Task<bool> UpdateAssemblyStatus(int recordID, string finalassy, DateTime shipdate, string mode, string WithSR,  string remarks);
+
+        Task<int> GetNumberofNextprocess(string record);
+        Task<bool> UpdateAssemblyStatus(int recordID, string finalassy, DateTime shipdate, string mode, bool WithSR,  string remarks);
         Task<List<P1TraceablityModel>> TraceableShopOrderSummary(string shopOrder);
     }
 }

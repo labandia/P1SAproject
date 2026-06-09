@@ -36,6 +36,9 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         [HttpGet]
         public async Task<ActionResult> GetListActiveShopOrders()
         {
+            await _manu.AutoUpdateShopOrderLine();
+
+
             var res = await _manu.GetListofActiveShopOrders();
             if (res == null || !res.Any())
                 return JsonNotFound("No Active Lines found");
@@ -46,15 +49,14 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         //============== LINE MANAGEMENT  =====================
         //=====================================================
         [HttpGet]
-        public async Task<ActionResult> LineShopOrderData(string Linename)
+        public async Task<ActionResult> LineShopOrderData(string Linename, string searchtext, int orderstatus)
         {
-            var res = await _manu.GetListofShopOrdersByLine(Linename);
+            var res = await _manu.GetListofShopOrdersByLine(Linename, searchtext, orderstatus);
             if (res == null || !res.Any())
                 return JsonNotFound("No Manpower data found");
 
             return JsonSuccess(res);
         }
-
         [HttpGet]
         public async Task<ActionResult> SelectedShopOrderData(int RecordID)
         {
@@ -74,8 +76,6 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             }
 
         }
-
-
         [HttpGet]
         public async Task<ActionResult> GetTraceabilityData(string shopOrder)
         {
@@ -93,7 +93,15 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                 throw;
             }
         }
-
+        [HttpGet]
+        public async Task<ActionResult> CheckIfAreadyCheckNext(string line)
+        {
+            Debug.WriteLine("LINE NUMBER : " + line);
+            int result = await _manu.GetNumberofNextprocess(line);
+            Debug.WriteLine(" NUMBER : " + result);
+            return JsonSuccess(result);
+        }
+        
         [HttpPost]
         public async Task<ActionResult> UpdateStatusLine(int recordID, int orderstats)
         {
@@ -113,7 +121,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         }
         [HttpPost]
         public async Task<ActionResult> UpdateAssemblyStats(
-            int RecordID, string FAStatus, DateTime ShipmentDate, string Mode, string WithSR, string Remarks)
+            int RecordID, string FAStatus, DateTime ShipmentDate, string Mode, bool WithSR, string Remarks)
         {
             try
             {

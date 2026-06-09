@@ -4,78 +4,79 @@
     var strLine = Request.QueryString["line"];
 }
 
-
 <input type="hidden" id="strLine" value="@strLine" />
 
-
-
-<div class="page-header">
-    <div class="breadcrumb-card">
-        <a href="#" id="navdata" class="breadcrumb-link">
-            <iconify-icon icon="lucide:house" width="16"></iconify-icon>
-            Manage Data
-        </a>
-
-
+<!-- TAB BAR -->
+<div class="tab-bar" id="tabBar">
+    <div class="tab active" id="tab-manage" data-tab="manage">
+        <iconify-icon icon="lucide:database" width="15"></iconify-icon>
+        <span class="tab-label" id="Linename">@strLine Data</span>
     </div>
-    <div class="action-buttons">
-        <div class="search-input">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.34-4.34" /></svg>
-            <span>Search here ....</span>
+</div>
+
+<!-- TAB CONTENT PANELS -->
+<div class="tab-content-area">
+
+    <!-- Main panel -->
+    <div class="tab-panel active" id="panel-manage">
+
+        <div class="breadcrumb-card" style="display:none">
+            <a href="#" id="navdata" class="breadcrumb-link">
+                <iconify-icon icon="lucide:house" width="16"></iconify-icon>
+                Manage Data
+            </a>
         </div>
 
-        <select id="filterdata" class=" filter-chip text-sm font-medium">
-            <option value="UPDATED">All</option>
-            <option value="UPDATED">Complete</option>
-            <option value="SAME">In Process</option>
-            <option value="SAME">Next Process</option>
-        </select>
+        <div class="page-header">
+            <div class="action-buttons">
+                <div class="search-input">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.34-4.34" />
+                    </svg>
+                    <input type="text" placeholder="Search here ..." id="searchinput" />
+                </div>
+                <select id="filterdata" class="filter-chip text-sm font-medium" style="height:32px;">
+                    <option value="0">All</option>
+                    <option value="1">Next Process</option>
+                    <option value="2">On Process</option>
+                    <option value="3">Completed/Done</option>
+                </select>
+            </div>
+        </div>
 
+        <div class="devices-table-wrapper">
+            <div class="table-scroll">
+                <table class="devices-table">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Final Shop Order/ Partno / Model</th>
+                            <th>PCB</th>
+                            <th>IMP</th>
+                            <th>LW</th>
+                            <th>MF</th>
+                            <th>FP</th>
+                            <th>FA</th>
+                            <th>WC</th>
+                            <th>QTY</th>
+                            <th>Plan Start</th>
+                            <th>Dispatch</th>
+                            <th>Note</th>
+                            <th>IFS Finish Date</th>
+                            <th>FA Status</th>
+                            <th>Shipment</th>
+                            <th>Mode</th>
+                            <th>WITH SR</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
     </div>
+    <!-- Dynamic detail panels injected here by JS -->
 </div>
-
-
-
-
-
-<div class="table-container">
-    <table class="data-table">
-        <thead>
-            <tr>
-                <th>Status</th>
-                <th>Final Shop Order/ Partno / Model</th>
-                <th>PCB</th>
-                <th>IMP</th>
-                <th>LW</th>
-                <th>MF</th>
-                <th>FP</th>
-                <th>FA</th>
-                <th>WC</th>
-                <th>QTY</th>
-                <th>Plan Start</th>
-                <th>Dispatch</th>
-                <th>Note</th>
-                <th>IFS Finish Date</th>
-                <th>FA Status</th>
-                <th>Shipment</th>
-                <th>Mode</th>
-                <th>WITH SR</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-</div>
-
-
-
-
-
-
-navdata
-
-
-
 
 
 
@@ -85,68 +86,162 @@ navdata
         postMethod
     } from '@Url.Content("~/Scripts/modules/index.js")';
 
-    class ShopOrderListController {
-        constructor() {
-            this.tbody = document.querySelector('.data-table tbody');
-            this.strLine = document.getElementById('strLine').value;
-            this.currentPage = 1;
-            this.pageSize = 10;
-            this.totalPages = 0;
-            this.totalRecords = 0;
+  class ShopOrderListController {
+    constructor() {
+        this.tbody = document.querySelector('.devices-table tbody');
+        this.searchinput = document.getElementById('searchinput');
+        this.filterStatus = document.getElementById('filterdata');
+        this.strLine = document.getElementById('strLine').value;
+        this.tabBar = document.getElementById('tabBar');
+        this.contentArea = document.querySelector('.tab-content-area');
+        this.openTabs = new Map(); // id -> { tab, panel }
+    }
+
+    async init() {
+        this.bindEvents();
+        await this.LoadLineShopOrderList();
+    }
+
+    bindEvents() {
+        // Status badge click
+        this.tbody.addEventListener('click', async (e) => {
+            const badge = e.target.closest('button.selectedbadge');
+            if (!badge) return;
+            e.stopPropagation();
+
+            const row = badge.closest('tr');
+            const id = parseInt(row.dataset.id);
+            const orderStatus = parseInt(row.dataset.orderStatus);
+            // do not trigger the Update
+            if (orderStatus === 2 || orderStatus === 3) return;
+
+            // Checks if already Exist
+            const res = await getMethod('@Url.Action("CheckIfAreadyCheckNext", "Assembly")', {
+                line: this.strLine
+            });
+
+            console.log(res);
+
+            if (res.data > 0  && orderStatus === 0) {
+                alert("Already selected the next process");
+                return;
+            }
+
+            console.log("PRocee Updates");
+            //const success = await this.updateOrderStatus(id, orderStatus);
+            //if (!success) return;
+
+            //row.dataset.orderStatus = '2';
+            //badge.className = 'selectedbadge selectedProcess';
+            //row.classList.add('bg-row-highlight');
+        });
+
+        this.tbody.addEventListener('click', (e) => {
+            if (e.target.closest('button.selectedbadge')) return;
+            const row = e.target.closest('tr');
+            if (!row) return;
+
+            const id = row.dataset.id;
+            const label = row.querySelector('td:nth-child(2) .text-primary')?.textContent?.trim() || `Order ${id}`;
+            this.openDetailTab(id, label);
+        });
+
+        // Tab bar: switch on click (close handled per-tab)
+        this.tabBar.addEventListener('click', (e) => {
+            const tab = e.target.closest('.tab');
+            if (!tab || e.target.closest('.tab-close')) return;
+            const targetId = tab.dataset.tab;
+            this.switchTab(targetId);
+        });
+
+        // Manage Data tab explicit click
+        document.getElementById('tab-manage').addEventListener('click', () => {
+            this.switchTab('manage');
+        });
+
+        // Search + filter debounce
+        let debounceTimer;
+        const debounced = () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => this.LoadLineShopOrderList(), 300);
+        };
+        this.searchinput.addEventListener('input', debounced);
+        this.filterStatus.addEventListener('change', debounced);
+    }
+
+    switchTab(tabId) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+
+        document.getElementById(`tab-${tabId}`)?.classList.add('active');
+        document.getElementById(`panel-${tabId}`)?.classList.add('active');
+    }
+
+    openDetailTab(id, label) {
+        // If already open, just switch to it
+        if (this.openTabs.has(id)) {
+            this.switchTab(`row-${id}`);
+            return;
         }
 
-        async init() {
-            this.bindEvents();
-            await this.LoadLineShopOrderList();
-        }
+        // Build tab
+        const tab = document.createElement('div');
+        tab.className = 'tab';
+        tab.id = `tab-row-${id}`;
+        tab.dataset.tab = `row-${id}`;
+        tab.innerHTML = `
+            <iconify-icon icon="lucide:file-text" width="14"></iconify-icon>
+            <span class="tab-label" title="${label}">${label}</span>
+            <button class="tab-close" title="Close" aria-label="Close tab">
+                <iconify-icon icon="lucide:x" width="13"></iconify-icon>
+            </button>`;
 
-        bindEvents() {
-                // First column button click
-                this.tbody.addEventListener('click', async (e) => {
+        tab.querySelector('.tab-close').addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.closeDetailTab(id);
+        });
 
-                    const badge = e.target.closest('button.selectedbadge');
-                    if (!badge) return;
+        this.tabBar.appendChild(tab);
 
-                    e.stopPropagation();
+        // Build panel with iframe
+        const panel = document.createElement('div');
+        panel.className = 'tab-panel';
+        panel.id = `panel-row-${id}`;
+        panel.innerHTML = `
+            <iframe
+                class="detail-iframe"
+                src="@Url.Action("ShopOrderDetails", "Assembly")?id=${id}"
+                title="Shop Order Details">
+            </iframe>`;
 
-                    const row = badge.closest('tr');
-                    const id = parseInt(row.dataset.id);
-                    const orderStatus = parseInt(row.dataset.orderStatus);
+        this.contentArea.appendChild(panel);
+        this.openTabs.set(id, { tab, panel });
 
-                    if (orderStatus === 2 || orderStatus === 3) return;
+        this.switchTab(`row-${id}`);
+    }
 
-                    const success = await this.updateOrderStatus(id, orderStatus);
-                    if (!success) return;
+    closeDetailTab(id) {
+        const entry = this.openTabs.get(id);
+        if (!entry) return;
 
-                    row.dataset.orderStatus = '2';
-                    badge.className = 'selectedbadge selectedProcess';
-                    row.classList.add('bg-row-highlight');
-                });
+        entry.tab.remove();
+        entry.panel.remove();
+        this.openTabs.delete(id);
 
-                // Row click navigation
-                this.tbody.addEventListener('click', (e) => {
+        // Return to Manage Data + refresh table
+        this.switchTab('manage');
+        this.LoadLineShopOrderList();
+    }
 
-                    // Ignore clicks on first column button
-                    if (e.target.closest('button.selectedbadge')) {
-                        return;
-                    }
-
-                    const row = e.target.closest('tr');
-                    if (!row) return;
-
-                    const id = row.dataset.id;
-
-                    window.location.href =
-                        `@Url.Action("ShopOrderDetails", "Assembly")?id=${id}`;
-                });
-        }
-
-        async LoadLineShopOrderList() {
+    // ... rest of your existing methods unchanged
+    async LoadLineShopOrderList() {
             try {
                 const res = await getMethod('@Url.Action("LineShopOrderData", "Assembly")', {
-                    Linename: this.strLine
+                    Linename: this.strLine,
+                    searchtext: document.getElementById('searchinput').value,
+                    orderstatus: document.getElementById('filterdata').value
                 });
-                console.log(res);
+                //console.log(res);
                 if (!res?.Success) return;
 
                 this.renderTable(res.data);
@@ -154,9 +249,9 @@ navdata
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
-        }
+    }
 
-        renderTable(data) {
+    renderTable(data) {
             if (!this.tbody) return;
 
             if (data.length === 0) {
@@ -181,7 +276,7 @@ navdata
                 let highlighted = row.OrderStatus == 2 ? 'bg-row-highlight' : '';
 
                 let selecthighlight = '';
-
+                console.log("OrderStatus  " + orderStatus);
                 switch (orderStatus) {
                     case 2:
                         selecthighlight = 'selectedProcess'
@@ -198,20 +293,20 @@ navdata
                 }
                 return `
               <tr class='${highlighted}' data-order-status="${orderStatus}" data-id="${row.RecordID}">
-                     <td><button class="selectedbadge ${selecthighlight}" ${row.OrderStatus === 2 || row.OrderStatus === 3 ? 'disabled' : ''}></button></td>
+                     <td class='fixedrow'><button class="selectedbadge ${selecthighlight}" ${row.OrderStatus === 2 || row.OrderStatus === 3 ? 'disabled' : ''}></button></td>
                       <td>
                         <span class="text-primary font-medium">${row.FinalShopOrder}</span>
                         <p>${row.ItemNo}</p>
-                        <span >${row.Model}</span>
-                      </td>
-                      <td>${circuit}</td>
-                      <td>${rotor}</td>
-                      <td>${winding}</td>
-                      <td>${molding}</td>
-                      <td>${press}</td>
-                      <td>${final}</td>
-                      <td>${row.WC}</td>
-                      <td>${row.PlanQty}</td>
+                        <span style='font-weight: 600;'>${row.Model}</span>
+                    </td>
+                        <td>${circuit}</td>
+                        <td>${rotor}</td>
+                        <td>${winding}</td>
+                        <td>${molding}</td>
+                        <td>${press}</td>
+                        <td>${final}</td>
+                        <td>${row.WC}</td>
+                        <td>${row.PlanQty}</td>
                         <td>${this.formatDate(row.PlanStartDate)}</td>
                         <td>${this.formatDate(row.DispatchDate)}</td>
                         <td>${row.Note || ''}</td>
@@ -223,9 +318,10 @@ navdata
                 </tr>`
 
             }).join('');
-        }
+     }
 
-        formatDate(dateString) {
+
+   formatDate(dateString) {
             if (!dateString) return '';
 
             const timestamp = parseInt(dateString.match(/\d+/)[0]);
@@ -233,30 +329,28 @@ navdata
 
             return date.toLocaleDateString('en-US');
         }
-
-
-        async updateOrderStatus(id, orderstatus) {
+     async updateOrderStatus(id, orderstatus) {
              try {
 
                  const res = await postMethod('@Url.Action("UpdateStatusLine", "Assembly")', {
                      recordID : id,
                      orderstats: orderstatus
                  });
-                  console.log(res);
+                  //console.log(res);
 
-                  //if (res.Success) {
-                  //    await this.LoadLineShopOrderList();
-                  //}
+                  if (res?.Success) {
+                      await this.LoadLineShopOrderList();
+                  }
 
              } catch (err) {
                   console.error(err);
              }
         }
 
-    }
+}
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const controller = new ShopOrderListController();
-        controller.init();
-    });
+document.addEventListener('DOMContentLoaded', function () {
+    const controller = new ShopOrderListController();
+    controller.init();
+});
 </script>

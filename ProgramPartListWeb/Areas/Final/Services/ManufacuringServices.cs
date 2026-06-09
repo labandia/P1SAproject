@@ -35,9 +35,55 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                  ,s.OrderStatus
                                  ,(SELECT m.Model FROM FanTraceabilityManufacturingOrder m WHERE m.Line = s.Line AND m.OrderStatus = 1)  as NextItem ";
 
-        public Task AutoUpdateShopOrderLine()
+        public async Task AutoUpdateShopOrderLine()
         {
-            throw new NotImplementedException();
+            var getdata = await GetListofActiveShopOrders();
+
+            foreach (var item in getdata)
+            {
+                int getDoneLines = await SqlDataAcess_Test.ExecuteScalarAsync<int>(
+                  @"SELECT
+                    (
+                        CASE
+                            WHEN EXISTS (
+                                SELECT 1
+                                FROM FanTraceabilityFinal
+                                WHERE FinalShopOrder = @FinalShopOrder
+                                  AND DepartmentID IN (1,2)
+                            )
+                            THEN 2
+                            ELSE 0
+                        END
+                    )
+                    +
+                    (
+                        SELECT COUNT(DISTINCT DepartmentID)
+                        FROM FanTraceabilityFinal
+                        WHERE FinalShopOrder = @FinalShopOrder
+                          AND DepartmentID IN (3,4,5,7)
+                    ) AS totalshop;", new
+                  {
+                      FinalShopOrder = item.FinalShopOrder
+                  });
+
+                Debug.WriteLine("COUNT : " + getDoneLines);
+                // if all the section has complete the finalShopOrder updates the status of the line and Updates also the next process
+                if (getDoneLines == 6)
+                {
+                    // UPDATE TO DONE
+                    await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingOrder 
+                        SET OrderStatus = 3 WHERE  Line =@Line AND OrderStatus = 2  ", new
+                    {
+                        Line = item.Line
+                    });
+                    // UPDATE TO ACTIVE NEXT PROCESS
+                    await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingOrder 
+                        SET OrderStatus = 2 WHERE   Line =@Line AND OrderStatus = 1 ", new
+                    {
+                        Line = item.Line
+                    });
+                }
+            }
         }
 
         public Task<bool> ChangeLineShopOrder(string shoporder, string newLine)
@@ -101,11 +147,11 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 {
                     string listdone = @"
                         SELECT CAST(DepartmentID AS VARCHAR(10))
-                        FROM [PMACS_TEST].[dbo].[FanTraceabilityFinal]
+                        FROM FanTraceabilityFinal
                         WHERE FinalShopOrder = @FinalShopOrder
                           AND DepartmentID IN (1,2,3,4,5,6,7,8)";
 
-                    var departments = await SqlDataAccess.GetDataAsync<string>(
+                    var departments = await SqlDataAcess_Test.GetDataAsync<string>(
                         listdone,
                         new { FinalShopOrder = order.FinalShopOrder });
 
@@ -125,7 +171,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
             }
         }
         //  GET THE LIST DETAILS BY LINE 
-        public async Task<List<FanTraceabilityManufacturingOrder>> GetListofShopOrdersByLine(string Linename)
+        public async Task<List<FanTraceabilityManufacturingOrder>> GetListofShopOrdersByLine(
+            string Linename, string searchText, int status)
         {
             try
             {
@@ -212,8 +259,26 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     FROM FanTraceabilityManufacturingOrder mo
                     WHERE  mo.Line =@Line ";
 
-                var getData = await SqlDataAcess_Test.GetDataAsync<FanTraceabilityManufacturingOrder>(query, new { Line = Linename });
-                return getData;
+                var parameters = new DynamicParameters();
+
+                parameters.Add("@Line", Linename);
+
+                if (!string.IsNullOrWhiteSpace(searchText))
+                {
+                    query += @" AND (
+                        mo.FinalShopOrder LIKE @SearchPrefix)";
+
+                    parameters.Add("@SearchPrefix", $"{searchText}%");
+                }
+
+                if(status != 0)
+                {
+                    query += " AND mo.OrderStatus = @OrderStatus";
+                    parameters.Add("@OrderStatus", status);
+                }
+
+
+                return await SqlDataAcess_Test.GetDataAsync<FanTraceabilityManufacturingOrder>(query, parameters);
             }
             catch (Exception ex)
             {
@@ -439,16 +504,27 @@ namespace ProgramPartListWeb.Areas.Final.Services
             return SqlDataAcess_Test.GetDataAsync<P1TraceablityModel>(sql, parameters);
         }
 
-        public Task<bool> UpdateAssemblyStatus(int recordID, string finalassy, DateTime shipdate, string mode, string WithSR, string remarks)
+        public Task<bool> UpdateAssemblyStatus(int RecordID, string FAStatus, DateTime ShipmentDate, string mode, bool WithSR, string OrderRemarks)
         {
-            return SqlDataAcess_Test.ExecuteAsync(@"UPDATE FanTraceabilityManufacturingOrder SET FAStatus =@FAStatus, ShipmentDate =@ShipmentDate
-                    Remarks =@Remarks WHERE RecordID =@RecordID", new
+            return SqlDataAcess_Test.ExecuteAsync(@"UPDATE FanTraceabilityManufacturingOrder 
+                    SET FAStatus =@FAStatus, ShipmentDate =@ShipmentDate, WithSR =@WithSR, 
+                    OrderRemarks =@OrderRemarks WHERE RecordID =@RecordID", new
             {
-                FAStatus = finalassy,
-                ShipmentDate = shipdate,
-                Remarks = remarks,  
-                RecordID = recordID
+                FAStatus,
+                ShipmentDate,
+                OrderRemarks,  
+                WithSR,
+                RecordID
             });
+        }
+
+        public async Task<int> GetNumberofNextprocess(string line)
+        {
+            var count = await SqlDataAcess_Test.ExecuteScalarAsync<int>($@"
+                        SELECT COUNT(*) 
+                        FROM FanTraceabilityManufacturingOrder 
+                        WHERE OrderStatus = 1 AND Line = @Line", new { Line = line });
+            return count;
         }
     }
 }

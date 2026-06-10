@@ -250,8 +250,10 @@
                         `;
 
                     card.addEventListener('click', () => {
-                    window.location.href =
-                        '@Url.Action("ShopOrderLine", "Assembly")?Line=' +
+                        if (!isOnline) return;
+
+                        window.location.href =
+                            '@Url.Action("ShopOrderLine", "Assembly")?Line=' +
                         encodeURIComponent(item.Line);
                     });
 

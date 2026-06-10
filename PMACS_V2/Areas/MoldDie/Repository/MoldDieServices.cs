@@ -315,6 +315,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             return count > 0;
 
         }
+
         public Task<bool> DeleteDailyMoldie(int ID)
         {
             throw new NotImplementedException();

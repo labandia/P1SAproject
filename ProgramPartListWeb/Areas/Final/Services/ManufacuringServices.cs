@@ -86,10 +86,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
             }
         }
 
-        public Task<bool> ChangeLineShopOrder(string shoporder, string newLine)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         public Task<bool> CheckCurrentStatusChange(int record)
         {
@@ -525,6 +522,20 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         FROM FanTraceabilityManufacturingOrder 
                         WHERE OrderStatus = 1 AND Line = @Line", new { Line = line });
             return count;
+        }
+
+        public Task<List<string>> GetListLine()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> ChangeLineShopOrder(int recordID, string Lineselect)
+        {
+            return SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingOrder SET  Line =@Line WHERE RecordID =@RecordID", new
+            {
+                RecordID = recordID,
+                Line = Lineselect
+            });
         }
     }
 }

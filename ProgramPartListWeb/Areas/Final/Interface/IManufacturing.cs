@@ -18,9 +18,8 @@ namespace ProgramPartListWeb.Areas.Final
         Task<FanTraceabilityManufacturingOrder> GetShopderDetails(int id);
         Task<string> GetAlreadyDoneShopOrdersBySection(string finalorder);
         Task<bool> SelectOnlineShopOrders(int recordID);
+        Task<bool> ChangeLineShopOrder(int recordID, string Lineselect);
 
-
-        Task<bool> ChangeLineShopOrder(string shoporder, string newLine);
         Task<bool> NextModelProcess(int id, string newLine);
         Task UploadDataToDatabase(ProductionRecord model);
         Task<bool> UpdateStatusShopOrder(int id, int status);
@@ -28,6 +27,7 @@ namespace ProgramPartListWeb.Areas.Final
         Task<bool> CheckIfNextInprocessExist(string line);
         Task<bool> CheckCurrentStatusChange(int record);
 
+        Task<List<string>> GetListLine();
 
 
         Task<int> GetNumberofNextprocess(string record);

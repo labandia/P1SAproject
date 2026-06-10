@@ -120,6 +120,22 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             }
         }
         [HttpPost]
+        public async Task<ActionResult> UpdateLineshopOrder(int recordID, string Lineman)
+        {
+            try
+            {
+                var res = await _manu.ChangeLineShopOrder(recordID, Lineman);
+                if (!res) return JsonError("Error Updated");
+                return JsonSuccess(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
+
+        [HttpPost]
         public async Task<ActionResult> UpdateAssemblyStats(
             int RecordID, string FAStatus, DateTime ShipmentDate, string Mode, bool WithSR, string Remarks)
         {

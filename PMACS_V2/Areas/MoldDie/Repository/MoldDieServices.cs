@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.DynamicData;
 using System.Web.UI.WebControls.WebParts;
+using Dapper;
 using PMACS_V2.Areas.MoldDie.Interface;
 using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Helper;
@@ -120,61 +121,51 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             int pageNumber,
             int pageSize)
         {
-            int offset = (pageNumber - 1) * pageSize;
+            Debug.WriteLine($@"Months {month} - Days {days} Year - {year} - Process {process}");
 
-            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            int TotalRecords = (pageNumber - 1) * pageSize;
 
-            //string filterdays = (days != 0) ? $@"AND DAY(d.DateInput) = {days}" : "";
+            string strsql = $@"SELECT 
+                        d.RecordID,
+	                    FORMAT(d.DateInput, 'MM/dd/yy') as DateInput, 
+	                    d.PartNo, p.DimensionQuality, 
+	                    d.CycleShot, 
+	                    d.Total, 
+	                    d.MachineNo, 
+	                    d.Status, 
+	                    d.Remarks, 
+	                    d.Mincharge
+                    FROM DieMold_Daily d 
+                    INNER JOIN DieMoldParts p ON d.PartNo = p.PartNo
+                    	INNER JOIN DieMoldProcesses ps ON ps.PartNo = p.PartNo
+                    WHERE YEAR(d.DateInput) = @year ";
 
-            string strquery = $@"SELECT 
-                            d.RecordID,
-	                        FORMAT(d.DateInput, 'MM/dd/yy') as DateInput, 
-	                        d.PartNo, p.Dimension_Quality, 
-	                        d.CycleShot, 
-	                        d.Total, 
-	                        d.MachineNo, 
-	                        d.Status, 
-	                        d.Remarks, 
-	                        d.Mincharge
-                        FROM DieMold_Daily d 
-                        INNER JOIN DieMold_MoldingMainParts p ON d.PartNo = p.PartNo
-                        WHERE 
-                            MONTH(d.DateInput) = @month
-					        AND YEAR(d.DateInput) = @year
-                            AND p.ProcessID = @process ";
+            var parameter = new DynamicParameters();
+            parameter.Add("year", year);
 
-            string countstring = @"SELECT COUNT(d.RecordID) FROM DieMold_Daily d  
-                                  INNER JOIN DieMold_MoldingMainParts p ON d.PartNo = p.PartNo
-                                  WHERE 
-                                    MONTH(d.DateInput) = @month
-					                AND YEAR(d.DateInput) = @year
-                                    AND p.ProcessID = @process  ";
-
-            parameters.Add("@month", month);
-            parameters.Add("@year", year);
-            parameters.Add("@process", process);
-
+            if (month != 0)
+            {
+                strsql += @" AND MONTH(d.DateInput) = @month";
+                parameter.Add("month", month);
+            }
 
             if (days != 0)
             {
-                strquery += " AND DAY(d.DateInput) = @days";
-                countstring += " AND DAY(d.DateInput) = @days";
+                strsql += @" AND DAY(d.DateInput) = @days";
+                parameter.Add("days", days);
             }
 
-            // If the Get Data has a Pagination function
-            if (pageSize != 0)
+            if (process != "")
             {
-                strquery += $@" ORDER BY d.RecordID DESC
-                            OFFSET @Offset ROWS
-                            FETCH NEXT @PageSize ROWS ONLY";
-                parameters.Add("@Offset", offset);
-                parameters.Add("@PageSize", pageSize);
+                strsql += @" AND ps.ProcessID = @process";
+                parameter.Add("process", process);
             }
 
+            strsql += " ORDER BY d.RecordID DESC";
 
-            var items = await SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>(strquery, parameters);
+            var items = await SqlDataAccess.GetDataAsync<DieMoldMonitoringModel>(strsql, parameter);
 
-            int TotalRecords = await SqlDataAccess.ExecuteScalarAsync(countstring, parameters);
+            Debug.WriteLine(strsql);
 
             return new PagedResult<DieMoldMonitoringModel>
             {
@@ -183,7 +174,6 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 PageSize = pageSize,
                 TotalRecords = TotalRecords
             };
-
         }
         public Task<List<DieMoldMonitoringModel>> GetDailyMoldHistoryData(
             string searchValue,

@@ -29,7 +29,7 @@
                     </select>
                 </div>
 
-                <div class="formcustomgroup" style="margin-top: 1em;">
+                <div class="formcustomgroup" style="margin-top: 1em; display:none;">
                     <label class="form-label required" for="processSelect">SEARCH PARTNO <span class="validate-message" id="validDateinput">Input part no is required</span></label>
                     <div class="search-container">
                         <input type="text" id="searchInput" placeholder="Enter part number to search (e.g., 002886060-01)" maxlength="14">
@@ -132,6 +132,19 @@
                             <i class="fas fa-tags"></i> Filter by Month
                         </label>
                         <select class="filter-select" id="monthSelectDaily">
+                            <option value="0"> -- select Month -- </option>
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
                         </select>
                     </div>
 
@@ -140,6 +153,7 @@
                             <i class="fas fa-tags"></i> Filter by Process
                         </label>
                         <select class="filter-select" id="DailyProcess">
+                            <option value=""> -- select Process -- </option>
                             <option value="M002">Mold Frame</option>
                             <option value="M003">Mold Impeller</option>
                             <option value="M004">Slot Insulator </option>
@@ -290,7 +304,6 @@
         isSubmitting: false,
         isSelectedSearch: 0,
         isChangeDate: 0,
-        currentMonth: new Date().getMonth() + 1,
         currentYear: new Date().getFullYear(),
         editRecordId: null,
         isEditMode: false,
@@ -357,7 +370,6 @@
         DOM.dailyInputs.hide();
         DOM.validDie.hide(); DOM.validProcess.hide(); DOM.validPart.hide();
 
-        initMonthSelect("monthSelectDaily", true);
         bindEvents();
         loadDaily();
     });
@@ -970,29 +982,31 @@
        DAILY SUMMARY
     ========================================================= */
 
-    async function loadDaily(month = state.currentMonth, day = 0, process = DOM.filterProcess.val()){
+    async function loadDaily(month = DOM.monthSelect.val(), day = 0, process = DOM.filterProcess.val()){
         if(state.isYearLoad) await loadYears();
 
         try {
-              const data = {
-                  Months: month,
-                  Days: day,
-                  Year: DOM.yearSelect.val() || state.currentYear,
-                  ProcessID: process,
-                  pageNumber: state.currentPage || 1,
-                  pageSize: state.pageSize || 20
-              };
-              const res = await GetMethod('@Url.Action("GetMoldDieDailyList","Mold")', data);
-              DOM.dailyDisplay.empty();
-              if (!res?.Success) return showNoSummaryData();
+             const res = await GetMethodPublic('@Url.Action("GetMoldDieDailyList","Mold")', {
+                    Months: month,
+                    Days: day,
+                    Year: DOM.yearSelect.val() || state.currentYear,
+                    ProcessID: process,
+                    pageNumber: state.currentPage || 1,
+                    pageSize: state.pageSize || 20
+              });
 
-              state.dailyData = res.Data.Items;
-              state.totalRecords = res.Data.TotalRecords || 0;
-              state.totalPages = Math.ceil(state.totalRecords / state.pageSize);
+              console.log(res);
 
-             renderDailyTable(state.dailyData);
+        //      DOM.dailyDisplay.empty();
+        //      if (!res?.Success) return showNoSummaryData();
 
-             updatePaginationUI();
+        //      state.dailyData = res.Data.Items;
+        //      state.totalRecords = res.Data.TotalRecords || 0;
+        //      state.totalPages = Math.ceil(state.totalRecords / state.pageSize);
+
+        //     renderDailyTable(state.dailyData);
+
+        //     updatePaginationUI();
         } catch (e) {
             showNoSummaryData();
         }

@@ -29,7 +29,6 @@ namespace PMACS_V2.Areas.MoldDie.Interface
         Task<List<DieMoldMonitoringModel>> GetDailyMoldHistoryData(string partnum, string processID);
         Task<List<DieMoldMonitoringModel>> GetDailyMoldHistoryByDieSerialData(string diepart, string processID);
 
-
         Task<bool> CheckMoldieExist(string partnum, string Dateinput);
         Task<bool> AddUpdateMainMoldie(DieMoldMonitoringModel mold, int action);
         Task<bool> AddUpdateDailyMoldie(DieMoldMonitoringModel mold, int action); // -- Both Add and Update 
@@ -68,7 +67,7 @@ namespace PMACS_V2.Areas.MoldDie.Interface
         Task<bool> CheckMasterlistDieSerial(string partnum, string process);
 
         Task<bool> CheckMasterlistPartnumber(string partnum, string process);
-
+         
         Task<PagedResult<DieMoldMonitoringModel>> GetMoldieMasterlist(
               string search,
               string filter,
@@ -80,11 +79,9 @@ namespace PMACS_V2.Areas.MoldDie.Interface
         Task<bool> CheckMoldieMasterlist(string partno);
 
 
-
         Task<bool> AddUpdateMoldieMasterlist(DieMoldMonitoringModel mold, int action);
         Task<bool> DeleteMoldieMasterlist(string partno);
 
         Task<bool> CheckZeroData(string partno, string strDate);
-
     }
 }

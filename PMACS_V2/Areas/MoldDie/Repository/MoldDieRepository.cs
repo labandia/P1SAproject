@@ -1,4 +1,5 @@
-﻿using PMACS_V2.Areas.MoldDie.Models;
+﻿using Dapper;
+using PMACS_V2.Areas.MoldDie.Models;
 using PMACS_V2.Areas.P1SA.Interface;
 using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Helper;
@@ -90,11 +91,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
         }
         public Task<List<DieMoldDaily>> GetDailyMoldData(int month, int days, int year, string process)
         {
-            string filterdays = (days != 0) ? $@"AND DAY(d.DateInput) = {days}" : "";
-
-
-
-            return SqlDataAccess.GetDataAsync<DieMoldDaily>($@"SELECT 
+            string strsql = $@"SELECT 
                         d.RecordID,
 	                    FORMAT(d.DateInput, 'MM/dd/yy') as DateInput, 
 	                    d.PartNo, p.DimensionQuality, 
@@ -107,12 +104,33 @@ namespace PMACS_V2.Areas.P1SA.Repository
                     FROM DieMoldDaily d 
                     INNER JOIN DieMoldParts p ON d.PartNo = p.PartNo
                     	INNER JOIN DieMoldProcesses ps ON ps.PartNo = p.PartNo
-					WHERE 
-                        MONTH(d.DateInput) = @month
-					    AND YEAR(d.DateInput) = @year
-					    {filterdays}      
-					    AND ps.ProcessID = @process 
-                    ORDER BY RecordID DESC", new { process = process, month = month, year = year });
+                    WHERE YEAR(d.DateInput) = @year ";
+
+            var parameter = new DynamicParameters();
+
+            if(month != 0)
+            {
+                strsql += @" AND MONTH(d.DateInput) = @month";
+                parameter.Add("month", month);
+            }
+            
+            if (days != 0)
+            {
+                strsql += @" AND DAY(d.DateInput) = @days";
+                parameter.Add("days", days);
+            }
+
+            if (process != "")
+            {
+                strsql += @" AND ps.ProcessID = @process";
+                parameter.Add("process", process);
+            }
+
+            strsql += " ORDER BY RecordID DESC";
+
+            Debug.WriteLine(strsql);
+
+            return SqlDataAccess.GetDataAsync<DieMoldDaily>(strsql, parameter);
         }
 
         public async Task<DieMoldDaily> GetDailyLastMoldData(string partnum)

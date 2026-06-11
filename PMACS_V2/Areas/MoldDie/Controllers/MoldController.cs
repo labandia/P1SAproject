@@ -104,7 +104,6 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
         // ===========================================================
         // MOLD DIE DAILY FUNCTIONALITY
         // ============================================================
-        [JwtAuthorize]
         public async Task<ActionResult> GetMoldDieDailyList(
             int Months, 
             int Year, 
@@ -115,6 +114,13 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
         {
 
             var data = await _dieV2.GetDailyMoldData(Months, Days, Year, ProcessID, pageNumber, pageSize);
+
+            //foreach(var items in data.Items)
+            //{
+            //    Debug.WriteLine($@"PartNo {items.PartNo} - DateInput {items.DateInput}" );
+            //}
+
+
             if (data == null || !data.Items.Any())
                 return JsonNotFound("No Mold Die Daily data found");
 

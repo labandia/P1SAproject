@@ -23,7 +23,7 @@
     --color-final: #fbbf24;
     --radius-sm: 6px;
     --radius-md: 10px;
-    --radius-lg: 16px;
+    --radius-lg: c;
     --radius-xl: 24px;
     --text-xs: 11px;
     --text-sm: 13px;
@@ -224,7 +224,17 @@ ol, ul, menu {
     min-width: 0;
     margin-top: 64px;
     margin-left: 64px; 
-    padding: 30px 20px;
+    overflow-y: auto;
+    height: 100%;
+    min-width: 0;
+}
+
+.contentV2 {
+    flex: 1;
+    overflow-y: auto;
+    min-width: 0;
+    padding: 0px 20px;
+    margin-top: 64px;
     overflow-y: auto;
     height: 100%;
     min-width: 0;
@@ -335,17 +345,60 @@ ol, ul, menu {
     background-color: var(--color-card);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
-    padding: 20px;
-    display: flex;
+    padding: 25px;
+    card-header display: flex;
     flex-direction: column;
     gap: 16px;
     cursor: pointer;
+}
+
+.line-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.idle-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+    gap: 8px;
+}
+
+.production-note {
+    font-size: 11px;
+    color: var(--muted-foreground);
+}
+
+.pause-icon {
+    width: 40px;
+    height: 40px;
+    background-color: var(--muted);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted-foreground);
+}
+
+.idle-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+.idle-sub {
+    font-size: 11px;
+    color: var(--muted-foreground);
 }
 
 .card-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 1em;
 }
 
 .card-header-left {
@@ -356,7 +409,7 @@ ol, ul, menu {
 
 .line-id {
     width: 40px;
-    height: 40px;
+    height: 25px;
     border-radius: var(--radius-md);
     display: flex;
     align-items: center;
@@ -406,6 +459,7 @@ ol, ul, menu {
 
 /* card rows */
 .card-row {
+    margin: 1em 0;
 }
 
 .card-row-label {
@@ -415,13 +469,13 @@ ol, ul, menu {
 }
 
 .card-row-value {
-    font-size: var(--text-sm);
+    font-size: 1.1rem;
     font-weight: 600;
     color: var(--color-foreground);
 }
 
 .card-row-value-normal {
-    font-size: var(--text-sm);
+    font-size: 1.1rem;
     font-weight: 400;
     color: var(--color-foreground);
 }
@@ -440,6 +494,7 @@ ol, ul, menu {
     border-radius: var(--radius-xl);
     font-size: var(--text-xs);
     font-weight: 600;
+    color:  #fff !important;
 }
 
 .badge-molding {
@@ -494,6 +549,17 @@ ol, ul, menu {
     font-size: var(--text-xs);
     font-weight: 500;
     color: var(--color-foreground);
+}
+
+.btn-completed {
+    background: #7c3aed;
+    padding: .6em 1.5em;
+    color: #fff;
+    border: none;
+    border-radius: .6em;
+}
+.btn-completed:hover{
+
 }
 
 /* =====================================================
@@ -2030,6 +2096,14 @@ svg.icon-stroke {
     background: #dea123;
 }
 
+.selectedbadge.selectedDone:disabled:hover{
+  background: #0cc267;
+}
+
+.selectedbadge.selectedProcess:disabled:hover{
+  background: #0071e3;
+}
+
 
 .selectedProcess {
     background: #0071e3;
@@ -2044,7 +2118,7 @@ svg.icon-stroke {
 }
 
 .selectedDone {
-    background: #e5e5ea;
+    background: #0cc267;
     border: 1px solid #d2d2d7;
     color: #ffffff;
 }
@@ -2497,7 +2571,6 @@ svg.icon-stroke {
 .tab-panel { display: none; }
 .tab-panel.active { 
     display: block; 
-
 }
 
 /* Detail iframe */
@@ -2541,13 +2614,13 @@ svg.icon-stroke {
     color: hsl(209, 80%, 50%);
 }
 
-    .custom_icon_container i {
+.custom_icon_container i {
         position: absolute;
         top: 50%;
         left: 50%;
         font-size: 3rem !important;
         transform: translate(-50%, -50%);
-    }
+}
 
 .custom_modal_header h5 {
     font-weight: 600;
@@ -2662,4 +2735,281 @@ svg.icon-stroke {
 .btn-primary-dark:hover{
     background: #184cbd;
     color: #fff;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ========== NEW ANIMATION STYLES ========== */
+/* overlay backdrop for centered card */
+.animation-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 1050;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+    .animation-backdrop.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+/* floating clone for slide animation */
+.floating-card-clone {
+    position: fixed;
+    z-index: 1100;
+    background: white;
+    overflow: hidden;
+    box-shadow: 0 30px 45px rgba(0, 0, 0, 0.3);
+    will-change: top, left, width, height, border-radius;
+    margin: 0;
+    transition: none;
+}
+
+/* final centered expanded card */
+.centered-standalone-card {
+    position: fixed;
+    z-index: 1150;
+    background: white;
+    border-radius: 16px;
+    overflow-y: auto;
+    box-shadow: 0 40px 70px rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.expanded-card-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.expanded-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.expanded-card-icon {
+    font-size: 3rem;
+}
+
+.close-centered-btn {
+    background: rgba(0, 0, 0, 0.05);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+
+    .close-centered-btn:hover {
+        background: rgba(0, 0, 0, 0.12);
+        transform: scale(1.02);
+    }
+
+.expanded-card-title {
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: #0f2c3f;
+    margin: 0.5rem 0 0.25rem;
+}
+
+.expanded-card-desc {
+    font-size: 1rem;
+    color: #3e5a76;
+    margin: 0.75rem 0;
+    line-height: 1.5;
+}
+
+.expanded-card-detail {
+    background: #f8fafd;
+    padding: 1rem 1.2rem;
+    border-radius: 24px;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #1c3a5c;
+    line-height: 1.45;
+}
+
+/* hide other cards during animation */
+.card-other-hidden {
+    opacity: 0 !important;
+    transform: scale(0.95) !important;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* disable grid clicks while expanded */
+.cards-grid.disabled-grid {
+    pointer-events: none;
+}
+
+.reset-grid-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-muted-foreground);
+    transition: color 0.2s;
+}
+
+    .reset-grid-btn:hover {
+        color: var(--color-primary);
+    }
+
+
+
+
+
+
+
+
+
+.completed-qty{
+    width:80px;
+   border: none;
+   background: #e5e5e5;
+   padding: .2em .5em;
+   text-align: center;
+   outline: #7c3aed;
+}
+/* Centered modal (expanded card) */
+.centered-standalone-card {
+    position: fixed;
+    z-index: 1150;
+    background: white;
+    border-radius: 20px;
+    overflow-y: auto;
+    box-shadow: 0 40px 70px rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.expanded-card-content {
+    padding: 1rem;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.expanded-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.expanded-card-icon {
+    font-size: 3rem;
+}
+
+.close-centered-btn {
+    background: rgba(0, 0, 0, 0.05);
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 40px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+
+    .close-centered-btn:hover {
+        background: rgba(0, 0, 0, 0.12);
+        transform: scale(1.02);
+    }
+
+.expanded-card-title {
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: #0f2c3f;
+    margin: 0.5rem 0 0.25rem;
+}
+
+.expanded-card-desc {
+    font-size: 1rem;
+    color: #3e5a76;
+    margin: 0.75rem 0;
+    line-height: 1.5;
+}
+
+.expanded-card-detail {
+    background: #f8fafd;
+    padding: 1rem 1.2rem;
+    border-radius: 24px;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #1c3a5c;
+    line-height: 1.45;
+}
+
+.animation-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 1050;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+    .animation-backdrop.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+.floating-card-clone {
+    position: fixed;
+    z-index: 1100;
+    background: white;
+    overflow: hidden;
+    box-shadow: 0 30px 45px rgba(0, 0, 0, 0.3);
+    will-change: top, left, width, height, border-radius;
+    margin: 0;
+    transition: none;
+}
+
+.cards-grid.disabled-grid {
+    pointer-events: none;
 }

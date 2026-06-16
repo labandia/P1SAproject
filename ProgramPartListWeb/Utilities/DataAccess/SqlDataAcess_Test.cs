@@ -13,6 +13,7 @@ using NLog;
 using System.Web;
 using CommandType = System.Data.CommandType;
 using System.Configuration;
+using System.Diagnostics;
 
 namespace ProgramPartListWeb.Utilities.DataAccess
 {
@@ -142,6 +143,10 @@ namespace ProgramPartListWeb.Utilities.DataAccess
                 _cache.Set(cacheKey, list, policy);
 
                 return list;
+            }catch(Exception e)
+            {
+                Debug.WriteLine("Error" + e.Message);
+                throw;
             }
             finally
             {
@@ -281,6 +286,7 @@ namespace ProgramPartListWeb.Utilities.DataAccess
             }
             catch (Exception ex)
             {
+                Debug.WriteLine("Update error : " + ex.Message);
                 Logger.Error(ex, "ExecuteAsync failed.");
                 return false;
             }

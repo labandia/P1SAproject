@@ -34,6 +34,7 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public string Winding { get; set; }
         public string final { get; set; }
         public string NextItem { get; set; }
+        public int InputQty { get; set; }
     }
 
 
@@ -95,7 +96,7 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public string FaStatus { get; set; } = string.Empty;
         public string Shipment { get; set; } = string.Empty;
         public string Mode { get; set; } = string.Empty;
-        public string WithSr { get; set; } = string.Empty;
+        public bool WithSr { get; set; } = false;
         public string Remarks { get; set; } = string.Empty;
 
         // ── Upload tracking (not persisted) ───────────────────────────────────
@@ -136,16 +137,16 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public string WC { get; set; } = string.Empty;
         public int PlanQty { get; set; } = 0;
         public DateTime? PlanStartDate { get; set; }
-        public DateTime? DispatchDate { get; set; }
+        public string DispatchDate { get; set; }
         public string Note { get; set; }
         public DateTime? FinalFinishedDate { get; set; }
         public string FAStatus { get; set; }
-        public DateTime ShipmentDate { get; set; }
+        public DateTime? ShipmentDate { get; set; }
         public string ShipmentMode { get; set; }
         public bool WithSR { get; set; } = false;
         public string OrderRemarks { get; set; }
         public int OrderStatus { get; set; }
-
+        public string StatusCheck { get; set; }
         public bool IsApproved { get; set; }
 
     }

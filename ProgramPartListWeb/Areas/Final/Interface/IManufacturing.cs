@@ -19,10 +19,18 @@ namespace ProgramPartListWeb.Areas.Final
         Task<string> GetAlreadyDoneShopOrdersBySection(string finalorder);
         Task<bool> SelectOnlineShopOrders(int recordID);
         Task<bool> ChangeLineShopOrder(int recordID, string Lineselect);
+        Task<bool> AddInputQuantiyPerLine(int recordID, int Qty);
 
-        Task<bool> NextModelProcess(int id, string newLine);
+      
+
+        // ======  UPDATING STATUS OF SHOP ORDER DATA =================
+        Task<bool> UpdateStatusShopOrder(int id, int status, string line);
+        Task<bool> CompletionStatusShopOrder(int id, int status, string line);
+        Task<bool> NextModelProcess(string newLine);
+        // ============================================================
+
+        // ======  FOR UPLOAD DATA  ====================================
         Task UploadDataToDatabase(ProductionRecord model);
-        Task<bool> UpdateStatusShopOrder(int id, int status);
 
         Task<bool> CheckIfNextInprocessExist(string line);
         Task<bool> CheckCurrentStatusChange(int record);

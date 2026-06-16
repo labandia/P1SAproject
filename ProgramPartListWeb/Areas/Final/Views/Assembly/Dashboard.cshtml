@@ -1,91 +1,52 @@
 ﻿
 
 @{
-    Layout = "~/Areas/Final/Views/Shared/_FinalAssemblyLayout.cshtml";
+    Layout = "~/Areas/Final/Views/Shared/_ManageLayout.cshtml";
 }
 
-<div class="dashboard">
-    <!-- ── HEADER ─────────────────────────────────────── -->
-    <header class="dasheader">
-        <div class="dasheader-left">
-            <div class="dasheader-logo">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2.667" stroke-linecap="round" stroke-linejoin="round"
-                     style="color:var(--color-primary-foreground)">
-                    <path d="M12 16h.01M16 16h.01M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5a.5.5 0 0 0-.769-.422l-4.462 2.844A.5.5 0 0 1 15 10.5v-2a.5.5 0 0 0-.769-.422L9.77 10.922A.5.5 0 0 1 9 10.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2zm5-3h.01" />
-                </svg>
-            </div>
-            <div>
-                <p class="dasheader-subtitle">Manufacturing Intelligence</p>
-                <h1 class="dasheader-title">Final Assembly Schedule Performance and Tracking Dashboard</h1>
-            </div>
-        </div>
-        <div class="dasheader-right">
-
-            <div class="badge badge-muted">
-                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"
-                     style="color:var(--color-muted-foreground)">
-                    <path d="M8 2v4m8-4v4" />
-                    <rect width="18" height="18" x="3" y="4" rx="2" />
-                    <path d="M3 10h18" />
-                </svg>
-                <span id="currentDate"
-                      style="font-size:var(--text-sm);font-weight:500"></span>
-            </div>
-            <div class="badge badge-online">
-                <span class="dot-online"></span>
-                <span id="liveTime"></span>
-            </div>
-        </div>
-    </header>
-
-    <section style="padding:40px;"></section>
-
-    <!-- ── CARDS GRID ─────────────────────────────────── -->
-    <div class="cards-section">
-        <div class="cards-grid" id="assemblyCardsGrid"></div>
-    </div>
-
-    <!-- ── LEGEND BAR ─────────────────────────────────── -->
-    <footer class="legend-bar">
-        <div class="legend-items">
-            <div class="legend-item">
-                <span class="legend-dot" style="background-color:var(--color-molding)"></span>
-                <span class="legend-text">Molding</span>
-            </div>
-            <div class="legend-item">
-                <span class="legend-dot" style="background-color:var(--color-press)"></span>
-                <span class="legend-text">Press</span>
-            </div>
-            <div class="legend-item">
-                <span class="legend-dot" style="background-color:var(--color-rotor)"></span>
-                <span class="legend-text">Rotor</span>
-            </div>
-            <div class="legend-item">
-                <span class="legend-dot" style="background-color:var(--color-winding)"></span>
-                <span class="legend-text">Winding</span>
-            </div>
-            <div class="legend-item">
-                <span class="legend-dot" style="background-color:var(--color-circuit)"></span>
-                <span class="legend-text">Circuit</span>
-            </div>
-            <div class="legend-item">
-                <span class="legend-dot" style="background-color:var(--color-final)"></span>
-                <span class="legend-text">FinalAssembly</span>
-            </div>
-        </div>
-        <div class="legend-refresh">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 12a9 9 0 0 1 9-9a9.75 9.75 0 0 1 6.74 2.74L21 8" />
-                <path d="M21 3v5h-5m5 4a9 9 0 0 1-9 9a9.75 9.75 0 0 1-6.74-2.74L3 16" />
-                <path d="M8 16H3v5" />
-            </svg>
-            <span id="lastUpdated">Auto-refresh every 30s · Last updated 06:42:18 AM</span>
-        </div>
-    </footer>
+<!-- ── CARDS GRID ─────────────────────────────────── -->
+<div class="cards-section">
+    <div class="cards-grid" id="assemblyCardsGrid"></div>
 </div>
+
+<!-- ── LEGEND BAR ─────────────────────────────────── -->
+<footer class="legend-bar">
+    <div class="legend-items">
+        <div class="legend-item">
+            <span class="legend-dot" style="background-color:var(--color-molding)"></span>
+            <span class="legend-text">Molding</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-dot" style="background-color:var(--color-press)"></span>
+            <span class="legend-text">Press</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-dot" style="background-color:var(--color-rotor)"></span>
+            <span class="legend-text">Rotor</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-dot" style="background-color:var(--color-winding)"></span>
+            <span class="legend-text">Winding</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-dot" style="background-color:var(--color-circuit)"></span>
+            <span class="legend-text">Circuit</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-dot" style="background-color:var(--color-final)"></span>
+            <span class="legend-text">FinalAssembly</span>
+        </div>
+    </div>
+    <div class="legend-refresh">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 0 1 9-9a9.75 9.75 0 0 1 6.74 2.74L21 8" />
+            <path d="M21 3v5h-5m5 4a9 9 0 0 1-9 9a9.75 9.75 0 0 1-6.74-2.74L3 16" />
+            <path d="M8 16H3v5" />
+        </svg>
+        <span id="lastUpdated">Auto-refresh every 30s · Last updated 06:42:18 AM</span>
+    </div>
+</footer>
 
 <script type="module" asp-append-version="true">
     import {
@@ -98,8 +59,18 @@
 
 
         constructor() {
+            this.prevModelprocess = "";
+
             this.refreshInterval = null;
             this.datalist = [];
+            this.isExpanded = false;      // whether a card is centered
+            this.isAnimating = false;      // animation in progress
+            this.originalCard = null;      // reference to clicked card
+            this.currentCenteredCard = null;
+            this.cloneCard = null;
+            this.activeLineId = null;           // store current cards data for reset
+            this.allCardsData = [];
+
             this.assemblyRecords = [
                 { finalShopOrder: "", Line: "L1", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
                 { finalShopOrder: "", Line: "L2", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
@@ -131,45 +102,34 @@
         }
 
         async init() {
-            this.updateClock();                         
-            setInterval(() => this.updateClock(), 1000);
-
-
             this.bindEvents();
-
             await this.LoadActiveShopOrders();
-
             this.refreshInterval = setInterval(
                 () => this.LoadActiveShopOrders(),
                 30000
             );
+
+             // add reset button listener
+            const resetBtn = document.getElementById('resetGridBtn');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => this.resetToGrid());
+            }
         }
 
         bindEvents() {
 
         }
         /* ================= LOAD DATA ================= */
-        async LoadActiveShopOrders() {
+         async LoadActiveShopOrders() {
+            if (this.isAnimating) return;
 
             try {
-
                 const res = await getMethod('@Url.Action("GetListActiveShopOrders", "Assembly")', {});
-
                 if (!res?.Success) return;
                 const apiData = res.data ?? [];
-                // DEBUG — remove after confirming
-                console.log("API returned lines:", apiData.map(x => x.Line));
-                console.log("Sample item keys:", apiData[0] ? Object.keys(apiData[0]) : "empty");
-                console.log("Sample FinalShopOrder value:", apiData[0]?.FinalShopOrder);
-
                 const lookup = new Map(apiData.map(item => [item.Line, item]));
-
                 const records = this.assemblyRecords.map(res => {
                     const fromApi = lookup.get(res.Line);
-
-                    // DEBUG
-                    console.log(`Line ${res.Line}:`, fromApi ? `found → FinalShopOrder="${fromApi.FinalShopOrder}"` : "not in API → offline");
-
                     return {
                         Line: res.Line,
                         FinalShopOrder: "",
@@ -178,151 +138,301 @@
                         NextItem: "",
                         Note: "",
                         OrderRemarks: "",
+                        RecordID: null,     // add
+                        PlanQty: 0,         // add
+                        InputQty: 0,        // add
                         ...(fromApi ?? {})
                     };
                 });
-
-
-                this.RenderCardList(records);
-                this.updateLastRefresh();
-            }
-            catch (err) {
+                this.allCardsData = records; // store for potential reset
+                if (this.isExpanded && this.currentCenteredCard && this.activeLineId) {
+                    // Update modal content with fresh data for this line
+                    const updatedRecord = records.find(r => r.Line === this.activeLineId);
+                    this.prevModelprocess = updatedRecord.NextItem;
+                    if (updatedRecord) this.updateModalContent(updatedRecord);
+                } else {
+                    // Normal full render
+                    this.RenderCardList(records);
+                }
+            } catch (err) {
                 console.error(err);
             }
         }
 
-
-        RenderCardList(data) {
-
-            const gridContainer = document.getElementById('assemblyCardsGrid');
-            if (!gridContainer) return;
+        updateModalContent(item) {
+            if (!this.currentCenteredCard) return;
 
             const sectionMap = {
                 1: ['badge-molding', 'AG'],
                 2: ['badge-press', 'AF'],
                 3: ['badge-rotor', 'BF'],
                 4: ['badge-winding', 'WF'],
-                5: ['badge-circuit', 'CE']
+                5: ['badge-circuit', 'CE'],
+                7: ['badge-final', 'HD']
             };
 
-            const fragment = document.createDocumentFragment();
+    const completedSections = (item.CompletedSection || '')
+        .split(',')
+        .map(x => x.trim())
+        .filter(x => sectionMap[x]);
+           const completionPct = Math.round((completedSections.length / 6) * 100);
+    const badges = completedSections
+        .map(x => {
+            const [css, text] = sectionMap[x];
+            return `<span class="status-badge ${css}">${text}</span>`;
+        })
+        .join('');
+
+    // Modal HTML with editable input, active button, and a close button
+    this.currentCenteredCard.innerHTML = `
+        <div class="expanded-card-content">
+            <div class="expanded-card-header">
+               <div class="card-header-left">
+                    <div class="line-id line-id-online">${item.Line}</div>
+                    <span class="status-tag status-tag-online">
+                        Online <div class="dot-indicator"></div>
+                    </span>
+                </div>
+                <button class="close-centered-btn" id="closeCenteredBtn">✕</button>
+            </div>
+
+            <div class="card-row">
+                <p class="card-row-label"  style='font-size: 1.1rem;'>On Process Model</p>
+                <p class="card-row-value" style='font-size: 1.5rem;'>${item.Model || '-'}</p>
+            </div>
+            <div class="card-row" style='margin: .2em 0;'>
+                <p class="card-row-label" style="margin-bottom:8px; font-size: 1.1rem;">
+                    Material Status : <span class="card-row-label" style='font-size: 1.1rem;'>${completionPct}%</span>
+                </p>
+                <div class="badge-row">${badges}</div>
+            </div>
+            <div class="card-row">
+                <p class="card-row-label" style='font-size: 1.1rem;'>Next Process Model</p>
+                <p class="card-row-value-normal" style='font-size: 1.5rem;'>${item.NextItem || '-'}</p>
+            </div>
+            <div class="card-footer">
+                <div class="card-footer-col">
+                    <p class="card-footer-label">Special Process</p>
+                    <p class="card-footer-value">${item.Note || '-'}</p>
+                </div>
+                <div class="card-footer-col">
+                    <p class="card-footer-label">Remarks</p>
+                    <p class="card-footer-value">${item.OrderRemarks || '-'}</p>
+                </div>
+            </div>
+
+
+            <div  style="display:flex;align-items:center;gap:8px; justify-content: space-between; margin-top: .5em;">
+                <div>
+                    <input type="number" id="modalQtyInput" class="completed-qty"
+                           min="1" max="${item.PlanQty || 0}" value="${item.InputQty === 0 ? '' : item.InputQty}" />
+                    / ${item.PlanQty || 0}
+                </div>
+                <button type="button" id="modalCompleteBtn" class="btn-completed"
+                        data-line="${item.Line}" data-order="${item.FinalShopOrder}">Completed</button>
+            </div>
+        </div>
+    `;
+
+    // Close button listener
+    const closeBtn = this.currentCenteredCard.querySelector('#closeCenteredBtn');
+    if (closeBtn) closeBtn.addEventListener('click', () => this.resetToGrid());
+
+    // Editable quantity input (blur event)
+    const qtyInput = this.currentCenteredCard.querySelector('#modalQtyInput');
+    if (qtyInput) {
+         const updateQty = async (value) => {
+            const newQty = parseInt(value || 0);
+
+            if (!newQty || newQty === item.InputQty) return;
+
+            if (newQty > item.PlanQty) {
+                alert("adadadasdsdsd");
+                qtyInput.value = item.InputQty;
+                return;
+            }
+
+            try {
+                await postMethod('@Url.Action("UpdateQuantityLine", "Assembly")', {
+                    recordID: item.RecordID,
+                    Qty: newQty
+                });
+
+                await this.LoadActiveShopOrders();
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        // Blur
+        qtyInput.addEventListener('blur', async (e) => {
+            await updateQty(e.target.value);
+        });
+
+        // Enter key
+        qtyInput.addEventListener('keydown', async (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                qtyInput.blur(); // optional: remove focus
+                await updateQty(e.target.value);
+            }
+        });
+    }
+
+    // Active Completed button
+    const completeBtn = this.currentCenteredCard.querySelector('#modalCompleteBtn');
+    if (completeBtn) {
+        // Update the row Data into a Complete
+        completeBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const res = await postMethod('@Url.Action("CompleteStatusLine", "Assembly")', {
+                recordID: item.RecordID,
+                line: item.Line
+            });
+            if (!res?.Success) return;
+
+            // 2. Loads the Latest Load Active ShopOrder (Online)
+            await this.LoadActiveShopOrders();
+
+            // 4. If there is NO next process (empty or null), close the modal
+            if (this.prevModelprocess === "") {
+                await this.resetToGrid();
+            }
+
+            this.prevModelprocess = "";
+        });
+    }
+
+    this.currentCenteredCard.addEventListener('dblclick', (e) => {
+        // Prevent navigation if clicking on input, button, or close button
+        if (e.target.closest('input') || e.target.closest('button')) return;
+        localStorage.setItem("LineSet", item.Line);
+        window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
+    });
+
+}
+
+
+
+
+     RenderCardList(data) {
+        const gridContainer = document.getElementById('assemblyCardsGrid');
+        if (!gridContainer) return;
+        if (this.isExpanded) return;
+
+        const sectionMap = {
+            1: ['badge-molding', 'AG'],
+            2: ['badge-press', 'AF'],
+            3: ['badge-rotor', 'BF'],
+            4: ['badge-winding', 'WF'],
+            5: ['badge-circuit', 'CE'],
+            7: ['badge-final', 'HD']
+        };
+
+        const fragment = document.createDocumentFragment();
 
             data.forEach(item => {
-
                 const shopOrder = (item.FinalShopOrder ?? '').trim();
                 const isOnline = shopOrder !== '';
-
                 const card = document.createElement('div');
                 card.className = 'line-card' + (isOnline ? '' : ' line-card-offline');
                 card.dataset.Line = item.Line;
 
                 if (!isOnline) {
                     card.innerHTML = `
-                            <div class="card-header">
-                                <div class="card-header-left">
-                                    <div class="line-id line-id-offline">${item.Line}</div>
-                                    <span class="status-tag status-tag-offline">Offline</span>
+                        <div class="card-header">
+                            <div class="line-badge">
+                             <div class="line-id line-id-offline">${item.Line}</div>
+                               <span class="status-tag status-tag-offline">Offline</span>
+                            </div>
+                            <span class="production-note">No production</span>
+                          </div>
+
+                        <div class="idle-center">
+                            <div class="pause-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M10 15V9m4 6V9"/></svg></div>
+                            <div class="idle-title">No Active Model Process</div>
+                            <div class="idle-sub">No  Next process Model found. Please Update the Data Inside </div>
+                          </div>
+                        <div class="card-footer card-footer-muted">
+                            <div class="card-footer-col">
+                                <p class="card-footer-label">Special Process</p>
+                                <p class="card-footer-value">—</p>
+                            </div>
+                            <div class="card-footer-col">
+                                <p class="card-footer-label">Remarks</p>
+                                <p class="card-footer-value">—</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    const completedSections = (item.CompletedSection || '')
+                        .split(',')
+                        .map(x => x.trim())
+                        .filter(x => sectionMap[x]);
+                    const completionPct = Math.round((completedSections.length / 6) * 100);
+                    const badges = completedSections
+                        .map(x => {
+                            const [css, text] = sectionMap[x];
+                            return `<span class="status-badge ${css}">${text}</span>`;
+                        })
+                        .join('');
+
+                    // Grid card: READONLY input and DISABLED button
+                    card.innerHTML = `
+
+                        <div class="card-header">
+                            <div class="card-header-left">
+                                <div class="line-id line-id-online">${item.Line}</div>
+                                <span class="status-tag status-tag-online">
+                                    <div class="dot-indicator"></div> Online
+                                </span>
+                            </div>
+                            <div class="card-complete-area" style="display:flex;align-items:center;gap:8px;">
+                                <div>
+                                  <span><strong>${item.InputQty === 0 ? '0' : item.InputQty}</strong>  / ${item.PlanQty || 0}</span>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="card-empty-state">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
-                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                     stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                                     class="card-empty-icon">
-                                    <rect x="3" y="3" width="18" height="18" rx="2"/>
-                                    <path d="M3 9h18M9 21V9"/>
-                                </svg>
-                                <p class="card-empty-label">No Active Order</p>
-                                <p class="card-empty-sub">Line is currently idle</p>
+                        <div class="card-row">
+                            <p class="card-row-label">On Process Model</p>
+                            <p class="card-row-value">${item.Model || '-'}</p>
+                        </div>
+                        <div class="card-row">
+                            <p class="card-row-label" style="margin-bottom:8px">
+                                Material Status : <span class="card-row-label">${completionPct}%</span>
+                            </p>
+                            <div class="badge-row">${badges}</div>
+                        </div>
+                        <div class="card-row">
+                            <p class="card-row-label">Next Process Model</p>
+                            <p class="card-row-value-normal">${item.NextItem || '-'}</p>
+                        </div>
+                        <div class="card-footer">
+                            <div class="card-footer-col">
+                                <p class="card-footer-label">Special Process</p>
+                                <p class="card-footer-value">${item.Note || '-'}</p>
                             </div>
-
-                            <div class="card-footer card-footer-muted">
-                                <div class="card-footer-col">
-                                    <p class="card-footer-label">Special Process</p>
-                                    <p class="card-footer-value">—</p>
-                                </div>
-                                <div class="card-footer-col">
-                                    <p class="card-footer-label">Remarks</p>
-                                    <p class="card-footer-value">—</p>
-                                </div>
+                            <div class="card-footer-col">
+                                <p class="card-footer-label">Remarks</p>
+                                <p class="card-footer-value">${item.OrderRemarks || '-'}</p>
                             </div>
-                        `;
-
-                    card.addEventListener('click', () => {
-                        if (!isOnline) return;
-
-                        window.location.href =
-                            '@Url.Action("ShopOrderLine", "Assembly")?Line=' +
-                        encodeURIComponent(item.Line);
-                    });
-
-                    fragment.appendChild(card);
-                    return;
+                        </div>
+                    `;
                 }
 
-                /* ── ONLINE STATE ── */
-                const completedSections = (item.CompletedSection || '')
-                    .split(',')
-                    .map(x => x.trim())
-                    .filter(x => sectionMap[x]);
+                // Only click event to open modal (no input/button listeners)
+                card.addEventListener('click', async (e) => {
+                    if (this.isExpanded || this.isAnimating) return;
 
-                const completionPct = Math.round((completedSections.length / 7) * 100);
-
-
-                const badges = completedSections
-                    .map(x => {
-                        const [css, text] = sectionMap[x];
-                        return `<span class="status-badge ${css}">${text}</span>`;
-                    })
-                    .join('');
-
-                card.innerHTML = `
-                            <div class="card-header">
-                                <div class="card-header-left">
-                                    <div class="line-id line-id-online">${item.Line}</div>
-                                    <span class="status-tag status-tag-online">
-                                        Online <div class="dot-indicator"></div>
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="card-row">
-                                <p class="card-row-label">On Process Model</p>
-                                <p class="card-row-value">${item.Model || '-'}</p>
-                            </div>
-
-                            <div class="card-row">
-                                <p class="card-row-label" style="margin-bottom:8px">
-                                    Completion Status :
-                                    <span class="card-row-label">${completionPct}%</span>
-                                </p>
-                                <div class="badge-row">${badges}</div>
-                            </div>
-
-                            <div class="card-row">
-                                <p class="card-row-label">Next Process Model</p>
-                                <p class="card-row-value-normal">${item.NextItem || '-'}</p>
-                            </div>
-
-                            <div class="card-footer">
-                                <div class="card-footer-col">
-                                    <p class="card-footer-label">Special Process</p>
-                                    <p class="card-footer-value">${item.Note || '-'}</p>
-                                </div>
-                                <div class="card-footer-col">
-                                    <p class="card-footer-label">Remarks</p>
-                                    <p class="card-footer-value">${item.OrderRemarks || '-'}</p>
-                                </div>
-                            </div>
-                        `;
-
-
-                card.addEventListener('click', () => {
-                    localStorage.setItem("LineSet", item.Line);
-                    window.location.href =
-                        '@Url.Action("ShopOrderLine", "Assembly")?Line=' +
-                        encodeURIComponent(item.Line);
+                    if (!isOnline) {
+                       localStorage.setItem("LineSet", item.Line);
+                        window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
+                        return;
+                    }
+                    console.log(item);
+                    this.prevModelprocess = item.NextItem;
+                    await this.animateCardToCenter(card, item);
                 });
 
                 fragment.appendChild(card);
@@ -330,48 +440,154 @@
 
             gridContainer.innerHTML = '';
             gridContainer.appendChild(fragment);
-        }
+}
 
-        updateClock() {
 
-            const now = new Date();
+       async animateCardToCenter(cardElement, itemData) {
+            if (this.isExpanded || this.isAnimating) return;
+            this.isAnimating = true;
+            this.activeLineId = itemData.Line;
+            this.originalCard = cardElement;
 
-            const dateText = now.toLocaleDateString('en-US', {
-                month: 'short',
-                day: '2-digit',
-                year: 'numeric'
+            // 1. Create backdrop immediately
+            let backdrop = document.querySelector('.animation-backdrop');
+            if (!backdrop) {
+                backdrop = document.createElement('div');
+                backdrop.className = 'animation-backdrop';
+                document.body.appendChild(backdrop);
+            }
+            backdrop.classList.add('active');
+
+            // 2. Disable grid clicks
+            const grid = document.getElementById('assemblyCardsGrid');
+            grid.classList.add('disabled-grid');
+
+            // 3. Get original card rect
+            const rect = cardElement.getBoundingClientRect();
+            const startWidth = rect.width;
+            const startHeight = rect.height;
+            const startLeft = rect.left;
+            const startTop = rect.top;
+
+            // 4. Create clone and position it exactly over original
+            const clone = cardElement.cloneNode(true);
+            clone.classList.add('floating-card-clone');
+            clone.style.position = 'fixed';
+            clone.style.top = `${startTop}px`;
+            clone.style.left = `${startLeft}px`;
+            clone.style.width = `${startWidth}px`;
+            clone.style.height = `${startHeight}px`;
+            clone.style.borderRadius = getComputedStyle(cardElement).borderRadius;
+            clone.style.padding = getComputedStyle(cardElement).padding;
+            clone.style.margin = '0';
+            clone.style.boxShadow = '0 30px 45px rgba(0,0,0,0.25)';
+            clone.style.background = getComputedStyle(cardElement).background;
+            clone.style.pointerEvents = 'none';
+            document.body.appendChild(clone);
+            this.cloneCard = clone;
+
+            // 5. Hide the original card (visibility hidden or opacity 0)
+            cardElement.style.opacity = '0';
+            cardElement.style.visibility = 'hidden'; // keep layout
+            cardElement.style.pointerEvents = 'none';
+
+            // 6. Simultaneously fade out other cards (but don't remove yet)
+            const allCards = Array.from(grid.querySelectorAll('.line-card'));
+            const otherCards = allCards.filter(c => c !== cardElement);
+            otherCards.forEach(c => {
+                c.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+                c.style.opacity = '0';
+                c.style.transform = 'scale(0.95)';
+                c.style.pointerEvents = 'none';
             });
 
-            const timeText = now.toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
+            // 7. Target center dimensions
+            const targetWidth = Math.min(540, window.innerWidth * 0.85);
+            const targetHeight = 450;
+            const targetLeft = (window.innerWidth - targetWidth) / 2;
+            const targetTop = (window.innerHeight - targetHeight) / 2;
+
+            // 8. Start clone animation
+            const keyframes = [
+                {
+                    top: `${startTop}px`,
+                    left: `${startLeft}px`,
+                    width: `${startWidth}px`,
+                    height: `${startHeight}px`,
+                    borderRadius: getComputedStyle(cardElement).borderRadius,
+                },
+                {
+                    top: `${targetTop}px`,
+                    left: `${targetLeft}px`,
+                    width: `${targetWidth}px`,
+                    height: `${targetHeight}px`,
+                    borderRadius: '36px',
+                }
+            ];
+            const animation = clone.animate(keyframes, {
+                duration: 500,
+                easing: 'cubic-bezier(0.2, 0.95, 0.4, 1.05)',
+                fill: 'forwards'
             });
 
-            const dateElement = document.getElementById('currentDate');
-            const liveElement = document.getElementById('liveTime');
+            // 9. Wait for animation to finish
+            await animation.finished;
 
-            if (dateElement)
-                dateElement.textContent = dateText;
+            // 10. Remove clone
+            if (this.cloneCard && this.cloneCard.parentNode) this.cloneCard.remove();
+            this.cloneCard = null;
 
-            if (liveElement)
-                liveElement.textContent = `LIVE ${timeText}`;
+            // 11. Remove original card and other cards from DOM
+            cardElement.remove();
+            otherCards.forEach(c => c.remove());
+
+            // 12. Create final centered card
+            this.createCenteredCard(itemData, targetLeft, targetTop, targetWidth, targetHeight);
+
+            this.isAnimating = false;
+            this.isExpanded = true;
         }
+
+        createCenteredCard(data, left, top, width, height) {
+            if (this.currentCenteredCard) this.currentCenteredCard.remove();
+            const centeredDiv = document.createElement('div');
+            centeredDiv.className = 'centered-standalone-card';
+            centeredDiv.style.left = `${left}px`;
+            centeredDiv.style.top = `${top}px`;
+            centeredDiv.style.width = `${width}px`;
+            centeredDiv.style.height = `${height}px`;
+            centeredDiv.style.overflowY = 'auto';
+            this.currentCenteredCard = centeredDiv;
+            this.updateModalContent(data); // fills innerHTML with all content
+            document.body.appendChild(centeredDiv);
+        }
+
+        async resetToGrid() {
+            if (!this.isExpanded || this.isAnimating) return;
+            this.isAnimating = true;
+
+            if (this.currentCenteredCard) {
+                this.currentCenteredCard.remove();
+                this.currentCenteredCard = null;
+            }
+            const backdrop = document.querySelector('.animation-backdrop');
+            if (backdrop) backdrop.classList.remove('active');
+
+            const grid = document.getElementById('assemblyCardsGrid');
+            if (grid) grid.classList.remove('disabled-grid');
+
+            this.isExpanded = false;
+            this.isAnimating = false;
+            this.activeLineId = null;
+            await this.LoadActiveShopOrders();
+        }
+
         updateLastRefresh() {
-
-            const now = new Date();
-
-            const timeText = now.toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            });
-
-            const element = document.getElementById('lastUpdated');
-
-            if (element) {
-                element.textContent =
-                    `Auto-refresh every 30s · Last updated ${timeText}`;
+            const span = document.getElementById('lastUpdated');
+            if (span) {
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                span.innerText = `Auto-refresh every 30s · Last updated ${timeStr}`;
             }
         }
     }

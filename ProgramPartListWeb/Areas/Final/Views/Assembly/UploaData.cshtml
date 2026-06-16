@@ -3,89 +3,92 @@
     Layout = "~/Areas/Final/Views/Shared/_ManageLayout.cshtml";
 }
 @Html.AntiForgeryToken()
-<!-- MAIN PANEL -->
-<!-- header section -->
-<div class="flex justify-between items-center mb-6">
-    <div class="flex items-center gap-lg-3">
-        <div>
-            <h2 class="text-xl font-semibold mb-1" style="font-size: 24px;">Final Assembly Upload Data</h2>
-            <p class="text-sm" style="color:#86868b;">Data Upload For the Final Assembly </p>
+
+<section style="padding: 30px 20px;">
+    <!-- MAIN PANEL -->
+    <!-- header section -->
+    <div class="flex justify-between items-center mb-6">
+        <div class="flex items-center gap-lg-3">
+            <div>
+                <h2 class="text-xl font-semibold mb-1" style="font-size: 24px;">Final Assembly Upload Data</h2>
+                <p class="text-sm" style="color:#86868b;">Data Upload For the Final Assembly </p>
+            </div>
+
+            <!-- filters bar -->
+            <div class="flex items-center gap-3 mb-4 flex-wrap">
+
+
+
+            </div>
         </div>
-
-        <!-- filters bar -->
-        <div class="flex items-center gap-3 mb-4 flex-wrap">
-           
-
-
-        </div>
-    </div>
-    <div class="flex gap-3">
-        <select id="filterdata" class=" filter-chip text-sm font-medium">
-            <option value="UPDATED">For Approval</option>
-            <option value="SAME">All Data</option>
-        </select>
-        <button id="uploadbtn"
-                class="btn-outline"
-                style="height: 32px;"
-                data-upload-url="@Url.Action("ImportUpload",   "Assembly")"
-                data-stream-url="@Url.Action("ImportUploadStream", "Assembly")"
-                data-progress-url="@Url.Action("ImportProgress", "Assembly")">
-            <iconify-icon icon="ic:round-upload" width="16"></iconify-icon>     
-            Import CSV
-        </button>
-        <button id="btn-proceed" class="btn-primary" style="height: 32px; background:#277eff;">
-            <iconify-icon icon="gg:push-down" width="16"></iconify-icon>
-            Deploy Changes
-        </button>
-    </div>
-</div>
-
-@*<span id="selectedCount">0 selected</span>
-
-<a href="#" id="clearSelectionBtn"
-   style="color: var(--color-primary); text-decoration: none;">
-    Clear selection
-</a>*@
-
-
-<div class="devices-table-wrapper">
-    <div class="table-scroll">
-        <table class="devices-table">
-            <thead>
-                <tr>
-                    <th class='fixedcolumn' style="width:44px;">
-                        <input type="checkbox" id="selectAllRows" />
-                    </th>
-
-                    <th class="uploadedheader">Shop Order </th>
-                    <th style="text-align: center;">Part No.</th>
-                    <th style="text-align: center;">Model </th>
-                    <th style="text-align: center;">WC</th>
-                    <th style="text-align: center;">Qty</th>
-                    <th style="text-align: center;">Current Plan Quantity</th>
-                    <th style="text-align: center;">Upload Plan Quantity</th>
-                    <th style="text-align: center;">Current Plan Date</th>
-                    <th style="text-align: center;">Upload Plan Date</th>
-                    <th style="text-align: center;">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-    <!-- pagination footer -->
-    <div class="flex justify-between items-center p-3 border-t" style="border-top: 1px solid #e5e5e5; background: white;">
-        <div class="text-sm" style="color:#86868b;">Showing 1-7 of 1,248 devices</div>
-        <div class="flex gap-1">
-            <button class="pagination-btn"><iconify-icon icon="lucide:chevron-left" style="font-size: 14px;"></iconify-icon></button>
-            <button class="pagination-btn pagination-active">1</button>
-            <button class="pagination-btn">2</button>
-            <button class="pagination-btn">3</button>
-            <span class="px-2 py-1 text-muted-foreground">...</span>
-            <button class="pagination-btn"><iconify-icon icon="lucide:chevron-right" style="font-size: 14px;"></iconify-icon></button>
+        <div class="flex gap-3">
+            <select id="filterdata" class=" filter-chip text-sm font-medium">
+                <option value="UPDATED">For Approval</option>
+                <option value="SAME">All Data</option>
+            </select>
+            <button id="uploadbtn"
+                    class="btn-outline"
+                    style="height: 32px;"
+                    data-upload-url="@Url.Action("ImportUpload",   "Assembly")"
+                    data-stream-url="@Url.Action("ImportUploadStream", "Assembly")"
+                    data-progress-url="@Url.Action("ImportProgress", "Assembly")">
+                <iconify-icon icon="ic:round-upload" width="16"></iconify-icon>
+                Import CSV
+            </button>
+            <button id="btn-proceed" class="btn-primary" style="height: 32px; background:#277eff;">
+                <iconify-icon icon="gg:push-down" width="16"></iconify-icon>
+                Deploy Changes
+            </button>
         </div>
     </div>
-</div>
+
+    @*<span id="selectedCount">0 selected</span>
+
+        <a href="#" id="clearSelectionBtn"
+           style="color: var(--color-primary); text-decoration: none;">
+            Clear selection
+        </a>*@
+
+
+    <div class="devices-table-wrapper">
+        <div class="table-scroll">
+            <table class="devices-table">
+                <thead>
+                    <tr>
+                        <th class='fixedcolumn' style="width:44px;">
+                            <input type="checkbox" id="selectAllRows" />
+                        </th>
+
+                        <th class="uploadedheader">Shop Order </th>
+                        <th style="text-align: center;">Part No.</th>
+                        <th style="text-align: center;">Model </th>
+                        <th style="text-align: center;">WC</th>
+                        <th style="text-align: center;">Qty</th>
+                        <th style="text-align: center;">Current Plan Quantity</th>
+                        <th style="text-align: center;">Upload Plan Quantity</th>
+                        <th style="text-align: center;">Current Plan Date</th>
+                        <th style="text-align: center;">Upload Plan Date</th>
+                        <th style="text-align: center;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <!-- pagination footer -->
+        <div class="flex justify-between items-center p-3 border-t" style="border-top: 1px solid #e5e5e5; background: white;">
+            <div class="text-sm" style="color:#86868b;">Showing 1-7 of 1,248 devices</div>
+            <div class="flex gap-1">
+                <button class="pagination-btn"><iconify-icon icon="lucide:chevron-left" style="font-size: 14px;"></iconify-icon></button>
+                <button class="pagination-btn pagination-active">1</button>
+                <button class="pagination-btn">2</button>
+                <button class="pagination-btn">3</button>
+                <span class="px-2 py-1 text-muted-foreground">...</span>
+                <button class="pagination-btn"><iconify-icon icon="lucide:chevron-right" style="font-size: 14px;"></iconify-icon></button>
+            </div>
+        </div>
+    </div>
+</section>
 
 @Html.Partial("_UploadDataDialog")
 

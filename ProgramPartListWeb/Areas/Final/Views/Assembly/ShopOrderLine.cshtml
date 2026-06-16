@@ -1,6 +1,6 @@
 ﻿
 @{
-    Layout = "~/Areas/Final/Views/Shared/_ManageLayout.cshtml";
+    Layout = "~/Areas/Final/Views/Shared/_FinalAssemblyLayout.cshtml";
     var strLine = Request.QueryString["line"];
 }
 
@@ -177,6 +177,7 @@
   class ShopOrderListController {
     constructor() {
         this.selectedID = 0;
+        this.selectedLine = "";
 
         this.tbody = document.querySelector('.devices-table tbody');
         this.searchinput = document.getElementById('searchinput');
@@ -211,9 +212,13 @@
             const row = badge.closest('tr');
             const id = parseInt(row.dataset.id);
             const orderStatus = parseInt(row.dataset.orderStatus);
+            const lineman = row.dataset.orderLine;
+            console.log("Line Selected : " + lineman);
+
 
             if (orderStatus === 1) {
                 this.selectedID = id;
+                this.selectedLine = lineman;
                 this.cancelModal.show();
                 return;
             }
@@ -234,7 +239,7 @@
             }
 
             console.log("PRocee Updates");
-            const success = await this.updateOrderStatus(id, orderStatus);
+            const success = await this.updateOrderStatus(id, 1, lineman);
             if (!success) return;
 
             row.dataset.orderStatus = '2';
@@ -309,13 +314,10 @@
         });
 
         this.cancelConfirm.addEventListener('click', async () => {
+            await this.updateOrderStatus(this.selectedID, 0, this.selectedLine);
 
-            const success = await this.updateOrderStatus(this.selectedID, 1);
-            if (!success) return;
+            this.cancelModal.hide();
 
-            row.dataset.orderStatus = '2';
-            badge.className = 'selectedbadge selectedProcess';
-            row.classList.add('bg-row-highlight');
         });
 
 
@@ -412,8 +414,8 @@
     }
 
     renderTable(data) {
-            if (!this.tbody) return;
-
+        if (!this.tbody) return;
+        console.log(data);
             if (data.length === 0) {
                 this.tbody.innerHTML = `
                 <tr>
@@ -452,7 +454,7 @@
                         break;
                 }
                 return `
-              <tr class='${highlighted}' data-order-status="${orderStatus}" data-id="${row.RecordID}">
+              <tr class='${highlighted}'  data-order-line="${row.Line}"   data-order-status="${orderStatus}" data-id="${row.RecordID}">
                      <td class='fixedrow'>
                          <div style='display: flex; align-items: center; gap: 1.5em;'>
                              <button class="selectedbadge ${selecthighlight}" ${row.OrderStatus === 2 || row.OrderStatus === 3 ? 'disabled' : ''}></button>
@@ -494,12 +496,13 @@
 
             return date.toLocaleDateString('en-US');
         }
-     async updateOrderStatus(id, orderstatus) {
+     async updateOrderStatus(id, orderstatus, lineman) {
              try {
 
                  const res = await postMethod('@Url.Action("UpdateStatusLine", "Assembly")', {
                      recordID : id,
-                     orderstats: orderstatus
+                     orderstats: orderstatus, 
+                     line: lineman
                  });
                   //console.log(res);
 

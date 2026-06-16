@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using OfficeOpenXml;
 using ProgramPartListWeb.Areas.Final.Interface;
@@ -13,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Windows.Threading;
 
@@ -36,7 +39,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         [HttpGet]
         public async Task<ActionResult> GetListActiveShopOrders()
         {
-            await _manu.AutoUpdateShopOrderLine();
+            //await _manu.AutoUpdateShopOrderLine();
 
 
             var res = await _manu.GetListofActiveShopOrders();
@@ -44,6 +47,22 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                 return JsonNotFound("No Active Lines found");
 
             return JsonSuccess(res);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateQuantityLine(int recordID, int Qty)
+        {
+            try
+            {
+                var res = await _manu.AddInputQuantiyPerLine(recordID, Qty);
+                if (!res) return JsonError("Error Updated");
+                return JsonSuccess(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
         }
         //=====================================================
         //============== LINE MANAGEMENT  =====================
@@ -103,13 +122,13 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         }
         
         [HttpPost]
-        public async Task<ActionResult> UpdateStatusLine(int recordID, int orderstats)
+        public async Task<ActionResult> UpdateStatusLine(int recordID, int orderstats, string line)
         {
             try
             {
-                int changeStats = orderstats == 0 ? 1 : 0;
+                //int changeStats = orderstats == 0 ? 1 : 0;
                 //Debug.WriteLine($"RecordID : {recordID} - OrderStatus : {orderstats}");
-                var res = await _manu.UpdateStatusShopOrder(recordID, changeStats);
+                var res = await _manu.UpdateStatusShopOrder(recordID, orderstats, line);
                 if (!res) return JsonError("Error Updated");
                 return JsonSuccess(true);
             }
@@ -119,6 +138,36 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                 throw;
             }
         }
+        [HttpPost]
+        public async Task<ActionResult> CompleteStatusLine(int recordID, string line)
+        {
+            try
+            {
+                var updateTask =  _manu.CompletionStatusShopOrder(recordID, 3, "");
+                var nextProcessTask =  _manu.NextModelProcess(line);
+
+                await Task.WhenAll(updateTask, nextProcessTask);
+
+                bool updateResult = await updateTask;
+                bool nextProcessResult = await nextProcessTask;
+
+                if (!updateResult)
+                    return JsonError("Error Updated");
+
+
+                return JsonSuccess(new
+                {
+                    Updated = updateResult,
+                    NextProcess = nextProcessResult
+                });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
+
         [HttpPost]
         public async Task<ActionResult> UpdateLineshopOrder(int recordID, string Lineman)
         {
@@ -197,6 +246,11 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             if (file == null || file.ContentLength == 0)
                 return Json(new { Success = false, Message = "No file uploaded." });
 
+            const int MaxBytes = 10 * 1024 * 1024; // 10 MB
+            if (file.ContentLength > MaxBytes)
+                return Json(new { Success = false, Message = "File too large. Maximum allowed size is 10 MB." });
+
+
             var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
             if (ext != ".csv" && ext != ".xlsx" && ext != ".xls")
                 return Json(new { Success = false, Message = "Unsupported file type." });
@@ -204,17 +258,17 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             try
             {
                 string uploadPath = Server.MapPath("~/Content/Excel/");
+                if (!Directory.Exists(uploadPath))
+                    Directory.CreateDirectory(uploadPath);
+
+
                 string uniqueName = Path.GetFileNameWithoutExtension(file.FileName)
                                   + "_" + Guid.NewGuid() + ext;
                 string filePath = Path.Combine(uploadPath, uniqueName);
 
-                if (!Directory.Exists(uploadPath))
-                    Directory.CreateDirectory(uploadPath);
-
                 file.SaveAs(filePath);
 
                 string jobId = Guid.NewGuid().ToString();
-
                 var state = new UploadJobState
                 {
                     Status = "processing",
@@ -226,7 +280,6 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                     Rows = new List<UploadRowResult>()
                 };
 
-                // ✅ store in HttpRuntime.Cache — accessible from background threads
                 HttpRuntime.Cache.Insert(
                     "job_" + jobId,
                     state,
@@ -236,10 +289,18 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                 );
 
                 // start background processing
-                var mapPath = Server.MapPath("~/Content/Excel/");
-                System.Threading.Tasks.Task.Run(() =>
+                HostingEnvironment.QueueBackgroundWorkItem(ct =>
                 {
-                    ProcessExcelJob(jobId, filePath);
+                    try
+                    {
+                        ProcessExcelJob(jobId, filePath);
+                    }
+                    finally
+                    {
+                        // Clean up the file whether processing succeeded or failed
+                        //if (File.Exists(filePath))
+                        //    File.Delete(filePath);
+                    }
                 });
 
                 return Json(new { Success = true, JobId = jobId });
@@ -292,7 +353,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                 {
                     var sheet = package.Workbook.Worksheets[0];
                     int rowCount = sheet.Dimension?.Rows ?? 0;
-
+                    Debug.WriteLine("ROW: " + rowCount.ToString());
                     // count total non-empty rows first
                     int total = 0;
                     for (int r = 2; r <= rowCount; r++)
@@ -306,7 +367,6 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
 
                         try
                         {
-                            Debug.WriteLine($@"ShipmentDate : {GetCell(sheet, r, 12)} Mode : {GetCell(sheet, r, 13)} ");
 
 
                             var rowResult = new UploadRowResult
@@ -336,18 +396,26 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                                 FaStatus = GetCell(sheet, r, 11),
                                 Shipment = GetCellAsDate(sheet, r, 12),
                                 Mode = GetCell(sheet, r, 13),
-                                WithSr = GetCell(sheet, r, 14),
-                                Remarks = GetCell(sheet, r, 15),
+                                WithSr = GetCell(sheet, r, 14) != "",
+                                Remarks = GetCell(sheet, r, 15)
                             };
 
                             // save to DB here if needed
-                            await _upload.UploadDataToDatabase(obj);
+                            bool inserted = await _upload.UploadDataToDatabase(obj);
                             // _service.SaveRow(rowResult);
 
                             lock (state)
                             {
                                 state.Current++;
-                                state.Success++;
+
+                                if (inserted)
+                                    state.Success++;
+                                else
+                                    state.Failed++;
+
+                                Debug.WriteLine("Completed Count :" + state.Success);
+
+                                Debug.WriteLine("Failed Count :" + state.Failed);
                                 state.Rows.Add(rowResult);
                             }
 

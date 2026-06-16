@@ -37,15 +37,26 @@
           
 
             <div class="header-actions">
-               
+                <div class="badge badge-muted">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"
+                         style="color:var(--color-muted-foreground)">
+                        <path d="M8 2v4m8-4v4" />
+                        <rect width="18" height="18" x="3" y="4" rx="2" />
+                        <path d="M3 10h18" />
+                    </svg>
+                    <span id="currentDate"
+                          style="font-size:var(--text-sm);font-weight:500"></span>
+                </div>
+                <div class="badge badge-online">
+                    <span class="dot-online"></span>
+                    <span id="liveTime"></span>
+                </div>
+
+
+
                 <div class="divider"></div>
-                <button class="icon-btn">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.268 21a2 2 0 0 0 3.464 0m-10.47-5.674A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" /></svg>
-                </button>
-                <button class="icon-btn" id="ExitDash">
-                    <iconify-icon icon="solar:exit-bold" width="20"></iconify-icon>
-                </button>
-                
+               
             </div>
 
 
@@ -54,7 +65,7 @@
         <div class="main-layout">
             <!-- Sidebar -->
             <aside class="sidebar">
-                <a href="#" id="pagelink" class="sidebar-item active">
+                <a href="/Final/Assembly/Dashboard" id="pagelink" class="sidebar-item active">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                         <rect x="3" y="3" width="8" height="8" rx="1" />
                         <rect x="13" y="3" width="8" height="8" rx="1" />
@@ -71,7 +82,24 @@
                 </a>
 
 
-              
+                @*<a href="#" id="pagelink" class="sidebar-item active">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <rect x="3" y="3" width="8" height="8" rx="1" />
+                <rect x="13" y="3" width="8" height="8" rx="1" />
+                <rect x="3" y="13" width="8" height="8" rx="1" />
+                <rect x="13" y="13" width="8" height="8" rx="1" />
+            </svg>
+        </a>
+
+        <a href="/Final/Assembly/UploaData" class="sidebar-item ">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" />
+                <path d="M12 12v9m-3-3 3 3 3-3" />
+            </svg>
+        </a>*@
+
+
+
                 <div class="sidebar-bottom">
                     <button class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3m.08 4h.01" /></svg></button>
                     <div class="sidebar-time">8:20am</div>
@@ -91,7 +119,7 @@
  
     <script src="~/Scripts/Shared/Global.js"></script>
     <script type="text/javascript">
-        const nav = document.getElementById('pagelink');
+        //const nav = document.getElementById('pagelink');
         const linkColor = document.querySelectorAll('.sidebar-item');
 
         function colorLink() {
@@ -101,7 +129,7 @@
 
         linkColor.forEach(l => l.addEventListener('click', colorLink))
 
-        nav.addEventListener('click', function (e) {
+        @*nav.addEventListener('click', function (e) {
             e.preventDefault();
             let getLine = localStorage.getItem("LineSet");
             window.location.href =
@@ -113,7 +141,38 @@
             e.preventDefault();
              window.location.href =
                  '@Url.Action("Dashboard", "Assembly")';
-        });
+        });*@
+
+
+        function updateClock() {
+
+            const now = new Date();
+
+            const dateText = now.toLocaleDateString('en-US', {
+                month: 'short',
+                day: '2-digit',
+                year: 'numeric'
+            });
+
+            const timeText = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+
+            const dateElement = document.getElementById('currentDate');
+            const liveElement = document.getElementById('liveTime');
+
+            if (dateElement)
+                dateElement.textContent = dateText;
+
+            if (liveElement)
+                liveElement.textContent = `LIVE ${timeText}`;
+        }
+
+
+        updateClock();
+        setInterval(() =>updateClock(), 1000);
     </script>
 </body>
 </html>

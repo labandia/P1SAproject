@@ -126,8 +126,6 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         {
             try
             {
-                //int changeStats = orderstats == 0 ? 1 : 0;
-                //Debug.WriteLine($"RecordID : {recordID} - OrderStatus : {orderstats}");
                 var res = await _manu.UpdateStatusShopOrder(recordID, orderstats, line);
                 if (!res) return JsonError("Error Updated");
                 return JsonSuccess(true);

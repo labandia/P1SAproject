@@ -149,7 +149,9 @@
                     // Update modal content with fresh data for this line
                     const updatedRecord = records.find(r => r.Line === this.activeLineId);
                     this.prevModelprocess = updatedRecord.NextItem;
-                    if (updatedRecord) this.updateModalContent(updatedRecord);
+                    if (updatedRecord) {
+                        this.updateModalContent(updatedRecord, { animateNextModel: true });
+                    }
                 } else {
                     // Normal full render
                     this.RenderCardList(records);
@@ -159,7 +161,73 @@
             }
         }
 
-        updateModalContent(item) {
+
+        /* ========== TYPING ANIMATION ========== */
+        async typeText(element, text, speed = 10, loop = false) {
+            if (this._typingAbort) {
+                this._typingAbort();
+                this._typingAbort = null;
+            }
+
+            if (!element) return;
+
+            const displayText = text || "-";
+            if (displayText === "-" || displayText.length <= 1) {
+                element.textContent = displayText;
+                element.classList.remove('typing-cursor');
+                element.classList.add('typing-done');
+                return;
+            }
+
+            let cancelled = false;
+            const abort = () => { cancelled = true; };
+            this._typingAbort = abort;
+
+            const runTyping = async () => {
+                if (cancelled) return;
+                element.textContent = "";
+                element.classList.add('typing-cursor');
+                element.classList.remove('typing-done');
+
+                const chars = displayText.split("");
+                for (let i = 0; i < chars.length; i++) {
+                    if (cancelled) {
+                        element.textContent = displayText;
+                        element.classList.remove('typing-cursor');
+                        element.classList.add('typing-done');
+                        return;
+                    }
+                    element.textContent += chars[i];
+                    let delay = speed;
+                    if (chars[i] === "." || chars[i] === "," || chars[i] === "!" || chars[i] === "?") {
+                        delay = speed * 2.5;
+                    } else if (chars[i] === " ") {
+                        delay = speed * 0.6;
+                    }
+                    await new Promise(r => setTimeout(r, delay));
+                }
+
+                // finished typing
+                element.classList.remove('typing-cursor');
+                element.classList.add('typing-done');
+
+                // loop if requested and not cancelled
+                if (loop && !cancelled) {
+                    await new Promise(r => setTimeout(r, 2000)); // pause before restart
+                    if (!cancelled) {
+                        runTyping(); // restart
+                    }
+                }
+            };
+
+            runTyping();
+        }
+
+
+
+
+        updateModalContent(item, options = {}) {
+            const { animateNextModel = false } = options;
             if (!this.currentCenteredCard) return;
 
             const sectionMap = {
@@ -168,7 +236,7 @@
                 3: ['badge-rotor', 'BF'],
                 4: ['badge-winding', 'WF'],
                 5: ['badge-circuit', 'CE'],
-                7: ['badge-final', 'HD']
+                9: ['badge-final', 'HD']
             };
 
     const completedSections = (item.CompletedSection || '')
@@ -206,27 +274,29 @@
                 </p>
                 <div class="badge-row">${badges}</div>
             </div>
-            <div class="card-row">
-                <p class="card-row-label" style='font-size: 1.1rem;'>Next Process Model</p>
-                <p class="card-row-value-normal" style='font-size: 1.5rem;'>${item.NextItem || '-'}</p>
-            </div>
+            <div class="card-row" style="margin-bottom: 1.5em;">
+                        <p class="card-row-label" style="font-size: 1.1rem;">Next Process Model</p>
+                        <p class="card-row-value-normal next-model-text" style="font-size: 1.5rem; min-height: 1.8rem;"></p>
+                    </div>
             <div class="card-footer">
                 <div class="card-footer-col">
-                    <p class="card-footer-label">Special Process</p>
-                    <p class="card-footer-value">${item.Note || '-'}</p>
+                    <p class="card-footer-label" style='font-size: 1.1rem;'>Special Process</p>
+                    <p class="card-footer-value" style='font-size: 1.2rem;'>${item.Note || '-'}</p>
                 </div>
                 <div class="card-footer-col">
-                    <p class="card-footer-label">Remarks</p>
-                    <p class="card-footer-value">${item.OrderRemarks || '-'}</p>
+                    <p class="card-footer-label" style='font-size: 1.1rem;'>Remarks</p>
+                    <p class="card-footer-value" style='font-size: 1.2rem;'>${item.OrderRemarks || '-'}</p>
                 </div>
             </div>
 
 
-            <div  style="display:flex;align-items:center;gap:8px; justify-content: space-between; margin-top: .5em;">
+            <div  style="display:flex;align-items:center;gap:8px; justify-content: space-between; margin-top: 6em;">
                 <div>
-                    <input type="number" id="modalQtyInput" class="completed-qty"
-                           min="1" max="${item.PlanQty || 0}" value="${item.InputQty === 0 ? '' : item.InputQty}" />
-                    / ${item.PlanQty || 0}
+                    <small>Quantity:</small>
+             <input type="number" id="modalQtyInput" class="completed-qty"
+min="1" max="${item.PlanQty || 0}" value="${item.InputQty === 0 ? '' : item.InputQty}" />
+  <span> / ${item.PlanQty || 0}</span>
+                  
                 </div>
                 <button type="button" id="modalCompleteBtn" class="btn-completed"
                         data-line="${item.Line}" data-order="${item.FinalShopOrder}">Completed</button>
@@ -310,6 +380,19 @@
         window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
     });
 
+
+    // --- handle next model text animation ---
+    const nextModelEl = this.currentCenteredCard.querySelector('.next-model-text');
+    if (nextModelEl) {
+        if (animateNextModel) {
+            this.typeText(nextModelEl, item.NextItem || '-', 50);
+        } else {
+            nextModelEl.textContent = item.NextItem || '-';
+            nextModelEl.classList.remove('typing-cursor');
+            nextModelEl.classList.add('typing-done');
+        }
+    }
+
 }
 
 
@@ -326,17 +409,22 @@
             3: ['badge-rotor', 'BF'],
             4: ['badge-winding', 'WF'],
             5: ['badge-circuit', 'CE'],
-            7: ['badge-final', 'HD']
+            9: ['badge-final', 'HD']
         };
 
         const fragment = document.createDocumentFragment();
 
-            data.forEach(item => {
+        data.forEach((item, index) => {
                 const shopOrder = (item.FinalShopOrder ?? '').trim();
                 const isOnline = shopOrder !== '';
                 const card = document.createElement('div');
-                card.className = 'line-card' + (isOnline ? '' : ' line-card-offline');
+                card.className = 'line-card' + (isOnline ? ' line-card-online' : ' line-card-offline');
                 card.dataset.Line = item.Line;
+
+                 // set custom property for stagger delay
+                card.style.setProperty('--order', index);
+                // add stagger-in class to trigger animation
+                card.classList.add('stagger-in');
 
                 if (!isOnline) {
                     card.innerHTML = `
@@ -353,16 +441,7 @@
                             <div class="idle-title">No Active Model Process</div>
                             <div class="idle-sub">No  Next process Model found. Please Update the Data Inside </div>
                           </div>
-                        <div class="card-footer card-footer-muted">
-                            <div class="card-footer-col">
-                                <p class="card-footer-label">Special Process</p>
-                                <p class="card-footer-value">—</p>
-                            </div>
-                            <div class="card-footer-col">
-                                <p class="card-footer-label">Remarks</p>
-                                <p class="card-footer-value">—</p>
-                            </div>
-                        </div>
+                       
                     `;
                 } else {
                     const completedSections = (item.CompletedSection || '')
@@ -502,8 +581,8 @@
             });
 
             // 7. Target center dimensions
-            const targetWidth = Math.min(540, window.innerWidth * 0.85);
-            const targetHeight = 450;
+            const targetWidth = Math.min(640, window.innerWidth * 0.85);
+            const targetHeight = 550;
             const targetLeft = (window.innerWidth - targetWidth) / 2;
             const targetTop = (window.innerHeight - targetHeight) / 2;
 
@@ -558,7 +637,7 @@
             centeredDiv.style.height = `${height}px`;
             centeredDiv.style.overflowY = 'auto';
             this.currentCenteredCard = centeredDiv;
-            this.updateModalContent(data); // fills innerHTML with all content
+            this.updateModalContent(data, { animateNextModel: true });
             document.body.appendChild(centeredDiv);
         }
 

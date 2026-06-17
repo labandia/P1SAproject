@@ -328,7 +328,7 @@ ol, ul, menu {
        CARDS GRID
     ===================================================== */
 .cards-section {
-    padding: 24px 32px 24px;
+    padding: 24px 32px 60px;
     flex: 1;
 }
 
@@ -342,14 +342,41 @@ ol, ul, menu {
        ASSEMBLY LINE CARD
     ===================================================== */
 .line-card {
-    background-color: var(--color-card);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
+    /* initial state before animation */
+    opacity: 0;
+    transform: translateY(20px);
+    background: var(--card-bg, #ffffff);
+    border-radius: 16px;
     padding: 25px;
-    card-header display: flex;
-    flex-direction: column;
-    gap: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.20);
+    cursor: pointer;
+}
+
+
+
+
+
+.line-card.stagger-in {
+    animation: stagger-fade-up 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    animation-delay: calc(var(--order, 0) * 0.06s);
+}
+
+@keyframes stagger-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .line-badge {
@@ -364,6 +391,7 @@ ol, ul, menu {
     align-items: center;
     justify-content: center;
     padding: 20px 0;
+    height: 200px;
     gap: 8px;
 }
 
@@ -384,13 +412,13 @@ ol, ul, menu {
 }
 
 .idle-title {
-    font-size: 13px;
+    font-size: 18px;
     font-weight: 600;
     color: var(--foreground);
 }
 
 .idle-sub {
-    font-size: 11px;
+    font-size: 13px;
     color: var(--muted-foreground);
 }
 
@@ -1201,10 +1229,10 @@ body {
 .badge {
     display: inline-flex;
     align-items: center;
-    padding: 2px 8px;
-    border-radius: 9999px;
+    padding: 8px 14px;
+    border-radius: 5px;
     font-size: 11px;
-    font-weight: 500;
+    font-weight: 800;
 }
 
 .badge-update-ready {
@@ -1213,13 +1241,13 @@ body {
 }
 
 .badge-uptodate {
-    background: #e8f5e9;
-    color: #2e7d32;
+    background-color: #fef3c7;
+    color: #92400e;
 }
 
-.badge-deferred {
-    background: #e8e8e8;
-    color: #5a5a5e;
+.badge-newdata {
+    background-color: #d1fae5;
+    color: #065f46;
 }
 
 .badge-failed {
@@ -3012,4 +3040,85 @@ svg.icon-stroke {
 
 .cards-grid.disabled-grid {
     pointer-events: none;
+}
+
+
+
+
+
+.dot-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background-color: #00e676;
+    border-radius: 50%;
+    margin-right: 6px;
+    box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.7);
+    animation: pulse-dot 1.8s ease-in-out infinite;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+    flex-shrink: 0;
+}
+
+@keyframes pulse-dot {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.7);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(0.7);
+        box-shadow: 0 0 0 12px rgba(0, 230, 118, 0);
+    }
+}
+
+/* ── PULSING CARD (grid) ─────────────────────────────────── */
+.line-card-online {
+    animation: card-glow-pulse 2.8s ease-in-out infinite;
+    border-color: rgba(0, 230, 118, 0.15);
+}
+
+@keyframes card-glow-pulse {
+    0%, 100% {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.20), 0 0 0 1px rgba(0, 230, 118, 0.08);
+        border-color: rgba(0, 230, 118, 0.12);
+    }
+
+    50% {
+        box-shadow: 0 8px 32px rgba(0, 230, 118, 0.20), 0 0 0 2px rgba(0, 230, 118, 0.25);
+        border-color: rgba(0, 230, 118, 0.35);
+    }
+}
+
+/* ── TYPING CURSOR BLINK ─────────────────────────────────── */
+.typing-cursor {
+    border-right: 2.5px solid #00e676;
+    animation: blink-caret 0.7s step-end infinite;
+    padding-right: 2px;
+    display: inline-block;
+    line-height: 1.2;
+}
+
+@keyframes blink-caret {
+    0%, 100% {
+        border-color: transparent;
+    }
+
+    50% {
+        border-color: #00e676;
+    }
+}
+
+.next-model-text {
+    min-height: 1.6em;
+    display: inline-block;
+    word-break: break-word;
+}
+
+.next-model-text.typing-done {
+    border-right: none !important;
+    animation: none !important;
 }

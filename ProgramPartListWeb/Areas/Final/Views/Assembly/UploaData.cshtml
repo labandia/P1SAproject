@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="flex gap-3">
-            <select id="filterdata" class=" filter-chip text-sm font-medium">
+            <select id="filterdata" class=" filter-chip text-sm font-medium" style="display: none;">
                 <option value="UPDATED">For Approval</option>
                 <option value="SAME">All Data</option>
             </select>
@@ -37,7 +37,7 @@
             </button>
             <button id="btn-proceed" class="btn-primary" style="height: 32px; background:#277eff;">
                 <iconify-icon icon="gg:push-down" width="16"></iconify-icon>
-                Deploy Changes
+                Update Changes
             </button>
         </div>
     </div>
@@ -59,7 +59,7 @@
                             <input type="checkbox" id="selectAllRows" />
                         </th>
 
-                        <th class="uploadedheader">Shop Order </th>
+                        <th style="text-align: center;">Shop Order </th>
                         <th style="text-align: center;">Part No.</th>
                         <th style="text-align: center;">Model </th>
                         <th style="text-align: center;">WC</th>
@@ -130,6 +130,24 @@
     }
 
     bindEvents() {
+        this.tbody.addEventListener('click', (e) => {
+
+            if (e.target.classList.contains('row-checkbox')) return;
+
+            const row = e.target.closest('tr');
+            if (!row) return;
+
+            const checkbox = row.querySelector('.row-checkbox');
+            if (!checkbox) return;
+
+            checkbox.checked = !checkbox.checked;
+
+            checkbox.dispatchEvent(
+                new Event('change', { bubbles: true })
+            );
+        });
+
+
         document.getElementById('uploadbtn').addEventListener('click', () => {
             this.fileInput.click();
         });
@@ -198,6 +216,14 @@
                 const isApproved = e.target.checked;
                 this.updateSelectedCount();
 
+                // Update header checkbox state
+                const allCheckboxes = [...document.querySelectorAll('.row-checkbox')];
+                const allChecked =
+                    allCheckboxes.length > 0 &&
+                    allCheckboxes.every(cb => cb.checked);
+
+                document.getElementById('selectAllRows').checked = allChecked;
+
                 try {
 
                     await postMethod(
@@ -215,7 +241,12 @@
                     e.target.checked = !isApproved;
                     this.updateSelectedCount();
                 }
-         });
+        });
+
+        document.getElementById('selectAllRows')
+            .addEventListener('change', async (e) => {
+                await this.toggleAllRows(e.target.checked);
+            });
     }
 
     /* ================= LOAD DATA ================= */
@@ -235,10 +266,12 @@
     }
 
     /* ================= RENDER MAIN TABLE ================= */
-    renderTable(data) {
+        renderTable(data) {
         if (!this.tbody) return;
 
         if (data.length === 0) {
+            document.getElementById('selectAllRows').checked = false;
+
             this.tbody.innerHTML = `
                 <tr>
                     <td colspan="11" style="text-align:center; padding:32px; color:#86868b;">
@@ -248,34 +281,51 @@
             return;
         }
 
-        this.tbody.innerHTML = data.map(row => `
-            <tr>
-               <td class='fixedrow'>
-                    <input type="checkbox"
-                           class="row-checkbox"
-                           data-id="${row.RecordID}"
-                           ${row.IsApproved == 1 ? 'checked' : ''} />
-                </td>
-                <td class="uploadedData">
-                    <div class="flex items-center gap-2">
-                        <iconify-icon icon="lucide:monitor" style="font-size:16px; color:#86868b;"></iconify-icon>
-                        <span class="font-semibold">${this.escape(row.FinalShopOrder)}</span>
-                    </div>
-                </td>
-                <td style="color:#515154; text-align:center;">${this.escape(row.ItemNo)}</td>
-                <td style="color:#515154;">${this.escape(row.Model)}</td>
-                <td style="color:#515154;">${this.escape(row.WC)}</td>
-                <td style="color:#515154; text-align:center;">${this.escape(row.PlanQty)}</td>
-                <td style="color:#515154; text-align:center;">${this.escape(row.UploadPlanQty)}</td>
-                <td style="color:#515154; text-align:center;">${this.escape(row.OrderPlanQty)}</td>
-                <td style="color:#515154; text-align:center;">${this.escape(row.UploadPlanStartDate)}</td>
-                <td style="color:#515154; text-align:center;">${this.escape(row.OrderPlanStartDate)}</td>
-                <td style="text-align:center;">
-                    <span class="badge ${this.statusUploadClass(row.StatusCheck)}">
-                        ${this.escape(row.StatusCheck)}
-                    </span>
-                </td>
-            </tr>`).join('');
+            this.tbody.innerHTML = data.map(row => {
+                const qtyMatched =
+                    Number(row.UploadPlanQty) !== Number(row.OrderPlanQty);
+                const dateMatched =
+                    new Date(row.UploadPlanStartDate).toDateString() !==
+                    new Date(row.OrderPlanStartDate).toDateString();
+
+
+                return `
+                        <tr>
+                           <td class='fixedrow'>
+                                <input type="checkbox"
+                                       class="row-checkbox"
+                                       data-id="${row.RecordID}"
+                                       ${row.IsApproved == 1 ? 'checked' : ''} />
+                            </td>
+                            <td class="uploadedData">
+                                <div class="flex items-center gap-2">
+                                    <iconify-icon icon="lucide:monitor" style="font-size:16px; color:#86868b;"></iconify-icon>
+                                    <span class="font-semibold">${this.escape(row.FinalShopOrder)}</span>
+                                </div>
+                            </td>
+                            <td style="color:#515154; text-align:center;">${this.escape(row.ItemNo)}</td>
+                            <td style="color:#515154;">${this.escape(row.Model)}</td>
+                            <td style="color:#515154;">${this.escape(row.WC)}</td>
+                            <td style="color:#515154; text-align:center;">${this.escape(row.PlanQty)}</td>
+                            <td style="color:${qtyMatched ? '#34c759' : '#515154'}; text-align:center;">${this.escape(row.UploadPlanQty)}</td>
+                            <td style="color:${qtyMatched ? '#34c759' : '#515154'}; text-align:center;">${this.escape(row.OrderPlanQty)}</td>
+                            <td style="color:${dateMatched ? '#34c759' : '#515154'}; text-align:center;">${this.escape(row.UploadPlanStartDate)}</td>
+                            <td style="color:${dateMatched ? '#34c759' : '#515154'}; text-align:center;">${this.escape(row.OrderPlanStartDate)}</td>
+                            <td style="text-align:center;">
+                                <span class="badge ${this.statusUploadClass(row.StatusCheck)}">
+                                    ${this.escape(row.StatusCheck)}
+                                </span>
+                            </td>
+                        </tr>`
+            }).join('');
+
+
+            // Sync Select All checkbox
+            const allCheckboxes = [...document.querySelectorAll('.row-checkbox')];
+
+            document.getElementById('selectAllRows').checked =
+                allCheckboxes.length > 0 &&
+                allCheckboxes.every(cb => cb.checked);
     }
 
         updateSelectedCount() {
@@ -292,7 +342,7 @@
         }
 
         statusUploadClass(stats) {
-            const map = { 'SAME': 'badge-update-ready', 'UPDATED': 'badge-uptodate' };
+            const map = { 'SAME': 'badge-update-ready', 'UPDATED': 'badge-uptodate', 'NEW DATA': 'badge-newdata' };
             return map[stats] ?? 'badge-uptodate';
         }
 
@@ -592,6 +642,34 @@
         d.textContent = str ?? '';
         return d.innerHTML;
     }
+
+
+    async toggleAllRows(isChecked) {
+            const checkboxes = [...document.querySelectorAll('.row-checkbox')];
+
+            // Update UI immediately
+            checkboxes.forEach(cb => cb.checked = isChecked);
+
+            this.updateSelectedCount();
+
+            try {
+                await Promise.all(
+                    checkboxes.map(cb =>
+                        postMethod(
+                            '@Url.Action("UpdateUploadApproval", "Assembly")',
+                            {
+                                recordID: cb.dataset.id,
+                                check: isChecked
+                            }
+                        )
+                    )
+                );
+            } catch (err) {
+                console.error(err);
+                await this.LoadUploadDataList(); // reload to restore actual state
+            }
+     }
+
 }
 
 document.addEventListener('DOMContentLoaded', function () {

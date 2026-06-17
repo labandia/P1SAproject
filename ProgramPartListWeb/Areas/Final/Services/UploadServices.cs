@@ -18,7 +18,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
         {
             try
             {
-                string query = $@"SELECT TOP 20
+                string query = $@"SELECT 
                                     U.RecordID,
                                     U.FinalShopOrder,
                                     U.ItemNo,
@@ -87,11 +87,30 @@ namespace ProgramPartListWeb.Areas.Final.Services
         }
         public async Task<bool> UploadDataToDatabase(ProductionRecord model)
         {
-           return await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO FanTraceabilityManufacturingUploadData 
-                   (Line, FinalShopOrder, ItemNo, Model, WC, PlanQty, PlanStartDate, DispatchDate, Note, FinalFinishedDate,
-                   FAStatus, ShipmentDate, ShipmentMode, WithSR, OrderRemarks, OrderStatus)
-                   VALUES (@Line, @FinalShopOrder, @ItemNo, @Model, @WC, @PlanQty, @PlanStartDate, @DispatchDate, 
-                   @Note, @FinalFinishedDate, @FAStatus, @ShipmentDate, @ShipmentMode, @WithSR, @OrderRemarks, @OrderStatus)",
+            return await SqlDataAcess_Test.ExecuteAsync(@"
+                    IF NOT EXISTS (
+                        SELECT 1
+                        FROM FanTraceabilityManufacturingUploadData
+                        WHERE FinalShopOrder = @FinalShopOrder
+                          AND ItemNo = @ItemNo
+                          AND Model = @Model
+                    )
+                    BEGIN
+                        INSERT INTO FanTraceabilityManufacturingUploadData
+                        (
+                            Line, FinalShopOrder, ItemNo, Model, WC,
+                            PlanQty, PlanStartDate, DispatchDate, Note,
+                            FinalFinishedDate, FAStatus, ShipmentDate,
+                            ShipmentMode, WithSR, OrderRemarks, OrderStatus
+                        )
+                        VALUES
+                        (
+                            @Line, @FinalShopOrder, @ItemNo, @Model, @WC,
+                            @PlanQty, @PlanStartDate, @DispatchDate, @Note,
+                            @FinalFinishedDate, @FAStatus, @ShipmentDate,
+                            @ShipmentMode, @WithSR, @OrderRemarks, @OrderStatus
+                        );
+                    END",
                    new
                    {
                        model.Line,
@@ -106,7 +125,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                        FinalFinishedDate = DateTime.TryParse(model.IfsFinish, out var ifs) ? ifs : (DateTime?)null,
                        FAStatus = model.FaStatus,
                        ShipmentDate = DateTime.TryParse(model.Shipment, out var ship) ? ship : (DateTime?)null,
-                       ShipmentMode = model.Mode, 
+                       ShipmentMode = model.Mode,
                        WithSR = model.WithSr,
                        OrderRemarks = model.Remarks,
                        OrderStatus = 1

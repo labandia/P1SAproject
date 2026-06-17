@@ -163,7 +163,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                             SELECT DepartmentID
                             FROM FanTraceabilityFinal
                             WHERE FinalShopOrder = @FinalShopOrder
-                              AND DepartmentID IN (1,2,3,4,5,6,7,8)
+                              AND DepartmentID IN (1,2,3,5,8,9)
                         )
                         SELECT CAST(DepartmentID AS VARCHAR(10))
                         FROM Depts
@@ -248,7 +248,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                             WHEN EXISTS (
                                 SELECT 1
                                 FROM FanTraceabilityFinal f
-                                WHERE f.DepartmentID = 4
+                                WHERE f.DepartmentID = 8
                                   AND f.FinalShopOrder = mo.FinalShopOrder
                             )
                             THEN 'FG'
@@ -279,7 +279,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                             WHEN EXISTS (
                                 SELECT 1
                                 FROM FanTraceabilityFinal f
-                                WHERE f.DepartmentID = 7
+                                WHERE f.DepartmentID = 9
                                   AND f.FinalShopOrder = mo.FinalShopOrder
                             )
                             THEN 'HD'

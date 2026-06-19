@@ -357,11 +357,6 @@ ol, ul, menu {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.20);
     cursor: pointer;
 }
-
-
-
-
-
 .line-card.stagger-in {
     animation: stagger-fade-up 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
     animation-delay: calc(var(--order, 0) * 0.06s);
@@ -426,7 +421,6 @@ ol, ul, menu {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 1em;
 }
 
 .card-header-left {
@@ -487,7 +481,7 @@ ol, ul, menu {
 
 /* card rows */
 .card-row {
-    margin: 1em 0;
+   
 }
 
 .card-row-label {

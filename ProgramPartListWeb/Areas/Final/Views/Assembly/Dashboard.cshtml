@@ -264,17 +264,17 @@
                 <button class="close-centered-btn" id="closeCenteredBtn">✕</button>
             </div>
 
-            <div class="card-row">
+            <div class="card-row" style=' margin: 1em 0;'>
                 <p class="card-row-label"  style='font-size: 1.1rem;'>On Process Model</p>
                 <p class="card-row-value" style='font-size: 1.5rem;'>${item.Model || '-'}</p>
             </div>
-            <div class="card-row" style='margin: .2em 0;'>
+            <div class="card-row" style=' margin: 1em 0;'>
                 <p class="card-row-label" style="margin-bottom:8px; font-size: 1.1rem;">
                     Material Status : <span class="card-row-label" style='font-size: 1.1rem;'>${completionPct}%</span>
                 </p>
                 <div class="badge-row">${badges}</div>
             </div>
-            <div class="card-row" style="margin-bottom: 1.5em;">
+            <div class="card-row" style=' margin: 1em 0;'>
                         <p class="card-row-label" style="font-size: 1.1rem;">Next Process Model</p>
                         <p class="card-row-value-normal next-model-text" style="font-size: 1.5rem; min-height: 1.8rem;"></p>
                     </div>
@@ -290,13 +290,13 @@
             </div>
 
 
-            <div  style="display:flex;align-items:center;gap:8px; justify-content: space-between; margin-top: 6em;">
+            <div  style="display:flex;align-items:center;gap:8px; justify-content: space-between; margin-top: 4em;">
                 <div>
                     <small>Quantity:</small>
              <input type="number" id="modalQtyInput" class="completed-qty"
 min="1" max="${item.PlanQty || 0}" value="${item.InputQty === 0 ? '' : item.InputQty}" />
   <span> / ${item.PlanQty || 0}</span>
-                  
+
                 </div>
                 <button type="button" id="modalCompleteBtn" class="btn-completed"
                         data-line="${item.Line}" data-order="${item.FinalShopOrder}">Completed</button>
@@ -317,7 +317,6 @@ min="1" max="${item.PlanQty || 0}" value="${item.InputQty === 0 ? '' : item.Inpu
             if (!newQty || newQty === item.InputQty) return;
 
             if (newQty > item.PlanQty) {
-                alert("adadadasdsdsd");
                 qtyInput.value = item.InputQty;
                 return;
             }
@@ -441,7 +440,7 @@ min="1" max="${item.PlanQty || 0}" value="${item.InputQty === 0 ? '' : item.Inpu
                             <div class="idle-title">No Active Model Process</div>
                             <div class="idle-sub">No  Next process Model found. Please Update the Data Inside </div>
                           </div>
-                       
+
                     `;
                 } else {
                     const completedSections = (item.CompletedSection || '')
@@ -473,17 +472,17 @@ min="1" max="${item.PlanQty || 0}" value="${item.InputQty === 0 ? '' : item.Inpu
                             </div>
                         </div>
 
-                        <div class="card-row">
+                        <div class="card-row" style=' margin: .5em 0;'>
                             <p class="card-row-label">On Process Model</p>
                             <p class="card-row-value">${item.Model || '-'}</p>
                         </div>
-                        <div class="card-row">
+                        <div class="card-row" style=' margin: .5em 0;'>
                             <p class="card-row-label" style="margin-bottom:8px">
                                 Material Status : <span class="card-row-label">${completionPct}%</span>
                             </p>
                             <div class="badge-row">${badges}</div>
                         </div>
-                        <div class="card-row">
+                        <div class="card-row" style=' margin: .5em 0;'>
                             <p class="card-row-label">Next Process Model</p>
                             <p class="card-row-value-normal">${item.NextItem || '-'}</p>
                         </div>
@@ -505,11 +504,13 @@ min="1" max="${item.PlanQty || 0}" value="${item.InputQty === 0 ? '' : item.Inpu
                     if (this.isExpanded || this.isAnimating) return;
 
                     if (!isOnline) {
-                       localStorage.setItem("LineSet", item.Line);
-                        window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
-                        return;
+                       //localStorage.setItem("LineSet", item.Line);
+                       @*window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);*@
+                        const res = await getMethod('@Url.Action("GetCountRecords", "Assembly")', { line: item.Line });
+                        console.log(res);
+
+                       return;
                     }
-                    console.log(item);
                     this.prevModelprocess = item.NextItem;
                     await this.animateCardToCenter(card, item);
                 });

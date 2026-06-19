@@ -12,6 +12,7 @@ namespace ProgramPartListWeb.Areas.Final
         Task AutoUpdateShopOrderLine();
 
         Task<List<FanTraceabilityManufacturingOrder>> GetListofActiveShopOrders();
+        Task<int> GetCountShopOrders(string line);
         Task<List<FanTraceabilityManufacturingOrder>> GetListofShopOrdersByLine(
             string Linename, string searchtext = "", int orderstatus = 0);
 

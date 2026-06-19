@@ -49,6 +49,15 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             return JsonSuccess(res);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> GetCountRecords(string line)
+        {
+            //await _manu.AutoUpdateShopOrderLine();
+            int res = await _manu.GetCountShopOrders(line);
+            Debug.WriteLine("COUNT LINE : " + res.ToString());
+            return JsonSuccess(res);
+        }
+
         [HttpPost]
         public async Task<ActionResult> UpdateQuantityLine(int recordID, int Qty)
         {

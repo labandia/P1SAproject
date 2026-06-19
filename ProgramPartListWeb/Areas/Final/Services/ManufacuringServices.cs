@@ -603,5 +603,16 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 OrderStatus = status
             });
         }
+
+        public Task<int> GetCountShopOrders(string line)
+        {
+            return SqlDataAccess.ExecuteScalarAsync<int>($@"SELECT COUNT(*) AS TotalCount
+                FROM FanTraceabilityManufacturingOrder
+                WHERE Line = @Line
+                  AND OrderStatus != 3;", new
+            {
+                Line = line
+            });
+        }
     }
 }

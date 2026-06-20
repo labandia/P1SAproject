@@ -201,7 +201,10 @@ namespace ProgramPartListWeb.Areas.Final.Services
         }
         //  GET THE LIST DETAILS BY LINE 
         public async Task<List<FanTraceabilityManufacturingOrder>> GetListofShopOrdersByLine(
-            string Linename, string searchText, int status)
+            string Linename, string searchText, 
+            int status,
+            int page = 1,
+            int pageSize = 10)
         {
             try
             {
@@ -290,6 +293,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
                 var parameters = new DynamicParameters();
 
+                int offset = (page - 1) * pageSize;
+
                 parameters.Add("@Line", Linename);
 
                 if (!string.IsNullOrWhiteSpace(searchText))
@@ -304,6 +309,15 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 {
                     query += " AND mo.OrderStatus = @OrderStatus";
                     parameters.Add("@OrderStatus", status);
+                }
+
+                if (pageSize != 0)
+                {
+                    query += $@" ORDER BY mo.RecordID ASC
+                            OFFSET @Offset ROWS
+                            FETCH NEXT @PageSize ROWS ONLY";
+                    parameters.Add("@Offset", offset);
+                    parameters.Add("@PageSize", pageSize);
                 }
 
 
@@ -535,6 +549,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     WHERE f.IsDeletedFinal = 0
                       AND s.ShopOrder IS NOT NULL
                       AND f.FinalShopOrder = @FinalShopOrder
+                      AND f.DepartmentID IN (1, 2, 3, 5, 8, 9)
                 )
                 SELECT *
                 FROM CTE

@@ -77,9 +77,13 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         //============== LINE MANAGEMENT  =====================
         //=====================================================
         [HttpGet]
-        public async Task<ActionResult> LineShopOrderData(string Linename, string searchtext, int orderstatus)
+        public async Task<ActionResult> LineShopOrderData(string Linename, 
+            string searchtext, 
+            int orderstatus,
+            int page = 1,
+            int pageSize = 10)
         {
-            var res = await _manu.GetListofShopOrdersByLine(Linename, searchtext, orderstatus);
+            var res = await _manu.GetListofShopOrdersByLine(Linename, searchtext, orderstatus, page, pageSize);
             if (res == null || !res.Any())
                 return JsonNotFound("No Manpower data found");
 

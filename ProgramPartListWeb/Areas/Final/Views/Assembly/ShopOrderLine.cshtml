@@ -37,15 +37,42 @@
                     <input type="text" placeholder="Search here ..." id="searchinput" />
                 </div>
                 <select id="filterdata" class="filter-chip text-sm font-medium" style="height:32px;">
-                    <option value="0">All</option>
-                    <option value="1">Next Process</option>
-                    <option value="2">On Process</option>
-                    <option value="3">Completed/Done</option>
+                    <option value="0">Filter By : ALL </option>
+                    <option value="1">Filter By : Next Process</option>
+                    <option value="2">Filter By : On Process</option>
+                    <option value="3">Filter By : Completed/Done</option>
                 </select>
+
+                <span style="color: #8a8f9e; font-size: .9rem;"><iconify-icon icon="lets-icons:move-light" width="20"></iconify-icon> Change line </span>
+
+                <span style="color: #8a8f9e; font-size: .9rem;"><iconify-icon icon="material-symbols-light:ads-click-rounded" style="font-size: 18px;"></iconify-icon> Double Click on the rows to see the Details..</span>
             </div>
 
-            <div >
+            <div>
+                <div>
+                    <!-- Legends -->
+                    <div class="flex items-center gap-4 flex-wrap">
+                        <div class="legends-group">
+                            <span class="rounded-full bg-status-gray flex-shrink-0"></span>
+                            <span class="text-label">Pending Model </span>
+                        </div>
 
+                        <div class="legends-group">
+                            <span class="rounded-full bg-status-blue flex-shrink-0"></span>
+                            <span class="text-label">On Process Model</span>
+                        </div>
+
+                        <div class="legends-group">
+                            <span class="rounded-full bg-status-yellow flex-shrink-0"></span>
+                            <span class="text-label">Next process</span>
+                        </div>
+
+                        <div class="legends-group">
+                            <span class="rounded-full bg-status-green flex-shrink-0"></span>
+                            <span class="text-label">Completed</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -94,7 +121,7 @@
             <div class="modal-card-wrapper">
                 <div class="modal-card">
                     <div class="modal-row">
-                        
+
                         <div class="modal-text" style="width: 100%;">
                             <p class="modal-title" style="margin: 0 0 .5em 0;">Change Line:</p>
                             <select id="moveline" class="filter-chip text-sm font-medium" style="width: 100%; height: 32px;">
@@ -133,11 +160,26 @@
             </div>
 
 
-       
+
 
         </div>
     </div>
 </div>
+
+
+@*########################### PAGINATION #################################### *@
+<div class=" flex justify-between items-center p-3 border-t" style="width: 100%; position: fixed; z-index: 999; bottom: 0; left: 0; border-top: 1px solid #e5e5e5; background: white;">
+    <div class="text-sm" style="color:#86868b;">Showing 1-7 of 1,248 devices</div>
+    <div class="flex gap-1">
+        <button class="pagination-btn"><iconify-icon icon="lucide:chevron-left" style="font-size: 14px;"></iconify-icon></button>
+        <button class="pagination-btn pagination-active">1</button>
+        <button class="pagination-btn">2</button>
+        <button class="pagination-btn">3</button>
+        <span class="px-2 py-1 text-muted-foreground">...</span>
+        <button class="pagination-btn"><iconify-icon icon="lucide:chevron-right" style="font-size: 14px;"></iconify-icon></button>
+    </div>
+</div>
+@*########################################################################## *@
 
 
 <div class="modal fade" id="cancelNextmodal" tabindex="-1" aria-labelledby="moveOrderModalLabel" aria-hidden="true">
@@ -145,7 +187,7 @@
         <div class="modal-content">
 
             <div class="modal-card-wrapper">
-                <div class="modal-card" >
+                <div class="modal-card">
                     <div class="modal-row">
                         <div class="icon-box bg-question-subtle">
                             <span class="text-question">
@@ -161,7 +203,7 @@
                         </div>
                     </div>
                     <div class="button-group">
-                        <button class="btn btn-outline"  data-bs-dismiss="modal">No</button>
+                        <button class="btn btn-outline" data-bs-dismiss="modal">No</button>
                         <button class="btn btn-primary-dark" id="CancelID">Yes</button>
                     </div>
                 </div>
@@ -183,10 +225,13 @@
     constructor() {
         this.selectedID = 0;
         this.selectedLine = "";
+        this.currentPage = 1;
+        this.pageSize = 100;
 
         this.tbody = document.querySelector('.devices-table tbody');
         this.searchinput = document.getElementById('searchinput');
         this.filterStatus = document.getElementById('filterdata');
+        this.refreshbutton = document.getElementById('refreshbtn');
         this.strLine = document.getElementById('strLine').value;
         this.tabBar = document.getElementById('tabBar');
         this.contentArea = document.querySelector('.tab-content-area');
@@ -311,7 +356,7 @@
                 await this.LoadLineShopOrderList();
               }
 
-      
+
 
 
             this.moveModal.hide();
@@ -323,6 +368,16 @@
 
             this.cancelModal.hide();
 
+        });
+
+        this.refreshbutton.addEventListener('click', async (e) =>{
+            e.preventDefault();
+            document.getElementById('searchinput').value = "";
+            document.getElementById('filterdata').value = "0";
+            this.currentPage = 1;
+            this.pageSize = 20;
+
+             await this.LoadLineShopOrderList();
         });
 
 
@@ -406,7 +461,9 @@
                 const res = await getMethod('@Url.Action("LineShopOrderData", "Assembly")', {
                     Linename: this.strLine,
                     searchtext: document.getElementById('searchinput').value,
-                    orderstatus: document.getElementById('filterdata').value
+                    orderstatus: document.getElementById('filterdata').value, 
+                    page: this.currentPage,
+                    pageSize: this.pageSize
                 });
                 //console.log(res);
                 if (!res?.Success) return;
@@ -463,12 +520,12 @@
                      <td class='fixedrow'>
                          <div style='display: flex; align-items: center; gap: 1.5em;'>
                              <button class="selectedbadge ${selecthighlight}" ${row.OrderStatus === 2 || row.OrderStatus === 3 ? 'disabled' : ''}></button>
-                             <button class="selectmove"> <iconify-icon icon="pepicons-pop:move-x" width="20"></iconify-icon></button>
+                             <button class="selectmove"> <iconify-icon icon="lets-icons:move-light" width="20"></iconify-icon></button>
                          </div>
                       </td>
                       <td>
                         <span class="text-primary font-medium">${row.FinalShopOrder}</span>
-                        <p>${row.ItemNo}</p>
+                        <p style='margin: .2em 0; color: #8a8f9e;'>${row.ItemNo}</p>
                         <span style='font-weight: 600;'>${row.Model}</span>
                     </td>
                         <td>${circuit}</td>
@@ -506,7 +563,7 @@
 
                  const res = await postMethod('@Url.Action("UpdateStatusLine", "Assembly")', {
                      recordID : id,
-                     orderstats: orderstatus, 
+                     orderstats: orderstatus,
                      line: lineman
                  });
                   //console.log(res);

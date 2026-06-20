@@ -52,7 +52,7 @@
 
     <div class="devices-table-wrapper">
         <div class="table-scroll">
-            <table class="devices-table">
+            <table class="upload-table">
                 <thead>
                     <tr>
                         <th class='fixedcolumn' style="width:44px;">
@@ -76,7 +76,7 @@
             </table>
         </div>
         <!-- pagination footer -->
-        <div class="flex justify-between items-center p-3 border-t" style="border-top: 1px solid #e5e5e5; background: white;">
+        @*<div class="flex justify-between items-center p-3 border-t" style="border-top: 1px solid #e5e5e5; background: white;">
             <div class="text-sm" style="color:#86868b;">Showing 1-7 of 1,248 devices</div>
             <div class="flex gap-1">
                 <button class="pagination-btn"><iconify-icon icon="lucide:chevron-left" style="font-size: 14px;"></iconify-icon></button>
@@ -86,7 +86,7 @@
                 <span class="px-2 py-1 text-muted-foreground">...</span>
                 <button class="pagination-btn"><iconify-icon icon="lucide:chevron-right" style="font-size: 14px;"></iconify-icon></button>
             </div>
-        </div>
+        </div>*@
     </div>
 </section>
 
@@ -114,7 +114,7 @@
              backdrop: 'static',
              keyboard: false
          });
-         this.tbody = document.querySelector('.devices-table tbody');
+         this.tbody = document.querySelector('.upload-table tbody');
          this.fileInput = this._createFileInput();
          this._xhr = null;
          this._pollTimer = null;
@@ -299,7 +299,6 @@
                             </td>
                             <td class="uploadedData">
                                 <div class="flex items-center gap-2">
-                                    <iconify-icon icon="lucide:monitor" style="font-size:16px; color:#86868b;"></iconify-icon>
                                     <span class="font-semibold">${this.escape(row.FinalShopOrder)}</span>
                                 </div>
                             </td>

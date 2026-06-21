@@ -154,8 +154,8 @@ namespace ProgramPartListWeb
 
         private void ConfigureLogging()
         {
-            string homeMachineName = "DESKTOP-FC0UP1P";
-            string homePath = @"C:\Users\Jaye Labandia\Desktop\Samplelogs";
+            string homeMachineName = "DESKTOP-JT9FE5D";
+            string homePath = @"C:\Users\backe\Desktop\Logs";
             string officePath = @"\\sdp01034s\SYSTEM EXECUTABLE\P1SA-PC_System\WebLogs";
 
             string selectedPath =

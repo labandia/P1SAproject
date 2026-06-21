@@ -496,16 +496,13 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         [OutputCache(NoStore = true, Duration = 0)]
         public async Task ImportUploadStream(string fileName)
         {
-            // ✅ reconstruct full path server-side — never trust client path
+          
             string uploadPath = Server.MapPath("~/Content/Excel/");
             string filePath = Path.Combine(uploadPath, fileName);
 
-            System.Diagnostics.Debug.WriteLine("FileName received: " + (fileName ?? "NULL"));
-            System.Diagnostics.Debug.WriteLine("FilePath resolved: " + filePath);
-            System.Diagnostics.Debug.WriteLine("File exists: " + System.IO.File.Exists(filePath));
 
             if (string.IsNullOrEmpty(fileName)
-                || fileName.Contains("..") // ✅ prevent path traversal
+                || fileName.Contains("..") 
                 || !System.IO.File.Exists(filePath))
             {
                 Response.StatusCode = 400;
@@ -515,7 +512,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                 return;
             }
 
-            // ✅ set headers first
+           
             Response.Clear();
             Response.ContentType = "text/event-stream";
             Response.Charset = "";

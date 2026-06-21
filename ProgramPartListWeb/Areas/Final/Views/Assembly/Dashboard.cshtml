@@ -125,8 +125,20 @@
 
             try {
                 const res = await getMethod('@Url.Action("GetListActiveShopOrders", "Assembly")', {});
-                if (!res?.Success) return;
+
+                if (!res?.Success) {
+                    if (!this.isExpanded) this.RenderEmptyState();
+                    return;
+                }
+
                 const apiData = res.data ?? [];
+
+                if (apiData.length === 0) {
+                    this.allCardsData = [];
+                    if (!this.isExpanded) this.RenderEmptyState();
+                    return;
+                }
+
                 const lookup = new Map(apiData.map(item => [item.Line, item]));
                 const records = this.assemblyRecords.map(res => {
                     const fromApi = lookup.get(res.Line);
@@ -660,6 +672,69 @@ min="1" max="${item.PlanQty || 0}" value="${item.InputQty === 0 ? '' : item.Inpu
             this.isAnimating = false;
             this.activeLineId = null;
             await this.LoadActiveShopOrders();
+        }
+
+        RenderEmptyState() {
+                const gridContainer = document.getElementById('assemblyCardsGrid');
+                if (!gridContainer) return;
+                if (this.isExpanded) return;
+
+                const fragment = document.createDocumentFragment();
+
+                this.assemblyRecords.forEach((item, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'line-card line-card-offline';
+                    card.dataset.Line = item.Line;
+
+                    card.style.setProperty('--order', index);
+                    card.classList.add('stagger-in');
+
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <div class="line-badge">
+                                <div class="line-id line-id-offline">${item.Line}</div>
+                                <span class="status-tag status-tag-offline">Offline</span>
+                            </div>
+                            <span class="production-note">No production</span>
+                        </div>
+
+                        <div class="idle-center">
+                            <div class="pause-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M10 15V9m4 6V9"/></svg></div>
+                            <div class="idle-title">No Active Model Process</div>
+                            <div class="idle-sub">No  Next process Model found. Please Update the Data Inside </div>
+                        </div>
+                    `;
+
+                    // Click event for offline cards
+                    card.addEventListener('click', async (e) => {
+                        if (this.isExpanded || this.isAnimating) return;
+
+                        const res = await getMethod('@Url.Action("GetCountRecords", "Assembly")', { line: item.Line });
+                        console.log(res);
+                    });
+
+                    fragment.appendChild(card);
+                });
+
+                gridContainer.innerHTML = '';
+                gridContainer.appendChild(fragment);
+            }
+
+        buildOfflineCardHTML(line) {
+            return `
+                <div class="card-header">
+                    <div class="line-badge">
+                        <div class="line-id line-id-offline">${line}</div>
+                        <span class="status-tag status-tag-offline">Offline</span>
+                    </div>
+                    <span class="production-note">No production</span>
+                </div>
+                <div class="idle-center">
+                    <div class="pause-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M10 15V9m4 6V9"/></svg></div>
+                    <div class="idle-title">No Active Model Process</div>
+                    <div class="idle-sub">No Next process Model found. Please Update the Data Inside</div>
+                </div>
+            `;
         }
 
         updateLastRefresh() {

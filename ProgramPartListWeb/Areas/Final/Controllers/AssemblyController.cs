@@ -54,7 +54,6 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         {
             //await _manu.AutoUpdateShopOrderLine();
             int res = await _manu.GetCountShopOrders(line);
-            Debug.WriteLine("COUNT LINE : " + res.ToString());
             return JsonSuccess(res);
         }
 
@@ -94,7 +93,6 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         {
             try
             {
-                Debug.WriteLine("GetID" + RecordID);
                 var res = await _manu.GetShopderDetails(RecordID);
                 if (res == null)
                     return JsonNotFound("No Manpower data found");
@@ -128,9 +126,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         [HttpGet]
         public async Task<ActionResult> CheckIfAreadyCheckNext(string line)
         {
-            Debug.WriteLine("LINE NUMBER : " + line);
             int result = await _manu.GetNumberofNextprocess(line);
-            Debug.WriteLine(" NUMBER : " + result);
             return JsonSuccess(result);
         }
         
@@ -269,15 +265,17 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             try
             {
                 string uploadPath = Server.MapPath("~/Content/Excel/");
-                if (!Directory.Exists(uploadPath))
-                    Directory.CreateDirectory(uploadPath);
-
-
                 string uniqueName = Path.GetFileNameWithoutExtension(file.FileName)
                                   + "_" + Guid.NewGuid() + ext;
                 string filePath = Path.Combine(uploadPath, uniqueName);
 
-                file.SaveAs(filePath);
+                await Task.Run(() =>
+                {
+                    if (!Directory.Exists(uploadPath))
+                        Directory.CreateDirectory(uploadPath);
+
+                    file.SaveAs(filePath);
+                });
 
                 string jobId = Guid.NewGuid().ToString();
                 var state = new UploadJobState
@@ -310,7 +308,9 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                     {
                         // Clean up the file whether processing succeeded or failed
                         //if (File.Exists(filePath))
+                        //{
                         //    File.Delete(filePath);
+                        //}
                     }
                 });
 
@@ -364,7 +364,6 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                 {
                     var sheet = package.Workbook.Worksheets[0];
                     int rowCount = sheet.Dimension?.Rows ?? 0;
-                    Debug.WriteLine("ROW: " + rowCount.ToString());
                     // count total non-empty rows first
                     int total = 0;
                     for (int r = 2; r <= rowCount; r++)
@@ -424,9 +423,9 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                                 else
                                     state.Failed++;
 
-                                Debug.WriteLine("Completed Count :" + state.Success);
+                                //Debug.WriteLine("Completed Count :" + state.Success);
 
-                                Debug.WriteLine("Failed Count :" + state.Failed);
+                                //Debug.WriteLine("Failed Count :" + state.Failed);
                                 state.Rows.Add(rowResult);
                             }
 

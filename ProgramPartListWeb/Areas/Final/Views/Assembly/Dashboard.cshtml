@@ -9,44 +9,7 @@
     <div class="cards-grid" id="assemblyCardsGrid"></div>
 </div>
 
-<!-- ── LEGEND BAR ─────────────────────────────────── -->
-<footer class="legend-bar">
-    <div class="legend-items">
-        <div class="legend-item">
-            <span class="legend-dot" style="background-color:var(--color-molding)"></span>
-            <span class="legend-text">Molding</span>
-        </div>
-        <div class="legend-item">
-            <span class="legend-dot" style="background-color:var(--color-press)"></span>
-            <span class="legend-text">Press</span>
-        </div>
-        <div class="legend-item">
-            <span class="legend-dot" style="background-color:var(--color-rotor)"></span>
-            <span class="legend-text">Rotor</span>
-        </div>
-        <div class="legend-item">
-            <span class="legend-dot" style="background-color:var(--color-winding)"></span>
-            <span class="legend-text">Winding</span>
-        </div>
-        <div class="legend-item">
-            <span class="legend-dot" style="background-color:var(--color-circuit)"></span>
-            <span class="legend-text">Circuit</span>
-        </div>
-        <div class="legend-item">
-            <span class="legend-dot" style="background-color:var(--color-final)"></span>
-            <span class="legend-text">FinalAssembly</span>
-        </div>
-    </div>
-    <div class="legend-refresh">
-        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 12a9 9 0 0 1 9-9a9.75 9.75 0 0 1 6.74 2.74L21 8" />
-            <path d="M21 3v5h-5m5 4a9 9 0 0 1-9 9a9.75 9.75 0 0 1-6.74-2.74L3 16" />
-            <path d="M8 16H3v5" />
-        </svg>
-        <span id="lastUpdated">Auto-refresh every 30s · Last updated 06:42:18 AM</span>
-    </div>
-</footer>
+
 
 <script type="module" asp-append-version="true">
     import {
@@ -93,8 +56,20 @@
                 { finalShopOrder: "", Line: "L19", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
                 { finalShopOrder: "", Line: "L20", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
                 { finalShopOrder: "", Line: "CL1", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
+                { finalShopOrder: "", Line: "CL2", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
+                { finalShopOrder: "", Line: "CL3", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
+                { finalShopOrder: "", Line: "CL4", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
                 { finalShopOrder: "", Line: "CL5", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
+                { finalShopOrder: "", Line: "CL6", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
+                { finalShopOrder: "", Line: "CL7", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
                 { finalShopOrder: "", Line: "CL8", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
+                { finalShopOrder: "", Line: "CL9", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
+                { finalShopOrder: "", Line: "CL10", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
+                { finalShopOrder: "", Line: "CL11", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
+                { finalShopOrder: "", Line: "CL12", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
+                { finalShopOrder: "", Line: "CL13", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
+                { finalShopOrder: "", Line: "CL14", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
+                { finalShopOrder: "", Line: "CL15", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
                 { finalShopOrder: "", Line: "OP", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
             ];
 
@@ -102,7 +77,6 @@
         }
 
         async init() {
-            this.bindEvents();
             await this.LoadActiveShopOrders();
             this.refreshInterval = setInterval(
                 () => this.LoadActiveShopOrders(),
@@ -116,9 +90,7 @@
             }
         }
 
-        bindEvents() {
 
-        }
         /* ================= LOAD DATA ================= */
          async LoadActiveShopOrders() {
             if (this.isAnimating) return;
@@ -394,17 +366,17 @@ min="1" max="${item.PlanQty || 0}" value="${item.InputQty === 0 ? '' : item.Inpu
 
     // --- handle next model text animation ---
     const nextModelEl = this.currentCenteredCard.querySelector('.next-model-text');
-    if (nextModelEl) {
-        if (animateNextModel) {
-            this.typeText(nextModelEl, item.NextItem || '-', 50);
-        } else {
-            nextModelEl.textContent = item.NextItem || '-';
-            nextModelEl.classList.remove('typing-cursor');
-            nextModelEl.classList.add('typing-done');
+        if (nextModelEl) {
+            if (animateNextModel) {
+                this.typeText(nextModelEl, item.NextItem || '-', 50);
+            } else {
+                nextModelEl.textContent = item.NextItem || '-';
+                nextModelEl.classList.remove('typing-cursor');
+                nextModelEl.classList.add('typing-done');
+            }
         }
-    }
 
-}
+    }
 
 
 
@@ -418,7 +390,7 @@ min="1" max="${item.PlanQty || 0}" value="${item.InputQty === 0 ? '' : item.Inpu
             1: ['badge-molding', 'AG'],
             2: ['badge-press', 'AF'],
             3: ['badge-rotor', 'BF'],
-            4: ['badge-winding', 'WF'],
+            7: ['badge-winding', 'FG'],
             5: ['badge-circuit', 'CE'],
             9: ['badge-final', 'HD']
         };
@@ -516,10 +488,13 @@ min="1" max="${item.PlanQty || 0}" value="${item.InputQty === 0 ? '' : item.Inpu
                     if (this.isExpanded || this.isAnimating) return;
 
                     if (!isOnline) {
-                       //localStorage.setItem("LineSet", item.Line);
-                       @*window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);*@
+
                         const res = await getMethod('@Url.Action("GetCountRecords", "Assembly")', { line: item.Line });
-                        console.log(res);
+                        if (!res.Success) return;
+
+                        if (res.data != 0) {
+                            window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
+                        }
 
                        return;
                     }
@@ -708,9 +683,9 @@ min="1" max="${item.PlanQty || 0}" value="${item.InputQty === 0 ? '' : item.Inpu
                     // Click event for offline cards
                     card.addEventListener('click', async (e) => {
                         if (this.isExpanded || this.isAnimating) return;
-
-                        const res = await getMethod('@Url.Action("GetCountRecords", "Assembly")', { line: item.Line });
-                        console.log(res);
+                         window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
+                        @*const res = await getMethod('@Url.Action("GetCountRecords", "Assembly")', { line: item.Line });
+                        console.log(res);*@
                     });
 
                     fragment.appendChild(card);

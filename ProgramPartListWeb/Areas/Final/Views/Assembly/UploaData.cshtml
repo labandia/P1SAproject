@@ -249,11 +249,17 @@
             });
     }
 
+
+
+
     /* ================= LOAD DATA ================= */
     async LoadUploadDataList() {
         try {
             const res = await getMethod('@Url.Action("GetUploadData", "Assembly")', {});
-            if (!res?.Success) return;
+            if (!res?.Success) {
+                this.NoTableRowData();
+                return;
+            }
 
             this.filterData = res.data ?? [];
 
@@ -267,19 +273,12 @@
 
     /* ================= RENDER MAIN TABLE ================= */
         renderTable(data) {
-        if (!this.tbody) return;
+            if (!this.tbody) return;
 
-        if (data.length === 0) {
-            document.getElementById('selectAllRows').checked = false;
-
-            this.tbody.innerHTML = `
-                <tr>
-                    <td colspan="11" style="text-align:center; padding:32px; color:#86868b;">
-                        No data available.
-                    </td>
-                </tr>`;
-            return;
-        }
+            if (data.length === 0) {
+                this.NoTableRowData();
+                return;
+            }
 
             this.tbody.innerHTML = data.map(row => {
                 const qtyMatched =
@@ -290,7 +289,7 @@
 
 
                 return `
-                        <tr>
+                        <tr class="fade-in">
                            <td class='fixedrow'>
                                 <input type="checkbox"
                                        class="row-checkbox"
@@ -325,7 +324,48 @@
             document.getElementById('selectAllRows').checked =
                 allCheckboxes.length > 0 &&
                 allCheckboxes.every(cb => cb.checked);
-    }
+        }
+
+
+        NoTableRowData() {
+            document.getElementById('selectAllRows').checked = false;
+
+            this.tbody.innerHTML = `
+            <tr>
+                <td colspan="11" style="padding: 0; border: none;">
+                    <div class="table-empty">
+                        <div class="table-empty-icon-box">
+                            <span class="icon-wrap" style="width:28px;height:28px;color:var(--color-primary);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24">
+                                    <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7142857142857142">
+                                        <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
+                                        <path d="M14 2v5a1 1 0 0 0 1 1h5m-8 4v6m3-3l-3-3l-3 3" />
+                                    </g>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="table-empty-content">
+                            <span class="table-empty-title">No upload data yet</span>
+                            <span class="table-empty-desc">Import a CSV or Excel file to compare planned quantities and dates against current shop orders.</span>
+                        </div>
+                        
+                    </div>
+                </td>
+            </tr>`;
+        }
+
+      showTableSkeleton() {
+          this.tbody.innerHTML = Array(10).fill(`
+            <tr>
+                ${Array(18).fill(`
+                    <td>
+                        <div class="skeleton-cell"></div>
+                    </td>
+                `).join('')}
+            </tr>
+            `).join('');
+      }
+
 
         updateSelectedCount() {
             const count =
@@ -483,7 +523,6 @@
 
               // ✅ pass fileName in query string
               const streamUrl = this.streamUrl + '?fileName=' + encodeURIComponent(fileName);
-              console.log('SSE URL:', streamUrl);
 
               const evtSource = new EventSource(streamUrl);
               this._evtSource = evtSource;

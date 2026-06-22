@@ -1,0 +1,114 @@
+﻿@*########################### PAGINATION #################################### *@
+<div class=" flex justify-between items-center p-3 border-t" style="width: 100%; position: fixed; z-index: 999; bottom: 0; left: 0; border-top: 1px solid #e5e5e5; background: white;">
+    <div class="text-sm" style="color:#86868b;">Showing 1-7 of 1,248 devices</div>
+    <div class="flex gap-1">
+        <button class="pagination-btn"><iconify-icon icon="lucide:chevron-left" style="font-size: 14px;"></iconify-icon></button>
+        <button class="pagination-btn pagination-active">1</button>
+        <button class="pagination-btn">2</button>
+        <button class="pagination-btn">3</button>
+        <span class="px-2 py-1 text-muted-foreground">...</span>
+        <button class="pagination-btn"><iconify-icon icon="lucide:chevron-right" style="font-size: 14px;"></iconify-icon></button>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+@*########################################################################## *@
+
+
+<div class="modal fade" id="cancelNextmodal" tabindex="-1" aria-labelledby="moveOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-card-wrapper">
+                <div class="modal-card">
+                    <div class="modal-row">
+                        <div class="icon-box bg-question-subtle">
+                            <span class="text-question">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3m.08 4h.01"></path>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="modal-text">
+                            <p class="modal-title">Are you sure you want to cancel?</p>
+                            <p class="modal-description">This action requires confirmation before proceeding.</p>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-outline" data-bs-dismiss="modal">No</button>
+                        <button class="btn btn-primary-dark" id="CancelID">Yes</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<div class="modal fade" id="moveOrderModal" tabindex="-1" aria-labelledby="moveOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-card-wrapper">
+                <div class="modal-card">
+                    <div class="modal-row">
+
+                        <div class="modal-text" style="width: 100%;">
+                            <p class="modal-title" style="margin: 0 0 .5em 0;">Change Line:</p>
+                            <select id="moveline" class="filter-chip text-sm font-medium" style="width: 100%; height: 32px;">
+                                <option value="L1">L1</option>
+                                <option value="L2">L2</option>
+                                <option value="L3">L3</option>
+                                <option value="L4">L4</option>
+                                <option value="L5">L5</option>
+                                <option value="L6">L6</option>
+                                <option value="L7">L7</option>
+                                <option value="L8">L8</option>
+                                <option value="L9">L9</option>
+                                <option value="L10">L10</option>
+                                <option value="L11">L11</option>
+                                <option value="L12">L12</option>
+                                <option value="L13">L13</option>
+                                <option value="L14">L14</option>
+                                <option value="L15">L15</option>
+                                <option value="L16">L16</option>
+                                <option value="L17">L17</option>
+                                <option value="L18">L18</option>
+                                <option value="L19">L19</option>
+                                <option value="L20">L20</option>
+                                <option value="CL1">CL1</option>
+                                <option value="CL5">Cl5</option>
+                                <option value="CL8">Cl8</option>
+                                <option value="OP">OP</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="button-group" style="gap: 1rem;">
+                        <button class="btn btn-outline" data-bs-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-primary" id="moveOrderConfirmBtn">Confirm</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+</div>

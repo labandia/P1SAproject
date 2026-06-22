@@ -163,7 +163,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                             SELECT DepartmentID
                             FROM FanTraceabilityFinal
                             WHERE FinalShopOrder = @FinalShopOrder
-                              AND DepartmentID IN (1,2,3,5,8,9)
+                              AND DepartmentID IN (1,2,3,5,7,9)
                         )
                         SELECT CAST(DepartmentID AS VARCHAR(10))
                         FROM Depts
@@ -171,12 +171,12 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         UNION
 
                         SELECT '1'
-                        WHERE EXISTS (SELECT 1 FROM Depts WHERE DepartmentID IN (1,2))
+                        WHERE EXISTS (SELECT 1 FROM Depts WHERE DepartmentID IN (1))
 
                         UNION
 
                         SELECT '2'
-                        WHERE EXISTS (SELECT 1 FROM Depts WHERE DepartmentID IN (1,2))";
+                        WHERE EXISTS (SELECT 1 FROM Depts WHERE DepartmentID IN (2))";
 
                     var departments = await SqlDataAcess_Test.GetDataAsync<string>(
                         listdone,
@@ -251,7 +251,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                             WHEN EXISTS (
                                 SELECT 1
                                 FROM FanTraceabilityFinal f
-                                WHERE f.DepartmentID = 8
+                                WHERE f.DepartmentID = 7
                                   AND f.FinalShopOrder = mo.FinalShopOrder
                             )
                             THEN 'FG'
@@ -263,7 +263,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                 SELECT 1
                                 FROM FanTraceabilityFinal f
                                 WHERE f.FinalShopOrder = mo.FinalShopOrder
-                                  AND f.DepartmentID IN (1, 2)
+                                  AND f.DepartmentID IN (1)
                             )
                             THEN 'AG'
                         END AS Molding,
@@ -273,7 +273,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                 SELECT 1
                                 FROM FanTraceabilityFinal f
                                 WHERE f.FinalShopOrder = mo.FinalShopOrder
-                                  AND f.DepartmentID IN (1, 2)
+                                  AND f.DepartmentID IN (2)
                             )
                             THEN 'AF'
                         END AS Press,
@@ -339,6 +339,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
         {
             string strsql = $@"SELECT TOP 1 {SelectColumns} FROM  FanTraceabilityManufacturingOrder s
                   WHERE s.RecordID =@RecordID  ";
+
             return SqlDataAcess_Test.GetSingleAsync<FanTraceabilityManufacturingOrder>(strsql, new
             {
                 RecordID = id
@@ -519,7 +520,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         f.RecordId,
                         f.FinalShopOrder,
                         s.ShopOrder,
-                        p.ProcessName,
+                        f.ProcessName,
                         f.ItemNo,
                         f.PlanQuan,
                         f.DatePrepared,
@@ -544,8 +545,6 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     FROM FanTraceabilityFinal f
                     LEFT JOIN FanTraceabilitySub s
                         ON s.FinalId = f.RecordId
-                    INNER JOIN FanTraceabilityProcess p
-                        ON p.ProcessId = f.ProcessId
                     WHERE f.IsDeletedFinal = 0
                       AND s.ShopOrder IS NOT NULL
                       AND f.FinalShopOrder = @FinalShopOrder
@@ -621,7 +620,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
         public Task<int> GetCountShopOrders(string line)
         {
-            return SqlDataAccess.ExecuteScalarAsync<int>($@"SELECT COUNT(*) AS TotalCount
+            return SqlDataAcess_Test.ExecuteScalarAsync<int>($@"SELECT COUNT(*) AS TotalCount
                 FROM FanTraceabilityManufacturingOrder
                 WHERE Line = @Line
                   AND OrderStatus != 3;", new

@@ -759,6 +759,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\AdminDesign.css" />
+    <Content Include="Content\css\Animation.css" />
     <Content Include="Content\css\FinalAssembly.css" />
     <Content Include="Content\css\HydroDesign.css" />
     <Content Include="Content\css\HydroDesign.min.css">
@@ -896,6 +897,7 @@
     <Content Include="Areas\Final\Views\Shared\_ManageLayout.cshtml" />
     <Content Include="Areas\Final\Views\Assembly\ShopOrderDetails.cshtml" />
     <Content Include="Areas\Final\Views\Shared\_FinalShopDetails.cshtml" />
+    <Content Include="Areas\Final\Views\Assembly\_ShopOrdersModal.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <Content Include="Content\Uploads\PCFY-81013Form1L.xlsx" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />

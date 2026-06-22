@@ -128,7 +128,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                        ShipmentMode = model.Mode,
                        WithSR = model.WithSr,
                        OrderRemarks = model.Remarks,
-                       OrderStatus = 1
+                       OrderStatus = 0
                    });
 
             // var planStartDate = DateTime.TryParse(model.PlanStart, out var ps)
@@ -255,7 +255,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
         {
             try
             {
-                var getApproveData = await SqlDataAcess_Test.GetDataAsync<UploadDataModel>(@"SELECT TOP 20
+                var getApproveData = await SqlDataAcess_Test.GetDataAsync<UploadDataModel>(@"SELECT 
                             U.RecordID,
 	                        U.Line,
                             U.FinalShopOrder,

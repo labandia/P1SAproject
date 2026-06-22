@@ -466,31 +466,34 @@
                 let molding = row.Molding ? '<span class="sectionbadge badge-molding">AF</span>' : '-';
                 let press = row.Press ? '<span class="sectionbadge badge-press">AG</span>' : '-';
                 let winding = row.Winding ? '<span class="sectionbadge badge-winding">FG</span>' : '-';
-                let final = row.final ? '<span class="sectionbadge badge-final">HD</span>' : '-';
+                let final = row.final ? '<span class="sectionbadge badge-final">FA</span>' : '-';
+
+               
 
                 const orderStatus = parseInt(row.OrderStatus);
                 let highlighted = row.OrderStatus == 2 ? 'bg-row-highlight' : '';
 
+
+                const allComplete = row.Circuit && row.Rotor && row.Molding && row.Press && row.Winding && row.final;
+                const orderStatus = parseInt(row.OrderStatus);
+                let highlighted = orderStatus === 2 ? 'bg-row-highlight' : '';
+
                 let selecthighlight = '';
-                switch (orderStatus) {
-                    case 2:
-                        selecthighlight = 'selectedProcess'
-                        break;
-                    case 1:
-                        selecthighlight = 'selectedNext'
-                        break;
-                    case 3:
-                        selecthighlight = 'selectedDone'
-                        break;
-                    default:
-                        selecthighlight = ''
-                        break;
+                if (allComplete) {
+                    switch (orderStatus) {
+                        case 2: selecthighlight = 'selectedProcess'; break;
+                        case 1: selecthighlight = 'selectedNext'; break;
+                        default: selecthighlight = 'selectedDone'; break;  // all done, no active status
+                    }
                 }
+                
+
+
                 return `
               <tr  class='${highlighted} fade-in'  data-order-line="${row.Line}"   data-order-status="${orderStatus}" data-id="${row.RecordID}">
                      <td class='fixedrow'>
                          <div style='display: flex; align-items: center; gap: 1.5em;'>
-                             <button class="selectedbadge ${selecthighlight}" ${row.OrderStatus === 2 || row.OrderStatus === 3 ? 'disabled' : ''}></button>
+                             <button class="selectedbadge ${selecthighlight}" ${!allComplete || orderStatus === 3 ? 'disabled' : ''}></button>
                              <button class="selectmove"> <iconify-icon icon="lets-icons:move-light" width="20"></iconify-icon></button>
                          </div>
                       </td>

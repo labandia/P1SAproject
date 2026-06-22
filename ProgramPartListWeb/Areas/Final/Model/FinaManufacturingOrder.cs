@@ -33,6 +33,8 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public string Rotor { get; set; }
         public string Winding { get; set; }
         public string final { get; set; }
+        public string Harness { get; set; }
+        public string Material { get; set; }
         public string NextItem { get; set; }
         public int InputQty { get; set; }
     }

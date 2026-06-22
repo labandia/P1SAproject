@@ -226,7 +226,15 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         mo.WithSR,
                         mo.OrderRemarks,
                         mo.OrderStatus,
-
+                        CASE
+                            WHEN EXISTS (
+                                SELECT 1
+                                FROM FanTraceabilityFinal f
+                                WHERE f.DepartmentID = 4
+                                  AND f.FinalShopOrder = mo.FinalShopOrder
+                            )
+                            THEN 'STR'
+                        END AS Winding,
                         CASE
                             WHEN EXISTS (
                                 SELECT 1
@@ -255,7 +263,17 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                   AND f.FinalShopOrder = mo.FinalShopOrder
                             )
                             THEN 'FG'
-                        END AS Winding,
+                        END AS Harness,
+
+                        CASE
+                            WHEN EXISTS (
+                                SELECT 1
+                                FROM FanTraceabilityFinal f
+                                WHERE f.DepartmentID = 7
+                                  AND f.FinalShopOrder = mo.FinalShopOrder
+                            )
+                            THEN 'DD'
+                        END AS Material,
 
                         -- DepartmentID 1 OR 2  Show both AG and AF
                         CASE

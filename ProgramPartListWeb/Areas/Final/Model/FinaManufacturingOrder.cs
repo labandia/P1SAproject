@@ -36,6 +36,7 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public string Harness { get; set; }
         public string Material { get; set; }
         public string NextItem { get; set; }
+        public string NextShop { get; set; }    
         public int InputQty { get; set; }
     }
 

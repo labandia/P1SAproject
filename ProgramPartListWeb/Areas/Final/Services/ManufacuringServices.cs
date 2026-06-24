@@ -34,7 +34,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                  ,s.WithSR
                                  ,s.OrderRemarks
                                  ,s.OrderStatus
-                                 ,(SELECT m.Model FROM FanTraceabilityManufacturingOrder m WHERE m.Line = s.Line AND m.OrderStatus = 1)  as NextItem ";
+                                 ,(SELECT m.Model FROM FanTraceabilityManufacturingOrder m WHERE m.Line = s.Line AND m.OrderStatus = 1)  as NextItem
+                                 ,(SELECT m.FinalShopOrder FROM FanTraceabilityManufacturingOrder m WHERE m.Line = s.Line AND m.OrderStatus = 1)  as NextShop";
 
         public async Task AutoUpdateShopOrderLine()
         {
@@ -163,7 +164,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                             SELECT DepartmentID
                             FROM FanTraceabilityFinal
                             WHERE FinalShopOrder = @FinalShopOrder
-                              AND DepartmentID IN (1,2,3,5,7,9)
+                              AND DepartmentID IN (1,2,3,4,5,7,9) 
                         )
                         SELECT CAST(DepartmentID AS VARCHAR(10))
                         FROM Depts
@@ -180,7 +181,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
                     var departments = await SqlDataAcess_Test.GetDataAsync<string>(
                         listdone,
-                        new { FinalShopOrder = order.FinalShopOrder });
+                        new { FinalShopOrder = order.NextShop });
 
                     order.CompletedSection = string.Join(",",
                         departments
@@ -226,6 +227,37 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         mo.WithSR,
                         mo.OrderRemarks,
                         mo.OrderStatus,
+                           -- DepartmentID 1 OR 2  Show both AG and AF
+                        CASE
+                            WHEN EXISTS (
+                                SELECT 1
+                                FROM FanTraceabilityFinal f
+                                WHERE f.FinalShopOrder = mo.FinalShopOrder
+                                   AND f.DepartmentID = 1
+                            )
+                            THEN 'AF'
+                        END AS Molding,
+
+                        CASE
+                            WHEN EXISTS (
+                                SELECT 1
+                                FROM FanTraceabilityFinal f
+                                WHERE f.FinalShopOrder = mo.FinalShopOrder
+                                   AND f.DepartmentID = 2
+                            )
+                            THEN 'AG'
+                        END AS Press,
+
+						CASE
+                            WHEN EXISTS (
+                                SELECT 1
+                                FROM FanTraceabilityFinal f
+                                WHERE f.DepartmentID = 3
+                                  AND f.FinalShopOrder = mo.FinalShopOrder
+                            )
+                            THEN 'BF'
+                        END AS Rotor,
+
                         CASE
                             WHEN EXISTS (
                                 SELECT 1
@@ -245,15 +277,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                             THEN 'CE'
                         END AS Circuit,
 
-                        CASE
-                            WHEN EXISTS (
-                                SELECT 1
-                                FROM FanTraceabilityFinal f
-                                WHERE f.DepartmentID = 3
-                                  AND f.FinalShopOrder = mo.FinalShopOrder
-                            )
-                            THEN 'BF'
-                        END AS Rotor,
+                        
 
                         CASE
                             WHEN EXISTS (
@@ -269,51 +293,25 @@ namespace ProgramPartListWeb.Areas.Final.Services
                             WHEN EXISTS (
                                 SELECT 1
                                 FROM FanTraceabilityFinal f
-                                WHERE f.DepartmentID = 7
-                                  AND f.FinalShopOrder = mo.FinalShopOrder
-                            )
-                            THEN 'DD'
-                        END AS Material,
-
-                        -- DepartmentID 1 OR 2  Show both AG and AF
-                        CASE
-                            WHEN EXISTS (
-                                SELECT 1
-                                FROM FanTraceabilityFinal f
-                                WHERE f.FinalShopOrder = mo.FinalShopOrder
-                                  AND f.DepartmentID IN (1)
-                            )
-                            THEN 'AG'
-                        END AS Molding,
-
-                        CASE
-                            WHEN EXISTS (
-                                SELECT 1
-                                FROM FanTraceabilityFinal f
-                                WHERE f.FinalShopOrder = mo.FinalShopOrder
-                                  AND f.DepartmentID IN (2)
-                            )
-                            THEN 'AF'
-                        END AS Press,
-
-                        CASE
-                            WHEN EXISTS (
-                                SELECT 1
-                                FROM FanTraceabilityFinal f
                                 WHERE f.DepartmentID = 9
                                   AND f.FinalShopOrder = mo.FinalShopOrder
                             )
-                            THEN 'HD'
-                        END AS Final
+                            THEN 'DD'
+                        END AS Material
 
                     FROM FanTraceabilityManufacturingOrder mo
-                    WHERE  mo.Line =@Line ";
+                    WHERE 1 = 1 ";
 
                 var parameters = new DynamicParameters();
 
                 int offset = (page - 1) * pageSize;
 
-                parameters.Add("@Line", Linename);
+                // Line filter
+                if (!string.IsNullOrWhiteSpace(Linename))
+                {
+                    query += " AND mo.Line = @Line";
+                    parameters.Add("@Line", Linename);
+                }
 
                 if (!string.IsNullOrWhiteSpace(searchText))
                 {
@@ -323,7 +321,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     parameters.Add("@SearchPrefix", $"{searchText}%");
                 }
 
-                if(status != 0)
+                if(status >= 0)
                 {
                     query += " AND mo.OrderStatus = @OrderStatus";
                     parameters.Add("@OrderStatus", status);
@@ -566,7 +564,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     WHERE f.IsDeletedFinal = 0
                       AND s.ShopOrder IS NOT NULL
                       AND f.FinalShopOrder = @FinalShopOrder
-                      AND f.DepartmentID IN (1, 2, 3, 5, 8, 9)
+                      AND f.DepartmentID IN (1, 2, 3, 4, 5, 7, 9)
                 )
                 SELECT *
                 FROM CTE
@@ -645,6 +643,22 @@ namespace ProgramPartListWeb.Areas.Final.Services
             {
                 Line = line
             });
+        }
+
+        public Task<int> GetActualCountOfShopOrders(string Linename)
+        {
+            string strquery = $@"SELECT COUNT(*) 
+                    FROM FanTraceabilityManufacturingOrder  ";
+
+            var parameters = new DynamicParameters();
+
+            if (!string.IsNullOrWhiteSpace(Linename))
+            {
+                strquery += " WHERE Line = @Line";
+                parameters.Add("@Line", Linename);
+            }
+
+            return SqlDataAcess_Test.ExecuteScalarAsync<int>(strquery, parameters);
         }
     }
 }

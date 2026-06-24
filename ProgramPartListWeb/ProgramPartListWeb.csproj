@@ -898,6 +898,7 @@
     <Content Include="Areas\Final\Views\Assembly\ShopOrderDetails.cshtml" />
     <Content Include="Areas\Final\Views\Shared\_FinalShopDetails.cshtml" />
     <Content Include="Areas\Final\Views\Assembly\_ShopOrdersModal.cshtml" />
+    <Content Include="Areas\Final\Views\Assembly\LineData.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <Content Include="Content\Uploads\PCFY-81013Form1L.xlsx" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />

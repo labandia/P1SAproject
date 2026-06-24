@@ -18,6 +18,8 @@ namespace ProgramPartListWeb.Areas.Final
             int page = 1,
             int pageSize = 10);
 
+        Task<int> GetActualCountOfShopOrders(string Linename);
+
         Task<FanTraceabilityManufacturingOrder> GetShopderDetails(int id);
         Task<string> GetAlreadyDoneShopOrdersBySection(string finalorder);
         Task<bool> SelectOnlineShopOrders(int recordID);

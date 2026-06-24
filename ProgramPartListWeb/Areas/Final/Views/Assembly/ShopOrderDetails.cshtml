@@ -11,20 +11,6 @@
 <div class="content-row">
     <!-- Main content panel -->
     <div class="main-panel">
-        <!-- Breadcrumb -->
-        @*<div class="breadcrumb-card">
-            <a href="#" class="breadcrumb-link" id="navcont">
-                <iconify-icon icon="lucide:house" width="16"></iconify-icon>
-                Manage Data
-            </a>
-
-            <span class="breadcrumb-separator">/</span>
-
-            <span class="breadcrumb-current" id="modelText">
-                Shop Order Details
-            </span>
-        </div>*@
-
         <!-- Shop Order Details Card -->
         <div class="details-card">
             <div class="Shopcard-header">
@@ -128,10 +114,7 @@
                 <span class="field-label">Shipment Date</span>
                 <input type="date" class="field-box" placeholder="Enter Final Assembly Status" id="ShipmentDate" />
             </div>
-            @*<div class="field-group">
-                <span class="field-label">Mode</span>
-                <input type="text" placeholder="Enter Final Assembly Status" id="ShipmentMode" />
-            </div>*@
+           
         <div class="check-group">
             <span class="field-label">With SR : </span>
             <input type="checkbox" id="WithSR" />
@@ -164,7 +147,6 @@
             this.recordID = document.getElementById('intID').value;
             this.strLine = "";
             this.intRecord = 0;
-            //this.navget = document.getElementById('navcont');
         }
 
         async init() {
@@ -172,12 +154,7 @@
             this.bindEvents();
         }
 
-        bindEvents() {
-            @*this.navget.addEventListener('click', (e) => {
-                e.preventDefault();
-                window.location.href = `@Url.Action("ShopOrderLine", "Assembly")?Line=${this.strLine}`;
-            });*@
-
+        bindEvents() {      
             const form = document.getElementById('EditFinalAsembly');
             form.addEventListener('submit', (e) => this.HandleSubmit(e));
         }
@@ -190,7 +167,6 @@
                 if (!res?.Success) return;
                 const data = res.data;
                 this.strLine = data.Line;
-                console.log(data);
                 document.getElementById("finalShopOrderText").textContent = data.FinalShopOrder;
                 document.getElementById("partnoText").textContent = data.ItemNo;
                 document.getElementById("ModelText").textContent = data.Model;
@@ -198,7 +174,7 @@
                 document.getElementById("LineText").textContent = data.Line;
 
                 document.getElementById("PlanText").textContent = data.PlanQty;
-                document.getElementById("DispatchText").textContent = data.DispatchDate;
+                document.getElementById("DispatchText").textContent = this.formatDate(data.DispatchDate);
                 document.getElementById("WCText").textContent = data.WC;
                 document.getElementById("IFSText").textContent = this.formatDate(data.FinalFinishedDate);
                 document.getElementById('WithSR').checked = data.WithSR;
@@ -225,7 +201,6 @@
 
               if (!res?.Success) return;
                 const data = res.data;
-                //console.log(data);
                 this.renderTable(data);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -309,34 +284,26 @@
                 return;
             }
 
-           
-
-
-
+          
             const sectionMap = {
                 1: "Molding",
                 2: "Press",
                 3: "Rotor",
-                8: "Winding",
+                4: "Winding",
                 5: "Circuit",
-                9: "Final Assembly"
+                7: "Harness",
+                9: "Material Prep"
             };
 
-            //const sectionMap = {
-            //    1: ['badge-molding', 'AG'],
-            //    2: ['badge-press', 'AF'],
-            //    3: ['badge-rotor', 'BF'],
-            //    4: ['badge-winding', 'WF'],
-            //    5: ['badge-circuit', 'CE']
-            //};
 
             const sectionCode = {
-                1: "AG",
-                2: "AF",
+                1: "AF",
+                2: "AG",
                 3: "BF",
-                4: "FG",
+                4: "FA",
                 5: "CE",
-                9: "HD"
+                7: "FG",
+                9: "DD"
             };
 
 
@@ -344,23 +311,26 @@
                 let sectionLabel = '';
 
                 switch (row.DepartmentID) {
-                    case 2:
-                        sectionLabel = '<span class="sectionbadge badge-press">AF</span>'
-                        break;
                     case 1:
-                        sectionLabel = '<span class="sectionbadge badge-molding">AG</span>'
+                        sectionLabel = '<span class="sectionbadge badge-molding">AF</span>'
+                        break;
+                    case 2:
+                        sectionLabel = '<span class="sectionbadge badge-press">AG</span>'
                         break;
                     case 3:
                         sectionLabel = '<span class="sectionbadge badge-rotor">BF</span>'
                         break;
                     case 4:
-                        sectionLabel = '<span class="sectionbadge badge-winding">FG</span>'
+                        sectionLabel = '<span class="sectionbadge badge-winding">FA</span>'
                         break;
                     case 5:
                         sectionLabel = '<span class="sectionbadge badge-circuit">CE</span>'
                         break;
+                    case 7:
+                        sectionLabel = '<span class="sectionbadge badge-harness">FG</span>'
+                        break;
                     default:
-                        sectionLabel = '<span class="sectionbadge badge-final">HD</span>'
+                        sectionLabel = '<span class="sectionbadge badge-Material">DD</span>'
                         break;
                 }
 

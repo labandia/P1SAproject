@@ -83,10 +83,20 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             int pageSize = 10)
         {
             var res = await _manu.GetListofShopOrdersByLine(Linename, searchtext, orderstatus, page, pageSize);
+           
+            int totalCount = await _manu.GetActualCountOfShopOrders(Linename);
+
             if (res == null || !res.Any())
                 return JsonNotFound("No Manpower data found");
 
-            return JsonSuccess(res);
+            var finaldata = new
+            {
+                payload = res,
+                Total = totalCount
+            };
+
+
+            return JsonSuccess(finaldata, "Retrieved data successfully");
         }
         [HttpGet]
         public async Task<ActionResult> SelectedShopOrderData(int RecordID)
@@ -719,8 +729,38 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             return val.ToString().Trim();
         }
 
+        //=====================================================
+        //============== FINAL ASSEMBLY DATA  =================
+        //=====================================================
+        [HttpGet]
+        public async Task<ActionResult> GetFinalAssemblyData(string Linename,
+            string searchtext,
+            int page = 1,
+            int pageSize = 10)
+        {
+            var res = await _manu.GetListofShopOrdersByLine(Linename, searchtext, 0, page, pageSize);
+
+            int totalCount = await _manu.GetActualCountOfShopOrders(Linename);
+
+            if (res == null || !res.Any())
+                return JsonNotFound("No Manpower data found");
+
+            var finaldata = new
+            {
+                payload = res,
+                Total = totalCount
+            };
+
+
+            return JsonSuccess(finaldata, "Retrieved data successfully");
+        }
+
+
+
         // GET: Final/Assembly
         public ActionResult Dashboard() => View();
+        // GET: Final/LineData
+        public ActionResult LineData() => View();
         // GET: Final/UploaData
         public ActionResult UploaData() => View();
         // GET: Final/ShopOrderLine/{line}

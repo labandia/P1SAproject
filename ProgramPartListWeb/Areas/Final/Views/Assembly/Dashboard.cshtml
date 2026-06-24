@@ -218,9 +218,10 @@
                 1: ['badge-molding', 'AG'],
                 2: ['badge-press', 'AF'],
                 3: ['badge-rotor', 'BF'],
-                4: ['badge-winding', 'WF'],
+                4: ['badge-winding', 'FA'],
                 5: ['badge-circuit', 'CE'],
-                9: ['badge-final', 'HD']
+                7: ['badge-harness', 'FG'],
+                9: ['badge-Material', 'DD']
             };
 
     const completedSections = (item.CompletedSection || '')
@@ -278,12 +279,19 @@
                 <div>
                     <small>Quantity:</small>
              <input type="number" id="modalQtyInput" class="completed-qty"
-min="1" max="${item.PlanQty || 0}" value="${item.InputQty === 0 ? '' : item.InputQty}" />
-  <span> / ${item.PlanQty || 0}</span>
+                    min="1" max="${item.PlanQty || 0}" value="${item.InputQty === 0 ? '' : item.InputQty}" />
+                      <span> / ${item.PlanQty || 0}</span>
 
                 </div>
-                <button type="button" id="modalCompleteBtn" class="btn-completed"
-                        data-line="${item.Line}" data-order="${item.FinalShopOrder}">Completed</button>
+
+                
+                <div style="display:flex; align-items:center; gap: 10px;">
+                     <button type="button" id="modalCancel" class="btn-cancel" ${item.InputQty !== 0 ? 'disabled' : ''}><iconify-icon icon="mdi-light:cancel" width="16"></iconify-icon>  Cancel</button>
+
+                    <button type="button" id="modalCompleteBtn" class="btn-completed"
+                            data-line="${item.Line}" data-order="${item.FinalShopOrder}"><iconify-icon icon="fluent-mdl2:completed" width="15"></iconify-icon>  Completed</button>
+                </div>
+
             </div>
         </div>
     `;
@@ -356,6 +364,18 @@ min="1" max="${item.PlanQty || 0}" value="${item.InputQty === 0 ? '' : item.Inpu
         });
     }
 
+    // Cancel  button
+    const cancelbtn = this.currentCenteredCard.querySelector('#modalCancel');
+    if (cancelbtn) {
+        cancelbtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            alert("Cancel Inprocess");
+            //let res = await this.updateOrderStatus(item.RecordID, 0, item.Line);
+          
+         });
+    }
+
+
     this.currentCenteredCard.addEventListener('dblclick', (e) => {
         // Prevent navigation if clicking on input, button, or close button
         if (e.target.closest('input') || e.target.closest('button')) return;
@@ -386,14 +406,15 @@ min="1" max="${item.PlanQty || 0}" value="${item.InputQty === 0 ? '' : item.Inpu
         if (!gridContainer) return;
         if (this.isExpanded) return;
 
-        const sectionMap = {
-            1: ['badge-molding', 'AG'],
-            2: ['badge-press', 'AF'],
-            3: ['badge-rotor', 'BF'],
-            7: ['badge-winding', 'FG'],
-            5: ['badge-circuit', 'CE'],
-            9: ['badge-final', 'HD']
-        };
+         const sectionMap = {
+             1: ['badge-molding', 'AG'],
+             2: ['badge-press', 'AF'],
+             3: ['badge-rotor', 'BF'],
+             4: ['badge-winding', 'FA'],
+             5: ['badge-circuit', 'CE'],
+             7: ['badge-harness', 'FG'],
+             9: ['badge-Material', 'DD']
+         };
 
         const fragment = document.createDocumentFragment();
 
@@ -438,8 +459,13 @@ min="1" max="${item.PlanQty || 0}" value="${item.InputQty === 0 ? '' : item.Inpu
                             return `<span class="status-badge ${css}">${text}</span>`;
                         })
                         .join('');
-
+                    console.log(item.NextItem);
                     // Grid card: READONLY input and DISABLED button
+                    let badgeopen = (item.NextItem != null && item.NextItem !== "")
+                        ? `<div class="badge-row">${badges}</div>`
+                        : '-';
+                  
+
                     card.innerHTML = `
 
                         <div class="card-header">
@@ -464,7 +490,7 @@ min="1" max="${item.PlanQty || 0}" value="${item.InputQty === 0 ? '' : item.Inpu
                             <p class="card-row-label" style="margin-bottom:8px">
                                 Material Status : <span class="card-row-label">${completionPct}%</span>
                             </p>
-                            <div class="badge-row">${badges}</div>
+                            ${badgeopen}
                         </div>
                         <div class="card-row" style=' margin: .5em 0;'>
                             <p class="card-row-label">Next Process Model</p>

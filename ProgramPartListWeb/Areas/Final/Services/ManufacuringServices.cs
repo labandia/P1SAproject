@@ -203,9 +203,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
         //  GET THE LIST DETAILS BY LINE 
         public async Task<List<FanTraceabilityManufacturingOrder>> GetListofShopOrdersByLine(
             string Linename, string searchText, 
-            int status,
-            int page = 1,
-            int pageSize = 10)
+            int status)
         {
             try
             {
@@ -304,7 +302,6 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
                 var parameters = new DynamicParameters();
 
-                int offset = (page - 1) * pageSize;
 
                 // Line filter
                 if (!string.IsNullOrWhiteSpace(Linename))
@@ -327,14 +324,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     parameters.Add("@OrderStatus", status);
                 }
 
-                if (pageSize != 0)
-                {
-                    query += $@" ORDER BY mo.RecordID ASC
-                            OFFSET @Offset ROWS
-                            FETCH NEXT @PageSize ROWS ONLY";
-                    parameters.Add("@Offset", offset);
-                    parameters.Add("@PageSize", pageSize);
-                }
+                query += $@" ORDER BY mo.RecordID ASC";
 
 
                 return await SqlDataAcess_Test.GetDataAsync<FanTraceabilityManufacturingOrder>(query, parameters);
@@ -660,5 +650,114 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
             return SqlDataAcess_Test.ExecuteScalarAsync<int>(strquery, parameters);
         }
+
+        // ====== PARTLY SHORT DATA SUMMARY REPORT =================
+
+        public Task<List<AssemblyPartlistRecord>> GetPartlyShortSummary()
+        {
+            string strsql = $@";WITH DeptStatus AS
+                (
+                SELECT
+                    FinalShopOrder,
+
+                    -- AF & AG are both complete if either Dept 1 or Dept 2 exists
+                    MAX(CASE WHEN DepartmentID IN (1,2) THEN 1 ELSE 0 END) AS AF,
+                    MAX(CASE WHEN DepartmentID IN (1,2) THEN 1 ELSE 0 END) AS AG,
+
+                    MAX(CASE WHEN DepartmentID = 3 THEN 1 ELSE 0 END) AS BF,
+                    MAX(CASE WHEN DepartmentID = 4 THEN 1 ELSE 0 END) AS FA,
+                    MAX(CASE WHEN DepartmentID = 5 THEN 1 ELSE 0 END) AS CE,
+                    MAX(CASE WHEN DepartmentID = 7 THEN 1 ELSE 0 END) AS FG,
+                    MAX(CASE WHEN DepartmentID = 9 THEN 1 ELSE 0 END) AS DD,
+                    MAX(CASE WHEN DepartmentID = 8 THEN 1 ELSE 0 END) AS FD
+                FROM FanTraceabilityFinal
+                GROUP BY FinalShopOrder
+            )
+
+            SELECT
+
+                CONVERT(VARCHAR(10), CAST(mo.PlanStartDate AS DATE), 103) AS [DateDelay],
+
+                ------------------------------------------------------------
+                -- Plan Start
+                ------------------------------------------------------------
+                (SUM(mo.PlanQty)) AS Plan_Start,
+
+                ------------------------------------------------------------
+                -- Completion
+                ------------------------------------------------------------
+                SUM
+	            (
+		            CASE
+			            WHEN mo.FinalFinishedDate IS NOT NULL
+			             AND ISNULL(ds.AF,0)=1
+			             AND ISNULL(ds.AG,0)=1
+			             AND ISNULL(ds.BF,0)=1
+			             AND ISNULL(ds.FA,0)=1
+			             AND ISNULL(ds.CE,0)=1
+			             AND ISNULL(ds.FG,0)=1
+			             AND ISNULL(ds.DD,0)=1
+			            THEN mo.PlanQty
+			            ELSE 0
+		            END
+	            ) AS Completion,
+
+                ------------------------------------------------------------
+                -- P1SA
+                ------------------------------------------------------------
+                (
+                    SUM(CASE WHEN ISNULL(ds.CE,0)=0 THEN mo.PlanQty ELSE 0 END) +
+                    SUM(CASE WHEN ISNULL(ds.FA,0)=0 THEN mo.PlanQty ELSE 0 END) +
+                    SUM(CASE WHEN ISNULL(ds.AF,0)=0 THEN mo.PlanQty ELSE 0 END) +
+                    SUM(CASE WHEN ISNULL(ds.AG,0)=0 THEN mo.PlanQty ELSE 0 END) +
+                    SUM(CASE WHEN ISNULL(ds.BF,0)=0 THEN mo.PlanQty ELSE 0 END)
+                ) AS P1SA,
+
+                ------------------------------------------------------------
+                -- P1FA
+                ------------------------------------------------------------
+                (
+                    SUM(CASE WHEN ISNULL(ds.FG,0)=0 THEN mo.PlanQty ELSE 0 END) +
+                    SUM(CASE WHEN ISNULL(ds.DD,0)=0 THEN mo.PlanQty ELSE 0 END)
+                ) AS P1FA,
+
+                ------------------------------------------------------------
+                -- Individual Sections
+                ------------------------------------------------------------
+
+                SUM(CASE WHEN ISNULL(ds.CE,0)=0 THEN mo.PlanQty ELSE 0 END) AS CE,
+
+                SUM(CASE WHEN ISNULL(ds.FA,0)=0 THEN mo.PlanQty ELSE 0 END) AS FA,
+
+                SUM(CASE WHEN ISNULL(ds.AF,0)=0 THEN mo.PlanQty ELSE 0 END) AS AF,
+
+                SUM(CASE WHEN ISNULL(ds.AG,0)=0 THEN mo.PlanQty ELSE 0 END) AS AG,
+
+                SUM(CASE WHEN ISNULL(ds.BF,0)=0 THEN mo.PlanQty ELSE 0 END) AS BF,
+
+                SUM(CASE WHEN ISNULL(ds.FG,0)=0 THEN mo.PlanQty ELSE 0 END) AS FG,
+
+                SUM(CASE WHEN ISNULL(ds.DD,0)=0 THEN mo.PlanQty ELSE 0 END) AS DD, 
+
+                SUM(CASE WHEN ISNULL(ds.FD,0)=0 THEN mo.PlanQty ELSE 0 END) AS FD
+
+            FROM FanTraceabilityManufacturingOrder mo
+
+            LEFT JOIN DeptStatus ds
+                ON ds.FinalShopOrder = mo.FinalShopOrder
+
+            WHERE
+                CAST(mo.PlanStartDate AS DATE) <= CAST(GETDATE() AS DATE)
+
+            GROUP BY
+                CAST(mo.PlanStartDate AS DATE)
+
+            ORDER BY
+                CAST(mo.PlanStartDate AS DATE);";
+
+            return SqlDataAcess_Test.GetDataAsync<AssemblyPartlistRecord>(strsql);
+        }
+
+        // ============================================================
     }
 }

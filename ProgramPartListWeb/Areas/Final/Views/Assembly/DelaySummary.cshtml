@@ -1,0 +1,519 @@
+﻿
+@{
+    ViewBag.Title = "DelaySummary";
+    Layout = "~/Areas/Final/Views/Shared/_ManageLayout.cshtml";
+}
+
+<div style="padding: 30px 20px;">
+    <!-- CHARTS ROW -->
+    <div class="charts-row">
+
+        <!-- Chart 1: Total Lacking Parts -->
+        <div class="chart-card">
+            <div>
+                <div class="chart-title">Total Lacking Parts</div>
+                <div class="chart-subtitle">Plan Start vs Completion · Daily trend</div>
+            </div>
+            <div style="position:relative;">
+                <canvas id="TotalLackbarChart" height="300"></canvas>
+            </div>
+            <div class="chart-legend">
+                <span class="legend-item">
+                    <span class="legend-dot" style="background: #4f7ef8;"></span>
+                    Plan Start
+                </span>
+                <span class="legend-item">
+                    <span class="legend-dot" style="background: #f59e0b;"></span>
+                    Completion
+                </span>
+            </div>
+        </div>
+
+        <!-- Chart 2: Sub-Assy Partly Short -->
+        <div class="chart-card">
+            <div>
+                <div class="chart-title">Sub-Assy Partly Short</div>
+                <div class="chart-subtitle">Delay Section by warehouse code</div>
+            </div>
+            <div style="position:relative;">
+                <canvas id="SubassybarChart" height="300"></canvas>
+            </div>
+            <div class="chart-legend">
+                <span class="legend-item"><span class="legend-dot" style="background: rgba(169,208,142); "></span>P1SA-C</span>
+                <span class="legend-item"><span class="legend-dot" style="background: rgba(255, 192, 0);"></span>P1SA-W</span>
+                <span class="legend-item"><span class="legend-dot" style="background: #3b82f6;"></span>P1SA-M</span>
+                <span class="legend-item"><span class="legend-dot" style="background: #94a3b8;"></span>P1SA-P</span>
+                <span class="legend-item"><span class="legend-dot" style="background: rgba(148, 169, 219);"></span>P1SA-R</span>
+                <span class="legend-item"><span class="legend-dot" style="background:var(--col-fd);"></span>P1FA-OP</span>
+                <span class="legend-item"><span class="legend-dot" style="background: rgba(153, 102, 255);"></span>P1FA-H</span>
+                <span class="legend-item"><span class="legend-dot" style="background: rgb(214, 129, 16);"></span>MP</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="section-card">
+        <div class="section-card-header">
+            <div>
+                <div class="section-card-title">Summary Report — Daily Breakdown</div>
+                <div class="section-card-subtitle">Production Warehouse Code Distribution · P1SA &amp; P1FA</div>
+            </div>
+            <div class="section-card-actions">
+                <div class="topbar-badge">
+                    <iconify-icon icon="lucide:filter" style="font-size:12px;color:var(--muted-foreground);"></iconify-icon>
+                    Filter
+                </div>
+            </div>
+        </div>
+
+        <div class="table-wrap">
+            <table class="DelayTable">
+                <thead>
+                    <tr>
+                        <th colspan="5">FAN MOTOR PARTLY SHORT / TOTAL LACKING PARTS</th>
+                        <th colspan="5">Delay Section / Sub-Assy Parts</th>
+                        <th colspan="3">Delay Section / Final-Assy Parts</th>
+                    </tr>
+
+                    @*<tr>
+                            <th class="left-align border-right" rowspan="2">Date</th>
+                            <th rowspan="2">Plan Start</th>
+                            <th rowspan="2">Completion</th>
+                            <th class="border-right" rowspan="2">P1SA</th>
+                            <th class="border-right" rowspan="2">P1FA</th>
+                            <th class="border-right-bottom" colspan="5">Delay Section / Sub-Assy Parts</th>
+                            <th colspan="3">Delay Section / Final-Assy Parts</th>
+                        </tr>*@
+                    <tr>
+                        <th class="left-align border-right">Date</th>
+                        <th>Plan Start</th>
+                        <th>Completion</th>
+                        <th class="border-right">P1SA</th>
+                        <th class="border-right">P1FA</th>
+                        <th class="th-ce">P1SA-C (CE)</th>
+                        <th class="th-fa">P1SA-W (FA)</th>
+                        <th class="th-af">P1SA-M (AF)</th>
+                        <th class="th-ag">P1SA-P (AG)</th>
+                        <th class="th-bf border-right">P1SA-R (BF)</th>
+                        <th class="th-fd">P1FA-OP (FD)</th>
+                        <th class="th-fg">PIFA-H (FG)</th>
+                        <th class="th-dd">MP (DD)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+
+<script src="~/Scripts/chart.js"></script>
+<script type="module" asp-append-version="true">
+    import {
+        getMethod,
+        postMethod
+    } from '@Url.Content("~/Scripts/modules/index.js")';
+
+  class PartlyShortController {
+     constructor() {
+        this.refreshInterval = null;
+        this.selectedID = 0;
+        this.selectedLine = "";
+        this.currentPage = 1;
+        this.pageSize = 100;
+        this.isFirstLoad = true;
+
+        this.tbody = document.querySelector('.DelayTable tbody');
+        this.totalLackChart = null;
+        this.subAssyChart = null;
+    }
+
+    async init() {
+        this.bindEvents();
+        await this.LoadLineShopOrderList();
+
+        this.refreshInterval = setInterval(
+            () => this.LoadLineShopOrderList(),
+            30000
+        );
+       
+    }
+
+      bindEvents() { 
+      }
+
+
+  
+
+      async LoadLineShopOrderList() {
+
+        try {
+                if (this.isFirstLoad) {
+                    this.showTableSkeleton();
+                    await new Promise(resolve => requestAnimationFrame(resolve));
+                    this.isFirstLoad = false;
+                }
+
+                const res = await getMethod('@Url.Action("GetPartlistReportData", "Assembly")', {});
+                console.log(res);
+                if (!res?.Success) {
+                    this.tbody.innerHTML = `
+                     <tr>
+                         <td colspan="13" style="text-align:center;color:red;">
+                             Failed to load data.
+                         </td>
+                     </tr>`;
+                    return;
+                };
+
+                const total = res.data.length;
+
+                if (total != 0) {
+                    this.renderTable(res.data ?? []);
+                    this.renderCharts(res.data ?? []);
+                } else {
+                    this.tbody.innerHTML = `
+                         <tr>
+                             <td colspan="12" style="text-align:center;color:red;">
+                                 Failed to load data.
+                             </td>
+                         </tr>`;
+                }
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+
+                //this.tbody.innerHTML = `
+                //<tr>
+                //    <td colspan="12" style="text-align:center;color:red;">
+                //        Failed to load data.
+                //    </td>
+                //</tr>`;
+            }
+    }
+
+
+    renderTable(data) {
+        if (!this.tbody) return;
+        if (data.length === 0) {
+            this.tbody.innerHTML = `
+        <tr>
+            <td colspan="13" style="text-align:center; padding:32px; color:#86868b;">
+                No data available.
+            </td>
+        </tr>`;
+            return;
+        }
+
+        const numCols = ['Plan_Start', 'Completion', 'P1SA', 'P1FA', 'CE', 'FA', 'AF', 'AG', 'BF', 'FD', 'FG', 'DD'];
+        const totals = {};
+        for (const col of numCols) {
+            totals[col] = data.reduce((sum, row) => sum + this.parseVal(row[col]), 0);
+        }
+
+        const rows = data.map(row => `
+        <tr class='fade-in' data-order-line="${row.Line}">
+            <td class="left-align">${row.DateDelay}</td>
+            <td>${row.Plan_Start}</td>
+            <td>${row.Completion}</td>
+            <td>${row.P1SA}</td>
+            <td class="border-right">${row.P1FA}</td>
+            <td><span class="col-badge cb-ce">${row.CE}</span></td>
+            <td><span class="col-badge cb-fa">${row.FA}</span></td>
+            <td><span class="col-badge cb-af">${row.AF}</span></td>
+            <td><span class="col-badge cb-ag">${row.AG}</span></td>
+            <td class="border-right"><span class="col-badge cb-bf">${row.BF}</span></td>
+            <td>${row.FD}</td>
+            <td>${row.FG}</td>
+            <td>${row.DD}</td>
+        </tr>`
+        ).join('');
+
+        const totalRow = `
+        <tr class="total-row">
+            <td class="left-align"><strong>Total</strong></td>
+            <td><strong>${totals.Plan_Start}</strong></td>
+            <td><strong>${totals.Completion}</strong></td>
+            <td><strong>${totals.P1SA}</strong></td>
+            <td class="border-right"><strong>${totals.P1FA}</strong></td>
+            <td><span class="col-badge cb-ce"><strong>${totals.CE}</strong></span></td>
+            <td><span class="col-badge cb-fa"><strong>${totals.FA}</strong></span></td>
+            <td><span class="col-badge cb-af"><strong>${totals.AF}</strong></span></td>
+            <td><span class="col-badge cb-ag"><strong>${totals.AG}</strong></span></td>
+            <td class="border-right"><span class="col-badge cb-bf"><strong>${totals.BF}</strong></span></td>
+            <td><strong>${totals.FD}</strong></td>
+            <td><strong>${totals.FG}</strong></td>
+            <td><strong>${totals.DD}</strong></td>
+        </tr>`;
+
+        this.tbody.innerHTML = rows + totalRow;
+     }
+
+
+    renderCharts(data) {
+          const labels = data.map(r => r.DateDelay);
+          const resolvedStyle = getComputedStyle(document.documentElement);
+          const get = (v) => resolvedStyle.getPropertyValue(v).trim();
+
+          // ── Chart 1: Total Lacking Parts ─────────────────────────────
+          const ctx1 = document.getElementById('TotalLackbarChart').getContext('2d');
+
+          if (this.totalLackChart) this.totalLackChart.destroy();
+
+          this.totalLackChart = new Chart(ctx1, {
+              type: 'bar',
+              data: {
+                  labels,
+                  datasets: [
+                      {
+                          label: 'Plan Start',
+                          data: data.map(r => r.Plan_Start),
+                          backgroundColor: get('--primary') || '#3b82f6',
+                          borderRadius: 4,
+                          barPercentage: 0.6,
+                          categoryPercentage: 0.7,
+                      },
+                      {
+                          label: 'Completion',
+                          data: data.map(r => r.Completion),
+                          backgroundColor: get('--warning') || '#f59e0b',
+                          borderRadius: 4,
+                          barPercentage: 0.6,
+                          categoryPercentage: 0.7,
+                      }
+                  ]
+              },
+              options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: {
+                      legend: { display: false },
+                      tooltip: {
+                          mode: 'index',
+                          intersect: false,
+                          callbacks: {
+                              title: (items) => `Date: ${items[0].label}`,
+                              label: (item) => ` ${item.dataset.label}: ${item.parsed.y}`
+                          }
+                      }
+                  },
+                  scales: {
+                      x: {
+                          title: {
+                              display: false,
+                              text: '',
+                              color: get('--muted-foreground') || '#6b7280',
+                              font: { size: 11 }
+                          },
+                          grid: { display: false },
+                          ticks: {
+                              color: get('--muted-foreground') || '#6b7280',
+                              font: { size: 11 },
+                              maxRotation: 45,
+                              minRotation: 0,
+                          }
+                      },
+                      y: {
+                          title: {
+                              display: false,
+                              text: '',
+                              color: get('--muted-foreground') || '#6b7280',
+                              font: { size: 11 }
+                          },
+                          beginAtZero: true,
+                          grid: { color: get('--border') || '#e5e7eb' },
+                          ticks: {
+                              color: get('--muted-foreground') || '#6b7280',
+                              font: { size: 11 },
+                              precision: 0
+                          }
+                      }
+                  }
+              }
+          });
+
+        // ── Chart 2: Sub-Assy Partly Short ───────────────────────────────────────
+        //const ctx2 = document.getElementById('SubassybarChart').getContext('2d');
+
+        //if (this.subAssyChart) this.subAssyChart.destroy();
+
+        // Sum each warehouse code across all dates
+        //const sumOf = (key) => data.reduce((acc, r) => acc + this.parseVal(r[key]), 0);
+
+        //const warehouseLabels = ['P1SA-C', 'P1SA-W', 'P1SA-M', 'P1SA-P', 'P1SA-R', 'P1FA-OP', 'P1FA-Harness', 'MP'];
+        //const warehouseData = [
+        //    sumOf('CE'),
+        //    sumOf('FA'),
+        //    sumOf('AF'),
+        //    sumOf('AG'),
+        //    sumOf('BF'),
+        //    sumOf('FD'),
+        //    sumOf('FG'),
+        //    sumOf('DD'),
+        //];
+        //const warehouseColors = [
+        //    get('--col-ce') || '#6366f1',
+        //    get('--col-fa') || '#ec4899',
+        //    get('--col-af') || '#f97316',
+        //    get('--col-ag') || '#eab308',
+        //    get('--col-bf') || '#22c55e',
+        //    get('--col-fd') || '#14b8a6',
+        //    get('--col-fg') || '#3b82f6',
+        //    get('--col-dd') || '#a855f7',
+        //];
+
+        // ── Chart 2: Sub-Assy Partly Short ───────────────────────────────────────
+        const ctx2 = document.getElementById('SubassybarChart').getContext('2d');
+
+        if (this.subAssyChart) this.subAssyChart.destroy();
+
+        const sumOf = (key) => data.reduce((acc, r) => acc + this.parseVal(r[key]), 0);
+
+        const warehouseLabels = ['P1SA-C', 'P1SA-W', 'P1SA-M', 'P1SA-P', 'P1SA-R', 'P1FA-OP', 'P1FA-Harness'];
+        const warehouseData = [
+            sumOf('CE'),
+            sumOf('FA'),
+            sumOf('AF'),
+            sumOf('AG'),
+            sumOf('BF'),
+            sumOf('FD'),
+            sumOf('FG')
+        ];
+        const warehouseColors = [
+            get('--col-ce') || '#6366f1',
+            get('--col-fa') || '#ec4899',
+            get('--col-af') || '#f97316',
+            get('--col-ag') || '#eab308',
+            get('--col-bf') || '#22c55e',
+            get('--col-fd') || '#14b8a6',
+            get('--col-fg') || '#3b82f6',
+        ];
+
+        // inline plugin — no CDN, no Chart.register() needed
+        const topLabelPlugin = {
+            id: 'topLabel',
+            afterDatasetsDraw(chart) {
+                const { ctx, data } = chart;
+                const labelColor = getComputedStyle(document.documentElement)
+                    .getPropertyValue('--foreground').trim() || '#111827';
+
+                ctx.save();
+                ctx.font = '600 11px Inter, sans-serif';
+                ctx.fillStyle = labelColor;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+
+                chart.getDatasetMeta(0).data.forEach((bar, i) => {
+                    const value = data.datasets[0].data[i];
+                    const label = value === 0 ? '0' : value.toLocaleString();
+                    ctx.fillText(label, bar.x, bar.y - 4);  // 4px gap above bar top
+                });
+
+                ctx.restore();
+            }
+        };
+
+        this.subAssyChart = new Chart(ctx2, {
+            type: 'bar',
+            plugins: [topLabelPlugin],                      // registered per-chart only
+            data: {
+                labels: warehouseLabels,
+                datasets: [
+                    {
+                        data: warehouseData,
+                        backgroundColor: warehouseColors,
+                        borderRadius: 4,
+                        barPercentage: 0.6,
+                        categoryPercentage: 0.7,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            title: (items) => items[0].label,
+                            label: (item) => ` Total: ${item.parsed.y.toLocaleString()}`
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: {
+                            color: get('--muted-foreground') || '#6b7280',
+                            font: { size: 11 },
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: get('--border') || '#e5e7eb' },
+                        ticks: {
+                            color: get('--muted-foreground') || '#6b7280',
+                            font: { size: 11 },
+                            precision: 0,
+                            callback: (val) => val.toLocaleString()
+                        }
+                    }
+                },
+                layout: {
+                    padding: { top: 28 }                    // room for label above tallest bar
+                }
+            }
+        });
+      }
+
+      parseVal(val) {
+          const n = parseInt(val);
+          return isNaN(n) ? 0 : n;
+      }
+
+    showTableSkeleton() {
+        //  this.tbody.innerHTML = Array(10).fill(`
+        //<tr>
+        //    ${Array(18).fill(`
+        //        <td>
+        //            <div class="skeleton-cell"></div>
+        //        </td>
+        //    `).join('')}
+        //</tr>
+        //`).join('');
+    }
+
+
+      showLoader() {
+          document.getElementById('loadingOverlay')
+              ?.classList.add('show');
+      }
+
+      hideLoader() {
+          document.getElementById('loadingOverlay')
+              ?.classList.remove('show');
+      }
+
+     formatDate(dateString) {
+            if (!dateString) return '';
+
+            const timestamp = parseInt(dateString.match(/\d+/)[0]);
+            const date = new Date(timestamp);
+
+            return date.toLocaleDateString('en-US');
+        }
+
+      
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const controller = new PartlyShortController();
+    controller.init();
+});
+</script>

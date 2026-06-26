@@ -85,9 +85,9 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 IsApproved = check
             });
         }
-        public async Task<bool> UploadDataToDatabase(ProductionRecord model)
+        public async Task<bool> UploadDataToDatabase(ProductionRecord model, string tb)
         {
-            return await SqlDataAcess_Test.ExecuteAsync(@"
+            return await SqlDataAcess_Test.ExecuteAsync($@"
                     IF NOT EXISTS (
                         SELECT 1
                         FROM FanTraceabilityManufacturingUploadData
@@ -96,19 +96,19 @@ namespace ProgramPartListWeb.Areas.Final.Services
                           AND Model = @Model
                     )
                     BEGIN
-                        INSERT INTO FanTraceabilityManufacturingUploadData
+                        INSERT INTO {tb}
                         (
                             Line, FinalShopOrder, ItemNo, Model, WC,
                             PlanQty, PlanStartDate, DispatchDate, Note,
                             FinalFinishedDate, FAStatus, ShipmentDate,
-                            ShipmentMode, WithSR, OrderRemarks, OrderStatus
+                            ShipmentMode, WithSR, OrderRemarks, OrderStatus, Operational
                         )
                         VALUES
                         (
                             @Line, @FinalShopOrder, @ItemNo, @Model, @WC,
                             @PlanQty, @PlanStartDate, @DispatchDate, @Note,
                             @FinalFinishedDate, @FAStatus, @ShipmentDate,
-                            @ShipmentMode, @WithSR, @OrderRemarks, @OrderStatus
+                            @ShipmentMode, @WithSR, @OrderRemarks, @OrderStatus, @Operational
                         );
                     END",
                    new
@@ -128,7 +128,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
                        ShipmentMode = model.Mode,
                        WithSR = model.WithSr,
                        OrderRemarks = model.Remarks,
-                       OrderStatus = 0
+                       OrderStatus = 0,
+                       model.Operational
                    });
 
             // var planStartDate = DateTime.TryParse(model.PlanStart, out var ps)
@@ -285,7 +286,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                 ELSE 'UPDATED'
                             END AS StatusCheck,
 
-                            U.IsApproved
+                            U.IsApproved, 
+							U.Operational
                         FROM FanTraceabilityManufacturingUploadData U
                         LEFT JOIN FanTraceabilityManufacturingOrder O
                             ON U.FinalShopOrder = O.FinalShopOrder

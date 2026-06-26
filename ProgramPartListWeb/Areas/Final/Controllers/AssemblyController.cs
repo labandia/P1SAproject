@@ -78,25 +78,15 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         [HttpGet]
         public async Task<ActionResult> LineShopOrderData(string Linename, 
             string searchtext, 
-            int orderstatus,
-            int page = 1,
-            int pageSize = 10)
+            int orderstatus)
         {
-            var res = await _manu.GetListofShopOrdersByLine(Linename, searchtext, orderstatus, page, pageSize);
+            var res = await _manu.GetListofShopOrdersByLine(Linename, searchtext, orderstatus);
            
-            int totalCount = await _manu.GetActualCountOfShopOrders(Linename);
 
             if (res == null || !res.Any())
                 return JsonNotFound("No Manpower data found");
 
-            var finaldata = new
-            {
-                payload = res,
-                Total = totalCount
-            };
-
-
-            return JsonSuccess(finaldata, "Retrieved data successfully");
+            return JsonSuccess(res, "Retrieved data successfully");
         }
         [HttpGet]
         public async Task<ActionResult> SelectedShopOrderData(int RecordID)
@@ -417,11 +407,12 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                                 Shipment = GetCellAsDate(sheet, r, 12),
                                 Mode = GetCell(sheet, r, 13),
                                 WithSr = GetCell(sheet, r, 14) != "",
-                                Remarks = GetCell(sheet, r, 15)
+                                Remarks = GetCell(sheet, r, 15),
+                                Operational = int.TryParse(GetCell(sheet, r, 16), out var op) ? op : 0
                             };
 
                             // save to DB here if needed
-                            bool inserted = await _upload.UploadDataToDatabase(obj);
+                            bool inserted = await _upload.UploadDataToDatabase(obj, "FanTraceabilityManufacturingUploadData");
                             // _service.SaveRow(rowResult);
 
                             lock (state)
@@ -429,10 +420,15 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                                 state.Current++;
 
                                 if (inserted)
+                                {
                                     state.Success++;
+                                }
                                 else
+                                {
+                                    //bool result2 = await _upload.UploadDataToDatabase(obj);
                                     state.Failed++;
-
+                                }
+                                   
                                 //Debug.WriteLine("Completed Count :" + state.Success);
 
                                 //Debug.WriteLine("Failed Count :" + state.Failed);
@@ -738,7 +734,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             int page = 1,
             int pageSize = 10)
         {
-            var res = await _manu.GetListofShopOrdersByLine(Linename, searchtext, 0, page, pageSize);
+            var res = await _manu.GetListofShopOrdersByLine(Linename, searchtext, 0);
 
             int totalCount = await _manu.GetActualCountOfShopOrders(Linename);
 
@@ -754,11 +750,24 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
 
             return JsonSuccess(finaldata, "Retrieved data successfully");
         }
+        //=====================================================
+        //============== PARTLY SHORT SUMMARY DATA  =================
+        //=====================================================
+        [HttpGet]
+        public async Task<ActionResult> GetPartlistReportData()
+        {
+            var res = await _manu.GetPartlyShortSummary();
 
 
+            if (res == null || !res.Any())
+                return JsonNotFound("No Manpower data found");
+
+            return JsonSuccess(res, "Retrieved data successfully");
+        }
 
         // GET: Final/Assembly
         public ActionResult Dashboard() => View();
+        public ActionResult DelaySummary() => View();   
         // GET: Final/LineData
         public ActionResult LineData() => View();
         // GET: Final/UploaData

@@ -41,6 +41,24 @@ namespace ProgramPartListWeb.Areas.Final.Model
     }
 
 
+    public class AssemblyPartlistRecord
+    {
+        public string DateDelay { get; set; }
+        public int Plan_Start { get; set; }
+        public int Completion { get; set; }
+        public int P1SA { get; set; }
+        public int P1FA { get; set; }
+        public string CE { get; set; }
+        public string FA { get; set; }
+        public string AF { get; set; }
+        public string AG { get; set; }
+        public string BF { get; set; }
+        public string FG { get; set; }
+        public string DD { get; set; }
+        public string FD { get; set; }
+    }
+
+
     public class AssemblyRecord
     {
         public string FinalShopOrder { get; set; }
@@ -101,6 +119,7 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public string Mode { get; set; } = string.Empty;
         public bool WithSr { get; set; } = false;
         public string Remarks { get; set; } = string.Empty;
+        public int Operational { get; set; } = 0;   
 
         // ── Upload tracking (not persisted) ───────────────────────────────────
         public int RowNumber { get; set; }
@@ -151,6 +170,7 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public int OrderStatus { get; set; }
         public string StatusCheck { get; set; }
         public bool IsApproved { get; set; }
+        public int Operational { get; set; }
 
     }
 

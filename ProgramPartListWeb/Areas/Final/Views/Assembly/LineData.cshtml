@@ -95,12 +95,13 @@
         </div>
     <!-- pagination footer -->
         <div class="flex justify-between items-center p-3 border-t" style="border-top: 1px solid #e5e5e5; background: white;">
-            <div id="resultsText" class="text-sm" style="color:#86868b;">Showing 1-7 of 1,248 devices</div>
-            <div class="flex gap-1">
+            <div id="resultsText" class="text-sm" style="color:#86868b;">Showing <span id="newrecords"></span> of <span id="currentrecords">1,248</span> Records</div>
+    
+            @*<div class="flex gap-1">
                 <button class="pagination-btn" id="prevBtn"><iconify-icon icon="lucide:chevron-left" style="font-size: 14px;"></iconify-icon></button>
 
                 <button class="pagination-btn" id="nextBtn"><iconify-icon icon="lucide:chevron-right" style="font-size: 14px;"></iconify-icon></button>
-            </div>
+            </div>*@
         </div>
 </div>
 </section>
@@ -129,6 +130,9 @@
         this.searchinput = document.getElementById('searchinput');
         this.filterStatus = document.getElementById('filterdata');
 
+
+        this.newRecords = document.getElementById("newrecords");
+        this.currentRecords = document.getElementById("currentrecords");
     }
 
     async init() {
@@ -213,9 +217,7 @@
                 const res = await getMethod('@Url.Action("LineShopOrderData", "Assembly")', {
                     Linename: document.getElementById('filterdata').value,
                     searchtext: document.getElementById('searchinput').value,
-                    orderstatus: 0,
-                    page: this.currentPage,
-                    pageSize: this.pageSize
+                    orderstatus: 0
                 });
 
                 console.log(res);
@@ -229,11 +231,12 @@
                 return;
             };
 
-                const total = res.data?.Total;
+                const total = res.data.Total;
+                this.updateRecordCount(total, total);
 
                 if (total != 0) {
-                    this.renderTable(res.data.payload ?? []);
-                    this.renderPagination(total ?? res.data.payload.length);
+                    this.renderTable(res.data.payload);
+                    //this.renderPagination(total ?? res.data.payload.length);
                 } else {
                     this.tbody.innerHTML = `
                          <tr>
@@ -255,7 +258,10 @@
             }
     }
 
-
+    updateRecordCount(filteredCount, totalCount) {
+        this.newRecords.textContent = filteredCount.toLocaleString();
+        this.currentRecords.textContent = totalCount.toLocaleString();
+    }
     renderTable(data) {
         if (!this.tbody) return;
             if (data.length === 0) {
@@ -321,54 +327,11 @@
             return date.toLocaleDateString('en-US');
         }
 
-      renderPagination(totalItems) {
-          const totalPages = Math.ceil(totalItems / this.pageSize);
-
-
-          const startItem = totalItems === 0
-              ? 0
-              : (this.currentPage - 1) * this.pageSize + 1;
-
-
-          const endItem = Math.min(this.currentPage * this.pageSize, totalItems);
-
-          // Update text info
-          // update text
-          document.getElementById("resultsText").textContent =
-              `Showing ${startItem}-${endItem} of ${totalItems} Records `;
-
-          const prevBtn = document.getElementById("prevBtn");
-          const nextBtn = document.getElementById("nextBtn");
-
-          // button states
-          prevBtn.classList.toggle("disabled", this.currentPage === 1);
-          nextBtn.classList.toggle("disabled", this.currentPage === totalPages || totalPages === 0);
-
-          // remove old listeners by cloning
-          prevBtn.replaceWith(prevBtn.cloneNode(true));
-          nextBtn.replaceWith(nextBtn.cloneNode(true));
-
-          const newPrevBtn = document.getElementById("prevBtn");
-          const newNextBtn = document.getElementById("nextBtn");
-
-          newPrevBtn.addEventListener("click", () => {
-              if (this.currentPage > 1) {
-                  this.currentPage--;
-                  this.LoadLineShopOrderList();
-              }
-          });
-
-          newNextBtn.addEventListener("click", () => {
-              if (this.currentPage < totalPages) {
-                  this.currentPage++;
-                  this.LoadLineShopOrderList();
-              }
-          });
-      }
+    
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    const controller = new FinaAssemblyController();
-    controller.init();
-});
+    document.addEventListener('DOMContentLoaded', function () {
+        const controller = new FinaAssemblyController();
+        controller.init();
+    });
 </script>

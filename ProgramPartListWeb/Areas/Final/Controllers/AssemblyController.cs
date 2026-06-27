@@ -81,12 +81,17 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             int orderstatus)
         {
             var res = await _manu.GetListofShopOrdersByLine(Linename, searchtext, orderstatus);
-           
+
+            var finalData = new
+            {
+                payload = res,
+                Total = res.Count()
+            };
 
             if (res == null || !res.Any())
                 return JsonNotFound("No Manpower data found");
 
-            return JsonSuccess(res, "Retrieved data successfully");
+            return JsonSuccess(finalData, "Retrieved data successfully");
         }
         [HttpGet]
         public async Task<ActionResult> SelectedShopOrderData(int RecordID)
@@ -221,6 +226,16 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             return JsonSuccess(res);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> GetFailedUploadData()
+        {
+            var res = await _upload.GetListofFailedData();
+            if (res == null || !res.Any())
+                return JsonNotFound("No Uploaded data found");
+
+            return JsonSuccess(res);
+        }
+
         [HttpPost]
         public async Task<ActionResult> UpdateUploadApproval(int recordID, bool check)
         {
@@ -253,9 +268,9 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             if (file == null || file.ContentLength == 0)
                 return Json(new { Success = false, Message = "No file uploaded." });
 
-            const int MaxBytes = 10 * 1024 * 1024; // 10 MB
-            if (file.ContentLength > MaxBytes)
-                return Json(new { Success = false, Message = "File too large. Maximum allowed size is 10 MB." });
+            //const int MaxBytes = 10 * 1024 * 1024; // 10 MB
+            //if (file.ContentLength > MaxBytes)
+            //    return Json(new { Success = false, Message = "File too large. Maximum allowed size is 10 MB." });
 
 
             var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
@@ -302,6 +317,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                 {
                     try
                     {
+                        Debug.WriteLine("File Process Start");
                         ProcessExcelJob(jobId, filePath);
                     }
                     finally
@@ -407,13 +423,18 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                                 Shipment = GetCellAsDate(sheet, r, 12),
                                 Mode = GetCell(sheet, r, 13),
                                 WithSr = GetCell(sheet, r, 14) != "",
-                                Remarks = GetCell(sheet, r, 15),
-                                Operational = int.TryParse(GetCell(sheet, r, 16), out var op) ? op : 0
+                                Operational = int.TryParse(GetCell(sheet, r, 15), out var op) ? op : 0
                             };
 
                             // save to DB here if needed
                             bool inserted = await _upload.UploadDataToDatabase(obj, "FanTraceabilityManufacturingUploadData");
-                            // _service.SaveRow(rowResult);
+
+                            if (!inserted)
+                            {
+                                await _upload.UploadDataToDatabase(
+                                obj,
+                                "FanTraceabilityManufacturingUploadFailed");
+                            }
 
                             lock (state)
                             {
@@ -425,13 +446,8 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                                 }
                                 else
                                 {
-                                    //bool result2 = await _upload.UploadDataToDatabase(obj);
                                     state.Failed++;
                                 }
-                                   
-                                //Debug.WriteLine("Completed Count :" + state.Success);
-
-                                //Debug.WriteLine("Failed Count :" + state.Failed);
                                 state.Rows.Add(rowResult);
                             }
 
@@ -462,6 +478,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             }
             catch (Exception ex)
             {
+                Debug.WriteLine(ex.Message);
                 lock (state)
                 {
                     state.Status = "error";

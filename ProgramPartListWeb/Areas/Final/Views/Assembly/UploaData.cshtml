@@ -26,6 +26,10 @@
                 <option value="UPDATED">For Approval</option>
                 <option value="SAME">All Data</option>
             </select>
+            <button id="btn-failed" class="btn-primary" style="height: 32px; background:#277eff;">
+                <iconify-icon icon="gg:push-down" width="16"></iconify-icon>
+                Failed Uploads
+            </button>
             <button id="uploadbtn"
                     class="btn-outline"
                     style="height: 32px;"
@@ -110,11 +114,17 @@
         this.filterData = [];
         this.uploadUrl = document.getElementById('uploadbtn').dataset.uploadUrl;
 
+         this.failedModal = new bootstrap.Modal(document.getElementById('uploadFailedModal'), {
+             backdrop: 'static',
+             keyboard: false
+         });
+
          this.progressModal = new bootstrap.Modal(document.getElementById('uploadStatusModal'), {
              backdrop: 'static',
              keyboard: false
          });
          this.tbody = document.querySelector('.upload-table tbody');
+         this.uploadbody = document.querySelector('.failed-table tbody');
          this.fileInput = this._createFileInput();
          this._xhr = null;
          this._pollTimer = null;
@@ -202,6 +212,11 @@
 
         });
 
+        document.getElementById('btn-failed').addEventListener('click', async () => {
+            await this.LoadFailedDataList();
+            this.failedModal.show();
+        });
+
         document.getElementById('continueBgBtn').addEventListener('click', () => {
             this.progressModal.hide();
         });
@@ -269,9 +284,54 @@
         } catch (err) {
             console.error(err);
         }
+      }
+
+      async LoadFailedDataList() {
+        try {
+            const res = await getMethod('@Url.Action("GetFailedUploadData", "Assembly")', {});
+            if (!res?.Success) {
+                return;
+            }
+
+            let load = res.data ?? [];
+
+            this.renderFailedTable(res.data ?? []);
+        } catch (err) {
+            console.error(err);
+        }
     }
 
-    /* ================= RENDER MAIN TABLE ================= */
+
+
+      /* ================= RENDER MAIN TABLE ================= */
+       renderFailedTable(data) {
+           if (!this.uploadbody) return;
+           if (data.length === 0) {
+               //this.NoTableRowData();
+               return;
+           }
+
+           this.uploadbody.innerHTML = data.map(row => {
+               return `
+          <tr  class='fade-in'  data-order-line="${row.Line}"   >
+                    <td>${row.Line}</td>
+                    <td class='text-primary' style="font-weight:600;">${row.FinalShopOrder}</td>
+                    <td>${row.ItemNo}</td>
+                    <td style="font-weight:600;">${row.Model}</td>
+                    <td>${row.PlanQty}</td>
+                    <td>${this.formatDate(row.PlanStartDate)}</td>
+                    <td>${this.formatDate(row.DispatchDate)}</td>
+                    <td>${row.Note || ''}</td>
+                    <td>${this.formatDate(row.FinalFinishedDate)}</td>
+                    <td>${row.FAStatus || ''}</td>
+                    <td>${this.formatDate(row.ShipmentDate)}</td>
+                    <td>${row.ShipmentMode || ''}</td>
+                    <td>${row.WithSR || ''}</td>
+            </tr>`
+           }).join('');
+       }
+
+
         renderTable(data) {
             if (!this.tbody) return;
 
@@ -348,7 +408,7 @@
                             <span class="table-empty-title">No upload data yet</span>
                             <span class="table-empty-desc">Import a CSV or Excel file to compare planned quantities and dates against current shop orders.</span>
                         </div>
-                        
+
                     </div>
                 </td>
             </tr>`;
@@ -681,6 +741,14 @@
         return d.innerHTML;
     }
 
+    formatDate(dateString) {
+          if (!dateString) return '';
+
+          const timestamp = parseInt(dateString.match(/\d+/)[0]);
+          const date = new Date(timestamp);
+
+          return date.toLocaleDateString('en-US');
+    }
 
     async toggleAllRows(isChecked) {
             const checkboxes = [...document.querySelectorAll('.row-checkbox')];

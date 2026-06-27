@@ -17,6 +17,7 @@ namespace ProgramPartListWeb.Areas.Final.Interface
         Task<(int totalrecords, int totalChanges)> GetNumberofUpdatedRecords();
         // Gets the list of uploaded data
         Task<List<UploadProductionRecord>> GetListofUploadedData();
+        Task<List<UploadDataModel>> GetListofFailedData();
 
         //===================================================================
         //=================== UPLOADING PROCESS =============================

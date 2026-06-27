@@ -80,7 +80,9 @@ ol, ul, menu {
     height: calc(0.25rem * 14);
 }
 
-
+/*.modal-xl {
+    max-width: 40px;
+}*/
 /* =====================================================
        LAYOUT — full viewport, flex column
     ===================================================== */
@@ -1643,6 +1645,10 @@ iconify-icon {
     margin: 1.75rem auto;
 }
 
+.modal-dialog.failed-modal-dialog {
+    max-width: 1200px;
+    margin: 1.75rem auto;
+}
 /* custom inner spacing — replaces Tailwind utilities */
 .modal-body-custom {
     padding: 2rem;

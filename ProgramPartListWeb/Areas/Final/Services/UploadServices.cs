@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
+﻿using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Spreadsheet;
 using ProgramPartListWeb.Areas.Final.Interface;
 using ProgramPartListWeb.Areas.Final.Model;
 using ProgramPartListWeb.Utilities.DataAccess;
@@ -87,168 +88,70 @@ namespace ProgramPartListWeb.Areas.Final.Services
         }
         public async Task<bool> UploadDataToDatabase(ProductionRecord model, string tb)
         {
-            return await SqlDataAcess_Test.ExecuteAsync($@"
-                    IF NOT EXISTS (
-                        SELECT 1
-                        FROM FanTraceabilityManufacturingUploadData
-                        WHERE FinalShopOrder = @FinalShopOrder
-                          AND ItemNo = @ItemNo
-                          AND Model = @Model
+            var parameters = new
+            {
+                model.Line,
+                FinalShopOrder = model.ShopOrder,
+                ItemNo = model.PartNo,
+                model.Model,
+                model.WC,
+                PlanQty = model.Qty,
+                PlanStartDate = DateTime.TryParse(model.PlanStart, out var ps) ? ps : (DateTime?)null,
+                DispatchDate = model.DispatchDate,
+                Note = model.Note ?? string.Empty,
+                FinalFinishedDate = DateTime.TryParse(model.IfsFinish, out var ifs) ? ifs : (DateTime?)null,
+                FAStatus = model.FaStatus,
+                ShipmentDate = DateTime.TryParse(model.Shipment, out var ship) ? ship : (DateTime?)null,
+                ShipmentMode = model.Mode,
+                WithSR = model.WithSr,
+                OrderStatus = 0,
+                model.Operational
+            };
+
+            if (tb == "FanTraceabilityManufacturingUploadFailed")
+            {
+                return await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO FanTraceabilityManufacturingUploadFailed
+                    (
+                        Line, FinalShopOrder, ItemNo, Model, WC,
+                        PlanQty, PlanStartDate, DispatchDate, Note,
+                        FinalFinishedDate, FAStatus, ShipmentDate,
+                        ShipmentMode, WithSR, OrderStatus, Operational
                     )
-                    BEGIN
-                        INSERT INTO {tb}
-                        (
-                            Line, FinalShopOrder, ItemNo, Model, WC,
-                            PlanQty, PlanStartDate, DispatchDate, Note,
-                            FinalFinishedDate, FAStatus, ShipmentDate,
-                            ShipmentMode, WithSR, OrderRemarks, OrderStatus, Operational
-                        )
-                        VALUES
-                        (
-                            @Line, @FinalShopOrder, @ItemNo, @Model, @WC,
-                            @PlanQty, @PlanStartDate, @DispatchDate, @Note,
-                            @FinalFinishedDate, @FAStatus, @ShipmentDate,
-                            @ShipmentMode, @WithSR, @OrderRemarks, @OrderStatus, @Operational
-                        );
-                    END",
-                   new
-                   {
-                       model.Line,
-                       FinalShopOrder = model.ShopOrder,
-                       ItemNo = model.PartNo,
-                       model.Model,
-                       model.WC,
-                       PlanQty = model.Qty,
-                       PlanStartDate = DateTime.TryParse(model.PlanStart, out var ps) ? ps : (DateTime?)null,
-                       DispatchDate = model.DispatchDate,
-                       Note = model.Note ?? string.Empty,
-                       FinalFinishedDate = DateTime.TryParse(model.IfsFinish, out var ifs) ? ifs : (DateTime?)null,
-                       FAStatus = model.FaStatus,
-                       ShipmentDate = DateTime.TryParse(model.Shipment, out var ship) ? ship : (DateTime?)null,
-                       ShipmentMode = model.Mode,
-                       WithSR = model.WithSr,
-                       OrderRemarks = model.Remarks,
-                       OrderStatus = 0,
-                       model.Operational
-                   });
-
-            // var planStartDate = DateTime.TryParse(model.PlanStart, out var ps)
-            //                    ? ps
-            //                    : (DateTime?)null;
-
-            // var dispatchDate = DateTime.TryParse(model.DispatchDate, out var dd)
-            //     ? dd
-            //     : (DateTime?)null;
-
-            // // STEP 1: Check existing ShopOrder
-            // var existing = await SqlDataAccess.ExecuteScalarReturnVal<ProductionRecord>(
-            //     @"SELECT TOP 1 PlanQty, PlanStartDate
-            //           FROM FanTraceabilityManufacturingUploadData
-            //           WHERE FinalShopOrder = @FinalShopOrder AND Line =@Line ",
-            //     new
-            //     {
-            //         FinalShopOrder = model.ShopOrder,
-            //         Line = model.Line   
-            //     });
-
-            // // STEP 2: If not exist -> INSERT
-            // if (existing == null)
-            // {
-            //     await SqlDataAccess.UpdateInsertQuery(@"
-            //         INSERT INTO FanTraceabilityManufacturingUploadData
-            //         (
-            //             Line,
-            //             FinalShopOrder,
-            //             ItemNo,
-            //             Model,
-            //             WC,
-            //             PlanQty,
-            //             PlanStartDate,
-            //             DispatchDate,
-            //             Note,
-            //             FinalFinishedDate,
-            //             FAStatus,
-            //             ShipmentDate,
-            //             ShipmentMode,
-            //             WithSR,
-            //             OrderRemarks,
-            //             OrderStatus
-            //         )
-            //         VALUES
-            //         (
-            //             @Line,
-            //             @FinalShopOrder,
-            //             @ItemNo,
-            //             @Model,
-            //             @WC,
-            //             @PlanQty,
-            //             @PlanStartDate,
-            //             @DispatchDate,
-            //             @Note,
-            //             @FinalFinishedDate,
-            //             @FAStatus,
-            //             @ShipmentDate,
-            //             @ShipmentMode,
-            //             @WithSR,
-            //             @OrderRemarks,
-            //             @OrderStatus
-            //         )",
-            //         new
-            //         {
-            //             model.Line,
-            //             FinalShopOrder = model.ShopOrder,
-            //             ItemNo = model.PartNo,
-            //             model.Model,
-            //             model.WC,
-            //             PlanQty = model.Qty,
-            //             PlanStartDate = planStartDate,
-            //             DispatchDate = dispatchDate,
-            //             Note = model.Note ?? string.Empty,
-            //             FinalFinishedDate = (DateTime?)null,
-            //             FAStatus = "Not Started",
-            //             ShipmentDate = DateTime.Now.AddDays(7),
-            //             ShipmentMode = "TBD",
-            //             WithSR = false,
-            //             OrderRemarks = string.Empty,
-            //             OrderStatus = 1
-            //         });
-
-            //     return;
-            // }
-
-            // // STEP 3: Compare values safely
-            // bool isPlanQtyChanged =
-            //     existing.Qty != model.Qty;
-
-            // DateTime? existingPlanStart =
-            //     DateTime.TryParse(existing.PlanStart, out var eps)
-            //? eps
-            //: (DateTime?)null;
-
-            // bool isPlanStartChanged =
-            //     existingPlanStart?.Date != planStartDate?.Date;
-
-            // // STEP 4: Skip if no changes
-            // if (!isPlanQtyChanged && !isPlanStartChanged)
-            //     return;
-
-            // // STEP 5: Update only changed fields
-            // await SqlDataAccess.UpdateInsertQuery(@"
-            // UPDATE FanTraceabilityManufacturingOrderSAMPLE
-            // SET
-            //     PlanQty = @PlanQty,
-            //     PlanStartDate = @PlanStartDate
-            // WHERE FinalShopOrder = @FinalShopOrder
-            // AND Line = @Line",
-            //     new
-            //     {
-            //         FinalShopOrder = model.ShopOrder,
-            //         Line = model.Line,
-            //         PlanQty = model.Qty,
-            //         PlanStartDate = planStartDate
-            //     });
-
-
+                    VALUES
+                    (
+                        @Line, @FinalShopOrder, @ItemNo, @Model, @WC,
+                        @PlanQty, @PlanStartDate, @DispatchDate, @Note,
+                        @FinalFinishedDate, @FAStatus, @ShipmentDate,
+                        @ShipmentMode, @WithSR, @OrderStatus, @Operational
+                    );", parameters);
+            }
+            else
+            {
+                return await SqlDataAcess_Test.ExecuteAsync($@"
+                IF NOT EXISTS (
+                    SELECT 1
+                    FROM FanTraceabilityManufacturingUploadData
+                    WHERE FinalShopOrder = @FinalShopOrder
+                      AND ItemNo = @ItemNo
+                      AND Model = @Model
+                )
+                BEGIN
+                    INSERT INTO {tb}
+                    (
+                        Line, FinalShopOrder, ItemNo, Model, WC,
+                        PlanQty, PlanStartDate, DispatchDate, Note,
+                        FinalFinishedDate, FAStatus, ShipmentDate,
+                        ShipmentMode, WithSR, OrderStatus, Operational
+                    )
+                    VALUES
+                    (
+                        @Line, @FinalShopOrder, @ItemNo, @Model, @WC,
+                        @PlanQty, @PlanStartDate, @DispatchDate, @Note,
+                        @FinalFinishedDate, @FAStatus, @ShipmentDate,
+                        @ShipmentMode, @WithSR, @OrderStatus, @Operational
+                    );
+                END", parameters);
+            }
 
         }
 
@@ -352,6 +255,43 @@ namespace ProgramPartListWeb.Areas.Final.Services
             }
 
 
+        }
+
+        public async Task<List<UploadDataModel>> GetListofFailedData()
+        {
+            try
+            {
+                string query = $@"SELECT RecordID
+                                  ,Line
+                                  ,FinalShopOrder
+                                  ,ItemNo
+                                  ,Model
+                                  ,WC
+                                  ,PlanQty
+                                  ,PlanStartDate
+                                  ,DispatchDate
+                                  ,Note
+                                  ,FinalFinishedDate
+                                  ,FAStatus
+                                  ,ShipmentDate
+                                  ,ShipmentMode
+                                  ,WithSR
+                                  ,Remarks
+                                  ,OrderRemarks
+                                  ,OrderStatus
+                                  ,IsNext
+                                  ,IsApproved
+                                  ,Operational
+                              FROM FanTraceabilityManufacturingUploadFailed";
+
+                return await SqlDataAcess_Test.GetDataAsync<UploadDataModel>(query, new { });
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return new List<UploadDataModel>();
+            }
         }
     }
 }

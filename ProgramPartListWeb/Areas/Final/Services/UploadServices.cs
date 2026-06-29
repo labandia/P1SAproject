@@ -229,11 +229,11 @@ namespace ProgramPartListWeb.Areas.Final.Services
                             {
                                 Debug.WriteLine($@"INSERT HERE : ");
                                 await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO FanTraceabilityManufacturingOrder (Line, FinalShopOrder, ItemNo, Model, WC, PlanQty, PlanStartDate, DispatchDate, Note, FinalFinishedDate,
-                                    FAStatus, ShipmentDate, ShipmentMode, WithSR, OrderRemarks, OrderStatus)
+                                    FAStatus, ShipmentDate, ShipmentMode, WithSR, OrderRemarks, OrderStatus, Operational)
                                     VALUES
                                     (@Line, @FinalShopOrder, @ItemNo, @Model, @WC, @PlanQty, @PlanStartDate, @DispatchDate,
                                      @Note, @FinalFinishedDate, @FAStatus, @ShipmentDate, @ShipmentMode, @WithSR,
-                                     @OrderRemarks, @OrderStatus)", item);
+                                     @OrderRemarks, @OrderStatus, @Operational)", item);
                             }
                         }
 
@@ -244,7 +244,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
                 // After transfer, you might want to clear the upload table or mark records as processed
                 await SqlDataAcess_Test.ExecuteAsync(@"DELETE FROM FanTraceabilityManufacturingUploadData", new { });
-
+                await SqlDataAcess_Test.ExecuteAsync(@"DELETE FROM FanTraceabilityManufacturingUploadFailed", new { });
 
                 return true;
             }

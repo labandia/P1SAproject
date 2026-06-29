@@ -295,7 +295,9 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                   AND f.FinalShopOrder = mo.FinalShopOrder
                             )
                             THEN 'DD'
-                        END AS Material
+                        END AS Material, 
+                            
+                        mo.Operational
 
                     FROM FanTraceabilityManufacturingOrder mo
                     WHERE 1 = 1 ";

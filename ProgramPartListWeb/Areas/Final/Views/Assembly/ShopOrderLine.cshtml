@@ -168,6 +168,7 @@
         this.cancelModal = new bootstrap.Modal(document.getElementById('cancelNextmodal'));
         this.moveModalBody = document.getElementById('moveOrderModalBody');
         this.moveConfirmBtn = document.getElementById('moveOrderConfirmBtn');
+        this.moveCellConfirmBtn = document.getElementById('moveCellConfirmBtn');
         this.cancelConfirm = document.getElementById('CancelID');
         this.pendingMoveId = null;
     }
@@ -189,6 +190,13 @@
             const id = parseInt(row.dataset.id); // ID
             const orderStatus = parseInt(row.dataset.orderStatus); // OrderStatus
             const lineman = row.dataset.orderLine; // Line
+            const operation = row.dataset.operational;
+
+
+            if (operation > 1) {
+                alert("Models needs to done other process before proceeding to next process");
+                return;
+            }
 
             // if the orderStatus(Next Process is set) Shows the Cancel Dialog
             if (orderStatus === 1) {
@@ -276,13 +284,14 @@
 
         this.moveConfirmBtn.addEventListener('click', async () => {
             const targetLine = document.getElementById('moveline')?.value;
+
             if (!targetLine) {
                 alert('Please select a Target line');
                 return;
             }
 
             const res = await postMethod('@Url.Action("UpdateLineshopOrder", "Assembly")', {
-                recordID: this.selectedID,
+                 recordID: this.selectedID,
                  Lineman: document.getElementById('moveline').value
              });
 
@@ -297,6 +306,30 @@
             this.moveModal.hide();
 
         });
+
+        this.moveCellConfirmBtn.addEventListener('click', async () => {
+            const targetLine = document.getElementById('moveCellline')?.value;
+
+            if (!targetLine) {
+                alert('Please select a Target line');
+                return;
+            }
+
+            const res = await postMethod('@Url.Action("UpdateLineshopOrder", "Assembly")', {
+                recordID: this.selectedID,
+                Lineman: document.getElementById('moveCellline').value
+             });
+
+            if (res?.Success) {
+                alert("Change Completed");
+                await this.LoadLineShopOrderList();
+            }
+
+            this.moveCellModal.hide();
+
+        });
+
+
 
         this.cancelConfirm.addEventListener('click', async () => {
             let res = await this.updateOrderStatus(this.selectedID, 0, this.selectedLine);
@@ -473,11 +506,12 @@
                     return;
               };
 
-              this.currentRecord = this.isFilter ? this.currentRecord : res.data.length;
+              this.currentRecord = this.isFilter ? this.currentRecord : res.data.Total;
 
               if (this.currentRecord != 0) {
+                  console.log(res.data.payload);
                    document.getElementById("currentrecords").textContent = this.currentRecord;
-                    this.renderTable(res.data ?? []);
+                  this.renderTable(res.data.payload ?? []);
                     //this.renderPagination(total ?? res.data.payload.length);
                 } else {
                     this.tbody.innerHTML = `
@@ -487,7 +521,7 @@
                              </td>
                          </tr>`;
                 }
-                
+
             } catch (error) {
                 console.error('Error fetching data:', error);
 
@@ -612,6 +646,7 @@
                       : '';
 
               let selecthighlight = '';
+              let isOperational = '';
 
               if (allComplete) {
                   switch (orderStatus) {
@@ -633,10 +668,14 @@
                   }
               }
 
+              isOperational = row.Operational === 2 || row.Operational === 3 ? `<span> ${row.Operational}</span>` : "";
+
+
               return `
         <tr class="${highlighted} fade-in"
             data-order-line="${row.Line}"
             data-order-status="${orderStatus}"
+            data-operational="${row.Operational}"
             data-id="${row.RecordID}">
 
             <td class="fixedrow">
@@ -649,8 +688,9 @@
                     <button class="selectmove">
                         <iconify-icon icon="lets-icons:move-light" width="20"></iconify-icon>
                     </button>
-                     <button class="changeCell">
+                     <button class="changeCell">                  
                           <iconify-icon icon="fluent-emoji-high-contrast:cl-button" width="20"></iconify-icon>
+                          ${isOperational}
                     </button>
                 </div>
             </td>

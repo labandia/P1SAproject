@@ -38,6 +38,7 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public string NextItem { get; set; }
         public string NextShop { get; set; }    
         public int InputQty { get; set; }
+        public int Operational { get; set; }
     }
 
 

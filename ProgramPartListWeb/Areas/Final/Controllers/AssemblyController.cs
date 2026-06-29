@@ -80,7 +80,8 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             string searchtext, 
             int orderstatus)
         {
-            var res = await _manu.GetListofShopOrdersByLine(Linename, searchtext, orderstatus);
+            var res = await _manu.GetListofShopOrdersByLine(Linename, 
+                searchtext, orderstatus);
 
             var finalData = new
             {
@@ -185,6 +186,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         {
             try
             {
+                //Debug.WriteLine($@"RecordID : {recordID} - lineman : {Lineman} ");
                 var res = await _manu.ChangeLineShopOrder(recordID, Lineman);
                 if (!res) return JsonError("Error Updated");
                 return JsonSuccess(true);

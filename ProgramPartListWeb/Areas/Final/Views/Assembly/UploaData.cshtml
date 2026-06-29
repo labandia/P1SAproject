@@ -4,95 +4,151 @@
 }
 @Html.AntiForgeryToken()
 
-<section style="padding: 30px 20px;">
-    <!-- MAIN PANEL -->
-    <!-- header section -->
-    <div class="flex justify-between items-center mb-6">
-        <div class="flex items-center gap-lg-3">
+<div class="uploadsection">
+
+    <!-- ── PAGE HEADER ───────────────────────────────────────────────────── -->
+    <div id="page-header">
+        <div id="page-header-top">
             <div>
-                <h2 class="text-xl font-semibold mb-1" style="font-size: 24px;">Final Assembly Upload Data</h2>
-                <p class="text-sm" style="color:#86868b;">Data Upload For the Final Assembly </p>
+                <div id="page-title">Final Assembly Upload Data</div>
+                <div id="page-subtitle">Data Upload For the Final Assembly</div>
             </div>
-
-            <!-- filters bar -->
-            <div class="flex items-center gap-3 mb-4 flex-wrap">
-
-
-
+            <div id="header-actions">
+               
+                <button id="btn-failed" class="btn-primary" style="height:32px; background:#277eff; display:none;">
+                    <iconify-icon icon="gg:push-down" width="16"></iconify-icon>
+                    Failed Uploads
+                </button>
+                <button id="uploadbtn"
+                        class="btn-outline"
+                        style="height:32px;"
+                        data-upload-url="@Url.Action("ImportUpload",      "Assembly")"
+                        data-stream-url="@Url.Action("ImportUploadStream","Assembly")"
+                        data-progress-url="@Url.Action("ImportProgress",  "Assembly")">
+                    <iconify-icon icon="ic:round-upload" width="16"></iconify-icon>
+                    Import CSV
+                </button>
+                <button id="btn-proceed" class="btn-primary" style="height:32px; background:#277eff;">
+                    <iconify-icon icon="gg:push-down" width="16"></iconify-icon>
+                    Update Changes
+                </button>
             </div>
         </div>
-        <div class="flex gap-3">
-            <select id="filterdata" class=" filter-chip text-sm font-medium" style="display: none;">
-                <option value="UPDATED">For Approval</option>
-                <option value="SAME">All Data</option>
-            </select>
-            <button id="btn-failed" class="btn-primary" style="height: 32px; background:#277eff;">
-                <iconify-icon icon="gg:push-down" width="16"></iconify-icon>
-                Failed Uploads
-            </button>
-            <button id="uploadbtn"
-                    class="btn-outline"
-                    style="height: 32px;"
-                    data-upload-url="@Url.Action("ImportUpload",   "Assembly")"
-                    data-stream-url="@Url.Action("ImportUploadStream", "Assembly")"
-                    data-progress-url="@Url.Action("ImportProgress", "Assembly")">
-                <iconify-icon icon="ic:round-upload" width="16"></iconify-icon>
-                Import CSV
-            </button>
-            <button id="btn-proceed" class="btn-primary" style="height: 32px; background:#277eff;">
-                <iconify-icon icon="gg:push-down" width="16"></iconify-icon>
-                Update Changes
-            </button>
+
+        <!-- TABS — data-target must match id="pane-{target}" below -->
+        <div id="tabs">
+            <div class="tab active" data-target="success">Successful (<span id="TotalSuccess"></span>)</div>
+            <div class="tab" data-target="failed">Failed Uploads (<span id="TotalFailed"></span>)</div>
         </div>
     </div>
 
-    @*<span id="selectedCount">0 selected</span>
+    <!-- ── TAB CONTENT ───────────────────────────────────────────────────── -->
+    <div id="tabcontent">
 
-        <a href="#" id="clearSelectionBtn"
-           style="color: var(--color-primary); text-decoration: none;">
-            Clear selection
-        </a>*@
+        <!-- ── PANE: success ── summary bar + successful-uploads table ───── -->
+        <div class="tab-pane active" id="pane-success"> 
 
-
-    <div class="devices-table-wrapper">
-        <div class="table-scroll">
-            <table class="upload-table">
-                <thead>
-                    <tr>
-                        <th class='fixedcolumn' style="width:44px;">
-                            <input type="checkbox" id="selectAllRows" />
-                        </th>
-
-                        <th style="text-align: center;">Shop Order </th>
-                        <th style="text-align: center;">Part No.</th>
-                        <th style="text-align: center;">Model </th>
-                        <th style="text-align: center;">WC</th>
-                        <th style="text-align: center;">Qty</th>
-                        <th style="text-align: center;">Current Plan Quantity</th>
-                        <th style="text-align: center;">Upload Plan Quantity</th>
-                        <th style="text-align: center;">Current Plan Date</th>
-                        <th style="text-align: center;">Upload Plan Date</th>
-                        <th style="text-align: center;">Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-        <!-- pagination footer -->
-        @*<div class="flex justify-between items-center p-3 border-t" style="border-top: 1px solid #e5e5e5; background: white;">
-            <div class="text-sm" style="color:#86868b;">Showing 1-7 of 1,248 devices</div>
-            <div class="flex gap-1">
-                <button class="pagination-btn"><iconify-icon icon="lucide:chevron-left" style="font-size: 14px;"></iconify-icon></button>
-                <button class="pagination-btn pagination-active">1</button>
-                <button class="pagination-btn">2</button>
-                <button class="pagination-btn">3</button>
-                <span class="px-2 py-1 text-muted-foreground">...</span>
-                <button class="pagination-btn"><iconify-icon icon="lucide:chevron-right" style="font-size: 14px;"></iconify-icon></button>
+            <!-- Successful Uploads table card -->
+            <div class="section-card success">
+                <div class="section-card-header">
+                    <div class="section-card-title">
+                        <iconify-icon icon="lucide:check-circle"
+                                      style="font-size:15px;color:#16a34a;"></iconify-icon>
+                        Successful Uploads
+                        <span class="count-badge success">
+                            <span id="subsuccess">0</span>&nbsp;&nbsp;Passed
+                        </span>
+                    </div>
+                    <div class="section-card-meta">Processed correctly</div>
+                </div>
+                <div class="devices-table-wrapper">
+                    <div class="table-scroll">
+                        <table class="upload-table">
+                            <thead>
+                                <tr>
+                                    <th class="fixedcolumn" style="width:44px;">
+                                        <input type="checkbox" id="selectAllRows" />
+                                    </th>
+                                    <th style="text-align:center;">Shop Order</th>
+                                    <th style="text-align:center;">Part No.</th>
+                                    <th style="text-align:center;">Model</th>
+                                    <th style="text-align:center;">WC</th>
+                                    <th style="text-align:center;">Qty</th>
+                                    <th style="text-align:center;">Current Plan Quantity</th>
+                                    <th style="text-align:center;">Upload Plan Quantity</th>
+                                    <th style="text-align:center;">Current Plan Date</th>
+                                    <th style="text-align:center;">Upload Plan Date</th>
+                                    <th style="text-align:center;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="table-footer">
+                    <span class="table-footer-text" id="successFooterText">Showing 0 successful rows</span>
+                    <span class="btn-text">
+                        View all
+                        <iconify-icon icon="lucide:chevron-right"
+                                      style="font-size:12px;color:var(--primary);"></iconify-icon>
+                    </span>
+                </div>
             </div>
-        </div>*@
-    </div>
-</section>
+
+        </div><!-- /pane-success -->
+        <!-- ── PANE: failed ── failed-uploads table only ─────────────────── -->
+        <div class="tab-pane" id="pane-failed">
+
+            <!-- Failed Uploads table card -->
+            <div class="section-card failed">
+                <div class="section-card-header">
+                    <div class="section-card-title">
+                        <iconify-icon icon="lucide:x-circle"
+                                      style="font-size:15px;color:#dc2626;"></iconify-icon>
+                        Failed Uploads
+                        <span class="count-badge error">
+                            <span id="subfailed">0</span>&nbsp;&nbsp;Errors
+                        </span>
+                    </div>
+                    <div class="section-card-meta">Duplicate records and require correction</div>
+                </div>
+                <div class="table-scroll">
+                    <table class="failed-table">
+                        <thead>
+                            <tr>
+                                <th>Line</th>
+                                <th>Final Shop Order</th>
+                                <th>Part No.</th>
+                                <th>Model</th>
+                                <th>QTY</th>
+                                <th>Plan Start</th>
+                                <th>Dispatch</th>
+                                <th>Note</th>
+                                <th>IFS Finish Date</th>
+                                <th>FA Status</th>
+                                <th>Shipment</th>
+                                <th>Mode</th>
+                                <th>WITH SR</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="table-footer">
+                    <span class="table-footer-text" id="failedFooterText">Showing 0 failed rows</span>
+                    <span class="btn-text">
+                        View all
+                        <iconify-icon icon="lucide:chevron-right"
+                                      style="font-size:12px;color:var(--primary);"></iconify-icon>
+                    </span>
+                </div>
+            </div>
+
+        </div><!-- /pane-failed -->
+
+    </div><!-- /tabcontent -->
+
+</div><!-- /uploadsection -->
 
 @Html.Partial("_UploadDataDialog")
 
@@ -109,84 +165,106 @@
 
 
   class UploadDataController {
+      // ── Private fields ────────────────────────────────────────────────────────
+      #dateCache = new Map();
+      #xhr = null;
+      #pollTimer = null;
+      #evtSource = null;
+
+      // Tab state
+      #tabs = null;
+      #panes = null;
 
      constructor() {
-        this.filterData = [];
+        this.successtotal = 0;
+         this.failedtotal = 0;
+
         this.uploadUrl = document.getElementById('uploadbtn').dataset.uploadUrl;
 
-         this.failedModal = new bootstrap.Modal(document.getElementById('uploadFailedModal'), {
-             backdrop: 'static',
-             keyboard: false
-         });
+         //this.failedModal = new bootstrap.Modal(document.getElementById('uploadFailedModal'), {
+         //    backdrop: 'static',
+         //    keyboard: false
+         //});
 
          this.progressModal = new bootstrap.Modal(document.getElementById('uploadStatusModal'), {
              backdrop: 'static',
              keyboard: false
          });
+
          this.tbody = document.querySelector('.upload-table tbody');
          this.uploadbody = document.querySelector('.failed-table tbody');
          this.fileInput = this._createFileInput();
-         this._xhr = null;
-         this._pollTimer = null;
 
          this.uploadUrl = document.getElementById('uploadbtn').dataset.uploadUrl;
          this.streamUrl = document.getElementById('uploadbtn').dataset.streamUrl;
          this.progressUrl = document.getElementById('uploadbtn').dataset.progressUrl; // ✅ add this
+
+
+         // Tab setup
+         this.#tabs = document.querySelectorAll('#tabs .tab');
+         this.#panes = new Map(
+             [...this.#tabs]
+                 .map(tab => [
+                     tab.dataset.target,
+                     document.getElementById(`pane-${tab.dataset.target}`)
+                 ])
+         );
     }
 
     async init() {
         this.bindEvents();
-        await this.LoadUploadDataList();
+
+        const initialTab = [...this.#tabs].find(t => t.classList.contains('active'))
+            ?? this.#tabs[0];
+        if (initialTab) this.activateTab(initialTab.dataset.target);
+
+        await Promise.all([this.LoadUploadDataList(), this.LoadFailedDataList()]);
+   
     }
 
-    bindEvents() {
+      bindEvents() {
+          // Tab switching
+          this.#tabs.forEach(tab => {
+              tab.addEventListener("click", () => {
+                  console.log("Clicked:", tab.dataset.target);
+                  this.activateTab(tab.dataset.target);
+              });
+          });
+
         this.tbody.addEventListener('click', (e) => {
-
             if (e.target.classList.contains('row-checkbox')) return;
-
             const row = e.target.closest('tr');
             if (!row) return;
-
             const checkbox = row.querySelector('.row-checkbox');
             if (!checkbox) return;
-
             checkbox.checked = !checkbox.checked;
-
             checkbox.dispatchEvent(
                 new Event('change', { bubbles: true })
             );
         });
 
-
         document.getElementById('uploadbtn').addEventListener('click', () => {
             this.fileInput.click();
         });
 
-        document.getElementById('cancelUploadBtn').addEventListener('click', () => {
-            if (this._xhr) { this._xhr.abort(); this._xhr = null; }
-            if (this._pollTimer) { clearTimeout(this._pollTimer); this._pollTimer = null; }
-            this.progressModal.hide();
-        });
+        document.getElementById('cancelUploadBtn')
+              .addEventListener('click', () => {
+                  this.#xhr?.abort();
+                  this.#xhr = null;
+                  if (this.#pollTimer) {
+                      clearTimeout(this.#pollTimer);
+                      this.#pollTimer = null;
+                  }
+                  this.progressModal.hide();
+         });
 
-        document.getElementById('filterdata').addEventListener('change', (e) => {
+        
 
-            const value = e.target.value;
-
-            if (value === "UPDATED") {
-                // For Approval only
-                const selectApprove = this.filterData.filter(item => item.StatusCheck == "UPDATED");
-                this.renderTable(selectApprove);
-            } else {
-                // All Data
-                this.renderTable(this.filterData);
-            }
-        });
-
-        this.fileInput.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            this.fileInput.value = '';
-            await this.beginUpload(file);
+        this.fileInput.addEventListener('change', async ({ target: { files } }) => {
+              const [file] = files;
+              if (!file) return;
+              this.fileInput.value = '';
+              await this.beginUpload(file);
         });
 
         document.getElementById('cancelUploadBtn').addEventListener('click', () => {
@@ -194,38 +272,26 @@
             this.progressModal.hide();
         });
 
-        document.getElementById('btn-proceed').addEventListener('click', async (e) => {
-            e.preventDefault();
+        document.getElementById('btn-proceed')
+            .addEventListener('click', async e => {
+                e.preventDefault();
+                try {
+                    const res = await postMethod('@Url.Action("FinalProcessUpload", "Assembly")', {});
+                    if (res.Success) await this.LoadUploadDataList();
+                } catch (err) {
+                    console.error(err);
+                }
+         });
 
-             try {
+        document.getElementById('btn-failed')
+            .addEventListener('click', () => this.LoadUploadDataList());
 
-                 const res = await postMethod('@Url.Action("FinalProcessUpload", "Assembly")', {});
-                 console.log(res);
-
-                 if (res.Success) {
-                     await this.LoadUploadDataList();
-                 }
-
-             } catch (err) {
-                 console.error(err);
-             }
-
-        });
-
-        document.getElementById('btn-failed').addEventListener('click', async () => {
-            await this.LoadFailedDataList();
-            this.failedModal.show();
-        });
-
-        document.getElementById('continueBgBtn').addEventListener('click', () => {
-            this.progressModal.hide();
-        });
+        document.getElementById('continueBgBtn')
+              .addEventListener('click', () => this.progressModal.hide());
 
 
         document.addEventListener('change', async (e) => {
-
-                if (!e.target.classList.contains('row-checkbox'))
-                    return;
+              if (!e.target.classList.contains('row-checkbox')) return;
 
                 const id = e.target.dataset.id;
                 const isApproved = e.target.checked;
@@ -271,15 +337,18 @@
     async LoadUploadDataList() {
         try {
             const res = await getMethod('@Url.Action("GetUploadData", "Assembly")', {});
-            if (!res?.Success) {
-                this.NoTableRowData();
-                return;
-            }
+            if (!res?.Success) { this.NoTableRowData(); return; }
+            
+ 
+            this.successtotal = res.data.length;
 
-            this.filterData = res.data ?? [];
+            const approvedCount = res.data.filter(x => x.IsApproved).length;
+            document.getElementById("btn-proceed").disabled = approvedCount === 0;
 
-            const approvedCount = res.data.filter(x => x.IsApproved === true).length;
-            document.getElementById("btn-proceed").disabled = approvedCount === 0
+            const display = this.successtotal > 0 ? `${this.successtotal}  ` : 0;
+            document.getElementById("TotalSuccess").textContent = display;
+            document.getElementById("subsuccess").textContent = display;
+
             this.renderTable(res.data ?? []);
         } catch (err) {
             console.error(err);
@@ -289,11 +358,11 @@
       async LoadFailedDataList() {
         try {
             const res = await getMethod('@Url.Action("GetFailedUploadData", "Assembly")', {});
-            if (!res?.Success) {
-                return;
-            }
+            if (!res?.Success) return;
 
-            let load = res.data ?? [];
+            this.failedtotal = res.data?.length ?? 0;
+            document.getElementById('TotalFailed').textContent = this.failedtotal || 0;
+            document.getElementById('subfailed').textContent = this.failedtotal || 0;
 
             this.renderFailedTable(res.data ?? []);
         } catch (err) {
@@ -304,49 +373,53 @@
 
 
       /* ================= RENDER MAIN TABLE ================= */
-       renderFailedTable(data) {
-           if (!this.uploadbody) return;
-           if (data.length === 0) {
-               //this.NoTableRowData();
-               return;
-           }
+      renderFailedTable(data) {
+          if (!this.uploadbody) return;
 
-           this.uploadbody.innerHTML = data.map(row => {
-               return `
-          <tr  class='fade-in'  data-order-line="${row.Line}"   >
-                    <td>${row.Line}</td>
-                    <td class='text-primary' style="font-weight:600;">${row.FinalShopOrder}</td>
-                    <td>${row.ItemNo}</td>
-                    <td style="font-weight:600;">${row.Model}</td>
-                    <td>${row.PlanQty}</td>
-                    <td>${this.formatDate(row.PlanStartDate)}</td>
-                    <td>${this.formatDate(row.DispatchDate)}</td>
-                    <td>${row.Note || ''}</td>
-                    <td>${this.formatDate(row.FinalFinishedDate)}</td>
-                    <td>${row.FAStatus || ''}</td>
-                    <td>${this.formatDate(row.ShipmentDate)}</td>
-                    <td>${row.ShipmentMode || ''}</td>
-                    <td>${row.WithSR || ''}</td>
-            </tr>`
-           }).join('');
-       }
+          if (!data || data.length === 0) {
+              this.uploadbody.innerHTML = `
+            <tr>
+                <td colspan="13" style="text-align:center;padding:20px;">
+                    No failed uploads.
+                </td>
+            </tr>`;
+              return;
+          }
 
+          this.uploadbody.innerHTML = data.map(row => `
+        <tr class="fade-in">
+            <td>${row.Line}</td>
+            <td class="text-primary" style="font-weight:600;">${row.FinalShopOrder}</td>
+            <td>${row.ItemNo}</td>
+            <td>${row.Model}</td>
+            <td>${row.PlanQty}</td>
+            <td>${this.formatDate(row.PlanStartDate)}</td>
+            <td>${this.formatDate(row.DispatchDate)}</td>
+            <td>${row.Note || ''}</td>
+            <td>${this.formatDate(row.FinalFinishedDate)}</td>
+            <td>${row.FAStatus || ''}</td>
+            <td>${this.formatDate(row.ShipmentDate)}</td>
+            <td>${row.ShipmentMode || ''}</td>
+            <td>${row.WithSR || ''}</td>
+        </tr>
+    `).join('');
+      }
 
+      // ── Render: success table ─────────────────────────────────────────────────
         renderTable(data) {
             if (!this.tbody) return;
-
-            if (data.length === 0) {
-                this.NoTableRowData();
-                return;
-            }
+            if (!data.length) { this.NoTableRowData(); return; }
+         
 
             this.tbody.innerHTML = data.map(row => {
-                const qtyMatched =
+                const qtyChanged =
                     Number(row.UploadPlanQty) !== Number(row.OrderPlanQty);
-                const dateMatched =
+                const dateChanged =
                     new Date(row.UploadPlanStartDate).toDateString() !==
                     new Date(row.OrderPlanStartDate).toDateString();
 
+                const qtyColor = qtyChanged ? '#34c759' : '#515154';
+                const dateColor = dateChanged ? '#34c759' : '#515154';
 
                 return `
                         <tr class="fade-in">
@@ -361,14 +434,14 @@
                                     <span class="font-semibold">${this.escape(row.FinalShopOrder)}</span>
                                 </div>
                             </td>
-                            <td style="color:#515154; text-align:center;">${this.escape(row.ItemNo)}</td>
+                             <td style="color:#515154; text-align:center;">${this.escape(row.ItemNo)}</td>
                             <td style="color:#515154;">${this.escape(row.Model)}</td>
                             <td style="color:#515154;">${this.escape(row.WC)}</td>
                             <td style="color:#515154; text-align:center;">${this.escape(row.PlanQty)}</td>
-                            <td style="color:${qtyMatched ? '#34c759' : '#515154'}; text-align:center;">${this.escape(row.UploadPlanQty)}</td>
-                            <td style="color:${qtyMatched ? '#34c759' : '#515154'}; text-align:center;">${this.escape(row.OrderPlanQty)}</td>
-                            <td style="color:${dateMatched ? '#34c759' : '#515154'}; text-align:center;">${this.escape(row.UploadPlanStartDate)}</td>
-                            <td style="color:${dateMatched ? '#34c759' : '#515154'}; text-align:center;">${this.escape(row.OrderPlanStartDate)}</td>
+                            <td style="color:${qtyColor};  text-align:center;">${this.escape(row.UploadPlanQty)}</td>
+                            <td style="color:${qtyColor};  text-align:center;">${this.escape(row.OrderPlanQty)}</td>
+                            <td style="color:${dateColor}; text-align:center;">${this.escape(row.UploadPlanStartDate)}</td>
+                            <td style="color:${dateColor}; text-align:center;">${this.escape(row.OrderPlanStartDate)}</td>
                             <td style="text-align:center;">
                                 <span class="badge ${this.statusUploadClass(row.StatusCheck)}">
                                     ${this.escape(row.StatusCheck)}
@@ -427,18 +500,10 @@
       }
 
 
-        updateSelectedCount() {
-            const count =
-                document.querySelectorAll('.row-checkbox:checked').length;
-
-            const label = document.getElementById('selectedCount');
-
-            document.getElementById("btn-proceed").disabled = count === 0;
-
-            //if (label) {
-            //    label.textContent = `${count} selected`;
-            //}
-        }
+      updateSelectedCount() {
+          const count = document.querySelectorAll('.row-checkbox:checked').length;
+          document.getElementById('btn-proceed').disabled = count === 0;
+      }
 
         statusUploadClass(stats) {
             const map = { 'SAME': 'badge-update-ready', 'UPDATED': 'badge-uptodate', 'NEW DATA': 'badge-newdata' };
@@ -539,7 +604,8 @@
                       const data = await res.json();
                       if (!data.Success) throw new Error(data.Message ?? 'Progress error');
 
-                      // append any new rows
+                      // append any new rowsdocument.getElementById("TotalSumUpload").textContent =
+                      this.failedtotal + this.successtotal;
                       (data.Rows ?? []).forEach(row => this._appendRow(row));
 
                       // update progress bar
@@ -553,7 +619,8 @@
                       if (data.Status === 'done') {
                           this._setProgress(100);
                           this._updateStats(data.Success, 0, 0, data.Failed);
-                          await this.LoadUploadDataList();
+                          
+                          await Promise.all([this.LoadUploadDataList(), this.LoadFailedDataList()]);
                           resolve();
                           return;
                       }
@@ -565,7 +632,7 @@
                       }
 
                       // still processing — poll again in 300ms
-                      this._pollTimer = setTimeout(poll, 300);
+                      this.#pollTimer = setTimeout(poll, 300);
 
                   } catch (err) {
                       reject(err);
@@ -684,7 +751,7 @@
 
           rows.forEach((row, i) => {
               const ok = row.result?.success ?? true;
-              if (ok) success++; else faisled++;
+              if (ok) success++; else failed++;
               console.log(row);
               const tr = document.createElement('tr');
               tr.innerHTML = `
@@ -740,14 +807,13 @@
         d.textContent = str ?? '';
         return d.innerHTML;
     }
-
     formatDate(dateString) {
-          if (!dateString) return '';
-
-          const timestamp = parseInt(dateString.match(/\d+/)[0]);
-          const date = new Date(timestamp);
-
-          return date.toLocaleDateString('en-US');
+        if (!dateString) return '';
+        if (this.#dateCache.has(dateString)) return this.#dateCache.get(dateString);
+        const ms = parseInt(dateString.match(/\d+/)?.[0]);
+        const result = isNaN(ms) ? '' : new Date(ms).toLocaleDateString('en-US');
+        this.#dateCache.set(dateString, result);
+        return result;
     }
 
     async toggleAllRows(isChecked) {
@@ -755,7 +821,6 @@
 
             // Update UI immediately
             checkboxes.forEach(cb => cb.checked = isChecked);
-
             this.updateSelectedCount();
 
             try {
@@ -776,6 +841,27 @@
             }
      }
 
+
+
+      // ── Tab control ───────────────────────────────────────────────────────────
+
+      activateTab(target) {
+          if (!this.#panes.has(target)) return;
+
+          // Tabs — toggle active class
+          this.#tabs.forEach(tab =>
+              tab.classList.toggle('active', tab.dataset.target === target)
+          );
+
+          // Panes — show/hide
+          this.#panes.forEach((pane, key) =>
+              pane.classList.toggle('active', key === target)
+          );
+
+          // Header actions only make sense on the success tab
+          const onSuccess = target === 'success';
+          document.getElementById('btn-proceed').style.display = onSuccess ? '' : 'none';
+      }
 }
 
 document.addEventListener('DOMContentLoaded', function () {

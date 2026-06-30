@@ -15,7 +15,7 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public string WC { get; set; } = string.Empty;
         public int PlanQty { get; set; } = 0;
         public DateTime? PlanStartDate { get; set; }
-        public DateTime? DispatchDate { get; set; }
+        public string DispatchDate { get; set; }
         public string Note { get; set; }
         public DateTime? FinalFinishedDate { get; set; }
         public string FAStatus { get; set; }
@@ -108,11 +108,10 @@ namespace ProgramPartListWeb.Areas.Final.Model
             get => _model;
             set => _model = (value ?? string.Empty).Replace(" ", "");
         }
-
         public string WC { get; set; } = string.Empty;
         public int Qty { get; set; }
         public string PlanStart { get; set; } = string.Empty;
-        public string DispatchDate { get; set; } = string.Empty;
+        public string DispatchDate { get; set; }
         public string Note { get; set; } = string.Empty;
         public string IfsFinish { get; set; } = string.Empty;
         public string FaStatus { get; set; } = string.Empty;
@@ -137,6 +136,10 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public string Model { get; set; } = string.Empty;
         public string WC { get; set; } = string.Empty;
         public int PlanQty { get; set; } = 0;
+        public string Note { get; set; }
+        public DateTime? FinalFinishedDate { get; set; }
+        public string FAStatus { get; set; }
+        public DateTime? ShipmentDate { get; set; }
         public int UploadPlanQty { get; set; }
         public int OrderPlanQty { get; set; }
 

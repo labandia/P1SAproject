@@ -182,12 +182,13 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> UpdateLineshopOrder(int recordID, string Lineman)
+        public async Task<ActionResult> UpdateLineshopOrder(int recordID, 
+            string Lineman, int process)
         {
             try
             {
                 //Debug.WriteLine($@"RecordID : {recordID} - lineman : {Lineman} ");
-                var res = await _manu.ChangeLineShopOrder(recordID, Lineman);
+                var res = await _manu.ChangeLineShopOrder(recordID, Lineman, process);
                 if (!res) return JsonError("Error Updated");
                 return JsonSuccess(true);
             }
@@ -248,6 +249,17 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                 return JsonError("Failed to update approval status.");
 
             return JsonSuccess("Approval status updated successfully.");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateAllUploadApproval()
+        {
+            var success = await _upload.CheckApprovalAllUploaded();
+
+            if (!success)
+                return JsonError("Failed to update.");
+
+            return JsonSuccess();
         }
 
         [HttpPost]
@@ -725,23 +737,32 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
 
         private string GetCellAsDate(ExcelWorksheet sheet, int row, int col)
         {
-            var val = sheet.Cells[row, col].Value;
-            if (val == null) return "";
+            var value = sheet.Cells[row, col].Value;
 
-            // Excel stores dates as doubles (serial number)
-            if (val is double d)
+            if (value == null)
+                return "";
+
+            if (value is DateTime dt)
+                return dt.ToString("yyyy-MM-dd");
+
+            if (value is double oa)
             {
                 try
                 {
-                    return DateTime.FromOADate(d).ToString("yyyy-MM-dd");
+                    return DateTime.FromOADate(oa).ToString("yyyy-MM-dd");
                 }
                 catch
                 {
-                    return val.ToString();
+                    return "";
                 }
             }
 
-            return val.ToString().Trim();
+            string text = sheet.Cells[row, col].Text.Trim();
+
+            if (DateTime.TryParse(text, out DateTime parsed))
+                return parsed.ToString("yyyy-MM-dd");
+
+            return "";
         }
 
         //=====================================================
@@ -782,6 +803,23 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                 return JsonNotFound("No Manpower data found");
 
             return JsonSuccess(res, "Retrieved data successfully");
+        }
+
+        public ActionResult DownloadFile(string fileName)
+        {
+            // Path to the folder where files are stored
+            string filePath = Server.MapPath("~/Content/Uploads/" + fileName);
+
+            // Check if the file exists
+            if (!System.IO.File.Exists(filePath))
+            {
+                return HttpNotFound("File not found.");
+            }
+
+            // Return the file to the user
+            byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
+            string fileDownloadName = Path.GetFileName(filePath);
+            return File(fileBytes, "application/octet-stream", fileDownloadName);
         }
 
         // GET: Final/Assembly

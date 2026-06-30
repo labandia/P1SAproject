@@ -24,6 +24,7 @@ namespace ProgramPartListWeb.Areas.Final.Interface
         //===================================================================
         // Updates the approval status of the uploaded data 
         Task<bool> CheckApprovalForUploadedData(int recordID, bool check);
+        Task<bool> CheckApprovalAllUploaded();
         // Insert the uploaded data to the database
         Task<bool> UploadDataToDatabase(ProductionRecord model, string tb);
         Task<bool> TransferDataUploadtoMain();

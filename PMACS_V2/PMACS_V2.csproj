@@ -527,6 +527,7 @@
     <Content Include="Areas\Planning\Views\Plan\_EndMonthInputs.cshtml" />
     <Content Include="Areas\Planning\Views\Plan\_PartnumberViews.cshtml" />
     <Content Include="Areas\Planning\Views\Plan\_UploadDialog.cshtml" />
+    <Content Include="Content\Template\FinalUploadTemplate.xlsx" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />

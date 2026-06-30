@@ -75,9 +75,7 @@
                     <thead>
                         <tr>
                             <th>Line</th>
-                            <th>Final Shop Order</th>
-                            <th>Partno</th>
-                            <th>Model</th>
+                            <th>Final Shop Order/ Partno / Model</th>
                             <th>QTY</th>
                             <th>Plan Start</th>
                             <th>Dispatch</th>
@@ -278,18 +276,21 @@
                 return `
               <tr  class='fade-in'  data-order-line="${row.Line}"   >
                         <td>${row.Line}</td>
-                        <td class='text-primary' style="font-weight:600;">${row.FinalShopOrder}</td>
-                        <td>${row.ItemNo}</td>
-                        <td style="font-weight:600;">${row.Model}</td>
+                        <td style='text-align: left;'>
+                            <span class="text-primary font-medium">${row.FinalShopOrder}</span>
+                            <p style="margin:.2em 0;color:#8a8f9e;">${row.ItemNo}</p>
+                            <span style="font-weight:600;">${row.Model}</span>
+                        </td>
+
                         <td>${row.PlanQty}</td>
                         <td>${this.formatDate(row.PlanStartDate)}</td>
-                        <td>${this.formatDate(row.DispatchDate)}</td>
+                        <td>${row.DispatchDate}</td>
                         <td>${row.Note || ''}</td>
                         <td>${this.formatDate(row.FinalFinishedDate)}</td>
                         <td>${row.FAStatus || ''}</td>
                         <td>${this.formatDate(row.ShipmentDate)}</td>
                         <td>${row.ShipmentMode || ''}</td>
-                        <td>${row.WithSR || ''}</td>
+                        <td>${row.WithSR ? 'With SR': ''}</td>
                 </tr>`
 
             }).join('');

@@ -596,13 +596,30 @@ namespace ProgramPartListWeb.Areas.Final.Services
             throw new NotImplementedException();
         }
 
-        public Task<bool> ChangeLineShopOrder(int recordID, string Lineselect)
+        public Task<bool> ChangeLineShopOrder(int recordID, string Lineselect, int process)
         {
-            return SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingOrder SET  Line =@Line WHERE RecordID =@RecordID", new
+            // Check if the Operation(process) has 2 or more  
+            if(process > 1)
             {
-                RecordID = recordID,
-                Line = Lineselect
-            });
+                int changeprocess = process - 1;
+                return SqlDataAcess_Test.ExecuteAsync($@"UPDATE 
+                FanTraceabilityManufacturingOrder SET  Line =@Line, Operational =@Operational
+                WHERE RecordID =@RecordID", new
+                {
+                    RecordID = recordID,
+                    Line = Lineselect,
+                    Operational = changeprocess
+                });
+            }
+            else
+            {
+                return SqlDataAcess_Test.ExecuteAsync($@"UPDATE 
+                FanTraceabilityManufacturingOrder SET  Line =@Line WHERE RecordID =@RecordID", new
+                {
+                    RecordID = recordID,
+                    Line = Lineselect
+                });
+            }
         }
 
         public Task<bool> AddInputQuantiyPerLine(int recordID, int Qty)

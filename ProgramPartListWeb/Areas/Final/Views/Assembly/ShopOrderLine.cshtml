@@ -146,6 +146,7 @@
   class ShopOrderListController {
     constructor() {
         this.selectedID = 0;
+        this.operation = 0;
         this.selectedLine = "";
         this.currentRecord = 0;
         this.pageSize = 0;
@@ -237,8 +238,9 @@
 
             const row = movebtn.closest('tr');
             const id = parseInt(row.dataset.id);
-
+           
             this.selectedID = id;
+            //this.operation
             this.moveModal.show();
         });
 
@@ -249,8 +251,11 @@
 
             const row = movebtn.closest('tr');
             const id = parseInt(row.dataset.id);
+            const operation = row.dataset.operational;
+            console.log("Operation : " + operation);
 
             this.selectedID = id;
+            this.Operational = operation;
             this.moveCellModal.show();
         })
 
@@ -292,7 +297,8 @@
 
             const res = await postMethod('@Url.Action("UpdateLineshopOrder", "Assembly")', {
                  recordID: this.selectedID,
-                 Lineman: document.getElementById('moveline').value
+                 Lineman: document.getElementById('moveline').value, 
+                 process: 0
              });
 
             if (res?.Success) {
@@ -317,7 +323,8 @@
 
             const res = await postMethod('@Url.Action("UpdateLineshopOrder", "Assembly")', {
                 recordID: this.selectedID,
-                Lineman: document.getElementById('moveCellline').value
+                Lineman: document.getElementById('moveCellline').value,
+                process: this.Operational
              });
 
             if (res?.Success) {

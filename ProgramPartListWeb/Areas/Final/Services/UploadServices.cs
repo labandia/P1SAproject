@@ -21,11 +21,16 @@ namespace ProgramPartListWeb.Areas.Final.Services
             {
                 string query = $@"SELECT 
                                     U.RecordID,
+                                    U.Line, 
                                     U.FinalShopOrder,
                                     U.ItemNo,
                                     U.Model,
                                     U.WC,
                                     U.PlanQty,
+                                    U.Note,
+									U.FinalFinishedDate,
+								    U.FAStatus,
+									U.ShipmentDate,
                                     U.PlanQty AS UploadPlanQty,
                                     O.PlanQty AS OrderPlanQty,
 
@@ -77,6 +82,17 @@ namespace ProgramPartListWeb.Areas.Final.Services
         //===================================================================
         //=================== UPLOADING PROCESS =============================
         //===================================================================
+        public Task<bool> CheckApprovalAllUpdate(int recordID, bool check)
+        {
+            return SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingUploadData 
+                 SET IsApproved = @IsApproved WHERE RecordID = @RecordID", new
+            {
+                RecordID = recordID,
+                IsApproved = check
+            });
+        }
+
+
         public Task<bool> CheckApprovalForUploadedData(int recordID, bool check)
         {
             return SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingUploadData 
@@ -200,10 +216,11 @@ namespace ProgramPartListWeb.Areas.Final.Services
                             OR CAST(U.PlanStartDate AS DATE) <> CAST(O.PlanStartDate AS DATE); ");
 
                 if (getApproveData == null || getApproveData.Count == 0) return false;
-
+                int count = 0;
 
                 foreach (var item in getApproveData)
                 {
+                    Debug.WriteLine("UPlOAD COUNT : " + count);
                     //Debug.WriteLine($@"Line : {item.Line} - ShopOrder : {item.FinalShopOrder}");
                     if (item.StatusCheck == "UPDATED")
                     {
@@ -213,14 +230,14 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
                             // Updates the main table if the Approval is checked
                             await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingOrder SET 
-                                PlanQty =@PlanQty, PlanStartDate =@PlanStartDate WHERE FinalShopOrder =@FinalShopOrder", item);
+                                PlanQty =@PlanQty, PlanStartDate =@PlanStartDate WHERE 
+                                FinalShopOrder =@FinalShopOrder", item);
                         }
                     }
                     else
                     {
                         if (item.IsApproved)
                         {
-                            Debug.WriteLine($@"INSERT HERE : ");
                             int isCount = await SqlDataAcess_Test.ExecuteScalarAsync<int>(
                                 @"SELECT COUNT(1) FROM FanTraceabilityManufacturingOrder 
                             WHERE FinalShopOrder = @FinalShopOrder", new { item.FinalShopOrder });
@@ -239,6 +256,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
                         
                     }
+
+                    count++;
                 }
 
 
@@ -292,6 +311,16 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 Debug.WriteLine(ex.Message);
                 return new List<UploadDataModel>();
             }
+        }
+
+        public Task<bool> CheckApprovalAllUploaded()
+        {
+            return SqlDataAcess_Test.ExecuteAsync(@"
+            UPDATE FanTraceabilityManufacturingUploadData
+            SET IsApproved = CASE
+                        WHEN IsApproved = 1 THEN 0
+                        ELSE 1
+                     END");
         }
     }
 }

@@ -21,7 +21,7 @@ namespace ProgramPartListWeb.Areas.Final
         Task<FanTraceabilityManufacturingOrder> GetShopderDetails(int id);
         Task<string> GetAlreadyDoneShopOrdersBySection(string finalorder);
         Task<bool> SelectOnlineShopOrders(int recordID);
-        Task<bool> ChangeLineShopOrder(int recordID, string Lineselect);
+        Task<bool> ChangeLineShopOrder(int recordID, string Lineselect, int process);
         Task<bool> AddInputQuantiyPerLine(int recordID, int Qty);
 
       

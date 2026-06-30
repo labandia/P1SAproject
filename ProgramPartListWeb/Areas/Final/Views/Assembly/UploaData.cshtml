@@ -14,7 +14,9 @@
                 <div id="page-subtitle">Data Upload For the Final Assembly</div>
             </div>
             <div id="header-actions">
-               
+                <a class="Downloadtemplate" href="@Url.Action("DownloadFile", "Assembly", new { fileName = "FinalUploadTemplate.xlsx" })">
+                    <iconify-icon icon="gg:push-down" width="16"></iconify-icon> Download Template
+                </a>
                 <button id="btn-failed" class="btn-primary" style="height:32px; background:#277eff; display:none;">
                     <iconify-icon icon="gg:push-down" width="16"></iconify-icon>
                     Failed Uploads
@@ -29,16 +31,23 @@
                     Import CSV
                 </button>
                 <button id="btn-proceed" class="btn-primary" style="height:32px; background:#277eff;">
-                    <iconify-icon icon="gg:push-down" width="16"></iconify-icon>
-                    Update Changes
+                    <span class="btn-content">
+                        <iconify-icon icon="material-symbols-light:published-with-changes" width="16"></iconify-icon>
+                        <span>Update Changes</span>
+                    </span>
+
+                    <span class="btn-loading" style="display:none;">
+                        <span class="spinner"></span>
+                        <span>Updating...</span>
+                    </span>
                 </button>
             </div>
         </div>
 
         <!-- TABS — data-target must match id="pane-{target}" below -->
         <div id="tabs">
-            <div class="tab active" data-target="success">Successful (<span id="TotalSuccess"></span>)</div>
-            <div class="tab" data-target="failed">Failed Uploads (<span id="TotalFailed"></span>)</div>
+            <div class="tab active" data-target="success">Successful (<span id="TotalSuccess">0</span>)</div>
+            <div class="tab" data-target="failed">Failed Uploads (<span id="TotalFailed">0</span>)</div>
         </div>
     </div>
 
@@ -69,13 +78,15 @@
                                     <th class="fixedcolumn" style="width:44px;">
                                         <input type="checkbox" id="selectAllRows" />
                                     </th>
-                                    <th style="text-align:center;">Shop Order</th>
-                                    <th style="text-align:center;">Part No.</th>
-                                    <th style="text-align:center;">Model</th>
-                                    <th style="text-align:center;">WC</th>
+                                    <th style="text-align:center;">Line</th>
+                                    <th>Final Shop Order/ Partno / Model</th>
                                     <th style="text-align:center;">Qty</th>
-                                    <th style="text-align:center;">Current Plan Quantity</th>
-                                    <th style="text-align:center;">Upload Plan Quantity</th>
+                                    <th>Note</th>
+                                    <th>IFS Finish Date</th>
+                                    <th>FA Status</th>
+                                    <th>Shipment</th>
+                                    <th style="text-align:center;">Current Plan Qty</th>
+                                    <th style="text-align:center;">Upload Plan Qty</th>
                                     <th style="text-align:center;">Current Plan Date</th>
                                     <th style="text-align:center;">Upload Plan Date</th>
                                     <th style="text-align:center;">Status</th>
@@ -85,14 +96,14 @@
                         </table>
                     </div>
                 </div>
-                <div class="table-footer">
+                @*<div class="table-footer">
                     <span class="table-footer-text" id="successFooterText">Showing 0 successful rows</span>
                     <span class="btn-text">
                         View all
                         <iconify-icon icon="lucide:chevron-right"
                                       style="font-size:12px;color:var(--primary);"></iconify-icon>
                     </span>
-                </div>
+                </div>*@
             </div>
 
         </div><!-- /pane-success -->
@@ -117,9 +128,7 @@
                         <thead>
                             <tr>
                                 <th>Line</th>
-                                <th>Final Shop Order</th>
-                                <th>Part No.</th>
-                                <th>Model</th>
+                                <th>Final Shop Order/ Partno / Model</th>
                                 <th>QTY</th>
                                 <th>Plan Start</th>
                                 <th>Dispatch</th>
@@ -134,14 +143,14 @@
                         <tbody></tbody>
                     </table>
                 </div>
-                <div class="table-footer">
+                @*<div class="table-footer">
                     <span class="table-footer-text" id="failedFooterText">Showing 0 failed rows</span>
                     <span class="btn-text">
                         View all
                         <iconify-icon icon="lucide:chevron-right"
                                       style="font-size:12px;color:var(--primary);"></iconify-icon>
                     </span>
-                </div>
+                </div>*@
             </div>
 
         </div><!-- /pane-failed -->
@@ -219,7 +228,7 @@
         if (initialTab) this.activateTab(initialTab.dataset.target);
 
         await Promise.all([this.LoadUploadDataList(), this.LoadFailedDataList()]);
-   
+
     }
 
       bindEvents() {
@@ -258,7 +267,7 @@
                   this.progressModal.hide();
          });
 
-        
+
 
         this.fileInput.addEventListener('change', async ({ target: { files } }) => {
               const [file] = files;
@@ -275,11 +284,33 @@
         document.getElementById('btn-proceed')
             .addEventListener('click', async e => {
                 e.preventDefault();
+                const btn = e.currentTarget;
+                const content = btn.querySelector('.btn-content');
+                const loading = btn.querySelector('.btn-loading');
+
+                btn.classList.add('loading');
+                btn.disabled = true;
+                content.style.display = 'none';
+                loading.style.display = 'flex';
+
                 try {
-                    const res = await postMethod('@Url.Action("FinalProcessUpload", "Assembly")', {});
-                    if (res.Success) await this.LoadUploadDataList();
+                    const res = await postMethod(
+                        '@Url.Action("FinalProcessUpload", "Assembly")',
+                        {}
+                    );
+
+                    if (res.Success) {
+                        await this.LoadUploadDataList();
+                        document.getElementById("TotalSuccess").textContent = 0;
+                        document.getElementById("TotalFailed").textContent = 0;
+                    }
                 } catch (err) {
                     console.error(err);
+                } finally {
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+                    content.style.display = 'flex';
+                    loading.style.display = 'none';
                 }
          });
 
@@ -338,8 +369,8 @@
         try {
             const res = await getMethod('@Url.Action("GetUploadData", "Assembly")', {});
             if (!res?.Success) { this.NoTableRowData(); return; }
-            
- 
+
+
             this.successtotal = res.data.length;
 
             const approvedCount = res.data.filter(x => x.IsApproved).length;
@@ -389,12 +420,18 @@
           this.uploadbody.innerHTML = data.map(row => `
         <tr class="fade-in">
             <td>${row.Line}</td>
-            <td class="text-primary" style="font-weight:600;">${row.FinalShopOrder}</td>
-            <td>${row.ItemNo}</td>
-            <td>${row.Model}</td>
+            <td style='text-align: left;'>
+                <span class="text-primary font-medium">${row.FinalShopOrder}</span>
+                <p style="margin:.2em 0;color:#8a8f9e;">${row.ItemNo}</p>
+                 <span
+                    class="model-text"
+                    title="${row.Model}">
+                    ${row.Model}
+                </span>
+            </td>
             <td>${row.PlanQty}</td>
             <td>${this.formatDate(row.PlanStartDate)}</td>
-            <td>${this.formatDate(row.DispatchDate)}</td>
+            <td>${row.DispatchDate}</td>
             <td>${row.Note || ''}</td>
             <td>${this.formatDate(row.FinalFinishedDate)}</td>
             <td>${row.FAStatus || ''}</td>
@@ -406,10 +443,11 @@
       }
 
       // ── Render: success table ─────────────────────────────────────────────────
-        renderTable(data) {
+      renderTable(data) {
+          console.log(data);
             if (!this.tbody) return;
             if (!data.length) { this.NoTableRowData(); return; }
-         
+
 
             this.tbody.innerHTML = data.map(row => {
                 const qtyChanged =
@@ -429,15 +467,21 @@
                                        data-id="${row.RecordID}"
                                        ${row.IsApproved == 1 ? 'checked' : ''} />
                             </td>
-                            <td class="uploadedData">
-                                <div class="flex items-center gap-2">
-                                    <span class="font-semibold">${this.escape(row.FinalShopOrder)}</span>
-                                </div>
+                             <td>${row.Line}</td>
+                            <td style='text-align: left;'>
+                                <span class="text-primary font-medium">${row.FinalShopOrder}</span>
+                                <p style="margin:.2em 0;color:#8a8f9e;">${row.ItemNo}</p>
+                                 <span
+                                    class="model-text"
+                                    title="${row.Model}">
+                                    ${row.Model}
+                                </span>
                             </td>
-                             <td style="color:#515154; text-align:center;">${this.escape(row.ItemNo)}</td>
-                            <td style="color:#515154;">${this.escape(row.Model)}</td>
-                            <td style="color:#515154;">${this.escape(row.WC)}</td>
                             <td style="color:#515154; text-align:center;">${this.escape(row.PlanQty)}</td>
+                            <td>${row.Note || ''}</td>
+                            <td>${this.formatDate(row.FinalFinishedDate)}</td>
+                            <td class="status-column">${row.FAStatus || ''}</td>
+                            <td>${this.formatDate(row.ShipmentDate)}</td>
                             <td style="color:${qtyColor};  text-align:center;">${this.escape(row.UploadPlanQty)}</td>
                             <td style="color:${qtyColor};  text-align:center;">${this.escape(row.OrderPlanQty)}</td>
                             <td style="color:${dateColor}; text-align:center;">${this.escape(row.UploadPlanStartDate)}</td>
@@ -465,7 +509,7 @@
 
             this.tbody.innerHTML = `
             <tr>
-                <td colspan="11" style="padding: 0; border: none;">
+                <td colspan="12" style="padding: 0; border: none;">
                     <div class="table-empty">
                         <div class="table-empty-icon-box">
                             <span class="icon-wrap" style="width:28px;height:28px;color:var(--color-primary);">
@@ -619,7 +663,7 @@
                       if (data.Status === 'done') {
                           this._setProgress(100);
                           this._updateStats(data.Success, 0, 0, data.Failed);
-                          
+
                           await Promise.all([this.LoadUploadDataList(), this.LoadFailedDataList()]);
                           resolve();
                           return;
@@ -664,7 +708,7 @@
                   clearTimeout(timeout);
               };
 
-              evtSource.onmessage = (e) => {
+              evtSource.onmessage = async (e) => {
                   clearTimeout(timeout);
                   try {
                       const payload = JSON.parse(e.data);
@@ -683,7 +727,7 @@
                           this._setProgress(100);
                           this._updateFooter(payload.total, payload.current, payload.success, payload.failed);
                           this._updateStats(payload.success, 0, 0, payload.failed);
-                          this.LoadUploadDataList();
+                          await Promise.all([this.LoadUploadDataList(), this.LoadFailedDataList()]);
                           resolve();
                       }
 
@@ -711,17 +755,18 @@
           const tr = document.createElement('tr');
           tr.style.animation = 'fadeInRow 0.15s ease';
           tr.innerHTML = `
+        <td>
+             <span class="status-badge ${ok ? 'done' : 'failed'}">
+                 <span class="status-dot"></span>
+                 ${ok ? 'OK' : (row.message ?? row.Message ?? 'Failed')}
+             </span>
+        </td>
         <td>${this.escape(row.shopOrder ?? row.ShopOrder)}</td>
         <td>${this.escape(row.partNo ?? row.PartNo)}</td>
         <td>${this.escape(row.model ?? row.Model)}</td>
         <td>${this.escape(row.wc ?? row.Wc)}</td>
         <td>${this.escape(row.planStart ?? row.PlanStart)}</td>
-        <td>
-            <span class="status-badge ${ok ? 'done' : 'failed'}">
-                <span class="status-dot"></span>
-                ${ok ? 'OK' : (row.message ?? row.Message ?? 'Failed')}
-            </span>
-        </td>`;
+       `;
 
           tbody.appendChild(tr);
 
@@ -817,29 +862,24 @@
     }
 
     async toggleAllRows(isChecked) {
-            const checkboxes = [...document.querySelectorAll('.row-checkbox')];
+        const checkboxes = [...document.querySelectorAll('.row-checkbox')];
 
-            // Update UI immediately
-            checkboxes.forEach(cb => cb.checked = isChecked);
-            this.updateSelectedCount();
+        document.getElementById('selectAllRows').checked = isChecked;
+       let res = await postMethod(
+           '@Url.Action("UpdateAllUploadApproval", "Assembly")', {});
 
-            try {
-                await Promise.all(
-                    checkboxes.map(cb =>
-                        postMethod(
-                            '@Url.Action("UpdateUploadApproval", "Assembly")',
-                            {
-                                recordID: cb.dataset.id,
-                                check: isChecked
-                            }
-                        )
-                    )
-                );
-            } catch (err) {
-                console.error(err);
-                await this.LoadUploadDataList(); // reload to restore actual state
-            }
-     }
+        if (res?.Success) {
+            await this.LoadUploadDataList();
+        }
+        //const ids = checkboxes.map(cb => cb.dataset.id);
+        //for (const cb of checkboxes) {
+        //    cb.checked = isChecked;
+
+
+        //}
+
+        this.updateSelectedCount();
+    }
 
 
 

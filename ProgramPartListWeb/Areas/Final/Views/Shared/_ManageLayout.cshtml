@@ -17,8 +17,10 @@
     <script src="~/Scripts/iconify-icon.min.js"></script>
     <link href="~/Content/Shared/bootstrap.min.css" rel="stylesheet" />
     @*@Styles.Render("~/Content/planning-css")*@
-    <link href="~/Content/css/FinalAssembly.css" rel="stylesheet" />
     <link href="~/Content/css/Animation.css" rel="stylesheet" />
+    @Styles.Render("~/Content/FinalAssembly-css")
+
+
     @Scripts.Render("~/bundles/shared-js")
     @Scripts.Render("~/bundles/modernizr")
 </head>
@@ -50,7 +52,7 @@
 
 
             <div class="header-actions">
-                <div class="badge badge-muted">
+                <div class="badge calendarBackground">
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"
                          style="color:var(--color-muted-foreground)">

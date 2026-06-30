@@ -54,6 +54,11 @@ namespace ProgramPartListWeb
             // For Progam Partlist Inspection  CSS
             bundles.Add(new StyleBundle("~/Content/Hydro-css").Include("~/Content/css/HydroDesign.css"));
 
+            bundles.Add(new StyleBundle("~/Content/FinalAssembly-css").Include(
+                          "~/Content/css/Animation.css",
+                          "~/Content/css/FinalAssembly.css"
+                          ));
+
 
             // =======================
             // 4. AUTO-DETECT AREA CSS/JS

@@ -109,7 +109,9 @@ ol, ul, menu {
 }
 
 
-
+.calendarBackground{
+    background: rgba(0,0,0,0.6);
+}
 
 
 .badge-muted {
@@ -386,8 +388,6 @@ ol, ul, menu {
     animation: stagger-fade-up 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
     animation-delay: calc(var(--order, 0) * 0.06s);
 }
-
-
 
 .line-badge {
     display: flex;
@@ -1189,7 +1189,7 @@ textarea,
     .devices-table th, .upload-table th {
         padding: 10px 16px;
         font-weight: 500;
-        color: #86868b;
+        color: #111827;
     }
 
     .devices-table td, .upload-table td {

@@ -10,7 +10,7 @@
     <div class="headerManage  flex justify-between items-center mb-6">
         <div class="flex items-center gap-lg-3">
             <div>
-                <h2 class="text-xl font-semibold mb-1" style="font-size: 24px;">Final Assembly Data</h2>
+                <h2 class="font-semibold mb-1" style="font-size: 22px;">Final Assembly Data</h2>
                 <p class="text-sm" style="color:#86868b;">Current Data of the Final Assembly </p>
             </div>
 
@@ -23,7 +23,7 @@
         </div>
         <div class="flex gap-3">
             <select id="filterdata" class=" filter-chip text-sm font-medium">
-                <option value="">-- Filter Line -- </option>
+                <option value="">Line : ALL</option>
                 <option value="L1">L1</option>
                 <option value="L2">L2</option>
                 <option value="L3">L3</option>
@@ -279,7 +279,11 @@
                         <td style='text-align: left;'>
                             <span class="text-primary font-medium">${row.FinalShopOrder}</span>
                             <p style="margin:.2em 0;color:#8a8f9e;">${row.ItemNo}</p>
-                            <span style="font-weight:600;">${row.Model}</span>
+                             <span
+                                class="model-text"
+                                title="${row.Model}">
+                                ${row.Model}
+                            </span>
                         </td>
 
                         <td>${row.PlanQty}</td>
@@ -287,7 +291,7 @@
                         <td>${row.DispatchDate}</td>
                         <td>${row.Note || ''}</td>
                         <td>${this.formatDate(row.FinalFinishedDate)}</td>
-                        <td>${row.FAStatus || ''}</td>
+                        <td class="status-column">${row.FAStatus || ''}</td>
                         <td>${this.formatDate(row.ShipmentDate)}</td>
                         <td>${row.ShipmentMode || ''}</td>
                         <td>${row.WithSR ? 'With SR': ''}</td>

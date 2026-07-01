@@ -187,29 +187,52 @@
             if (!badge) return;
             e.stopPropagation();
 
+            const isStatus = Object.freeze({
+                Blank: 0,
+                NextProcess: 1,
+                InProcess: 2,
+                Completed: 3,
+                Temporary: 4
+            });
+
             const row = badge.closest('tr');
             const id = parseInt(row.dataset.id); // ID
             const orderStatus = parseInt(row.dataset.orderStatus); // OrderStatus
             const lineman = row.dataset.orderLine; // Line
             const operation = row.dataset.operational;
-            const isComplete = row.dataset.checkstats;
-            console.log(isComplete);
+            const isComplete = row.dataset.checkstats === 'true';
 
-            // ORDERSTATUS = 4 (TEMPORARY)
-            if (orderStatus === 4) {
-                alert("Doestn Complete");
+
+            if (Number.isNaN(id) || Number.isNaN(orderStatus)) {
+                console.error('Row missing required data attributes', row.dataset);
                 return;
             }
 
+            // if isCOmplete is false(incomplete from the shops)
+            if (!isComplete) {
+                if (orderStatus === isStatus.Temporary) {
+                    alert("Already in process.");
+                } else {
+                    // if not updates the OrderStatus to 4 (In Process) and updates the row
+                    const success = await this.updateOrderStatus(id, 4, line);
+                    if (!success) return;
 
+                    row.dataset.orderStatus = '4';
+                    badge.className = 'selectedbadge selectedProcessInProgress'; // or whatever your "in process" class is
+                    row.classList.add('bg-row-highlight');
+
+                    await this.LoadLineShopOrderList();
+                }
+                return;
+            }
 
             if (operation > 1) {
-                alert("Models needs to done other process before proceeding to next process");
+                alert("Model needs to complete other processes before proceeding to next process.");
                 return;
             }
 
             // if the orderStatus(Next Process is set) Shows the Cancel Dialog
-            if (orderStatus === 1) {
+            if (orderStatus === isStatus.NextProcess) {
                 this.selectedID = id;
                 this.selectedLine = lineman;
                 this.cancelModal.show();
@@ -217,28 +240,27 @@
             }
 
 
-            if (orderStatus === 2 || orderStatus === 3) return;
+            if (orderStatus === isStatus.InProcess || orderStatus === isStatus.Completed) return;
 
-            const res = await getMethod('@Url.Action("CheckIfAreadyCheckNext", "Assembly")', {
-                line: this.strLine
-            });
+            try {
+                const res = await getMethod('@Url.Action("CheckIfAreadyCheckNext", "Assembly")', { line });
+                if (res.data > 0) {
+                    alert("Already selected the next process.");
+                    return;
+                }
 
+                const success = await this.updateOrderStatus(id, OrderStatus.NextProcess, line);
+                if (!success) return;
 
-            if (res.data > 0) {
-                alert("Already selected the next process");
-                return;
+                row.dataset.orderStatus = String(OrderStatus.NextProcess);
+                badge.className = 'selectedbadge selectedProcess';
+                row.classList.add('bg-row-highlight');
+
+                await this.LoadLineShopOrderList();
+            } catch (err) {
+                console.error('Failed to update order status', err);
+                alert("Something went wrong updating the status. Please try again.");
             }
-
-           
-
-            const success = await this.updateOrderStatus(id, 1, lineman);
-            if (!success) return;
-
-            this.LoadLineShopOrderList();
-
-            row.dataset.orderStatus = '2';
-            badge.className = 'selectedbadge selectedProcess';
-            row.classList.add('bg-row-highlight');
         });
 
 
@@ -249,7 +271,7 @@
 
             const row = movebtn.closest('tr');
             const id = parseInt(row.dataset.id);
-           
+
             this.selectedID = id;
             //this.operation
             this.moveModal.show();
@@ -308,7 +330,7 @@
 
             const res = await postMethod('@Url.Action("UpdateLineshopOrder", "Assembly")', {
                  recordID: this.selectedID,
-                 Lineman: document.getElementById('moveline').value, 
+                 Lineman: document.getElementById('moveline').value,
                  process: 0
              });
 
@@ -711,7 +733,7 @@
                     <button class="selectmove">
                         <iconify-icon icon="lets-icons:move-light" width="20"></iconify-icon>
                     </button>
-                     <button class="changeCell">                  
+                     <button class="changeCell">
                           <iconify-icon icon="fluent-emoji-high-contrast:cl-button" width="20"></iconify-icon>
                           ${isOperational}
                     </button>

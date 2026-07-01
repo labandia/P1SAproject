@@ -192,6 +192,15 @@
             const orderStatus = parseInt(row.dataset.orderStatus); // OrderStatus
             const lineman = row.dataset.orderLine; // Line
             const operation = row.dataset.operational;
+            const isComplete = row.dataset.checkstats;
+            console.log(isComplete);
+
+            // ORDERSTATUS = 4 (TEMPORARY)
+            if (orderStatus === 4) {
+                alert("Doestn Complete");
+                return;
+            }
+
 
 
             if (operation > 1) {
@@ -219,6 +228,8 @@
                 alert("Already selected the next process");
                 return;
             }
+
+           
 
             const success = await this.updateOrderStatus(id, 1, lineman);
             if (!success) return;
@@ -673,6 +684,10 @@
                           selecthighlight = 'selectAvailable';
                           break;
                   }
+              } else {
+                  if (orderStatus === 2 || orderStatus == 4) {
+                      selecthighlight = 'selectedProcess';
+                  }
               }
 
               isOperational = row.Operational === 2 || row.Operational === 3 ? `<span> ${row.Operational}</span>` : "";
@@ -683,13 +698,14 @@
             data-order-line="${row.Line}"
             data-order-status="${orderStatus}"
             data-operational="${row.Operational}"
+            data-checkstats ="${allComplete}"
             data-id="${row.RecordID}">
 
             <td class="fixedrow">
                 <div style="display:flex;align-items:center;gap:1.5em;">
                     <button
                         class="selectedbadge ${selecthighlight}"
-                        ${!allComplete || orderStatus === 2 || orderStatus === 3 ? 'disabled' : ''}>
+                        ${orderStatus === 2 || orderStatus === 3 ? 'disabled' : ''}>
                     </button>
 
                     <button class="selectmove">
@@ -719,7 +735,7 @@
             <td>${row.WC}</td>
             <td>${row.PlanQty}</td>
             <td>${this.formatDate(row.PlanStartDate)}</td>
-            <td>${this.formatDate(row.DispatchDate)}</td>
+            <td>${row.DispatchDate}</td>
             <td>${row.Note || ''}</td>
             <td>${this.formatDate(row.FinalFinishedDate)}</td>
             <td>${row.FAStatus || ''}</td>

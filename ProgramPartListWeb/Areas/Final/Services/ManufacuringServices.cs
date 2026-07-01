@@ -137,7 +137,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
         {
             try
             {
-                string query = $@"SELECT {SelectColumns} FROM FanTraceabilityManufacturingOrder s WHERE OrderStatus = 2 ";
+                string query = $@"SELECT {SelectColumns} FROM FanTraceabilityManufacturingOrder s WHERE OrderStatus = 2 OR OrderStatus = 4 ";
                 var getData = await SqlDataAcess_Test.GetDataAsync<FanTraceabilityManufacturingOrder>(query);
 
                 foreach (var order in getData)

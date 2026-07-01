@@ -171,6 +171,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
         }
 
+
         public async Task<bool> TransferDataUploadtoMain()
         {
             try
@@ -195,66 +196,42 @@ namespace ProgramPartListWeb.Areas.Final.Services
 	                        U.OrderRemarks,
 	                        U.OrderStatus,
                             U.PlanQty AS UploadPlanQty,
-                            O.PlanQty AS OrderPlanQty,
-
+                         
                             FORMAT(U.PlanStartDate, 'MM/dd/yyyy') AS UploadPlanStartDate,
-                            FORMAT(O.PlanStartDate, 'MM/dd/yyyy') AS OrderPlanStartDate,
-
-                            CASE
-                                WHEN O.FinalShopOrder IS NULL THEN 'NEW DATA'
-                                ELSE 'UPDATED'
-                            END AS StatusCheck,
+                       
 
                             U.IsApproved, 
 							U.Operational
-                        FROM FanTraceabilityManufacturingUploadData U
-                        LEFT JOIN FanTraceabilityManufacturingOrder O
-                            ON U.FinalShopOrder = O.FinalShopOrder
-                        WHERE
-                            O.FinalShopOrder IS NULL
-                            OR U.PlanQty <> O.PlanQty
-                            OR CAST(U.PlanStartDate AS DATE) <> CAST(O.PlanStartDate AS DATE); ");
+                        FROM FanTraceabilityManufacturingUploadData U ");
 
                 if (getApproveData == null || getApproveData.Count == 0) return false;
                 int count = 0;
 
                 foreach (var item in getApproveData)
                 {
-                    Debug.WriteLine("UPlOAD COUNT : " + count);
-                    //Debug.WriteLine($@"Line : {item.Line} - ShopOrder : {item.FinalShopOrder}");
-                    if (item.StatusCheck == "UPDATED")
-                    {
-                        if (item.IsApproved)
-                        {
-                            Debug.WriteLine($@"UPDATE HERE : ");
-
-                            // Updates the main table if the Approval is checked
-                            await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingOrder SET 
-                                PlanQty =@PlanQty, PlanStartDate =@PlanStartDate WHERE 
-                                FinalShopOrder =@FinalShopOrder", item);
-                        }
-                    }
-                    else
-                    {
-                        if (item.IsApproved)
-                        {
-                            int isCount = await SqlDataAcess_Test.ExecuteScalarAsync<int>(
-                                @"SELECT COUNT(1) FROM FanTraceabilityManufacturingOrder 
+                    int isCount = await SqlDataAcess_Test.ExecuteScalarAsync<int>(
+                              @"SELECT COUNT(1) FROM FanTraceabilityManufacturingOrder 
                             WHERE FinalShopOrder = @FinalShopOrder", new { item.FinalShopOrder });
 
-                            if (isCount == 0)
-                            {
-                                Debug.WriteLine($@"INSERT HERE : ");
-                                await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO FanTraceabilityManufacturingOrder (Line, FinalShopOrder, ItemNo, Model, WC, PlanQty, PlanStartDate, DispatchDate, Note, FinalFinishedDate,
+                    if (isCount == 0)
+                    {
+                        Debug.WriteLine($@"INSERT HERE : ");
+                        await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO FanTraceabilityManufacturingOrder (Line, FinalShopOrder, ItemNo, Model, WC, PlanQty, PlanStartDate, DispatchDate, Note, FinalFinishedDate,
                                     FAStatus, ShipmentDate, ShipmentMode, WithSR, OrderRemarks, OrderStatus, Operational)
                                     VALUES
                                     (@Line, @FinalShopOrder, @ItemNo, @Model, @WC, @PlanQty, @PlanStartDate, @DispatchDate,
                                      @Note, @FinalFinishedDate, @FAStatus, @ShipmentDate, @ShipmentMode, @WithSR,
                                      @OrderRemarks, @OrderStatus, @Operational)", item);
-                            }
-                        }
-
-                        
+                    }
+                    else
+                    {
+                        Debug.WriteLine($@"UPDATE HERE : ");
+                        await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingOrder SET Line =@Line, WC =@WC, 
+                                    DispatchDate =@DispatchDate, Note =@Note, FinalFinishedDate =@FinalFinishedDate, 
+                                    FAStatus =@FAStatus, 
+                                    WithSR =@WithSR,
+                                    PlanQty =@PlanQty, PlanStartDate =@PlanStartDate 
+                                    WHERE  FinalShopOrder =@FinalShopOrder", item);
                     }
 
                     count++;
@@ -272,9 +249,112 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 Debug.WriteLine(ex.ToString());
                 throw;
             }
-
-
         }
+
+
+
+        // public async Task<bool> TransferDataUploadtoMain()
+        // {
+        //     try
+        //     {
+        //         var getApproveData = await SqlDataAcess_Test.GetDataAsync<UploadDataModel>(@"SELECT 
+        //                     U.RecordID,
+        //                  U.Line,
+        //                     U.FinalShopOrder,
+        //                     U.ItemNo,
+        //                     U.Model,
+        //                     U.WC,
+        //                     U.PlanQty,
+        //                  U.PlanStartDate,
+        //                  U.DispatchDate,
+        //                  U.Note,
+        //                  U.FinalFinishedDate,
+        //                  U.FAStatus,
+        //                  U.ShipmentDate,
+        //                  U.ShipmentMode,
+        //                  U.WithSR,
+        //                  U.Remarks,
+        //                  U.OrderRemarks,
+        //                  U.OrderStatus,
+        //                     U.PlanQty AS UploadPlanQty,
+        //                     O.PlanQty AS OrderPlanQty,
+
+        //                     FORMAT(U.PlanStartDate, 'MM/dd/yyyy') AS UploadPlanStartDate,
+        //                     FORMAT(O.PlanStartDate, 'MM/dd/yyyy') AS OrderPlanStartDate,
+
+        //                     CASE
+        //                         WHEN O.FinalShopOrder IS NULL THEN 'NEW DATA'
+        //                         ELSE 'UPDATED'
+        //                     END AS StatusCheck,
+
+        //                     U.IsApproved, 
+        //U.Operational
+        //                 FROM FanTraceabilityManufacturingUploadData U
+        //                 LEFT JOIN FanTraceabilityManufacturingOrder O
+        //                     ON U.FinalShopOrder = O.FinalShopOrder
+        //                 WHERE
+        //                     O.FinalShopOrder IS NULL
+        //                     OR U.PlanQty <> O.PlanQty
+        //                     OR CAST(U.PlanStartDate AS DATE) <> CAST(O.PlanStartDate AS DATE); ");
+
+        //         if (getApproveData == null || getApproveData.Count == 0) return false;
+        //         int count = 0;
+
+        //         foreach (var item in getApproveData)
+        //         {
+        //             Debug.WriteLine("UPlOAD COUNT : " + count);
+        //             //Debug.WriteLine($@"Line : {item.Line} - ShopOrder : {item.FinalShopOrder}");
+        //             if (item.StatusCheck == "UPDATED")
+        //             {
+        //                 if (item.IsApproved)
+        //                 {
+        //                     Debug.WriteLine($@"UPDATE HERE : ");
+
+        //                     // Updates the main table if the Approval is checked
+        //                     await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingOrder SET 
+        //                         PlanQty =@PlanQty, PlanStartDate =@PlanStartDate WHERE 
+        //                         FinalShopOrder =@FinalShopOrder", item);
+        //                 }
+        //             }
+        //             else
+        //             {
+        //                 if (item.IsApproved)
+        //                 {
+        //                     int isCount = await SqlDataAcess_Test.ExecuteScalarAsync<int>(
+        //                         @"SELECT COUNT(1) FROM FanTraceabilityManufacturingOrder 
+        //                     WHERE FinalShopOrder = @FinalShopOrder", new { item.FinalShopOrder });
+
+        //                     if (isCount == 0)
+        //                     {
+        //                         Debug.WriteLine($@"INSERT HERE : ");
+        //                         await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO FanTraceabilityManufacturingOrder (Line, FinalShopOrder, ItemNo, Model, WC, PlanQty, PlanStartDate, DispatchDate, Note, FinalFinishedDate,
+        //                             FAStatus, ShipmentDate, ShipmentMode, WithSR, OrderRemarks, OrderStatus, Operational)
+        //                             VALUES
+        //                             (@Line, @FinalShopOrder, @ItemNo, @Model, @WC, @PlanQty, @PlanStartDate, @DispatchDate,
+        //                              @Note, @FinalFinishedDate, @FAStatus, @ShipmentDate, @ShipmentMode, @WithSR,
+        //                              @OrderRemarks, @OrderStatus, @Operational)", item);
+        //                     }
+        //                 }
+
+
+        //             }
+
+        //             count++;
+        //         }
+
+
+        //         // After transfer, you might want to clear the upload table or mark records as processed
+        //         await SqlDataAcess_Test.ExecuteAsync(@"DELETE FROM FanTraceabilityManufacturingUploadData", new { });
+        //         await SqlDataAcess_Test.ExecuteAsync(@"DELETE FROM FanTraceabilityManufacturingUploadFailed", new { });
+
+        //         return true;
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         Debug.WriteLine(ex.ToString());
+        //         throw;
+        //     }
+        // }
 
         public async Task<List<UploadDataModel>> GetListofFailedData()
         {

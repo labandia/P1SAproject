@@ -34,7 +34,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         }
 
         //======================================================
-        //============== DASHBIARD & SHOP ORDER LINE ===========
+        //============== DASHBOARD & SHOP ORDER LINE ===========
         //=====================================================
         [HttpGet]
         public async Task<ActionResult> GetListActiveShopOrders()
@@ -151,6 +151,25 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                 throw;
             }
         }
+
+        [HttpPost]
+        public async Task<ActionResult> ForCompleteUpdateStatusLine(int recordID, int orderstats, string line)
+        {
+            try
+            {
+                var res = await _manu.UpdateCompleteShopOrder(recordID, orderstats, line);
+                if (!res) return JsonError("Error Updated");
+                return JsonSuccess(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
+
+
+
         [HttpPost]
         public async Task<ActionResult> CompleteStatusLine(int recordID, string line)
         {
@@ -791,12 +810,27 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             return JsonSuccess(finaldata, "Retrieved data successfully");
         }
         //=====================================================
-        //============== PARTLY SHORT SUMMARY DATA  =================
+        //============== PARTLY SHORT SUMMARY DATA  ===========
         //=====================================================
         [HttpGet]
-        public async Task<ActionResult> GetPartlistReportData()
+        public async Task<ActionResult> GetLastUpdateAndTotalPartlyShort()
         {
-            var res = await _manu.GetPartlyShortSummary();
+            var res = await _manu.GetLastUpdateAndTotal();
+
+            var obj = new
+            {
+                res.PlanQty,
+                res.LastDate,
+                res.totalpercent
+            };
+
+            return JsonSuccess(obj, "Retrieved data successfully");
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetPartlistReportData(int dispatch)
+        {
+            var res = await _manu.GetPartlyShortSummary(dispatch);
 
 
             if (res == null || !res.Any())
@@ -824,7 +858,8 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
 
         // GET: Final/Assembly
         public ActionResult Dashboard() => View();
-        public ActionResult DelaySummary() => View();   
+        public ActionResult DelaySummary() => View();
+        public ActionResult DispatchSummary() => View();
         // GET: Final/LineData
         public ActionResult LineData() => View();
         // GET: Final/UploaData

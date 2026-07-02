@@ -36,6 +36,16 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                  ,s.OrderStatus
                                  ,(SELECT m.Model FROM FanTraceabilityManufacturingOrder m WHERE m.Line = s.Line AND m.OrderStatus = 1)  as NextItem
                                  ,(SELECT m.FinalShopOrder FROM FanTraceabilityManufacturingOrder m WHERE m.Line = s.Line AND m.OrderStatus = 1)  as NextShop";
+        public enum OrderStatus
+        {
+            Blank = 0,
+            NextProcess = 1,
+            InProcess = 2,
+            Completed = 3,
+            Temporary = 4
+        }
+
+
 
         public async Task AutoUpdateShopOrderLine()
         {
@@ -370,33 +380,63 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
         public async Task<bool> UpdateStatusShopOrder(int id, int status, string line)
         {
-            int hasOrderStats = await SqlDataAcess_Test.ExecuteScalarAsync<int>($@"
-              SELECT COUNT(*) 
-              FROM FanTraceabilityManufacturingOrder
-              WHERE line = @line AND OrderStatus = 2", new { line });
-            if (hasOrderStats == 0)
+            if (status == (int)OrderStatus.InProcess || status == (int)OrderStatus.Temporary) // 2 or 4
             {
-                return await SqlDataAcess_Test.ExecuteAsync($@"
-                UPDATE FanTraceabilityManufacturingOrder SET OrderStatus = 2
-                WHERE RecordID =@RecordID", new
-                {
-                    RecordID = id
-                });
+                int hasOrderStats = await SqlDataAcess_Test.ExecuteScalarAsync<int>(@"
+                    SELECT COUNT(*) 
+                    FROM FanTraceabilityManufacturingOrder
+                    WHERE line = @line 
+                      AND OrderStatus IN (@inProcess, @temporary)
+                      AND RecordID != @id",
+                    new
+                    {
+                        line,
+                        inProcess = (int)OrderStatus.InProcess,
+                        temporary = (int)OrderStatus.Temporary,
+                        id
+                    });
 
+                if (hasOrderStats > 0)
+                    return false;
+            }
+
+            return await SqlDataAcess_Test.ExecuteAsync(@"
+                    UPDATE FanTraceabilityManufacturingOrder 
+                    SET OrderStatus = @status
+                    WHERE RecordID = @id AND line = @line", 
+                 new { id, status, line });
+        }
+
+        public async Task<bool> UpdateCompleteShopOrder(int id, int status, string line)
+        {
+            int hasOrderStats = await SqlDataAcess_Test.ExecuteScalarAsync<int>(@"
+                    SELECT COUNT(*) 
+                    FROM FanTraceabilityManufacturingOrder
+                    WHERE line = @line 
+                      AND OrderStatus IN (2)
+                      AND RecordID != @id",
+                    new
+                    {
+                        line,
+                        id
+                    });
+
+            if (hasOrderStats > 0) {
+                return await SqlDataAcess_Test.ExecuteAsync(@"
+                    UPDATE FanTraceabilityManufacturingOrder 
+                    SET OrderStatus = 1
+                    WHERE RecordID = @id AND line = @line",
+                new { id, status, line });
             }
             else
             {
-
-                return await SqlDataAcess_Test.ExecuteAsync($@"
-                UPDATE FanTraceabilityManufacturingOrder SET OrderStatus =@OrderStatus 
-                WHERE RecordID =@RecordID", new
-                {
-                    RecordID = id,
-                    OrderStatus = status
-                });
+                return await SqlDataAcess_Test.ExecuteAsync(@"
+                    UPDATE FanTraceabilityManufacturingOrder 
+                    SET OrderStatus = 2
+                    WHERE RecordID = @id AND line = @line",
+                    new { id, status, line });
             }
-
-     
+            
         }
 
         public async Task UploadDataToDatabase(ProductionRecord model)
@@ -672,8 +712,10 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
         // ====== PARTLY SHORT DATA SUMMARY REPORT =================
 
-        public Task<List<AssemblyPartlistRecord>> GetPartlyShortSummary()
+        public Task<List<AssemblyPartlistRecord>> GetPartlyShortSummary(int isdispatch)
         {
+            string filtercondition = isdispatch == 0 ? " " : " AND mo.DispatchDate = '' ";
+
             string strsql = $@";WITH DeptStatus AS
                 (
                 SELECT
@@ -766,8 +808,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 ON ds.FinalShopOrder = mo.FinalShopOrder
 
             WHERE
-                CAST(mo.PlanStartDate AS DATE) <= CAST(GETDATE() AS DATE)
-
+                CAST(mo.PlanStartDate AS DATE) <= CAST(GETDATE() AS DATE) {filtercondition}
+                AND mo.OrderStatus <> 3
             GROUP BY
                 CAST(mo.PlanStartDate AS DATE)
 
@@ -776,6 +818,29 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
             return SqlDataAcess_Test.GetDataAsync<AssemblyPartlistRecord>(strsql);
         }
+
+        public async Task<(int PlanQty, string LastDate, decimal totalpercent)> GetLastUpdateAndTotal()
+        {
+            var getdata = await SqlDataAcess_Test.GetSingleAsync<PartlistTotal>($@"SELECT
+                            SUM(PlanQty) AS TotalPlanQty,
+                            MAX(LastUpdated) AS LastUpdated,
+                            CAST(
+                                (SUM(PlanQty) * 100.0) /
+                                (SELECT SUM(PlanQty)
+                                 FROM [PMACS_TEST].[dbo].[FanTraceabilityManufacturingOrder])
+                                AS DECIMAL(5,2)
+                            ) AS AsPercentage
+                        FROM [PMACS_TEST].[dbo].[FanTraceabilityManufacturingOrder]
+                        WHERE DispatchDate = ''");
+            if (getdata == null)
+                return (0, "", 0);
+
+
+
+            return (getdata.TotalPlanQty, getdata.LastUpdated, getdata.AsPercentage);
+        }
+
+
 
         // ============================================================
     }

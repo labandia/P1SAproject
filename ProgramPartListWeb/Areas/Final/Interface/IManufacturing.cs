@@ -28,6 +28,7 @@ namespace ProgramPartListWeb.Areas.Final
 
         // ======  UPDATING STATUS OF SHOP ORDER DATA =================
         Task<bool> UpdateStatusShopOrder(int id, int status, string line);
+        Task<bool> UpdateCompleteShopOrder(int id, int status, string line);
         Task<bool> CompletionStatusShopOrder(int id, int status, string line);
         Task<bool> NextModelProcess(string newLine);
         // ============================================================
@@ -46,8 +47,8 @@ namespace ProgramPartListWeb.Areas.Final
         Task<List<P1TraceablityModel>> TraceableShopOrderSummary(string shopOrder);
 
         // ====== PARTLY SHORT DATA SUMMARY REPORT =================
-        Task<List<AssemblyPartlistRecord>> GetPartlyShortSummary();
-
+        Task<List<AssemblyPartlistRecord>> GetPartlyShortSummary(int isdispatch);
+        Task<(int PlanQty, string LastDate, decimal totalpercent)> GetLastUpdateAndTotal();
 
 
         // ============================================================

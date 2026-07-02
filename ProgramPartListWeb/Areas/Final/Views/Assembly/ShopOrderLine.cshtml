@@ -214,10 +214,10 @@
                     alert("Already in process.");
                 } else {
                     // if not updates the OrderStatus to 4 (In Process) and updates the row
-                    const success = await this.updateOrderStatus(id, 4, line);
+                    const success = await this.updateOrderStatus(id, isStatus.Temporary, lineman);
                     if (!success) return;
 
-                    row.dataset.orderStatus = '4';
+                    row.dataset.orderStatus = String(isStatus.Temporary);
                     badge.className = 'selectedbadge selectedProcessInProgress'; // or whatever your "in process" class is
                     row.classList.add('bg-row-highlight');
 
@@ -243,16 +243,16 @@
             if (orderStatus === isStatus.InProcess || orderStatus === isStatus.Completed) return;
 
             try {
-                const res = await getMethod('@Url.Action("CheckIfAreadyCheckNext", "Assembly")', { line });
+                const res = await getMethod('@Url.Action("CheckIfAreadyCheckNext", "Assembly")', { lineman });
                 if (res.data > 0) {
                     alert("Already selected the next process.");
                     return;
                 }
 
-                const success = await this.updateOrderStatus(id, OrderStatus.NextProcess, line);
+                const success = await this.ForCompleteupdateOrderStatus(id, isStatus.NextProcess, lineman);
                 if (!success) return;
 
-                row.dataset.orderStatus = String(OrderStatus.NextProcess);
+                row.dataset.orderStatus = String(isStatus.NextProcess);
                 badge.className = 'selectedbadge selectedProcess';
                 row.classList.add('bg-row-highlight');
 
@@ -814,9 +814,24 @@
                  console.error(err);
                  return false;
              }
+     }
+
+     async ForCompleteupdateOrderStatus(id, orderstatus, lineman) {
+        try {
+
+            const res = await postMethod('@Url.Action("ForCompleteUpdateStatusLine", "Assembly")', {
+                recordID : id,
+                orderstats: orderstatus,
+                line: lineman
+            });
+
+            return res;
+
+        } catch (err) {
+            console.error(err);
+            return false;
         }
-
-
+}
 }
 
 document.addEventListener('DOMContentLoaded', function () {

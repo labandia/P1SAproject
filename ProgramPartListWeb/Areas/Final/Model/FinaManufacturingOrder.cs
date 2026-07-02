@@ -220,4 +220,13 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public bool IsSuccess { get; set; }
         public string Message { get; set; }
     }
+
+    public class PartlistTotal
+    {
+        public int TotalPlanQty { get; set; }
+        public string LastUpdated { get; set; }
+        public decimal AsPercentage { get; set; }
+    }
+
+
 }

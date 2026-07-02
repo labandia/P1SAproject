@@ -5,13 +5,32 @@
 }
 
 <div style="padding: 30px 20px;">
+    <!-- SUBHEADER -->
+    <div class="subheader">
+        <div class="subheader-item">
+            <iconify-icon icon="lucide:clock" style="font-size: 14px; color: #6c47ff"></iconify-icon>
+            <span>Last Upload Date: <strong id="lastUpdateText">-- : -- : -- </strong></span>
+        </div>
+        <div class="subheader-divider"></div>
+        <div class="subheader-item">
+            <iconify-icon icon="lucide:package" style="font-size: 14px; color: #6c47ff"></iconify-icon>
+            <span>Total Plan Qty: <strong id="totalPlanText">0</strong></span>
+        </div>
+        <div class="subheader-divider"></div>
+        <div class="subheader-item">
+            <iconify-icon icon="lucide:trending-up" style="font-size: 14px; color: #22c55e"></iconify-icon>
+            <span>Completion Rate: <strong id="percentText" style="color: #22c55e">0%</strong></span>
+        </div>
+      
+    </div>
+
     <!-- CHARTS ROW -->
     <div class="charts-row">
 
         <!-- Chart 1: Total Lacking Parts -->
         <div class="chart-card">
             <div>
-                <div class="chart-title">Total Lacking Parts</div>
+                <div class="chart-title">Total Lacking Parts (Dispatch) </div>
                 <div class="chart-subtitle">Plan Start vs Completion · Daily trend</div>
             </div>
             <div style="position:relative;">
@@ -32,7 +51,7 @@
         <!-- Chart 2: Sub-Assy Partly Short -->
         <div class="chart-card">
             <div>
-                <div class="chart-title">Sub-Assy Partly Short</div>
+                <div class="chart-title">Sub-Assy Partly Short (Dispatch) </div>
                 <div class="chart-subtitle">Delay Section by warehouse code</div>
             </div>
             <div style="position:relative;">
@@ -56,14 +75,14 @@
     <div class="section-card">
         <div class="section-card-header">
             <div>
-                <div class="section-card-title">Summary Report — Daily Breakdown</div>
+                <div class="section-card-title">Summary Report (Dispatch) — Daily Breakdown</div>
                 <div class="section-card-subtitle">Production Warehouse Code Distribution · P1SA &amp; P1FA</div>
             </div>
             <div class="section-card-actions">
                 @*<div class="topbar-badge">
-                    <iconify-icon icon="lucide:filter" style="font-size:12px;color:var(--muted-foreground);"></iconify-icon>
-                    Filter
-                </div>*@
+                        <iconify-icon icon="lucide:filter" style="font-size:12px;color:var(--muted-foreground);"></iconify-icon>
+                        Filter
+                    </div>*@
             </div>
         </div>
 
@@ -137,19 +156,37 @@
     async init() {
         this.bindEvents();
         await this.LoadLineShopOrderList();
+        await this.LoadTotalPartsSummary();
 
         this.refreshInterval = setInterval(
             () => this.LoadLineShopOrderList(),
             30000
         );
-       
+
     }
 
-      bindEvents() { 
+      bindEvents() {
       }
 
+      async LoadTotalPartsSummary() {
 
+        try {
   
+            const res = await getMethod('@Url.Action("GetLastUpdateAndTotalPartlyShort", "Assembly")', {});
+
+            if (res?.Success) {
+                document.getElementById("lastUpdateText").textContent = res.data.LastDate;
+                document.getElementById("totalPlanText").textContent = res.data.PlanQty;
+                document.getElementById("percentText").textContent = res.data.totalpercent + '%';
+            }
+            
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+
+        }
+      }
+
 
       async LoadLineShopOrderList() {
 
@@ -161,9 +198,8 @@
                 }
 
                 const res = await getMethod('@Url.Action("GetPartlistReportData", "Assembly")', {
-                    dispatch : 0
+                    dispatch : 1
                 });
-                console.log(res);
                 if (!res?.Success) {
                     this.tbody.innerHTML = `
                      <tr>
@@ -511,7 +547,7 @@
             return date.toLocaleDateString('en-US');
         }
 
-      
+
 }
 
 document.addEventListener('DOMContentLoaded', function () {

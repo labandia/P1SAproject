@@ -3795,3 +3795,46 @@ td.status-column {
         transform: rotate(360deg);
     }
 }
+
+
+
+
+
+
+
+/* ---------- SUBHEADER ---------- */
+.subheader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #7a7f8c;
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 10px 16px;
+    border: 1px solid #e2e4e9;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+    margin-bottom: 1em;
+}
+
+.subheader-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #7a7f8c;
+}
+
+    .subheader-item strong {
+        color: #1a1d23;
+        font-weight: 600;
+    }
+
+.subheader-divider {
+    width: 1px;
+    height: 16px;
+    background: #e2e4e9;
+    margin: 0 8px;
+    flex-shrink: 0;
+}

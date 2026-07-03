@@ -243,6 +243,7 @@
             if (orderStatus === isStatus.InProcess || orderStatus === isStatus.Completed) return;
 
             try {
+                // Check if the next process(1) has already been selected for this line    
                 const res = await getMethod('@Url.Action("CheckIfAreadyCheckNext", "Assembly")', { lineman });
                 if (res.data > 0) {
                     alert("Already selected the next process.");

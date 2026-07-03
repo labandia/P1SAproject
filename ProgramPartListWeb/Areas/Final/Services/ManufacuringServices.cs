@@ -409,11 +409,14 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
         public async Task<bool> UpdateCompleteShopOrder(int id, int status, string line)
         {
+            // CHecks if the orderStatus is 2 or 4 (InProcess or Temporary) and
+            // if there are other orders with the same line and status, it will update
+            // the current order to 1 (NextProcess) instead of 2 (InProcess)
             int hasOrderStats = await SqlDataAcess_Test.ExecuteScalarAsync<int>(@"
                     SELECT COUNT(*) 
                     FROM FanTraceabilityManufacturingOrder
                     WHERE line = @line 
-                      AND OrderStatus IN (2)
+                      AND OrderStatus IN (2, 4)
                       AND RecordID != @id",
                     new
                     {

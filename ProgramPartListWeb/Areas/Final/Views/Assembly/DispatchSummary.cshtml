@@ -172,12 +172,13 @@
 
         try {
   
-            const res = await getMethod('@Url.Action("GetLastUpdateAndTotalPartlyShort", "Assembly")', {});
+            const res = await getMethod('@Url.Action("GetLastUpdateAndTotalPartlyShort", "Assembly")', {
+                dispatch: 1
+            });
 
             if (res?.Success) {
                 document.getElementById("lastUpdateText").textContent = res.data.LastDate;
                 document.getElementById("totalPlanText").textContent = res.data.PlanQty;
-                document.getElementById("percentText").textContent = res.data.totalpercent + '%';
             }
             
 

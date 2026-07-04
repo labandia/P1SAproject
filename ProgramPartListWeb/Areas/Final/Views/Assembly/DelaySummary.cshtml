@@ -5,6 +5,20 @@
 }
 
 <div style="padding: 30px 20px;">
+    <!-- SUBHEADER -->
+    <div class="subheader">
+        <div class="subheader-item">
+            <iconify-icon icon="lucide:clock" style="font-size: 14px; color: #6c47ff"></iconify-icon>
+            <span>Last Upload Date: <strong id="lastUpdateText">-- : -- : -- </strong></span>
+        </div>
+        <div class="subheader-divider"></div>
+        <div class="subheader-item">
+            <iconify-icon icon="lucide:package" style="font-size: 14px; color: #6c47ff"></iconify-icon>
+            <span>Total Plan Qty: <strong id="totalPlanText">0</strong></span>
+        </div>
+     
+    </div>
+
     <!-- CHARTS ROW -->
     <div class="charts-row">
 
@@ -61,9 +75,9 @@
             </div>
             <div class="section-card-actions">
                 @*<div class="topbar-badge">
-                    <iconify-icon icon="lucide:filter" style="font-size:12px;color:var(--muted-foreground);"></iconify-icon>
-                    Filter
-                </div>*@
+                        <iconify-icon icon="lucide:filter" style="font-size:12px;color:var(--muted-foreground);"></iconify-icon>
+                        Filter
+                    </div>*@
             </div>
         </div>
 
@@ -137,19 +151,39 @@
     async init() {
         this.bindEvents();
         await this.LoadLineShopOrderList();
+        await this.LoadTotalPartsSummary();
 
         this.refreshInterval = setInterval(
             () => this.LoadLineShopOrderList(),
             30000
         );
-       
+
     }
 
-      bindEvents() { 
+      bindEvents() {
       }
 
 
-  
+      async LoadTotalPartsSummary() {
+        try {
+
+            const res = await getMethod('@Url.Action("GetLastUpdateAndTotalPartlyShort", "Assembly")', {
+                dispatch: 0
+            });
+
+            if (res?.Success) {
+                document.getElementById("lastUpdateText").textContent = res.data.LastDate;
+                document.getElementById("totalPlanText").textContent = res.data.PlanQty;
+                document.getElementById("percentText").textContent = res.data.totalpercent + '%';
+            }
+
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+
+        }
+      }
+
 
       async LoadLineShopOrderList() {
 
@@ -511,7 +545,7 @@
             return date.toLocaleDateString('en-US');
         }
 
-      
+
 }
 
 document.addEventListener('DOMContentLoaded', function () {

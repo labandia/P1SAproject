@@ -813,9 +813,9 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         //============== PARTLY SHORT SUMMARY DATA  ===========
         //=====================================================
         [HttpGet]
-        public async Task<ActionResult> GetLastUpdateAndTotalPartlyShort()
+        public async Task<ActionResult> GetLastUpdateAndTotalPartlyShort(int dispatch)
         {
-            var res = await _manu.GetLastUpdateAndTotal();
+            var res = await _manu.GetLastUpdateAndTotal(dispatch);
 
             var obj = new
             {

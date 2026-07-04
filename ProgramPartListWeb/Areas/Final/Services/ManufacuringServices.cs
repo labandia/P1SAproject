@@ -843,6 +843,29 @@ namespace ProgramPartListWeb.Areas.Final.Services
             return (getdata.TotalPlanQty, getdata.LastUpdated, getdata.AsPercentage);
         }
 
+        public async Task<(int PlanQty, string LastDate, decimal totalpercent)> GetLastUpdateAndTotal(int isdispatch)
+        {
+            string filtercondition = isdispatch == 0 ? " " : " WHERE DispatchDate = ''";
+
+            var getdata = await SqlDataAcess_Test.GetSingleAsync<PartlistTotal>($@"SELECT
+                            SUM(PlanQty) AS TotalPlanQty,
+                            MAX(LastUpdated) AS LastUpdated,
+                            CAST(
+                                (SUM(PlanQty) * 100.0) /
+                                (SELECT SUM(PlanQty)
+                                 FROM FanTraceabilityManufacturingOrder)
+                                AS DECIMAL(5,2)
+                            ) AS AsPercentage
+                        FROM FanTraceabilityManufacturingOrder
+                        {filtercondition} ");
+            if (getdata == null)
+                return (0, "", 0);
+
+
+
+            return (getdata.TotalPlanQty, getdata.LastUpdated, getdata.AsPercentage);
+        }
+
 
 
         // ============================================================

@@ -27,7 +27,6 @@ namespace ProgramPartListWeb
                  "~/Scripts/Shared/Utilities.js",
                  "~/Scripts/Shared/jquery-3.7.1.js",
                  "~/Scripts/jquery.validate.js",
-                 "~/Scripts/all.min.js",
                  "~/Scripts/sweetalert2.min.js",
                  "~/Scripts/Cryptojs.min.js"
             ));

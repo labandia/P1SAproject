@@ -9,7 +9,11 @@
 <!-- TAB BAR -->
 <div class="tab-bar" id="tabBar">
     <div class="tab active" id="tab-manage" data-tab="manage">
-        <iconify-icon icon="lucide:database" width="15"></iconify-icon>
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path fill="currentColor" d="M12 21q-3.775 0-6.387-1.162T3 17V7q0-1.65 2.638-2.825T12 3t6.363 1.175T21 7v10q0 1.675-2.613 2.838T12 21m0-11.975q2.225 0 4.475-.638T19 7.025q-.275-.725-2.512-1.375T12 5q-2.275 0-4.462.638T5 7.025q.35.75 2.538 1.375T12 9.025M12 14q1.05 0 2.025-.1t1.863-.288t1.675-.462T19 12.525v-3q-.65.35-1.437.625t-1.675.463t-1.863.287T12 11t-2.05-.1t-1.888-.288T6.4 10.15T5 9.525v3q.625.35 1.4.625t1.663.463t1.887.287T12 14m0 5q1.15 0 2.338-.175t2.187-.462t1.675-.65t.8-.738v-2.45q-.65.35-1.437.625t-1.675.463t-1.863.287T12 16t-2.05-.1t-1.888-.288T6.4 15.15T5 14.525V17q.125.375.788.725t1.662.638t2.2.462T12 19" />
+        </svg>
+
         <span class="tab-label" id="Linename">@strLine Data</span>
     </div>
 </div>
@@ -22,7 +26,13 @@
 
         <div class="breadcrumb-card" style="display:none">
             <a href="#" id="navdata" class="breadcrumb-link">
-                <iconify-icon icon="lucide:house" width="16"></iconify-icon>
+                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+                        <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    </g>
+                </svg>
                 Manage Data
             </a>
         </div>
@@ -118,9 +128,21 @@
 <div class=" flex justify-between items-center p-3 border-t" style="width: 100%; position: fixed; z-index: 999; bottom: 0; left: 0; border-top: 1px solid #e5e5e5; background: white;">
     <div id="resultsText" class="text-sm" style="color:#86868b;">Showing <span id="newrecords"></span> of <span id="currentrecords">1,248</span> Records</div>
     <div class="flex gap-1">
-        <span style="color: #8a8f9e; font-size: .9rem;"><iconify-icon icon="lets-icons:move-light" width="20"></iconify-icon> Change line </span>
+        <span class="flex gap-1" style="color: #8a8f9e; font-size: .9rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path fill="none" stroke="currentColor" d="m17 15l-5 5l-5-5m10-6l-5-5l-5 5" />
+            </svg>
+            Change line 
+        </span>
 
-        <span style="color: #8a8f9e; font-size: .9rem;"><iconify-icon icon="material-symbols-light:ads-click-rounded" style="font-size: 18px;"></iconify-icon> Double Click on the rows to see the Details..</span>
+        <span class="flex gap-1"  style="color: #8a8f9e; font-size: .9rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path fill="currentColor" d="M12 8q-1.65 0-2.825 1.175T8 12q0 1.26.716 2.277q.717 1.017 1.89 1.465q.188.085.284.28q.094.195.016.384q-.079.177-.247.275t-.344.019q-1.498-.538-2.406-1.821T7 12q0-2.077 1.462-3.538T12 7q1.583 0 2.878.909q1.295.908 1.828 2.399q.073.177-.032.354t-.282.25q-.207.078-.396-.02q-.188-.098-.273-.305q-.448-1.173-1.465-1.88T12 8m0-4Q8.65 4 6.325 6.325T4 12q0 3.342 2.248 5.63q2.248 2.29 5.546 2.359q.214.011.363.163t.143.365t-.149.364t-.357.144q-1.873-.029-3.474-.783q-1.6-.754-2.786-1.991t-1.86-2.856T3 12q0-1.864.71-3.506q.711-1.642 1.927-2.857Q6.852 4.42 8.494 3.71T12 3q3.56 0 6.251 2.512t2.774 6.263q.012.208-.132.36q-.143.154-.356.16t-.378-.15t-.176-.37q-.087-3.154-2.42-5.465Q15.229 4 12 4m7.242 16.27l-4.28-4.295l-.52 1.583q-.105.292-.398.29q-.292-.004-.378-.296l-1.449-4.825q-.061-.236.106-.404q.168-.167.404-.106l4.825 1.449q.292.086.295.378t-.29.398l-1.582.52l4.3 4.28q.214.214.214.514t-.214.513t-.516.214t-.517-.214" />
+            </svg>
+           Double Click on the rows to see the Details..
+        </span>
     </div>
 </div>
 
@@ -286,7 +308,6 @@
             const row = movebtn.closest('tr');
             const id = parseInt(row.dataset.id);
             const operation = row.dataset.operational;
-            console.log("Operation : " + operation);
 
             this.selectedID = id;
             this.Operational = operation;
@@ -477,10 +498,17 @@
         tab.id = `tab-row-${id}`;
         tab.dataset.tab = `row-${id}`;
         tab.innerHTML = `
-            <iconify-icon icon="lucide:file-text" width="14"></iconify-icon>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+	            <path d="M0 0h24v24H0z" fill="none" />
+	            <path fill="currentColor" d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 2h7v5h5v11H6zm2 8v2h8v-2zm0 4v2h5v-2z" />
+            </svg>
+
             <span class="tab-label" title="${label}">${label}</span>
             <button class="tab-close" title="Close" aria-label="Close tab">
-                <iconify-icon icon="lucide:x" width="13"></iconify-icon>
+               <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <path fill="currentColor" d="M6.4 19L5 17.6l5.6-5.6L5 6.4L6.4 5l5.6 5.6L17.6 5L19 6.4L13.4 12l5.6 5.6l-1.4 1.4l-5.6-5.6z" />
+                </svg>
             </button>`;
 
         tab.querySelector('.tab-close').addEventListener('click', (e) => {
@@ -550,7 +578,6 @@
               this.currentRecord = this.isFilter ? this.currentRecord : res.data.Total;
 
               if (this.currentRecord != 0) {
-                  console.log(res.data.payload);
                    document.getElementById("currentrecords").textContent = this.currentRecord;
                   this.renderTable(res.data.payload ?? []);
                     //this.renderPagination(total ?? res.data.payload.length);
@@ -731,10 +758,19 @@
                     </button>
 
                     <button class="selectmove">
-                        <iconify-icon icon="lets-icons:move-light" width="20"></iconify-icon>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+	                        <path d="M0 0h24v24H0z" fill="none" />
+	                        <path fill="none" stroke="currentColor" d="m17 15l-5 5l-5-5m10-6l-5-5l-5 5" />
+                        </svg>
+
                     </button>
                      <button class="changeCell">
-                          <iconify-icon icon="fluent-emoji-high-contrast:cl-button" width="20"></iconify-icon>
+                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32">
+                          <path d="M0 0h32v32H0z" fill="none" />
+                          <g fill="currentColor">
+                            <path d="M6.063 14.627a5.268 5.268 0 0 1 9.766-2.74l.033.054a1.375 1.375 0 1 1-2.349 1.43l-.033-.053a2.517 2.517 0 0 0-4.667 1.309v2.76a2.536 2.536 0 0 0 4.686 1.342l.022-.035a1.375 1.375 0 1 1 2.333 1.456l-.022.035a5.286 5.286 0 0 1-9.77-2.799zM19.375 9.36c.76 0 1.375.615 1.375 1.374v8.907c0 .138.112.25.25.25h3.656a1.375 1.375 0 1 1 0 2.75h-5.281c-.76 0-1.375-.616-1.375-1.375V10.734c0-.759.616-1.375 1.375-1.375" />
+                            <path d="M6 1a5 5 0 0 0-5 5v20a5 5 0 0 0 5 5h20a5 5 0 0 0 5-5V6a5 5 0 0 0-5-5zM3 6a3 3 0 0 1 3-3h20a3 3 0 0 1 3 3v20a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3z" />
+                          </g>
                           ${isOperational}
                     </button>
                 </div>

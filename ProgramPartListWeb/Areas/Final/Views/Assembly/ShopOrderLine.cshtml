@@ -229,6 +229,10 @@
                 console.error('Row missing required data attributes', row.dataset);
                 return;
             }
+            if (operation > 1) {
+                alert("Model needs to complete other processes before proceeding to next process.");
+                return;
+            }
 
             // if isCOmplete is false(incomplete from the shops)
             if (!isComplete) {
@@ -248,10 +252,7 @@
                 return;
             }
 
-            if (operation > 1) {
-                alert("Model needs to complete other processes before proceeding to next process.");
-                return;
-            }
+            
 
             // if the orderStatus(Next Process is set) Shows the Cancel Dialog
             if (orderStatus === isStatus.NextProcess) {

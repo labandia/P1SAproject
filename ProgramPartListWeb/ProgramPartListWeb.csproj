@@ -697,9 +697,8 @@
     <Compile Include="Areas\PC\Repository\NotificationRepository.cs" />
     <Compile Include="Areas\PC\Repository\PatrolEmailService.cs" />
     <Compile Include="Areas\PC\Repository\RegistrationRepository.cs" />
-    <Compile Include="Areas\Press\Controllers\PartsLocatorController.cs" />
-    <Compile Include="Areas\Press\Interfaces\IAluminumProducts.cs" />
-    <Compile Include="Areas\Press\PressAreaRegistration.cs" />
+    <Compile Include="Areas\Production1\Controllers\FinalAssemblyController.cs" />
+    <Compile Include="Areas\Production1\Production1AreaRegistration.cs" />
     <Compile Include="Areas\Rotor\Controllers\RegisterController.cs" />
     <Compile Include="Areas\Rotor\Data\CategoryServices.cs" />
     <Compile Include="Areas\Rotor\Data\RegistrationServices.cs" />
@@ -725,7 +724,6 @@
     <Compile Include="Models\ProjectsModel.cs" />
     <Compile Include="Models\UserRoleProvider.cs" />
     <Compile Include="Services\EmployeeRepository.cs" />
-    <Compile Include="Areas\Press\Repository\PressRepository.cs" />
     <Compile Include="Repository\UserRespository.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -753,7 +751,6 @@
     <Compile Include="Utilities\DataAccess\UsersAccess.cs" />
     <Compile Include="Utilities\Common\Utilities.cs" />
     <Compile Include="Models\MessageResponse.cs" />
-    <Compile Include="Areas\Press\Models\PressPartsLocator.cs" />
     <Compile Include="Models\UsersModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -761,6 +758,7 @@
     <Content Include="Content\css\AdminDesign.css" />
     <Content Include="Content\css\Animation.css" />
     <Content Include="Content\css\FinalAssembly.css" />
+    <Content Include="Content\css\FinalDashboard.css" />
     <Content Include="Content\css\HydroDesign.css" />
     <Content Include="Content\css\HydroDesign.min.css">
       <DependentUpon>HydroDesign.css</DependentUpon>
@@ -901,6 +899,9 @@
     <Content Include="Areas\Final\Views\Assembly\LineData.cshtml" />
     <Content Include="Areas\Final\Views\Assembly\DelaySummary.cshtml" />
     <Content Include="Areas\Final\Views\Assembly\DispatchSummary.cshtml" />
+    <Content Include="Areas\Production1\Views\web.config" />
+    <Content Include="Areas\Production1\Views\FinalAssembly\Dashboard.cshtml" />
+    <Content Include="Areas\Production1\Views\Shared\_FinalDashboard.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <Content Include="Content\Uploads\PCFY-81013Form1L.xlsx" />
     <Content Include="Content\Uploads\FinalUploadTemplate.xlsx" />
@@ -984,17 +985,8 @@
     <Content Include="Content\Shared\bootstrap-grid.min.css.map" />
     <Content Include="Content\Shared\bootstrap-grid.css.map" />
     <Content Include="libman.json" />
-    <Content Include="Areas\Press\Views\web.config" />
-    <Content Include="Areas\Press\Views\PartsLocator\Home.cshtml" />
     <Content Include="Areas\Admin\Views\web.config" />
     <Content Include="Areas\Circuit\Views\web.config" />
-    <Content Include="Areas\Press\Views\Shared\_PartsLocator.cshtml" />
-    <Content Include="Areas\Press\Views\PartsLocator\StorageLocation.cshtml" />
-    <Content Include="Areas\Press\Views\PartsLocator\Masterlist.cshtml" />
-    <Content Include="Areas\Press\Views\PartsLocator\ProductDetails.cshtml" />
-    <Content Include="Areas\Press\Views\PartsLocator\HistoryTransaction.cshtml" />
-    <Content Include="Areas\Press\Views\PartsLocator\Changepassword.cshtml" />
-    <Content Include="Areas\Press\Views\PartsLocator\HoursSummary.cshtml" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />
     <Content Include="Content\fonts\fontawesome-webfont.woff" />
@@ -1004,7 +996,6 @@
     <Content Include="Content\fonts\Poppins-Light.ttf" />
     <Content Include="Content\fonts\Poppins-Medium.ttf" />
     <Content Include="Content\fonts\Poppins-Regular.ttf" />
-    <Content Include="Areas\Press\Views\PartsLocator\IssuanceParts.cshtml" />
     <Content Include="Areas\Circuit\Views\ProgramPartList\ComponentsOut.cshtml" />
     <Content Include="Areas\Circuit\Views\ProgramPartList\HistoryTransaction.cshtml" />
     <Content Include="Areas\Circuit\Views\ProgramPartList\LogMainpage.cshtml" />
@@ -1118,7 +1109,7 @@
     <Folder Include="Areas\Final\Data\" />
     <Folder Include="Areas\Final\Views\Modal\" />
     <Folder Include="Areas\P1SA\Data\" />
-    <Folder Include="Areas\Press\Data\" />
+    <Folder Include="Areas\Production1\Data\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

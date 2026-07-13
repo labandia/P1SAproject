@@ -1,22 +1,22 @@
 ﻿using System.Web.Mvc;
 
-namespace ProgramPartListWeb.Areas.Press
+namespace ProgramPartListWeb.Areas.Production1
 {
-    public class PressAreaRegistration : AreaRegistration 
+    public class Production1AreaRegistration : AreaRegistration 
     {
         public override string AreaName 
         {
             get 
             {
-                return "Press";
+                return "Production1";
             }
         }
 
         public override void RegisterArea(AreaRegistrationContext context) 
         {
             context.MapRoute(
-                "Press_default",
-                "Press/{controller}/{action}/{id}",
+                "Production1_default",
+                "Production1/{controller}/{action}/{id}",
                 new { action = "Index", id = UrlParameter.Optional }
             );
         }

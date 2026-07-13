@@ -1,0 +1,429 @@
+﻿
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Areas/Production1/Views/Shared/_FinalDashboard.cshtml";
+}
+
+
+<div class="dashboard" id="dashboard">
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="header-title">
+            <h1>
+                Best Final Assembly Line
+                <small>Dashboard</small>
+            </h1>
+        </div>
+        <div class="header-brand">
+            <div class="company">
+                SANYO DENKI <span>PHILIPPINES, INC.</span>
+            </div>
+            <div class="tagline">Turn the Time into Power</div>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <div class="dashboard-main">
+        <!-- Left column -->
+        <section class="col-left">
+            <h2 class="section-title">NCR Type</h2>
+            <div class="ncr-bars">
+                <div class="ncr-bar" data-type="inprocess">
+                    <div id="ncr-inprocess" class="bar bg-primary" style="width:80%;">
+                        <span class="emoji">😒</span>
+                        <span>In-Process Defect</span>
+                        <span class="count" id="ncr-inprocess-count">0</span>
+                    </div>
+                </div>
+                <div class="ncr-bar" data-type="rejected">
+                    <div id="ncr-rejected" class="bar bg-orange" style="width:70%;">
+                        <span class="emoji">😢</span>
+                        <span>Rejected Lot</span>
+                        <span class="count" id="ncr-rejected-count">0</span>
+                    </div>
+                </div>
+                <div class="ncr-bar" data-type="claim">
+                    <div id="ncr-claim" class="bar bg-red" style="width:65%;">
+                        <span class="emoji">😭</span>
+                        <span>Customer Claim</span>
+                        <span class="count" id="ncr-claim-count">0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="ncr-scale">
+                <span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span>
+            </div>
+
+            <h2 class="section-title" style="margin-top:1.2rem;">NCR Distribution</h2>
+            <div class="dist-row" data-group="Group 1">
+                <span class="label">Group 1</span>
+                <div class="track">
+                    <div id="dist-group1" class="fill bg-secondary" style="width:40%;">24%</div>
+                </div>
+            </div>
+            <div class="dist-row" data-group="Group 2">
+                <span class="label">Group 2</span>
+                <div class="track">
+                    <div id="dist-group2" class="fill bg-secondary" style="width:20%;">12%</div>
+                </div>
+            </div>
+            <div class="dist-row" data-group="Cell Line">
+                <span class="label">Cell Line</span>
+                <div class="track">
+                    <div id="dist-cell" class="fill bg-secondary" style="width:35%;">22%</div>
+                </div>
+            </div>
+            <div class="dist-row" data-group="Harness">
+                <span class="label">Harness</span>
+                <div class="track">
+                    <div id="dist-harness" class="fill bg-yellow" style="width:38%;">24%</div>
+                </div>
+            </div>
+            <div class="dist-row" data-group="Oil Proof">
+                <span class="label">Oil Proof</span>
+                <div class="track">
+                    <div id="dist-oil" class="fill bg-secondary" style="width:30%;">19%</div>
+                </div>
+            </div>
+
+            <div class="badge-harness">
+                <span class="icon">🐝</span>
+                <div class="info">
+                    <div class="title">WIRE HARNESS</div>
+                    <span class="group-badge">BEST GROUP</span>
+                    <div class="effort">EFFORT</div>
+                </div>
+                <span class="team">TEAM</span>
+            </div>
+        </section>
+
+        <!-- Center column -->
+        <section class="col-center">
+            <h2 style="font-family:var(--font-headings);font-weight:900;color:var(--color-primary);text-align:center;font-size:clamp(1.2rem,2vw,1.8rem);line-height:1.2;">
+                July 2026<br />FA Line<br />Monitoring
+            </h2>
+
+            <div class="calendar">
+                <div class="header">
+                    <div class="month">July</div>
+                    <div class="year">2026</div>
+                </div>
+                <div class="grid">
+                    <div class="weekdays">
+                        <div>SUN</div><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div>
+                    </div>
+                    <div class="days">
+                        <div class="muted">31</div><div>1</div><div>2</div><div></div><div></div><div></div><div></div>
+                        <div class="red">3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div>
+                        <div class="red">10</div><div>11</div><div>12</div><div>13</div><div>14</div><div>15</div><div>16</div>
+                        <div class="red">17</div><div>18</div><div>19</div><div>20</div><div>21</div><div>22</div><div>23</div>
+                        <div class="red">24</div><div>25</div><div>26</div><div>27</div><div>28</div><div>29</div><div>30</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="best-block">
+                <div class="best">BEST</div>
+                <div class="line">FA LINE</div>
+                <div class="line-detail">
+                    <span class="emoji-big">🤩</span>
+                    <div>
+                        <div class="line-number" id="best-line-number">LINE 9</div>
+                        <div class="slogan">Quality starts with me!</div>
+                    </div>
+                </div>
+                <div class="thinking">🤔</div>
+            </div>
+        </section>
+
+        <!-- Right column -->
+        <section class="col-right" id="line-list">
+            <!-- Line rows will be populated by JavaScript -->
+        </section>
+    </div>
+</div>
+
+<!-- Tooltip -->
+<div id="tooltip" class="tooltip-popup">
+    <h4 id="tooltip-title">Title</h4>
+    <ul id="tooltip-list"></ul>
+    <button class="close-btn" id="tooltip-close">Close</button>
+</div>
+
+<!-- Refresh indicator -->
+<div class="refresh-indicator" id="refreshIndicator">
+    <span class="spinner"></span>
+    <span id="refreshText">Updating...</span>
+</div>
+
+<script>
+        (function() {
+            'use strict';
+
+            // ---- DOM refs ----
+            const lineList = document.getElementById('line-list');
+            const tooltip = document.getElementById('tooltip');
+            const tooltipTitle = document.getElementById('tooltip-title');
+            const tooltipList = document.getElementById('tooltip-list');
+            const tooltipClose = document.getElementById('tooltip-close');
+            const refreshText = document.getElementById('refreshText');
+            const bestLineNumber = document.getElementById('best-line-number');
+
+            // ---- Data generation ----
+            const lineNames = [
+                'Line 01', 'Line 02', 'Line 03', 'Line 04', 'Line 05',
+                'Line 06', 'Line 09', 'Line 10', 'Line 11', 'Line 12',
+                'Line 14', 'Line 16', 'Line 17', 'Line 18',
+                'Cell Line', 'Harness', 'Oil Proof'
+            ];
+            const groupMap = {
+                'Line 01': 'Group 1', 'Line 02': 'Group 1', 'Line 14': 'Group 1',
+                'Line 03': 'Group 2', 'Line 04': 'Group 2', 'Line 16': 'Group 2',
+                'Line 05': 'Cell Line', 'Line 06': 'Cell Line', 'Line 17': 'Cell Line', 'Line 18': 'Cell Line',
+                'Line 09': 'Harness', 'Line 10': 'Harness',
+                'Line 11': 'Oil Proof', 'Line 12': 'Oil Proof',
+                'Cell Line': 'Cell Line',
+                'Harness': 'Harness',
+                'Oil Proof': 'Oil Proof'
+            };
+
+            let lineData = [];
+
+            function generateData() {
+                lineData = lineNames.map(name => ({
+                    name: name,
+                    group: groupMap[name] || 'Other',
+                    inprocess: Math.floor(Math.random() * 41),
+                    rejected: Math.floor(Math.random() * 41),
+                    claim: Math.floor(Math.random() * 41)
+                }));
+            }
+
+            // ---- Render line rows ----
+            function renderLines() {
+                lineList.innerHTML = '';
+                lineData.forEach(d => {
+                    const row = document.createElement('div');
+                    row.className = 'line-row';
+                    row.dataset.line = d.name;
+                    row.dataset.group = d.group;
+                    row.innerHTML = `
+                        <span class="name">${d.name}</span>
+                        <span class="emoji"></span>
+                    `;
+                    lineList.appendChild(row);
+                });
+                // Re-attach click events after render
+                attachLineClicks();
+            }
+
+            // ---- Update dashboard ----
+            function refreshDashboard() {
+                generateData();
+
+                // 1. Compute totals
+                let totalInproc = 0, totalRejected = 0, totalClaim = 0;
+                lineData.forEach(d => {
+                    totalInproc += d.inprocess;
+                    totalRejected += d.rejected;
+                    totalClaim += d.claim;
+                });
+
+                const maxTotal = Math.max(totalInproc, totalRejected, totalClaim);
+                const maxWidth = 100; // percentage
+                const getPct = (val) => maxTotal ? Math.max(20, (val / maxTotal) * 90) : 20;
+
+                // Update NCR bars
+                document.getElementById('ncr-inprocess').style.width = getPct(totalInproc) + '%';
+                document.getElementById('ncr-rejected').style.width = getPct(totalRejected) + '%';
+                document.getElementById('ncr-claim').style.width = getPct(totalClaim) + '%';
+                document.getElementById('ncr-inprocess-count').textContent = totalInproc;
+                document.getElementById('ncr-rejected-count').textContent = totalRejected;
+                document.getElementById('ncr-claim-count').textContent = totalClaim;
+
+                // Pulse animation
+                ['ncr-inprocess', 'ncr-rejected', 'ncr-claim'].forEach(id => {
+                    const el = document.getElementById(id);
+                    el.classList.remove('bar-update');
+                    void el.offsetWidth;
+                    el.classList.add('bar-update');
+                });
+
+                // 2. Distribution
+                const groups = ['Group 1', 'Group 2', 'Cell Line', 'Harness', 'Oil Proof'];
+                const groupTotals = {};
+                groups.forEach(g => groupTotals[g] = 0);
+                lineData.forEach(d => {
+                    if (groupTotals.hasOwnProperty(d.group)) {
+                        groupTotals[d.group] += (d.inprocess + d.rejected + d.claim);
+                    }
+                });
+                const totalAll = Object.values(groupTotals).reduce((a,b) => a+b, 0);
+                const maxGroup = Math.max(...Object.values(groupTotals), 1);
+
+                const distMap = {
+                    'Group 1': 'dist-group1',
+                    'Group 2': 'dist-group2',
+                    'Cell Line': 'dist-cell',
+                    'Harness': 'dist-harness',
+                    'Oil Proof': 'dist-oil'
+                };
+                groups.forEach(g => {
+                    const val = groupTotals[g] || 0;
+                    const pct = totalAll ? Math.round((val / totalAll) * 100) : 0;
+                    const bar = document.getElementById(distMap[g]);
+                    if (bar) {
+                        const width = maxGroup ? Math.max(20, (val / maxGroup) * 90) : 20;
+                        bar.style.width = width + '%';
+                        bar.textContent = pct + '%';
+                        bar.classList.remove('bar-update');
+                        void bar.offsetWidth;
+                        bar.classList.add('bar-update');
+                    }
+                });
+
+                // 3. Assign emojis to lines (max per type)
+                const rows = document.querySelectorAll('.line-row');
+                // reset
+                rows.forEach(row => {
+                    const emojiSpan = row.querySelector('.emoji');
+                    if (emojiSpan) emojiSpan.textContent = '';
+                    row.classList.remove('highlight');
+                });
+
+                let maxInproc = -1, maxRej = -1, maxClaim = -1;
+                let lineInproc = null, lineRej = null, lineClaim = null;
+                lineData.forEach(d => {
+                    if (d.inprocess > maxInproc) { maxInproc = d.inprocess; lineInproc = d; }
+                    if (d.rejected > maxRej) { maxRej = d.rejected; lineRej = d; }
+                    if (d.claim > maxClaim) { maxClaim = d.claim; lineClaim = d; }
+                });
+
+                const setEmoji = (line, emoji) => {
+                    if (!line) return;
+                    const row = document.querySelector(`.line-row[data-line="${line.name}"]`);
+                    if (row) {
+                        const span = row.querySelector('.emoji');
+                        if (span) span.textContent = emoji;
+                        row.classList.add('highlight');
+                    }
+                };
+                setEmoji(lineInproc, '😒');
+                setEmoji(lineRej, '😢');
+                setEmoji(lineClaim, '😭');
+
+                // Update best line (we'll set to the line with highest total)
+                let bestLine = null;
+                let bestTotal = -1;
+                lineData.forEach(d => {
+                    const total = d.inprocess + d.rejected + d.claim;
+                    if (total > bestTotal) {
+                        bestTotal = total;
+                        bestLine = d;
+                    }
+                });
+                if (bestLine) {
+                    bestLineNumber.textContent = bestLine.name;
+                }
+
+                // Refresh time
+                refreshText.textContent = 'Updated ' + new Date().toLocaleTimeString();
+            }
+
+            // ---- Tooltip functions ----
+            function showTooltip(title, items, x, y) {
+                tooltipTitle.textContent = title;
+                tooltipList.innerHTML = '';
+                items.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span>${item.name}</span><span>${item.value}</span>`;
+                    tooltipList.appendChild(li);
+                });
+                tooltip.style.left = x + 'px';
+                tooltip.style.top = y + 'px';
+                tooltip.classList.add('visible');
+            }
+
+            function hideTooltip() {
+                tooltip.classList.remove('visible');
+            }
+
+            tooltipClose.addEventListener('click', hideTooltip);
+            document.addEventListener('click', function(e) {
+                if (!tooltip.contains(e.target)) {
+                    hideTooltip();
+                }
+            });
+
+            // ---- Click handlers ----
+            function attachLineClicks() {
+                document.querySelectorAll('.line-row').forEach(row => {
+                    row.addEventListener('click', function(e) {
+                        const name = this.dataset.line;
+                        const data = lineData.find(d => d.name === name);
+                        if (!data) return;
+                        const items = [
+                            { name: 'In-Process', value: data.inprocess },
+                            { name: 'Rejected', value: data.rejected },
+                            { name: 'Claim', value: data.claim },
+                            { name: 'Group', value: data.group }
+                        ];
+                        const rect = this.getBoundingClientRect();
+                        showTooltip('Details for ' + name, items, rect.left + 10, rect.bottom + 10);
+                    });
+                });
+            }
+
+            // NCR bars click
+            document.querySelectorAll('.ncr-bar').forEach((bar, idx) => {
+                bar.addEventListener('click', function() {
+                    const types = ['inprocess', 'rejected', 'claim'];
+                    const labels = ['In-Process Defect', 'Rejected Lot', 'Customer Claim'];
+                    const key = types[idx];
+                    const sorted = lineData.slice().sort((a,b) => b[key] - a[key]);
+                    const items = sorted.map(d => ({ name: d.name, value: d[key] }));
+                    const rect = this.getBoundingClientRect();
+                    showTooltip(labels[idx] + ' (counts)', items, rect.left + 10, rect.bottom + 10);
+                });
+            });
+
+            // Distribution rows click
+            document.querySelectorAll('.dist-row').forEach(row => {
+                row.addEventListener('click', function() {
+                    const group = this.dataset.group;
+                    const members = lineData.filter(d => d.group === group);
+                    const total = members.reduce((sum, d) => sum + d.inprocess + d.rejected + d.claim, 0);
+                    const items = members.map(d => ({
+                        name: d.name,
+                        value: (d.inprocess + d.rejected + d.claim)
+                    }));
+                    items.push({ name: 'TOTAL', value: total });
+                    const rect = this.getBoundingClientRect();
+                    showTooltip('Group: ' + group, items, rect.left + 10, rect.bottom + 10);
+                });
+            });
+
+            // ---- Initial render and refresh ----
+            generateData();
+            renderLines();
+            refreshDashboard();
+
+            // ---- Auto-refresh every 30 sec ----
+            setInterval(refreshDashboard, 30000);
+
+            // ---- Re-render lines when data changes (but we already update in refresh) ----
+            // We'll also update the line emojis and counts in refresh, so no need to re-render whole list.
+            // But we need to re-attach click events after refresh? We attach once, but elements persist.
+            // We'll just update the DOM in refresh.
+            // Override refreshDashboard to also update line rows' emojis and highlights.
+
+            // We'll keep the refreshDashboard as is, but we need to ensure line rows are updated.
+            // We already update them inside refreshDashboard.
+            // Also we need to re-attach line clicks? They are already attached via attachLineClicks() on initial render.
+            // Since we don't recreate rows on refresh, the event listeners remain.
+
+            // ---- Handle window resize for tooltip positioning (no scaling needed) ----
+            // Nothing else.
+
+        })();
+</script>

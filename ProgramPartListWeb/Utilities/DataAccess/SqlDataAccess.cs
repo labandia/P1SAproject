@@ -21,7 +21,25 @@ namespace ProgramPartListWeb.Helper
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         // -------------------- CONFIG & CACHE --------------------
-        private static readonly string _connectionString = BuildConnectionString();
+        private static readonly Lazy<string> _connectionString =
+             new Lazy<string>(() =>
+             {
+                 var raw = ConfigurationManager.ConnectionStrings["LiveDevelopment"]?.ConnectionString;
+
+                 if (string.IsNullOrWhiteSpace(raw))
+                 {
+                     throw new InvalidOperationException(
+                         "Connection string 'LiveDevelopment' was not found.");
+                 }
+
+                 return raw;
+             });
+
+        public static string ConnectionString() => _connectionString.Value;
+        public static SqlConnection GetConnection()
+                => new SqlConnection(ConnectionString());
+
+
         private static readonly ObjectCache _cache = MemoryCache.Default;
 
         // High concurrency locks per cache key
@@ -33,46 +51,9 @@ namespace ProgramPartListWeb.Helper
             SlidingExpiration = TimeSpan.FromMinutes(10)
         };
 
+      
 
-
-        public static string BuildConnectionString()
-        {
-            try
-            {
-                string env = ConfigurationManager.AppSettings["AppEnvironment"];
-                string key;
-
-                switch (env)
-                {
-                    case "Home":
-                        key = "HomeDevelopment";
-                        break;
-
-                    case "Test":
-                        key = "TestDevelopment";
-                        break;
-
-                    default:
-                        key = "LiveDevelopment";
-                        break;
-                }
-
-                var encrypted = ConfigurationManager
-                    .ConnectionStrings[key]
-                    .ConnectionString;
-
-                // AES decode happens once at app start
-                return AesEncryption.DecodeBase64ToString(encrypted);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex, "Error connection string. Defaulting to LiveDevelopment");
-                return System.Configuration.ConfigurationManager.ConnectionStrings["LiveDevelopment"].ConnectionString;
-            } 
-        }
-
-        private static SqlConnection CreateConnection()
-       => new SqlConnection(_connectionString);
+      
 
 
         // --------------------- CORE METHODS ---------------------
@@ -86,7 +67,7 @@ namespace ProgramPartListWeb.Helper
         {
             if (string.IsNullOrEmpty(cacheKey))
             {
-                using (var con = CreateConnection())
+                using (var con = GetConnection())
                 {
                     var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
                     return result.AsList();
@@ -110,7 +91,7 @@ namespace ProgramPartListWeb.Helper
 
                 List<T> list;
 
-                using (var con = CreateConnection())
+                using (var con = GetConnection())
                 {
                     var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
                     list = result.AsList();
@@ -124,7 +105,7 @@ namespace ProgramPartListWeb.Helper
                 // 🔥 SQL AUTO INVALIDATE
                 if (useSqlDependency)
                 {
-                    using (var connection = new SqlConnection(_connectionString))
+                    using (var connection = new SqlConnection(_connectionString.Value))
                     using (var command = new SqlCommand(query, connection))
                     {
                         connection.Open();
@@ -143,7 +124,7 @@ namespace ProgramPartListWeb.Helper
                     {
                         try
                         {
-                            using (var con = CreateConnection())
+                            using (var con = GetConnection())
                             {
                                 var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
                                 var refreshed = result.AsList();
@@ -179,7 +160,7 @@ namespace ProgramPartListWeb.Helper
         {
             if (string.IsNullOrEmpty(cacheKey))
             {
-                using (var con = CreateConnection())
+                using (var con = GetConnection())
                     return await con.QueryFirstOrDefaultAsync<T>(query, parameters, commandType: commandType);
             }
 
@@ -198,7 +179,7 @@ namespace ProgramPartListWeb.Helper
 
                 T result;
 
-                using (var con = CreateConnection())
+                using (var con = GetConnection())
                     result = await con.QueryFirstOrDefaultAsync<T>(query, parameters, commandType: commandType);
 
                 var policy = new CacheItemPolicy
@@ -223,7 +204,7 @@ namespace ProgramPartListWeb.Helper
         {
             try
             {
-                using (IDbConnection con = CreateConnection())
+                using (IDbConnection con = GetConnection())
                     return await con.QuerySingleOrDefaultAsync<string>(query, parameters);
             }
             catch (Exception ex)
@@ -240,7 +221,7 @@ namespace ProgramPartListWeb.Helper
         {
             try
             {
-                using (var con = CreateConnection())
+                using (var con = GetConnection())
                     return await con.ExecuteScalarAsync<T>(
                         query,
                         parameters,
@@ -262,7 +243,7 @@ namespace ProgramPartListWeb.Helper
         {
             try
             {
-                using (var con = CreateConnection())
+                using (var con = GetConnection())
                 {
                     int count = await con.ExecuteScalarAsync<int>(
                         query,
@@ -289,7 +270,7 @@ namespace ProgramPartListWeb.Helper
         {
             try
             {
-                using (var con = CreateConnection())
+                using (var con = GetConnection())
                 {
                     int rows = await con.ExecuteAsync(query, parameters, commandType: commandType);
 
@@ -316,7 +297,7 @@ namespace ProgramPartListWeb.Helper
 
             try
             {
-                using (var con = CreateConnection())
+                using (var con = GetConnection())
                 {
                     var result = await con.QueryAsync<string>(
                         query,
@@ -352,7 +333,7 @@ namespace ProgramPartListWeb.Helper
             if (data == null || !data.Any())
                 return;
 
-            using (var con = new SqlConnection(_connectionString))
+            using (var con = new SqlConnection(_connectionString.Value))
             {
                 await con.OpenAsync();
 
@@ -400,12 +381,12 @@ namespace ProgramPartListWeb.Helper
 
         public static void StartSqlDependency()
         {
-            SqlDependency.Start(_connectionString);
+            SqlDependency.Start(_connectionString.Value);
         }
 
         public static void StopSqlDependency()
         {
-            SqlDependency.Stop(_connectionString);
+            SqlDependency.Stop(_connectionString.Value);
         }
     }
 }

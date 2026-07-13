@@ -1,6 +1,5 @@
 ﻿using ProgramPartListWeb.Areas.PC.Interface;
 using ProgramPartListWeb.Areas.PC.Repository;
-using ProgramPartListWeb.Areas.Press.Interfaces;
 using ProgramPartListWeb.Data;
 using ProgramPartListWeb.Interfaces;
 using ProgramPartListWeb.Repository;
@@ -62,7 +61,7 @@ namespace ProgramPartListWeb
 
         protected void Application_End()
         {
-            SqlDependency.Stop(SqlDataAccess.BuildConnectionString());
+            SqlDependency.Stop(SqlDataAccess.ConnectionString());
 
             if (Response.StatusCode == 401)
             {
@@ -128,7 +127,6 @@ namespace ProgramPartListWeb
             container.RegisterType<IAuthRepository, AuthRepository>(new ContainerControlledLifetimeManager());
             container.RegisterType<IUserRepository, UserRespository>(new ContainerControlledLifetimeManager());
             container.RegisterType<IEmployee, EmployeeRepository>(new ContainerControlledLifetimeManager());
-            container.RegisterType<IAluminumProducts, PressRepository>(new ContainerControlledLifetimeManager());
             container.RegisterType<IInspector, InpectorRepository>(new ContainerControlledLifetimeManager());
             container.RegisterType<IHyrdoParts, HydroPartsRepository>(new ContainerControlledLifetimeManager());
             container.RegisterType<IRegistration, RegistrationRepository>(new ContainerControlledLifetimeManager());

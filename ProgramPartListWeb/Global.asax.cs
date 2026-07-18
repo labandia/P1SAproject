@@ -28,6 +28,8 @@ using ProgramPartListWeb.Areas.P1SA.Interface;
 using ProgramPartListWeb.Areas.Final;
 using ProgramPartListWeb.Areas.Final.Services;
 using ProgramPartListWeb.Areas.Final.Interface;
+using ProgramPartListWeb.Areas.Production1.Interface;
+using ProgramPartListWeb.Areas.Production1.Repository;
 
 namespace ProgramPartListWeb
 {
@@ -134,7 +136,7 @@ namespace ProgramPartListWeb
             container.RegisterType<IChambers, ChamberRepository>(new ContainerControlledLifetimeManager());
             container.RegisterType<IPartsList, PartsMasterlistRepository>(new ContainerControlledLifetimeManager());
             container.RegisterType<IStocksparts, StockpartsRepository>(new ContainerControlledLifetimeManager());
-
+            container.RegisterType<INCRDashboardRepository, NCRDashboardRepository>(new ContainerControlledLifetimeManager());
 
             // Services (Usually stateless → Singleton)
             container.RegisterType<ICategory, CategoryServices>(new ContainerControlledLifetimeManager());

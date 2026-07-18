@@ -217,7 +217,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
         {
             try
             {
-                string query = $@"SELECT
+                string query = $@"SELECT TOP  1000
                         mo.RecordID,
                         mo.Line,
                         mo.FinalShopOrder,
@@ -309,8 +309,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                             
                         mo.Operational
 
-                    FROM FanTraceabilityManufacturingOrder mo
-                    WHERE 1 = 1 ";
+                    FROM FanTraceabilityManufacturingOrder mo WHERE 1 = 1 ";
 
                 var parameters = new DynamicParameters();
 
@@ -330,7 +329,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     parameters.Add("@SearchPrefix", $"{searchText}%");
                 }
 
-                if(status >= 0)
+                if (status >= 0)
                 {
                     query += " AND mo.OrderStatus = @OrderStatus";
                     parameters.Add("@OrderStatus", status);
@@ -339,12 +338,13 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 query += $@" ORDER BY mo.RecordID ASC";
 
 
+
                 return await SqlDataAcess_Test.GetDataAsync<FanTraceabilityManufacturingOrder>(query, parameters);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error retrieving active shop orders: {ex.Message}");
-                return new List<FanTraceabilityManufacturingOrder>();
+                Debug.WriteLine(ex.ToString());
+                throw;
             }
         }
 

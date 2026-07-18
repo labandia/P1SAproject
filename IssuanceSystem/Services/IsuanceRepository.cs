@@ -1,0 +1,32 @@
+﻿using IssuanceSystem.Data;
+using IssuanceSystem.Interface;
+using IssuanceSystem.Model;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace IssuanceSystem.Services
+{
+    internal class IsuanceRepository : IIsuanceRespository
+    {
+        public Task<List<IssuanceModel>> GetIssuanceData()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> SearchPartnumber(string part, string rev)
+        {
+            string strsql = $@"SELECT COUNT (*)  
+              FROM PCBIssuance_Masterlist
+              WHERE Partnumber = @Partnumber AND Revision =@Revision";
+
+            return SqlDataAccess.ExistsAsync(strsql, new
+            {
+                Partnumber = part,
+                Revision = rev
+            });
+        }
+    }
+}

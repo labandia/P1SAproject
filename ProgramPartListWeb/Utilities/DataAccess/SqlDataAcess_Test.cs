@@ -43,7 +43,7 @@ namespace ProgramPartListWeb.Utilities.DataAccess
                     .ConnectionString;
 
                 // AES decode happens once at app start
-                return AesEncryption.DecodeBase64ToString(encrypted);
+                return encrypted;
             }
             catch (Exception ex)
             {

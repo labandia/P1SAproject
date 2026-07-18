@@ -83,14 +83,16 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             var res = await _manu.GetListofShopOrdersByLine(Linename, 
                 searchtext, orderstatus);
 
+            if (res == null || !res.Any())
+                return JsonNotFound("No Manpower data found");
+
             var finalData = new
             {
                 payload = res,
-                Total = res.Count()
+                Total = res.Count
             };
 
-            if (res == null || !res.Any())
-                return JsonNotFound("No Manpower data found");
+   
 
             return JsonSuccess(finalData, "Retrieved data successfully");
         }

@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Dashboard";
     Layout = "~/Areas/Production1/Views/Shared/_FinalDashboard.cshtml";
 }
@@ -147,6 +146,21 @@
     </div>
 </div>
 
+<!-- Award Slide Overlay -->
+<div class="award-slide-overlay" id="awardSlideOverlay">
+    <div class="award-slide">
+        <div class="award-slide-left">
+            <div class="award-ribbon">🏆</div>
+            <h2 class="award-heading">Award Goes To</h2>
+            <div class="award-winner-name" id="awardWinnerName">—</div>
+            <div class="award-subtitle" id="awardSubtitle"></div>
+        </div>
+        <div class="award-slide-right">
+            <img id="awardCertImage" src="" alt="Certificate"
+                 onerror="this.onerror=null; this.src='@Url.Content("~/Content/Images/no-image.png")';" />
+        </div>
+    </div>
+</div>
 <!-- Tooltip -->
 <div id="tooltip" class="tooltip-popup">
     <h4 id="tooltip-title">Title</h4>
@@ -203,6 +217,14 @@
             this.tooltipClose = document.getElementById('tooltip-close');
             this.refreshText = document.getElementById('refreshText');
             this.bestLineNumber = document.getElementById('best-line-number');
+
+            // ---- Award slide DOM refs ----
+            this.dashboardEl = document.getElementById('dashboard');
+            this.awardSlideOverlay = document.getElementById('awardSlideOverlay');
+            this.awardWinnerName = document.getElementById('awardWinnerName');
+            this.awardCertImage = document.getElementById('awardCertImage');
+            this.awardSubtitle = document.getElementById('awardSubtitle');
+            this.awardSlideDuration = 8000; // how long the award slide stays on screen, ms
 
 
             this.OpensDataManage = document.getElementById('commentBtn');
@@ -263,6 +285,11 @@
                 this.refreshText.textContent = 'Updated ' + new Date().toLocaleTimeString();
             }, 10000);
 
+            // Award slide: push in every 5 minutes
+            this.awardSlideInterval = setInterval(() => {
+                this.showAwardSlide();
+            }, 1 * 60 * 1000);
+
 
             this.OpensDataManage.addEventListener('click', (e) => {
                 window.location.href = '/Production1/FinalAssembly/ManagementData';
@@ -281,6 +308,32 @@
             } catch (error) {
                 console.error('Error fetching 4M data:', error);
             }
+        }
+
+        // Resets a bar/fill to 0 and re-animates it to its target width,
+        // recreating a "start page" fill-in effect on every refresh.
+        animateBarFill(el, pct) {
+            if (!el) return;
+
+            // Kill any transition, snap to 0 instantly
+            el.style.transition = 'none';
+            el.style.width = '0%';
+            el.classList.add('bar-refreshing');
+
+            // Force reflow so the browser registers the 0% width
+            // before we start the new transition
+            void el.offsetWidth;
+
+            requestAnimationFrame(() => {
+                el.style.transition = 'width 0.8s cubic-bezier(0.22, 1, 0.36, 1)';
+                el.style.width = pct + '%';
+            });
+
+            // Clean up the shimmer class after it plays once
+            clearTimeout(el._shimmerTimeout);
+            el._shimmerTimeout = setTimeout(() => {
+                el.classList.remove('bar-refreshing');
+            }, 850);
         }
 
         renderNcrBars(data) {
@@ -308,7 +361,7 @@
                 //console.log("Quantity: " + qty);
                 //console.log("Percentage: " + pct);
 
-                bar.style.width = `${pct}%`;
+                this.animateBarFill(bar, pct);
                 //countEl.textContent = qty;
             });
         }
@@ -353,7 +406,7 @@
 
                 const pct = finalPercentRow[key] ?? 0;
 
-                el.style.width = `${pct}%`;
+                this.animateBarFill(el, pct);
                 el.textContent = `${pct}%`;
             });
         }
@@ -497,6 +550,59 @@
             tooltip.style.left = x + 'px';
             tooltip.style.top = y + 'px';
             tooltip.classList.add('visible');
+        }
+
+        // ---- Award slide functions ----
+        async fetchAwardData() {
+            try {
+                const res = await getMethod('@Url.Action("GetAwardData", "FinalAssembly")', {});
+                console.log(res);
+
+                if(res?.Success){
+                    return res.data;
+                }
+
+            } catch (error) {
+                console.error('Error fetching award data:', error);
+                return null;
+            }
+        }
+
+        async showAwardSlide() {
+    
+            const data = await this.fetchAwardData();
+            if (!data) return;
+            if (!data.IsDisplayed) return; // flagged off — skip this cycle silently
+
+           const imagePath = data.CertificateImage
+        ? `@Url.Action("DisplaytheImage", "FinalAssembly")?filename=${encodeURIComponent(data.CertificateImage)}`
+        : '@Url.Content("~/Content/Images/no-image.png")';
+
+            this.awardWinnerName.textContent = data.WinnerName ?? '';
+            this.awardCertImage.src = imagePath; // ✅ now actually used
+            this.awardSubtitle.textContent = data.Subtitle ?? '';
+            this.awardSubtitle.style.display = data.Subtitle ? '' : 'none';
+
+            this.dashboardEl.classList.add('slide-out-to-award');
+            this.awardSlideOverlay.classList.remove('leaving');
+            this.awardSlideOverlay.classList.add('active');
+
+            clearTimeout(this._awardHideTimeout);
+            this._awardHideTimeout = setTimeout(() => this.hideAwardSlide(), this.awardSlideDuration);
+        }
+
+        hideAwardSlide() {
+            // Award slide exits to the left...
+            this.awardSlideOverlay.classList.add('leaving');
+            this.awardSlideOverlay.classList.remove('active');
+
+            // ...dashboard re-enters from the left back to center
+            this.dashboardEl.classList.remove('slide-out-to-award');
+
+            clearTimeout(this._awardCleanupTimeout);
+            this._awardCleanupTimeout = setTimeout(() => {
+                this.awardSlideOverlay.classList.remove('leaving');
+            }, 900);
         }
     }
 

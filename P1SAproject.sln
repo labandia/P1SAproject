@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parts_locator", "Parts_locator\Parts_locator.csproj", "{DD1D25EF-4381-469F-AEEA-401D069642DD}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PracticeC#", "PracticeC-\PracticeC#.csproj", "{F1B6C750-2C62-494F-B1E0-FEC380983508}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZebraPrinterLabel", "ZebraPrinterLabel\ZebraPrinterLabel.csproj", "{A4FE5F8B-E062-477A-A90E-4D04C7BBDBDE}"
@@ -12,8 +10,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailSender", "EmailSender\EmailSender.csproj", "{7A9F93A9-321F-44FA-A734-515A68E0C1E0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProgramPartListWeb", "ProgramPartListWeb\ProgramPartListWeb.csproj", "{83F78258-1DAB-4EC8-901F-3417C42AD76D}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SariSariStoreApp", "SariSariStoreApp\SariSariStoreApp.vdproj", "{06467C76-620E-4D9C-B80A-49285931F652}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PMACS_V2", "PMACS_V2\PMACS_V2.csproj", "{DA2C686B-57CA-4416-83EC-C832D9B9826F}"
 EndProject
@@ -31,22 +27,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DD1D25EF-4381-469F-AEEA-401D069642DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DD1D25EF-4381-469F-AEEA-401D069642DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DD1D25EF-4381-469F-AEEA-401D069642DD}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{DD1D25EF-4381-469F-AEEA-401D069642DD}.Debug|ARM.Build.0 = Debug|Any CPU
-		{DD1D25EF-4381-469F-AEEA-401D069642DD}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{DD1D25EF-4381-469F-AEEA-401D069642DD}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{DD1D25EF-4381-469F-AEEA-401D069642DD}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{DD1D25EF-4381-469F-AEEA-401D069642DD}.Debug|x86.Build.0 = Debug|Any CPU
-		{DD1D25EF-4381-469F-AEEA-401D069642DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DD1D25EF-4381-469F-AEEA-401D069642DD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DD1D25EF-4381-469F-AEEA-401D069642DD}.Release|ARM.ActiveCfg = Release|Any CPU
-		{DD1D25EF-4381-469F-AEEA-401D069642DD}.Release|ARM.Build.0 = Release|Any CPU
-		{DD1D25EF-4381-469F-AEEA-401D069642DD}.Release|ARM64.ActiveCfg = Release|Any CPU
-		{DD1D25EF-4381-469F-AEEA-401D069642DD}.Release|ARM64.Build.0 = Release|Any CPU
-		{DD1D25EF-4381-469F-AEEA-401D069642DD}.Release|x86.ActiveCfg = Release|Any CPU
-		{DD1D25EF-4381-469F-AEEA-401D069642DD}.Release|x86.Build.0 = Release|Any CPU
 		{F1B6C750-2C62-494F-B1E0-FEC380983508}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F1B6C750-2C62-494F-B1E0-FEC380983508}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1B6C750-2C62-494F-B1E0-FEC380983508}.Debug|ARM.ActiveCfg = Debug|Any CPU
@@ -111,14 +91,6 @@ Global
 		{83F78258-1DAB-4EC8-901F-3417C42AD76D}.Release|ARM64.Build.0 = Release|Any CPU
 		{83F78258-1DAB-4EC8-901F-3417C42AD76D}.Release|x86.ActiveCfg = Release|Any CPU
 		{83F78258-1DAB-4EC8-901F-3417C42AD76D}.Release|x86.Build.0 = Release|Any CPU
-		{06467C76-620E-4D9C-B80A-49285931F652}.Debug|Any CPU.ActiveCfg = Debug
-		{06467C76-620E-4D9C-B80A-49285931F652}.Debug|ARM.ActiveCfg = Debug
-		{06467C76-620E-4D9C-B80A-49285931F652}.Debug|ARM64.ActiveCfg = Debug
-		{06467C76-620E-4D9C-B80A-49285931F652}.Debug|x86.ActiveCfg = Debug
-		{06467C76-620E-4D9C-B80A-49285931F652}.Release|Any CPU.ActiveCfg = Release
-		{06467C76-620E-4D9C-B80A-49285931F652}.Release|ARM.ActiveCfg = Release
-		{06467C76-620E-4D9C-B80A-49285931F652}.Release|ARM64.ActiveCfg = Release
-		{06467C76-620E-4D9C-B80A-49285931F652}.Release|x86.ActiveCfg = Release
 		{DA2C686B-57CA-4416-83EC-C832D9B9826F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DA2C686B-57CA-4416-83EC-C832D9B9826F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA2C686B-57CA-4416-83EC-C832D9B9826F}.Debug|ARM.ActiveCfg = Debug|Any CPU

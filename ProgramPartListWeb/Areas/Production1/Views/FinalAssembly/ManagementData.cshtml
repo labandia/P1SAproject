@@ -9,241 +9,282 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>ManagementData</title>
-    <link href="~/Content/css/FinalDashboard.css" rel="stylesheet" />
+    <link href="~/Content/css/FinalDashMangement.css" rel="stylesheet" />
 </head>
 <body>
-    <!-- ─── Two-Column Grid ─── -->
-    <div class="dashboard-grid">
+    <div class="dashboard">
 
-        <!-- ═══ LEFT: FORMS ═══ -->
-        <section class="forms-column">
+        <!-- ─── Two-Column Grid ─── -->
+        <div class="dashboard-grid">
 
-            <!-- Add / Edit Form -->
-            <div class="form-card" id="formCard">
-                <div class="card-title">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 32 32">
-                        <path d="M0 0h32v32H0z" fill="none" />
-                        <path fill="currentColor" d="M19 21h-6a3 3 0 0 0-3 3v2h2v-2a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2h2v-2a3 3 0 0 0-3-3m-3-1a4 4 0 1 0-4-4a4 4 0 0 0 4 4m0-6a2 2 0 1 1-2 2a2 2 0 0 1 2-2" />
-                        <path fill="currentColor" d="M25 5h-3V4a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v1H7a2 2 0 0 0-2 2v21a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2M12 4h8v4h-8Zm13 24H7V7h3v3h12V7h3Z" />
-                    </svg>
+            <!-- ═══ LEFT: FORMS ═══ -->
+            <section class="forms-column">
 
-                    <span id="formTitle">Add New Record</span>
+                <!-- Add / Edit Form -->
+                <div class="form-card" id="formCard">
+                    <div class="card-title">
+                        <button id="backbtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 512 512">
+                                <path d="M0 0h512v512H0z" fill="none" />
+                                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M249.38 336L170 256l79.38-80m-68.35 80H342" />
+                                <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32" d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192s192-86 192-192Z" />
+                            </svg>
+                        </button>
+
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 32 32">
+                            <path d="M0 0h32v32H0z" fill="none" />
+                            <path fill="currentColor" d="M19 21h-6a3 3 0 0 0-3 3v2h2v-2a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2h2v-2a3 3 0 0 0-3-3m-3-1a4 4 0 1 0-4-4a4 4 0 0 0 4 4m0-6a2 2 0 1 1-2 2a2 2 0 0 1 2-2" />
+                            <path fill="currentColor" d="M25 5h-3V4a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v1H7a2 2 0 0 0-2 2v21a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2M12 4h8v4h-8Zm13 24H7V7h3v3h12V7h3Z" />
+                        </svg>
+                        <span id="formTitle">Add New Record</span>
+                    </div>
+
+                    <form id="dataForm" autocomplete="off">
+                        <input type="hidden" id="editIndex" value="-1" />
+
+                        <div class="form-group">
+                            <label>Registration No. <span class="required">*</span></label>
+                            <input type="text" id="regNo" class="uppercase-input" placeholder="e.g. P1FARN-250614" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Model <span class="required">*</span></label>
+                            <input type="text" id="model" class="uppercase-input" placeholder="e.g. 9WPA0612P4G004" required />
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Process</label>
+                                <select id="processSelect">
+                                    <option value="0">Select process</option>
+                                    <option value="1">PCB Stator Soldering</option>
+                                    <option value="2">Silicon Application</option>
+                                    <option value="3">Lead Connector Assembly</option>
+                                    <option value="4">Packaging</option>
+                                    <option value="5">Leadwire Soldering</option>
+                                    <option value="6">CFI Issuance</option>
+                                    <option value="7">Affixing Label</option>
+                                    <option value="8">Adhesive Application</option>
+                                    <option value="9">Epoxy Molding</option>
+                                    <option value="10">Terminal Shrinking</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>4M</label>
+                                <select id="fourM">
+                                    <option value="0">Select 4M</option>
+                                    <option value="1">Machine</option>
+                                    <option value="2">Man</option>
+                                    <option value="3">Material</option>
+                                    <option value="4">Method</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>NCR Type</label>
+                                <select id="ncrType">
+                                    <option value="0">Select NCR Type</option>
+                                    <option value="1">Customer Complaint</option>
+                                    <option value="2">In-Process</option>
+                                    <option value="3">Rejected Lot</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Line</label>
+                                <select id="Line">
+                                    <option value="L1">L1</option>
+                                    <option value="L2">L2</option>
+                                    <option value="L3">L3</option>
+                                    <option value="L4">L4</option>
+                                    <option value="L5">L5</option>
+                                    <option value="L6">L6</option>
+                                    <option value="L7">L7</option>
+                                    <option value="L8">L8</option>
+                                    <option value="L9">L9</option>
+                                    <option value="L10">L10</option>
+                                    <option value="L11">L11</option>
+                                    <option value="L12">L12</option>
+                                    <option value="L13">L13</option>
+                                    <option value="L14">L14</option>
+                                    <option value="L15">L15</option>
+                                    <option value="L16">L16</option>
+                                    <option value="L17">L17</option>
+                                    <option value="L18">L18</option>
+                                    <option value="L19">L19</option>
+                                    <option value="L20">L20</option>
+                                    <option value="CL2">CL2</option>
+                                    <option value="CL5">CL5</option>
+                                    <option value="CL8">CL8</option>
+                                    <option value="CL9">CL9</option>
+                                    <option value="CL11">CL11</option>
+                                    <option value="MEIG">MEIG</option>
+                                    <option value="OP-EM">OP-EM</option>
+                                    <option value="Matprep">Matprep</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Groups</label>
+                                <select id="groupID">
+                                    <option value="0">Select Group</option>
+                                    <option value="1">Group 1</option>
+                                    <option value="2">Group 2</option>
+                                    <option value="3">Group 3</option>
+                                    <option value="4">OP</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-primary btn-block" id="submitBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24">
+                                    <path d="M0 0h24v24H0z" fill="none" />
+                                    <path fill="currentColor" d="M20 7.423v10.962q0 .69-.462 1.153T18.384 20H5.616q-.691 0-1.153-.462T4 18.384V5.616q0-.691.463-1.153T5.616 4h10.961zm-1 .427L16.15 5H5.616q-.27 0-.443.173T5 5.616v12.769q0 .269.173.442t.443.173h12.769q.269 0 .442-.173t.173-.443zm-5.587 8.102q.587-.586.587-1.414t-.587-1.413T12 12.539t-1.413.586T10 14.538t.587 1.414t1.413.586t1.414-.586M6.768 9.769h7.423v-3H6.77zM5 7.85V19V5z" />
+                                </svg>
+                                Add Record
+                            </button>
+                            <button type="button" class="btn btn-outline btn-block" id="cancelBtn" style="display:none;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
+                                    <path d="M0 0h48v48H0z" fill="none" />
+                                    <defs>
+                                        <mask id="SVGt9zVddCE">
+                                            <path fill="#555" fill-rule="evenodd" stroke="#fff" stroke-linejoin="round" stroke-width="4" d="M44 40.836q-7.34-8.96-13.036-10.168t-10.846-.365V41L4 23.545L20.118 7v10.167q9.523.075 16.192 6.833q6.668 6.758 7.69 16.836Z" clip-rule="evenodd" />
+                                        </mask>
+                                    </defs>
+                                    <path fill="currentColor" d="M0 0h48v48H0z" mask="url(#SVGt9zVddCE)" />
+                                </svg>
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
                 </div>
 
-                <form id="dataForm" autocomplete="off">
-                    <input type="hidden" id="editIndex" value="-1" />
-
-                    <div class="form-group">
-                        <label>Registration No. <span class="required">*</span></label>
-                        <input type="text" id="regNo" class="uppercase-input" placeholder="e.g. P1FARN-250614" required />
+                <!-- Quick Actions -->
+                <div class="form-card">
+                    <div class="card-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                        </svg>
+                        Upload Images
                     </div>
 
                     <div class="form-group">
-                        <label>Model <span class="required">*</span></label>
-                        <input type="text" id="model" class="uppercase-input" placeholder="e.g. 9WPA0612P4G004" required />
+                        <label>Winners Name. <span class="required">*</span></label>
+                        <input type="text" id="winnerText" class="uppercase-input" placeholder="e.g. Juan Dela Cruz" required />
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Process</label>
-                            <select id="process">
-                                <option value="0">Select process</option>
-                                <option value="1">PCB Stator Soldering</option>
-                                <option value="2">Silicon Application</option>
-                                <option value="3">Lead Connector Assembly</option>
-                                <option value="4">Packaging</option>
-                                <option value="5">Leadwire Soldering</option>
-                                <option value="6">CFI Issuance</option>
-                                <option value="7">Affixing Label</option>
-                                <option value="8">Adhesive Application</option>
-                                <option value="9">Epoxy Molding</option>
-                                <option value="10">Terminal Shrinking</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>4M</label>
-                            <select id="fourM">
-                                <option value="0">Select 4M</option>
-                                <option value="1">Machine</option>
-                                <option value="2">Man </option>
-                                <option value="3">Material</option>
-                                <option value="4">Method</option>
-                            </select>
-                        </div>
-                    </div>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="isDisplayed" />
+                        Show in the Dashboard
+                    </label>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>NCR Type</label>
-                            <select id="ncrType">
-                                <option value="0">Select NCR Type</option>
-                                <option value="1">Customer Complaint</option>
-                                <option value="2">In-Process</option>
-                                <option value="3">Rejected Lot</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Line</label>
-                            <select id="Line">
-                                <option value="L1">L1</option>
-                                <option value="L2">L2</option>
-                                <option value="L3">L3</option>
-                                <option value="L4">L4</option>
-                                <option value="L5">L5</option>
-                                <option value="L6">L6</option>
-                                <option value="L7">L7</option>
-                                <option value="L8">L8</option>
-                                <option value="L9">L9</option>
-                                <option value="L10">L10</option>
-                                <option value="L11">L11</option>
-                                <option value="L12">L12</option>
-                                <option value="L13">L13</option>
-                                <option value="L14">L14</option>
-                                <option value="L15">L15</option>
-                                <option value="L16">L16</option>
-                                <option value="L17">L17</option>
-                                <option value="L18">L18</option>
-                                <option value="L19">L19</option>
-                                <option value="L20">L20</option>
-                                <option value="CL2">CL2</option>
-                                <option value="CL5">CL5</option>
-                                <option value="CL8">CL8</option>
-                                <option value="CL9">CL9</option>
-                                <option value="CL11">CL11</option>
-                                <option value="MEIG">MEIG</option>
-                                <option value="OP-EM">OP-EM</option>
-                                <option value="Matprep">Matprep </option>
-                            </select>
-                        </div>
-                    </div>
-
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Groups</label>
-                            <select id="groupID">
-                                <option value="0">Select Group</option>
-                                <option value="1">Group 1</option>
-                                <option value="2">Group 2</option>
-                                <option value="3">Group 3</option>
-                                <option value="4">OP</option>   
-                            </select>
-                        </div>
-                       
-                    </div>
-
-
+                    <!-- hidden actual file input; button below triggers it -->
+                    <input type="file" id="certificateFile" accept=".png,.jpg,.jpeg" style="display:none;" />
 
                     <div class="btn-group">
-                        <button type="submit" class="btn btn-primary btn-block" id="submitBtn">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24">
+                        <button class="btn btn-success" id="sampleDataBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <ellipse cx="12" cy="5" rx="9" ry="3" />
+                                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+                                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+                            </svg>
+                            Update the Image Certificate
+                        </button>
+
+                        <button id="viewimage">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
                                 <path d="M0 0h24v24H0z" fill="none" />
-                                <path fill="currentColor" d="M20 7.423v10.962q0 .69-.462 1.153T18.384 20H5.616q-.691 0-1.153-.462T4 18.384V5.616q0-.691.463-1.153T5.616 4h10.961zm-1 .427L16.15 5H5.616q-.27 0-.443.173T5 5.616v12.769q0 .269.173.442t.443.173h12.769q.269 0 .442-.173t.173-.443zm-5.587 8.102q.587-.586.587-1.414t-.587-1.413T12 12.539t-1.413.586T10 14.538t.587 1.414t1.413.586t1.414-.586M6.768 9.769h7.423v-3H6.77zM5 7.85V19V5z" />
-                            </svg>
-                            Add Record
-                        </button>
-                        <button type="button" class="btn btn-outline btn-block" id="cancelBtn" style="display:none;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
-                                <path d="M0 0h48v48H0z" fill="none" />
-                                <defs>
-                                    <mask id="SVGt9zVddCE">
-                                        <path fill="#555" fill-rule="evenodd" stroke="#fff" stroke-linejoin="round" stroke-width="4" d="M44 40.836q-7.34-8.96-13.036-10.168t-10.846-.365V41L4 23.545L20.118 7v10.167q9.523.075 16.192 6.833q6.668 6.758 7.69 16.836Z" clip-rule="evenodd" />
-                                    </mask>
-                                </defs>
-                                <path fill="currentColor" d="M0 0h48v48H0z" mask="url(#SVGt9zVddCE)" />
-                            </svg>
-                            Cancel
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Quick Actions -->
-            <div class="form-card">
-                <div class="card-title">
-                    <i class="fas fa-bolt"></i>
-                    Quick Actions
-                </div>
-                <div class="btn-group">
-                    <button class="btn btn-success" id="sampleDataBtn">
-                        <i class="fas fa-database"></i> Load Sample Data
-                    </button>
-                    <button class="btn btn-danger" id="clearAllBtn">
-                        <i class="fas fa-trash-can"></i> Clear All
-                    </button>
-                </div>
-                <p style="margin-top: 14px; font-size: 13px; color: #64748b;">
-                    <i class="fas fa-circle-info"></i> Click a row in the table to edit.
-                </p>
-            </div>
-
-        </section>
-
-        <!-- ═══ RIGHT: TABLE ═══ -->
-        <section class="table-column">
-
-            <div class="table-wrapper">
-                <div class="table-toolbar">
-                    <div class="left">
-                        <h2><i class="fas fa-table" style="color:#2563eb; margin-right:8px;"></i> NCR Records</h2>
-                        <span class="record-count" id="recordCount">0 entries</span>
-                        <select id="process">
-                            <option value="0">Select process</option>
-                            <option value="1">PCB Stator Soldering</option>
-                            <option value="2">Silicon Application</option>
-                            <option value="3">Lead Connector Assembly</option>
-                            <option value="4">Packaging</option>
-                            <option value="5">Leadwire Soldering</option>
-                            <option value="6">CFI Issuance</option>
-                            <option value="7">Affixing Label</option>
-                            <option value="8">Adhesive Application</option>
-                            <option value="9">Epoxy Molding</option>
-                            <option value="10">Terminal Shrinking</option>
-                        </select>
-                    </div>
-                    <div class="search-box">
-                        <input type="text" id="searchInput" placeholder="Search anything..." />
-                        <button id="searchBtn">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 48 48">
-                                <path d="M0 0h48v48H0z" fill="none" />
-                                <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="4">
-                                    <path d="M21 38c9.389 0 17-7.611 17-17S30.389 4 21 4S4 11.611 4 21s7.611 17 17 17Z" />
-                                    <path stroke-linecap="round" d="M26.657 14.343A7.98 7.98 0 0 0 21 12a7.98 7.98 0 0 0-5.657 2.343m17.879 18.879l8.485 8.485" />
+                                <g fill="none">
+                                    <path d="M3 3h18v18H3z" />
+                                    <path d="M6 6h12v12H6z" />
+                                    <path stroke="currentColor" stroke-width="2" d="M3 3h18v18H3z" />
+                                    <path stroke="currentColor" stroke-linecap="square" stroke-width="2" d="m7 13l2-2l6.5 6.5M6 6h12v12H6zm9 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0Z" />
                                 </g>
                             </svg>
-                            Search
                         </button>
+
+
+                        <button class="btn btn-primary" id="updateDataBtn" type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 12a9 9 0 1 1-3-6.7" />
+                                <polyline points="21 3 21 9 15 9" />
+                            </svg>
+                            Update
+                        </button>
+
+
+
+                    </div>
+                    <p style="margin-top:14px; font-size:13px; color:#64748b;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:4px;">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="12" x2="12" y2="16" />
+                            <line x1="12" y1="8" x2="12.01" y2="8" />
+                        </svg>
+                        Image must be a png or jpeg
+                    </p>
+                </div>
+
+            </section>
+
+            <!-- ═══ RIGHT: TABLE ═══ -->
+            <section class="table-column">
+
+                <div class="table-wrapper">
+                    <div class="table-toolbar">
+                        <div class="left">
+                            <h2><svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="3" y1="15" x2="21" y2="15" /><line x1="9" y1="21" x2="9" y2="9" /></svg> NCR Records</h2>
+                            <span class="record-count" id="recordCount">0 entries</span>
+                        </div>
+                        <div class="search-box">
+                            <input type="text" id="searchInput" placeholder="Search anything..." />
+                            <button id="searchBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 48 48">
+                                    <path d="M0 0h48v48H0z" fill="none" />
+                                    <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="4">
+                                        <path d="M21 38c9.389 0 17-7.611 17-17S30.389 4 21 4S4 11.611 4 21s7.611 17 17 17Z" />
+                                        <path stroke-linecap="round" d="M26.657 14.343A7.98 7.98 0 0 0 21 12a7.98 7.98 0 0 0-5.657 2.343m17.879 18.879l8.485 8.485" />
+                                    </g>
+                                </svg>
+                                Search
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-scroll">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th><svg xmlns="http://www.w3.org/2000/svg" width="0.9em" height="0.9em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg> Date/Time</th>
+                                    <th><svg xmlns="http://www.w3.org/2000/svg" width="0.9em" height="0.9em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg> Reg. No.</th>
+                                    <th><svg xmlns="http://www.w3.org/2000/svg" width="0.9em" height="0.9em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></svg> Model</th>
+                                    <th><svg xmlns="http://www.w3.org/2000/svg" width="0.9em" height="0.9em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg> Process</th>
+                                    <th><svg xmlns="http://www.w3.org/2000/svg" width="0.9em" height="0.9em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" /><line x1="8" y1="2" x2="8" y2="22" /><line x1="16" y1="2" x2="16" y2="22" /><line x1="2" y1="8" x2="22" y2="8" /><line x1="2" y1="16" x2="22" y2="16" /></svg> 4M</th>
+                                    <th><svg xmlns="http://www.w3.org/2000/svg" width="0.9em" height="0.9em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><polyline points="9 12 11 14 15 10" /></svg> NCR Type</th>
+                                    <th><svg xmlns="http://www.w3.org/2000/svg" width="0.9em" height="0.9em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" /></svg> Line</th>
+                                    <th style="text-align:center;"><svg xmlns="http://www.w3.org/2000/svg" width="0.9em" height="0.9em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /><circle cx="5" cy="12" r="1" /></svg> Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <!-- rows injected by JS -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
-                <div class="table-scroll">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th><i class="fas fa-qrcode"></i> Date/ Time.</th>
-                                <th><i class="fas fa-qrcode"></i> Reg. No.</th>
-                                <th><i class="fas fa-cube"></i> Model</th>
-                                <th><i class="fas fa-gear"></i> Process</th>
-                                <th><i class="fas fa-list"></i> 4M</th>
-                                <th><i class="fas fa-tag"></i> NCR Type</th>
-                                <th><i class="fas fa-arrows-left-right"></i> Line</th>
-                                <th style="text-align:center;"><i class="fas fa-sliders"></i> Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableBody">
-                            <!-- rows injected by JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            </section>
 
-        </section>
+        </div>
 
     </div>
 
     <!-- ─── Toast ─── -->
     <div class="toast" id="toast">
-        <i class="fas fa-check-circle"></i>
+        <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
         <span id="toastMessage">Done!</span>
     </div>
 
@@ -252,8 +293,8 @@
         <div class="modal-box">
             <p>Delete this NCR record? This cannot be undone.</p>
             <div class="btn-group">
-                <button class="btn btn-danger" id="confirmDeleteBtn"><i class="fas fa-trash-can"></i> Delete</button>
-                <button class="btn btn-outline" id="cancelDeleteBtn"><i class="fas fa-times"></i> Cancel</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg> Delete</button>
+                <button class="btn btn-outline" id="cancelDeleteBtn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg> Cancel</button>
             </div>
         </div>
     </div>
@@ -273,6 +314,7 @@
             this.formTitle = document.getElementById('formTitle');
             this.submitBtn = document.getElementById('submitBtn');
             this.cancelBtn = document.getElementById('cancelBtn');
+            this.backbtn = document.getElementById('backbtn');
             this.recordCount = document.getElementById('recordCount');
             this.toast = document.getElementById('toast');
             this.toastMessage = document.getElementById('toastMessage');
@@ -283,7 +325,7 @@
             // INput Value
             this.regNoInput = document.getElementById('regNo');
             this.modelInput = document.getElementById('model');
-            this.processSelect = document.getElementById('process');
+            this.processSelect = document.getElementById('processSelect');
             this.fourMSelect = document.getElementById('fourM');
             this.ncrTypeSelect = document.getElementById('ncrType');
             this.lineSelect = document.getElementById('Line');
@@ -299,17 +341,44 @@
             this.monthName = today.toLocaleString('en-US', { month: 'long' });
             this.year = today.getFullYear();
 
+            // File UPLOAd IMAGE
+            this.fileInput = document.getElementById('certificateFile');
+            this.uploadBtn = document.getElementById('sampleDataBtn');
+            this.nameInput = document.getElementById('winnerText');
+            this.isDisplayedInput = document.getElementById('isDisplayed');
+            this.updateBtn = document.getElementById('updateDataBtn');
 
+            // holds the picked File object between selection and the Update click
+            this.selectedCertificateFile = null;
         }
 
         async init() {
             await this.GetRegistrationData();
+            await this.fetchAwardData();
 
             this.bindFormEvents();
             this.bindTableEvents();
+            this.bindUploadEvents();
+            this.bindUpdateEvents();
 
             document.querySelectorAll('.uppercase-input')
                 .forEach(input => input.addEventListener('input', this.forceUpperCase));
+        }
+
+        async fetchAwardData() {
+            try {
+                const res = await getMethod('@Url.Action("GetAwardData", "FinalAssembly")', {});
+                console.log(res);
+
+                if(res?.Success){
+                    let getdata = res.data;
+                    this.nameInput.value = getdata.WinnerName;
+                }
+
+            } catch (error) {
+                console.error('Error fetching award data:', error);
+                return null;
+            }
         }
 
         async GetRegistrationData() {
@@ -321,7 +390,6 @@
                     console.log('No data Registration Found ');
                     return;
                 }
-                console.log(res);
                 this.renderTable(res.data);
             } catch (error) {
                 console.error('Error fetching 4M data:', error);
@@ -345,8 +413,7 @@
             }
 
             this.tbody.innerHTML = data.map(row => {
-                console.log(`Process2 : ${row.ProcessID} -  fourID2 : ${row.FourMID}
-              NCR Type2: ${row.NCRTypeID} - GROUPS2: ${row.GroupID}`)
+              
                 return `
              <tr class='fade-in'
                  data-ncr-id="${row.NCRID}"
@@ -388,6 +455,10 @@
         }
 
         bindFormEvents() {
+            this.backbtn.addEventListener('click', ()=>{
+                window.location.href = '/Production1/FinalAssembly/Dashboard';
+            });
+
             this.form.addEventListener('submit', (e) => this.handleSubmit(e));
             this.cancelBtn.addEventListener('click', () => this.resetForm());
         }
@@ -406,6 +477,67 @@
                 }
             });
         }
+
+        bindUploadEvents() {
+            // clicking the styled button opens the real (hidden) file picker
+            this.uploadBtn.addEventListener('click', () => this.fileInput.click());
+
+            this.fileInput.addEventListener('change', () => {
+                const file = this.fileInput.files[0];
+                if (!file) return;
+
+                // client-side type check — server re-validates this too, don't trust the client alone
+                const allowedTypes = ['image/png', 'image/jpeg'];
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Only PNG or JPEG images are allowed.');
+                    this.fileInput.value = '';
+                    this.selectedCertificateFile = null;
+                    return;
+                }
+
+                // just stash it — actual submit happens on "Update" click
+                this.selectedCertificateFile = file;
+            });
+        }
+
+        bindUpdateEvents() {
+                this.updateBtn.addEventListener('click', async () => {
+                    const name = this.nameInput.value.trim();
+                    if (!name) {
+                        alert('Enter the winner\'s name first.');
+                        return;
+                    }
+                    if (!this.selectedCertificateFile) {
+                        alert('Choose a certificate image first.');
+                        return;
+                    }
+
+                    const formData = new FormData();
+                    formData.append('awardeesName', name);
+                    formData.append('isDisplayed', this.isDisplayedInput.checked);
+                    formData.append('certificateImage', this.selectedCertificateFile);
+
+                    this.updateBtn.disabled = true;
+                    try {
+                        const res = await postMethod('@Url.Action("UploadCertificate", "FinalAssembly")', formData);
+                        console.log(res);
+
+                        if (!res?.Success) {
+                            this.showToast(res?.Message || 'Update failed.', true);
+                            return;
+                        }
+
+                        this.showToast('Awardee updated.');
+                        this.fileInput.value = '';
+                        this.selectedCertificateFile = null;
+                    } catch (err) {
+                        console.error(err);
+                        this.showToast('Update failed: network or server error.', true);
+                    } finally {
+                        this.updateBtn.disabled = false;
+                    }
+                });
+            }
 
         bindDeleteModalEvents() {
             //document.getElementById('cancelDeleteBtn').addEventListener('click', () => this.closeDeleteModal());
@@ -453,7 +585,7 @@
                 ProcessID: parseInt(this.processSelect.value, 10),
                 FourMID: parseInt(this.fourMSelect.value, 10),
                 NCRTypeID: parseInt(this.ncrTypeSelect.value, 10),
-                OriginID: this.lineSelect.value, 
+                OriginID: this.lineSelect.value,
                 GroupID : this.GroupID.value
             };
 

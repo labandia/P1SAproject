@@ -58,6 +58,12 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public decimal Percentage { get; set; }
     }
 
-
+    public class AwardDto
+    {
+        public string WinnerName { get; set; }
+        public string CertificateImage { get; set; }
+        public string Subtitle { get; set; }
+        public bool IsDisplayed { get; set; }
+    }
 
 }

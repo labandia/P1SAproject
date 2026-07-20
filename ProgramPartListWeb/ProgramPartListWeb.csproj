@@ -762,6 +762,7 @@
     <Content Include="Content\css\Animation.css" />
     <Content Include="Content\css\FinalAssembly.css" />
     <Content Include="Content\css\FinalDashboard.css" />
+    <Content Include="Content\css\FinalDashMangement.css" />
     <Content Include="Content\css\HydroDesign.css" />
     <Content Include="Content\css\HydroDesign.min.css">
       <DependentUpon>HydroDesign.css</DependentUpon>

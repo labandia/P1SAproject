@@ -25,6 +25,17 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                 VALUES(@RegistrationNo, @ModelShopOrder, @OriginID, @ProcessID, @FourMID, @NCRTypeID, @GroupID)", model);
         }
 
+        public Task<bool> EditAwardsData(AwardDto model)
+        {
+            return SqlDataAcess_Test.ExecuteAsync($@"UPDATE ProductionFinal_Awardees SET AwardeesName =@AwardeesName, 
+                   ImagePathCertificate =@ImagePathCertificate, IsDisplayed =@IsDisplayed ", new
+            {
+                AwardeesName = model.WinnerName,
+                ImagePathCertificate = model.CertificateImage,
+                IsDisplayed = model.IsDisplayed
+            });
+        }
+
         public Task<bool> EditRegistrationData(RegistrationFinalModel model)
         {
             Debug.WriteLine("Edit  process");
@@ -32,6 +43,21 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             return SqlDataAcess_Test.ExecuteAsync($@"UPDATE ProductionFinal_Registration SET 
                 RegistrationNo =@RegistrationNo, ModelShopOrder =@ModelShopOrder , OriginID =@OriginID, 
                 ProcessID =@ProcessID, FourMID =@FourMID, NCRTypeID =@NCRTypeID, GroupID =@GroupID WHERE NCRID =@NCRID ", model);
+        }
+
+        public async Task<AwardDto> GetAwardsData()
+        {
+            const string sql = @"
+                SELECT TOP 1
+                    AwardeesName as WinnerName,
+                    ImagePathCertificate as CertificateImage,
+                    DateUpdated, IsDisplayed
+                FROM ProductionFinal_Awardees
+                ORDER BY DateUpdated DESC";
+
+            var getdata = await SqlDataAcess_Test.GetDataAsync<AwardDto>(sql);
+
+            return getdata.SingleOrDefault();
         }
 
         public Task<List<LineTopsModel>> GetBestLines()
@@ -212,7 +238,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                                 ", null);   
         }
 
-        public Task<List<RegistrationFinalModel>> GetRegistrationData(string searchText, int month)
+        public async Task<List<RegistrationFinalModel>> GetRegistrationData(string searchText, int month)
         {
             var year = DateTime.Today.Year;
             var startDate = new DateTime(year, month, 1);
@@ -236,9 +262,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                   INNER JOIN ProductionFinal_Process p ON p.ProcessID = r.ProcessID
                   INNER JOIN ProductionFinal_4M m ON m.FourMID = r.FourMID
                   INNER JOIN ProductionFinalNCR_Type n ON n.NCRTypeID = r.NCRTypeID
-                  INNER JOIN ProductionFinal_Group g ON g.GroupID = r.GroupID
-                  WHERE r.CreatedDate >= @StartDate
-                    AND r.CreatedDate < @EndDate  ";
+                  INNER JOIN ProductionFinal_Group g ON g.GroupID = r.GroupID ";
 
 
             var parameters = new DynamicParameters();
@@ -253,8 +277,9 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                 parameters.Add("@SearchPrefix", $"{searchText}%");
             }
 
-            return SqlDataAcess_Test.GetDataAsync<RegistrationFinalModel>(@"
-                  ORDER BY r.CreatedDate DESC", parameters);
+            query += "ORDER BY r.CreatedDate DESC";
+
+            return await SqlDataAcess_Test.GetDataAsync<RegistrationFinalModel>(query, null);
 
 
         }

@@ -2,73 +2,141 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using IssuanceSystem.Interface;
+using IssuanceSystem.Model;
 using Microsoft.Web.WebView2.WinForms;
 
 namespace IssuanceSystem
 {
     internal partial class Form1 : Form
     {
+        private CancellationTokenSource _cts;
+
         private readonly IIsuanceRespository _sua;
 
         // Fixed root folder to search within
         private readonly string rootFolder = @"C:\Users\jaye-labandia\Desktop\PCB";
+        private readonly BindingSource _bindingSource = new BindingSource();
 
         public Form1(IIsuanceRespository sua)
         {
             InitializeComponent();
             _sua = sua;
 
-            lstResults.View = View.Details;
-            lstResults.FullRowSelect = true;
-            lstResults.Columns.Add("Name", 250);
-            lstResults.Columns.Add("Type", 80);
-            lstResults.Columns.Add("Full Path", 400);
-            lstResults.Columns.Add("Modified", 130);
-
-            lblStatus.Text = $"Searching within: {rootFolder}";
+            dataGridView1.AutoGenerateColumns = true;
+            dataGridView1.DataSource = _bindingSource;
+            EnableDoubleBuffering(dataGridView1);
         }
 
-        private async void Form1_Load(object sender, EventArgs e)
+        public static void EnableDoubleBuffering(DataGridView dgv)
         {
-            //await webView21.EnsureCoreWebView2Async(null);
+            typeof(DataGridView)
+                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                .SetValue(dgv, true, null);
+        }
 
-            //string pdfPath = @"C:\Users\jaye-labandia\Desktop\PCB\00015063-01R\00015063-01M (P1SAC-2303001).pdf";
+        private async void Form1_Load(object sender, EventArgs e) => await loadData();
 
-            //if (File.Exists(pdfPath))
-            //{
-            //    // WebView2 needs a properly encoded file:// URI, especially since
-            //    // this path has spaces and parentheses in it
-            //    string uri = new Uri(pdfPath).AbsoluteUri;
-            //    webView21.CoreWebView2.Navigate(uri);
-            //}
-            //else
-            //{
-            //    MessageBox.Show("PDF not found:\n" + pdfPath);
-            //}
+        public async Task loadData(bool append = false)
+        {
+            _cts?.Cancel();
+            _cts?.Dispose();
+            _cts = new CancellationTokenSource();
+            var token = _cts.Token;
 
+            try
+            {
+                dataGridView1.SuspendLayout();
 
 
+                var dataTask = await _sua.GetIssuanceTransaction();
 
-            //pictureBox1.Image = Image.FromFile(@"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\NonComformity\2c264587-ffab-42db-bdca-7abd826c3b3a.png");
+                if (token.IsCancellationRequested) return;
+                BindGrid(dataTask, append);
+
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show($"Load error: {ex.Message}");
+                Debug.WriteLine($"Load error: {ex.Message}");
+            }
+
+        }
+
+        private void BindGrid(List<IssuanceTransactionModel> result, bool append)
+        {
+            if (append && _bindingSource.DataSource is List<IssuanceTransactionModel> existing)
+            {
+                existing.AddRange(result);
+                _bindingSource.ResetBindings(false);
+            }
+            else
+            {
+                _bindingSource.DataSource = result;
+            }
+
+            dataGridView1.ClearSelection();
+        }
+
+        public void ArrangeColumns()
+        {
+          
+            dataGridView1.Columns["ShopOrder"].HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridView1.Columns["ShopOrder"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            dataGridView1.Columns["ShopOrder"].Width = 120;
+
+            ConfigureColumn(dataGridView1, "ItemNo", 120);
+            ConfigureColumn(dataGridView1, "PartNo", 120);
+            ConfigureColumn(dataGridView1, "ProcessName", 200);
+            ConfigureColumn(dataGridView1, "Description", 200);
+            ConfigureColumn(dataGridView1, "PreparedQuantity", 200);
+
+            ConfigureColumn(dataGridView1, "DepartmentID", 120);
+            dataGridView1.Columns["PreparedQuantity"].DefaultCellStyle.Format = "0.##";
+        }
+
+        public static void ConfigureColumn(DataGridView grid, string name, int width)
+        {
+            if (!grid.Columns.Contains(name)) return;
+
+            var col = grid.Columns[name];
+
+            col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            col.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            col.Width = width;
         }
 
         private async void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode != Keys.Enter) return;
             e.SuppressKeyPress = true;
+
+            await SearchandDisplay();
+        }
+
+        public async Task SearchandDisplay()
+        {
+            if (!FormValidation()) return;
+
             string partnum = textBox1.Text.Trim();
-            if (string.IsNullOrEmpty(partnum)) return;
-            bool result = await _sua.SearchPartnumber(partnum, RevText.Text);
-            if (result)
+            //if (string.IsNullOrEmpty(partnum)) return;
+
+            var getDetails = await _sua.GetIssuanceDetails(partnum, RevText.Text);
+
+            if (getDetails != null)
             {
                 string filename = partnum + RevText.Text;
+
+                label10.Text = getDetails.Application;
+                label6.Text = getDetails.Remarks;
 
                 // Step 1: find the folder matching filename
                 string foundFolder = await Task.Run(() =>
@@ -103,6 +171,9 @@ namespace IssuanceSystem
                         if (imageExtensions.Contains(ext))
                         {
                             pictureBox1.Image = Image.FromFile(foundPath);
+                            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+
+                            pictureBox1.BringToFront();
                         }
                         else if (ext == ".pdf")
                         {
@@ -117,6 +188,8 @@ namespace IssuanceSystem
                             {
                                 MessageBox.Show("PDF not found:\n" + foundPath);
                             }
+
+                            webView21.BringToFront();
                         }
                         else
                         {
@@ -124,6 +197,18 @@ namespace IssuanceSystem
                             {
                                 UseShellExecute = true
                             });
+                        }
+
+                        ShowStatus(Color.FromArgb(14, 209, 69), "GOOD PCB");
+
+                        bool result = await _sua.OnsubmitTransaction(AmbassadorText.Text, textBox1.Text,
+                            label13.Text, label6.Text, label10.Text);
+
+                        if (result)
+                        {
+                            MessageBox.Show("Save succesfully");
+
+                           await loadData();
                         }
                     }
                     catch (Exception ex)
@@ -138,96 +223,19 @@ namespace IssuanceSystem
             }
             else
             {
-                MessageBox.Show("Part number / revision not found.");
+                ShowStatus(Color.FromArgb(238, 28, 36), "WRONG PCB");
             }
         }
+
+
 
         private async void btnSearch_Click(object sender, EventArgs e)
         {
-            string searchTerm = txtSearch.Text.Trim();
-
-            if (!Directory.Exists(rootFolder))
-            {
-                MessageBox.Show($"Folder not found:\n{rootFolder}");
-                return;
-            }
-            if (string.IsNullOrEmpty(searchTerm))
-            {
-                MessageBox.Show("Enter a name to search for.");
-                return;
-            }
-
-            lstResults.Items.Clear();
-            btnSearch.Enabled = false;
-            lblStatus.Text = "Searching...";
-
-            try
-            {
-                var results = await Task.Run(() => SearchFolder(rootFolder, searchTerm));
-
-                foreach (var item in results)
-                    lstResults.Items.Add(item);
-
-                lblStatus.Text = $"{results.Count} result(s) found in {rootFolder}";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Search error: " + ex.Message);
-            }
-            finally
-            {
-                btnSearch.Enabled = true;
-            }
+           
         }
 
-        private List<ListViewItem> SearchFolder(string startFolder, string searchTerm)
-        {
-            var matches = new List<ListViewItem>();
+     
 
-            void SearchRecursive(string path)
-            {
-                IEnumerable<string> entries;
-                try
-                {
-                    entries = Directory.EnumerateFileSystemEntries(path);
-                }
-                catch (UnauthorizedAccessException) { return; }
-                catch (PathTooLongException) { return; }
-
-                foreach (var entry in entries)
-                {
-                    string name = Path.GetFileName(entry);
-
-                    if (name.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        bool isDir = Directory.Exists(entry);
-                        var lvi = new ListViewItem(name);
-                        lvi.SubItems.Add(isDir ? "Folder" : "File");
-                        lvi.SubItems.Add(entry);
-                        lvi.SubItems.Add(File.GetLastWriteTime(entry).ToString("yyyy-MM-dd HH:mm"));
-                        lvi.Tag = entry;
-                        matches.Add(lvi);
-                    }
-
-                    if (Directory.Exists(entry))
-                        SearchRecursive(entry);
-                }
-            }
-
-            SearchRecursive(startFolder);
-            return matches;
-        }
-
-        private void lstResults_DoubleClick(object sender, EventArgs e)
-        {
-            if (lstResults.SelectedItems.Count == 0) return;
-            string path = lstResults.SelectedItems[0].Tag.ToString();
-
-            if (File.Exists(path))
-                System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{path}\"");
-            else if (Directory.Exists(path))
-                System.Diagnostics.Process.Start("explorer.exe", $"\"{path}\"");
-        }
 
         private void txtSearch_KeyDown(object sender, KeyEventArgs e)
         {
@@ -238,9 +246,63 @@ namespace IssuanceSystem
             }
         }
 
-        private void Savebtn_Click(object sender, EventArgs e)
+        private async void Savebtn_Click(object sender, EventArgs e)
         {
+            if (!FormValidation()) return;
 
+            bool result = await _sua.OnsubmitTransaction(AmbassadorText.Text, textBox1.Text, 
+                label13.Text, label6.Text, label10.Text);
+
+            if (result)
+            {
+                MessageBox.Show("Save succesfully");
+            }
+        }
+
+        public bool FormValidation()
+        {
+            bool result = true;
+
+            if (string.IsNullOrEmpty(AmbassadorText.Text))
+            {
+                MessageBox.Show("Input FA Shop Order is required");
+                return false;
+            }else if (string.IsNullOrEmpty(textBox1.Text))
+            {
+                MessageBox.Show("Input PRepared PCB assembly is required");
+                return false;
+            }
+            else if (string.IsNullOrEmpty(RevText.Text))
+            {
+                MessageBox.Show("Input Revision is required");
+                return false;
+            }
+
+            return result;
+        }
+
+        private async void RevText_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Enter) return;
+            e.SuppressKeyPress = true;
+
+            await SearchandDisplay();
+        }
+
+        // ══════════════════════════════════════════════════════════════
+        //  STATUS DISPLAY & TIMER
+        // ══════════════════════════════════════════════════════════════
+        private void ShowStatus(Color bg, string text)
+        {
+            //_statusTimer.Stop();
+            Statustext.BackColor = bg;
+            Statustext.Text = text;
+            //_statusTimer.Start();
+        }
+        private void StatusTimer_Tick(object sender, EventArgs e)
+        {
+            Statustext.BackColor = Color.FromArgb(26, 36, 59);
+            Statustext.Text = "CHECK PCBA ....";
         }
     }
 }

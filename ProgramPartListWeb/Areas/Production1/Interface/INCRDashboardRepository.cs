@@ -14,6 +14,9 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
         Task<List<GroupSummaryModel>> GetGroupSummary();
         Task<List<LineTopsModel>> GetBestLines();
 
+        Task<bool> EditAwardsData(AwardDto model);
+        Task<AwardDto> GetAwardsData();
+
         Task<List<RegistrationFinalModel>> GetRegistrationData(string search, int month);
         Task<bool> AddRegistrationData(RegistrationFinalModel model);
         Task<bool> EditRegistrationData(RegistrationFinalModel model);

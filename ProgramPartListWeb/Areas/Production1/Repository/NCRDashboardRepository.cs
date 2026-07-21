@@ -17,18 +17,24 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
     {
         public Task<bool> AddRegistrationData(RegistrationFinalModel model)
         {
-            Debug.WriteLine("Add process");
-
-
             return SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO ProductionFinal_Registration
                 (RegistrationNo, ModelShopOrder, OriginID, ProcessID, FourMID, NCRTypeID, GroupID) 
                 VALUES(@RegistrationNo, @ModelShopOrder, @OriginID, @ProcessID, @FourMID, @NCRTypeID, @GroupID)", model);
         }
 
+        public async Task<bool> DeleteRegistrationData(int ID)
+        {
+            return await SqlDataAcess_Test.ExecuteAsync($@"DELETE FROM ProductionFinal_Registration 
+                WHERE NCRID = @NCRID ", new
+            { NCRID = ID });
+        }
+
         public Task<bool> EditAwardsData(AwardDto model)
         {
-            return SqlDataAcess_Test.ExecuteAsync($@"UPDATE ProductionFinal_Awardees SET AwardeesName =@AwardeesName, 
-                   ImagePathCertificate =@ImagePathCertificate, IsDisplayed =@IsDisplayed ", new
+            return SqlDataAcess_Test.ExecuteAsync($@"UPDATE ProductionFinal_Awardees 
+                   SET AwardeesName =@AwardeesName, 
+                   ImagePathCertificate = COALESCE(@ImagePathCertificate, ImagePathCertificate),
+                   IsDisplayed =@IsDisplayed ", new
             {
                 AwardeesName = model.WinnerName,
                 ImagePathCertificate = model.CertificateImage,
@@ -45,15 +51,19 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                 ProcessID =@ProcessID, FourMID =@FourMID, NCRTypeID =@NCRTypeID, GroupID =@GroupID WHERE NCRID =@NCRID ", model);
         }
 
+        public Task<string> GetAwardName()
+        {
+            return SqlDataAcess_Test.GetOneData($@"SELECT TOP 1 AwardeesName FROM ProductionFinal_Awardees ", null);
+        }
+
         public async Task<AwardDto> GetAwardsData()
         {
-            const string sql = @"
+            string sql = @"
                 SELECT TOP 1
                     AwardeesName as WinnerName,
                     ImagePathCertificate as CertificateImage,
                     DateUpdated, IsDisplayed
-                FROM ProductionFinal_Awardees
-                ORDER BY DateUpdated DESC";
+                FROM ProductionFinal_Awardees ORDER BY DateUpdated DESC";
 
             var getdata = await SqlDataAcess_Test.GetDataAsync<AwardDto>(sql);
 

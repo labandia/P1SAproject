@@ -907,6 +907,7 @@
     <Content Include="Areas\Production1\Views\FinalAssembly\Dashboard.cshtml" />
     <Content Include="Areas\Production1\Views\Shared\_FinalDashboard.cshtml" />
     <Content Include="Areas\Production1\Views\FinalAssembly\ManagementData.cshtml" />
+    <Content Include="Content\fonts\Arial Rounded MT Bold Regular.ttf" />
     <None Include="Content\Images\.editorconfig" />
     <Content Include="Content\Uploads\PCFY-81013Form1L.xlsx" />
     <Content Include="Content\Uploads\FinalUploadTemplate.xlsx" />

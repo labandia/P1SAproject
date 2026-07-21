@@ -120,6 +120,8 @@
                                     <option value="CL9">CL9</option>
                                     <option value="CL11">CL11</option>
                                     <option value="MEIG">MEIG</option>
+                                    <option value="OP1">OP1</option>
+                                    <option value="OP3">OP3</option>
                                     <option value="OP-EM">OP-EM</option>
                                     <option value="Matprep">Matprep</option>
                                 </select>
@@ -177,36 +179,42 @@
                         <input type="text" id="winnerText" class="uppercase-input" placeholder="e.g. Juan Dela Cruz" required />
                     </div>
 
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="isDisplayed" />
-                        Show in the Dashboard
-                    </label>
+                  
 
                     <!-- hidden actual file input; button below triggers it -->
                     <input type="file" id="certificateFile" accept=".png,.jpg,.jpeg" style="display:none;" />
 
                     <div class="btn-group">
-                        <button class="btn btn-success" id="sampleDataBtn">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <ellipse cx="12" cy="5" rx="9" ry="3" />
-                                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
-                                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
-                            </svg>
-                            Update the Image Certificate
-                        </button>
+                        <div class="upload-group">
+                            <button class="btn btn-success" id="sampleDataBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <ellipse cx="12" cy="5" rx="9" ry="3" />
+                                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+                                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+                                </svg>
+                                Update the Image
+                            </button>
 
-                        <button id="viewimage">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
-                                <path d="M0 0h24v24H0z" fill="none" />
-                                <g fill="none">
-                                    <path d="M3 3h18v18H3z" />
-                                    <path d="M6 6h12v12H6z" />
-                                    <path stroke="currentColor" stroke-width="2" d="M3 3h18v18H3z" />
-                                    <path stroke="currentColor" stroke-linecap="square" stroke-width="2" d="m7 13l2-2l6.5 6.5M6 6h12v12H6zm9 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0Z" />
-                                </g>
-                            </svg>
-                        </button>
+                            <button class="btn btn-outline-secondary" id="viewimage">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+                                    <path d="M0 0h24v24H0z" fill="none" />
+                                    <g fill="none">
+                                        <path d="M3 3h18v18H3z" />
+                                        <path d="M6 6h12v12H6z" />
+                                        <path stroke="currentColor" stroke-width="2" d="M3 3h18v18H3z" />
+                                        <path stroke="currentColor" stroke-linecap="square" stroke-width="2" d="m7 13l2-2l6.5 6.5M6 6h12v12H6zm9 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0Z" />
+                                    </g>
+                                </svg>
+                                View 
+                            </button>
+                        </div>
 
+
+
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="isDisplayed" />
+                            Show in the Dashboard
+                        </label>
 
                         <button class="btn btn-primary" id="updateDataBtn" type="button">
                             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -319,7 +327,7 @@
             this.toast = document.getElementById('toast');
             this.toastMessage = document.getElementById('toastMessage');
             this.deleteModal = document.getElementById('deleteModal');
-
+            this.clicksearch = document.getElementById('searchBtn');
 
 
             // INput Value
@@ -347,19 +355,29 @@
             this.nameInput = document.getElementById('winnerText');
             this.isDisplayedInput = document.getElementById('isDisplayed');
             this.updateBtn = document.getElementById('updateDataBtn');
+            this.viewImageBtn = document.getElementById("viewimage");
 
             // holds the picked File object between selection and the Update click
             this.selectedCertificateFile = null;
+            this.imageFileName = '';
         }
 
         async init() {
             await this.GetRegistrationData();
             await this.fetchAwardData();
 
+            this.bindDeleteModalEvents();
             this.bindFormEvents();
             this.bindTableEvents();
             this.bindUploadEvents();
             this.bindUpdateEvents();
+
+
+            this.clicksearch.addEventListener('click', async (e) => {
+                e.preventDefault();
+
+                await GetRegistrationData();
+            });
 
             document.querySelectorAll('.uppercase-input')
                 .forEach(input => input.addEventListener('input', this.forceUpperCase));
@@ -373,6 +391,9 @@
                 if(res?.Success){
                     let getdata = res.data;
                     this.nameInput.value = getdata.WinnerName;
+                    this.isDisplayedInput.checked = getdata.IsDisplayed;
+                    this.imageFileName = getdata.CertificateImage;
+                    //this.selectedCertificateFile = getdata.CertificateImage;
                 }
 
             } catch (error) {
@@ -413,7 +434,7 @@
             }
 
             this.tbody.innerHTML = data.map(row => {
-              
+
                 return `
              <tr class='fade-in'
                  data-ncr-id="${row.NCRID}"
@@ -501,35 +522,34 @@
         }
 
         bindUpdateEvents() {
-                this.updateBtn.addEventListener('click', async () => {
+             this.updateBtn.addEventListener('click', async () => {
                     const name = this.nameInput.value.trim();
                     if (!name) {
                         alert('Enter the winner\'s name first.');
-                        return;
-                    }
-                    if (!this.selectedCertificateFile) {
-                        alert('Choose a certificate image first.');
                         return;
                     }
 
                     const formData = new FormData();
                     formData.append('awardeesName', name);
                     formData.append('isDisplayed', this.isDisplayedInput.checked);
-                    formData.append('certificateImage', this.selectedCertificateFile);
 
-                    this.updateBtn.disabled = true;
-                    try {
+                    if (this.selectedCertificateFile) {
+                        formData.append('certificateImage', this.selectedCertificateFile);
+                    }
+
+                    //const data = Object.fromEntries(formData);
+                     try {
                         const res = await postMethod('@Url.Action("UploadCertificate", "FinalAssembly")', formData);
-                        console.log(res);
 
                         if (!res?.Success) {
                             this.showToast(res?.Message || 'Update failed.', true);
                             return;
                         }
 
-                        this.showToast('Awardee updated.');
+                        this.showToast('Update Winner Successfully.');
                         this.fileInput.value = '';
                         this.selectedCertificateFile = null;
+                        await this.fetchAwardData();
                     } catch (err) {
                         console.error(err);
                         this.showToast('Update failed: network or server error.', true);
@@ -537,17 +557,29 @@
                         this.updateBtn.disabled = false;
                     }
                 });
-            }
+
+
+                this.viewImageBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+
+                    if (!this.imageFileName) {
+                        alert("No image available.");
+                        return;
+                    }
+
+                    const url = `@Url.Action("DisplaytheImage", "FinalAssembly")?filename=${encodeURIComponent(this.imageFileName)}`;
+
+                    window.open(url, "_blank");
+                });
+        }
 
         bindDeleteModalEvents() {
-            //document.getElementById('cancelDeleteBtn').addEventListener('click', () => this.closeDeleteModal());
-            //document.getElementById('confirmDeleteBtn').addEventListener('click', () => this.handleDelete());
+            document.getElementById('cancelDeleteBtn').addEventListener('click', () => this.closeDeleteModal());
+            document.getElementById('confirmDeleteBtn').addEventListener('click', () => this.handleDelete());
         }
 
         populateFormForEdit(row) {
 
-            console.log(`Process : ${row.dataset.processId} -  fourID : ${row.dataset.fourmId}
-                         NCR Type: ${row.dataset.ncrType} - GROUPS : ${row.dataset.group}`)
             this.editIndexInput.value = row.dataset.ncrId;
             this.regNoInput.value = row.dataset.regNo;
             this.modelInput.value = row.dataset.model;
@@ -589,7 +621,6 @@
                 GroupID : this.GroupID.value
             };
 
-            console.log('Submitting payload:', payload);
                this.submitBtn.disabled = true;
                 try {
                     const res = await postMethod('@Url.Action("SaveRegistration", "FinalAssembly")', payload);
@@ -621,10 +652,12 @@
         }
 
         async handleDelete() {
-            @*if (!this.pendingDeleteId) return;
+            if (!this.pendingDeleteId) return;
 
             try {
-                const res = await postMethod('@Url.Action("DeleteRegistration", "FinalAssembly")', { NCRID: this.pendingDeleteId });
+                console.log("DELETE HERE");
+
+                const res = await postMethod('@Url.Action("deleteRegistration", "FinalAssembly")', { NCRID: this.pendingDeleteId });
 
                 if (!res?.Success) {
                     this.showToast(res?.Message || 'Delete failed.', true);
@@ -644,7 +677,7 @@
                 this.showToast('Delete failed.', true);
             } finally {
                 this.closeDeleteModal();
-            }*@
+            }
         }
 
         forceUpperCase(e) {

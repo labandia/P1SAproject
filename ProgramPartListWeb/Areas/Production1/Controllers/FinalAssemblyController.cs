@@ -12,6 +12,7 @@ using ProgramPartListWeb.Areas.Production1.Model;
 using ProgramPartListWeb.Areas.Hydroponics.Interface;
 using System.Configuration;
 using System.IO;
+using System.Diagnostics;
 
 namespace ProgramPartListWeb.Areas.Production1.Controllers
 {
@@ -101,19 +102,43 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
         }
 
         [HttpPost]
+        public async Task<ActionResult> deleteRegistration(int NCRID)
+        {
+            try
+            {
+
+                bool result = await _manu.DeleteRegistrationData(NCRID);
+                if (!result) return JsonPostError("Insert failed.", 500);
+
+
+                return JsonCreated(result, "Delete Registration Successfully");
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message, 500);
+            }
+        }
+        private static readonly string[] allowedExtensionsForCleanup = { ".png", ".jpg", ".jpeg" };
+
+        [HttpPost]
         public async Task<ActionResult> UploadCertificate(string awardeesName, bool isDisplayed,
             HttpPostedFileBase certificateImage)
         {
-            if (string.IsNullOrWhiteSpace(awardeesName) || certificateImage == null || certificateImage.ContentLength == 0)
-            {
-                return JsonError("Name and image are required.");
-            }
+            if (string.IsNullOrWhiteSpace(awardeesName))
+                return JsonError("Name is required.");
 
-            var allowedExtensions = new[] { ".png", ".jpg", ".jpeg" };
-            var ext = Path.GetExtension(certificateImage.FileName).ToLowerInvariant();
-            if (!allowedExtensions.Contains(ext))
+            string newFileName = null;
+
+            // Only save a new image if one was uploaded
+            if (certificateImage != null && certificateImage.ContentLength > 0)
             {
-                return JsonError("Only PNG or JPEG files are allowed.");
+                var allowedExtensions = new[] { ".png", ".jpg", ".jpeg" };
+                var ext = Path.GetExtension(certificateImage.FileName).ToLowerInvariant();
+                if (!allowedExtensions.Contains(ext))
+                {
+                    return JsonError("Only PNG or JPEG files are allowed.");
+                }
+                newFileName = $"{Guid.NewGuid()}{ext}";
             }
 
             try
@@ -122,29 +147,52 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
                 if (!Directory.Exists(folderPath))
                     Directory.CreateDirectory(folderPath);
 
-                var fileName = $"{Guid.NewGuid()}{ext}";
-                var fullPath = Path.Combine(folderPath, fileName);
-                certificateImage.SaveAs(fullPath);
+                // ExistingFile is now a string
+                string existingFileName = await _manu.GetAwardName();
+                if (string.IsNullOrWhiteSpace(existingFileName))
+                {
+                    return JsonError("No existing awardee found with that name.");
+                }
+
+                if (newFileName != null)
+                {
+                    // clear the folder before saving — it should only ever hold the one
+                    // current certificate, so nothing accumulates as an orphan
+                    try
+                    {
+                        var filesToRemove = Directory.GetFiles(folderPath, "*.*")
+                            .Where(f => allowedExtensionsForCleanup.Contains(Path.GetExtension(f).ToLowerInvariant()));
+
+                        foreach (var filePath in filesToRemove)
+                        {
+                            try { System.IO.File.Delete(filePath); }
+                            catch { /* TODO: log — file locked/in-use, continue with the rest */ }
+                        }
+                    }
+                    catch { /* TODO: log — couldn't enumerate folder */ }
+
+                    certificateImage.SaveAs(Path.Combine(folderPath, newFileName));
+                }
 
                 bool result = await _manu.EditAwardsData(new AwardDto
                 {
                     WinnerName = awardeesName,
-                    CertificateImage = fileName,
+                    CertificateImage = newFileName, // null means don't replace image
                     IsDisplayed = isDisplayed
                 });
 
-                if (!result) return JsonValidationError("Upload Problem");
-                
-                return JsonSuccess(fileName, "Upload Successfully");
+                if (!result)
+                    return JsonValidationError("Update failed.");
+
+                return JsonSuccess(newFileName ?? existingFileName, "Awardee updated successfully");
             }
             catch (UnauthorizedAccessException)
             {
-                // most common failure with UNC shares: app pool identity lacks write access
-                return Json(new { success = false, message = "Server lacks permission to write to the image share." });
+                return JsonError("Server lacks permission to write to the image share.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return Json(new { success = false, message = "Server error while saving the file." });
+                return JsonError("Server error while saving the file.");
             }
         }
 

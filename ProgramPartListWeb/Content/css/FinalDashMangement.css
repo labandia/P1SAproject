@@ -45,10 +45,16 @@ body {
     overflow-x: hidden;
 }
 
+button{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 /* ─── Dashboard Container ─── */
 .dashboard {
     width: 100%;
-    max-width: 1600px;
+    max-width: 1650px;
     background: #fff;
     border-radius: 10px;
     overflow: hidden;
@@ -151,6 +157,27 @@ body {
     gap: 12px;
 }
 
+#updateDataBtn{
+    width: 100%;
+}
+
+  .btn-outline-secondary {
+        background: transparent;
+        border-color: #cbd5e1;
+        color: #475569;
+    }
+    .btn-outline-secondary:hover {
+        background: #f1f5f9;
+        border-color: #94a3b8;
+        color: #0f172a;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+.upload-group{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 /* ─── Buttons ─── */
 .btn {
     display: inline-flex;

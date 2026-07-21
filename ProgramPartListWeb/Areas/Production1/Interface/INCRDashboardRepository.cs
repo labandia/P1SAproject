@@ -17,8 +17,11 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
         Task<bool> EditAwardsData(AwardDto model);
         Task<AwardDto> GetAwardsData();
 
+        Task<string>GetAwardName(); 
+
         Task<List<RegistrationFinalModel>> GetRegistrationData(string search, int month);
         Task<bool> AddRegistrationData(RegistrationFinalModel model);
         Task<bool> EditRegistrationData(RegistrationFinalModel model);
+        Task<bool> DeleteRegistrationData(int ID);
     }
 }

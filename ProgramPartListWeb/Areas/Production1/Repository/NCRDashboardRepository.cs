@@ -15,23 +15,26 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 {
     public class NCRDashboardRepository : INCRDashboardRepository
     {
-        public Task<bool> AddRegistrationData(RegistrationFinalModel model)
+        public async Task<bool> AddRegistrationData(RegistrationFinalModel model)
         {
-            return SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO ProductionFinal_Registration
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO ProductionFinal_Registration
                 (RegistrationNo, ModelShopOrder, OriginID, ProcessID, FourMID, NCRTypeID, GroupID) 
                 VALUES(@RegistrationNo, @ModelShopOrder, @OriginID, @ProcessID, @FourMID, @NCRTypeID, @GroupID)", model);
+
+            return rows > 0;
         }
 
         public async Task<bool> DeleteRegistrationData(int ID)
         {
-            return await SqlDataAcess_Test.ExecuteAsync($@"DELETE FROM ProductionFinal_Registration 
+            int rows =  await SqlDataAcess_Test.ExecuteAsync($@"DELETE FROM ProductionFinal_Registration 
                 WHERE NCRID = @NCRID ", new
             { NCRID = ID });
+            return rows > 0;
         }
 
-        public Task<bool> EditAwardsData(AwardDto model)
+        public async Task<bool> EditAwardsData(AwardDto model)
         {
-            return SqlDataAcess_Test.ExecuteAsync($@"UPDATE ProductionFinal_Awardees 
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE ProductionFinal_Awardees 
                    SET AwardeesName =@AwardeesName, 
                    ImagePathCertificate = COALESCE(@ImagePathCertificate, ImagePathCertificate),
                    IsDisplayed =@IsDisplayed ", new
@@ -40,20 +43,24 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                 ImagePathCertificate = model.CertificateImage,
                 IsDisplayed = model.IsDisplayed
             });
+
+            return rows > 0;
         }
 
-        public Task<bool> EditRegistrationData(RegistrationFinalModel model)
+        public async Task<bool> EditRegistrationData(RegistrationFinalModel model)
         {
             Debug.WriteLine("Edit  process");
 
-            return SqlDataAcess_Test.ExecuteAsync($@"UPDATE ProductionFinal_Registration SET 
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE ProductionFinal_Registration SET 
                 RegistrationNo =@RegistrationNo, ModelShopOrder =@ModelShopOrder , OriginID =@OriginID, 
                 ProcessID =@ProcessID, FourMID =@FourMID, NCRTypeID =@NCRTypeID, GroupID =@GroupID WHERE NCRID =@NCRID ", model);
+
+            return rows > 0;
         }
 
         public Task<string> GetAwardName()
         {
-            return SqlDataAcess_Test.GetOneData($@"SELECT TOP 1 AwardeesName FROM ProductionFinal_Awardees ", null);
+            return SqlDataAcess_Test.ExecuteScalarAsync<string>($@"SELECT TOP 1 AwardeesName FROM ProductionFinal_Awardees ", null);
         }
 
         public async Task<AwardDto> GetAwardsData()
@@ -65,14 +72,12 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                     DateUpdated, IsDisplayed
                 FROM ProductionFinal_Awardees ORDER BY DateUpdated DESC";
 
-            var getdata = await SqlDataAcess_Test.GetDataAsync<AwardDto>(sql);
-
-            return getdata.SingleOrDefault();
+            return await SqlDataAcess_Test.QuerySingleAsync<AwardDto>(sql);
         }
 
         public Task<List<LineTopsModel>> GetBestLines()
         {
-            return SqlDataAcess_Test.GetDataAsync<LineTopsModel>($@"WITH NCRCounts AS (
+            return SqlDataAcess_Test.QueryAsync<LineTopsModel>($@"WITH NCRCounts AS (
                     SELECT 
                         r.NCRTypeID,
                         COUNT(*) AS [Qty]
@@ -153,7 +158,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 
         public Task<List<FourMSummaryModel>> GetFourMSummary()
         {
-            return  SqlDataAcess_Test.GetDataAsync<FourMSummaryModel>($@";WITH Pivoted AS (
+            return  SqlDataAcess_Test.QueryAsync<FourMSummaryModel>($@";WITH Pivoted AS (
                     SELECT 
                         nt.NCRTypeName AS [NCRType],
                         SUM(CASE WHEN fm.FourMName = 'Man'      THEN 1 ELSE 0 END) AS [Man],
@@ -189,7 +194,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 
         public Task<List<GroupSummaryModel>> GetGroupSummary()
         {
-            return SqlDataAcess_Test.GetDataAsync<GroupSummaryModel>($@";WITH Pivoted AS (
+            return SqlDataAcess_Test.QueryAsync<GroupSummaryModel>($@";WITH Pivoted AS (
                         SELECT 
                             nt.NCRTypeName AS [NCRType],
                             SUM(CASE WHEN g.GroupName = 'Group 1' THEN 1 ELSE 0 END) AS [Group1],
@@ -257,7 +262,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             string query = $@"SELECT 
                      r.NCRID,
                      r.RegistrationNo,
-                     r.CreatedDate,
+                     FORMAT(r.CreatedDate, 'MM/dd/yyyy hh:mm') as CreatedDate,
                      r.ModelShopOrder,
                      r.OriginID,
                      p.ProcessID,
@@ -289,7 +294,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 
             query += "ORDER BY r.CreatedDate DESC";
 
-            return await SqlDataAcess_Test.GetDataAsync<RegistrationFinalModel>(query, null);
+            return await SqlDataAcess_Test.QueryAsync<RegistrationFinalModel>(query, null);
 
 
         }

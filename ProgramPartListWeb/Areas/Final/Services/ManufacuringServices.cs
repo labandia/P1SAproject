@@ -134,7 +134,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                             WHERE FinalShopOrder = @FinalShopOrder
                               AND DepartmentID IN (3,4,5,6,7,8)
                             ORDER BY DepartmentID;";
-            var GetData = await SqlDataAcess_Test.GetDataAsync<string>(query, new { FinalShopOrder = finalorder });
+            var GetData = await SqlDataAcess_Test.QueryAsync<string>(query, new { FinalShopOrder = finalorder });
 
             return string.Join(",",
                      GetData
@@ -148,7 +148,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
             try
             {
                 string query = $@"SELECT {SelectColumns} FROM FanTraceabilityManufacturingOrder s WHERE OrderStatus = 2 OR OrderStatus = 4 ";
-                var getData = await SqlDataAcess_Test.GetDataAsync<FanTraceabilityManufacturingOrder>(query);
+                var getData = await SqlDataAcess_Test.QueryAsync<FanTraceabilityManufacturingOrder>(query);
 
                 foreach (var order in getData)
                 {
@@ -189,7 +189,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         SELECT '2'
                         WHERE EXISTS (SELECT 1 FROM Depts WHERE DepartmentID IN (2))";
 
-                    var departments = await SqlDataAcess_Test.GetDataAsync<string>(
+                    var departments = await SqlDataAcess_Test.QueryAsync<string>(
                         listdone,
                         new { FinalShopOrder = order.NextShop });
 
@@ -339,7 +339,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
 
 
-                return await SqlDataAcess_Test.GetDataAsync<FanTraceabilityManufacturingOrder>(query, parameters);
+                return await SqlDataAcess_Test.QueryAsync<FanTraceabilityManufacturingOrder>(query, parameters);
             }
             catch (Exception ex)
             {
@@ -358,22 +358,24 @@ namespace ProgramPartListWeb.Areas.Final.Services
             string strsql = $@"SELECT TOP 1 {SelectColumns} FROM  FanTraceabilityManufacturingOrder s
                   WHERE s.RecordID =@RecordID  ";
 
-            return SqlDataAcess_Test.GetSingleAsync<FanTraceabilityManufacturingOrder>(strsql, new
+            return SqlDataAcess_Test.QuerySingleOrDefaultAsync<FanTraceabilityManufacturingOrder>(strsql, new
             {
                 RecordID = id
             });
         }
 
        
-        public Task<bool> NextModelProcess(string newLine)
+        public async Task<bool> NextModelProcess(string newLine)
         {
-            return  SqlDataAcess_Test.ExecuteAsync($@"
+            int rows =await   SqlDataAcess_Test.ExecuteAsync($@"
                 UPDATE FanTraceabilityManufacturingOrder SET OrderStatus = 2
                 WHERE Line = @Line
                 AND OrderStatus = 1", new
             {
                 Line = newLine
             });
+
+            return rows > 0;
         }
 
        
@@ -400,11 +402,13 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     return false;
             }
 
-            return await SqlDataAcess_Test.ExecuteAsync(@"
+            int rows =  await SqlDataAcess_Test.ExecuteAsync(@"
                     UPDATE FanTraceabilityManufacturingOrder 
                     SET OrderStatus = @status
                     WHERE RecordID = @id AND line = @line", 
                  new { id, status, line });
+
+            return rows > 0;
         }
 
         public async Task<bool> UpdateCompleteShopOrder(int id, int status, string line)
@@ -412,6 +416,10 @@ namespace ProgramPartListWeb.Areas.Final.Services
             // CHecks if the orderStatus is 2 or 4 (InProcess or Temporary) and
             // if there are other orders with the same line and status, it will update
             // the current order to 1 (NextProcess) instead of 2 (InProcess)
+
+            int rows = 0;
+
+
             int hasOrderStats = await SqlDataAcess_Test.ExecuteScalarAsync<int>(@"
                     SELECT COUNT(*) 
                     FROM FanTraceabilityManufacturingOrder
@@ -425,7 +433,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     });
 
             if (hasOrderStats > 0) {
-                return await SqlDataAcess_Test.ExecuteAsync(@"
+                rows = await SqlDataAcess_Test.ExecuteAsync(@"
                     UPDATE FanTraceabilityManufacturingOrder 
                     SET OrderStatus = 1
                     WHERE RecordID = @id AND line = @line",
@@ -433,13 +441,14 @@ namespace ProgramPartListWeb.Areas.Final.Services
             }
             else
             {
-                return await SqlDataAcess_Test.ExecuteAsync(@"
+                rows = await SqlDataAcess_Test.ExecuteAsync(@"
                     UPDATE FanTraceabilityManufacturingOrder 
                     SET OrderStatus = 2
                     WHERE RecordID = @id AND line = @line",
                     new { id, status, line });
             }
-            
+
+            return rows > 0;
         }
 
         public async Task UploadDataToDatabase(ProductionRecord model)
@@ -608,12 +617,12 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
             parameters.Add("@FinalShopOrder", shopOrder);
 
-            return SqlDataAcess_Test.GetDataAsync<P1TraceablityModel>(sql, parameters);
+            return SqlDataAcess_Test.QueryAsync<P1TraceablityModel>(sql, parameters);
         }
 
-        public Task<bool> UpdateAssemblyStatus(int RecordID, string FAStatus, DateTime ShipmentDate, string mode, bool WithSR, string OrderRemarks)
+        public async Task<bool> UpdateAssemblyStatus(int RecordID, string FAStatus, DateTime ShipmentDate, string mode, bool WithSR, string OrderRemarks)
         {
-            return SqlDataAcess_Test.ExecuteAsync(@"UPDATE FanTraceabilityManufacturingOrder 
+            int rows = await SqlDataAcess_Test.ExecuteAsync(@"UPDATE FanTraceabilityManufacturingOrder 
                     SET FAStatus =@FAStatus, ShipmentDate =@ShipmentDate, WithSR =@WithSR, 
                     OrderRemarks =@OrderRemarks WHERE RecordID =@RecordID", new
             {
@@ -623,6 +632,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 WithSR,
                 RecordID
             });
+
+            return rows > 0;
         }
 
         public async Task<int> GetNumberofNextprocess(string line)
@@ -639,13 +650,14 @@ namespace ProgramPartListWeb.Areas.Final.Services
             throw new NotImplementedException();
         }
 
-        public Task<bool> ChangeLineShopOrder(int recordID, string Lineselect, int process)
+        public async Task<bool> ChangeLineShopOrder(int recordID, string Lineselect, int process)
         {
+            int rows = 0;
             // Check if the Operation(process) has 2 or more  
             if(process > 1)
             {
                 int changeprocess = process - 1;
-                return SqlDataAcess_Test.ExecuteAsync($@"UPDATE 
+                rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE 
                 FanTraceabilityManufacturingOrder SET  Line =@Line, Operational =@Operational
                 WHERE RecordID =@RecordID", new
                 {
@@ -656,34 +668,40 @@ namespace ProgramPartListWeb.Areas.Final.Services
             }
             else
             {
-                return SqlDataAcess_Test.ExecuteAsync($@"UPDATE 
+                rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE 
                 FanTraceabilityManufacturingOrder SET  Line =@Line WHERE RecordID =@RecordID", new
                 {
                     RecordID = recordID,
                     Line = Lineselect
                 });
             }
+
+            return rows > 0;
         }
 
-        public Task<bool> AddInputQuantiyPerLine(int recordID, int Qty)
+        public async Task<bool> AddInputQuantiyPerLine(int recordID, int Qty)
         {
-            return SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingOrder SET  
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingOrder SET  
                 InputQty =@Qty WHERE RecordID =@RecordID", new
             {
                 RecordID = recordID,
                 Qty = Qty
             });
+
+            return rows > 0;
         }
 
-        public Task<bool> CompletionStatusShopOrder(int id, int status, string line)
+        public async Task<bool> CompletionStatusShopOrder(int id, int status, string line)
         {
-            return  SqlDataAcess_Test.ExecuteAsync($@"
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"
                 UPDATE FanTraceabilityManufacturingOrder SET OrderStatus =@OrderStatus 
                 WHERE RecordID =@RecordID", new
             {
                 RecordID = id,
                 OrderStatus = status
             });
+
+            return rows > 0;
         }
 
         public Task<int> GetCountShopOrders(string line)
@@ -819,12 +837,12 @@ namespace ProgramPartListWeb.Areas.Final.Services
             ORDER BY
                 CAST(mo.PlanStartDate AS DATE);";
 
-            return SqlDataAcess_Test.GetDataAsync<AssemblyPartlistRecord>(strsql);
+            return SqlDataAcess_Test.QueryAsync<AssemblyPartlistRecord>(strsql);
         }
 
         public async Task<(int PlanQty, string LastDate, decimal totalpercent)> GetLastUpdateAndTotal()
         {
-            var getdata = await SqlDataAcess_Test.GetSingleAsync<PartlistTotal>($@"SELECT
+            var getdata = await SqlDataAcess_Test.QuerySingleOrDefaultAsync<PartlistTotal>($@"SELECT
                             SUM(PlanQty) AS TotalPlanQty,
                             MAX(LastUpdated) AS LastUpdated,
                             CAST(
@@ -847,7 +865,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
         {
             string filtercondition = isdispatch == 0 ? " " : " WHERE DispatchDate = ''";
 
-            var getdata = await SqlDataAcess_Test.GetSingleAsync<PartlistTotal>($@"SELECT
+            var getdata = await SqlDataAcess_Test.QuerySingleOrDefaultAsync<PartlistTotal>($@"SELECT
                             SUM(PlanQty) AS TotalPlanQty,
                             MAX(LastUpdated) AS LastUpdated,
                             CAST(

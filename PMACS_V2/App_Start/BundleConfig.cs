@@ -10,7 +10,7 @@ namespace PMACS_V2
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                       "~/Scripts/Shared/jquery-{version}.js"));
+                       "~/Scripts/jquery-{version}.js"));
 
             // =======================
             // 1. SHARED CSS

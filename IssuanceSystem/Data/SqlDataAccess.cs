@@ -135,13 +135,7 @@ namespace IssuanceSystem.Data
             }
         }
 
-
-
-        public static SqlConnection GetConnection(string connectionString)
-        {
-            return new SqlConnection(connectionString);
-        }
-
+        public static SqlConnection GetConnection(string connectionString) =>  new SqlConnection(connectionString);
         /// <summary>
         /// Runs a query and maps every row to type T, returning all results as
         /// a List&lt;T&gt;. Opens and disposes its own connection.

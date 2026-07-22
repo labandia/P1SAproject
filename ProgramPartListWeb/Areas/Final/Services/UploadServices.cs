@@ -51,7 +51,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                     OR U.PlanQty <> O.PlanQty
                                     OR CAST(U.PlanStartDate AS DATE) <> CAST(O.PlanStartDate AS DATE); ";
 
-                 return  await SqlDataAcess_Test.GetDataAsync<UploadProductionRecord>(query, new { });
+                 return  await SqlDataAcess_Test.QueryAsync<UploadProductionRecord>(query, new { });
                
             }
             catch (Exception ex)
@@ -82,28 +82,34 @@ namespace ProgramPartListWeb.Areas.Final.Services
         //===================================================================
         //=================== UPLOADING PROCESS =============================
         //===================================================================
-        public Task<bool> CheckApprovalAllUpdate(int recordID, bool check)
+        public async Task<bool> CheckApprovalAllUpdate(int recordID, bool check)
         {
-            return SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingUploadData 
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingUploadData 
                  SET IsApproved = @IsApproved WHERE RecordID = @RecordID", new
             {
                 RecordID = recordID,
                 IsApproved = check
             });
+
+            return rows > 0;
         }
 
 
-        public Task<bool> CheckApprovalForUploadedData(int recordID, bool check)
+        public async Task<bool> CheckApprovalForUploadedData(int recordID, bool check)
         {
-            return SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingUploadData 
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingUploadData 
                  SET IsApproved = @IsApproved WHERE RecordID = @RecordID", new
             {
                 RecordID = recordID,
                 IsApproved = check
             });
+
+            return rows > 0;
         }
         public async Task<bool> UploadDataToDatabase(ProductionRecord model, string tb)
         {
+            int rows = 0;
+
             var parameters = new
             {
                 model.Line,
@@ -126,7 +132,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
             if (tb == "FanTraceabilityManufacturingUploadFailed")
             {
-                return await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO FanTraceabilityManufacturingUploadFailed
+                 rows = await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO FanTraceabilityManufacturingUploadFailed
                     (
                         Line, FinalShopOrder, ItemNo, Model, WC,
                         PlanQty, PlanStartDate, DispatchDate, Note,
@@ -143,7 +149,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
             }
             else
             {
-                return await SqlDataAcess_Test.ExecuteAsync($@"
+                 rows = await SqlDataAcess_Test.ExecuteAsync($@"
                 IF NOT EXISTS (
                     SELECT 1
                     FROM FanTraceabilityManufacturingUploadData
@@ -169,6 +175,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 END", parameters);
             }
 
+            return rows > 0;
+
         }
 
 
@@ -176,7 +184,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
         {
             try
             {
-                var getApproveData = await SqlDataAcess_Test.GetDataAsync<UploadDataModel>(@"SELECT 
+                var getApproveData = await SqlDataAcess_Test.QueryAsync<UploadDataModel>(@"SELECT 
                             U.RecordID,
 	                        U.Line,
                             U.FinalShopOrder,
@@ -383,7 +391,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                   ,Operational
                               FROM FanTraceabilityManufacturingUploadFailed";
 
-                return await SqlDataAcess_Test.GetDataAsync<UploadDataModel>(query, new { });
+                return await SqlDataAcess_Test.QueryAsync<UploadDataModel>(query, new { });
 
             }
             catch (Exception ex)
@@ -393,14 +401,16 @@ namespace ProgramPartListWeb.Areas.Final.Services
             }
         }
 
-        public Task<bool> CheckApprovalAllUploaded()
+        public async Task<bool> CheckApprovalAllUploaded()
         {
-            return SqlDataAcess_Test.ExecuteAsync(@"
+            int rows = await SqlDataAcess_Test.ExecuteAsync(@"
             UPDATE FanTraceabilityManufacturingUploadData
             SET IsApproved = CASE
                         WHEN IsApproved = 1 THEN 0
                         ELSE 1
                      END");
+
+            return rows > 0;
         }
     }
 }

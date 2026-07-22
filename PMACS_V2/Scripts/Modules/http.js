@@ -250,6 +250,7 @@ export async function postMethodPublic(url, data, options = {}) {
             return { success: false, status: response.status };
 
         try {
+            console.log(JSON.parse(text));
             return JSON.parse(text);
         }
         catch {

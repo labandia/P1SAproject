@@ -58,7 +58,7 @@ namespace PMACS_V2.Helper
                 }
 
                 var encrypted = ConfigurationManager
-                    .ConnectionStrings[key]
+                    .ConnectionStrings["LiveDevelopment"]
                     .ConnectionString;
 
                 // AES decode happens once at app start
@@ -76,95 +76,112 @@ namespace PMACS_V2.Helper
 
         // --------------------- CORE METHODS ---------------------
         public static async Task<List<T>> GetDataAsync<T>(
-          string query,
-          object parameters = null,
-          CommandType commandType = CommandType.Text,
-          string cacheKey = null,
-          int cacheMinutes = 10,
-          bool useSqlDependency = false)
+            string query,
+            object parameters = null,
+            CommandType commandType = CommandType.Text,
+            string cacheKey = null,
+            int cacheMinutes = 10,
+            bool useSqlDependency = false)
         {
-            if (string.IsNullOrEmpty(cacheKey))
-            {
-                using (var con = CreateConnection())
-                {
-                    var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
-                    return result.AsList();
-                }
-            }
-
-            // First check (no lock)
-            var cached = _cache.Get(cacheKey) as List<T>;
-            if (cached != null)
-                return cached;
-
-            var myLock = _locks.GetOrAdd(cacheKey, new SemaphoreSlim(1, 1));
-
-            await myLock.WaitAsync();
             try
             {
-                // Double check
-                cached = _cache.Get(cacheKey) as List<T>;
+                if (string.IsNullOrEmpty(cacheKey))
+                {
+                    using (var con = CreateConnection())
+                    {
+                        var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
+                        return result.AsList();
+                    }
+                }
+
+                // First check (no lock)
+                var cached = _cache.Get(cacheKey) as List<T>;
                 if (cached != null)
                     return cached;
 
-                List<T> list;
+                var myLock = _locks.GetOrAdd(cacheKey, _ => new SemaphoreSlim(1, 1));
 
-                using (var con = CreateConnection())
-                {
-                    var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
-                    list = result.AsList();
-                }
+                await myLock.WaitAsync();
 
-                var policy = new CacheItemPolicy
+                try
                 {
-                    AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(cacheMinutes)
-                };
+                    // Double check
+                    cached = _cache.Get(cacheKey) as List<T>;
+                    if (cached != null)
+                        return cached;
 
-                // 🔥 SQL AUTO INVALIDATE
-                if (useSqlDependency)
-                {
-                    using (var connection = new SqlConnection(_connectionString))
-                    using (var command = new SqlCommand(query, connection))
+                    List<T> list;
+
+                    using (var con = CreateConnection())
                     {
-                        connection.Open();
-                        var dependency = new SqlDependency(command);
-
-                        policy.ChangeMonitors.Add(
-                            new SqlChangeMonitor(dependency)
-                        );
+                        var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
+                        list = result.AsList();
                     }
-                }
 
-                // 🔥 BACKGROUND AUTO REFRESH
-                policy.RemovedCallback = async args =>
-                {
-                    if (args.RemovedReason == CacheEntryRemovedReason.Expired)
+                    var policy = new CacheItemPolicy
                     {
-                        try
-                        {
-                            using (var con = CreateConnection())
-                            {
-                                var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
-                                var refreshed = result.AsList();
+                        AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(cacheMinutes)
+                    };
 
-                                _cache.Set(cacheKey, refreshed,
-                                    DateTimeOffset.Now.AddMinutes(cacheMinutes));
+                    // SQL AUTO INVALIDATE
+                    if (useSqlDependency)
+                    {
+                        using (var connection = new SqlConnection(_connectionString))
+                        using (var command = new SqlCommand(query, connection))
+                        {
+                            connection.Open();
+
+                            var dependency = new SqlDependency(command);
+
+                            policy.ChangeMonitors.Add(
+                                new SqlChangeMonitor(dependency));
+                        }
+                    }
+
+                    // BACKGROUND AUTO REFRESH
+                    policy.RemovedCallback = async args =>
+                    {
+                        if (args.RemovedReason == CacheEntryRemovedReason.Expired)
+                        {
+                            try
+                            {
+                                using (var con = CreateConnection())
+                                {
+                                    var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
+                                    var refreshed = result.AsList();
+
+                                    _cache.Set(
+                                        cacheKey,
+                                        refreshed,
+                                        DateTimeOffset.Now.AddMinutes(cacheMinutes));
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Error(ex, "Background refresh failed.");
                             }
                         }
-                        catch (Exception ex)
-                        {
-                            Logger.Error(ex, "Background refresh failed.");
-                        }
-                    }
-                };
+                    };
 
-                _cache.Set(cacheKey, list, policy);
+                    _cache.Set(cacheKey, list, policy);
 
-                return list;
+                    return list;
+                }
+                finally
+                {
+                    myLock.Release();
+                }
             }
-            finally
+            catch (Exception ex)
             {
-                myLock.Release();
+                Logger.Error(ex,
+                    "GetDataAsync<{Type}> failed. CacheKey={CacheKey}, CommandType={CommandType}, Query={Query}",
+                    typeof(T).Name,
+                    cacheKey ?? "<none>",
+                    commandType,
+                    query);
+                Debug.WriteLine("Error " + ex.Message);
+                throw;
             }
         }
         // -------------------- GET OBJECT DATA --------------------

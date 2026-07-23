@@ -19,5 +19,13 @@ namespace PMACS_V2.Areas.P1SA.Models
         public string Mincharge { get; set; }
         public string ProcessID { get; set; }
         public string DieSerial { get; set; }
+        public DateTime CurrentDate { get; set; }   
+    }
+    public class DieMoldpartsModel
+    {
+        public string PartNo { get; set; }
+        public string Dimension_Quality { get; set; }
+        public string DieSerial { get; set; }
+        public int Status { get; set; }
     }
 }

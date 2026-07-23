@@ -325,6 +325,7 @@ namespace PMACS_V2.Helper
             catch (Exception ex)
             {
                 Logger.Error(ex, "ExecuteAsync failed.");
+                Debug.WriteLine(ex.Message);
                 return false;
             }
         }

@@ -23,22 +23,32 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
         // MOLD DIE DAILY FUNCTIONALITY
         // ============================================================
         [HttpGet]
-        public async Task<ActionResult> GetMoldDieDailyList()
+        public async Task<ActionResult> GetMoldDieDailyList(DateTime dateInput, 
+            int monthInt = 0,  string process = "")
         {
-            Debug.WriteLine("adadads");
-            var data = await _mold.GetDailyMoldData(DateTime.Now, 6, "M002");
-
-            foreach (var items in data)
-            {
-                Debug.WriteLine($@"PartNo {items.PartNo} - DateInput {items.DateInput}");
-            }
-
+           
+            var data = await _mold.GetDailyMoldData(dateInput, monthInt, process);
 
             if (data == null || data.Count() == 0)
                 return JsonNotFound("No Mold Die Daily data found");
 
-            return JsonSuccess(data, "Add Data Succesfully");
+            return JsonSuccess(data, "Get Mold Die Succesfully");
         }
+
+        [HttpGet]
+        public async Task<ActionResult> GetSearchMoldieList(string DieSerial, string process = "")
+        {
+            Debug.WriteLine($@"Process : {process}");
+            var data = await _mold.GetThePartnoList(DieSerial, process);
+            var finalobj = new 
+            {
+                Details = data.details,
+                Listdata = data.getlist,    
+            };
+            return JsonSuccess(finalobj, "Get Mold Die Succesfully");
+        }
+
+
 
 
 
@@ -54,13 +64,41 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
         public async Task<ActionResult> SaveDailyMoldDieMonitor(DieMoldDaily model)
         {
             bool success = await _mold.AddDailyInput(model);
+            Debug.WriteLine("Result : " + success);
+            if (!success)
+                return JsonValidationError();
 
+            return JsonCreated(success, "Add Data Successfully");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateDailyMoldRecord(DieMoldDaily model)
+        {
+            bool success = await _mold.EditDailyInput(model);
+            Debug.WriteLine("Result : " + success);
             if (!success)
                 return JsonValidationError();
 
             return JsonCreated(model, "Add Data Successfully");
         }
 
+        [HttpPost]
+        public async Task<ActionResult> DeleteDailyMoldRecord(int RecordID, string DieSerial, DateTime DateInput)
+        {
+            //bool success = await _mold.DeleteDailyInput(RecordID, DieSerial, DateInput);
+            //Debug.WriteLine("Result : " + success);
+            //if (!success)
+            //    return JsonValidationError();
+
+            var obj = new
+            {
+                RecordID,
+                DieSerial,
+                DateInput
+            };
+
+            return JsonCreated(true, "Delete Data Successfully");
+        }
 
 
         // GET: P1SA/DieMold

@@ -119,13 +119,7 @@
                         </div>
                     </div>
 
-                    <div class="control-group">
-                        <label class="control-label">
-                            <i class="fas fa-tags"></i> Filter by Year
-                        </label>
-                        <select class="filter-select" id="yearselectDaily">
-                        </select>
-                    </div>
+                  
 
                     <div class="control-group">
                         <label class="control-label">
@@ -274,13 +268,6 @@
 </div>
 
 
-@*<script type="module" asp-append-version="true">
-            import { initMoldiePage }
-            from '@Url.Content("~/Scripts/Systems/MoldieModule.js?v=15")';
-
-            initMoldiePage();
-    </script>*@
-
 
 <script type="module" asp-append-version="true">
      import {
@@ -291,67 +278,529 @@
     class DieMoldController {
         constructor() {
             this.form = document.getElementById('addDailyForm');
+            this.editform = document.getElementById('EditDailyforms');
+            this.tbody = document.querySelector('.TrackTable tbody');
+
+            this.detailSummary = document.querySelector('.TrackTable tbody');
+            this.tableDisplay = document.querySelector('#dieMoldMasterlist');
+
+            // Input fields Value
+            this.processSelection = document.getElementById('processSelect');
+            this.DieSerial = document.getElementById('searchDie');
+            this.DateInput = document.getElementById('DateInput');
+            this.CycleShot = document.getElementById('CycleShot');
+            this.MachineNo = document.getElementById('MachineNo');
+            this.remarks = document.getElementById('remarks');
+            this.Mincharge = document.getElementById('Mincharge');
+
+
+            // filter selection
+            this.DailyProcess = document.getElementById('DailyProcess');
+            this.filterProcess = document.getElementById('monthSelectDaily');
+            this.searchDieButton = document.getElementById('searchDieButton');
+            this.searchInput = document.getElementById('searchDie');
+
+
+            // Validation Input
+            this.validprocess = document.getElementById('validprocess');
+            this.validDate = document.getElementById('validDateDieSerial');
+
+
+            // Display Daily Input
+            this.DailySummary = document.getElementById('DailySummary');
+            this.DailyInputs = document.getElementById('DailyInputs');
+
+            // ================= Edit Modal =================
+            this.editModal = new bootstrap.Modal(
+                document.getElementById("EditDailyMold")
+            );
+
+            this.EditRecordID = document.getElementById('EditRecordID');
+            this.DieSerialCurrentDate = document.getElementById("DieSerialCurrentDate");
+            this.DieSerialDateInput = document.getElementById("DieSerialDateInput");
+            this.DieSerialCycleShot = document.getElementById("DieSerialCycleShot");
+            this.DieSerialMachineNo = document.getElementById("DieSerialMachineNo");
+            this.DieSerialRemarks = document.getElementById("DieSerialRemarks");
+            this.DieSerialMincharge = document.getElementById("DieSerialMincharge");
         }
 
         async init() {
+            this.setIntialization();
             await this.GetMoldDieDailyData();
+
+            this.bindFormEvents();
+            this.bindFilterEvents();
+            this.bindEditFormEvents();
+
+        }
+
+        async setIntialization() {
+            const today = new Date();
+
+            // Hide Display Daily input and  Show the Summary
+            this.DailySummary.style.display = "block";
+            this.DailyInputs.style.display = "none";
+
+            // Hide validation messages
+            this.validprocess.style.display = "none";
+            this.validDate.style.display = "none";
+
+            // Set today's date (YYYY-MM-DD)
+            document.getElementById("DailyfilterDate").value =
+                today.toISOString().split("T")[0];
+
+            // Set current month (1-12)
+            document.getElementById("monthSelectDaily").value =
+                today.getMonth() + 1;
         }
 
         async GetMoldDieDailyData() {
-             try {
-                 const res = await getMethod('@Url.Action("GetMoldDieDailyList", "Mold")',{});
+            try {
+                const today = new Date().toISOString();
+
+                 const res = await getMethod('@Url.Action("GetMoldDieDailyList", "Mold")', {
+                     dateInput: today, // Sends current date/time
+                     monthInt: document.getElementById("monthSelectDaily").value,
+                     process: this.DailyProcess.value
+                 });
 
                  console.log(res);
-                 //if (!res?.Success) {
-                 //    console.log('No data Registration Found ');
-                 //    return;
-                 //}
-                 //this.renderTable(res.data);
+                 if (!res?.Success) {
+                     console.log('No data Registration Found ');
+                     return;
+                 }
+                 this.renderTable(res.Data);
              } catch (error) {
                  console.error('Error fetching 4M data:', error);
              }
         }
+        renderTable(data) {
+            if (!this.tbody) return;
 
-        bindFormEvents() {
-            this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+            //this.recordCount.textContent = `${data.length} ${data.length === 1 ? 'entry' : 'entries'}`;
+
+            if (data.length === 0) {
+                this.tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align:center; padding:32px; color:#86868b;">
+                            No data available.
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            this.tbody.innerHTML = data.map(row => {
+
+            return `
+               <tr class='fade-in'>
+                        <td>${row.DateInput}</td>
+                        <td style='font-weight: 600;'>${row.PartNo}</td>
+                        <td>${row.CycleShot}</td>
+                        <td>${row.Total || ''}</td>
+                        <td>${row.MachineNo}</td>
+                        <td class="status-column">${row.Status || ''}</td>
+                        <td>${row.Remarks ?? row.Remarks ?? ''}</td>
+                </tr>`;
+
+            }).join('');
+
+        }
+
+        bindFilterEvents() {
+            this.DailyProcess.addEventListener('change', (e) => this.handlefilterProcess(e));
+            this.filterProcess.addEventListener('change', (e) => this.HandlefilterMonths());
+            this.searchDieButton.addEventListener('click', async (e) => {
+                e.preventDefault();
+                await this.searchDieSerial();
+            });
+
+            this.searchInput.addEventListener("keypress", async (e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    await this.searchDieSerial();
+                }
+            });
+        }
+
+        // ======== SEARCH DIE SERIAL ===========
+        async searchDieSerial() {
+            const dieval = this.searchInput.value.trim();
+
+            if (!dieval) {
+                this.validDate.style.display = "block";
+                this.validDate.textContent = "Please enter a Die Serial.";
+                return;
+            }
+
+            this.validDate.style.display = "none";
+
+            const res = await getMethod('@Url.Action("GetSearchMoldieList", "Mold")', {
+                DieSerial: dieval, // Sends current date/time
+                process: this.processSelection.value,
+            });
+
+            //if (!res.Success) return;
+            console.log(res);
+
+            this.populateDieSerialDetails(res.Data.Details);
+            this.populateDieTable(res.Data.Listdata);
+
+            this.DailySummary.style.display = "none";
+            this.DailyInputs.style.display = "block";
+
+            console.log("Die Enter:", dieval);
+        }
+
+        populateDieTable(list) {
+            let counter = 0;
+            this.tableDisplay.innerHTML = "";
+
+            console.log(list);
+
+            list.forEach(row => {
+                let actionButton = "";
+
+                if (row.Total === 0) {
+                    counter = 1;
+                }
+
+                if (counter === 0) {
+                    actionButton = `
+                    <div style="display:grid;grid-template-columns:50% 50%;gap:5px;">
+
+                        <button type="button"
+                                class="text-primary actionicon EditDailyDieSerial">
+                            <i class="fa-regular fa-pen-to-square action_btn"></i>
+                        </button>
+
+                        <button type="button"
+                                class="text-danger actionicon DeleteDailyDieSerial">
+                            <i class="fa-regular fa-trash-can"></i>
+                        </button>
+
+                    </div>`;
+                }
+
+                const statusBtns = this.buildStatusButtonSet(
+                    row.RecordID,
+                    row.Status,
+                    true,
+                    row
+                );
+
+                const tr = document.createElement("tr");
+
+                tr.innerHTML = `
+                    <td>${row.DateInput}</td>
+                    <td>${row.CycleShot}</td>
+                    <td>${row.Total}</td>
+                    <td>${row.MachineNo}</td>
+                    <td>${row.Remarks ?? ""}</td>
+                    <td>${row.Mincharge ?? ""}</td>
+                    <td><div class="flex_align">${statusBtns}</div></td>
+                    <td>${actionButton}</td>
+                `;
+
+
+                // ================= Edit Button =================
+                const editBtn = tr.querySelector(".EditDailyDieSerial");
+
+                if (editBtn) {
+                    editBtn.addEventListener("click", () => {
+                        this.openEditModal(row);
+                    });
+                }
+
+                // ================= Delete Button =================
+                const deleteBtn = tr.querySelector(".DeleteDailyDieSerial");
+
+                if (deleteBtn) {
+                    deleteBtn.addEventListener("click", () => {
+                        this.deleteDailyRecord(row);
+                    });
+                }
+
+                this.tableDisplay.appendChild(tr);
+
+            });
+        }
+
+        openEditModal(row) {
+            //console.log(row);
+            this.EditRecordID.value = row.RecordID;
+            this.DieSerialCurrentDate.value = row.DateInput;
+
+            this.DieSerialDateInput.value = row.DateInput;
+            this.DieSerialCycleShot.value = row.CycleShot;
+            this.DieSerialMachineNo.value = row.MachineNo;
+            this.DieSerialRemarks.value = row.Remarks ?? "N/A";
+            this.DieSerialMincharge.value = row.Mincharge ?? "N.AMLOG";
+
+            this.editModal.show();
+        }
+
+        bindEditFormEvents() {
+            this.editform.addEventListener("submit", (e) => {
+                this.handleEditSubmit(e);
+            });
+        }
+
+        async handleEditSubmit(e) {
+            e.preventDefault();
+
+            const payload = {
+                RecordID: parseInt(this.EditRecordID.value, 10),
+                CurrentDate: this.DieSerialCurrentDate.value,
+                DateInput: this.DieSerialDateInput.value,
+                CycleShot: parseInt(this.DieSerialCycleShot.value, 10),
+                MachineNo: parseInt(this.DieSerialMachineNo.value, 10),
+
+                Remarks: this.DieSerialRemarks.value,
+                Mincharge: this.DieSerialMincharge.value
+            };
+            try {
+
+                const res = await postMethod(
+                    '@Url.Action("UpdateDailyMoldRecord", "Mold")',
+                    payload
+                );
+                console.log(res);
+                if (!res.Success) {
+                    alert(res.Message);
+                    return;
+                }
+
+                // Close Modal
+                this.editModal.hide();
+
+                // Refresh Table
+                await this.searchDieSerial();
+
+            }
+            catch (err) {
+                console.error(err);
+                alert("Unable to update record.");
+            }
+        }
+
+
+        async deleteDailyRecord(row) {
+
+                const confirmed = confirm(
+                    `Delete daily record?\n\nDie Serial: ${row.DieSerial}\nDate: ${row.DateInput}`
+                );
+
+                if (!confirmed) return;
+
+               let payload = {
+                    RecordID: parseInt(row.RecordID, 10),
+                    DieSerial: row.DieSerial,
+                    DateInput: new Date(row.DateInput).toISOString()
+                };
+                console.log(payload);
+                try {
+
+                    const res = await postMethod('@Url.Action("DeleteDailyMoldRecord", "Mold")', payload);
+                    console.log(res);
+                    //if (!res.Success) {
+                    //    alert(res.Message);
+                    //    return;
+                    //}
+
+                    //// Refresh table
+                    //await this.searchDieSerial();
+
+                } catch (err) {
+                    console.error(err);
+                    alert("Unable to delete record.");
+                }
+        }
+
+        populateDieSerialDetails(details) {
+            this.detailSummary.innerHTML = "";
+
+            const table = document.getElementById("DieSerialMasterlist");
+            table.innerHTML = "";
+
+            if (!details || details.length === 0) return;
+
+            const rowspan = details.length;
+            const dieSerial = details[0].DieSerial;
+            const status = details[0].Status;
+
+
+            details.forEach((part, index) => {
+                const row = document.createElement("tr");
+
+                // Part No
+                const partNoCell = document.createElement("td");
+                partNoCell.textContent = part.PartNo;
+                row.appendChild(partNoCell);
+
+                // Dimension / Quality
+                const dimensionCell = document.createElement("td");
+                dimensionCell.textContent = part.Dimension_Quality;
+                row.appendChild(dimensionCell);
+
+                // Merged cells only on the first row
+                if (index === 0) {
+                    const dieSerialCell = document.createElement("td");
+                    dieSerialCell.rowSpan = rowspan;
+                    dieSerialCell.className = "die-serial";
+                    dieSerialCell.textContent = dieSerial;
+                    row.appendChild(dieSerialCell);
+
+                    const statusCell = document.createElement("td");
+                    statusCell.rowSpan = rowspan;
+                    statusCell.className = "die-status";
+                    statusCell.innerHTML = this.buildStatusBadge(status); // Returns HTML
+                    row.appendChild(statusCell);
+                }
+
+                table.appendChild(row);
+            });
+        }
+
+
+        buildStatusButtonSet(id, status, isDie = false, row = null) {
+            let actionStatus = "";
+
+            // For the Partnumber
+            if (!isDie) {
+                actionStatus = `
+                 <button class='status-btn ${status === 0 ? `badge bg-primary` : ``}'
+                     onclick="ChangeStatus(${id}, 0)">
+                     Continue
+                 </button>
+                  <button class='status-btn ${status === 1 ? `badge bg-warning text-dark` : ``}'
+                     onclick="ChangeStatus(${id}, 1)">
+                     Needed
+                 </button>
+                 <button class='status-btn ${status === 2 ? `badge bg-success` : ``}'
+                     onclick="ChangeStatus(${id}, 2)">
+                     Complete
+                 </button>
+                 `;
+            } else {
+                const key = `'${row.DateInput}','${row.DieSerial}', ${row.Total}`;
+                actionStatus = `
+                   <button class='status-btn ${status === 0 ? `badge bg-primary` : ``}'
+                       onclick="ChangeDieSerialStatus(${key}, 0)">
+                       Continue
+                   </button>
+                    <button class='status-btn ${status === 1 ? `badge bg-warning text-dark` : ``}'
+                       onclick="ChangeDieSerialStatus(${key}, 1)">
+                       Needed
+                   </button>
+                   <button class='status-btn ${status === 2 ? `badge bg-success` : ``}'
+                       onclick="ChangeDieSerialStatus(${key}, 2)">
+                       Complete
+                   </button>
+                   `;
+            }
+
+            return actionStatus;
+        }
+        buildStatusBadge(status) {
+            switch (status) {
+                case 0:
+                    return `<span class="badge bg-primary">Continue</span>`;
+                case 1:
+                    return `<span class="badge bg-warning text-dark">Needed</span>`;
+                case 2:
+                    return `<span class="badge bg-success">Completed</span>`;
+                default:
+                    return `<span class="badge bg-secondary">Unknown</span>`;
+            }
+        }
+
+
+        // ======== FILTER BY PROCESS ===========
+        async handlefilterProcess(e) {
+            e.preventDefault();
+            console.log("change Process");
+            await this.GetMoldDieDailyData();
+        }
+        // ======== CHANGE THE MONTH AND DATE ===========
+        HandlefilterMonths() {
+            const month = parseInt(this.filterProcess.value);
+
+            if (month === 0) {
+                this.DailyProcess.removeAttribute("min");
+                this.DailyProcess.removeAttribute("max");
+                return;
+            }
+
+            const year = new Date().getFullYear();
+
+            // First day of selected month
+            const firstDay = new Date(year, month - 1, 1);
+
+            // Last day of selected month
+            const lastDay = new Date(year, month, 0);
+
+            const formatDate = (date) => date.toISOString().split("T")[0];
+
+            const minDate = formatDate(firstDay);
+            const maxDate = formatDate(lastDay);
+
+            const dateInput = document.getElementById("DailyfilterDate");
+
+            dateInput.min = minDate;
+            dateInput.max = maxDate;
+
+            const today = new Date();
+
+            // If selected month is the current month, use today.
+            // Otherwise use the first day of the selected month.
+            if (
+                today.getFullYear() === year &&
+                today.getMonth() + 1 === month
+            ) {
+                dateInput.value = formatDate(today);
+            } else {
+                dateInput.value = minDate;
+            }
         }
 
 
 
+
+        bindFormEvents() {
+            this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+        }
         async handleSubmit(e) {
              e.preventDefault();
 
              //if (!this.form.reportValidity()) return;
 
              const payload = {
-                 NCRID: ncrId > 0 ? ncrId : 0,
-                 RegistrationNo: this.regNoInput.value.trim(),
-                 ModelShopOrder: this.modelInput.value.trim(),
-                 ProcessID: parseInt(this.processSelect.value, 10),
-                 FourMID: parseInt(this.fourMSelect.value, 10),
-                 NCRTypeID: parseInt(this.ncrTypeSelect.value, 10),
-                 OriginID: this.lineSelect.value,
-                 GroupID : this.GroupID.value
+                 ProcessID: this.processSelection.value,
+                 DieSerial: this.DieSerial.value,
+                 DateInput: this.DateInput.value,
+                 CycleShot: parseInt(this.CycleShot.value, 10),
+                 MachineNo: parseInt(this.MachineNo.value, 10),
+                 Remarks: this.remarks.value,
+                 Mincharge: this.Mincharge.value
              };
 
-                this.submitBtn.disabled = true;
-                 try {
-                     const res = await postMethod('@Url.Action("SaveRegistration", "FinalAssembly")', payload);
-                     console.log(res);
-                     if (!res?.Success) {
-                         this.showToast(res?.Message || 'Save failed.', true);
-                         return;
-                     }
 
-                     this.showToast(payload.NCRID > 0 ? 'Record updated.' : 'Record added.');
-                     this.resetForm();
-                     await this.GetRegistrationData();
-                 } catch (error) {
-                     console.error('Error saving record:', error);
-                     this.showToast('Save failed.', true);
-                 } finally {
-                     this.submitBtn.disabled = false;
+                //this.submitBtn.disabled = true;
+             try {
+                 const res = await postMethod('@Url.Action("SaveDailyMoldDieMonitor", "Mold")', payload);
+                 console.log(res);
+
+                 if (!res?.Success) {
+                         //this.showToast(res?.Message || 'Save failed.', true);
+                     console.log('Save Failed');
+                     return;
                  }
+                 this.tableDisplay.innerHTML = "";
+                 await this.searchDieSerial();
+             } catch (error) {
+                     console.error('Error saving record:', error);
+             } finally {
+             }
          }
     }
 

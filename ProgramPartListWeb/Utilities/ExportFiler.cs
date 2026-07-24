@@ -712,7 +712,7 @@ namespace ProgramPartListWeb.Utilities
                                 INNER JOIN ProjectList p ON p.Project_ID = ua.Project_ID
                                 WHERE IsActive = 1 AND u.Employee_ID =@ID";
 
-            string data = await SqlDataAccess.GetOneData(strquery, new { ID = EmpID });
+            string data = await SqlDataAccess.ExecuteScalarAsync<string>(strquery, new { ID = EmpID });
             return (!string.IsNullOrEmpty(data)) ? data : "";   
         }
 
@@ -722,7 +722,7 @@ namespace ProgramPartListWeb.Utilities
             string strquery = $@"SELECT TOP 1 Signature
                                  FROM Patrol_UserEmail WHERE Employee_ID =@ID";
 
-            string data = await SqlDataAccess.GetOneData(strquery, new { ID = EmpID });
+            string data = await SqlDataAccess.ExecuteScalarAsync<string>(strquery, new { ID = EmpID });
             return (!string.IsNullOrEmpty(data)) ? data : "";
         }
 

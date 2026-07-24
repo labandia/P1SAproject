@@ -80,7 +80,7 @@ namespace ProgramPartListWeb.Data
                         WHERE User_ID = @User_ID 
                         AND Project_ID = @Project_ID";
 
-                bool accountExists = await SqlDataAccess.CheckDataAsync(
+                bool accountExists = await SqlDataAccess.ExistsAsync(
                     checkAccountQuery,
                     new { User_ID = userId.Value, reg.Project_ID });
 
@@ -155,7 +155,7 @@ namespace ProgramPartListWeb.Data
                             (@User_ID, @Project_ID, @Username, @Password, @Role_ID)
                     END";
 
-                return await SqlDataAccess.ExecuteAsync(insertAccountQuery, new
+                int rows = await SqlDataAccess.ExecuteAsync(insertAccountQuery, new
                 {
                     User_ID = userId.Value,
                     reg.Project_ID,
@@ -163,6 +163,8 @@ namespace ProgramPartListWeb.Data
                     reg.Password,
                     reg.Role_ID
                 });
+
+                return rows > 0;
             }
             catch (Exception ex)
             {
@@ -194,13 +196,53 @@ namespace ProgramPartListWeb.Data
             }
 
 
-            return await SqlDataAccess.ExecuteAsync(strsql, new { Signature  = fileName, User_ID = userID});
+            int rows = await SqlDataAccess.ExecuteAsync(strsql, new { Signature  = fileName, User_ID = userID});
+
+            return rows > 0;
         }
-        public Task<bool> Changepassword(ChangePassModel ch)
+        public async Task<bool> Changepassword(ChangePassModel ch)
         {
             string strsql = $@"UPDATE UserAccounts SET Password =@Password
                                WHERE User_ID =@User_ID AND Project_ID = @Project_ID";
-            return SqlDataAccess.ExecuteAsync(strsql, ch);
+            int rows = await SqlDataAccess.ExecuteAsync(strsql, ch);
+
+            return rows > 0;
+        }
+
+        public async Task<bool> UpdatesUserClienfoToDatabase(ClientsInfoModel client)
+        {
+            // Check if this ComputerName + IpAddress combination already exists
+            const string checkSql = @"
+                    SELECT COUNT(1)
+                    FROM UsersInfoAccount
+                    WHERE ComputerName = @ComputerName
+                      AND IpAddress = @IpAddress;";
+
+            bool exists = await UsersAccess.ExistsAsync(checkSql, new
+            {
+                client.ComputerName,
+                client.IpAddress
+            });
+
+            // Already tracked — do nothing, per the "don't insert if exists" rule
+            if (exists)
+            {
+                return false;
+            }
+
+            const string insertSql = @"
+                INSERT INTO UsersInfoAccount (ComputerName, IpAddress, AccountName, Email)
+                VALUES (@ComputerName, @IpAddress, @AccountName, @Email);";
+
+            bool rowsAffected = await UsersAccess.ExecuteAsync(insertSql, new
+            {
+                client.ComputerName,
+                client.IpAddress,
+                client.AccountName,
+                client.Email
+            });
+
+            return rowsAffected;
         }
     }
 }

@@ -47,3 +47,39 @@
         apiRoot: "@apiRoot"
     };
 </script>
+
+
+<script type="module" asp-append-version="true">
+     import {
+         getMethod,
+         postMethod
+     } from '@Url.Content("~/Scripts/modules/index.js")';
+
+     class UsersJSController {
+         constructor() { }
+
+         async init() {
+             await this.SampleUserData();
+         }
+          async SampleUserData() {
+              try {
+                  const res = await getMethod('/User/SaveClienInfo', {});
+                  console.log(res);
+                  //if (!res?.Success) {
+                  //    console.log('No data found in 4M ');
+                  //    return;
+                  //}
+                  //this.renderNcrBars(res.data);
+              } catch (error) {
+                  console.error('Error fetching 4M data:', error);
+              }
+          }
+
+     }
+
+
+     document.addEventListener('DOMContentLoaded', function () {
+         const controller = new UsersJSController();
+         controller.init();
+     });
+</script>

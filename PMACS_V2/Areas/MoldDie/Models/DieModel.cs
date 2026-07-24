@@ -5,6 +5,23 @@ using System.Web;
 
 namespace PMACS_V2.Areas.P1SA.Models
 {
+    ///<summary>
+    /// Part of the Moldie Masterlist
+    ///<summary>
+    public class MoldieMasterModel
+    {
+        public string PartNo { get; set; }
+        public string DimensionQuality { get; set; }
+        public string DieSerial { get; set; }
+        public string DieNumber { get; set; }
+        public int Cavity { get; set; }
+        public int ProcessID { get; set; }
+    }
+
+
+    /// <summary>
+    /// Part of the Daily Mold Die
+    /// </summary>
     public class DieMoldDaily
     {
         public int RecordID { get; set; }

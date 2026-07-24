@@ -17,14 +17,14 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
             string updatestorage = $@"UPDATE PartsLocatorRotor_Location SET Quantity = Quantity + @Quantity
                                      WHERE Partnumber =@Partnumber AND Area =@Area";
 
-            bool storageResult = await SqlDataAccess.ExecuteAsync(updatestorage, new { 
+            int  storageResult = await SqlDataAccess.ExecuteAsync(updatestorage, new { 
                     Quantity = shop.Quantity, 
                     Partnumber = shop.Partnumber, 
                     Area = shop.Area 
              });
 
             // if the Update storage is Success proceed to Summary insert
-            if (storageResult)
+            if (storageResult > 0)
             {
                 string strsql = $@"INSERT INTO PartsLocatorRotor_Transaction(TransactionType, Partnumber, RotorOrder, Area, Quantity, PreviousQuantity,  Remarks) 
                               VALUES(0, @Partnumber, @RotorOrder, @Area, @Quantity, @PreviousQuantity,  @Remarks)";
@@ -32,29 +32,30 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                 await SqlDataAccess.ExecuteAsync(strsql, shop);
             }
 
-            return storageResult;
+            return storageResult > 0;
         }
 
       
 
-        public Task<bool> DeleteTransaction(ShopOrderInModel shop)
+        public async Task<bool> DeleteTransaction(ShopOrderInModel shop)
         {
             string strsql = $@"UPDATE PartsLocatorRotor_Transaction SET IsDelete = 1 WHERE TransactionID =@TransactionID";
-            return SqlDataAccess.ExecuteAsync(strsql, new
+            int rows = await SqlDataAccess.ExecuteAsync(strsql, new
             {
                 TransactionID = shop.TransactionID
-            }); 
+            });
+            return rows > 0; 
         }
 
 
-        public Task<bool> EditTransaction(ShopOrderInModel shop)
+        public async Task<bool> EditTransaction(ShopOrderInModel shop)
         {
             string strsql = $@"UPDATE PartsLocatorRotor_Transaction 
                               SET RotorOrder =@RotorOrder, Quantity =@Quantity, 
                                 Remarks =@Remarks, PreviousQuantity =@PreviousQuantity
                               WHERE TransactionID =@TransactionID";
 
-            return SqlDataAccess.ExecuteAsync(strsql, new
+            int rows = await SqlDataAccess.ExecuteAsync(strsql, new
             {
                 RotorOrder = shop.RotorOrder,
                 Quantity = shop.Quantity,
@@ -62,6 +63,8 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                 PreviousQuantity = shop.PreviousQuantity,
                 TransactionID = shop.TransactionID
             });
+
+            return rows > 0;
         }
 
 
@@ -101,7 +104,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                           FETCH NEXT @PageSize ROWS ONLY";
 
        
-            var items = await SqlDataAccess.GetDataAsync<ShopOrderInModel>(
+            var items = await SqlDataAccess.QueryAsync<ShopOrderInModel>(
                    strsql,
                    new
                    {

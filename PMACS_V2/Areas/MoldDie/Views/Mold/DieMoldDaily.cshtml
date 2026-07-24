@@ -425,22 +425,34 @@
         // ======== SEARCH DIE SERIAL ===========
         async searchDieSerial() {
             const dieval = this.searchInput.value.trim();
+            const processval = this.processSelection.value;
 
             if (!dieval) {
                 this.validDate.style.display = "block";
                 this.validDate.textContent = "Please enter a Die Serial.";
                 return;
+            } else {
+                this.validDate.style.display = "none";
             }
 
-            this.validDate.style.display = "none";
-
+            if (processval === "") {
+                this.validprocess.style.display = "block";
+                return;
+            } else {
+                this.validprocess.style.display = "none";
+            }
+            console.log("asdsadsa");
             const res = await getMethod('@Url.Action("GetSearchMoldieList", "Mold")', {
-                DieSerial: dieval, // Sends current date/time
+                DieSerial: dieval, 
                 process: this.processSelection.value,
             });
-
-            //if (!res.Success) return;
             console.log(res);
+            let getdata = res.Data.Listdata;
+
+            if (getdata.length == 0) {
+                alert("Mold Die Serial Not found");
+                return;
+            }
 
             this.populateDieSerialDetails(res.Data.Details);
             this.populateDieTable(res.Data.Listdata);
@@ -455,9 +467,8 @@
             let counter = 0;
             this.tableDisplay.innerHTML = "";
 
-            console.log(list);
-
             list.forEach(row => {
+
                 let actionButton = "";
 
                 if (row.Total === 0) {
@@ -466,43 +477,55 @@
 
                 if (counter === 0) {
                     actionButton = `
-                    <div style="display:grid;grid-template-columns:50% 50%;gap:5px;">
+                <div style="display:grid;grid-template-columns:50% 50%;gap:5px;">
 
-                        <button type="button"
-                                class="text-primary actionicon EditDailyDieSerial">
-                            <i class="fa-regular fa-pen-to-square action_btn"></i>
-                        </button>
+                    <button type="button"
+                            class="text-primary actionicon EditDailyDieSerial">
+                        <i class="fa-regular fa-pen-to-square action_btn"></i>
+                    </button>
 
-                        <button type="button"
-                                class="text-danger actionicon DeleteDailyDieSerial">
-                            <i class="fa-regular fa-trash-can"></i>
-                        </button>
+                    <button type="button"
+                            class="text-danger actionicon DeleteDailyDieSerial">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button>
 
-                    </div>`;
+                </div>`;
                 }
 
-                const statusBtns = this.buildStatusButtonSet(
-                    row.RecordID,
-                    row.Status,
-                    true,
-                    row
-                );
+                const statusBtns = this.buildStatusButtonSet(row.Status);
 
                 const tr = document.createElement("tr");
 
                 tr.innerHTML = `
-                    <td>${row.DateInput}</td>
-                    <td>${row.CycleShot}</td>
-                    <td>${row.Total}</td>
-                    <td>${row.MachineNo}</td>
-                    <td>${row.Remarks ?? ""}</td>
-                    <td>${row.Mincharge ?? ""}</td>
-                    <td><div class="flex_align">${statusBtns}</div></td>
-                    <td>${actionButton}</td>
-                `;
+            <td>${row.DateInput}</td>
+            <td>${row.CycleShot}</td>
+            <td>${row.Total}</td>
+            <td>${row.MachineNo}</td>
+            <td>${row.Remarks ?? ""}</td>
+            <td>${row.Mincharge ?? ""}</td>
+            <td>
+                <div class="flex_align">
+                    ${statusBtns}
+                </div>
+            </td>
+            <td>${actionButton}</td>
+        `;
 
+                // ================= STATUS BUTTONS =================
+                tr.querySelectorAll(".status-btn").forEach(btn => {
 
-                // ================= Edit Button =================
+                    btn.addEventListener("click", () => {
+
+                        this.ChangeDieSerialStatus(
+                            row.RecordID,
+                            Number(btn.dataset.status)
+                        );
+
+                    });
+
+                });
+
+                // ================= EDIT =================
                 const editBtn = tr.querySelector(".EditDailyDieSerial");
 
                 if (editBtn) {
@@ -511,7 +534,7 @@
                     });
                 }
 
-                // ================= Delete Button =================
+                // ================= DELETE =================
                 const deleteBtn = tr.querySelector(".DeleteDailyDieSerial");
 
                 if (deleteBtn) {
@@ -521,7 +544,6 @@
                 }
 
                 this.tableDisplay.appendChild(tr);
-
             });
         }
 
@@ -549,10 +571,10 @@
             e.preventDefault();
 
             const payload = {
-                RecordID: parseInt(this.EditRecordID.value, 10),
+                RecordID: parseInt(this.EditRecordID.value),
                 CurrentDate: this.DieSerialCurrentDate.value,
                 DateInput: this.DieSerialDateInput.value,
-                CycleShot: parseInt(this.DieSerialCycleShot.value, 10),
+                CycleShot: parseInt(this.DieSerialCycleShot.value),
                 MachineNo: parseInt(this.DieSerialMachineNo.value, 10),
 
                 Remarks: this.DieSerialRemarks.value,
@@ -591,24 +613,24 @@
                 );
 
                 if (!confirmed) return;
+                const d = new Date(row.DateInput);
 
                let payload = {
                     RecordID: parseInt(row.RecordID, 10),
                     DieSerial: row.DieSerial,
-                    DateInput: new Date(row.DateInput).toISOString()
+                    DateInput: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
                 };
-                console.log(payload);
                 try {
 
                     const res = await postMethod('@Url.Action("DeleteDailyMoldRecord", "Mold")', payload);
                     console.log(res);
-                    //if (!res.Success) {
-                    //    alert(res.Message);
-                    //    return;
-                    //}
+                    if (!res.Success) {
+                        alert(res.Message);
+                        return;
+                    }
 
-                    //// Refresh table
-                    //await this.searchDieSerial();
+                    // Refresh table
+                    await this.searchDieSerial();
 
                 } catch (err) {
                     console.error(err);
@@ -662,44 +684,26 @@
         }
 
 
-        buildStatusButtonSet(id, status, isDie = false, row = null) {
-            let actionStatus = "";
+        buildStatusButtonSet(status) {
+            return `
+                <button type="button"
+                        class="status-btn ${status === 0 ? "badge bg-primary" : ""}"
+                        data-status="0">
+                    Continue
+                </button>
 
-            // For the Partnumber
-            if (!isDie) {
-                actionStatus = `
-                 <button class='status-btn ${status === 0 ? `badge bg-primary` : ``}'
-                     onclick="ChangeStatus(${id}, 0)">
-                     Continue
-                 </button>
-                  <button class='status-btn ${status === 1 ? `badge bg-warning text-dark` : ``}'
-                     onclick="ChangeStatus(${id}, 1)">
-                     Needed
-                 </button>
-                 <button class='status-btn ${status === 2 ? `badge bg-success` : ``}'
-                     onclick="ChangeStatus(${id}, 2)">
-                     Complete
-                 </button>
-                 `;
-            } else {
-                const key = `'${row.DateInput}','${row.DieSerial}', ${row.Total}`;
-                actionStatus = `
-                   <button class='status-btn ${status === 0 ? `badge bg-primary` : ``}'
-                       onclick="ChangeDieSerialStatus(${key}, 0)">
-                       Continue
-                   </button>
-                    <button class='status-btn ${status === 1 ? `badge bg-warning text-dark` : ``}'
-                       onclick="ChangeDieSerialStatus(${key}, 1)">
-                       Needed
-                   </button>
-                   <button class='status-btn ${status === 2 ? `badge bg-success` : ``}'
-                       onclick="ChangeDieSerialStatus(${key}, 2)">
-                       Complete
-                   </button>
-                   `;
-            }
+                <button type="button"
+                        class="status-btn ${status === 1 ? "badge bg-warning text-dark" : ""}"
+                        data-status="1">
+                    Needed
+                </button>
 
-            return actionStatus;
+                <button type="button"
+                        class="status-btn ${status === 2 ? "badge bg-success" : ""}"
+                        data-status="2">
+                    Complete
+                </button>
+            `;
         }
         buildStatusBadge(status) {
             switch (status) {
@@ -711,6 +715,29 @@
                     return `<span class="badge bg-success">Completed</span>`;
                 default:
                     return `<span class="badge bg-secondary">Unknown</span>`;
+            }
+        }
+
+
+
+        async ChangeDieSerialStatus(id,  status) {
+                console.log({
+                    id,
+                    status
+                });
+
+            const res = await postMethod(
+                '@Url.Action("ChangeDieMoldStatusData", "Mold")',
+                {
+                    RecordID: parseInt(id),
+                    Status: parseInt(status, 10)
+                }
+            );
+
+            console.log(res);
+
+            if (res?.Success) {
+                await this.searchDieSerial();
             }
         }
 
@@ -772,8 +799,7 @@
         async handleSubmit(e) {
              e.preventDefault();
 
-             //if (!this.form.reportValidity()) return;
-
+            //if (!this.form.reportValidity()) return;
              const payload = {
                  ProcessID: this.processSelection.value,
                  DieSerial: this.DieSerial.value,
@@ -782,13 +808,25 @@
                  MachineNo: parseInt(this.MachineNo.value, 10),
                  Remarks: this.remarks.value,
                  Mincharge: this.Mincharge.value
-             };
+            };
 
+            const d = new Date(payload.DateInput);
+
+             // Checks if the Cycle Shot Input is Already Exists
+            let checkduplicate = await GetMethod('@Url.Action("CheckDialyMoldExist", "Mold")',
+            {
+                 dieSerial: payload.DieSerial,
+                 DateInput: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+            });
+
+            if (checkduplicate && payload.cycleShot !== 0) {
+                console.log(payload.DateInput + " is Already Input");
+                return;
+            }
 
                 //this.submitBtn.disabled = true;
              try {
                  const res = await postMethod('@Url.Action("SaveDailyMoldDieMonitor", "Mold")', payload);
-                 console.log(res);
 
                  if (!res?.Success) {
                          //this.showToast(res?.Message || 'Save failed.', true);

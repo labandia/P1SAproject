@@ -237,7 +237,7 @@
             // if isCOmplete is false(incomplete from the shops)
             if (!isComplete) {
                 if (orderStatus === isStatus.Temporary) {
-                    alert("Already in process.");
+                    alert("Already in Next or In process.");
                 } else {
                     // if not updates the OrderStatus to 4 (In Process) and updates the row
                     const success = await this.updateOrderStatus(id, isStatus.Temporary, lineman);

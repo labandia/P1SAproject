@@ -88,4 +88,19 @@ namespace ProgramPartListWeb.Models
         public AuthModel auth { get; set; } 
         public RegisterModel reg { get; set; }
     }
+
+
+
+
+    public class ClientsInfoModel
+    {
+        public int UserAccountId { get; set; }
+        public string ComputerName { get; set; }
+        public string IpAddress { get; set; }
+        public string AccountName { get; set; }
+        public string Email { get; set; }
+    }
+
+
+
 }

@@ -14,7 +14,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
             string updatestorage = $@"UPDATE PartsLocatorRotor_Location SET Quantity = Quantity - @Quantity
                                      WHERE Partnumber =@Partnumber AND Area =@Area";
 
-            bool storageResult = await SqlDataAccess.ExecuteAsync(updatestorage, new
+            int  storageResult = await SqlDataAccess.ExecuteAsync(updatestorage, new
             {
                 Quantity = shop.Quantity,
                 Partnumber = shop.Partnumber,
@@ -27,7 +27,9 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                               VALUES(1, @Partnumber, @RotorOrder, @ShopOrder, @PlanQuantity, 
                               @PlanDate, @ModelBase, @Area, @Quantity, @Remarks, @Status, @BushType, @PreviousQuantity)";
 
-            return await SqlDataAccess.ExecuteAsync(strsql, shop);
+            int rows =  await SqlDataAccess.ExecuteAsync(strsql, shop);
+
+            return rows > 0;
         }
 
         public Task<bool> DeleteTransactionOut(ShopOrderOutModel shop)
@@ -35,7 +37,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
             throw new NotImplementedException();
         }
 
-        public Task<bool> EditTransactionOut(ShopOrderOutModel shop)
+        public async Task<bool> EditTransactionOut(ShopOrderOutModel shop)
         {
             string strsql = $@"UPDATE PartsLocatorRotor_Transaction 
                               SET RotorOrder =@RotorOrder, ShopOrder =@ShopOrder, PlanQuantity =@PlanQuantity,
@@ -44,7 +46,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                                   BushType =@BushType
                               WHERE TransactionID =@TransactionID";
 
-            return SqlDataAccess.ExecuteAsync(strsql, new
+            int rows = await SqlDataAccess.ExecuteAsync(strsql, new
             {
                 RotorOrder = shop.RotorOrder,
                 ShopOrder = shop.ShopOrder,
@@ -55,6 +57,8 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                 BushType = shop.BushType,
                 TransactionID = shop.TransactionID
             });
+
+            return rows > 0;
         }
 
         public async Task<PagedResult<ShopOrderOutModel>> GetShopOderOutlist(
@@ -100,7 +104,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                         OFFSET @Offset ROWS
                         FETCH NEXT @PageSize ROWS ONLY";
 
-            var items =  await SqlDataAccess.GetDataAsync<ShopOrderOutModel>(
+            var items =  await SqlDataAccess.QueryAsync<ShopOrderOutModel>(
                     strsql,
                     new
                     {

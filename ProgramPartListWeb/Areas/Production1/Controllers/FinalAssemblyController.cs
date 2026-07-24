@@ -13,6 +13,8 @@ using ProgramPartListWeb.Areas.Hydroponics.Interface;
 using System.Configuration;
 using System.IO;
 using System.Diagnostics;
+using ProgramPartListWeb.Utilities;
+using DocumentFormat.OpenXml.EMMA;
 
 namespace ProgramPartListWeb.Areas.Production1.Controllers
 {
@@ -21,18 +23,37 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
         private readonly INCRDashboardRepository _manu;
 
 
-        public FinalAssemblyController(INCRDashboardRepository manu)
-        {
-            _manu = manu;
-        }
+        public FinalAssemblyController(INCRDashboardRepository manu) => _manu = manu;
         //======================================================
         //============== DASHBOARD  ===========
         //=====================================================
-
         [HttpGet]
-        public async Task<ActionResult> GetListof4ManFactor()
+        public async Task<ActionResult> SampleGet()
         {
+            string ip = ClientsInfo.GetClientIpAddress();
+            string hostName = ClientsInfo.GetHostName(ip);
+            var (account, email) = ClientsInfo.GetAccountAndEmail(hostName);
+
+            var context = HttpContext;
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine("REMOTE_ADDR: " + context.Request.ServerVariables["REMOTE_ADDR"]);
+            sb.AppendLine("REMOTE_HOST: " + context.Request.ServerVariables["REMOTE_HOST"]);
+            sb.AppendLine("HTTP_X_FORWARDED_FOR: " + context.Request.ServerVariables["HTTP_X_FORWARDED_FOR"]);
+            sb.AppendLine("HTTP_X_REAL_IP: " + context.Request.ServerVariables["HTTP_X_REAL_IP"]);
+            sb.AppendLine("LOCAL_ADDR: " + context.Request.ServerVariables["LOCAL_ADDR"]);
+            sb.AppendLine("Request.UserHostAddress: " + context.Request.UserHostAddress);
+
+            return JsonSuccess(sb.ToString());
+        }
+    [HttpGet]
+    public async Task<ActionResult> GetListof4ManFactor()
+    {
             //await _manu.AutoUpdateShopOrderLine();
+        //var info = ClientsInfo.GetClientInfo();
+        //string account = ClientsInfo.GetLoggedInUserViaWmi(info.ComputerName);
+        //Debug.WriteLine($@"Hostname: {info.ComputerName} - IP : {info.IpAddress} - Account name : {account}");
+
+
 
 
             var res = await _manu.GetFourMSummary();

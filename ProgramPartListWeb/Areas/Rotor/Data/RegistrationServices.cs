@@ -12,7 +12,7 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
 {
     public class RegistrationServices : IRotorRegistration
     {
-        public Task<bool> AddRegistration(RotorRegistrationModel masterlist)
+        public async Task<bool> AddRegistration(RotorRegistrationModel masterlist)
         {
             string strquery = @"
                 IF EXISTS (
@@ -55,21 +55,22 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
                     );
                 END";
 
-            return SqlDataAccess.ExecuteAsync(strquery, masterlist);
-
+            int rows = await SqlDataAccess.ExecuteAsync(strquery, masterlist);
+            return rows > 0;
         }
 
-        public Task<bool> DeleteRegistration(int registID)
+        public async Task<bool> DeleteRegistration(int registID)
         {
-            return SqlDataAccess.ExecuteAsync($@"UPDATE Registration
+            int rows = await SqlDataAccess.ExecuteAsync($@"UPDATE Registration
                                     SET IsDeleted = 1
                                     WHERE RegistrationID = @RegistrationID;", 
                                     new { RegistrationID = registID });
+            return rows > 0;
         }
 
-        public Task<bool> EditRegistration(RotorRegistrationModel masterlist)
+        public async Task<bool> EditRegistration(RotorRegistrationModel masterlist)
         {
-            return SqlDataAccess.ExecuteAsync(@"
+            int rows = await SqlDataAccess.ExecuteAsync(@"
                         UPDATE Registration
                         SET
                             RegistrationNo = @RegistrationNo,
@@ -80,6 +81,8 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
                         WHERE RegistrationID = @RegistrationID
                           AND IsDeleted = 0;",
                         masterlist);
+
+            return rows > 0;
         }
 
         public async Task<PagedResult<RotorRegistrationModel>> GetRegistrationsList(
@@ -179,7 +182,7 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
             }
 
 
-            var items = await SqlDataAccess.GetDataAsync<RotorRegistrationModel>(strquery, parameters);
+            var items = await SqlDataAccess.QueryAsync<RotorRegistrationModel>(strquery, parameters);
 
             // Now get the total count
             int TotalRecords = await SqlDataAccess.ExecuteScalarAsync<int>(countQuery, parameters);

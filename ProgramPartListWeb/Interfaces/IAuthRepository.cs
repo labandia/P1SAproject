@@ -12,6 +12,8 @@ namespace ProgramPartListWeb.Interfaces
         string GetRefreshToken(string fullname, string role, int userId);
         string GetuserRolename(int roleid);
         bool VerifyPassword(string enteredPassword, string storedHash);
-       
+
+
+        Task<bool> UpdatesUserClienfoToDatabase(ClientsInfoModel client);
     }
 }

@@ -78,11 +78,13 @@ namespace PMACS_V2.Services
         }
 
 
-        public static Task<bool> SendEmailViaSqlDatabase(SentEmailModel em)
+        public static async Task<bool> SendEmailViaSqlDatabase(SentEmailModel em)
         {
             string strsql = $@"INSERT INTO P1SA_EmailSend(Subject, Sender, Recipient, Body)
                                VALUES(@Subject, @Sender, @Recipient, @Body)";
-            return SqlDataAccess.ExecuteAsync(strsql, em);
+            int rows = await SqlDataAccess.ExecuteAsync(strsql, em);
+
+            return rows > 0;
         }
 
         public static string CreateAEmailBody(string Fullname, string messageContent)

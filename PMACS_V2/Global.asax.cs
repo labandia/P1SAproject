@@ -51,7 +51,7 @@ namespace PMACS_V2
         }
         protected void Application_End()
         {
-            SqlDependency.Stop(SqlDataAccess.BuildConnectionString());
+            SqlDependency.Stop(SqlDataAccess.ConnectionString());
 
             if (Response.StatusCode == 401)
             {

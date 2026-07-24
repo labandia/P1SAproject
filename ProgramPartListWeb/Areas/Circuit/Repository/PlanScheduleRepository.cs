@@ -10,7 +10,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
 {
     public class PlanScheduleRepository : IPlanSchedule
     {
-        public Task<bool> AddPlanSchedules(PlanScheduleMode plan)
+        public async Task<bool> AddPlanSchedules(PlanScheduleMode plan)
         {
             string strquery = @"INSERT INTO PartList_Series_tbl 
                                (Series_no, Line, Timetarget, CreatedBy, 
@@ -20,16 +20,20 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                                @Shift, @Remarks, @SetupNavi, 
                                @VisualManage, @Status, @MachineSerial, 
                                @Modelno, @SetGroup)";
-            return SqlDataAccess.ExecuteAsync(strquery, plan, System.Data.CommandType.StoredProcedure, "serieslist");
+            int row = await SqlDataAccess.ExecuteAsync(strquery, plan);
+
+            return row > 0;
         }
 
-        public Task<bool> DeletePlanSched(string plan)
+        public async Task<bool> DeletePlanSched(string plan)
         {
             string strquery = @"DELETE FROM PartList_Series_tbl WHERE Series_no =@Series_no";
-            return SqlDataAccess.ExecuteAsync(strquery, new { Series_no  = plan}, System.Data.CommandType.StoredProcedure, "serieslist");
+            int rows = await SqlDataAccess.ExecuteAsync(strquery, new { Series_no  = plan});
+
+            return rows > 0;
         }
 
-        public Task<bool> EditPlanSchedules(PlanScheduleMode plan)
+        public async Task<bool> EditPlanSchedules(PlanScheduleMode plan)
         {
             string strquery = "UPDATE PartList_Series_tbl SET " +
                                "Series_no = @Series_no, Line =@Line, Timetarget =@Timetarget, CreatedBy =@CreatedBy, " +
@@ -41,7 +45,8 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
 
             };
             
-            return SqlDataAccess.ExecuteAsync(strquery, parameters);
+            int rows = await SqlDataAccess.ExecuteAsync(strquery, parameters);
+            return rows > 0;
         }
 
         public Task<List<PlanScheduleMode>> GetPlanSchedules()
@@ -72,10 +77,8 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                                 GROUP BY Series_ID
                             ) cs ON cs.Series_ID = s.Series_ID
                               ORDER BY Series_ID DESC";
-            return SqlDataAccess.GetDataAsync<PlanScheduleMode>(strquery, 
-                null, 
-                System.Data.CommandType.StoredProcedure,
-                "serieslist");
+            return SqlDataAccess.QueryAsync<PlanScheduleMode>(strquery, 
+                null);
         }
 
         public async Task<PlanScheduleMode> GetPlanSchedulesByID(string plan)

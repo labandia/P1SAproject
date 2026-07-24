@@ -127,7 +127,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
 
 
-            return SqlDataAccess.GetDataAsync<RequestChambersModel>(strsql, parameters);
+            return SqlDataAccess.QueryAsync<RequestChambersModel>(strsql, parameters);
         }
 
         public Task<List<RequestChambersDetailsModel>> GetRequestDetailList(string order)
@@ -149,7 +149,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                             INNER JOIN Hydro_CategoryParts c ON i.CategoryID = c.CategoryID
                             INNER JOIN Hydro_Stocks s ON s.PartID = o.PartID
                             WHERE o.OrderID = @OrderID";
-            return SqlDataAccess.GetDataAsync<RequestChambersDetailsModel>(strsql, new { OrderID = order });
+            return SqlDataAccess.QueryAsync<RequestChambersDetailsModel>(strsql, new { OrderID = order });
         }
 
         public async Task<IEnumerable<ChamberslistModel>> GetAllChambersDisplay()
@@ -168,7 +168,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                             INNER JOIN Hydro_ChamberMasterlist cm ON cm.ChamberID = c.ChamberID
                             LEFT JOIN Hydro_Stocks s ON c.PartID = s.PartID
                             GROUP BY cm.ChamberID, cm.ChamberID, cm.ChamberName";
-            return await SqlDataAccess.GetDataAsync<ChamberslistModel>(strsql, null);
+            return await SqlDataAccess.QueryAsync<ChamberslistModel>(strsql, null);
         }
 
 
@@ -184,9 +184,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                             LEFT JOIN Hydro_Stocks s ON cp.PartID = s.PartID
                             WHERE cp.ChamberID = @ChamberID
                             GROUP BY cp.ChamberID, c.ChamberName;";
-            var result = await SqlDataAccess.GetDataAsync<ChambersProduce>(strsql, new { ChamberID = chamber });
+           return await SqlDataAccess.QuerySingleOrDefaultAsync<ChambersProduce>(strsql, new { ChamberID = chamber });
 
-            return result.FirstOrDefault();
         }
 
         public async Task<ChamberTotalPrice> GetTotalPriceData(int chamber)
@@ -199,7 +198,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                             INNER JOIN Hydro_CategoryParts cp ON cp.CategoryID = i.CategoryID
                             INNER JOIN Hydro_ChamberMasterlist cm ON cm.ChamberID = c.ChamberID
                             WHERE c.ChamberID = @ChamberID;";
-            var result = await SqlDataAccess.GetDataAsync<ChamberTotalPrice>(strsql, new { ChamberID = chamber });
+            var result = await SqlDataAccess.QueryAsync<ChamberTotalPrice>(strsql, new { ChamberID = chamber });
 
             return result.FirstOrDefault();
         }
@@ -226,23 +225,26 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                             INNER JOIN Hydro_CategoryParts cp ON cp.CategoryID = i.CategoryID
                             INNER JOIN Hydro_ChamberMasterlist cm ON cm.ChamberID = c.ChamberID
                             WHERE c.ChamberID =@ChamberID";
-            return SqlDataAccess.GetDataAsync<ChamberModel>(strsql, new { ChamberID = chamber });
+            return SqlDataAccess.QueryAsync<ChamberModel>(strsql, new { ChamberID = chamber });
         }
-        public Task<List<ChamberTypeList>> GetChamberTypes() => SqlDataAccess.GetDataAsync<ChamberTypeList>("SELECT ChamberID, ChamberName FROM Hydro_ChamberMasterlist");
+        public Task<List<ChamberTypeList>> GetChamberTypes() => SqlDataAccess.QueryAsync<ChamberTypeList>("SELECT ChamberID, ChamberName FROM Hydro_ChamberMasterlist");
 
 
-        public Task<bool> UpdateRequestStatus(string OrderID, string RequestStatus, string remarks, string EditCustomerName, double EditAssemblyStats)
+        public async Task<bool> UpdateRequestStatus(string OrderID, string RequestStatus, string remarks, string EditCustomerName, double EditAssemblyStats)
         {
             string strsql = $@"UPDATE Hydro_Orders SET Status =@Status, Remarks =@Remarks, CustomerName =@CustomerName,  AssemblyStats =@AssemblyStats
                                WHERE OrderID =@OrderID";
-            return SqlDataAccess.ExecuteAsync(strsql, new { OrderID = OrderID, Status = RequestStatus, Remarks = remarks, CustomerName = EditCustomerName, AssemblyStats = EditAssemblyStats });  
+            int rows = await SqlDataAccess.ExecuteAsync(strsql, new { OrderID = OrderID, Status = RequestStatus, Remarks = remarks, CustomerName = EditCustomerName, AssemblyStats = EditAssemblyStats });
+
+            return rows > 0;
         }
 
-        public Task<bool> UpdateUnitCostChamber(int ChamberPartID, string UnitCost_PHP)
+        public async Task<bool> UpdateUnitCostChamber(int ChamberPartID, string UnitCost_PHP)
         {
             string strsql = $@"UPDATE Hydro_ChamberParts SET UnitCost_PHP =@UnitCost_PHP 
                                WHERE ChamberPartID =@ChamberPartID";
-            return SqlDataAccess.ExecuteAsync(strsql, new { ChamberPartID = ChamberPartID, UnitCost_PHP = UnitCost_PHP });
+            int rows = await SqlDataAccess.ExecuteAsync(strsql, new { ChamberPartID = ChamberPartID, UnitCost_PHP = UnitCost_PHP });
+            return rows > 0;
         }
     
 
@@ -259,7 +261,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                 @PIC, @TargetDate, 
                                 @OrderDate, @CustomerName, @Remarks)";
 
-            bool result = await SqlDataAccess.ExecuteAsync(strsql, new
+            int  result = await SqlDataAccess.ExecuteAsync(strsql, new
             {
                 OrderID,
                 item.ChamberID,
@@ -273,7 +275,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             });
 
             // If insert is Completed go the next process   
-            if (result)
+            if (result > 0)
             {
                 // Get Chambers list parts based on the ChamberID 
                 var chamberParts = await GetChambersData(item.ChamberID);
@@ -329,7 +331,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
             }
 
-            return result;
+            return result > 0;
         }
 
         public async Task<bool> UpdatesRequestMaterials(string OrderID, int partID, double allocated)
@@ -359,7 +361,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 WHERE OrderID = @OrderID
                   AND PartID = @PartID;";
 
-            bool result = await SqlDataAccess.ExecuteAsync(
+            int result = await SqlDataAccess.ExecuteAsync(
                 updateOrderSql,
                 new
                 {
@@ -368,7 +370,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                     QtyUsed = actualUsed
                 });
 
-            if (result)
+            if (result > 0)
             {
                 // Update stocks using actual quantity only
                 string updateStocksSql = @"
@@ -388,10 +390,10 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                     });
             }
 
-            return result;
+            return result > 0;
         }
 
-        public Task<bool> AdditionalChambers(AddPartsChamberModel add)
+        public async Task<bool> AdditionalChambers(AddPartsChamberModel add)
         {
             string insertStockQuery = $@"INSERT INTO Hydro_ChamberParts 
                                          (ChamberID, PartNo, QuantityPerChamber, UnitCost_PHP) 
@@ -405,7 +407,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 add.ChamberID
             };
 
-            return SqlDataAccess.ExecuteAsync(insertStockQuery, stockPramers);
+            int row = await SqlDataAccess.ExecuteAsync(insertStockQuery, stockPramers);
+            return row > 0;
         }
 
         public Task<bool> Deletechambers()

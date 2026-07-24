@@ -10,31 +10,35 @@ namespace PMACS_V2.Areas.P1SA.Repository
 {
     public class MachineRepository : IMachine
     {
-        public Task<bool> AddMachine(PostMachineModel model)
+        public async Task<bool> AddMachine(PostMachineModel model)
         {
             string strsql = $@"INSERT INTO machine(MACH_CODE, Machname, Model, Serial, Manufact, Date_acquired, Shifts, 
                                                    Location, Status, Asset, IsDelete, Section_ID, Filepath, Dateadd, Reasons, Tongs)
                                VALUES(@MACH_CODE, @Equipment, @Model, @Serial, @Manufact, @Date_acquired, @Shifts, 
                                                    @Location, @Status, @Asset, @IsDelete, @Section_ID, @Filepath, @Dateadd, @Reasons, @Tongs)";
-            return SqlDataAccess.ExecuteAsync(strsql, model);    
+            int rows = await SqlDataAccess.ExecuteAsync(strsql, model);
+
+            return rows > 0;
         }
 
-        public Task<bool> DeleteMachine(int machID)
+        public async Task<bool> DeleteMachine(int machID)
         {
             string strsql = $@"UPDATE machine SET IsDelete = 0 WHERE ID =@ID";
-            return SqlDataAccess.ExecuteAsync(strsql, new { ID = machID});
+            int rows = await SqlDataAccess.ExecuteAsync(strsql, new { ID = machID});
+
+            return rows > 0;
         }
 
-        public Task<bool> EditMachine(EditMachineModel model)
+        public async Task<bool> EditMachine(EditMachineModel model)
         {
             string strsql = $@"UPDATE machine SET Machname =@Machname, Date_acquired =@Date_acquired, Model =@Model, 
                                Location =@Location, Serial =@Serial, Shifts =@Shifts, Manufact =@Manufact, Asset =@Asset, 
                                Tongs =@Tongs, Status =@Status, Reasons =@Reasons, Filepath =@Filepath
                               WHERE ID =@ID";
 
+            int rows = await SqlDataAccess.ExecuteAsync(strsql, model);
 
-
-            return SqlDataAccess.ExecuteAsync(strsql, model);
+            return rows > 0;
         }
 
         public Task<List<CountMachineModel>> GetCountMachine(int sectionID, string MachineCode)
@@ -45,13 +49,13 @@ namespace PMACS_V2.Areas.P1SA.Repository
                             FROM machine WHERE 
                             Section_ID = @sectionID  {machfilter}";
 
-            return SqlDataAccess.GetDataAsync<CountMachineModel>(strsql, new { sectionID = sectionID });
+            return SqlDataAccess.QueryAsync<CountMachineModel>(strsql, new { sectionID = sectionID });
         }
 
         public Task<List<EquipmentList>> GetEquipmentData(int sectionID)
         {
             string strsql = "SELECT Machine_code, Equipment, Section_ID FROM Major WHERE Section_ID = " + sectionID + "";
-            return SqlDataAccess.GetDataAsync<EquipmentList>(strsql, null);
+            return SqlDataAccess.QueryAsync<EquipmentList>(strsql, null);
         }
 
         public Task<List<MachineModel>> GetMachineData(int offset, int limit, int sect, string mach)
@@ -65,7 +69,7 @@ namespace PMACS_V2.Areas.P1SA.Repository
                     FROM Machine m INNER JOIN major ma on ma.Machine_code = m.MACH_CODE 
                     WHERE m.Section_ID = {sect} {machfilter} ORDER BY m.ID DESC 
                     OFFSET {offset} ROWS FETCH NEXT {limit} ROWS ONLY ";
-            return SqlDataAccess.GetDataAsync<MachineModel>(strsql, null);
+            return SqlDataAccess.QueryAsync<MachineModel>(strsql, null);
         }
 
         public  Task<List<MachineModel>> GetMachineDataByID(int ID)
@@ -76,11 +80,11 @@ namespace PMACS_V2.Areas.P1SA.Repository
                     FORMAT(m.Dateadd, 'MM/dd/yyyy') as Dateadd 
                     FROM Machine m INNER JOIN major ma on ma.Machine_code = m.MACH_CODE
                     WHERE m.ID =@ID";
-            return  SqlDataAccess.GetDataAsync<MachineModel>(strsql, new { ID = ID });
+            return  SqlDataAccess.QueryAsync<MachineModel>(strsql, new { ID = ID });
         }
 
 
-        public async Task<byte[]> GetMachineImage(int machineID)
+        public  Task<byte[]> GetMachineImage(int machineID)
         {
             //string sql = "SELECT Filepath FROM machine WHERE ID = @ID";
             //return await SqlDataAccess.GetByteAsync(sql, new { ID = machineID });

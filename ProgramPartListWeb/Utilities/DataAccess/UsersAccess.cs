@@ -9,12 +9,15 @@ using System.Runtime.Caching;
 using System.Threading;
 using System.Collections.Concurrent;
 using CommandType = System.Data.CommandType;
+using System.Text.RegularExpressions;
 
 
 namespace ProgramPartListWeb.Utilities
 {
     public sealed class UsersAccess
     {
+        private static readonly Regex ProcRegex = new Regex(@"^[a-zA-Z_]\w*(\.[a-zA-Z_]\w*)?$", RegexOptions.Compiled);
+
         // -------------------- CONFIG & CACHE --------------------
         private static readonly string _connectionString = BuildConnectionString();
         private static readonly ObjectCache _cache = MemoryCache.Default;
@@ -64,6 +67,56 @@ namespace ProgramPartListWeb.Utilities
 
         private static SqlConnection CreateConnection()
        => new SqlConnection(_connectionString);
+
+        public static SqlConnection GetConnection()
+         => new SqlConnection(_connectionString);
+
+
+        private static CommandType GetCommandType(string command, bool? storedProcedure)
+        {
+            if (storedProcedure.HasValue)
+                return storedProcedure.Value
+                    ? CommandType.StoredProcedure
+                    : CommandType.Text;
+
+            return ProcRegex.IsMatch(command)
+                ? CommandType.StoredProcedure
+                : CommandType.Text;
+        }
+
+        public static async Task<bool> ExistsAsync(
+          string sql,
+          object parameters = null,
+          bool? isStoredProcedure = null)
+        {
+            return await ExecuteScalarAsync<int>(
+                sql,
+                parameters,
+                isStoredProcedure) > 0;
+        }
+
+        public static async Task<T> ExecuteScalarAsync<T>(
+           string sql,
+           object parameters = null,
+           bool? isStoredProcedure = null,
+           CancellationToken ct = default(CancellationToken))
+        {
+            using (var connection = GetConnection())
+            {
+                var command = new CommandDefinition(
+                    sql,
+                    parameters,
+                    commandType: GetCommandType(sql, isStoredProcedure),
+                    cancellationToken: ct);
+
+                return await connection.ExecuteScalarAsync<T>(command);
+            }
+        }
+
+
+
+
+
 
         // #################################### USER MANAGEMENT ===================================
 
@@ -159,6 +212,43 @@ namespace ProgramPartListWeb.Utilities
                 myLock.Release();
             }
         }
+
+
+
+        // -------------------- INSERT AND UPDATE QUERY --------------------
+        public static async Task<bool> ExecuteAsync(
+            string query,
+            object parameters = null,
+            CommandType commandType = CommandType.Text,
+            string cacheKeyToInvalidate = null)
+        {
+            try
+            {
+                using (var con = GetConnection())
+                {
+                    int rows = await con.ExecuteAsync(query, parameters, commandType: commandType);
+
+                    if (rows > 0 && !string.IsNullOrEmpty(cacheKeyToInvalidate))
+                        _cache.Remove(cacheKeyToInvalidate);
+
+                    return rows > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
         public static async Task<bool> UpdateUserData(
             string query,
             object parameters = null,

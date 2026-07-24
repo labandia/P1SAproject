@@ -13,12 +13,14 @@ using NLog;
 using ProgramPartListWeb.Utilities;
 using CommandType = System.Data.CommandType;
 using System.Configuration;
+using System.Text.RegularExpressions;
 
 namespace ProgramPartListWeb.Helper
 {
     public sealed class SqlDataAccess
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private static readonly Regex ProcRegex = new Regex(@"^[a-zA-Z_]\w*(\.[a-zA-Z_]\w*)?$", RegexOptions.Compiled);
 
         // -------------------- CONFIG & CACHE --------------------
         private static readonly Lazy<string> _connectionString =
@@ -39,253 +41,180 @@ namespace ProgramPartListWeb.Helper
         public static SqlConnection GetConnection()
                 => new SqlConnection(ConnectionString());
 
-
-        private static readonly ObjectCache _cache = MemoryCache.Default;
-
-        // High concurrency locks per cache key
-        private static readonly ConcurrentDictionary<string, SemaphoreSlim> _locks
-            = new ConcurrentDictionary<string, SemaphoreSlim>();
-
-        private static readonly CacheItemPolicy DefaultPolicy = new CacheItemPolicy
+        private static CommandType GetCommandType(string command, bool? storedProcedure)
         {
-            SlidingExpiration = TimeSpan.FromMinutes(10)
-        };
+            if (storedProcedure.HasValue)
+                return storedProcedure.Value
+                    ? CommandType.StoredProcedure
+                    : CommandType.Text;
 
-      
-
-      
-
-
-        // --------------------- CORE METHODS ---------------------
-        public static async Task<List<T>> GetDataAsync<T>(
-          string query,
-          object parameters = null,
-          CommandType commandType = CommandType.Text,
-          string cacheKey = null,
-          int cacheMinutes = 10,
-          bool useSqlDependency = false)
-        {
-            if (string.IsNullOrEmpty(cacheKey))
-            {
-                using (var con = GetConnection())
-                {
-                    var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
-                    return result.AsList();
-                }
-            }
-
-            // First check (no lock)
-            var cached = _cache.Get(cacheKey) as List<T>;
-            if (cached != null)
-                return cached;
-
-            var myLock = _locks.GetOrAdd(cacheKey, new SemaphoreSlim(1, 1));
-
-            await myLock.WaitAsync();
-            try
-            {
-                // Double check
-                cached = _cache.Get(cacheKey) as List<T>;
-                if (cached != null)
-                    return cached;
-
-                List<T> list;
-
-                using (var con = GetConnection())
-                {
-                    var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
-                    list = result.AsList();
-                }
-
-                var policy = new CacheItemPolicy
-                {
-                    AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(cacheMinutes)
-                };
-
-                // 🔥 SQL AUTO INVALIDATE
-                if (useSqlDependency)
-                {
-                    using (var connection = new SqlConnection(_connectionString.Value))
-                    using (var command = new SqlCommand(query, connection))
-                    {
-                        connection.Open();
-                        var dependency = new SqlDependency(command);
-
-                        policy.ChangeMonitors.Add(
-                            new SqlChangeMonitor(dependency)
-                        );
-                    }
-                }
-
-                // 🔥 BACKGROUND AUTO REFRESH
-                policy.RemovedCallback = async args =>
-                {
-                    if (args.RemovedReason == CacheEntryRemovedReason.Expired)
-                    {
-                        try
-                        {
-                            using (var con = GetConnection())
-                            {
-                                var result = await con.QueryAsync<T>(query, parameters, commandType: commandType);
-                                var refreshed = result.AsList();
-
-                                _cache.Set(cacheKey, refreshed,
-                                    DateTimeOffset.Now.AddMinutes(cacheMinutes));
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Error(ex, "Background refresh failed.");
-                        }
-                    }
-                };
-
-                _cache.Set(cacheKey, list, policy);
-
-                return list;
-            }
-            finally
-            {
-                myLock.Release();
-            }
+            return ProcRegex.IsMatch(command)
+                ? CommandType.StoredProcedure
+                : CommandType.Text;
         }
 
-        // -------------------- GET OBJECT DATA --------------------
-        public static async Task<T> GetSingleAsync<T>(
-            string query,
+   
+
+        /// <summary>
+        /// Runs a query and maps every row to type T, returning all results as
+        /// a List&lt;T&gt;. Opens and disposes its own connection.
+        /// </summary>
+        public static async Task<List<T>> QueryAsync<T>(
+            string sql,
             object parameters = null,
-            CommandType commandType = CommandType.Text,
-            string cacheKey = null,
-            int cacheMinutes = 10)
+            bool? isStoredProcedure = null,
+            CancellationToken ct = default(CancellationToken))
         {
-            if (string.IsNullOrEmpty(cacheKey))
+            using (var connection = GetConnection())
             {
-                using (var con = GetConnection())
-                    return await con.QueryFirstOrDefaultAsync<T>(query, parameters, commandType: commandType);
+                var command = new CommandDefinition(
+                    sql,
+                    parameters,
+                    commandType: GetCommandType(sql, isStoredProcedure),
+                    cancellationToken: ct);
+
+                return (await connection.QueryAsync<T>(command)).AsList();
             }
+        }
 
-            var cached = _cache.Get(cacheKey);
-            if (cached != null)
-                return (T)cached;
-
-            var myLock = _locks.GetOrAdd(cacheKey, new SemaphoreSlim(1, 1));
-
-            await myLock.WaitAsync();
-            try
+        /// <summary>
+        /// Runs a query expected to return exactly one row and maps it to T.
+        /// Throws if zero or more than one row is returned.
+        /// </summary>
+        public static async Task<T> QuerySingleAsync<T>(
+            string sql,
+            object parameters = null,
+            bool? isStoredProcedure = null,
+            CancellationToken ct = default(CancellationToken))
+        {
+            using (var connection = GetConnection())
             {
-                cached = _cache.Get(cacheKey);
-                if (cached != null)
-                    return (T)cached;
+                var command = new CommandDefinition(
+                    sql,
+                    parameters,
+                    commandType: GetCommandType(sql, isStoredProcedure),
+                    cancellationToken: ct);
 
-                T result;
-
-                using (var con = GetConnection())
-                    result = await con.QueryFirstOrDefaultAsync<T>(query, parameters, commandType: commandType);
-
-                var policy = new CacheItemPolicy
-                {
-                    AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(cacheMinutes)
-                };
-
-                _cache.Set(cacheKey, result, policy);
-
-                return result;
+                return await connection.QuerySingleAsync<T>(command);
             }
-            finally
+        }
+
+        /// <summary>
+        /// Runs a query expected to return zero or one row and maps it to T.
+        /// Returns default(T) if no row is found. Throws if more than one row
+        /// is returned.
+        /// </summary>
+        public static async Task<T> QuerySingleOrDefaultAsync<T>(
+            string sql,
+            object parameters = null,
+            bool? isStoredProcedure = null,
+            CancellationToken ct = default(CancellationToken))
+        {
+            using (var connection = GetConnection())
             {
-                myLock.Release();
+                var command = new CommandDefinition(
+                    sql,
+                    parameters,
+                    commandType: GetCommandType(sql, isStoredProcedure),
+                    cancellationToken: ct);
+
+                return await connection.QuerySingleOrDefaultAsync<T>(command);
             }
         }
 
 
-
-        // -------------------- GETS STRING ONLY --------------------
-        public static async Task<string> GetOneData(string query, object parameters)
+        /// <summary>
+        /// Executes a non-query command (INSERT/UPDATE/DELETE/DDL/stored proc)
+        /// using its own connection and returns the number of affected rows.
+        /// </summary>
+        public static async Task<int> ExecuteAsync(
+            string sql,
+            object parameters = null,
+            bool? isStoredProcedure = null,
+            CancellationToken ct = default(CancellationToken))
         {
-            try
+            using (var connection = GetConnection())
             {
-                using (IDbConnection con = GetConnection())
-                    return await con.QuerySingleOrDefaultAsync<string>(query, parameters);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex, $"SQL Exception while executing query. Query: {query}");
-                return "";
+                var command = new CommandDefinition(
+                    sql,
+                    parameters,
+                    commandType: GetCommandType(sql, isStoredProcedure),
+                    cancellationToken: ct);
+
+                return await connection.ExecuteAsync(command);
             }
         }
-        // -------------------- GET THE TOTAL COUNT --------------------
+
+        /// <summary>
+        /// Executes a non-query command against an existing connection and
+        /// transaction (for use inside ExecuteInTransactionAsync work
+        /// delegates), returning the number of affected rows.
+        /// </summary>
+        public static async Task<int> ExecuteAsync(
+            IDbConnection connection,
+            IDbTransaction transaction,
+            string sql,
+            object parameters = null)
+        {
+            return await connection.ExecuteAsync(
+                sql,
+                parameters,
+                transaction);
+        }
+
+        /// <summary>
+        /// Executes a query and returns a single scalar value of type T (e.g.
+        /// a COUNT(*) result or a newly generated identity), using its own
+        /// connection.
+        /// </summary>
         public static async Task<T> ExecuteScalarAsync<T>(
-             string query,
-             object parameters = null,
-             CommandType commandType = CommandType.Text)
-        {
-            try
-            {
-                using (var con = GetConnection())
-                    return await con.ExecuteScalarAsync<T>(
-                        query,
-                        parameters,
-                        commandType: commandType);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex, $"ExecuteScalarAsync failed. Query: {query}");
-                return default(T);
-            }
-        }
-
-
-        // -------------------- CHECK IF THE DATA EXIST --------------------
-        public static async Task<bool> CheckDataAsync(
-                string query,
-                object parameters = null,
-                CommandType commandType = CommandType.Text)
-        {
-            try
-            {
-                using (var con = GetConnection())
-                {
-                    int count = await con.ExecuteScalarAsync<int>(
-                        query,
-                        parameters,
-                        commandType: commandType
-                    );
-
-                    return count > 0;
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex, $"CheckDataAsync failed. Query: {query}");
-                return false;
-            }
-
-        }
-        // -------------------- INSERT AND UPDATE QUERY --------------------
-        public static async Task<bool> ExecuteAsync(
-            string query,
+            string sql,
             object parameters = null,
-            CommandType commandType = CommandType.Text,
-            string cacheKeyToInvalidate = null)
+            bool? isStoredProcedure = null,
+            CancellationToken ct = default(CancellationToken))
         {
-            try
+            using (var connection = GetConnection())
             {
-                using (var con = GetConnection())
-                {
-                    int rows = await con.ExecuteAsync(query, parameters, commandType: commandType);
+                var command = new CommandDefinition(
+                    sql,
+                    parameters,
+                    commandType: GetCommandType(sql, isStoredProcedure),
+                    cancellationToken: ct);
 
-                    if (rows > 0 && !string.IsNullOrEmpty(cacheKeyToInvalidate))
-                        _cache.Remove(cacheKeyToInvalidate);
-
-                    return rows > 0;
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex, "ExecuteAsync failed.");
-                return false;
+                return await connection.ExecuteScalarAsync<T>(command);
             }
         }
+
+        /// <summary>
+        /// Same as the other ExecuteScalarAsync overload, but runs against an
+        /// existing connection/transaction instead of opening a new one.
+        /// </summary>
+        public static async Task<T> ExecuteScalarAsync<T>(
+            IDbConnection connection,
+            IDbTransaction transaction,
+            string sql,
+            object parameters = null)
+        {
+            return await connection.ExecuteScalarAsync<T>(
+                sql,
+                parameters,
+                transaction);
+        }
+
+        public static async Task<bool> ExistsAsync(
+           string sql,
+           object parameters = null,
+           bool? isStoredProcedure = null)
+        {
+            return await ExecuteScalarAsync<int>(
+                sql,
+                parameters,
+                isStoredProcedure) > 0;
+        }
+
+
+
+
 
         // -------------------- GET THE LIST DATA BY STRING --------------------
         public static async Task<List<string>> StringListAsync(
@@ -323,7 +252,8 @@ namespace ProgramPartListWeb.Helper
         {
             string sql = $"UPDATE {tableName} SET IsDelete = 1 WHERE {keyColumn} = @Id";
 
-            return await ExecuteAsync(sql, new { Id = keyValue });
+            int rows = await ExecuteAsync(sql, new { Id = keyValue });
+            return rows > 0;
         }
 
         public static async Task BulkInsertAsync<T>(
@@ -365,18 +295,18 @@ namespace ProgramPartListWeb.Helper
         }
 
         // -------------------- CACHE UTILITIES --------------------
-        public static void ClearCache(string cacheKey = null)
-        {
-            if (!string.IsNullOrEmpty(cacheKey))
-            {
-                _cache.Remove(cacheKey);
-            }
-            else
-            {
-                foreach (var item in _cache)
-                    _cache.Remove(item.Key);
-            }
-        }
+        //public static void ClearCache(string cacheKey = null)
+        //{
+        //    if (!string.IsNullOrEmpty(cacheKey))
+        //    {
+        //        _cache.Remove(cacheKey);
+        //    }
+        //    else
+        //    {
+        //        foreach (var item in _cache)
+        //            _cache.Remove(item.Key);
+        //    }
+        //}
 
 
         public static void StartSqlDependency()

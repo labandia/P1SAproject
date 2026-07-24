@@ -214,8 +214,7 @@
             this.MonthTitle = document.getElementById('monthText');
             this.YearTitle = document.getElementById('yearText');
 
-            console.log(this.monthName); // July
-            console.log(this.year);      // 2026
+
             // ---- DOM refs ----
             this.lineList = document.getElementById('line-list');
             this.tooltip = document.getElementById('tooltip');
@@ -276,6 +275,7 @@
 
             await this.fetch4MData();
             await this.fetchGroupData();
+            await this.SampleUserData();
 
             this.generateData();      // <-- missing
             this.renderLines();
@@ -302,6 +302,20 @@
                 window.location.href = '/Production1/FinalAssembly/ManagementData';
             });
         }
+
+         async SampleUserData() {
+             try {
+                 const res = await getMethod('@Url.Action("SampleGet", "FinalAssembly")', {});
+                 console.log(res);
+                 //if (!res?.Success) {
+                 //    console.log('No data found in 4M ');
+                 //    return;
+                 //}
+                 //this.renderNcrBars(res.data);
+             } catch (error) {
+                 console.error('Error fetching 4M data:', error);
+             }
+         }
 
         // ---- 4M Factors dashboard ----
         async fetch4MData() {
@@ -576,7 +590,7 @@
         }
 
         async showAwardSlide() {
-    
+
             const data = await this.fetchAwardData();
             if (!data) return;
             if (!data.IsDisplayed) return; // flagged off — skip this cycle silently

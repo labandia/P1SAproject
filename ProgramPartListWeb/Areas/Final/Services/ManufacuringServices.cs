@@ -309,7 +309,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                             
                         mo.Operational
 
-                    FROM FanTraceabilityManufacturingOrder mo WHERE 1 = 1 ";
+                    FROM FanTraceabilityManufacturingOrder mo WHERE 1 = 1 AND OrderStatus <> 3 ";
 
                 var parameters = new DynamicParameters();
 

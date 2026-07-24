@@ -75,7 +75,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 								END,
 								s.CurrentQty ASC;";
 
-            return SqlDataAccess.GetDataAsync<StockPartsModel>(strsql, null);
+            return SqlDataAccess.QueryAsync<StockPartsModel>(strsql, null);
         }
 
         public async Task<int> GenerateStockNotification(List<int> userIds, int hoursInterval = 6)
@@ -92,8 +92,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
 
 
-                var lastCreatedList = await SqlDataAccess.GetDataAsync<DateTime>(lastSql, null);
-                DateTime? lastCreated = lastCreatedList.FirstOrDefault();
+                var lastCreatedList = await SqlDataAccess.QuerySingleOrDefaultAsync<DateTime>(lastSql, null);
+                DateTime? lastCreated = lastCreatedList;
 
                 if (!lastCreated.HasValue)
                 {
@@ -236,7 +236,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                         INNER JOIN Hydro_InventoryParts i ON i.PartID = s.PartID
                         WHERE a.IsRead = 0";
 
-            return SqlDataAccess.GetDataAsync<StockAlert>(sql, null);
+            return SqlDataAccess.QueryAsync<StockAlert>(sql, null);
         }
 
         public Task MarkAlertAsReadAsync(int alertId)
@@ -380,7 +380,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         public Task<List<StockSendLogs>> GetStockSendEmailLogs()
         {
             string strsql = $@"SELECT StockLogId, EmailSent, SentAt FROM Hydro_StockAlertLog";
-            return SqlDataAccess.GetDataAsync<StockSendLogs>(strsql, null);
+            return SqlDataAccess.QueryAsync<StockSendLogs>(strsql, null);
 
         }
 
@@ -453,7 +453,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
         public async Task<IEnumerable<StockNotification>> GetLowStockNotificationList(int userId)
         {
-            return await SqlDataAccess.GetDataAsync<StockNotification>($@"
+            return await SqlDataAccess.QueryAsync<StockNotification>($@"
                             SELECT 
 	                            n.NotificationId, 
 	                            n.Title, 
@@ -472,7 +472,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                             WHERE NotificationId = @NotificationId AND User_ID =@User_ID;";
             await SqlDataAccess.ExecuteAsync(sql, new { NotificationId = Id, User_ID  = userID });
 
-            return await SqlDataAccess.GetDataAsync<StockNotificationDetail>($@"SELECT 
+            return await SqlDataAccess.QueryAsync<StockNotificationDetail>($@"SELECT 
 	                                                                        i.PartNo,
 	                                                                        i.PartName,
 	                                                                        d.CurrentQty, 
@@ -484,12 +484,14 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                                                         WHERE d.NotificationId = @NotificationId;", new { NotificationId = Id });
         }
 
-        public Task<bool> ClickNotificationCount(int alertId)
+        public async Task<bool> ClickNotificationCount(int alertId)
         {
             string sql = $@"UPDATE Hyrdo_StockNotificationUsers 
                             SET IsRead = 1, ReadDate = GETDATE()
                             WHERE User_ID =@User_ID;";
-            return  SqlDataAccess.ExecuteAsync(sql, new { User_ID = alertId });
+            int row = await  SqlDataAccess.ExecuteAsync(sql, new { User_ID = alertId });
+
+            return row > 0;
         }
     }
 }

@@ -68,7 +68,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             sql.Append(" ORDER BY c.DateInput DESC");
 
 
-            return await SqlDataAccess.GetDataAsync<DieMoldDaily>(sql.ToString(), parameters);
+            return await SqlDataAccess.QueryAsync<DieMoldDaily>(sql.ToString(), parameters);
         }
 
         public Task<DieMoldDaily> GetDailyMoldDetails(int recordID)
@@ -78,20 +78,29 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
         public async Task<bool> CheckMoldDateInputExist(string DieSerial, DateTime dateInput)
         {
-            // Checks if the Daily Input is Already Exist 
-            // Checks the DieSerial and Date Input together
-            bool check = await SqlDataAccess.CheckDataAsync("");
+            return await SqlDataAccess.ExistsAsync($@"SELECT COUNT(*) FROM DieMold_DailyInputChecker 
+                        WHERE  DieSerial =@DieSerial AND DateInput =@DateInput", new
+            {
+                DieSerial = DieSerial,
+                DateInput = dateInput
+            });
 
-            throw new NotImplementedException();
         }
 
-        public Task<bool> ChangeStatusMoldie(int recordID, int StatsValue)
+        public async Task<bool> ChangeStatusMoldie(int recordID, int StatsValue)
         {
-            throw new NotImplementedException();
+            int rows = await SqlDataAccess.ExecuteAsync($@"UPDATE DieMold_Daily SET Status =@Status WHERE
+                RecordID =@RecordID ", new
+            {
+                RecordID = recordID,
+                Status = StatsValue
+            });
+
+            return rows > 0;
         }
         public async Task<bool> AddDailyInput(DieMoldDaily daily)
         {
-            bool results = await SqlDataAccess.ExecuteAsync($@"INSERT INTO 
+            int results = await SqlDataAccess.ExecuteAsync($@"INSERT INTO 
                 DieMold_DailyInputChecker(DieSerial, DateInput, Count)
                 VALUES(@DieSerial, @DateInput, @Count)", new
             {
@@ -100,14 +109,14 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 Count = 1
             });
 
-            if (!results) return false;
+            if (results == 0) return false;
 
             string sql = @"INSERT INTO DieMold_Daily (DieSerial, DateInput, CycleShot, 
                         Total, MachineNo, Remarks, Mincharge, Status)
                         VALUES(@DieSerial, @DateInput, @CycleShot, @Total, @MachineNo, 
                         @Remarks, @Mincharge, @Status)";
 
-            return await SqlDataAccess.ExecuteAsync(sql, new
+            int rows = await SqlDataAccess.ExecuteAsync(sql, new
             {
                 daily.DieSerial,
                 daily.DateInput,
@@ -119,6 +128,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 daily.Status
             });
 
+            return rows > 0;
         }
 
        
@@ -127,7 +137,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         {
             var obj = new { DieSerial, Process };
 
-            var getldetails = await SqlDataAccess.GetDataAsync<DieMoldpartsModel>($@" SELECT 
+            var getldetails = await SqlDataAccess.QueryAsync<DieMoldpartsModel>($@" SELECT 
 	                        p.PartNo, p.Dimension_Quality, p.DieSerial, 
 	                        (SELECT TOP 1 status FROM DieMold_Daily 
 	                        WHERE DieSerial = p.DieSerial ORDER BY RecordID DESC) as status
@@ -137,7 +147,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 	                        AND (p.DieSerial = @DieSerial AND p.ProcessID = @Process)
                             ", obj);
 
-            var getlist = await SqlDataAccess.GetDataAsync<DieMoldDaily>($@"SELECT 
+            var getlist = await SqlDataAccess.QueryAsync<DieMoldDaily>($@"SELECT 
                             d.RecordID,
                             FORMAT(d.DateInput, 'MM/dd/yy') AS DateInput,             
 	                        p.DieSerial,
@@ -227,7 +237,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
         public async Task<bool> EditDailyInput(DieMoldDaily daily)
         {
-            return await SqlDataAccess.ExecuteAsync($@"UPDATE DieMold_Daily SET CycleShot =@CycleShot, 
+            int rows =  await SqlDataAccess.ExecuteAsync($@"UPDATE DieMold_Daily SET CycleShot =@CycleShot, 
                     MachineNo =@MachineNo, Remarks =@Remarks, Mincharge =@Mincharge WHERE RecordID =@RecordID", new
             {
                 daily.CycleShot,
@@ -236,15 +246,17 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 daily.Mincharge,
                 daily.RecordID
             });
+
+            return rows > 0;
         }
 
         public async Task<bool> DeleteDailyInput(int recordID, string DieSerial, DateTime DateInput)
         {
-            bool result = await SqlDataAccess.ExecuteAsync($@"DELETE FROM DieMold_Daily 
+            int result = await SqlDataAccess.ExecuteAsync($@"DELETE FROM DieMold_Daily 
             WHERE RecordID =@RecordID", new
             { RecordID = recordID });
 
-            if (result)
+            if (result > 0)
             {
                 await SqlDataAccess.ExecuteAsync($@"DELETE FROM DieMold_DailyInputChecker
                    WHERE DieSerial =@DieSerial AND DateInput =@DateInput", new
@@ -254,7 +266,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                 });
             }
 
-            return result;
+            return result > 0;
         }
     }
 }

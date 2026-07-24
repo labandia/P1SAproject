@@ -11,18 +11,22 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
 {
     public class MetalMaskTransactionServices : IMetalMast_Transaction
     {
-        public Task<bool> AddMetalMastTransaction(MetalMaskTransaction metal)
+        public async Task<bool> AddMetalMastTransaction(MetalMaskTransaction metal)
         {
             string strsql = $@"INSERT INTO MetalMask_Transaction(Partnumber, Shift, AREA, SMTLine, Status)
                             VALUES(@Partnumber, @Shift, @AREA, @SMTLine, @Status)";
-            return SqlDataAccess.ExecuteAsync(strsql, metal);
+            int rows = await SqlDataAccess.ExecuteAsync(strsql, metal);
+
+            return rows > 0;
         }
 
-        public Task<bool> DeleteMetalMastTransaction(int ID)
+        public async Task<bool> DeleteMetalMastTransaction(int ID)
         {
             string strsql = $@"UPDATE MetalMask_Transaction SET IsDelete = 1
                                WHERE RecordID =@RecordID";
-            return SqlDataAccess.ExecuteAsync(strsql, new { RecordID  = ID });
+            int rows = await SqlDataAccess.ExecuteAsync(strsql, new { RecordID  = ID });
+
+            return rows > 0;
         }
 
         public Task<bool> EditMetalMastTransaction(MetalMaskTransaction metal)
@@ -50,7 +54,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                                   INNER JOIN MetalMask_Masterlist m ON t.Partnumber = m.Partnumber
                                   WHERE t.IsDelete = 0 AND t.RecordID =@RecordID";
 
-            return SqlDataAccess.GetSingleAsync<MetalMaskTransaction>(strquery, new { RecordID = RecordID });
+            return SqlDataAccess.QuerySingleOrDefaultAsync<MetalMaskTransaction>(strquery, new { RecordID = RecordID });
         }
 
         public Task<List<MetalMaskTransaction>> GetMetalMaskTransaction(
@@ -136,38 +140,42 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
             }
 
 
-            return SqlDataAccess.GetDataAsync<MetalMaskTransaction>(strquery, parameters);
+            return SqlDataAccess.QueryAsync<MetalMaskTransaction>(strquery, parameters);
         }
 
-        public Task<bool> StartOperation(int ID)
+        public async Task<bool> StartOperation(int ID)
         {
             TimeSpan startTime = DateTime.Now.TimeOfDay;
 
             string strsql = $@"UPDATE MetalMask_Transaction SET SMT_start =@SMT_start 
                                WHERE RecordID =@RecordID";
 
-            return SqlDataAccess.ExecuteAsync(strsql, new
+            int rows = await SqlDataAccess.ExecuteAsync(strsql, new
             {
                 SMT_start = startTime,
                 RecordID = ID
             });
+
+            return rows > 0;
         }
 
-        public Task<bool> EndOperation(int ID)
+        public async Task<bool> EndOperation(int ID)
         {
             TimeSpan startTime = DateTime.Now.TimeOfDay;
 
             string strsql = $@"UPDATE MetalMask_Transaction SET SMT_end =@SMT_end 
                                WHERE RecordID =@RecordID";
 
-            return SqlDataAccess.ExecuteAsync(strsql, new
+            int rows = await SqlDataAccess.ExecuteAsync(strsql, new
             {
                 SMT_end = startTime,
                 RecordID = ID
             });
+
+            return rows > 0;
         }
 
-        public Task<bool> SMTsubmitTransaction(
+        public async Task<bool> SMTsubmitTransaction(
             MetalMaskTransaction metal)
         {
             string strsql = $@"UPDATE MetalMask_Transaction SET CleanDate = GETDATE(),
@@ -175,15 +183,17 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                             SMT_Operator =@SMT_Operator
                                WHERE RecordID =@RecordID";
 
-            return SqlDataAccess.ExecuteAsync(strsql, new
+            int rows = await SqlDataAccess.ExecuteAsync(strsql, new
             {
                 TotalPrintBoard = metal.TotalPrintBoard,
                 SMT_Operator = metal.SMT_Operator,
                 RecordID = metal.RecordID
             });
+
+            return rows > 0;
         }
 
-        public Task<bool> TensionsubmitTransaction(MetalMaskTransaction metal)
+        public async Task<bool> TensionsubmitTransaction(MetalMaskTransaction metal)
         {
             string strsql = $@"UPDATE MetalMask_Transaction SET CleanDate =@CleanDate,
                             Pattern =@Pattern, Frame =@Frame, ReadOne =@ReadOne, ReadTwo =@ReadTwo,
@@ -191,7 +201,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                             Remarks =@Remarks, PIC =@PIC, Status = 2
                             WHERE RecordID =@RecordID";
 
-            return SqlDataAccess.ExecuteAsync(strsql, new
+            int rows = await SqlDataAccess.ExecuteAsync(strsql, new
             {
                 CleanDate = DateTime.Now,
                 Pattern = metal.Pattern,
@@ -205,11 +215,13 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                 PIC = metal.PIC,
                 RecordID = metal.RecordID
             });
+
+            return rows > 0;
         }
 
         public Task<MetalMasKCountTransact> GetTheTotalCount()
         {
-            return SqlDataAccess.GetSingleAsync<MetalMasKCountTransact>($@"SELECT 
+            return SqlDataAccess.QuerySingleOrDefaultAsync<MetalMasKCountTransact>($@"SELECT 
 	                TOP 1
 	                (SELECT COUNT(Status) FROM MetalMask_Transaction WHERE Status = 0 AND IsDelete = 0) as SMTCount, 
 	                (SELECT COUNT(Status) FROM MetalMask_Transaction WHERE Status = 1 AND IsDelete = 0) as TensionCount
@@ -279,7 +291,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                 parameters.Add("@PageSize", pageSize);
             }
 
-            var items = await SqlDataAccess.GetDataAsync<MetalMaskTransaction>(strquery, parameters);
+            var items = await SqlDataAccess.QueryAsync<MetalMaskTransaction>(strquery, parameters);
 
 
             // Now get the total count
@@ -294,13 +306,12 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
             };
         }
 
-        public Task<bool> UpdateMetalMaskIncomplete(MetalMaskTransaction metal)
+        public async Task<bool> UpdateMetalMaskIncomplete(MetalMaskTransaction metal)
         {
             string strsql = $@"UPDATE MetalMask_Transaction SET  ReadOne =@ReadOne, ReadTwo =@ReadTwo,
                             ReadThree =@ReadThree, ReadFour =@ReadFour
                             WHERE RecordID =@RecordID";
-
-            return SqlDataAccess.ExecuteAsync(strsql, new
+            int rows = await SqlDataAccess.ExecuteAsync(strsql, new
             {
                 ReadOne = metal.ReadOne,
                 ReadTwo = metal.ReadTwo,
@@ -308,6 +319,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                 ReadFour = metal.ReadFour,
                 RecordID = metal.RecordID
             });
-        }
+            return rows > 0;
+        } 
     }
 }

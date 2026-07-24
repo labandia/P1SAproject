@@ -114,7 +114,7 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
         public async Task<P1SAEmployeesModel> GetEmployees(int empID)
         {
             var sql = $"SELECT {SelectColumns} {FromJoins} AND e.EmployeeId =@EmployeeId ORDER BY e.FullName";
-            return await SqlDataAccess.GetSingleAsync<P1SAEmployeesModel>(sql, new { EmployeeId  = empID });
+            return await SqlDataAccess.QuerySingleOrDefaultAsync<P1SAEmployeesModel>(sql, new { EmployeeId  = empID });
         }
 
         public async Task<List<P1SAEmployeesModel>> GetEmployees(
@@ -176,7 +176,7 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
             }
 
 
-            return await SqlDataAccess.GetDataAsync<P1SAEmployeesModel>(strquery, parameters);
+            return await SqlDataAccess.QueryAsync<P1SAEmployeesModel>(strquery, parameters);
         }
 
         public async Task<List<P1SAEmployeesModel>> GetProductionEmployees(
@@ -235,11 +235,11 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
 
             //Debug.WriteLine(strquery);
 
-            return await SqlDataAccess.GetDataAsync<P1SAEmployeesModel>(strquery, parameters);
+            return await SqlDataAccess.QueryAsync<P1SAEmployeesModel>(strquery, parameters);
         }
 
 
-        public Task<bool> MarkAwolAsync(int employeeId, DateTime dateAwol)
+        public async Task<bool> MarkAwolAsync(int employeeId, DateTime dateAwol)
         {
             var sql = @"
                 UPDATE P1SA_Employees
@@ -248,10 +248,12 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
                        UpdatedAt    = GETDATE()
                 WHERE  EmployeeId = @EmployeeId AND IsDeleted = 0";
 
-            return SqlDataAccess.ExecuteAsync(sql, new { EmployeeId = employeeId, DateAwol = dateAwol });
+            int rows = await SqlDataAccess.ExecuteAsync(sql, new { EmployeeId = employeeId, DateAwol = dateAwol });
+
+            return rows > 0;
         }
 
-        public Task<bool> ResignAsync(int employeeId, DateTime dateResigned)
+        public async Task<bool> ResignAsync(int employeeId, DateTime dateResigned)
         {
             var sql = @"
                 UPDATE P1SA_Employees
@@ -260,10 +262,12 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
                        UpdatedAt    = GETDATE()
                 WHERE  EmployeeId = @EmployeeId AND IsDeleted = 0";
 
-            return  SqlDataAccess.ExecuteAsync(sql, new { EmployeeId = employeeId, DateResigned = dateResigned });
+            int rows = await  SqlDataAccess.ExecuteAsync(sql, new { EmployeeId = employeeId, DateResigned = dateResigned });
+
+            return rows > 0;
         }
 
-        public Task<bool> SoftDeleteAsync(int employeeId)
+        public async Task<bool> SoftDeleteAsync(int employeeId)
         {
             var sql = @"
                 UPDATE P1SA_Employees
@@ -271,10 +275,11 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
                        UpdatedAt = GETDATE()
                 WHERE  EmployeeId = @EmployeeId";
 
-            return SqlDataAccess.ExecuteAsync(sql, new { EmployeeId = employeeId });
+            int rows = await SqlDataAccess.ExecuteAsync(sql, new { EmployeeId = employeeId });
+            return rows > 0;
         }
 
-        public Task<bool> UpdateAsync(P1SAEmployeesInputModel model)
+        public async Task<bool> UpdateAsync(P1SAEmployeesInputModel model)
         {
             var sql = @"
                 UPDATE P1SA_Employees SET
@@ -299,7 +304,8 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
                     UpdatedAt          = GETDATE()
                 WHERE EmployeeId = @EmployeeId AND IsDeleted = 0";
 
-            return SqlDataAccess.ExecuteAsync(sql, model);
+            int rows = await SqlDataAccess.ExecuteAsync(sql, model);
+            return rows > 0;
         }
     }
 }

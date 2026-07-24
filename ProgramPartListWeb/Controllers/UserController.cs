@@ -1,9 +1,12 @@
-﻿using ProgramPartListWeb.Helper;
+﻿using DocumentFormat.OpenXml.EMMA;
+using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Interfaces;
 using ProgramPartListWeb.Models;
+using ProgramPartListWeb.Utilities;
 using ProgramPartListWeb.Utilities.Security;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -252,6 +255,25 @@ namespace ProgramPartListWeb.Controllers
         {
             bool isAuthenticated = User.Identity.IsAuthenticated;
             return Json(new { isAuthenticated }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> SaveClienInfo()
+        {
+            string ip = ClientsInfo.GetClientIpAddress();
+            var (computerName, account) = ClientsInfo.GetComputerInfoViaWmi(ip);
+            //var (account, email) = ClientsInfo.GetAccountAndEmail(hostName);
+
+            var obj = new ClientsInfoModel
+            {
+                ComputerName = computerName,
+                IpAddress = ip,
+                AccountName = account,
+                Email = "adsad"
+            };
+
+            bool user = await _user.UpdatesUserClienfoToDatabase(obj);
+            return Json(user, JsonRequestBehavior.AllowGet);
         }
 
 

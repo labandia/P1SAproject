@@ -21,10 +21,10 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                 i.Unit
                             FROM Hydro_InventoryParts i
                             INNER JOIN Hydro_CategoryParts c ON c.CategoryID = i.CategoryID";
-            return await SqlDataAccess.GetDataAsync<MasterlistPartsModel>(strsql, null);
+            return await SqlDataAccess.QueryAsync<MasterlistPartsModel>(strsql, null);
         }
 
-        public Task<bool> AddMasterlistParts(MasterlistPartsModel p)
+        public async Task<bool> AddMasterlistParts(MasterlistPartsModel p)
         {
             // 1. Check and Insert A new Partnumber
             string partinsertquery = $@"INSERT INTO Hydro_InventoryParts(PartNo, PartName, CategoryID, Supplier, UnitCost_PHP, ImageParts)
@@ -41,10 +41,12 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 ImageParts = p.ImageParts
             };
 
-            return SqlDataAccess.ExecuteAsync(partinsertquery, insertparams);
+            int rows = await SqlDataAccess.ExecuteAsync(partinsertquery, insertparams);
+
+            return rows > 0;
         }
 
-        public Task<bool> EditMasterlistParts(MasterlistPartsModel p)
+        public async Task<bool> EditMasterlistParts(MasterlistPartsModel p)
         {
             // 1. Check and Insert A new Partnumber
             string partinsertquery = $@"UPDATE Hydro_InventoryParts 
@@ -64,7 +66,8 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             };
 
             
-            return SqlDataAccess.ExecuteAsync(partinsertquery, insertparams);
+            int rows = await SqlDataAccess.ExecuteAsync(partinsertquery, insertparams);
+            return rows > 0;
         }
 
         

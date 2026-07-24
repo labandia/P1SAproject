@@ -17,5 +17,8 @@ namespace ProgramPartListWeb.Interfaces
 
 
         Task<bool> Changepassword(ChangePassModel ch);
+
+
+        Task<bool> UpdatesUserClienfoToDatabase(ClientsInfoModel client);
     }
 }

@@ -68,13 +68,13 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                             WHERE r.RegNo LIKE '%{prefix}%'      
                             ORDER BY DateCreated DESC";
 
-            return SqlDataAccess.GetDataAsync<PatrolRegistrationViewModel>(strsql);
+            return SqlDataAccess.QueryAsync<PatrolRegistrationViewModel>(strsql);
         }
         public Task<List<EmailModelV2>> PatrolEmailData()
         {
             string strsql = $@"SELECT Employee_ID, FullName, Email, Position, Department_ID, DepPrefix, Signature
                                FROM Patrol_UserEmail";
-            return SqlDataAccess.GetDataAsync<EmailModelV2>(strsql);
+            return SqlDataAccess.QueryAsync<EmailModelV2>(strsql);
         }
 
 
@@ -83,7 +83,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             string strsql = $@"SELECT FullName, Email, Position, Department_ID, Signature
                                FROM Patrol_UserEmail 
                                WHERE Employee_ID =@Employee_ID AND Position =@Position AND DepPrefix =@DepPrefix";
-            return SqlDataAccess.GetSingleAsync<EmailModelV2>(strsql, 
+            return SqlDataAccess.QuerySingleAsync<EmailModelV2>(strsql, 
                 new { 
                     Employee_ID  = emp,
                     Position = pos,
@@ -94,27 +94,27 @@ namespace ProgramPartListWeb.Areas.PC.Repository
 
         public Task<List<FindingModel>> GetRegisterFindings(string regNo)
         {
-            return SqlDataAccess.GetDataAsync<FindingModel>("GetFindings", new { Regno = regNo }, CommandType.StoredProcedure);
+            return SqlDataAccess.QueryAsync<FindingModel>("GetFindings", new { Regno = regNo }, true);
         }
 
         public Task<List<RegistrationFiles>> GetRegisterFiles(string regNo)
         {
-             return SqlDataAccess.GetDataAsync<RegistrationFiles>($@"SELECT RegNo, FilePath, CounterPath FROM Patrol_Registration_Files WHERE RegNo =@RegNo ", new { RegNo = regNo });
+             return SqlDataAccess.QueryAsync<RegistrationFiles>($@"SELECT RegNo, FilePath, CounterPath FROM Patrol_Registration_Files WHERE RegNo =@RegNo ", new { RegNo = regNo });
         }
 
         public async Task<bool> AddRegistration(AddFormRegistrationModel reg, string json)
         {
             //INSERT MAIN REGISTRATION PROCESS
-            bool result = await SqlDataAccess.ExecuteAsync("InsertRegistration", new
+            int result = await SqlDataAccess.ExecuteAsync("InsertRegistration", new
             {
                 RegNo = reg.RegNo,
                 Department_ID = reg.Department_ID,
                 PIC_ID = reg.PIC_ID,
                 Employee_ID = reg.Employee_ID
-            }, CommandType.StoredProcedure);
+            }, true);
 
             // If main insert failed → stop the whole process
-            if (!result) return false;
+            if (result == 0) return false;
 
             // ========== 2. INSERT FILES ==========
             //await SqlDataAccess.ExecuteAsync("InserFiles", new
@@ -147,7 +147,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                         RegNo = "P1SA-" + f.RegNo,
                         FindID = f.FindID,
                         FindDescription = f.FindDescription
-                    }, CommandType.StoredProcedure, "Registration");
+                    });
                 }
             }
 
@@ -189,9 +189,9 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                 FilePath = reg.Filepath,
                 CounterPath = reg.CounterPath,
                 RegNo = reg.RegNo
-            }, CommandType.StoredProcedure);
+            }, true);
 
-            bool[] results = await Task.WhenAll(regMain, regApp, regFiles);
+            int[] results = await Task.WhenAll(regMain, regApp, regFiles);
 
             // INSERT FINDING AND COUNTERMEASURE PROCESS
             // Deserialize findings
@@ -210,7 +210,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                             WHERE RegNo =@RegNo AND FindID =@FindID", findparams);
             }
 
-            return results.All(r => r);
+            return results.All(r => r > 0);
         }
 
         public async Task<bool> ApproveByInspector(string reg, string datecon, string newfilepath, string ManagerID)
@@ -227,9 +227,9 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                             FilePath =@FilePath
                             WHERE RegNo =@RegNo", new { FilePath = newfilepath,  RegNo = reg });
 
-            bool[] results = await Task.WhenAll(regsql, revsql, regFiles);
+            int[] results = await Task.WhenAll(regsql, revsql, regFiles);
 
-            return results.All(r => r);
+            return results.All(r => r > 0);
         }
 
         public async Task<bool> ApproveByManager(string reg, string comments, string newfilepath, string DepManager)
@@ -249,9 +249,9 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                 RegNo = reg
             });
 
-            bool[] results = await Task.WhenAll(regsql, revsql, regFiles);
+            int[] results = await Task.WhenAll(regsql, revsql, regFiles);
 
-            return results.All(r => r);
+            return results.All(r => r > 0);
         }
 
         public async Task<bool> ApproveByDepartment(string reg, string comments, string newfilepath, string DepManager)
@@ -271,9 +271,9 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                 RegNo = reg
             });
 
-            bool[] results = await Task.WhenAll(regsql, revsql, regFiles);
+            int[] results = await Task.WhenAll(regsql, revsql, regFiles);
 
-            return results.All(r => r);
+            return results.All(r => r > 0);
         }
 
 
@@ -294,9 +294,9 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                 RegNo = reg
             });
 
-            bool[] results = await Task.WhenAll(regsql, revsql, regFiles);
+            int[] results = await Task.WhenAll(regsql, revsql, regFiles);
 
-            return results.All(r => r);
+            return results.All(r => r > 0);
         }
 
 
@@ -318,26 +318,32 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             throw new NotImplementedException();
         }
 
-        public Task<bool> SaveSignatureData(int userID, string fileName)
+        public async Task<bool> SaveSignatureData(int userID, string fileName)
         {
             string strsql = "UPDATE Patrol_UserEmail Set Signature =@Signature WHERE Employee_ID =@Employee_ID";
 
-            return SqlDataAccess.ExecuteAsync(strsql, new { Signature = fileName, Employee_ID = userID });
+            int rows = await SqlDataAccess.ExecuteAsync(strsql, new { Signature = fileName, Employee_ID = userID });
+
+            return rows > 0;
         }
 
-        public Task<bool> InsertFileRawRegistration(string regno, string FilePath)
+        public async Task<bool> InsertFileRawRegistration(string regno, string FilePath)
         {
-            return SqlDataAccess.ExecuteAsync("InserFiles", new
+            int rows = await SqlDataAccess.ExecuteAsync("InserFiles", new
             {
                 RegNo = regno,
                 FilePath = FilePath
-            }, CommandType.StoredProcedure);
+            }, true);
+
+            return rows > 0;
         }
 
-        public Task<bool> UpdateRegistrationFiles(string RegNo, string FilePath)
+        public async Task<bool> UpdateRegistrationFiles(string RegNo, string FilePath)
         {
-            return SqlDataAccess.ExecuteAsync($@"UPDATE Patrol_Registration_Files SET FilePath =@FilePath
+            int rows = await SqlDataAccess.ExecuteAsync($@"UPDATE Patrol_Registration_Files SET FilePath =@FilePath
                     WHERE RegNo =@RegNo ", new { FilePath, RegNo });
+
+            return rows > 0;
         }
     }
 }

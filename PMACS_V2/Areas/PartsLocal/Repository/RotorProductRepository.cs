@@ -21,7 +21,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                             OFFSET (@page - 1) * @pageSize ROWS
                             FETCH NEXT @pageSize ROWS ONLY";
 
-            var items = await SqlDataAccess.GetDataAsync<RotorProductModel>(strsql, new
+            var items = await SqlDataAccess.QueryAsync<RotorProductModel>(strsql, new
             {
                 search = search,
                 page = pageNumber,
@@ -62,11 +62,13 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                             (@Partnumber, @ModelName)
                     END";
 
-            return await SqlDataAccess.ExecuteAsync(strsql, new
+            int rows = await SqlDataAccess.ExecuteAsync(strsql, new
             {
                 Partnumber = rotor.Partnumber,
                 ModelName = rotor.ModelName
             });
+
+            return rows > 0;
         }
 
         public async Task<IEnumerable<RotorProductModel>> GetRotorMasterlist()
@@ -76,7 +78,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                                m.FrontImage, m.BackImage
                             FROM PartsLocatorRotor_Masterlist m
                             WHERE m.IsDeleted = 0";
-            return await SqlDataAccess.GetDataAsync<RotorProductModel>(strsql, null);
+            return await SqlDataAccess.QueryAsync<RotorProductModel>(strsql, null);
         }
 
         
@@ -93,7 +95,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                             ON m.Partnumber = l.Partnumber
                             WHERE m.IsDeleted = 0 AND l.IsRemove =  0
                             ORDER BY l.Area ASC";
-            return await SqlDataAccess.GetDataAsync<RotorProductModel>(strsql, null);
+            return await SqlDataAccess.QueryAsync<RotorProductModel>(strsql, null);
         }
 
         public Task<RotorProductModel> GetRotorStorageByID(int ID)
@@ -107,7 +109,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                             ON m.Partnumber = l.Partnumber
                             WHERE l.RecordID = @RecordID    
                             ORDER BY l.RecordID DESC";
-            return SqlDataAccess.GetDataByID<RotorProductModel>(strsql, new { RecordID = ID });
+            return SqlDataAccess.QuerySingleOrDefaultAsync<RotorProductModel>(strsql, new { RecordID = ID });
         }
 
         public Task<bool> UpdateRotorMasterlist(RotorProductModel rotor)
@@ -119,7 +121,7 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
 
         // ADD / EDIT / REMOVE LOCATION METHODS
 
-        public Task<bool> AddNewLocation(string Area, string partnum, int Quantity)
+        public async Task<bool> AddNewLocation(string Area, string partnum, int Quantity)
         {
             Area = Area.StartsWith("R") ? Area.Substring(1) : Area;
 
@@ -147,43 +149,51 @@ namespace PMACS_V2.Areas.PartsLocal.Repository
                         END
                     ";
 
-            return SqlDataAccess.ExecuteAsync(strsql, new
+            int rows = await SqlDataAccess.ExecuteAsync(strsql, new
             {
                 Partnumber = partnum,
                 Area = Area, 
                 Quantity = Quantity
             });
+
+            return rows > 0;
         }
 
-        public Task<bool> ChangeLocation(int ID, string Area, int Quan)
+        public async Task<bool> ChangeLocation(int ID, string Area, int Quan)
         {
             Area = Area.StartsWith("R") ? Area.Substring(1) : Area;
 
             string strsql = $@"UPDATE PartsLocatorRotor_Location
                             SET Area = @Area, Quantity =@Quantity
                             WHERE RecordID =@RecordID AND IsRemove = 0";
-            return SqlDataAccess.ExecuteAsync(strsql, new 
+            int row = await SqlDataAccess.ExecuteAsync(strsql, new 
             {
                 Area = Area, 
                 Quantity = Quan,
                 RecordID = ID
             });
+
+            return row > 0;
         }
 
-        public Task<bool> RemoveLocation(int recorID)
+        public async Task<bool> RemoveLocation(int recorID)
         {
             string strsql = $@"UPDATE PartsLocatorRotor_Location SET IsRemove = 1
                             WHERE RecordID = @recorID";
 
-            return SqlDataAccess.ExecuteAsync(strsql, new { recorID = recorID });
+            int rows = await SqlDataAccess.ExecuteAsync(strsql, new { recorID = recorID });
+
+            return rows > 0;
         }
 
-        public Task<bool> DeleteMasterlist(string partnum)
+        public async Task<bool> DeleteMasterlist(string partnum)
         {
             string strsql = $@"UPDATE PartsLocatorRotor_Masterlist SET IsDeleted = 1
                             WHERE Partnumber = @Partnumber AND IsDeleted = 0";
 
-            return SqlDataAccess.ExecuteAsync(strsql, new { Partnumber = partnum });
+            int rows = await SqlDataAccess.ExecuteAsync(strsql, new { Partnumber = partnum });
+
+            return rows > 0;
         }
     }
 }

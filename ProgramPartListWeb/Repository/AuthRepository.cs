@@ -43,6 +43,42 @@ namespace ProgramPartListWeb.Repository
             }
         }
 
+        public async Task<bool> UpdatesUserClienfoToDatabase(ClientsInfoModel client)
+        {
+            // Check if this ComputerName + IpAddress combination already exists
+            const string checkSql = @"
+                    SELECT COUNT(1)
+                    FROM UsersInfoAccount
+                    WHERE ComputerName = @ComputerName
+                      AND IpAddress = @IpAddress;";
+
+            bool exists = await SqlDataAccess.ExistsAsync(checkSql, new
+            {
+                client.ComputerName,
+                client.IpAddress
+            });
+
+            // Already tracked — do nothing, per the "don't insert if exists" rule
+            if (exists)
+            {
+                return false;
+            }
+
+            const string insertSql = @"
+                INSERT INTO UsersInfoAccount (ComputerName, IpAddress, AccountName, Email)
+                VALUES (@ComputerName, @IpAddress, @AccountName, @Email);";
+
+            int rowsAffected = await SqlDataAccess.ExecuteAsync(insertSql, new
+            {
+                client.ComputerName,
+                client.IpAddress,
+                client.AccountName,
+                client.Email
+            });
+
+            return rowsAffected > 0;
+        }
+
         public bool VerifyPassword(string enteredPassword, string storedHash) => PasswordHasher.VerifyPassword(storedHash, enteredPassword);
        
         

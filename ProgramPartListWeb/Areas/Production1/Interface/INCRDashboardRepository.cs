@@ -12,16 +12,20 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
     {
         Task<List<FourMSummaryModel>> GetFourMSummary();
         Task<List<GroupSummaryModel>> GetGroupSummary();
-        Task<List<LineTopsModel>> GetBestLines();
+        Task<List<LineTopNCRModel>> GetBestLines();
 
+        Task<bool> AddAwardsData(AwardDto model);
         Task<bool> EditAwardsData(AwardDto model);
-        Task<AwardDto> GetAwardsData();
+        Task<List<AwardDto>> GetAwardsData();
 
-        Task<string>GetAwardName(); 
+        Task<string> GetAwardName();
 
         Task<List<RegistrationFinalModel>> GetRegistrationData(string search, int month);
         Task<bool> AddRegistrationData(RegistrationFinalModel model);
         Task<bool> EditRegistrationData(RegistrationFinalModel model);
         Task<bool> DeleteRegistrationData(int ID);
+
+
+        Task<List<ProcessGroupsModel>> SetsProcessGroupData(int groups);
     }
 }

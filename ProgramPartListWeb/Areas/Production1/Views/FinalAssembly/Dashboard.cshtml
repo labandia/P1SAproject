@@ -280,22 +280,23 @@
             this.generateData();      // <-- missing
             this.renderLines();
 
-            // Needs to run AFTER renderLines() so the .line-row elements exist to highlight
             await this.fetchBestLines();
 
             this.refreshInterval = setInterval(async () => {
                 await this.fetch4MData();
                 await this.fetchGroupData();
-                await this.fetchBestLines();
-
-                // Refresh time
                 this.refreshText.textContent = 'Updated ' + new Date().toLocaleTimeString();
             }, 10000);
+
+            // Separate, slower interval just for best-lines / missing-lines data
+            this.bestLinesInterval = setInterval(async () => {
+                await this.fetchBestLines();
+            }, 2 * 60 * 10000); // every 60s — adjust to taste
 
             // Award slide: push in every 5 minutes
             this.awardSlideInterval = setInterval(() => {
                 this.showAwardSlide();
-            }, 1 * 60 * 1000);
+            }, 20 * 1000);
 
 
             this.OpensDataManage.addEventListener('click', (e) => {
@@ -445,7 +446,7 @@
          } catch (error) {
              console.error('Error fetching group data:', error);
          }
-       }
+        }
 
         applyBestLines(data) {
             const typeMap = {
@@ -456,16 +457,20 @@
 
             document.querySelectorAll('.line-row').forEach(row => {
                 const emojiSpan = row.querySelector('.emoji');
+                const ncrInfoSpan = row.querySelector('.ncr-info');
                 if (emojiSpan) emojiSpan.textContent = '';
+                if (ncrInfoSpan) ncrInfoSpan.textContent = '';
                 row.classList.remove('highlight');
             });
 
-            const setEmoji = (lineName, emoji) => {
+            const setEmoji = (lineName, emoji, ncrTypeName, qty) => {
                 if (!lineName) return;
                 const row = document.querySelector(`.line-row[data-line="${lineName}"]`);
                 if (row) {
                     const span = row.querySelector('.emoji');
+                    const ncrInfoSpan = row.querySelector('.ncr-info');
                     if (span) span.textContent = emoji;
+                    if (ncrInfoSpan) ncrInfoSpan.textContent = `${ncrTypeName} (${qty})`;
                     row.classList.add('highlight');
                 }
             };
@@ -477,29 +482,126 @@
                 return this.reverseGroupMap[line] || line;
             };
 
-            // Exclude the 'Total' row — its BestLine is null and its Qty
-            // would otherwise win the "worst type" comparison below
-            const rows = (data || []).filter(r => r['NCRtype'] !== 'Total');
+            const rows = data || [];
+            const linesWithData = new Set();
 
             rows.forEach(row => {
-                const emoji = typeMap[row['NCRtype']];   // reverted: 'NCRtype', lowercase t
+                const lineName = normalizeLine(row['Line']);
+                linesWithData.add(lineName);
+
+                const emoji = typeMap[row['NCRType']];
                 if (!emoji) return;
 
-                const lineName = normalizeLine(row['BestLine']);
-                setEmoji(lineName, emoji);
+                const qty = row['Qty'] ?? 0;
+                setEmoji(lineName, emoji, row['NCRType'], qty);
 
                 const entry = this.lineData.find(d => d.name === lineName);
                 if (entry) {
-                    entry.total = row['Qty'] ?? 0;
+                    entry.total = qty;
                     entry.percentage = row['Percentage'] ?? 0;
                 }
             });
 
-            const worstTypeRow = rows.reduce((max, r) => (r.Qty > (max?.Qty ?? -1) ? r : max), null);
-            if (worstTypeRow?.BestLine) {
-                this.bestLineNumber.textContent = normalizeLine(worstTypeRow.BestLine);
+            const linesWithoutData = this.lineNames.filter(name => !linesWithData.has(name));
+
+            // Only restart the typing cycle if the missing-lines list actually changed
+            const newKey = linesWithoutData.join('|');
+            if (newKey !== this._lastMissingLinesKey) {
+                this._lastMissingLinesKey = newKey;
+                this.startMissingLinesTyping(linesWithoutData);
             }
         }
+
+        // ---- Typewriter cycling through lines with no NCR data ----
+        startMissingLinesTyping(lines) {
+            // Stop any previous cycle before starting a new one
+            clearTimeout(this._typingTimeout);
+            clearInterval(this._typingInterval);
+
+            if (!lines || lines.length === 0) {
+                this.bestLineNumber.textContent = 'All Lines Reported';
+                return;
+            }
+
+            let lineIndex = 0;
+
+            const typeLine = () => {
+                const text = lines[lineIndex];
+                let charIndex = 0;
+                this.bestLineNumber.textContent = '';
+
+                this._typingInterval = setInterval(() => {
+                    charIndex++;
+                    this.bestLineNumber.textContent = text.substring(0, charIndex);
+
+                    if (charIndex >= text.length) {
+                        clearInterval(this._typingInterval);
+
+                        // Pause on the fully typed line before moving to the next
+                        this._typingTimeout = setTimeout(() => {
+                            lineIndex = (lineIndex + 1) % lines.length;
+                            typeLine();
+                        }, 1500); // how long the finished text stays visible, ms
+                    }
+                }, 100); // typing speed per character, ms
+            };
+
+            typeLine();
+        }
+
+        //applyBestLines(data) {
+        //    const typeMap = {
+        //        'In-Process': '😒',
+        //        'Rejected Lot': '😢',
+        //        'Customer Complaint': '😭'
+        //    };
+
+        //    document.querySelectorAll('.line-row').forEach(row => {
+        //        const emojiSpan = row.querySelector('.emoji');
+        //        if (emojiSpan) emojiSpan.textContent = '';
+        //        row.classList.remove('highlight');
+        //    });
+
+        //    const setEmoji = (lineName, emoji) => {
+        //        if (!lineName) return;
+        //        const row = document.querySelector(`.line-row[data-line="${lineName}"]`);
+        //        if (row) {
+        //            const span = row.querySelector('.emoji');
+        //            if (span) span.textContent = emoji;
+        //            row.classList.add('highlight');
+        //        }
+        //    };
+
+        //    const normalizeLine = (line) => {
+        //        if (!line) return line;
+        //        if (line.startsWith('CL')) return 'Cell Line';
+        //        if (line.startsWith('OP')) return 'OilProof';
+        //        return this.reverseGroupMap[line] || line;
+        //    };
+
+        //    // Exclude the 'Total' row — its BestLine is null and its Qty
+        //    // would otherwise win the "worst type" comparison below
+        //    const rows = (data || []).filter(r => r['NCRtype'] !== 'Total');
+
+        //    rows.forEach(row => {
+        //        const emoji = typeMap[row['NCRtype']];   // reverted: 'NCRtype', lowercase t
+        //        if (!emoji) return;
+
+        //        const lineName = normalizeLine(row['BestLine']);
+        //        setEmoji(lineName, emoji);
+
+        //        const entry = this.lineData.find(d => d.name === lineName);
+        //        if (entry) {
+        //            entry.total = row['Qty'] ?? 0;
+        //            entry.percentage = row['Percentage'] ?? 0;
+        //        }
+        //    });
+
+        //    const worstTypeRow = rows.reduce((max, r) => (r.Qty > (max?.Qty ?? -1) ? r : max), null);
+        //    if (worstTypeRow?.BestLine) {
+        //        this.bestLineNumber.textContent = normalizeLine(worstTypeRow.BestLine);
+        //    }
+        //}
 
 
         generateData() {
@@ -522,9 +624,10 @@
                 row.dataset.line = d.name;
                 row.dataset.group = d.group;
                 row.innerHTML = `
-                            <span class="name">${d.name}</span>
-                            <span class="emoji"></span>
-                        `;
+                    <span class="name">${d.name}</span>
+                    <span class="ncr-info"></span>
+                    <span class="emoji"></span>
+                `;
                 this.lineList.appendChild(row);
             });
             // Re-attach click events after render

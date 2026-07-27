@@ -87,6 +87,18 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
 
             return JsonSuccess(res);
         }
+
+        [HttpGet]
+        public async Task<ActionResult> GetProcessGroupList(int groups)
+        {
+
+            var res = await _manu.SetsProcessGroupData(groups);
+            if (res == null || !res.Any())
+                return JsonNotFound("No Active Lines found");
+
+            return JsonSuccess(res);
+        }
+
         //======================================================
         //============== MANAGE DATA  ===========
         //====================================================
@@ -227,6 +239,23 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
                 return JsonNotFound("No Active Lines found");
 
             return JsonSuccess(res);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> SaveAwardsData(AwardDto model)
+        {
+            try
+            {
+                bool result = await _manu.AddAwardsData(model);  
+                if (!result) return JsonPostError("Insert failed.", 500);
+
+
+                return JsonCreated(result, "Update Stocks Successfully");
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message, 500);
+            }
         }
 
         // Streams the certificate image bytes from the network share to the browser

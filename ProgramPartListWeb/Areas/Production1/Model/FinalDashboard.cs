@@ -60,10 +60,29 @@ namespace ProgramPartListWeb.Areas.Production1.Model
 
     public class AwardDto
     {
+        public string EmployeeID { get; set; }
         public string WinnerName { get; set; }
         public string CertificateImage { get; set; }
         public string Subtitle { get; set; }
+        public string AssignLine { get; set; }
+        public string DefectDetect { get; set; }
         public bool IsDisplayed { get; set; }
     }
 
+
+    public class LineTopNCRModel
+    {
+        public string Line { get; set; }
+        public string NCRType { get; set; }
+        public int Qty { get; set; }
+        public decimal Percentage { get; set; }
+    }
+
+
+    public class ProcessGroupsModel
+    {
+        public int ProcessID { get; set; }
+        public string ProcessName { get; set; }
+        public int ProcessGroups { get; set; }
+    }
 }

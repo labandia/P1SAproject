@@ -257,24 +257,6 @@ namespace ProgramPartListWeb.Controllers
             return Json(new { isAuthenticated }, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpGet]
-        public async Task<JsonResult> SaveClienInfo()
-        {
-            string ip = ClientsInfo.GetClientIpAddress();
-            var (computerName, account) = ClientsInfo.GetComputerInfoViaWmi(ip);
-            //var (account, email) = ClientsInfo.GetAccountAndEmail(hostName);
-
-            var obj = new ClientsInfoModel
-            {
-                ComputerName = computerName,
-                IpAddress = ip,
-                AccountName = account,
-                Email = "adsad"
-            };
-
-            bool user = await _user.UpdatesUserClienfoToDatabase(obj);
-            return Json(user, JsonRequestBehavior.AllowGet);
-        }
 
 
         public ActionResult GetSignatureImage(string filename)
@@ -290,6 +272,30 @@ namespace ProgramPartListWeb.Controllers
 
             byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
             return File(fileBytes, "image/png"); // Change to "image/jpeg" if needed
+        }
+
+
+
+        [HttpGet]
+        public async Task<JsonResult> SaveClienInfo()
+        {
+            string ip = ClientsInfo.GetClientIpAddress();
+            var (computerName, account) = ClientsInfo.GetComputerInfoViaWmi(
+                 ip,
+                 wmiUsername: "FACTORYDOMAIN\\svc-webapp",
+                 wmiPassword: "<from secure config, not hardcoded>"
+             );
+
+            var obj = new ClientsInfoModel
+            {
+                ComputerName = computerName,
+                IpAddress = ip,
+                AccountName = account,
+                Email = ClientsInfo.GetAccountName(), 
+            };
+
+            bool user = await _user.UpdatesUserClienfoToDatabase(obj);
+            return Json(user, JsonRequestBehavior.AllowGet);
         }
 
     }

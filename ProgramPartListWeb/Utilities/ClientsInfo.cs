@@ -53,7 +53,10 @@ namespace ProgramPartListWeb.Utilities
         ///  - Remote Registry / WMI (DCOM, port 135) reachable from server to client
         ///  - Client PCs are domain-joined and on the same network
         /// </summary>
-        public static (string ComputerName, string AccountName) GetComputerInfoViaWmi(string targetHostOrIp)
+        public static (string ComputerName, string AccountName) GetComputerInfoViaWmi(
+     string targetHostOrIp,
+     string wmiUsername = null,   // e.g. "FACTORYDOMAIN\\svc-webapp"
+     string wmiPassword = null)
         {
             if (string.IsNullOrEmpty(targetHostOrIp) || targetHostOrIp == "Unknown")
                 return ("Unknown", "Unknown");
@@ -62,8 +65,17 @@ namespace ProgramPartListWeb.Utilities
             {
                 var connOptions = new ConnectionOptions
                 {
-                    Timeout = TimeSpan.FromSeconds(3)
+                    Timeout = TimeSpan.FromSeconds(3),
+                    Authentication = AuthenticationLevel.PacketPrivacy,
+                    Impersonation = ImpersonationLevel.Impersonate
                 };
+
+                // Only set explicit credentials if provided — otherwise falls back to app pool identity
+                if (!string.IsNullOrEmpty(wmiUsername))
+                {
+                    connOptions.Username = wmiUsername;
+                    connOptions.Password = wmiPassword;
+                }
 
                 var scope = new ManagementScope($@"\\{targetHostOrIp}\root\cimv2", connOptions);
                 scope.Connect();

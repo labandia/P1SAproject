@@ -15,6 +15,23 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 {
     public class NCRDashboardRepository : INCRDashboardRepository
     {
+        public async Task<bool> AddAwardsData(AwardDto model)
+        {
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO ProductionFinal_Awardees
+                (AwardeesName, EmployeeID, ImagePathCertificate, IsDisplayed, AssignLine, DefectDetect) 
+                VALUES(@AwardeesName, @EmployeeID, @ImagePathCertificate, @IsDisplayed, @AssignLine, @DefectDetect)", new
+            {
+                AwardeesName = model.WinnerName,
+                model.EmployeeID,
+                ImagePathCertificate = model.CertificateImage,
+                model.IsDisplayed,
+                model.AssignLine,
+                model.DefectDetect
+            });
+
+            return rows > 0;
+        }
+
         public async Task<bool> AddRegistrationData(RegistrationFinalModel model)
         {
             int rows = await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO ProductionFinal_Registration
@@ -63,98 +80,142 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             return SqlDataAcess_Test.ExecuteScalarAsync<string>($@"SELECT TOP 1 AwardeesName FROM ProductionFinal_Awardees ", null);
         }
 
-        public async Task<AwardDto> GetAwardsData()
+        public async Task<List<AwardDto>> GetAwardsData()
         {
             string sql = @"
-                SELECT TOP 1
+                SELECT 
                     AwardeesName as WinnerName,
                     ImagePathCertificate as CertificateImage,
-                    DateUpdated, IsDisplayed
+                    DateUpdated, IsDisplayed, EmployeeID, AssignLine, DefectDetect
                 FROM ProductionFinal_Awardees ORDER BY DateUpdated DESC";
 
-            return await SqlDataAcess_Test.QuerySingleAsync<AwardDto>(sql);
+            return await SqlDataAcess_Test.QueryAsync<AwardDto>(sql);
         }
 
-        public Task<List<LineTopsModel>> GetBestLines()
+        public Task<List<LineTopNCRModel>> GetBestLines()
         {
-            return SqlDataAcess_Test.QueryAsync<LineTopsModel>($@"WITH NCRCounts AS (
+            return SqlDataAcess_Test.QueryAsync<LineTopNCRModel>($@"WITH LineCounts AS (
                     SELECT 
+                        r.OriginID,
                         r.NCRTypeID,
                         COUNT(*) AS [Qty]
                     FROM ProductionFinal_Registration r
                     WHERE r.NCRTypeID <> 4
-                    GROUP BY r.NCRTypeID
+                      AND r.OriginID IS NOT NULL
+                      AND YEAR(r.CreatedDate) = YEAR(GETDATE())
+                      AND MONTH(r.CreatedDate) = MONTH(GETDATE())
+                    GROUP BY r.OriginID, r.NCRTypeID
                 ),
-                ProcessCounts AS (
+                LineTotals AS (
                     SELECT 
-                        r.NCRTypeID,
-                        p.ProcessID,
-                        p.ProcessName,
-                        COUNT(*) AS [ProcessQty]
-                    FROM ProductionFinal_Registration r
-                    LEFT JOIN ProductionFinal_Process p ON r.ProcessID = p.ProcessID
-                    WHERE r.NCRTypeID <> 4
-                    GROUP BY r.NCRTypeID, p.ProcessID, p.ProcessName
-                ),
-                RankedProcess AS (
-                    SELECT 
-                        NCRTypeID, ProcessID, ProcessName, ProcessQty,
-                        ROW_NUMBER() OVER (PARTITION BY NCRTypeID ORDER BY ProcessQty DESC) AS rn
-                    FROM ProcessCounts
-                ),
-                TopProcess AS (
-                    SELECT NCRTypeID, ProcessName, ProcessQty
-                    FROM RankedProcess
-                    WHERE rn = 1
-                ),
-                LineCounts AS (
-                    SELECT 
-                        r.NCRTypeID,
-                        r.OriginID,
-                        COUNT(*) AS [LineQty]
-                    FROM ProductionFinal_Registration r
-                    WHERE r.NCRTypeID <> 4
-					AND YEAR(r.CreatedDate) = YEAR(GETDATE())
-					AND MONTH(r.CreatedDate) = MONTH(GETDATE())
-                    GROUP BY r.NCRTypeID, r.OriginID
-                ),
-                RankedLine AS (
-                    SELECT 
-                        NCRTypeID, OriginID, LineQty,
-                        ROW_NUMBER() OVER (PARTITION BY NCRTypeID ORDER BY LineQty DESC) AS rn
+                        OriginID,
+                        SUM([Qty]) AS TotalQty
                     FROM LineCounts
+                    GROUP BY OriginID
                 ),
-                TopLine AS (
-                    SELECT NCRTypeID, OriginID, LineQty
-                    FROM RankedLine
-                    WHERE rn = 1
+                RankedNCR AS (
+                    SELECT 
+                        lc.OriginID,
+                        lc.NCRTypeID,
+                        lc.[Qty],
+                        ROW_NUMBER() OVER (
+                            PARTITION BY lc.OriginID 
+                            ORDER BY lc.[Qty] DESC, lc.NCRTypeID DESC
+                        ) AS rn
+                    FROM LineCounts lc
                 )
                 SELECT 
-                    nt.NCRTypeName AS [NCRType],
-                    nc.[Qty],
-                    CAST(nc.[Qty] * 100.0 / SUM(nc.[Qty]) OVER() AS DECIMAL(5,1)) AS [Percentage],
-                    tp.ProcessName AS [TopProcess],
-                    CAST(tp.ProcessQty * 100.0 / NULLIF(nc.[Qty],0) AS DECIMAL(5,1)) AS [TopProcess%],
-                    tl.OriginID AS [BestLine],
-                    CAST(tl.LineQty * 100.0 / NULLIF(nc.[Qty],0) AS DECIMAL(5,1)) AS [TopLine%],
-                    0 AS SortOrder
-                FROM NCRCounts nc
-                JOIN ProductionFinalNCR_Type nt ON nc.NCRTypeID = nt.NCRTypeID
-                LEFT JOIN TopProcess tp ON tp.NCRTypeID = nc.NCRTypeID
-                LEFT JOIN TopLine tl    ON tl.NCRTypeID = nc.NCRTypeID
-
-                UNION ALL
-
-                SELECT 
-                    'Total',
-                    SUM(nc.[Qty]),
-                    100.0,
-                    NULL, NULL, NULL, NULL,
-                    1 AS SortOrder
-                FROM NCRCounts nc
-
-                ORDER BY SortOrder, [NCRType];");
+                    rn.OriginID       AS [Line],
+                    nt.NCRTypeName    AS [NCRType],
+                    rn.[Qty],
+                    CAST(rn.[Qty] * 100.0 / NULLIF(lt.TotalQty, 0) AS DECIMAL(5,1)) AS [Percentage]
+                FROM RankedNCR rn
+                JOIN LineTotals lt ON lt.OriginID = rn.OriginID
+                LEFT JOIN ProductionFinalNCR_Type nt ON nt.NCRTypeID = rn.NCRTypeID
+                WHERE rn.rn = 1
+                ORDER BY rn.OriginID;");
         }
+
+        //   public Task<List<LineTopNCRModel>> GetBestLines()
+        //   {
+        //       return SqlDataAcess_Test.QueryAsync<LineTopNCRModel>($@"WITH NCRCounts AS (
+        //               SELECT 
+        //                   r.NCRTypeID,
+        //                   COUNT(*) AS [Qty]
+        //               FROM ProductionFinal_Registration r
+        //               WHERE r.NCRTypeID <> 4
+        //               GROUP BY r.NCRTypeID
+        //           ),
+        //           ProcessCounts AS (
+        //               SELECT 
+        //                   r.NCRTypeID,
+        //                   p.ProcessID,
+        //                   p.ProcessName,
+        //                   COUNT(*) AS [ProcessQty]
+        //               FROM ProductionFinal_Registration r
+        //               LEFT JOIN ProductionFinal_Process p ON r.ProcessID = p.ProcessID
+        //               WHERE r.NCRTypeID <> 4
+        //               GROUP BY r.NCRTypeID, p.ProcessID, p.ProcessName
+        //           ),
+        //           RankedProcess AS (
+        //               SELECT 
+        //                   NCRTypeID, ProcessID, ProcessName, ProcessQty,
+        //                   ROW_NUMBER() OVER (PARTITION BY NCRTypeID ORDER BY ProcessQty DESC) AS rn
+        //               FROM ProcessCounts
+        //           ),
+        //           TopProcess AS (
+        //               SELECT NCRTypeID, ProcessName, ProcessQty
+        //               FROM RankedProcess
+        //               WHERE rn = 1
+        //           ),
+        //           LineCounts AS (
+        //               SELECT 
+        //                   r.NCRTypeID,
+        //                   r.OriginID,
+        //                   COUNT(*) AS [LineQty]
+        //               FROM ProductionFinal_Registration r
+        //               WHERE r.NCRTypeID <> 4
+        //AND YEAR(r.CreatedDate) = YEAR(GETDATE())
+        //AND MONTH(r.CreatedDate) = MONTH(GETDATE())
+        //               GROUP BY r.NCRTypeID, r.OriginID
+        //           ),
+        //           RankedLine AS (
+        //               SELECT 
+        //                   NCRTypeID, OriginID, LineQty,
+        //                   ROW_NUMBER() OVER (PARTITION BY NCRTypeID ORDER BY LineQty DESC) AS rn
+        //               FROM LineCounts
+        //           ),
+        //           TopLine AS (
+        //               SELECT NCRTypeID, OriginID, LineQty
+        //               FROM RankedLine
+        //               WHERE rn = 1
+        //           )
+        //           SELECT 
+        //               nt.NCRTypeName AS [NCRType],
+        //               nc.[Qty],
+        //               CAST(nc.[Qty] * 100.0 / SUM(nc.[Qty]) OVER() AS DECIMAL(5,1)) AS [Percentage],
+        //               tp.ProcessName AS [TopProcess],
+        //               CAST(tp.ProcessQty * 100.0 / NULLIF(nc.[Qty],0) AS DECIMAL(5,1)) AS [TopProcess%],
+        //               tl.OriginID AS [BestLine],
+        //               CAST(tl.LineQty * 100.0 / NULLIF(nc.[Qty],0) AS DECIMAL(5,1)) AS [TopLine%],
+        //               0 AS SortOrder
+        //           FROM NCRCounts nc
+        //           JOIN ProductionFinalNCR_Type nt ON nc.NCRTypeID = nt.NCRTypeID
+        //           LEFT JOIN TopProcess tp ON tp.NCRTypeID = nc.NCRTypeID
+        //           LEFT JOIN TopLine tl    ON tl.NCRTypeID = nc.NCRTypeID
+
+        //           UNION ALL
+
+        //           SELECT 
+        //               'Total',
+        //               SUM(nc.[Qty]),
+        //               100.0,
+        //               NULL, NULL, NULL, NULL,
+        //               1 AS SortOrder
+        //           FROM NCRCounts nc
+
+        //           ORDER BY SortOrder, [NCRType];");
+        //   }
 
         public Task<List<FourMSummaryModel>> GetFourMSummary()
         {
@@ -297,6 +358,15 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             return await SqlDataAcess_Test.QueryAsync<RegistrationFinalModel>(query, null);
 
 
+        }
+
+        public Task<List<ProcessGroupsModel>> SetsProcessGroupData(int groups)
+        {
+            return SqlDataAcess_Test.QueryAsync<ProcessGroupsModel>($@"SELECT  ProcessID
+                      ,ProcessName
+                      ,ProcessGroups
+                  FROM ProductionFinal_Process WHERE ProcessGroups =@ProcessGroups", new
+            { ProcessGroups = groups });
         }
     }
 }

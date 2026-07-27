@@ -201,7 +201,7 @@ body {
     }
 
         .ncr-bar .bar .emoji {
-            font-size: 1.2rem;
+            font-size: 2rem;
         }
 
         .ncr-bar .bar .count {
@@ -507,6 +507,14 @@ body {
     -webkit-text-stroke: 1px;
 }
 
+#best-line-number {
+    animation: typing-loop 6s steps(20, end) infinite, /* was likely something like 3s — doubled to 6s */
+    blink-caret 0.75s step-end infinite;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 2px solid currentColor;
+}
+
 @keyframes typing-loop {
     0% {
         width: 0;
@@ -516,12 +524,18 @@ body {
         width: 7ch; /* fully typed — "LINE 10" = 7 characters */
     }
 
-    70% {
-        width: 5ch; /* pause while fully visible */
+    100% {
+        width: 7ch; /* stays fully visible, no erase */
+    }
+}
+
+@keyframes blink-caret {
+    from, to {
+        border-color: transparent;
     }
 
-    100% {
-        width: 0; /* erase back to start */
+    50% {
+        border-color: currentColor;
     }
 }
 
@@ -590,6 +604,34 @@ body {
         background: var(--color-line-bg) !important;
         transform: scale(1.02);
     }
+
+    /*.line-row .emoji {
+        font-size: 1.3rem !important;*/ /* bump this up/down to taste */
+        /*line-height: 1;
+        display: inline-block;
+        transform-origin: center;
+    }*/
+
+.line-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+    .line-row .ncr-info {
+        font-size: 0.70rem;
+        color: rgb(83, 92, 70);
+        flex: 1;
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    .line-row .emoji {
+        font-size: 1.5rem;
+        line-height: 1;
+    }
+
 
 /* ----- Responsive tweaks ----- */
 @media (max-width: 1024px) {
@@ -715,6 +757,8 @@ body {
             font-size: 0.7rem;
             font-weight: 800;
         }
+
+       
 }
 
 /* ----- Animation pulse for bars ----- */
@@ -845,6 +889,7 @@ body {
 .award-slide-right img {
     max-width: 100%;
     max-height: 100%;
+    width: 300px;
     object-fit: contain;
     box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     border-radius: 6px;
@@ -1646,3 +1691,13 @@ tbody td {
 .btn-delete {
     color: #e63030;
 }
+
+
+
+
+
+
+
+
+
+

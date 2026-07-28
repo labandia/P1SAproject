@@ -16,8 +16,59 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
     public class MoldController : ExtendController
     {
         private readonly IMoldDaily _mold;
-        public MoldController(IMoldDaily mold) => _mold = mold;
+        private readonly IDieMasterList _master;
 
+        public MoldController(IMoldDaily mold, IDieMasterList master)
+        {
+            _mold = mold;
+            _master = master;
+        }
+
+
+        // ===========================================================
+        // MOLD DIE MASTER LIST
+        // ============================================================
+        [HttpGet]
+        public async Task<ActionResult> GetMoldDieMasterList(
+          string search = "",
+          int page = 1,
+          int pageSize = 50)
+        {
+            Debug.WriteLine("GETMOLD DIE");
+            var data = await _master.GetModelDieMasterList(search, page, pageSize);
+
+            //if (data == null || !data.Any())
+            //    return JsonNotFound("No Mold Die Tooling data found");
+
+            return JsonSuccess(data);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AddMoldDieMasterlist(MoldieMasterModel add)
+        {
+            bool update = await _master.AddMoldieMasterList(add);
+            if (!update) return JsonValidationError();
+
+            return JsonCreated(add, "Update Data Successfully");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateMoldMasterlist(MoldieMasterModel add)
+        {
+            bool update = await _master.EditMoldieMasterList(add);
+            if (!update) return JsonValidationError();
+
+            return JsonCreated(add, "Update Data Successfully");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteMoldMasterlist(string DieSerial)
+        {
+            //bool update = await _master.EditMoldieMasterList(add);
+            //if (!update) return JsonValidationError();
+
+            return JsonCreated(true, "Update Data Successfully");
+        }
 
         // ===========================================================
         // MOLD DIE DAILY FUNCTIONALITY

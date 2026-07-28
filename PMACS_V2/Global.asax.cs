@@ -114,6 +114,7 @@ namespace PMACS_V2
             container.RegisterType<ICapacity, CapacityRepository>(new ContainerControlledLifetimeManager());
             container.RegisterType<IMachine, MachineRepository>(new ContainerControlledLifetimeManager());
             container.RegisterType<IMoldDaily, MoldDailyRepositories>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IDieMasterList, MoldDieMasterlistRepository>(new ContainerControlledLifetimeManager());
 
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));

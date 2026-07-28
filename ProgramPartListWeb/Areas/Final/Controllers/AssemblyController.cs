@@ -756,35 +756,44 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             return sheet.Cells[row, col].Value?.ToString()?.Trim() ?? "";
         }
 
-        private string GetCellAsDate(ExcelWorksheet sheet, int row, int col)
+        private static string GetCellAsDate(ExcelWorksheet sheet, int row, int col)
         {
-            var value = sheet.Cells[row, col].Value;
+            var val = sheet.Cells[row, col].Value;
+            if (val == null) return "";
 
-            if (value == null)
-                return "";
-
-            if (value is DateTime dt)
-                return dt.ToString("yyyy-MM-dd");
-
-            if (value is double oa)
-            {
-                try
-                {
-                    return DateTime.FromOADate(oa).ToString("yyyy-MM-dd");
-                }
-                catch
-                {
-                    return "";
-                }
-            }
-
-            string text = sheet.Cells[row, col].Text.Trim();
-
-            if (DateTime.TryParse(text, out DateTime parsed))
-                return parsed.ToString("yyyy-MM-dd");
-
-            return "";
+            double serial = Convert.ToDouble(val);          // <-- the trap
+            return DateTime.FromOADate(serial).ToString("MM/dd/yyyy");
         }
+
+        //private string GetCellAsDate(ExcelWorksheet sheet, int row, int col)
+        //{
+        //    var value = sheet.Cells[row, col].Value;
+
+        //    if (value == null)
+        //        return "";
+
+        //    if (value is DateTime dt)
+        //        return dt.ToString("yyyy-MM-dd");
+
+        //    if (value is double oa)
+        //    {
+        //        try
+        //        {
+        //            return DateTime.FromOADate(oa).ToString("yyyy-MM-dd");
+        //        }
+        //        catch
+        //        {
+        //            return "";
+        //        }
+        //    }
+
+        //    string text = sheet.Cells[row, col].Text.Trim();
+
+        //    if (DateTime.TryParse(text, out DateTime parsed))
+        //        return parsed.ToString("yyyy-MM-dd");
+
+        //    return "";
+        //}
 
         //=====================================================
         //============== FINAL ASSEMBLY DATA  =================

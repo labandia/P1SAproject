@@ -60,6 +60,8 @@ namespace ProgramPartListWeb.Areas.Production1.Model
 
     public class AwardDto
     {
+        public int AwardID { get; set; }
+        public string Months { get; set; }
         public string EmployeeID { get; set; }
         public string WinnerName { get; set; }
         public string CertificateImage { get; set; }

@@ -41,6 +41,14 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             return rows > 0;
         }
 
+        public async Task<bool> DeleteAwardData(int ID)
+        {
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"DELETE FROM ProductionFinal_Awardees 
+                WHERE AwardID = @AwardID ", new
+            { AwardID = ID });
+            return rows > 0;
+        }
+
         public async Task<bool> DeleteRegistrationData(int ID)
         {
             int rows =  await SqlDataAcess_Test.ExecuteAsync($@"DELETE FROM ProductionFinal_Registration 
@@ -52,11 +60,17 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         public async Task<bool> EditAwardsData(AwardDto model)
         {
             int rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE ProductionFinal_Awardees 
-                   SET AwardeesName =@AwardeesName, 
+                   SET AwardeesName =@AwardeesName, EmployeeID =@EmployeeID,
                    ImagePathCertificate = COALESCE(@ImagePathCertificate, ImagePathCertificate),
-                   IsDisplayed =@IsDisplayed ", new
+                   IsDisplayed =@IsDisplayed, DateUpdated =@DateUpdated, AssignLine =@AssignLine, DefectDetect =@DefectDetect
+                   WHERE AwardID =@AwardID ", new
             {
+                AwardID = model.AwardID,
+                EmployeeID = model.EmployeeID,
                 AwardeesName = model.WinnerName,
+                DateUpdated = DateTime.Now,
+                AssignLine = model.AssignLine,
+                DefectDetect = model.DefectDetect,
                 ImagePathCertificate = model.CertificateImage,
                 IsDisplayed = model.IsDisplayed
             });
@@ -66,8 +80,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 
         public async Task<bool> EditRegistrationData(RegistrationFinalModel model)
         {
-            Debug.WriteLine("Edit  process");
-
+    
             int rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE ProductionFinal_Registration SET 
                 RegistrationNo =@RegistrationNo, ModelShopOrder =@ModelShopOrder , OriginID =@OriginID, 
                 ProcessID =@ProcessID, FourMID =@FourMID, NCRTypeID =@NCRTypeID, GroupID =@GroupID WHERE NCRID =@NCRID ", model);
@@ -84,6 +97,8 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         {
             string sql = @"
                 SELECT 
+	                DATENAME(MONTH, DateCreated) AS Months,
+                    AwardID,
                     AwardeesName as WinnerName,
                     ImagePathCertificate as CertificateImage,
                     DateUpdated, IsDisplayed, EmployeeID, AssignLine, DefectDetect
@@ -258,31 +273,33 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             return SqlDataAcess_Test.QueryAsync<GroupSummaryModel>($@";WITH Pivoted AS (
                         SELECT 
                             nt.NCRTypeName AS [NCRType],
-                            SUM(CASE WHEN g.GroupName = 'Group 1' THEN 1 ELSE 0 END) AS [Group1],
-                            SUM(CASE WHEN g.GroupName = 'Group 2' THEN 1 ELSE 0 END) AS [Group2],
-                            SUM(CASE WHEN g.GroupName = 'Group 3' THEN 1 ELSE 0 END) AS [Group3],
-                            SUM(CASE WHEN g.GroupName = 'Matprep' THEN 1 ELSE 0 END) AS [Matprep],
-                            SUM(CASE WHEN g.GroupName = 'Oiloof'  THEN 1 ELSE 0 END) AS [Oiloof],
-                            SUM(CASE WHEN g.GroupName IN ('Group 1','Group 2','Group 3','Matprep','Oiloof') THEN 1 ELSE 0 END) AS [Qty]
+                            SUM(CASE WHEN g.GroupName = 'Group 1'       THEN 1 ELSE 0 END) AS [Group1],
+                            SUM(CASE WHEN g.GroupName = 'Group 2'       THEN 1 ELSE 0 END) AS [Group2],
+                            SUM(CASE WHEN g.GroupName = 'Group 3'       THEN 1 ELSE 0 END) AS [Group3],
+                            SUM(CASE WHEN g.GroupName = 'OP'            THEN 1 ELSE 0 END) AS [OP],
+                            SUM(CASE WHEN g.GroupName = 'Material Prep' THEN 1 ELSE 0 END) AS [MatPrep],
+                            SUM(CASE WHEN g.GroupName = 'Oiloof'        THEN 1 ELSE 0 END) AS [Oiloof],
+                            SUM(CASE WHEN g.GroupName IN ('Group 1','Group 2','Group 3','OP','Material Prep') THEN 1 ELSE 0 END) AS [Qty]
                         FROM ProductionFinal_Registration r
                         LEFT JOIN ProductionFinalNCR_Type nt ON r.NCRTypeID = nt.NCRTypeID
                         LEFT JOIN ProductionFinal_Group   g  ON r.GroupID   = g.GroupID
-                        WHERE YEAR(r.CreatedDate) = YEAR(GETDATE())
-                        AND MONTH(r.CreatedDate) = MONTH(GETDATE())
+                        WHERE YEAR(r.CreatedDate)  = YEAR(GETDATE())
+                          AND MONTH(r.CreatedDate) = MONTH(GETDATE())
                         GROUP BY nt.NCRTypeName
                     ),
                     Totals AS (
                         SELECT 
-                            SUM([Group1])  AS [Group1],
-                            SUM([Group2])  AS [Group2],
-                            SUM([Group3])  AS [Group3],
-                            SUM([Matprep]) AS [Matprep],
-                            SUM([Oiloof])  AS [Oiloof],
-                            SUM([Qty])     AS [Qty]
+                            SUM([Group1]) AS [Group1],
+                            SUM([Group2]) AS [Group2],
+                            SUM([Group3]) AS [Group3],
+                            SUM([OP])     AS [OP],
+                            SUM([MatPrep]) AS [MatPrep],
+                            SUM([Oiloof]) AS [Oiloof],
+                            SUM([Qty])    AS [Qty]
                         FROM Pivoted
                     )
                     SELECT 
-                        [NCRType], [Group1], [Group2], [Group3], [Matprep], [Oiloof], [Qty],
+                        [NCRType], [Group1], [Group2], [Group3], [OP], [MatPrep], [Oiloof], [Qty],
                         CAST([Qty] * 100.0 / SUM([Qty]) OVER() AS DECIMAL(5,1)) AS [Percentage],
                         0 AS SortOrder
                     FROM Pivoted
@@ -291,7 +308,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 
                     SELECT 
                         'Total',
-                        SUM([Group1]), SUM([Group2]), SUM([Group3]), SUM([Matprep]), SUM([Oiloof]), SUM([Qty]),
+                        SUM([Group1]), SUM([Group2]), SUM([Group3]), SUM([OP]), SUM([MatPrep]), SUM([Oiloof]), SUM([Qty]),
                         100.0,
                         1 AS SortOrder
                     FROM Pivoted
@@ -303,7 +320,8 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                         CAST([Group1]  * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
                         CAST([Group2]  * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
                         CAST([Group3]  * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
-                        CAST([Matprep] * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
+                        CAST([OP]      * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
+                        CAST([MatPrep] * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
                         CAST([Oiloof]  * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
                         100.0,
                         100.0,
@@ -323,7 +341,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             string query = $@"SELECT 
                      r.NCRID,
                      r.RegistrationNo,
-                     FORMAT(r.CreatedDate, 'MM/dd/yyyy hh:mm') as CreatedDate,
+                     FORMAT(r.CreatedDate, 'MM/dd/yy hh:mm') as CreatedDate,
                      r.ModelShopOrder,
                      r.OriginID,
                      p.ProcessID,

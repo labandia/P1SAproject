@@ -251,13 +251,20 @@ button{
     justify-content: center;
 }
 
+.backcontainer{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: .5em 0 0;
+}
+
 #backbtn {
     display: flex;
     align-items: center;
     justify-content: center;
     background: transparent;
     border: none;
-    cursor:pointer;
+    cursor: pointer;
 }
 
 /* ─── Right Column: Table ─── */
@@ -937,7 +944,6 @@ button{
     background: #f1f5f9;
     border-radius: 14px;
     padding: 4px;
-    margin-bottom: 1.2rem;
     border: 1px solid #eef2f6;
 }
 
@@ -1000,4 +1006,30 @@ button{
 
 .table-panel.active{
     display:block;
+}
+
+
+.award-winners-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.award-winner-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.award-slide-right {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.award-cert-image {
+    max-width: 100%;
+    height: auto;
+    /* if you always have 3 awardees, cap the width so 3 fit side by side */
+    max-height: 100%;
 }

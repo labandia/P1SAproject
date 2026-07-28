@@ -154,6 +154,25 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
         private static readonly string[] allowedExtensionsForCleanup = { ".png", ".jpg", ".jpeg" };
 
         [HttpPost]
+        public async Task<ActionResult> DeleteAwardsData(int AwardID)
+        {
+            Debug.WriteLine("Awardss: " + AwardID);
+
+            try
+            {
+                bool result = await _manu.DeleteAwardData(AwardID);
+                if (!result) return JsonPostError("Insert failed.", 500);
+                return JsonCreated(result, "Delete Award Successfully");
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message, 500);
+            }
+        }
+
+
+
+        [HttpPost]
         public async Task<ActionResult> UploadCertificate(string awardeesName, bool isDisplayed,
             HttpPostedFileBase certificateImage)
         {
@@ -242,21 +261,45 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> SaveAwardsData(AwardDto model)
+        public async Task<ActionResult> SaveAwardsData(AwardDto model, HttpPostedFileBase certificateImage)
         {
-            try
+
+            //string newFileName = null;
+
+            if (certificateImage != null && certificateImage.ContentLength > 0)
             {
-                bool result = await _manu.AddAwardsData(model);  
-                if (!result) return JsonPostError("Insert failed.", 500);
+                var allowedExtensions = new[] { ".png", ".jpg", ".jpeg" };
+                var ext = Path.GetExtension(certificateImage.FileName).ToLowerInvariant();
+
+                if (!allowedExtensions.Contains(ext))
+                    return JsonError("Only PNG or JPEG files are allowed.");
+
+                var newFileName = $"{Guid.NewGuid()}{ext}";
+
+                model.CertificateImage = newFileName;
+
+                var folderPath = ConfigurationManager.AppSettings["CertificateUploadPath"];
+
+                if (!Directory.Exists(folderPath))
+                    Directory.CreateDirectory(folderPath);
+
+                var savePath = Path.Combine(folderPath, newFileName);
+                certificateImage.SaveAs(savePath);
+            }
+
+            bool result = model.AwardID > 0
+                   ? await _manu.EditAwardsData(model)
+                   : await _manu.AddAwardsData(model);
 
 
-                return JsonCreated(result, "Update Stocks Successfully");
-            }
-            catch (Exception ex)
-            {
-                return JsonError(ex.Message, 500);
-            }
+            if (!result)
+                return JsonPostError(model.AwardID > 0 ? "Update failed." : "Insert failed.", 500);
+
+            return JsonCreated(true, model.AwardID > 0 ? "Award updated successfully." : "Award saved successfully.");
+
         }
+
+      
 
         // Streams the certificate image bytes from the network share to the browser
         public ActionResult CertificateImage(string path)

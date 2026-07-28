@@ -60,301 +60,132 @@
 @Html.Partial("_MasterlistModelForms")
 
 
+<script type="module" asp-append-version="true">
+     import {
+         getMethod,
+         postMethod
+     } from '@Url.Content("~/Scripts/modules/index.js")';
 
-<script type="text/javascript">
-    "use strict";
-    /* =========================================================
-       GLOBAL STATE
-    ========================================================= */
-    const state = {
-        debounceTimer: null,
-        totalPages: 0,
-        currentPage: 1,
-        pageSize: 20,
-        totalRecords: 0,
-        isFirstLoad: true,
-        isYearLoad: true,
-        getData: []
-    };
-    /* =========================================================
-       DOM CACHE
-    ========================================================= */
-    const DOM = {
-        DescriptionSelect : $("#DescriptionID"),
-        ToolingDisplay : $("#DieMoldToolist"),
-        SearchInput: $("#RegisterSearch"),
-        descriptSelect: $("#PartDescription"),
-        editdescriptSelect: $("#EditPartDescription"),
-        Addform : $("#addnewform"),
-        Editform : $("#editnewform")
-    };
-    /* =========================================================
-       HELPERS
-    ========================================================= */
+    class DieMoldMasterController {
+        constructor() {
+            this.tbody = document.querySelector('.TrackTable tbody');
 
-    /* =========================================================
-       INITIALIZATION
-    ========================================================= */
-    $(document).ready(() => {
-        bindEvents();
-        GetMoldieDescription();
-        GetMoldDieMasterlist();
+            this.SearchInput = document.getElementById("RegisterSearch");
+
+        }
+
+        async init() {
+            await this.GetMoldDieMasterlist();
+
+            this.bindTableEvents();
+        }
+
+
+        /* =========================================================
+             GET MASTERLIST 
+        ========================================================= */
+        async GetMoldDieMasterlist() {
+            try {
+                const res = await getMethod('@Url.Action("GetMoldDieMasterList", "Mold")',
+                    {
+                        search: '',
+                        page: 1,
+                        pageSize: 50
+                    });
+
+                console.log(res);
+                //if (!res?.Success) {
+                //    console.log('No data Masterlist Found ');
+                //    return;
+                //}
+                //this.renderTable(res.data);
+            } catch (error) {
+                console.error('Error fetching 4M data:', error);
+            }
+        }
+
+        renderTable(data) {
+                if (!this.tbody) return;
+
+                //this.recordCount.textContent = `${data.length} ${data.length === 1 ? 'entry' : 'entries'}`;
+
+                if (data.length === 0) {
+                    this.tbody.innerHTML = `
+                        <tr>
+                            <td colspan="7" style="text-align:center; padding:32px; color:#86868b;">
+                                No data available.
+                            </td>
+                        </tr>`;
+                    return;
+                }
+
+                this.tbody.innerHTML = data.map(row => {
+
+                return `
+                   <tr class='fade-in'
+                        data-partno="${row.PartNo}"
+                        data-descript="${row.PartDescription ?? ''}"
+                        data-dimension="${row.Dimension_Quality ?? ''}"
+                        data-dieSerial="${row.DieSerial ?? ''}"
+                        data-dienum="${row.DieNumber ?? ''}"
+                   >
+                            <td style='font-weight: 600;'>${row.PartNo}</td>
+                              <td>${row.PartDescription}</td>
+                              <td>${row.Dimension_Quality}</td>
+                              <td>${row.DieSerial}</td>
+                              <td>${row.DieNumber}</td>
+                              <td>
+                                <button type="button" class="btn-icon btn-edit" title="Edit">
+                                   <i class='fa-regular fa-pen-to-square action_btn'></i>
+                                </button>
+
+                                <button type="button" class="btn-icon btn-delete" title="Delete">
+                                    <i class="fa-regular fa-trash-can"></i>
+                                </button>
+                             </td>
+                    </tr>`;
+
+                }).join('');
+
+        }
+
+        bindTableEvents() {
+            this.tbody.addEventListener('click', (e) => {
+                const editBtn = e.target.closest('.btn-edit');
+                const deleteBtn = e.target.closest('.btn-delete');
+
+                if (editBtn) {
+                    const row = editBtn.closest('tr');
+                    this.populateFormForEdit(row);
+                } else if (deleteBtn) {
+                    const row = deleteBtn.closest('tr');
+                    this.openDeleteModal(row.dataset.ncrId);
+                }
+            });
+        }
+
+        populateFormForEdit(row) {
+
+            //this.editIndexInput.value = row.dataset.ncrId;
+            //this.regNoInput.value = row.dataset.regNo;
+            //this.modelInput.value = row.dataset.model;
+            //this.processSelect.value = row.dataset.processId;
+            //this.fourMSelect.value = row.dataset.fourmId;
+            //this.ncrTypeSelect.value = row.dataset.ncrType;
+            //this.lineSelect.value = row.dataset.line;
+            //this.GroupID.value = row.dataset.group;
+
+            //this.formTitle.textContent = 'Edit Record';
+            //this.submitBtn.innerHTML = '<i class="fas fa-check"></i> Update Record';
+            //this.cancelBtn.style.display = '';
+
+            //document.getElementById('formCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const controller = new DieMoldMasterController();
+        controller.init();
     });
-
-    /* =========================================================
-       EVENT BINDINGS
-    ========================================================= */
-    function bindEvents() {
-        $("#addnewform").on('submit', HandleAddMasterlist);
-        $("#editnewform").on('submit', HandleEditMasterlist);
-
-        DOM.SearchInput.on("keyup", () => {
-            clearTimeout(state.debounceTimer);
-            state.debounceTimer = setTimeout(() => {
-                GetMoldDieMasterlist();
-            }, 400);
-        });
-
-        DOM.ToolingDisplay.on("click", ".EditToolClick", OpenEditMasterModal);
-    }
-    /* =========================================================
-       MASTERLIST PROCESS CRUD OPERATION
-    ========================================================= */
-    async function HandleAddMasterlist(e){
-        e.preventDefault();
-
-        let formData = new FormData(e.target);
-        const data = Object.fromEntries(formData);
-
-        // Check for duplicate entry for the same part number on the same date
-        let checkduplicate = await GetMethod('@Url.Action("CheckMasterlistMoldExist", "Mold")',
-        { PartNo: data.PartNo });
-
-        if (checkduplicate) {
-            Swal.fire({
-                icon: "error",
-                text: `Partnumber ${data.PartNo} is already Exist `,
-                timer: 1500,
-                showConfirmButton: false
-            });
-            return;
-        }
-
-        let res = await postMethod('@Url.Action("AddMoldDieMasterlist", "Mold")', data);
-
-        if (res?.Success) {
-            Swal.fire({
-                title: "Success",
-                text: res.Message,
-                icon: "success",
-                confirmButtonColor: "#0d97c9",
-                timer: 1500
-            }).then(() => {
-                GetMoldDieMasterlist();
-            });
-        } else {
-            Swal.fire({
-                icon: "error",
-                text: res?.Message ?? "Add data Failed",
-                timer: 1500,
-                showConfirmButton: false
-            });
-        }
-    }
-
-    async function OpenEditMasterModal() {
-        const partno = this.id.split("_")[1];
-        const row = state.getData.find(r => r.PartNo === partno);
-        if (!row) return;
-
-        $("#EditPartNo").val(partno);
-        $("#EditPartDescription").val(row.PartDescription);
-        $("#EditDimension_Quality").val(row.Dimension_Quality);
-        $("#EditDieSerial").val(row.DieSerial);
-        $("#EditDieNumber").val(row.DieNumber);
-        $("#EditTooling").modal("show");
-    }
-    async function HandleEditMasterlist(e){
-      e.preventDefault();
-
-      let formData = new FormData(e.target);
-      const data = Object.fromEntries(formData);
-
-      let res = await postMethod('@Url.Action("UpdateMoldMasterlist", "Mold")', formData);
-
-      if (res?.Success) {
-          Swal.fire({
-              title: "Success",
-              text: res.Message,
-              icon: "success",
-              confirmButtonColor: "#0d97c9",
-              timer: 1500
-          }).then(() => {
-              GetMoldDieMasterlist();
-              $("#EditTooling").modal("hide");
-          });
-      } else {
-          Swal.fire({
-              icon: "error",
-              text: res?.Message ?? "Update data Failed",
-              timer: 1500,
-              showConfirmButton: false
-          });
-      }
-  }
-    /* =========================================================
-       GET MASTERLIST SUMMARY
-    ========================================================= */
-    async function GetMoldDieMasterlist() {
-        try {
-            const data = {
-                search: DOM.SearchInput.val(),
-                filter: DOM.DescriptionSelect.val(),
-                page: state.currentPage || 1,
-                pageSize: state.pageSize || 20
-            };
-
-            const res = await GetMethod('@Url.Action("GetMoldDieMasterList", "Mold")', data);
-
-            if (res?.Success) {
-                state.getData = res.Data.Items;
-                state.totalRecords = res.Data.TotalRecords || 0;
-                state.totalPages = Math.ceil(state.totalRecords / state.pageSize);
-
-
-                renderMasterlistTable(state.getData);
-            }
-
-        } catch (e) {
-
-        }
-    }
-    function renderMasterlistTable(rows) {
-        DOM.ToolingDisplay.empty();
-        rows.forEach(r => {
-            DOM.ToolingDisplay.append(`<tr>
-              <td style='font-weight: 600;'>${r.PartNo}</td>
-              <td>${r.PartDescription}</td>
-              <td>${r.Dimension_Quality}</td>
-              <td>${r.DieSerial}</td>
-              <td>${r.DieNumber}</td>
-              <td>
-                <button type='button' class='btn actionicon text-primary EditToolClick' id='editButton_${r.PartNo}' >
-                   <i class='fa-regular fa-pen-to-square action_btn'></i>
-                </button>
-
-                <button type="button" class="btn actionicon text-danger deleteDailyButton"
-                    id="deleteDailyButton_${r.PartNo}">
-                    <i class="fa-regular fa-trash-can"></i>
-                </button>
-             </td>
-          </tr>`);
-        });
-
-        updatePaginationUI();
-
-    }
-
-    /* =========================================================
-       GET DESCRIPTION LIST
-    ========================================================= */
-    const GetMoldieDescription = async () => {
-        let res = await GetMethod('@Url.Action("GetPartDescription", "Mold")', {});
-
-        DOM.descriptSelect.empty();
-
-        res.forEach(year => {
-            DOM.DescriptionSelect.append(`<option value='${year}'>${year}</option>`);
-            DOM.descriptSelect.append(`<option value='${year}'>${year}</option>`);
-            DOM.editdescriptSelect.append(`<option value='${year}'>${year}</option>`);
-        });
-
-        DOM.DescriptionSelect.prop('selectedIndex', 0);
-    }
-
-
-
-
-    function updatePaginationUI() {
-
-        const $pagination = $("#pagination");
-        const $paginationItems = $(".pagination-items");
-
-        // Clear existing buttons
-        $paginationItems.empty();
-
-        // Always show pagination for debugging
-        $pagination.css({
-            'display': 'flex',
-            'visibility': 'visible',
-            'opacity': '1',
-            'position': 'relative'
-        });
-
-        // Show/hide pagination based on total records
-        if (state.totalRecords > state.pageSize) {
-            $pagination.show();
-
-            // Create pagination buttons
-            const prevDisabled = state.currentPage === 1 ? 'disabled' : '';
-            const nextDisabled = state.currentPage === state.totalPages || state.totalPages === 0 ? 'disabled' : '';
-
-            $paginationItems.html(`
-            <button class="page-btn prev-btn" ${prevDisabled} data-page="${state.currentPage - 1}">
-                <i class="fas fa-chevron-left"></i> Previous
-            </button>
-
-            <div class="page-info">
-                Page ${state.currentPage} of ${state.totalPages || 1}
-                <span class="record-info"></span>
-            </div>
-
-            <button class="page-btn next-btn" ${nextDisabled} data-page="${state.currentPage + 1}">
-                Next <i class="fas fa-chevron-right"></i>
-            </button>
-        `);
-
-            // Add page number input for direct navigation (optional)
-            if (state.totalPages > 10) {
-                $paginationItems.append(`
-                <div class="page-jump">
-                    <input type="number" id="pageJumpInput" min="1" max="${state.totalPages}" value="${state.currentPage}"
-                           style="width: 60px; padding: 5px; border: 1px solid #ddd; border-radius: 4px;">
-                    <button class="page-btn jump-btn" id="pageJumpBtn">Go</button>
-                </div>
-            `);
-            }
-
-            // Add click handlers
-            $(".page-btn").off('click').on('click', function () {
-                if ($(this).is(':disabled')) return;
-
-                const pageNum = parseInt($(this).data('page'));
-
-                if (pageNum >= 1 && pageNum <= state.totalPages && pageNum !== state.currentPage) {
-                    state.currentPage = pageNum;
-                    GetMoldDieMasterlist();
-                }
-            });
-
-            // Add handler for jump button if exists
-            $("#pageJumpBtn").off('click').on('click', function () {
-                const jumpPage = parseInt($("#pageJumpInput").val());
-                if (jumpPage >= 1 && jumpPage <= state.totalPages && jumpPage !== state.currentPage) {
-                    state.currentPage = jumpPage;
-                    GetMoldDieMasterlist();
-                }
-            });
-
-            // Add enter key handler for jump input
-            $("#pageJumpInput").off('keypress').on('keypress', function (e) {
-                if (e.which === 13) { // Enter key
-                    $("#pageJumpBtn").click();
-                }
-            });
-
-        } else {
-            $pagination.hide();
-        }
-    }
 </script>

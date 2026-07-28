@@ -28,4 +28,5 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public string LotNo { get; set; }
         public int DepartmentID { get; set; }
     }
+
 }

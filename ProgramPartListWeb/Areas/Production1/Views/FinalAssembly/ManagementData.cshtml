@@ -19,14 +19,37 @@
 
             <!-- ═══ LEFT: FORMS ═══ -->
             <section class="forms-column">
+                <div class="backcontainer">
+                    <button id="backbtn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 512 512">
+                            <path d="M0 0h512v512H0z" fill="none" />
+                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M249.38 336L170 256l79.38-80m-68.35 80H342" />
+                            <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32" d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192s192-86 192-192Z" />
+                        </svg>
+                    </button>
+                    <h4>Back to the Dashboard</h4>
+                </div>
+
+
                 <!-- ─── Tab Buttons ─── -->
                 <div class="ChangeFormstab">
                     <button type="button" class="tab-btn active" data-tab="tabRecord">
-                        Add Records
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 32 32">
+                            <path d="M0 0h32v32H0z" fill="none" />
+                            <path fill="currentColor" d="M19 21h-6a3 3 0 0 0-3 3v2h2v-2a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2h2v-2a3 3 0 0 0-3-3m-3-1a4 4 0 1 0-4-4a4 4 0 0 0 4 4m0-6a2 2 0 1 1-2 2a2 2 0 0 1 2-2" />
+                            <path fill="currentColor" d="M25 5h-3V4a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v1H7a2 2 0 0 0-2 2v21a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2M12 4h8v4h-8Zm13 24H7V7h3v3h12V7h3Z" />
+                        </svg> NCR Records
                     </button>
 
                     <button type="button" class="tab-btn" data-tab="tabUpload">
-                        Upload Images
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 32 32">
+                            <path d="M0 0h24v24H0z" fill="none" />
+                            <g fill="none" fill-rule="evenodd">
+                                <path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z" />
+                                <path fill="currentColor" d="m8.076 7.26l.095.083l8.486 8.485a1 1 0 0 1-.246 1.595l-.116.05L5.91 21.3c-1.952.72-3.853-1.115-3.26-3.064l.05-.146L6.526 7.705a1 1 0 0 1 1.447-.516zm-.214 2.602l-3.285 8.92a.5.5 0 0 0 .562.664l.08-.023l8.918-3.286zm9.245 1.742c.911.048 2.16.24 3.246.892a1 1 0 0 1-.925 1.77l-.104-.055c-.682-.41-1.554-.57-2.322-.61a8 8 0 0 0-.95.004l-.316.031a1 1 0 0 1-.281-1.98a8.6 8.6 0 0 1 1.652-.053m2.025-2.786a1 1 0 0 1 .116 1.993l-.116.007h-.708a1 1 0 0 1-.116-1.993l.116-.007zM15.95 8.05a1 1 0 0 1 .083 1.32l-.083.094l-1.06 1.061a1 1 0 0 1-1.498-1.32l.083-.094l1.06-1.06a1 1 0 0 1 1.415 0m-2.587-5.266c.448 1.346.208 2.82-.072 3.85a10 10 0 0 1-.69 1.863a1 1 0 0 1-1.79-.893a8 8 0 0 0 .55-1.496c.227-.832.341-1.735.166-2.475l-.061-.216a1 1 0 1 1 1.897-.633m5.415 2.438a1 1 0 0 1 0 1.414l-.707.707a1 1 0 1 1-1.414-1.414l.707-.707a1 1 0 0 1 1.414 0" />
+                            </g>
+                        </svg>
+                        Best Employee
                     </button>
                 </div>
 
@@ -36,13 +59,7 @@
                 <!-- Add / Edit Form -->
                 <div class="form-card tab-panel active" id="formCard">
                     <div class="card-title">
-                        <button id="backbtn">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 512 512">
-                                <path d="M0 0h512v512H0z" fill="none" />
-                                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M249.38 336L170 256l79.38-80m-68.35 80H342" />
-                                <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32" d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192s192-86 192-192Z" />
-                            </svg>
-                        </button>
+
 
                         <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 32 32">
                             <path d="M0 0h32v32H0z" fill="none" />
@@ -143,6 +160,8 @@
                                     <option value="2">Group 2</option>
                                     <option value="3">Group 3</option>
                                     <option value="4">OP</option>
+                                    <option value="5">Material Prep</option>
+                                    <option value="6">Harness</option>
                                 </select>
                             </div>
                         </div>
@@ -199,14 +218,22 @@
                 <!-- Quick Actions -->
                 <!-- Upload Form -->
                 <form id="uploadCard" class="form-card tab-panel">
+                    <input type="hidden" id="editAwardIndex" value="-1" />
+
+
                     <div class="card-title">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24"
-                             fill="none" stroke="currentColor" stroke-width="2"
-                             stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 32 32">
+                            <path d="M0 0h24v24H0z" fill="none" />
+                            <g fill="none" fill-rule="evenodd">
+                                <path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z" />
+                                <path fill="currentColor" d="m8.076 7.26l.095.083l8.486 8.485a1 1 0 0 1-.246 1.595l-.116.05L5.91 21.3c-1.952.72-3.853-1.115-3.26-3.064l.05-.146L6.526 7.705a1 1 0 0 1 1.447-.516zm-.214 2.602l-3.285 8.92a.5.5 0 0 0 .562.664l.08-.023l8.918-3.286zm9.245 1.742c.911.048 2.16.24 3.246.892a1 1 0 0 1-.925 1.77l-.104-.055c-.682-.41-1.554-.57-2.322-.61a8 8 0 0 0-.95.004l-.316.031a1 1 0 0 1-.281-1.98a8.6 8.6 0 0 1 1.652-.053m2.025-2.786a1 1 0 0 1 .116 1.993l-.116.007h-.708a1 1 0 0 1-.116-1.993l.116-.007zM15.95 8.05a1 1 0 0 1 .083 1.32l-.083.094l-1.06 1.061a1 1 0 0 1-1.498-1.32l.083-.094l1.06-1.06a1 1 0 0 1 1.415 0m-2.587-5.266c.448 1.346.208 2.82-.072 3.85a10 10 0 0 1-.69 1.863a1 1 0 0 1-1.79-.893a8 8 0 0 0 .55-1.496c.227-.832.341-1.735.166-2.475l-.061-.216a1 1 0 1 1 1.897-.633m5.415 2.438a1 1 0 0 1 0 1.414l-.707.707a1 1 0 1 1-1.414-1.414l.707-.707a1 1 0 0 1 1.414 0" />
+                            </g>
                         </svg>
-                        Upload Images
+                        <span id="uploadFormTitle">Best Of Employees</span>
                     </div>
+
+                    <p id="monthlyWinnerCount" style="margin:-4px 0 14px;font-size:13px;color:#64748b;"></p>
+
 
                     <div class="form-group">
                         <label>Employee ID <span class="required">*</span></label>
@@ -237,11 +264,12 @@
 
                     <div class="form-group">
                         <label>Defective Detection <span class="required">*</span></label>
-                        <input type="text"
-                               id="defectText"
-                               class="uppercase-input"
-                               placeholder="Enter Defective Detection"
-                               required />
+                        <textarea type="text"
+                                  cols="30"
+                                  rows="5"
+                                  id="defectText"
+                                  class="uppercase-input"
+                                  placeholder="Enter Defective Detection"> </textarea>
                     </div>
 
                     <!-- Hidden file input -->
@@ -270,6 +298,21 @@
                         <button type="submit" class="btn btn-primary" id="updateDataBtn">
                             Save Database
                         </button>
+
+
+                        <button type="button" class="btn btn-outline btn-block" id="uploadCancelBtn" style="display:none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
+                                <path d="M0 0h48v48H0z" fill="none" />
+                                <defs>
+                                    <mask id="SVGt9zVddCE2">
+                                        <path fill="#555" fill-rule="evenodd" stroke="#fff" stroke-linejoin="round" stroke-width="4" d="M44 40.836q-7.34-8.96-13.036-10.168t-10.846-.365V41L4 23.545L20.118 7v10.167q9.523.075 16.192 6.833q6.668 6.758 7.69 16.836Z" clip-rule="evenodd" />
+                                    </mask>
+                                </defs>
+                                <path fill="currentColor" d="M0 0h48v48H0z" mask="url(#SVGt9zVddCE2)" />
+                            </svg>
+                            Cancel
+                        </button>
+
 
                     </div>
 
@@ -331,7 +374,7 @@
 
                     <div class="table-toolbar">
                         <div class="left">
-                            <h2>Uploaded Images</h2>
+                            <h2>History Records</h2>
                             <span class="record-count" id="imageRecordCount">0 entries</span>
                         </div>
 
@@ -345,12 +388,12 @@
                         <table>
                             <thead>
                                 <tr>
+                                    <th>Month</th>
+                                    <th>Image</th>
                                     <th>Employee ID</th>
                                     <th>Winner name</th>
                                     <th>Line</th>
                                     <th>Defective Detection</th>
-                                    <th>Image</th>
-                                    <th>Updated</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -377,7 +420,7 @@
     <!-- ─── Delete Confirm Modal ─── -->
     <div class="modal-overlay" id="deleteModal" style="display:none;">
         <div class="modal-box">
-            <p>Delete this NCR record? This cannot be undone.</p>
+            <p id="deleteModalText">Delete this NCR record? This cannot be undone.</p>
             <div class="btn-group">
                 <button class="btn btn-danger" id="confirmDeleteBtn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg> Delete</button>
                 <button class="btn btn-outline" id="cancelDeleteBtn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg> Cancel</button>
@@ -407,9 +450,18 @@
             this.toast = document.getElementById('toast');
             this.toastMessage = document.getElementById('toastMessage');
             this.deleteModal = document.getElementById('deleteModal');
+            this.deleteModalText = document.getElementById('deleteModalText');
             this.clicksearch = document.getElementById('searchBtn');
 
             this.uploadForm = document.getElementById("uploadCard");
+            this.uploadFormTitle = document.getElementById('uploadFormTitle');
+            this.editAwardIndexInput = document.getElementById('editAwardIndex');
+            this.uploadCancelBtn = document.getElementById('uploadCancelBtn');
+            this.monthlyWinnerCountEl = document.getElementById('monthlyWinnerCount');
+
+            this.MAX_WINNERS_PER_MONTH = 3;
+            this.currentMonthAwardCount = 0;
+
 
             // Tab elements
             this.tabButtons = document.querySelectorAll('.ChangeFormstab .tab-btn');
@@ -436,6 +488,7 @@
             this.searchText = document.getElementById('searchInput');
 
             this.pendingDeleteId = null;
+            this.pendingDeleteType = null; // 'ncr' | 'award'
 
             this.refreshInterval = null;
             const today = new Date();
@@ -446,7 +499,10 @@
             // File UPLOAd IMAGE
             this.fileInput = document.getElementById('certificateFile');
             this.uploadBtn = document.getElementById('sampleDataBtn');
+            this.employeeIDInput = document.getElementById('employeeIDText');
             this.nameInput = document.getElementById('winnerText');
+            this.lineTextInput = document.getElementById('lineText');
+            this.defectTextInput = document.getElementById('defectText');
             this.isDisplayedInput = document.getElementById('isDisplayed');
             this.updateBtn = document.getElementById('updateDataBtn');
             this.viewImageBtn = document.getElementById("viewimage");
@@ -467,6 +523,7 @@
             this.bindUploadEvents();
             this.bindUpdateEvents();
             this.bindTabEvents();
+            this.bindUploadTableEvents();
 
             this.clicksearch.addEventListener('click', async (e) => {
                 e.preventDefault();
@@ -541,10 +598,6 @@
 
                 if(res?.Success){
                     let getdata = res.data;
-                   // this.nameInput.value = getdata.WinnerName;
-                   // this.isDisplayedInput.checked = getdata.IsDisplayed;
-                   // this.imageFileName = getdata.CertificateImage;
-                    //this.selectedCertificateFile = getdata.CertificateImage;
                     this.renderUploadsTable(getdata);
                 }
 
@@ -663,17 +716,18 @@
             }).join('');
 
         }
-
-
         renderUploadsTable(data) {
                 if (!this.uploadtbody) return;
 
                 //this.recordCount.textContent = `${data.length} ${data.length === 1 ? 'entry' : 'entries'}`;
 
+                this.currentMonthAwardCount = this.countWinnersThisMonth(data);
+                this.updateMonthlyWinnerCountUI();
+
                 if (data.length === 0) {
-                    this.tbody.innerHTML = `
-                   <tr>
-                       <td colspan="12" style="text-align:center; padding:32px; color:#86868b;">
+                    this.uploadtbody.innerHTML = `
+                    <tr>
+                       <td colspan="7" style="text-align:center; padding:32px; color:#86868b;">
                            No data available.
                        </td>
                    </tr>`;
@@ -681,16 +735,26 @@
                 }
 
                 this.uploadtbody.innerHTML = data.map(row => {
+                    const imagePath = row.CertificateImage ?? row.ImagePath ?? '';
+                    const isDisplayed = row.IsDisplayed ? '1' : '0';
+
 
                     return `
                  <tr class='fade-in'
-                     data-AwardID="${row.AwardID}">
+                     data-award-id="${row.AwardID}"
+                     data-employee-id="${row.EmployeeID ?? ''}"
+                     data-winner-name="${row.WinnerName ?? ''}"
+                     data-line="${row.AssignLine ?? ''}"
+                     data-defect="${row.DefectDetect ?? ''}"
+                     data-image="${imagePath}"
+                     data-is-displayed="${isDisplayed}">
+                           <td>${row.Months}</td>
+                           <td>${imagePath ? `<button type="button" class="btn-link btn-row-view" title="View image">View</button>` : '—'}</td>
                            <td>${row.EmployeeID}</td>
                            <td style='font-weight: 600;'>${row.WinnerName}</td>
                            <td>${row.AssignLine}</td>
                            <td>${row.DefectDetect || ''}</td>
-                           <td class="status-column">${row.DefectDetect || ''}</td>
-                           <td>${row.DefectDetect ?? row.DefectDetect ?? ''}</td>
+                           
                            <td style="text-align:center; white-space:nowrap;">
                                <button type="button" class="btn-icon btn-edit" title="Edit">
                                   <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24">
@@ -712,7 +776,7 @@
 
                 }).join('');
 
-            }
+        }
 
         bindFormEvents() {
             this.backbtn.addEventListener('click', ()=>{
@@ -767,8 +831,22 @@
                 if (!this.uploadForm.reportValidity())
                     return;
 
+
+                const isEditing = parseInt(this.editAwardIndexInput.value, 10) > 0;
+
+                if (isEditing && !this.selectedCertificateFile) {
+                    this.showToast('Please select a new image before updating this record.', true);
+                    return;
+                }
+
+                if (!isEditing && this.currentMonthAwardCount >= this.MAX_WINNERS_PER_MONTH) {
+                    this.showToast(`Only ${this.MAX_WINNERS_PER_MONTH} winners can be added per month.`, true);
+                    return;
+                }
+
                 const formData = new FormData();
 
+                formData.append("AwardID", this.editAwardIndexInput.value || -1);
                 formData.append("EmployeeID", document.getElementById("employeeIDText").value.trim());
                 formData.append("WinnerName", this.nameInput.value.trim());
                 formData.append("AssignLine", document.getElementById("lineText").value.trim());
@@ -787,7 +865,7 @@
                 try {
                     const res = await postMethod(
                         '@Url.Action("SaveAwardsData", "FinalAssembly")',
-                        data
+                        formData
                     );
                     console.log(res);
                     if (!res?.Success) {
@@ -795,11 +873,9 @@
                         return;
                     }
 
-                    this.showToast("Record saved successfully.");
+                    this.showToast(isEditing ? "Record updated." : "Record saved successfully.");
 
-                    this.uploadForm.reset();
-                    this.selectedCertificateFile = null;
-                    this.imageFileName = "";
+                    this.resetUploadForm();
 
                     await this.fetchAwardData();
 
@@ -887,6 +963,132 @@
             document.getElementById('formCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
+        // ─────────────────────────────────────────────
+        // Upload Images table — Edit / Delete / View
+        // ─────────────────────────────────────────────
+        bindUploadTableEvents() {
+            if (!this.uploadtbody) return;
+
+            this.uploadtbody.addEventListener('click', (e) => {
+                const editBtn = e.target.closest('.btn-edit');
+                const deleteBtn = e.target.closest('.btn-delete');
+                const viewBtn = e.target.closest('.btn-row-view');
+
+                if (editBtn) {
+                    const row = editBtn.closest('tr');
+                    this.populateUploadFormForEdit(row);
+                } else if (deleteBtn) {
+                    console.log("assdsd");
+                    const row = deleteBtn.closest('tr');
+                    console.log("ID " + row.dataset.awardId);
+                    this.openDeleteModal(row.dataset.awardId, 'award');
+                } else if (viewBtn) {
+                    const row = viewBtn.closest('tr');
+                    this.viewImage(row.dataset.image);
+                }
+            });
+
+            this.uploadCancelBtn.addEventListener('click', () => this.resetUploadForm());
+        }
+
+        populateUploadFormForEdit(row) {
+            this.editAwardIndexInput.value = row.dataset.awardId;
+            this.employeeIDInput.value = row.dataset.employeeId || '';
+            this.nameInput.value = row.dataset.winnerName || '';
+            this.lineTextInput.value = row.dataset.line || '';
+            this.defectTextInput.value = row.dataset.defect || '';
+            this.isDisplayedInput.checked = row.dataset.isDisplayed === '1';
+
+
+            this.imageFileName = row.dataset.image || '';
+            this.selectedCertificateFile = null;
+            this.fileInput.value = '';
+
+            this.uploadFormTitle.textContent = 'Edit Uploaded Image';
+            this.updateBtn.textContent = 'Update Record';
+            this.uploadCancelBtn.style.display = '';
+            this.updateMonthlyWinnerCountUI();
+
+
+            this.uploadForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        resetUploadForm() {
+            this.uploadForm.reset();
+            this.editAwardIndexInput.value = -1;
+            this.selectedCertificateFile = null;
+            this.imageFileName = '';
+
+            this.uploadFormTitle.textContent = 'Upload Images';
+            this.updateBtn.textContent = 'Save Database';
+            this.uploadCancelBtn.style.display = 'none';
+
+            this.updateMonthlyWinnerCountUI();
+        }
+
+        updateMonthlyWinnerCountUI() {
+            if (!this.monthlyWinnerCountEl) return;
+
+            const atLimit = this.currentMonthAwardCount >= this.MAX_WINNERS_PER_MONTH;
+            const isEditing = parseInt(this.editAwardIndexInput?.value, 10) > 0;
+
+            this.monthlyWinnerCountEl.textContent =
+                `${this.currentMonthAwardCount} / ${this.MAX_WINNERS_PER_MONTH} winners added this month`;
+            this.monthlyWinnerCountEl.style.color = atLimit ? '#dc2626' : '#64748b';
+
+            // Only block new adds — editing an existing winner is still allowed at the limit.
+            this.updateBtn.disabled = atLimit && !isEditing;
+        }
+
+        countWinnersThisMonth(data) {
+            if (!Array.isArray(data)) return 0;
+
+            const now = new Date();
+            const editingAwardId = parseInt(this.editAwardIndexInput?.value, 10) || -1;
+
+            return data.filter(row => {
+                // an award currently being edited shouldn't block itself
+                if (editingAwardId > 0 && parseInt(row.AwardID, 10) === editingAwardId) return false;
+
+                const raw = row.CreatedDate ?? row.UpdatedDate ?? row.ModifiedDate;
+                if (!raw) return true; // no date to check — count it to be safe
+
+                const d = new Date(raw);
+                if (isNaN(d)) return true;
+
+                return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+            }).length;
+        }
+
+
+        openDeleteModal(id, type = 'ncr') {
+            this.pendingDeleteId = id;
+            this.pendingDeleteType = type;
+
+
+            this.deleteModalText.textContent = type === 'award'
+                ? 'Delete this uploaded image record? This cannot be undone.'
+                : 'Delete this NCR record? This cannot be undone.';
+
+            this.deleteModal.style.display = 'flex';
+        }
+
+        viewImage(filename) {
+            if (!filename) {
+                alert('No image available.');
+                return;
+            }
+
+            const url = `@Url.Action("DisplaytheImage", "FinalAssembly")?filename=${encodeURIComponent(filename)}`;
+            window.open(url, '_blank');
+        }
+
+        closeDeleteModal() {
+            this.pendingDeleteId = null;
+            this.pendingDeleteType = null;
+            this.deleteModal.style.display = 'none';
+        }
+
         resetForm() {
             this.form.reset();
             this.editIndexInput.value = -1;
@@ -932,10 +1134,10 @@
                 }
          }
 
-        openDeleteModal(ncrId) {
-            this.pendingDeleteId = ncrId;
-            this.deleteModal.style.display = 'flex';
-        }
+        //openDeleteModal(ncrId) {
+        //    this.pendingDeleteId = ncrId;
+        //    this.deleteModal.style.display = 'flex';
+        //}
 
         closeDeleteModal() {
             this.pendingDeleteId = null;
@@ -945,10 +1147,18 @@
         async handleDelete() {
             if (!this.pendingDeleteId) return;
 
+            const isAward = this.pendingDeleteType === 'award';
+            console.log(isAward);
             try {
-                console.log("DELETE HERE");
 
-                const res = await postMethod('@Url.Action("deleteRegistration", "FinalAssembly")', { NCRID: this.pendingDeleteId });
+                const res = await postMethod(
+                    isAward
+                        ? '@Url.Action("DeleteAwardsData", "FinalAssembly")'
+                        : '@Url.Action("deleteRegistration", "FinalAssembly")',
+                    isAward
+                        ? { AwardID: this.pendingDeleteId }
+                        : { NCRID: this.pendingDeleteId }
+                );
 
                 if (!res?.Success) {
                     this.showToast(res?.Message || 'Delete failed.', true);
@@ -957,12 +1167,19 @@
 
                 this.showToast('Record deleted.');
 
-                // If the deleted row was mid-edit, drop back to Add mode.
-                if (parseInt(this.editIndexInput.value, 10) === this.pendingDeleteId) {
-                    this.resetForm();
+                if (isAward) {
+                    // If the deleted row was mid-edit, drop back to the default upload form.
+                    if (parseInt(this.editAwardIndexInput.value, 10) === parseInt(this.pendingDeleteId, 10)) {
+                        this.resetUploadForm();
+                    }
+                    await this.fetchAwardData();
+                } else {
+                    // If the deleted row was mid-edit, drop back to Add mode.
+                    if (parseInt(this.editIndexInput.value, 10) === parseInt(this.pendingDeleteId, 10)) {
+                        this.resetForm();
+                    }
+                    await this.GetRegistrationData();
                 }
-
-                await this.GetRegistrationData();
             } catch (error) {
                 console.error('Error deleting record:', error);
                 this.showToast('Delete failed.', true);

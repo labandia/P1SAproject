@@ -13,7 +13,10 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 {
     public class MoldDieMasterlistRepository : IDieMasterList
     {
-        public Task<List<MoldieMasterModel>> GetModelDieMasterList(string searchText)
+        public Task<List<MoldieMasterModel>> GetModelDieMasterList(
+            string searchText,
+            int page = 1, 
+            int pageSize = 50)
         {
             string strsql = $@"SELECT PartNo
                           ,PartDescription
@@ -30,13 +33,13 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             var parameters = new DynamicParameters();
       
 
-            if (!string.IsNullOrWhiteSpace(searchText))
-            {
-                strsql += @" AND (
-                        PartNo LIKE @SearchPrefix)";
+            //if (!string.IsNullOrWhiteSpace(searchText))
+            //{
+            //    strsql += @" AND (
+            //            PartNo LIKE @SearchPrefix)";
 
-                parameters.Add("@SearchPrefix", $"{searchText}%");
-            }
+            //    parameters.Add("@SearchPrefix", $"{searchText}%");
+            //}
 
             return SqlDataAccess.QueryAsync<MoldieMasterModel>(strsql, parameters);
         }

@@ -17,6 +17,7 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
         Task<bool> AddAwardsData(AwardDto model);
         Task<bool> EditAwardsData(AwardDto model);
         Task<List<AwardDto>> GetAwardsData();
+        Task<bool> DeleteAwardData(int ID);
 
         Task<string> GetAwardName();
 

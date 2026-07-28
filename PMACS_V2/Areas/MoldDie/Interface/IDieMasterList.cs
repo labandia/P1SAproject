@@ -9,7 +9,8 @@ namespace PMACS_V2.Areas.MoldDie.Interface
 {
     public interface IDieMasterList
     {
-        Task<List<MoldieMasterModel>> GetModelDieMasterList(string search);
+        Task<List<MoldieMasterModel>> GetModelDieMasterList(
+            string search, int page = 1, int pageSize = 50);
 
         Task<bool> AddMoldieMasterList(MoldieMasterModel model);
         Task<bool> EditMoldieMasterList(MoldieMasterModel model);

@@ -2,6 +2,21 @@
     ViewBag.Title = "Dashboard";
     Layout = "~/Areas/Production1/Views/Shared/_FinalDashboard.cshtml";
 }
+
+<!-- Add this right after the existing tagline div in your header -->
+<!-- Replace the existing tagline div with this updated version -->
+<div class="TVscreen" id="TVscreen">
+    <span class="screen-size-badge" id="screenSizeBadge">
+        <span class="size-label">Screen</span>
+        <span class="size-value" id="screenSize">-- × --</span>
+        <span class="size-separator">·</span>
+        <span class="size-label">Viewport</span>
+        <span class="size-value" id="viewportSize">-- × --</span>
+    </span>
+</div>
+
+
+
 <!-- Header -->
 <header class="dashboard-header">
     <div class="header-title">
@@ -14,7 +29,7 @@
         <div class="company">
             SANYO DENKI <span>PHILIPPINES, INC.</span>
         </div>
-        <div class="tagline">Turn the Time into Power</div>
+        <div class="tagline" id=tagline>Turn the Time into Power</div>
     </div>
 </header>
 
@@ -29,7 +44,7 @@
             <div class="ncr-bars">
                 @*<div class="ncr-group">
 
-            </div>*@
+                    </div>*@
                 <div class="ncr-bar" data-type="inprocess">
                     <div id="ncr-inprocess" class="bar bg-primary" style="width:80%;">
                         <span class="emoji">😒</span>
@@ -54,7 +69,7 @@
                 <span>60</span><span>70</span><span>80</span><span>90</span><span>100</span>
             </div>
 
-            <h2 class="section-title" style="margin-top:1.2rem;">NCR Distribution</h2>
+            <h2 class="section-title" style="margin-top:1.2rem; margin-bottom: 1em;">NCR Distribution</h2>
             <div class="dist-row" data-group="Group 1">
                 <span class="label">Group 1</span>
                 <div class="track">
@@ -106,8 +121,7 @@
 
         <!-- Center column -->
         <section class="col-center">
-            <h2 id="dashboard-title"
-                style="font-family:var(--font-headings);font-weight:900;color:var(--color-primary);text-align:center;font-size:clamp(1.2rem,2vw,1.8rem);line-height:1.2;">
+            <h2 id="dashboard-title">
                 July 2026<br />
                 FA Line<br />
                 Monitoring
@@ -165,22 +179,26 @@
     <div class="award-slide">
         <div class="award-slide-left">
             <div class="award-ribbon">🏆</div>
-            <h2 class="award-heading">Award Goes To</h2>
+            <h2 class="award-heading">Quality Wall of fame</h2>
             <div class="award-winner-name" id="awardWinnerName">—</div>
             <div class="award-subtitle" id="awardSubtitle"></div>
 
             <div class="award-subtitle" id="awardID"></div>
             <div class="award-subtitle" id="Affiliation"></div>
 
-            <div >Early Defect Detection</div>
+            <div>Early Defect Detection</div>
             <div class="award-subtitle" id="EarlyDefects"></div>
         </div>
-        <div class="award-slide-right"> 
+        <div class="award-slide-right">
             <img id="awardCertImage" src="" alt="Certificate"
                  onerror="this.onerror=null; this.src='@Url.Content("~/Content/Images/no-image.png")';" />
         </div>
     </div>
 </div>
+
+
+
+
 <!-- Tooltip -->
 <div id="tooltip" class="tooltip-popup">
     <h4 id="tooltip-title">Title</h4>
@@ -433,7 +451,7 @@
                 { key: 'Group3', barId: 'dist-cell' },
                 { key: 'Harness', barId: 'dist-harness' },
                 { key: 'MatPrep', barId: 'dist-mat' },
-                { key: 'OP', barId: 'dist-oil' }, 
+                { key: 'OP', barId: 'dist-oil' },
             ];
 
             groupMap.forEach(({ key, barId }) => {
@@ -740,11 +758,11 @@
                     ? `@Url.Action("DisplaytheImage", "FinalAssembly")?filename=${encodeURIComponent(data.CertificateImage)}`
                     : '@Url.Content("~/Content/Images/no-image.png")';
 
-                document.getElementById("awardID").textContent = data.EmployeeID ?? '';
+                document.getElementById("awardID").textContent = "ID Number : " + data.EmployeeID ?? '';
                 document.getElementById("EarlyDefects").textContent = data.DefectDetect ?? '';
                 this.awardWinnerName.textContent = data.WinnerName ?? '';
                 this.awardCertImage.src = imagePath;
-                this.awardSubtitle.textContent = data.AssignLine ?? '';
+                this.awardSubtitle.textContent = "Line No : " +  data.AssignLine ?? '';
                 this.awardSubtitle.style.display = data.AssignLine ? '' : 'none';
             };
 
@@ -777,8 +795,149 @@
     }
 
 
+
+    // ============================================
+    // Screen Size Controller - ES6 Class
+    // Displays screen and viewport dimensions
+    // ============================================
+
+    class ScreenSizeController {
+        constructor() {
+            // DOM refs
+            this.screenSizeEl = document.getElementById('screenSize');
+            this.viewportSizeEl = document.getElementById('viewportSize');
+            this.badgeEl = document.getElementById('screenSizeBadge');
+
+            // State
+            this.isTV = false;
+            this.resizeTimer = null;
+
+            // Bind methods
+            this.update = this.update.bind(this);
+            this.handleResize = this.handleResize.bind(this);
+        }
+
+        // === GET SCREEN INFO ===
+        getInfo() {
+            const { width: screenW, height: screenH } = window.screen;
+            const { innerWidth: viewW, innerHeight: viewH } = window;
+            const dpr = window.devicePixelRatio || 1;
+            const physW = Math.round(screenW * dpr);
+            const physH = Math.round(screenH * dpr);
+
+            return { screenW, screenH, viewW, viewH, dpr, physW, physH };
+        }
+
+        // === DETECT TV ===
+        detectTV() {
+            const ua = navigator.userAgent;
+            const isTVUA = /tcl|android tv|smart-tv|webos|vizio|roku|fire tv|apple tv/i.test(ua);
+            const hasCast = window.chrome?.hasOwnProperty('cast') ?? false;
+            const isAndroidTV = ua.includes('Android') && ua.includes('TV');
+            const isLarge = window.screen.width >= 1920 && window.screen.height >= 1080;
+
+            return {
+                isTV: isTVUA || hasCast || isAndroidTV || isLarge,
+                isTCL: /tcl/i.test(ua),
+                isAndroidTV
+            };
+        }
+
+        // === UPDATE DISPLAY ===
+        update() {
+            const info = this.getInfo();
+            const tv = this.detectTV();
+            this.isTV = tv.isTV;
+
+            // Update screen size
+            let screenDisplay = `${info.screenW} × ${info.screenH}`;
+            if (this.isTV && (info.screenW !== info.physW || info.screenH !== info.physH)) {
+                screenDisplay = `${info.screenW}×${info.screenH} (${info.physW}×${info.physH})`;
+            }
+            this.screenSizeEl.textContent = screenDisplay;
+
+            // Update viewport
+            this.viewportSizeEl.textContent = `${info.viewW} × ${info.viewH}`;
+
+            // Add TV badge if needed
+            let badgeHTML = '';
+            if (this.isTV) {
+                const tvLabel = tv.isTCL ? '📺 TCL' : '📺 TV';
+                badgeHTML = `<span class="tv-badge">${tvLabel}</span>`;
+            }
+
+            // Add DPR for TV
+            let dprHTML = '';
+            if (this.isTV) {
+                dprHTML = `<span class="size-separator">·</span><span class="size-label">DPR</span><span class="size-value">${info.dpr.toFixed(1)}x</span>`;
+            }
+
+            // Rebuild badge
+            this.badgeEl.innerHTML = `
+            ${badgeHTML}
+            <span class="size-label">Screen</span>
+            <span class="size-value" id="screenSize">${screenDisplay}</span>
+            <span class="size-separator">·</span>
+            <span class="size-label">Viewport</span>
+            <span class="size-value" id="viewportSize">${info.viewW} × ${info.viewH}</span>
+            ${dprHTML}
+        `;
+
+            // Re-assign refs (since we rebuilt innerHTML)
+            this.screenSizeEl = document.getElementById('screenSize');
+            this.viewportSizeEl = document.getElementById('viewportSize');
+
+            // Log debug
+            this.logDebug(info, tv);
+        }
+
+        // === RESIZE HANDLER (debounced) ===
+        handleResize() {
+            clearTimeout(this.resizeTimer);
+            this.resizeTimer = setTimeout(this.update, 150);
+        }
+
+        // === LOG DEBUG ===
+        logDebug(info, tv) {
+            console.log('📺 Screen Size:', {
+                screen: `${info.screenW}×${info.screenH}`,
+                viewport: `${info.viewW}×${info.viewH}`,
+                dpr: info.dpr,
+                physical: `${info.physW}×${info.physH}`,
+                isTV: tv.isTV,
+                isTCL: tv.isTCL,
+                userAgent: navigator.userAgent
+            });
+        }
+
+        // === INIT ===
+        init() {
+            this.update();
+            window.addEventListener('resize', this.handleResize);
+            window.addEventListener('orientationchange', () => {
+                setTimeout(this.update, 300);
+            });
+            console.log('✅ ScreenSizeController ready');
+        }
+
+        // === CLEANUP ===
+        destroy() {
+            window.removeEventListener('resize', this.handleResize);
+            clearTimeout(this.resizeTimer);
+        }
+    }
+
+
+
     document.addEventListener('DOMContentLoaded', function () {
         const controller = new FinalDashboardController();
         controller.init();
+
+        // Initialize screen size controller
+        const screenController = new ScreenSizeController();
+        screenController.init();
+
+        // Store for cleanup if needed
+        window.screenController = screenController;
     });
 </script>

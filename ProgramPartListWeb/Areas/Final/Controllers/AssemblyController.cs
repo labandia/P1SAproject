@@ -237,6 +237,64 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             }
         }
 
+
+        [HttpGet]
+        public async Task<ActionResult> GetRegistrationList(string finalshopOrder)
+        {
+
+            Debug.WriteLine("ShopOrder " + finalshopOrder);
+            try
+            {
+                var res = await _manu.GetRegistrationMEIG(finalshopOrder);
+                if (res == null)
+                    return JsonNotFound("No Manpower data found");
+
+                return JsonSuccess(res);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
+
+
+        [HttpGet]
+        public async Task<ActionResult> GetCatergoryPartslist(int cat)
+        {
+            try
+            {
+                var res = await _manu.GetCategoryRegistration(cat);
+                if (res == null)
+                    return JsonNotFound("No Manpower data found");
+
+                return JsonSuccess(res);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AddRegistrationMEIG(MEIGpartsModel model)
+        {
+            try
+            {
+                var res = await _manu.AddRegistrationMEIG(model);
+                if (!res) return JsonError("Error Updated");
+                return JsonSuccess(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
+
+
+
         //=====================================================
         //============== UPLOAD DATA MANAGEMENT  ==============
         //=====================================================
@@ -756,44 +814,44 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             return sheet.Cells[row, col].Value?.ToString()?.Trim() ?? "";
         }
 
-        private static string GetCellAsDate(ExcelWorksheet sheet, int row, int col)
-        {
-            var val = sheet.Cells[row, col].Value;
-            if (val == null) return "";
-
-            double serial = Convert.ToDouble(val);          // <-- the trap
-            return DateTime.FromOADate(serial).ToString("MM/dd/yyyy");
-        }
-
-        //private string GetCellAsDate(ExcelWorksheet sheet, int row, int col)
+        //private static string GetCellAsDate(ExcelWorksheet sheet, int row, int col)
         //{
-        //    var value = sheet.Cells[row, col].Value;
+        //    var val = sheet.Cells[row, col].Value;
+        //    if (val == null) return "";
 
-        //    if (value == null)
-        //        return "";
-
-        //    if (value is DateTime dt)
-        //        return dt.ToString("yyyy-MM-dd");
-
-        //    if (value is double oa)
-        //    {
-        //        try
-        //        {
-        //            return DateTime.FromOADate(oa).ToString("yyyy-MM-dd");
-        //        }
-        //        catch
-        //        {
-        //            return "";
-        //        }
-        //    }
-
-        //    string text = sheet.Cells[row, col].Text.Trim();
-
-        //    if (DateTime.TryParse(text, out DateTime parsed))
-        //        return parsed.ToString("yyyy-MM-dd");
-
-        //    return "";
+        //    double serial = Convert.ToDouble(val);          // <-- the trap
+        //    return DateTime.FromOADate(serial).ToString("MM/dd/yyyy");
         //}
+
+        private string GetCellAsDate(ExcelWorksheet sheet, int row, int col)
+        {
+            var value = sheet.Cells[row, col].Value;
+
+            if (value == null)
+                return "";
+
+            if (value is DateTime dt)
+                return dt.ToString("yyyy-MM-dd");
+
+            if (value is double oa)
+            {
+                try
+                {
+                    return DateTime.FromOADate(oa).ToString("yyyy-MM-dd");
+                }
+                catch
+                {
+                    return "";
+                }
+            }
+
+            string text = sheet.Cells[row, col].Text.Trim();
+
+            if (DateTime.TryParse(text, out DateTime parsed))
+                return parsed.ToString("yyyy-MM-dd");
+
+            return "";
+        }
 
         //=====================================================
         //============== FINAL ASSEMBLY DATA  =================

@@ -52,5 +52,10 @@ namespace ProgramPartListWeb.Areas.Final
 
 
         // ============================================================
+
+        // ====== MEIG DATA ======================
+        Task<List<CatergoryPartsModel>> GetCategoryRegistration(int category);
+        Task<List<MEIGpartsModel>>  GetRegistrationMEIG(string finashopOrder);
+        Task<bool> AddRegistrationMEIG(MEIGpartsModel mdodel);
     }
 }

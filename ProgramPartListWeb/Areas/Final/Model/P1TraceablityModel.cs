@@ -29,4 +29,26 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public int DepartmentID { get; set; }
     }
 
+    public class CatergoryPartsModel
+    {
+        public int CartsPartID { get; set; }
+        public string PartsName { get; set; }
+    }
+
+    public class MEIGpartsModel
+    {
+        public string FinalShopOrder { get; set; }
+        public int CartsPartID { get; set; }
+        public string PartsName { get; set; }
+        public string CategoryName { get; set; }
+        public string Registration { get; set; }
+        public string PartNumber { get; set; }
+        public string PinList { get; set; }
+        public string TimeIn { get; set; }
+        public string TimeOut { get; set; }
+        public string Lines { get; set; }
+        public string Issuer { get; set; }
+        public string Preparation { get; set; }
+    }
+
 }

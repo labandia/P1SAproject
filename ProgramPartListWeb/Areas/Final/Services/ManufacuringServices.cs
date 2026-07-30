@@ -886,6 +886,63 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
 
 
+
         // ============================================================
+
+
+        public Task<List<CatergoryPartsModel>> GetCategoryRegistration(int cat)
+        {
+            return SqlDataAcess_Test.QueryAsync<CatergoryPartsModel>($@"SELECT CartsPartID
+                    ,PartsName
+                    ,Category
+                FROM FanTraceabilityCategoryParts WHERE Category = @Category
+            ", new
+            { Category = cat });
+        }
+
+        public async Task<bool> AddRegistrationMEIG(MEIGpartsModel model)
+        {
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO FanTraceabilityMEIG
+                (FinalShopOrder, CartsPartID, Registration,PartNumber, PinList, TimeIn, TimeOut, Lines, Issuer, Preparation) 
+                VALUES (@FinalShopOrder, @CartsPartID, @Registration, @PartNumber, 
+                @PinList, @TimeIn, @TimeOut, @Lines, @Issuer, @Preparation) ", model);
+
+            return rows > 0;
+        }
+
+        public Task<List<MEIGpartsModel>> GetRegistrationMEIG(string finashopOrder)
+        {
+            try
+            {
+                return SqlDataAcess_Test.QueryAsync<MEIGpartsModel>($@"SELECT 
+                    f.RegisterdID
+                    ,f.FinalShopOrder
+                    ,f.Registration
+	                ,c.PartsName
+                    ,f.PartNumber
+                    ,f.PinList
+                    ,f.TimeIn
+                    ,f.TimeOut
+                    ,f.Lines
+                    ,f.Issuer
+                    ,f.Preparation
+	                ,f.CartsPartID
+	                ,CASE
+                        WHEN c.Category = 1 THEN 'Jig'
+                        WHEN c.Category = 2 THEN 'Inspection Tools'
+                        WHEN c.Category = 3 THEN 'Soldering Tools'
+                        WHEN c.Category = 4 THEN 'Special Unit'
+                    END AS CategoryName
+                FROM FanTraceabilityMEIG f 
+                INNER JOIN FanTraceabilityCategoryParts c 
+                ON f.CartsPartID = c.CartsPartID WHERE f.FinalShopOrder = @FinalShopOrder
+            ", new
+                { FinalShopOrder = finashopOrder });
+            }catch(Exception ex)
+            {
+                Debug.WriteLine($@"Error : " + ex.Message);
+                throw;
+            }
+        }
     }
 }

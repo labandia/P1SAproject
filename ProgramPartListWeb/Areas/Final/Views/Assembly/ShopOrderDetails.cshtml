@@ -71,9 +71,11 @@
         <div>
             <div class="trace-header">
                 <span class="trace-title">Production 1 Traceability Auto Search Data</span>
+
+                <button id="OpenMEIG">Parts List Preparation</button>
             </div>
             <div class="devices-table-wrapper">
-                <div class="table-scroll">
+                <div class="table-scroll" id="showTraceabilityTable">
                     <table class="devices-table">
                         <thead>
                             <tr>
@@ -93,7 +95,29 @@
                         </tbody>
                     </table>
                 </div>
-               
+
+
+                <div class="table-scroll" id="showMEIGTable" style="display: none;">
+                    <table class="MEIG-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">Registration </th>
+                                <th style="text-align: center;">Category</th>
+                                <th style="text-align: center;">Name</th>
+                                <th style="text-align: center;">Part number </th>
+                                <th style="text-align: center;">Location Pins</th>
+                                <th style="text-align: center;">TIME</th>
+                                <th style="text-align: center;">OUT</th>
+                                <th style="text-align: center;">Line </th>
+                                <th style="text-align: center;">Issuer</th>
+                                <th style="text-align: center;">Preparation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </div>
     </div>
@@ -104,31 +128,103 @@
             <div class="panel-header-line"></div>
             <span class="panel-header-title">Assembly Status</span>
         </div>
-
+        <!-- ================================================================================ -->
+        <!-- ======================= FINAL ASSY ASSEMBLY STATUS ============================= -->
+        <!-- ================================================================================ -->
         <form method="post" id="EditFinalAsembly" class="panel-content">
             <div class="field-group">
                 <span class="field-label">Final Assembly Status</span>
-               <input  type="text" class="field-box" placeholder="Enter Final Assembly Status" id="FAStatus"/>
+                <input type="text" class="field-box" placeholder="Enter Final Assembly Status" id="FAStatus" />
             </div>
             <div class="field-group">
                 <span class="field-label">Shipment Date</span>
-                <input type="date" class="field-box"  id="ShipmentDate" />
+                <input type="date" class="field-box" id="ShipmentDate" />
             </div>
-           
-        <div class="check-group">
-            <span class="field-label">With SR : </span>
-            <input type="checkbox" id="WithSR" />
-        </div>
+
+            <div class="check-group">
+                <span class="field-label">With SR : </span>
+                <input type="checkbox" id="WithSR" />
+            </div>
             <div class="field-group">
                 <span class="field-label">Remarks</span>
-                <textarea class="textarea-box"  placeholder="Enter Remarks" id="Remarks" > </textarea>
+                <textarea class="textarea-box" placeholder="Enter Remarks" id="Remarks"> </textarea>
             </div>
             <button class="save-btn">
                 <span class="icon-inline" style="width:13px;height:13px;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" /><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7M7 3v4a1 1 0 0 0 1 1h7" /></svg>
-                    </span> Save Changes</button>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" /><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7M7 3v4a1 1 0 0 0 1 1h7" /></svg>
+                </span> Save Changes
+            </button>
         </form>
-  
+
+        <!-- ================================================================================ -->
+        <!-- ======================= PART LIST PREPARATION  ================================= -->
+        <!-- ================================================================================ -->
+
+        <form method="post" id="EditRegistrationParts" class="panel-content" style="display: none;">
+            <div class="field-group">
+                <span class="field-label">Registration</span>
+                <input type="text" class="field-box" placeholder="Enter Registration" id="Registration" name="Registration" />
+            </div>
+            <div class="field-group">
+                <span class="field-label">Category </span>
+                <select id="selectparts">
+                    <option value="1">jig</option>
+                    <option value="2">Inspection Tools</option>
+                    <option value="3">Soldering Tools</option>
+                    <option value="4">Special Unit</option>
+                </select>
+            </div>
+
+            <div class="field-group">
+                <span class="field-label">Select Names </span>
+                <select id="CartsPartID" name="CartsPartID">
+                </select>
+            </div>
+
+            <div class="field-group">
+                <span class="field-label">Partnumber : </span>
+                <input type="text" class="field-box" id="PartNumber" name="PartNumber" />
+            </div>
+
+            <div class="field-group">
+                <span class="field-label">Pin List : </span>
+                <input type="text" class="field-box" id="PinList" name="PinList" />
+            </div>
+
+            <div class="field-group">
+                <span class="field-label">TIME : </span>
+                <input type="text" class="field-box" id="TimeIn" name="TimeIn" />
+            </div>
+
+            <div class="field-group">
+                <span class="field-label">OUT : </span>
+                <input type="text" class="field-box" id="TimeOut" name="TimeOut" />
+            </div>
+
+            <div class="field-group">
+                <span class="field-label">Lines : </span>
+                <input type="text" class="field-box" id="Lines" name="Lines" />
+            </div>
+
+            <div class="field-group">
+                <span class="field-label">Issuer : </span>
+                <input type="text" class="field-box" id="Issuer" name="Issuer" />
+            </div>
+
+            <div class="field-group">
+                <span class="field-label">Preparation : </span>
+                <input type="text" class="field-box" id="Preparation" name="Preparation" />
+            </div>
+
+            <button type="submit" class="save-btn">
+                <span class="icon-inline" style="width:13px;height:13px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" /><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7M7 3v4a1 1 0 0 0 1 1h7" /></svg>
+                </span> Save Changes
+            </button>
+        </form>
+
+
+
     </div>
 </div>
 
@@ -144,19 +240,80 @@
     class ShopOrderDetailsController {
         constructor() {
             this.tbody = document.querySelector('.devices-table tbody');
+            this.MEIGbody = document.querySelector('.MEIG-table tbody');
             this.recordID = document.getElementById('intID').value;
+
+            this.changeForms = document.getElementById('OpenMEIG');
+            this.selectParts = document.getElementById('selectparts');
+            this.partsDropDown = document.getElementById('CartsPartID');
+
+            this.finalAssemblyPanel = document.getElementById('EditFinalAsembly');
+            this.partsListPanel = document.getElementById('EditRegistrationParts');
+
+            this.traceabilityTable = document.getElementById('showTraceabilityTable');
+            this.meigTable = document.getElementById('showMEIGTable');
+
+            this.formAssembly = document.getElementById('EditFinalAsembly');
+            this.formParts = document.getElementById('EditRegistrationParts');
+
             this.strLine = "";
+            this.finalShopOrder = "";
             this.intRecord = 0;
         }
 
         async init() {
             await this.LoadDetailsinfo();
+            
             this.bindEvents();
         }
 
-        bindEvents() {      
-            const form = document.getElementById('EditFinalAsembly');
-            form.addEventListener('submit', (e) => this.HandleSubmit(e));
+        bindEvents() {
+            this.formAssembly.addEventListener('submit', (e) => this.HandleSubmit(e));
+            this.formParts.addEventListener('submit', (e) => this.HandlePartSubmit(e));
+            this.changeForms.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                this.TogglePanels();
+            });
+
+
+            this.selectParts.addEventListener('change', async (e) => {
+                e.preventDefault();
+
+                const res = await getMethod('@Url.Action("GetCatergoryPartslist", "Assembly")', {
+                    cat: parseInt(e.target.value)
+                });
+
+                if (res?.Success) {
+                    const select = document.getElementById("CartsPartID");
+
+                    // Clear existing options
+                    select.innerHTML = '<option value="">-- Select Name --</option>';
+
+                    // Append new options
+                    res.data.forEach(item => {
+                        const option = document.createElement("option");
+                        option.value = parseInt(item.CartsPartID);
+                        option.textContent = item.PartsName; // Replace with your actual name field
+                        select.appendChild(option);
+                    });
+                }
+                console.log(res);
+            });
+        }
+
+        TogglePanels() {
+            const showingParts = this.partsListPanel.style.display !== 'none';
+
+            this.partsListPanel.style.display = showingParts ? 'none' : 'block';
+            this.finalAssemblyPanel.style.display = showingParts ? 'block' : 'none';
+
+            this.traceabilityTable.style.display = showingParts ? 'block' : 'none';
+            this.meigTable.style.display = showingParts ? 'none' : 'block';
+
+            this.changeForms.textContent = showingParts
+                ? 'Parts List Preparation'
+                : 'Final Assembly Status';
         }
 
         async LoadDetailsinfo() {
@@ -166,8 +323,9 @@
                 });
                 if (!res?.Success) return;
                 const data = res.data;
-                console.log(data);
+                //console.log(data);
                 this.strLine = data.Line;
+                this.finalShopOrder = data.FinalShopOrder;
                 document.getElementById("finalShopOrderText").textContent = data.FinalShopOrder;
                 document.getElementById("partnoText").textContent = data.ItemNo;
                 document.getElementById("ModelText").textContent = data.Model;
@@ -190,6 +348,7 @@
                 document.getElementById("Remarks").value = data.OrderRemarks;
 
                 this.LoadTraceAbility(data.FinalShopOrder);
+                this.LoadMEIGData(data.FinalShopOrder);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -203,6 +362,21 @@
               if (!res?.Success) return;
                 const data = res.data;
                 this.renderTable(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        async LoadMEIGData(shoporder) {
+            try {
+              const res = await getMethod('@Url.Action("GetRegistrationList", "Assembly")', {
+                  finalshopOrder: shoporder
+              });
+                console.log(res);
+              if (!res?.Success) return;
+                const data = res.data;
+              
+                this.renderMEIGTable(data);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -222,6 +396,17 @@
 
             await this.EditAssemblyStatus(formData);
         }
+
+        async HandlePartSubmit(e) {
+            e.preventDefault();
+            const formdata = new FormData(this.formParts);
+            formdata.append('FinalShopOrder', this.finalShopOrder);
+            const data = Object.fromEntries(formdata);
+            console.log(data);
+
+            await this.AddRegistrationData(formdata);
+        }
+
 
         async EditAssemblyStatus(formdata) {
             const savebtn = document.querySelector('#EditFinalAsembly .save-btn');
@@ -250,6 +435,37 @@
                 saveBtn.disabled = false;
             }
         }
+
+
+        async AddRegistrationData(formdata) {
+            const savebtn = document.querySelector('#EditRegistrationParts .save-btn');
+            savebtn.innerHTML = '<span>Saving...</span>';
+            savebtn.disabled = true;
+
+            const originalText = savebtn.innerHTML;
+
+            try {
+                const res = await postMethod('@Url.Action("AddRegistrationMEIG", "Assembly")', formdata);
+                console.log(res);
+                if (res?.Success) {
+                    alert('Assembly status updated successfully!');
+                    // Optionally reload data to reflect changes
+                    //await this.LoadDetailsinfo();
+                } else {
+                    alert('Error: ' + (res?.Message || 'Could not save data.'));
+                }
+            } catch (error) {
+                console.error('Save error:', error);
+                alert('An error occurred while saving.');
+            } finally {
+                // Restore button state
+                const saveBtn = document.querySelector('#EditFinalAsembly .save-btn');
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+            }
+        }
+
+
 
         formatDate(dateString) {
             if (!dateString) return '';
@@ -285,7 +501,7 @@
                 return;
             }
 
-          
+
             const sectionMap = {
                 1: "Molding",
                 2: "Press",
@@ -335,7 +551,7 @@
                         break;
                 }
 
-                
+
                 return `
                     <tr>
                         <td>
@@ -355,6 +571,38 @@
                     </tr>`;
                         }).join('');
         }
+
+
+        renderMEIGTable(data) {
+            if (!this.MEIGbody) return;
+
+            if (data.length === 0) {
+                this.MEIGbody.innerHTML = `
+                 <tr>
+                     <td colspan="10" style="text-align:center; padding:32px; color:#86868b;">
+                         No data available.
+                     </td>
+                 </tr>`;
+                return;
+            }
+
+            this.MEIGbody.innerHTML = data.map(row => {           
+                return `
+                    <tr>
+                        <td>${this.escape(row.Registration)}</td>
+                        <td>${this.escape(row.CategoryName)}</td>   
+                        <td>${this.escape(row.PartsName)}</td>
+                        <td>${this.escape(row.PartNumber)}</td>        
+                        <td>${this.escape(row.PinList)}</td>
+                        <td>${this.escape(row.TimeIn)}</td>        
+                        <td>${this.escape(row.TimeOut)}</td>      
+                          <td>${this.escape(row.Lines)}</td>
+                          <td>${this.escape(row.Issuer)}</td>        
+                          <td>${this.escape(row.Preparation)}</td> 
+                    </tr>`;
+                    }).join('');
+        }
+
 
         escape(str) {
             const d = document.createElement('div');

@@ -57,5 +57,12 @@ namespace ProgramPartListWeb.Areas.Final
         Task<List<CatergoryPartsModel>> GetCategoryRegistration(int category);
         Task<List<MEIGpartsModel>>  GetRegistrationMEIG(string finashopOrder);
         Task<bool> AddRegistrationMEIG(MEIGpartsModel mdodel);
+
+
+
+
+
+        // ====== SEPARATE FOR THE TRACEABILITY =====================
+        Task<List<DailyPlanChartModel>> GetDailyPlanChart();
     }
 }

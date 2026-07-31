@@ -116,15 +116,22 @@ namespace PMACS_V2.Helper
             bool? isStoredProcedure = null,
             CancellationToken ct = default(CancellationToken))
         {
-            using (var connection = GetConnection())
+            try
             {
-                var command = new CommandDefinition(
-                    sql,
-                    parameters,
-                    commandType: GetCommandType(sql, isStoredProcedure),
-                    cancellationToken: ct);
-
-                return (await connection.QueryAsync<T>(command)).AsList();
+                using (var connection = GetConnection())
+                {
+                    var command = new CommandDefinition(
+                        sql,
+                        parameters,
+                        commandType: GetCommandType(sql, isStoredProcedure),
+                        cancellationToken: ct);
+                    return (await connection.QueryAsync<T>(command)).AsList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("QueryAsync error: " + ex.Message);
+                throw;
             }
         }
 

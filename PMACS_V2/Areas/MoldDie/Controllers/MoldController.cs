@@ -44,12 +44,21 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddMoldDieMasterlist(MoldieMasterModel add)
+        public async Task<ActionResult> SaveMoldieMasterlist(MoldieMasterModel model)
         {
-            bool update = await _master.AddMoldieMasterList(add);
-            if (!update) return JsonValidationError();
+            try
+            {
 
-            return JsonCreated(add, "Update Data Successfully");
+                bool result = (model.MoldID == 0) ? await _master.AddMoldieMasterList(model) : await _master.EditMoldieMasterList(model);
+                if (!result) return JsonPostError("Insert failed.", 500);
+
+
+                return JsonCreated(result, "Update Stocks Successfully");
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message, 500);
+            }
         }
 
         [HttpPost]

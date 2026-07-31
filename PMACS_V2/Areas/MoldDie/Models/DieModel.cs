@@ -10,12 +10,14 @@ namespace PMACS_V2.Areas.P1SA.Models
     ///<summary>
     public class MoldieMasterModel
     {
+        public int MoldID { get; set; }
         public string PartNo { get; set; }
-        public string DimensionQuality { get; set; }
+        public string PartDescription { get; set; }
+        public string Dimension_Quality { get; set; }
         public string DieSerial { get; set; }
         public string DieNumber { get; set; }
         public int Cavity { get; set; }
-        public int ProcessID { get; set; }
+        public string ProcessID { get; set; }
     }
 
 

@@ -27,7 +27,7 @@
             </div>
 
         </div>
-        <button class="btn-primary-custom" data-bs-toggle="modal" data-bs-target="#AddTooling"><i class="fa-solid fa-plus"></i> Add Data</button>
+        <button class="btn-primary-custom" id="addbtn"><i class="fa-solid fa-plus"></i> Add Data</button>
     </div>
 
 
@@ -72,17 +72,37 @@
 
             this.SearchInput = document.getElementById("RegisterSearch");
 
+            this.moldform = document.getElementById("addnewform");
+
+            // Modal
+            this.addToolingModal = new bootstrap.Modal(document.getElementById('AddTooling'));
+
+
+            this.moldIDText = document.getElementById("MoldID");
+            this.partNoText = document.getElementById("PartNo");
+            this.partDescript = document.getElementById("PartDescription");
+            this.dimension = document.getElementById("Dimension_Quality");
+            this.DieSerialText = document.getElementById("DieSerial");
+            this.dieNumber = document.getElementById("DieNumber");
+            this.processID = document.getElementById("ProcessID");
+            this.Cavity = document.getElementById("Cavity");
+
+            this.formTitle = document.getElementById("formtitle");
+            this.submitBtn = document.getElementById("btnSave");
+            this.openAddmodal = document.getElementById("addbtn");
         }
 
         async init() {
             await this.GetMoldDieMasterlist();
 
             this.bindTableEvents();
+            this.bindOpenDialog();
+            this.bindFormEvents()
         }
 
 
         /* =========================================================
-             GET MASTERLIST 
+             GET MASTERLIST
         ========================================================= */
         async GetMoldDieMasterlist() {
             try {
@@ -94,11 +114,11 @@
                     });
 
                 console.log(res);
-                //if (!res?.Success) {
-                //    console.log('No data Masterlist Found ');
-                //    return;
-                //}
-                //this.renderTable(res.data);
+                if (!res?.Success) {
+                    console.log('No data Masterlist Found ');
+                    return;
+                }
+                this.renderTable(res.Data);
             } catch (error) {
                 console.error('Error fetching 4M data:', error);
             }
@@ -123,11 +143,14 @@
 
                 return `
                    <tr class='fade-in'
+                        data-MoldID="${row.MoldID}"
                         data-partno="${row.PartNo}"
                         data-descript="${row.PartDescription ?? ''}"
                         data-dimension="${row.Dimension_Quality ?? ''}"
                         data-dieSerial="${row.DieSerial ?? ''}"
                         data-dienum="${row.DieNumber ?? ''}"
+                        data-process="${row.ProcessID ?? ''}"
+                        data-cavity="${row.Cavity ?? ''}"
                    >
                             <td style='font-weight: 600;'>${row.PartNo}</td>
                               <td>${row.PartDescription}</td>
@@ -149,6 +172,61 @@
 
         }
 
+        bindOpenDialog() {
+
+
+            this.openAddmodal.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                this.ResetForms();
+                this.formTitle.textContent = 'Add Record';
+                this.submitBtn.innerHTML = '<i class="fas fa-check"></i> Save Record';
+                this.addToolingModal.show();
+            });
+        }
+
+        bindFormEvents() {
+            this.moldform.addEventListener('submit', (e) => this.handleSubmit(e));
+        }
+
+        async handleSubmit(e) {
+            e.preventDefault();
+
+             const moldid = parseInt(this.moldIDText.value, 10);
+             const payload = {
+                 MoldID: moldid > 0 ? moldid : 0,
+                 PartNo: this.partNoText.value.trim(),
+                 PartDescription: this.partDescript.value.trim(),
+                 Dimension_Quality: this.dimension.value,
+                 DieSerial: this.DieSerialText.value,
+                 DieNumber: parseInt(this.dieNumber.value, 10),
+                 ProcessID: this.processID.value
+            };
+
+            console.log(payload);
+
+            //this.submitBtn.disabled = true;
+             try {
+                 const res = await postMethod('@Url.Action("SaveMoldieMasterlist", "Mold")', payload);
+
+                 console.log(res);
+                 if (!res?.Success) {
+                     //this.showToast(res?.Message || 'Save failed.', true);
+                     return;
+                 }
+
+                 //this.showToast(payload.NCRID > 0 ? 'Record updated.' : 'Record added.');
+                 this.ResetForms();
+                 await this.GetMoldDieMasterlist();
+                 this.addToolingModal.hide();
+             } catch (error) {
+                 console.log('Error saving record:', error);
+                 //this.showToast('Save failed.', true);
+             } finally {
+                 //this.submitBtn.disabled = false;
+             }
+        }
+
         bindTableEvents() {
             this.tbody.addEventListener('click', (e) => {
                 const editBtn = e.target.closest('.btn-edit');
@@ -165,21 +243,32 @@
         }
 
         populateFormForEdit(row) {
+            console.log(row.dataset.moldid);
+            this.moldIDText.value = parseInt(row.dataset.moldid);
+            this.partNoText.value = row.dataset.partno;
+            this.partDescript.value = row.dataset.descript;
+            this.dimension.value = row.dataset.dimension;
+            this.DieSerialText.value = row.dataset.dieserial;
+            this.dieNumber.value = parseInt(row.dataset.dienum);
+            this.processID.value = row.dataset.process;
+            this.Cavity.value = row.dataset.cavity;
 
-            //this.editIndexInput.value = row.dataset.ncrId;
-            //this.regNoInput.value = row.dataset.regNo;
-            //this.modelInput.value = row.dataset.model;
-            //this.processSelect.value = row.dataset.processId;
-            //this.fourMSelect.value = row.dataset.fourmId;
-            //this.ncrTypeSelect.value = row.dataset.ncrType;
-            //this.lineSelect.value = row.dataset.line;
-            //this.GroupID.value = row.dataset.group;
-
-            //this.formTitle.textContent = 'Edit Record';
-            //this.submitBtn.innerHTML = '<i class="fas fa-check"></i> Update Record';
+            this.addToolingModal.show();
+            this.formTitle.textContent = 'Edit Record';
+            this.submitBtn.innerHTML = '<i class="fas fa-check"></i> Update Record';
             //this.cancelBtn.style.display = '';
 
             //document.getElementById('formCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        ResetForms() {
+            this.moldIDText.value = "";
+            this.partNoText.value ="";
+            this.partDescript.value = "";
+            this.dimension.value = "";
+            this.DieSerialText.value = "";
+            this.dieNumber.value = "";
+            this.processID.value = "";
         }
 
     }

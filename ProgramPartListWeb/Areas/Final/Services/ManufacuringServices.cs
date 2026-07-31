@@ -944,5 +944,34 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 throw;
             }
         }
+
+        public Task<List<DailyPlanChartModel>> GetDailyPlanChart()
+        {
+            try
+            {
+                return SqlDataAcess_Test.QueryAsync<DailyPlanChartModel>($@"SELECT
+                        DAY(DatePrepared) AS PlanDay,
+                        SUM(CASE WHEN DepartmentID = 1 THEN PlanQuan ELSE 0 END) AS Molding,
+                        SUM(CASE WHEN DepartmentID = 2 THEN PlanQuan ELSE 0 END) AS Press,
+                        SUM(CASE WHEN DepartmentID = 3 THEN PlanQuan ELSE 0 END) AS Rotor,
+                        SUM(CASE WHEN DepartmentID = 4 THEN PlanQuan ELSE 0 END) AS Winding,
+                        SUM(CASE WHEN DepartmentID = 5 THEN PlanQuan ELSE 0 END) AS Circuit,
+                        SUM(CASE WHEN DepartmentID = 6 THEN PlanQuan ELSE 0 END) AS Oilproof,
+                        SUM(CASE WHEN DepartmentID = 7 THEN PlanQuan ELSE 0 END) AS Harness,
+                        SUM(CASE WHEN DepartmentID = 8 THEN PlanQuan ELSE 0 END) AS FinalAssembly,
+                        SUM(CASE WHEN DepartmentID = 9 THEN PlanQuan ELSE 0 END) AS MaterialPrep
+                    FROM FanTraceabilityFinal
+                    WHERE YEAR(DatePrepared) = YEAR(GETDATE())
+                      AND MONTH(DatePrepared) = MONTH(GETDATE())
+                      AND ISNULL(IsDeletedFinal, 0) = 0
+                    GROUP BY DAY(DatePrepared)
+                    ORDER BY PlanDay;");
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine($@"Error : " + ex.Message);
+                throw;
+            }
+        }
     }
 }

@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-body modalwrap">
                 <div class="custom_modal_header">
-                    <h5>Add Masterlist Data</h5>
+                    <h5 id="formtitle">Add Masterlist Data</h5>
 
                     <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
                         <span>&times;</span>
@@ -12,7 +12,7 @@
                 </div>
 
                 <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
-
+                    <input type="hidden" id="MoldID" name="MoldID" value="-1" />
 
                     <div class="form_group col-12 col-sm-12">
                         <label>Part Number <small style="color: #a81818; font-weight: 600;">*</small></label>
@@ -21,10 +21,11 @@
 
                     <div class="form_group col-12 col-sm-12 mb-3">
                         <label class="mb-2">Part No. Description<small style="color: #a81818; font-weight: 600;">*</small></label> <br />
-                        <div class="select-container" style="width: 100%;">
-                            <select id="PartDescription" name="PartDescription">
-                            </select>
-                        </div>
+                        @*<div class="select-container" style="width: 100%;">
+                <select id="PartDescription" name="PartDescription">
+                </select>
+            </div>*@
+                        <input type="text" placeholder="Enter the Part No" name="PartDescription" id="PartDescription" required />
                     </div>
                     <div class="form_group col-12 col-sm-12 ">
                         <label>Dimension Quality <small style="color: #a81818; font-weight: 600;"> *</small></label>
@@ -38,6 +39,11 @@
                     <div class="form_group col-12 col-sm-12">
                         <label>Die Number <small style="color: #a81818; font-weight: 600;"> *</small></label>
                         <input type="number" placeholder="Enter the Die Number" name="DieNumber" id="DieNumber" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Cavity <small style="color: #a81818; font-weight: 600;"> *</small></label>
+                        <input type="number" placeholder="Enter the Cavity" name="Cavity" id="Cavity" required />
                     </div>
 
                     <div class="form_group col-12 col-sm-12">
@@ -59,7 +65,7 @@
                         <div>
                             <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
                         </div>
-                        <button id="btnSave" class="btn-primary-custom"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                        <button type="submit" id="btnSave" class="btn-primary-custom"><i class="fa-regular fa-floppy-disk"></i> Save</button>
                     </div>
                 </form>
 

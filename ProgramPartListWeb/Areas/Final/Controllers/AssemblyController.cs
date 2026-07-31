@@ -13,6 +13,7 @@ using System.Formats.Asn1;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
@@ -925,6 +926,20 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             return File(fileBytes, "application/octet-stream", fileDownloadName);
         }
 
+
+
+        [HttpGet]
+        public async Task<ActionResult> GetDailyPlanChart()
+        {
+            var data = await _manu.GetDailyPlanChart();
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+
+
         // GET: Final/Assembly
         public ActionResult Dashboard() => View();
         public ActionResult DelaySummary() => View();
@@ -937,5 +952,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         public ActionResult ShopOrderLine(string line) => View();
         // GET: Final/ShopOrderDetails/{id}
         public ActionResult ShopOrderDetails(int id) => View();
+
+        public ActionResult DailyPlanChart() => View();
     }
 }

@@ -51,4 +51,29 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public string Preparation { get; set; }
     }
 
+
+    public class DailyPlanChartModel
+    {
+        public int PlanDay { get; set; }
+
+        public int Molding { get; set; }
+
+        public int Press { get; set; }
+
+        public int Rotor { get; set; }
+
+        public int Winding { get; set; }
+
+        public int Circuit { get; set; }
+
+        public int Oilproof { get; set; }
+
+        public int Harness { get; set; }
+
+        public int FinalAssembly { get; set; }
+
+        public int MaterialPrep { get; set; }
+    }
+
+
 }

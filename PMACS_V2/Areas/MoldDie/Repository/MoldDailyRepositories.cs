@@ -15,6 +15,77 @@ namespace PMACS_V2.Areas.MoldDie.Repository
     public class MoldDailyRepositories : IMoldDaily
     {
         // ===========================================================
+        // MOLD DIE OVER ALL SUMMARY AND MONTHLY
+        // ===========================================================
+        public Task<List<DieMoldMonitoringModel>> GetMoldDieSummary(int Month, int year, string process = "")
+        {
+            string filter = process != "" ? $@" WHERE p.ProcessID = '{process}' AND p.DieSerial != '' " : "";
+
+            string sqlquery = $@"WITH TotalDiePerPart AS (
+                        SELECT DieSerial, SUM(CycleShot) AS TotalQty
+                        FROM DieMold_Daily
+                        GROUP BY DieSerial
+                    ),
+                    SingleDS AS
+                    (
+                        SELECT *
+                        FROM
+                        (
+                            SELECT
+                                DieSerial,
+                                CycleShot AS TotalDie,
+                                DateInput AS DateAction,
+                                ROW_NUMBER() OVER
+                                (
+                                    PARTITION BY DieSerial
+                                    ORDER BY DateInput DESC
+                                ) AS rn
+                            FROM DieMold_Daily
+		                    WHERE MONTH(DateInput) = @Month
+		                    AND YEAR(DateInput) = @Year
+                        ) RankedDS
+                        WHERE rn = 1
+                    ),
+                    TotalByNo AS (
+                        SELECT p.DieSerial, SUM(ISNULL(td.TotalQty, 0)) AS ShotOnwards
+                        FROM DieMold_MoldingMainParts p
+                        LEFT JOIN TotalDiePerPart td ON td.DieSerial = p.DieSerial
+                        GROUP BY p.DieSerial
+                    )
+                    SELECT 
+                        p.ProcessID,
+                        p.PartNo,
+                        p.DieNumber,
+                        p.DieSerial,
+                        p.PreviousCount,
+                        ISNULL(p.Dimension_Quality, '') AS Dimension_Quality,
+                        p.PartDescription,
+                        td.TotalQty,
+                        ISNULL(ds.DateAction, NULL) AS DateAction,
+                        ISNULL(ds.TotalDie, 0) AS LatestTotalDie,
+                        ISNULL(tb.ShotOnwards, 0) AS ShotOnwards,
+                        ISNULL(p.PreviousCount, 0) + ISNULL(p.ShotCountprevious, 0) + ISNULL(tb.ShotOnwards, 0) AS TotalShotCount,
+                        CASE 
+		                    WHEN ISNULL(1000000, 0) = 0 THEN 0
+		                    ELSE CAST((ISNULL(p.PreviousCount, 0) + ISNULL(p.ShotCountprevious, 0) +  ISNULL(tb.ShotOnwards, 0)) AS BIGINT) * 100 / 1000000
+	                    END AS Status,
+	                    CASE 
+		                    WHEN CAST((ISNULL(p.PreviousCount, 0) + ISNULL(p.ShotCountprevious, 0) +  ISNULL(tb.ShotOnwards, 0)) AS BIGINT) * 100 / 1000000 >= 100 THEN 'End of Life'
+		                    ELSE 'For Monitoring'
+	                    END AS Remarks
+                    FROM DieMold_MoldingMainParts p
+                    LEFT JOIN SingleDS ds ON ds.DieSerial = p.DieSerial
+                    LEFT JOIN TotalDiePerPart td ON td.DieSerial = p.DieSerial
+                    LEFT JOIN TotalByNo tb ON tb.DieSerial = p.DieSerial 
+                    {filter}
+                    ORDER BY p.DieSerial ASC";
+
+
+            return SqlDataAccess.QueryAsync<DieMoldMonitoringModel>(sqlquery, new { month = Month, year = year });
+        }
+
+
+        // ===========================================================
         // ==================== MOLDING DIE MOLD  ====================
         // ===========================================================
 
@@ -268,5 +339,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
             return result > 0;
         }
+
+      
     }
 }

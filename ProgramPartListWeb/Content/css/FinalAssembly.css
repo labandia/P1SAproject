@@ -449,6 +449,10 @@ menu, ol, ul {
     border-radius: var(--radius-xl)
 }
 
+.status-badge .ok{
+    background: red !important;
+}
+
 .card-row-value, .status-tag {
     font-weight: 600
 }
@@ -500,8 +504,8 @@ menu, ol, ul {
 }
 
     .status-badge.done {
-        background: #dcfce7 !important;
-        color: #16a34a
+        background: #16a34a !important;
+        color: #dcfce7
     }
 
 .badge-molding {
@@ -962,8 +966,8 @@ text- [13px] text-[#86868b] .upload-text-action {
 }
 
 .logo-text {
-    font-weight: 700;
-    font-size: 15px;
+    font-weight: 500;
+    font-size: 16px;
     letter-spacing: -.025em;
     color: #fff
 }
@@ -1689,8 +1693,8 @@ iconify-icon {
     }
 
     .status-badge.failed {
-        background-color: var(--red-50);
-        color: var(--red-600)
+        background-color: #ee4141;
+        color: #fff;
     }
 
 .status-dot {

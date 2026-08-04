@@ -7,6 +7,10 @@ namespace PMACS_V2.Areas.MoldDie.Interface
 {
     public interface IMoldDaily
     {
+        Task<List<DieMoldMonitoringModel>> GetMoldDieSummary(int Month, int year, string process = "");
+
+
+
         Task<List<DieMoldDaily>> GetDailyMoldData(DateTime selectedDate, int? month, string process);
         Task<DieMoldDaily> GetDailyMoldDetails(int recordID);
         Task<bool> CheckMoldDateInputExist(string DieSerial, DateTime dateInput);

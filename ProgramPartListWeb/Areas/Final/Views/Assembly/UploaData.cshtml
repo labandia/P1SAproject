@@ -418,32 +418,32 @@
           }
 
           this.uploadbody.innerHTML = data.map(row => `
-        <tr class="fade-in">
-            <td>${row.Line}</td>
-            <td style='text-align: left;'>
-                <span class="text-primary font-medium">${row.FinalShopOrder}</span>
-                <p style="margin:.2em 0;color:#8a8f9e;">${row.ItemNo}</p>
-                 <span
-                    class="model-text"
-                    title="${row.Model}">
-                    ${row.Model}
-                </span>
-            </td>
-            <td>${row.PlanQty}</td>
-            <td>${this.formatDate(row.PlanStartDate)}</td>
-            <td>${row.DispatchDate}</td>
-            <td>${row.Note || ''}</td>
-            <td>${this.formatDate(row.FinalFinishedDate)}</td>
-            <td>${row.FAStatus || ''}</td>
-            <td>${this.formatDate(row.ShipmentDate)}</td>
-            <td>${row.ShipmentMode || ''}</td>
-            <td>${row.WithSR || ''}</td>
-        </tr>
-    `).join('');
+            <tr class="fade-in">
+                <td>${row.Line}</td>
+                <td style='text-align: left;'>
+                    <span class="text-primary font-medium">${row.FinalShopOrder}</span>
+                    <p style="margin:.2em 0;color:#8a8f9e;">${row.ItemNo}</p>
+                     <span
+                        class="model-text"
+                        title="${row.Model}">
+                        ${row.Model}
+                    </span>
+                </td>
+                <td>${row.PlanQty}</td>
+                <td>${this.formatDate(row.PlanStartDate)}</td>
+                <td>${row.DispatchDate}</td>
+                <td>${row.Note || ''}</td>
+                <td>${this.formatDate(row.FinalFinishedDate)}</td>
+                <td>${row.FAStatus || ''}</td>
+                <td>${this.formatDate(row.ShipmentDate)}</td>
+                <td>${row.ShipmentMode || ''}</td>
+                <td>${row.WithSR || ''}</td>
+            </tr>
+        `).join('');
       }
 
       // ── Render: success table ─────────────────────────────────────────────────
-      renderTable(data) {
+        renderTable(data) {
           console.log(data);
             if (!this.tbody) return;
             if (!data.length) { this.NoTableRowData(); return; }
@@ -531,7 +531,7 @@
             </tr>`;
         }
 
-      showTableSkeleton() {
+        showTableSkeleton() {
           this.tbody.innerHTML = Array(10).fill(`
             <tr>
                 ${Array(18).fill(`
@@ -541,13 +541,13 @@
                 `).join('')}
             </tr>
             `).join('');
-      }
+        }
 
 
-      updateSelectedCount() {
+        updateSelectedCount() {
           const count = document.querySelectorAll('.row-checkbox:checked').length;
           document.getElementById('btn-proceed').disabled = count === 0;
-      }
+        }
 
         statusUploadClass(stats) {
             const map = { 'SAME': 'badge-update-ready', 'UPDATED': 'badge-uptodate', 'NEW DATA': 'badge-newdata' };
@@ -777,7 +777,7 @@
 
 
     /* ================= PROGRESS BAR ================= */
-    _setProgress(pct) {
+      _setProgress(pct) {
         const fill  = document.querySelector('#uploadStatusModal .progress-card .progress-fill');
         const label = document.querySelector('#uploadStatusModal .progress-card .progress-label');
 
@@ -797,20 +797,20 @@
           rows.forEach((row, i) => {
               const ok = row.result?.success ?? true;
               if (ok) success++; else failed++;
-              console.log(row);
+
               const tr = document.createElement('tr');
               tr.innerHTML = `
-            <td>${this.escape(row.ShopOrder)}</td>
-            <td>${this.escape(row.PartNo)}</td>
-            <td>${this.escape(row.Model)}</td>
-            <td>${this.escape(row.Wc)}</td>
-            <td>${this.escape(row.Qty)}</td>
-            <td>
-                <span class="status-badge ${ok ? 'done' : 'failed'}">
-                    <span class="status-dot"></span>
-                    ${ok ? 'Imported' : (row.result?.message ?? 'Failed')}
-                </span>
-            </td>`;
+                <td>${this.escape(row.ShopOrder)}</td>
+                <td>${this.escape(row.PartNo)}</td>
+                <td>${this.escape(row.Model)}</td>
+                <td>${this.escape(row.Wc)}</td>
+                <td>${this.escape(row.Qty)}</td>
+                <td>
+                    <span class="status-badge ${ok ? 'done' : 'failed'}">
+                        <span class="status-dot"></span>
+                        ${ok ? 'Imported' : (row.result?.message ?? 'Failed')}
+                    </span>
+                </td>`;
               tbody.appendChild(tr);
 
               this._updateFooter(rows.length, i + 1, success, failed);

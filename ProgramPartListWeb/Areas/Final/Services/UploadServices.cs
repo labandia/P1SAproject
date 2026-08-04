@@ -127,7 +127,14 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 ShipmentMode = model.Mode,
                 WithSR = model.WithSr,
                 OrderStatus = 0,
-                model.Operational
+                model.Operational,
+                model.P1SA_C,
+                model.P1SA_M,
+                model.P1SA_R,
+                model.P1SA_W,
+                model.P1FA_FA,
+                model.P1FA_H,
+                model.M1
             };
 
             if (tb == "FanTraceabilityManufacturingUploadFailed")
@@ -137,14 +144,16 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         Line, FinalShopOrder, ItemNo, Model, WC,
                         PlanQty, PlanStartDate, DispatchDate, Note,
                         FinalFinishedDate, FAStatus, ShipmentDate,
-                        ShipmentMode, WithSR, OrderStatus, Operational
+                        ShipmentMode, WithSR, OrderStatus, Operational, 
+                        P1SA_C, P1SA_M, P1SA_R, P1SA_W, P1FA_FA, P1FA_H, M1
                     )
                     VALUES
                     (
                         @Line, @FinalShopOrder, @ItemNo, @Model, @WC,
                         @PlanQty, @PlanStartDate, @DispatchDate, @Note,
                         @FinalFinishedDate, @FAStatus, @ShipmentDate,
-                        @ShipmentMode, @WithSR, @OrderStatus, @Operational
+                        @ShipmentMode, @WithSR, @OrderStatus, @Operational, 
+                        @P1SA_C, @P1SA_M, @P1SA_R, @P1SA_W, @P1FA_FA, @P1FA_H, @M1
                     );", parameters);
             }
             else
@@ -163,14 +172,16 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         Line, FinalShopOrder, ItemNo, Model, WC,
                         PlanQty, PlanStartDate, DispatchDate, Note,
                         FinalFinishedDate, FAStatus, ShipmentDate,
-                        ShipmentMode, WithSR, OrderStatus, Operational
+                        ShipmentMode, WithSR, OrderStatus, Operational,
+                        P1SA_C, P1SA_M, P1SA_R, P1SA_W, P1FA_FA, P1FA_H, M1
                     )
                     VALUES
                     (
                         @Line, @FinalShopOrder, @ItemNo, @Model, @WC,
                         @PlanQty, @PlanStartDate, @DispatchDate, @Note,
                         @FinalFinishedDate, @FAStatus, @ShipmentDate,
-                        @ShipmentMode, @WithSR, @OrderStatus, @Operational
+                        @ShipmentMode, @WithSR, @OrderStatus, @Operational,
+                        @P1SA_C, @P1SA_M, @P1SA_R, @P1SA_W, @P1FA_FA, @P1FA_H, @M1
                     );
                 END", parameters);
             }

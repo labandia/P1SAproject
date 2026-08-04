@@ -750,7 +750,7 @@
             await this.GetMoldDieDailyData();
         }
         // ======== CHANGE THE MONTH AND DATE ===========
-        HandlefilterMonths() {
+        async HandlefilterMonths() {
             const month = parseInt(this.filterProcess.value);
 
             if (month === 0) {
@@ -789,6 +789,8 @@
             } else {
                 dateInput.value = minDate;
             }
+
+            await this.GetMoldDieDailyData();
         }
 
 

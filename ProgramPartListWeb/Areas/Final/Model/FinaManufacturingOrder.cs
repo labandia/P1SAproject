@@ -121,6 +121,15 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public string Remarks { get; set; } = string.Empty;
         public int Operational { get; set; } = 0;   
 
+        // Section Delays 
+        public int P1SA_C { get; set; } = 0;
+        public int P1SA_M { get; set; } = 0;
+        public int P1SA_R { get; set; } = 0;
+        public int P1SA_W { get; set; } = 0;
+        public int P1FA_FA { get; set; } = 0;
+        public int P1FA_H { get; set; } = 0;
+        public int M1 { get; set; } = 0;
+
         // ── Upload tracking (not persisted) ───────────────────────────────────
         public int RowNumber { get; set; }
         public string Status { get; set; } = "Pending";

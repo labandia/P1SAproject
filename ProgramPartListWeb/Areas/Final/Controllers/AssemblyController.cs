@@ -517,9 +517,40 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                                 Shipment = GetCellAsDate(sheet, r, 12),
                                 Mode = GetCell(sheet, r, 13),
                                 WithSr = GetCell(sheet, r, 14) != "",
-                                Operational = int.TryParse(GetCell(sheet, r, 15), out var op) ? op : 0
+                                P1SA_C = int.TryParse(GetCell(sheet, r, 15), out var p1sac) ? p1sac : 0,
+                                P1SA_W = int.TryParse(GetCell(sheet, r, 16), out var p1saw) ? p1saw : 0,
+                                P1SA_M = int.TryParse(GetCell(sheet, r, 17), out var p1sam) ? p1sam : 0,
+                                P1SA_R = int.TryParse(GetCell(sheet, r, 18), out var p1sar) ? p1sar : 0,
+                                P1FA_FA = int.TryParse(GetCell(sheet, r, 19), out var pifafa) ? pifafa : 0,
+                                P1FA_H = int.TryParse(GetCell(sheet, r, 20), out var pifaH) ? pifaH : 0,
+                                M1 = int.TryParse(GetCell(sheet, r, 21), out var M1) ? M1 : 0,
+                                Operational = int.TryParse(GetCell(sheet, r, 22), out var op) ? op : 0
                             };
-
+                            Debug.WriteLine($@"
+                                ========== ProductionRecord (Row {r}) ==========
+                                Line          : {obj.Line}
+                                ShopOrder     : {obj.ShopOrder}
+                                PartNo        : {obj.PartNo}
+                                Model         : {obj.Model}
+                                WC            : {obj.WC}
+                                Qty           : {obj.Qty}
+                                PlanStart     : {obj.PlanStart:yyyy-MM-dd}
+                                DispatchDate  : {obj.DispatchDate}
+                                Note          : {obj.Note}
+                                IfsFinish     : {obj.IfsFinish:yyyy-MM-dd}
+                                FaStatus      : {obj.FaStatus}
+                                Shipment      : {obj.Shipment:yyyy-MM-dd}
+                                Mode          : {obj.Mode}
+                                WithSr        : {obj.WithSr}
+                                P1SA_C        : {obj.P1SA_C}
+                                P1SA_W        : {obj.P1SA_W}
+                                P1SA_M        : {obj.P1SA_M}
+                                P1SA_R        : {obj.P1SA_R}
+                                P1FA_FA       : {obj.P1FA_FA}
+                                P1FA_H        : {obj.P1FA_H}
+                                M1            : {obj.M1}
+                                Operational   : {obj.Operational}
+                                ===============================================");
                             // save to DB here if needed
                             bool inserted = await _upload.UploadDataToDatabase(obj, "FanTraceabilityManufacturingUploadData");
 

@@ -6,10 +6,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using PMACS_V2.Areas.MoldDie.Interface;
-using PMACS_V2.Areas.P1SA.Interface;
 using PMACS_V2.Areas.P1SA.Models;
 using PMACS_V2.Controllers;
-using PMACS_V2.Helper;
+using static PMACS_V2.Areas.P1SA.Models.DieMoldMonitoringModel;
 
 namespace PMACS_V2.Areas.MoldDie.Controllers
 {
@@ -23,6 +22,56 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
             _mold = mold;
             _master = master;
         }
+        // ===========================================================
+        // MOLD DIE SUMMARY LIST
+        // ============================================================
+        public async Task<ActionResult> GetMoldDieSummaryList(int Months, int Year, string ProcessID)
+        {
+
+            var data = await _mold.GetMoldDieSummary(Months, Year, ProcessID) ?? new List<DieMoldMonitoringModel>();
+            if (data == null || !data.Any())
+                return JsonNotFound("No DieSummary  data not found");
+
+            // Get the Max no of the data
+            int maxNo = data.Count;
+            int monitorCount = 0;
+            int endLifeCount = 0;
+
+            var groupNo = data.GroupBy(x => x.DieSerial)
+                .Select(x => new {
+                    Remarks = x.First().Remarks
+                });
+
+
+
+            foreach (var list in groupNo)
+            {
+                if (list.Remarks == "For Monitoring")
+                    monitorCount++;
+                else if (list.Remarks == "End of Life")
+                    endLifeCount++;
+            }
+
+            int maxDieLife = Math.Abs(maxNo - (monitorCount + endLifeCount));
+
+            var summaryList = new List<FinalMoldDieSummary>
+            {
+                new FinalMoldDieSummary { Category = "Max Die life", MoldDie = maxDieLife },
+                new FinalMoldDieSummary { Category = "For Monitoring", MoldDie = monitorCount },
+                new FinalMoldDieSummary { Category = "End of life", MoldDie = endLifeCount }
+            };
+
+
+            var dataSets = new Dictionary<string, IEnumerable<object>>
+            {
+                    { "FinalSummary", data },
+                    { "MoldDieSummary", summaryList }
+            };
+
+
+            return JsonMultipleData(dataSets);
+        }
+
 
 
         // ===========================================================

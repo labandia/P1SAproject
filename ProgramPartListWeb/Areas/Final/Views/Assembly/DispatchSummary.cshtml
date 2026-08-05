@@ -156,7 +156,7 @@
     async init() {
         this.bindEvents();
         await this.LoadLineShopOrderList();
-        await this.LoadTotalPartsSummary();
+        //await this.LoadTotalPartsSummary();
 
         this.refreshInterval = setInterval(
             () => this.LoadLineShopOrderList(),
@@ -198,9 +198,8 @@
                     this.isFirstLoad = false;
                 }
 
-                const res = await getMethod('@Url.Action("GetPartlistReportData", "Assembly")', {
-                    dispatch : 1
-                });
+               const res = await getMethod('@Url.Action("GetDispatchReportData", "Assembly")', {});
+               console.log(res);
                 if (!res?.Success) {
                     this.tbody.innerHTML = `
                      <tr>
@@ -250,7 +249,20 @@
             return;
         }
 
-        const numCols = ['Plan_Start', 'Completion', 'P1SA', 'P1FA', 'CE', 'FA', 'AF', 'AG', 'BF', 'FD', 'FG', 'DD'];
+        const numCols = [
+            'Plan_Start',
+            'Completion',
+            'P1SA',
+            'P1FA',
+            'P1SA_C',
+            'P1SA_W',
+            'P1SA_M',
+            'P1SA_P',
+            'P1SA_R',
+            'P1FA_FA',
+            'P1FA_H',
+            'M1'
+        ];
         const totals = {};
         for (const col of numCols) {
             totals[col] = data.reduce((sum, row) => sum + this.parseVal(row[col]), 0);
@@ -262,15 +274,14 @@
             <td>${row.Plan_Start}</td>
             <td>${row.Completion}</td>
             <td>${row.P1SA}</td>
-            <td class="border-right">${row.P1FA}</td>
-            <td><span class="col-badge cb-ce">${row.CE}</span></td>
-            <td><span class="col-badge cb-fa">${row.FA}</span></td>
-            <td><span class="col-badge cb-af">${row.AF}</span></td>
-            <td><span class="col-badge cb-ag">${row.AG}</span></td>
-            <td class="border-right"><span class="col-badge cb-bf">${row.BF}</span></td>
-            <td>${row.FD}</td>
-            <td>${row.FG}</td>
-            <td>${row.DD}</td>
+            <td><span class="col-badge cb-ce">${row.P1SA_C}</span></td>
+            <td><span class="col-badge cb-fa">${row.P1SA_W}</span></td>
+            <td><span class="col-badge cb-af">${row.P1SA_M}</span></td>
+            <td><span class="col-badge cb-ag">${row.P1SA_P}</span></td>
+            <td class="border-right"><span class="col-badge cb-bf">${row.P1SA_R}</span></td>
+            <td>${row.P1FA_FA}</td>
+            <td>${row.P1FA_H}</td>
+            <td>${row.M1}</td>
         </tr>`
         ).join('');
 
@@ -280,15 +291,14 @@
             <td><strong>${totals.Plan_Start}</strong></td>
             <td><strong>${totals.Completion}</strong></td>
             <td><strong>${totals.P1SA}</strong></td>
-            <td class="border-right"><strong>${totals.P1FA}</strong></td>
-            <td><span class="col-badge cb-ce"><strong>${totals.CE}</strong></span></td>
-            <td><span class="col-badge cb-fa"><strong>${totals.FA}</strong></span></td>
-            <td><span class="col-badge cb-af"><strong>${totals.AF}</strong></span></td>
-            <td><span class="col-badge cb-ag"><strong>${totals.AG}</strong></span></td>
-            <td class="border-right"><span class="col-badge cb-bf"><strong>${totals.BF}</strong></span></td>
-            <td><strong>${totals.FD}</strong></td>
-            <td><strong>${totals.FG}</strong></td>
-            <td><strong>${totals.DD}</strong></td>
+            <td><span class="col-badge cb-ce"><strong>${totals.P1SA_C}</strong></span></td>
+            <td><span class="col-badge cb-fa"><strong>${totals.P1SA_W}</strong></span></td>
+            <td><span class="col-badge cb-af"><strong>${totals.P1SA_M}</strong></span></td>
+            <td><span class="col-badge cb-ag"><strong>${totals.P1SA_P}</strong></span></td>
+            <td class="border-right"><span class="col-badge cb-bf"><strong>${totals.P1SA_R}</strong></span></td>
+            <td><strong>${totals.P1FA_FA}</strong></td>
+            <td><strong>${totals.P1FA_H}</strong></td>
+            <td><strong>${totals.M1}</strong></td>
         </tr>`;
 
         this.tbody.innerHTML = rows + totalRow;
@@ -414,15 +424,26 @@
 
         const sumOf = (key) => data.reduce((acc, r) => acc + this.parseVal(r[key]), 0);
 
-        const warehouseLabels = ['P1SA-C', 'P1SA-W', 'P1SA-M', 'P1SA-P', 'P1SA-R', 'P1FA-OP', 'P1FA-Harness'];
+        const warehouseLabels = [
+            'P1SA-C',
+            'P1SA-W',
+            'P1SA-M',
+            'P1SA-P',
+            'P1SA-R',
+            'P1FA-FA',
+            'P1FA-H',
+            'M1'
+        ];
+
         const warehouseData = [
-            sumOf('CE'),
-            sumOf('FA'),
-            sumOf('AF'),
-            sumOf('AG'),
-            sumOf('BF'),
-            sumOf('FD'),
-            sumOf('FG')
+            sumOf('P1SA_C'),
+            sumOf('P1SA_W'),
+            sumOf('P1SA_M'),
+            sumOf('P1SA_P'),
+            sumOf('P1SA_R'),
+            sumOf('P1FA_FA'),
+            sumOf('P1FA_H'),
+            sumOf('M1')
         ];
         const warehouseColors = [
             get('--col-ce') || '#6366f1',
@@ -432,6 +453,7 @@
             get('--col-bf') || '#22c55e',
             get('--col-fd') || '#14b8a6',
             get('--col-fg') || '#3b82f6',
+            get('--col-dd') || '#a855f7'
         ];
 
         // inline plugin — no CDN, no Chart.register() needed
@@ -460,7 +482,7 @@
 
         this.subAssyChart = new Chart(ctx2, {
             type: 'bar',
-            plugins: [topLabelPlugin],                      // registered per-chart only
+            plugins: [topLabelPlugin],                     
             data: {
                 labels: warehouseLabels,
                 datasets: [
@@ -546,7 +568,7 @@
             const date = new Date(timestamp);
 
             return date.toLocaleDateString('en-US');
-        }
+     }
 
 
 }

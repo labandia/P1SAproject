@@ -520,11 +520,12 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                                 P1SA_C = int.TryParse(GetCell(sheet, r, 15), out var p1sac) ? p1sac : 0,
                                 P1SA_W = int.TryParse(GetCell(sheet, r, 16), out var p1saw) ? p1saw : 0,
                                 P1SA_M = int.TryParse(GetCell(sheet, r, 17), out var p1sam) ? p1sam : 0,
-                                P1SA_R = int.TryParse(GetCell(sheet, r, 18), out var p1sar) ? p1sar : 0,
-                                P1FA_FA = int.TryParse(GetCell(sheet, r, 19), out var pifafa) ? pifafa : 0,
-                                P1FA_H = int.TryParse(GetCell(sheet, r, 20), out var pifaH) ? pifaH : 0,
-                                M1 = int.TryParse(GetCell(sheet, r, 21), out var M1) ? M1 : 0,
-                                Operational = int.TryParse(GetCell(sheet, r, 22), out var op) ? op : 0
+                                P1SA_P = int.TryParse(GetCell(sheet, r, 18), out var p1sap) ? p1sap : 0,
+                                P1SA_R = int.TryParse(GetCell(sheet, r, 19), out var p1sar) ? p1sar : 0,
+                                P1FA_FA = int.TryParse(GetCell(sheet, r, 20), out var pifafa) ? pifafa : 0,
+                                P1FA_H = int.TryParse(GetCell(sheet, r, 21), out var pifaH) ? pifaH : 0,
+                                M1 = int.TryParse(GetCell(sheet, r, 22), out var M1) ? M1 : 0,
+                                Operational = int.TryParse(GetCell(sheet, r, 23), out var op) ? op : 0
                             };
                             Debug.WriteLine($@"
                                 ========== ProductionRecord (Row {r}) ==========
@@ -545,6 +546,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                                 P1SA_C        : {obj.P1SA_C}
                                 P1SA_W        : {obj.P1SA_W}
                                 P1SA_M        : {obj.P1SA_M}
+                                P1SA_P        : {obj.P1SA_P}
                                 P1SA_R        : {obj.P1SA_R}
                                 P1FA_FA       : {obj.P1FA_FA}
                                 P1FA_H        : {obj.P1FA_H}
@@ -939,6 +941,20 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
 
             return JsonSuccess(res, "Retrieved data successfully");
         }
+
+        [HttpGet]
+        public async Task<ActionResult> GetDispatchReportData()
+        {
+            var res = await _manu.GetDispatchShortSummay();
+
+
+            if (res == null || !res.Any())
+                return JsonNotFound("No Manpower data found");
+
+            return JsonSuccess(res, "Retrieved data successfully");
+        }
+
+
 
         public ActionResult DownloadFile(string fileName)
         {

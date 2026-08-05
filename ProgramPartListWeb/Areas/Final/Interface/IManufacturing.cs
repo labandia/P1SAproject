@@ -48,6 +48,7 @@ namespace ProgramPartListWeb.Areas.Final
 
         // ====== PARTLY SHORT DATA SUMMARY REPORT =================
         Task<List<AssemblyPartlistRecord>> GetPartlyShortSummary(int isdispatch);
+        Task<List<DispatchPartlistRecord>> GetDispatchShortSummay();
         Task<(int PlanQty, string LastDate, decimal totalpercent)> GetLastUpdateAndTotal(int isdispatch);
 
 

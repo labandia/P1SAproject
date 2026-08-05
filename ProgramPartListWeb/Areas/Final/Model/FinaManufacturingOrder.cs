@@ -81,6 +81,36 @@ namespace ProgramPartListWeb.Areas.Final.Model
         }
     }
 
+    public class DispatchPartlistRecord
+    {
+        public string DateDelay { get; set; }
+
+        // Summary
+        public int Plan_Start { get; set; }
+        public int Completion { get; set; }
+        public int P1SA { get; set; }
+        public int P1FA { get; set; }
+
+        // Individual Process Totals
+        public int P1SA_C { get; set; }
+        public int P1SA_W { get; set; }
+        public int P1SA_M { get; set; }
+        public int P1SA_P { get; set; }
+        public int P1SA_R { get; set; }
+
+        public int P1FA_FA { get; set; }
+        public int P1FA_H { get; set; }
+
+        public int M1 { get; set; }
+    }
+
+
+
+
+
+
+
+
 
     public class ProductionRecord
     {
@@ -123,9 +153,10 @@ namespace ProgramPartListWeb.Areas.Final.Model
 
         // Section Delays 
         public int P1SA_C { get; set; } = 0;
-        public int P1SA_M { get; set; } = 0;
-        public int P1SA_R { get; set; } = 0;
         public int P1SA_W { get; set; } = 0;
+        public int P1SA_M { get; set; } = 0;
+        public int P1SA_P { get; set; } = 0;
+        public int P1SA_R { get; set; } = 0;
         public int P1FA_FA { get; set; } = 0;
         public int P1FA_H { get; set; } = 0;
         public int M1 { get; set; } = 0;
@@ -156,6 +187,16 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public string OrderPlanStartDate { get; set; } = string.Empty;
         public string StatusCheck { get; set; } = string.Empty;
         public bool IsApproved { get; set; } = false;
+
+
+        public int P1SA_C { get; set; } = 0;
+        public int P1SA_W { get; set; } = 0;
+        public int P1SA_M { get; set; } = 0;
+        public int P1SA_P { get; set; } = 0;
+        public int P1SA_R { get; set; } = 0;
+        public int P1FA_FA { get; set; } = 0;
+        public int P1FA_H { get; set; } = 0;
+        public int M1 { get; set; } = 0;
     }
 
 

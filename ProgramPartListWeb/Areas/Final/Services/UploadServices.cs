@@ -131,6 +131,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 model.P1SA_C,
                 model.P1SA_M,
                 model.P1SA_R,
+                model.P1SA_P,
                 model.P1SA_W,
                 model.P1FA_FA,
                 model.P1FA_H,
@@ -145,7 +146,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         PlanQty, PlanStartDate, DispatchDate, Note,
                         FinalFinishedDate, FAStatus, ShipmentDate,
                         ShipmentMode, WithSR, OrderStatus, Operational, 
-                        P1SA_C, P1SA_M, P1SA_R, P1SA_W, P1FA_FA, P1FA_H, M1
+                        P1SA_C, P1SA_M, P1SA_R, P1SA_W, P1FA_FA, P1FA_H, M1, P1SA_P
                     )
                     VALUES
                     (
@@ -153,7 +154,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         @PlanQty, @PlanStartDate, @DispatchDate, @Note,
                         @FinalFinishedDate, @FAStatus, @ShipmentDate,
                         @ShipmentMode, @WithSR, @OrderStatus, @Operational, 
-                        @P1SA_C, @P1SA_M, @P1SA_R, @P1SA_W, @P1FA_FA, @P1FA_H, @M1
+                        @P1SA_C, @P1SA_M, @P1SA_R, @P1SA_W, @P1FA_FA, @P1FA_H, @M1, @P1SA_P
                     );", parameters);
             }
             else
@@ -173,7 +174,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         PlanQty, PlanStartDate, DispatchDate, Note,
                         FinalFinishedDate, FAStatus, ShipmentDate,
                         ShipmentMode, WithSR, OrderStatus, Operational,
-                        P1SA_C, P1SA_M, P1SA_R, P1SA_W, P1FA_FA, P1FA_H, M1
+                        P1SA_C, P1SA_M, P1SA_R, P1SA_W, P1FA_FA, P1FA_H, M1, P1SA_P
                     )
                     VALUES
                     (
@@ -181,7 +182,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         @PlanQty, @PlanStartDate, @DispatchDate, @Note,
                         @FinalFinishedDate, @FAStatus, @ShipmentDate,
                         @ShipmentMode, @WithSR, @OrderStatus, @Operational,
-                        @P1SA_C, @P1SA_M, @P1SA_R, @P1SA_W, @P1FA_FA, @P1FA_H, @M1
+                        @P1SA_C, @P1SA_M, @P1SA_R, @P1SA_W, @P1FA_FA, @P1FA_H, @M1, @P1SA_P
                     );
                 END", parameters);
             }
@@ -215,7 +216,14 @@ namespace ProgramPartListWeb.Areas.Final.Services
 	                        U.OrderRemarks,
 	                        U.OrderStatus,
                             U.PlanQty AS UploadPlanQty,
-                         
+                            U.P1SA_C,
+                            U.P1SA_M,
+                            U.P1SA_R,
+                            U.P1SA_P,
+                            U.P1SA_W,
+                            U.P1FA_FA,
+                            U.P1FA_H,
+                            U.M1,
                             FORMAT(U.PlanStartDate, 'MM/dd/yyyy') AS UploadPlanStartDate,
                        
 
@@ -236,11 +244,11 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     {
                         Debug.WriteLine($@"INSERT HERE : ");
                         await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO FanTraceabilityManufacturingOrder (Line, FinalShopOrder, ItemNo, Model, WC, PlanQty, PlanStartDate, DispatchDate, Note, FinalFinishedDate,
-                                    FAStatus, ShipmentDate, ShipmentMode, WithSR, OrderRemarks, OrderStatus, Operational)
+                                    FAStatus, ShipmentDate, ShipmentMode, WithSR, OrderRemarks, OrderStatus, Operational, P1SA_C, P1SA_M, P1SA_R, P1SA_W, P1FA_FA, P1FA_H, M1, P1SA_P)
                                     VALUES
                                     (@Line, @FinalShopOrder, @ItemNo, @Model, @WC, @PlanQty, @PlanStartDate, @DispatchDate,
                                      @Note, @FinalFinishedDate, @FAStatus, @ShipmentDate, @ShipmentMode, @WithSR,
-                                     @OrderRemarks, @OrderStatus, @Operational)", item);
+                                     @OrderRemarks, @OrderStatus, @Operational,  @P1SA_C, @P1SA_M, @P1SA_R, @P1SA_W, @P1FA_FA, @P1FA_H, @M1, @P1SA_P)", item);
                     }
                     else
                     {
@@ -249,7 +257,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                     DispatchDate =@DispatchDate, Note =@Note, FinalFinishedDate =@FinalFinishedDate, 
                                     FAStatus =@FAStatus, 
                                     WithSR =@WithSR,
-                                    PlanQty =@PlanQty, PlanStartDate =@PlanStartDate 
+                                    PlanQty =@PlanQty, PlanStartDate =@PlanStartDate, 
+                                    P1SA_C =@P1SA_C, P1SA_M =@P1SA_M, P1SA_R =@P1SA_R, P1SA_W =@P1SA_W, P1FA_FA =@P1FA_FA, P1FA_H =@P1FA_H, M1 =@M1, P1SA_P =@P1SA_P
                                     WHERE  FinalShopOrder =@FinalShopOrder", item);
                     }
 

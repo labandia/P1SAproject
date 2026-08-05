@@ -159,7 +159,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     //      AND DepartmentID IN (1,2,3,4,5,6,7,8)";
 
                     //var departments = await SqlDataAcess_Test.GetDataAsync<string>(
-                    //    listdone,
+                    //    listdone,GetPartlyShortSummary
                     //    new { FinalShopOrder = order.FinalShopOrder });
 
                     //order.CompletedSection = string.Join(",",
@@ -972,6 +972,50 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 Debug.WriteLine($@"Error : " + ex.Message);
                 throw;
             }
+        }
+
+        public Task<List<DispatchPartlistRecord>> GetDispatchShortSummay()
+        {
+            return SqlDataAcess_Test.QueryAsync<DispatchPartlistRecord>($@"SELECT
+                    CONVERT(VARCHAR(10), CAST(PlanStartDate AS DATE), 103) AS DateDelay,
+
+                    -- Total Planned Quantity
+                    SUM(PlanQty) AS Plan_Start,
+
+                    -- Completion
+                    SUM(M1) AS Completion,
+
+                    -- Totals
+                    SUM(P1SA_C + P1SA_W + P1SA_M + P1SA_P + P1SA_R) AS P1SA,
+                    SUM(P1FA_FA + P1FA_H) AS P1FA,
+
+                    -- Individual Columns
+                    SUM(P1SA_C)  AS [P1SA_C],
+                    SUM(P1SA_W)  AS [P1SA_W],
+                    SUM(P1SA_M)  AS [P1SA_M],
+                    SUM(P1SA_P)  AS [P1SA_P],
+                    SUM(P1SA_R)  AS [P1SA_R],
+                    SUM(P1FA_FA) AS [P1FA_FA],
+                    SUM(P1FA_H)  AS [P1FA_H],
+                    SUM(M1)      AS [M1]
+
+                FROM FanTraceabilityManufacturingOrder
+
+                WHERE
+                    CAST(PlanStartDate AS DATE) <= CAST(GETDATE() AS DATE)
+                GROUP BY
+                    CAST(PlanStartDate AS DATE)
+                HAVING
+                       SUM(P1SA_C)  <> 0
+                    OR SUM(P1SA_W)  <> 0
+                    OR SUM(P1SA_M)  <> 0
+                    OR SUM(P1SA_P)  <> 0
+                    OR SUM(P1SA_R)  <> 0
+                    OR SUM(P1FA_FA) <> 0
+                    OR SUM(P1FA_H)  <> 0
+                    OR SUM(M1)      <> 0
+                ORDER BY
+                    CAST(PlanStartDate AS DATE);");
         }
     }
 }

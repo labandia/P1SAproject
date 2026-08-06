@@ -226,6 +226,16 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public bool IsApproved { get; set; }
         public int Operational { get; set; }
 
+
+        public int P1SA_C { get; set; } = 0;
+        public int P1SA_W { get; set; } = 0;
+        public int P1SA_M { get; set; } = 0;
+        public int P1SA_P { get; set; } = 0;
+        public int P1SA_R { get; set; } = 0;
+        public int P1FA_FA { get; set; } = 0;
+        public int P1FA_H { get; set; } = 0;
+        public int M1 { get; set; } = 0;
+
     }
 
     public class UploadRowDto

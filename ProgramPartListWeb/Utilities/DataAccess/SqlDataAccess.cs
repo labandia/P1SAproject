@@ -14,6 +14,7 @@ using ProgramPartListWeb.Utilities;
 using CommandType = System.Data.CommandType;
 using System.Configuration;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace ProgramPartListWeb.Helper
 {
@@ -53,7 +54,38 @@ namespace ProgramPartListWeb.Helper
                 : CommandType.Text;
         }
 
-   
+
+        private static void LogFailure(string source, string sql, object parameters, Exception ex)
+        {
+            Debug.WriteLine($"========== {source} ERROR ==========");
+            Debug.WriteLine($"SQL:\n{sql}");
+
+            if (parameters != null)
+            {
+                Debug.WriteLine("Parameters:");
+
+                foreach (var prop in parameters.GetType().GetProperties())
+                {
+                    object value;
+
+                    try
+                    {
+                        value = prop.GetValue(parameters);
+                    }
+                    catch (Exception propEx)
+                    {
+                        value = $"<error reading property: {propEx.Message}>";
+                    }
+
+                    Debug.WriteLine($"{prop.Name} = {value}");
+                }
+            }
+
+            Debug.WriteLine("Exception:");
+            Debug.WriteLine(ex.ToString());
+            Debug.WriteLine("========================================");
+        }
+
 
         /// <summary>
         /// Runs a query and maps every row to type T, returning all results as
@@ -65,15 +97,23 @@ namespace ProgramPartListWeb.Helper
             bool? isStoredProcedure = null,
             CancellationToken ct = default(CancellationToken))
         {
-            using (var connection = GetConnection())
+            try
             {
-                var command = new CommandDefinition(
-                    sql,
-                    parameters,
-                    commandType: GetCommandType(sql, isStoredProcedure),
-                    cancellationToken: ct);
+                using (var connection = GetConnection())
+                {
+                    var command = new CommandDefinition(
+                        sql,
+                        parameters,
+                        commandType: GetCommandType(sql, isStoredProcedure),
+                        cancellationToken: ct);
 
-                return (await connection.QueryAsync<T>(command)).AsList();
+                    return (await connection.QueryAsync<T>(command)).AsList();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogFailure(nameof(QueryAsync), sql, parameters, ex);
+                throw;
             }
         }
 
@@ -87,15 +127,23 @@ namespace ProgramPartListWeb.Helper
             bool? isStoredProcedure = null,
             CancellationToken ct = default(CancellationToken))
         {
-            using (var connection = GetConnection())
+            try
             {
-                var command = new CommandDefinition(
-                    sql,
-                    parameters,
-                    commandType: GetCommandType(sql, isStoredProcedure),
-                    cancellationToken: ct);
+                using (var connection = GetConnection())
+                {
+                    var command = new CommandDefinition(
+                        sql,
+                        parameters,
+                        commandType: GetCommandType(sql, isStoredProcedure),
+                        cancellationToken: ct);
 
-                return await connection.QuerySingleAsync<T>(command);
+                    return await connection.QuerySingleAsync<T>(command);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogFailure(nameof(QuerySingleAsync), sql, parameters, ex);
+                throw;
             }
         }
 
@@ -110,15 +158,23 @@ namespace ProgramPartListWeb.Helper
             bool? isStoredProcedure = null,
             CancellationToken ct = default(CancellationToken))
         {
-            using (var connection = GetConnection())
+            try
             {
-                var command = new CommandDefinition(
-                    sql,
-                    parameters,
-                    commandType: GetCommandType(sql, isStoredProcedure),
-                    cancellationToken: ct);
+                using (var connection = GetConnection())
+                {
+                    var command = new CommandDefinition(
+                        sql,
+                        parameters,
+                        commandType: GetCommandType(sql, isStoredProcedure),
+                        cancellationToken: ct);
 
-                return await connection.QuerySingleOrDefaultAsync<T>(command);
+                    return await connection.QuerySingleOrDefaultAsync<T>(command);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogFailure(nameof(QuerySingleOrDefaultAsync), sql, parameters, ex);
+                throw;
             }
         }
 
@@ -133,15 +189,27 @@ namespace ProgramPartListWeb.Helper
             bool? isStoredProcedure = null,
             CancellationToken ct = default(CancellationToken))
         {
-            using (var connection = GetConnection())
+            try
             {
-                var command = new CommandDefinition(
-                    sql,
-                    parameters,
-                    commandType: GetCommandType(sql, isStoredProcedure),
-                    cancellationToken: ct);
+                using (var connection = GetConnection())
+                {
+                    var command = new CommandDefinition(
+                        sql,
+                        parameters,
+                        commandType: GetCommandType(sql, isStoredProcedure),
+                        cancellationToken: ct);
 
-                return await connection.ExecuteAsync(command);
+                    var rowsAffected = await connection.ExecuteAsync(command);
+
+                    Debug.WriteLine($"[ExecuteAsync] Success - Rows Affected: {rowsAffected}");
+
+                    return rowsAffected;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogFailure(nameof(ExecuteAsync), sql, parameters, ex);
+                throw; // Preserve the original exception
             }
         }
 
@@ -156,10 +224,21 @@ namespace ProgramPartListWeb.Helper
             string sql,
             object parameters = null)
         {
-            return await connection.ExecuteAsync(
-                sql,
-                parameters,
-                transaction);
+            try
+            {
+                return await connection.ExecuteAsync(
+                    sql,
+                    parameters,
+                    transaction);
+            }
+            catch (Exception ex)
+            {
+                // Deliberately does NOT roll back here -- this overload runs
+                // inside a caller-owned transaction, and rollback/commit is the
+                // caller's responsibility (see ExecuteInTransactionAsync).
+                LogFailure(nameof(ExecuteAsync) + "(txn)", sql, parameters, ex);
+                throw;
+            }
         }
 
         /// <summary>
@@ -173,15 +252,23 @@ namespace ProgramPartListWeb.Helper
             bool? isStoredProcedure = null,
             CancellationToken ct = default(CancellationToken))
         {
-            using (var connection = GetConnection())
+            try
             {
-                var command = new CommandDefinition(
-                    sql,
-                    parameters,
-                    commandType: GetCommandType(sql, isStoredProcedure),
-                    cancellationToken: ct);
+                using (var connection = GetConnection())
+                {
+                    var command = new CommandDefinition(
+                        sql,
+                        parameters,
+                        commandType: GetCommandType(sql, isStoredProcedure),
+                        cancellationToken: ct);
 
-                return await connection.ExecuteScalarAsync<T>(command);
+                    return await connection.ExecuteScalarAsync<T>(command);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogFailure(nameof(ExecuteScalarAsync), sql, parameters, ex);
+                throw;
             }
         }
 

@@ -86,8 +86,8 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
             Debug.WriteLine("GETMOLD DIE");
             var data = await _master.GetModelDieMasterList(search, page, pageSize);
 
-            //if (data == null || !data.Any())
-            //    return JsonNotFound("No Mold Die Tooling data found");
+            if (data == null || !data.Any())
+                return JsonNotFound("No Mold Die Tooling data found");
 
             return JsonSuccess(data);
         }

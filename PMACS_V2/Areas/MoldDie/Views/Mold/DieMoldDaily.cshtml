@@ -448,9 +448,8 @@
                 process: this.processSelection.value,
             });
             console.log(res);
-            let getdata = res.Data.Listdata;
 
-            if (getdata.length == 0) {
+            if (res.Data.Details.length == 0) {
                 alert("Mold Die Serial Not found");
                 return;
             }

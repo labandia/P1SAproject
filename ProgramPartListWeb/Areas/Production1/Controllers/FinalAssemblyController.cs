@@ -45,9 +45,9 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
 
             return JsonSuccess(sb.ToString());
         }
-    [HttpGet]
-    public async Task<ActionResult> GetListof4ManFactor()
-    {
+        [HttpGet]
+        public async Task<ActionResult> GetListof4ManFactor()
+        {
             //await _manu.AutoUpdateShopOrderLine();
         //var info = ClientsInfo.GetClientInfo();
         //string account = ClientsInfo.GetLoggedInUserViaWmi(info.ComputerName);
@@ -97,6 +97,13 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
                 return JsonNotFound("No Active Lines found");
 
             return JsonSuccess(res);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetMonthyear()
+        {
+            var strmonth = await _manu.GetMonthName();
+            return JsonSuccess(strmonth);
         }
 
         //======================================================

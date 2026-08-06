@@ -17,14 +17,7 @@
                 </div>
             </div>
 
-            <div class="control-group">
-                <label class="control-label">
-                    <i class="fas fa-tags"></i> Filter by Description
-                </label>
-                <select id="DescriptionID" class="filter-select">
-                    <option value="">-- Select Description --</option>
-                </select>
-            </div>
+            
 
         </div>
         <button class="btn-primary-custom" id="addbtn"><i class="fa-solid fa-plus"></i> Add Data</button>
@@ -77,6 +70,8 @@
             // Modal
             this.addToolingModal = new bootstrap.Modal(document.getElementById('AddTooling'));
 
+            this.searchChange = document.getElementById("RegisterSearch");
+
 
             this.moldIDText = document.getElementById("MoldID");
             this.partNoText = document.getElementById("PartNo");
@@ -98,6 +93,7 @@
             this.bindTableEvents();
             this.bindOpenDialog();
             this.bindFormEvents()
+            this.bindfilterEvents();
         }
 
 
@@ -108,12 +104,11 @@
             try {
                 const res = await getMethod('@Url.Action("GetMoldDieMasterList", "Mold")',
                     {
-                        search: '',
+                        search: this.searchChange.value,
                         page: 1,
                         pageSize: 50
                     });
 
-                console.log(res);
                 if (!res?.Success) {
                     console.log('No data Masterlist Found ');
                     return;
@@ -271,6 +266,11 @@
             this.processID.value = "";
         }
 
+        bindfilterEvents() {
+            this.searchChange.addEventListener('input', async () => {
+                await this.GetMoldDieMasterlist();
+            });
+        }
     }
 
     document.addEventListener('DOMContentLoaded', function () {

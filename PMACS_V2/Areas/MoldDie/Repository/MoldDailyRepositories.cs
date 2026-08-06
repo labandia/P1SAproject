@@ -213,9 +213,7 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 	                        (SELECT TOP 1 status FROM DieMold_Daily 
 	                        WHERE DieSerial = p.DieSerial ORDER BY RecordID DESC) as status
                         FROM DieMold_MoldingMainParts p 
-                        WHERE (SELECT TOP 1 status FROM DieMold_Daily 
-	                        WHERE DieSerial = p.DieSerial ORDER BY RecordID DESC) IS NOT NULL 
-	                        AND (p.DieSerial = @DieSerial AND p.ProcessID = @Process)
+                        WHERE p.DieSerial = @DieSerial AND p.ProcessID = @Process
                             ", obj);
 
             var getlist = await SqlDataAccess.QueryAsync<DieMoldDaily>($@"SELECT 

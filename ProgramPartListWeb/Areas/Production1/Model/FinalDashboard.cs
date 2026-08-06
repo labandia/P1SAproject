@@ -87,4 +87,11 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public string ProcessName { get; set; }
         public int ProcessGroups { get; set; }
     }
+
+
+    public class Monthyear
+    {
+        public string months { get; set; }
+        public int years { get; set; }
+    }
 }

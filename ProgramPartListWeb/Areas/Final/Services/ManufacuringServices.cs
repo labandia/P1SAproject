@@ -983,7 +983,14 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     SUM(PlanQty) AS Plan_Start,
 
                     -- Completion
-                    SUM(M1) AS Completion,
+                    SUM(
+						CASE
+							WHEN FinalFinishedDate IS NOT NULL
+							 AND CAST(FinalFinishedDate AS DATE) <= CAST(GETDATE() AS DATE)
+							THEN PlanQty
+							ELSE 0
+						END
+					) AS Completion,
 
                     -- Totals
                     SUM(P1SA_C + P1SA_W + P1SA_M + P1SA_P + P1SA_R) AS P1SA,

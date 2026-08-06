@@ -20,6 +20,7 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
         Task<bool> DeleteAwardData(int ID);
 
         Task<string> GetAwardName();
+        Task<Monthyear> GetMonthName();
 
         Task<List<RegistrationFinalModel>> GetRegistrationData(string search, int month);
         Task<bool> AddRegistrationData(RegistrationFinalModel model);

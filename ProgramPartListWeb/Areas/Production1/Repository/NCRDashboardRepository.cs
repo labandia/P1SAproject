@@ -332,6 +332,13 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                                 ", null);   
         }
 
+        public Task<Monthyear> GetMonthName()
+        {
+            return SqlDataAccess.QuerySingleAsync<Monthyear>($@"SELECT
+                DATENAME(MONTH, GETDATE()) as months,
+                CAST(YEAR(GETDATE()) AS VARCHAR(4)) AS years;");
+        }
+
         public async Task<List<RegistrationFinalModel>> GetRegistrationData(string searchText, int month)
         {
             var year = DateTime.Today.Year;

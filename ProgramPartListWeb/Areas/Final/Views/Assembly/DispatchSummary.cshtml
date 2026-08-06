@@ -115,7 +115,7 @@
                         <th class="th-af">P1SA-M (AF)</th>
                         <th class="th-ag">P1SA-P (AG)</th>
                         <th class="th-bf border-right">P1SA-R (BF)</th>
-                        <th class="th-fd">P1FA-OP (FD)</th>
+                        <th class="th-fd">P1FA-FA (FD)</th>
                         <th class="th-fg">PIFA-H (FG)</th>
                         <th class="th-dd">MP (DD)</th>
                     </tr>
@@ -156,7 +156,7 @@
     async init() {
         this.bindEvents();
         await this.LoadLineShopOrderList();
-        //await this.LoadTotalPartsSummary();
+        await this.LoadTotalPartsSummary();
 
         this.refreshInterval = setInterval(
             () => this.LoadLineShopOrderList(),
@@ -178,7 +178,7 @@
 
             if (res?.Success) {
                 document.getElementById("lastUpdateText").textContent = res.data.LastDate;
-                document.getElementById("totalPlanText").textContent = res.data.PlanQty;
+                //document.getElementById("totalPlanText").textContent = res.data.PlanQty;
             }
             
 
@@ -274,6 +274,7 @@
             <td>${row.Plan_Start}</td>
             <td>${row.Completion}</td>
             <td>${row.P1SA}</td>
+            <td>${row.P1FA}</td>
             <td><span class="col-badge cb-ce">${row.P1SA_C}</span></td>
             <td><span class="col-badge cb-fa">${row.P1SA_W}</span></td>
             <td><span class="col-badge cb-af">${row.P1SA_M}</span></td>
@@ -291,6 +292,7 @@
             <td><strong>${totals.Plan_Start}</strong></td>
             <td><strong>${totals.Completion}</strong></td>
             <td><strong>${totals.P1SA}</strong></td>
+            <td><strong>${totals.P1FA}</strong></td>
             <td><span class="col-badge cb-ce"><strong>${totals.P1SA_C}</strong></span></td>
             <td><span class="col-badge cb-fa"><strong>${totals.P1SA_W}</strong></span></td>
             <td><span class="col-badge cb-af"><strong>${totals.P1SA_M}</strong></span></td>
@@ -301,7 +303,11 @@
             <td><strong>${totals.M1}</strong></td>
         </tr>`;
 
+        document.getElementById("totalPlanText").textContent = totals.Plan_Start;
+
         this.tbody.innerHTML = rows + totalRow;
+
+
      }
 
 

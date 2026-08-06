@@ -296,15 +296,9 @@
         }
 
         async init() {
-            this.dashboardTitle.innerHTML = `
-                ${this.monthName} ${this.year}<br>
-                FA Line<br>
-                Monitoring
-            `;
+           
 
-            this.MonthTitle.innerHTML = this.monthName;
-            this.YearTitle.innerHTML = this.year;
-
+            await this.fetchMonthData();
             await this.fetch4MData();
             await this.fetchGroupData();
             await this.SampleUserData();
@@ -339,15 +333,39 @@
              try {
                  const res = await getMethod('@Url.Action("SampleGet", "FinalAssembly")', {});
                  console.log(res);
-                 //if (!res?.Success) {
-                 //    console.log('No data found in 4M ');
-                 //    return;
-                 //}
+                 if (!res?.Success) {
+                     console.log('No data found in 4M ');
+                     return;
+                 }
                  //this.renderNcrBars(res.data);
              } catch (error) {
                  console.error('Error fetching 4M data:', error);
              }
-         }
+        }
+
+        // ---- Month Display dashboard ----
+        async fetchMonthData() {
+            try {
+                const res = await getMethod('@Url.Action("GetMonthyear", "FinalAssembly")', {});
+                if (!res?.Success) {
+                    console.log('No data found in 4M ');
+                    return;
+                }
+
+                this.dashboardTitle.innerHTML = `
+                     ${res.data.months} ${res.data.years}<br>
+                     FA Line<br>
+                     Monitoring
+                `;
+
+                this.MonthTitle.innerHTML = res.data.months;
+                this.YearTitle.innerHTML = res.data.years;
+            } catch (error) {
+                console.error('Error fetching 4M data:', error);
+            }
+        }
+
+
 
         // ---- 4M Factors dashboard ----
         async fetch4MData() {

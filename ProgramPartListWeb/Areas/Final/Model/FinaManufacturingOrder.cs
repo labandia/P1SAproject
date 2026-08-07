@@ -19,7 +19,7 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public string Note { get; set; }
         public DateTime? FinalFinishedDate { get; set; }
         public string FAStatus { get; set; }
-        public DateTime ShipmentDate { get; set; }
+        public string ShipmentDate { get; set; }
         public string ShipmentMode { get; set; }
         public bool WithSR { get; set; } = false;
         public string OrderRemarks { get; set; }

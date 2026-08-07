@@ -106,90 +106,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
             return rows > 0;
         }
-        public async Task<bool> UploadDataToDatabase(ProductionRecord model, string tb)
-        {
-            int rows = 0;
-
-            var parameters = new
-            {
-                model.Line,
-                FinalShopOrder = model.ShopOrder,
-                ItemNo = model.PartNo,
-                model.Model,
-                model.WC,
-                PlanQty = model.Qty,
-                PlanStartDate = DateTime.TryParse(model.PlanStart, out var ps) ? ps : (DateTime?)null,
-                DispatchDate = model.DispatchDate,
-                Note = model.Note ?? string.Empty,
-                FinalFinishedDate = DateTime.TryParse(model.IfsFinish, out var ifs) ? ifs : (DateTime?)null,
-                FAStatus = model.FaStatus,
-                ShipmentDate = DateTime.TryParse(model.Shipment, out var ship) ? ship : (DateTime?)null,
-                ShipmentMode = model.Mode,
-                WithSR = model.WithSr,
-                OrderStatus = 0,
-                model.Operational,
-                model.P1SA_C,
-                model.P1SA_M,
-                model.P1SA_R,
-                model.P1SA_P,
-                model.P1SA_W,
-                model.P1FA_FA,
-                model.P1FA_H,
-                model.M1
-            };
-
-            if (tb == "FanTraceabilityManufacturingUploadFailed")
-            {
-                 rows = await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO FanTraceabilityManufacturingUploadFailed
-                    (
-                        Line, FinalShopOrder, ItemNo, Model, WC,
-                        PlanQty, PlanStartDate, DispatchDate, Note,
-                        FinalFinishedDate, FAStatus, ShipmentDate,
-                        ShipmentMode, WithSR, OrderStatus, Operational, 
-                        P1SA_C, P1SA_M, P1SA_R, P1SA_W, P1FA_FA, P1FA_H, M1, P1SA_P
-                    )
-                    VALUES
-                    (
-                        @Line, @FinalShopOrder, @ItemNo, @Model, @WC,
-                        @PlanQty, @PlanStartDate, @DispatchDate, @Note,
-                        @FinalFinishedDate, @FAStatus, @ShipmentDate,
-                        @ShipmentMode, @WithSR, @OrderStatus, @Operational, 
-                        @P1SA_C, @P1SA_M, @P1SA_R, @P1SA_W, @P1FA_FA, @P1FA_H, @M1, @P1SA_P
-                    );", parameters);
-            }
-            else
-            {
-                 rows = await SqlDataAcess_Test.ExecuteAsync($@"
-                IF NOT EXISTS (
-                    SELECT 1
-                    FROM FanTraceabilityManufacturingUploadData
-                    WHERE FinalShopOrder = @FinalShopOrder
-                      AND ItemNo = @ItemNo
-                      AND Model = @Model
-                )
-                BEGIN
-                    INSERT INTO {tb}
-                    (
-                        Line, FinalShopOrder, ItemNo, Model, WC,
-                        PlanQty, PlanStartDate, DispatchDate, Note,
-                        FinalFinishedDate, FAStatus, ShipmentDate,
-                        ShipmentMode, WithSR, OrderStatus, Operational,
-                        P1SA_C, P1SA_M, P1SA_R, P1SA_W, P1FA_FA, P1FA_H, M1, P1SA_P
-                    )
-                    VALUES
-                    (
-                        @Line, @FinalShopOrder, @ItemNo, @Model, @WC,
-                        @PlanQty, @PlanStartDate, @DispatchDate, @Note,
-                        @FinalFinishedDate, @FAStatus, @ShipmentDate,
-                        @ShipmentMode, @WithSR, @OrderStatus, @Operational,
-                        @P1SA_C, @P1SA_M, @P1SA_R, @P1SA_W, @P1FA_FA, @P1FA_H, @M1, @P1SA_P
-                    );
-                END", parameters);
-            }
-
-            return rows > 0;
-
-        }
+       
 
 
         public async Task<bool> TransferDataUploadtoMain()
@@ -429,6 +346,182 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         WHEN IsApproved = 1 THEN 0
                         ELSE 1
                      END");
+
+            return rows > 0;
+        }
+
+
+        public async Task<bool> UploadDataToDatabase(ProductionRecord model, string tb)
+        {
+            int rows = 0;
+
+            var parameters = new
+            {
+                model.Line,
+                FinalShopOrder = model.ShopOrder,
+                ItemNo = model.PartNo,
+                model.Model,
+                model.WC,
+                PlanQty = model.Qty,
+                PlanStartDate = DateTime.TryParse(model.PlanStart, out var ps) ? ps : (DateTime?)null,
+                DispatchDate = model.DispatchDate,
+                Note = model.Note ?? string.Empty,
+                FinalFinishedDate = DateTime.TryParse(model.IfsFinish, out var ifs) ? ifs : (DateTime?)null,
+                FAStatus = model.FaStatus,
+                ShipmentDate = DateTime.TryParse(model.Shipment, out var ship) ? ship : (DateTime?)null,
+                ShipmentMode = model.Mode,
+                WithSR = model.WithSr,
+                OrderStatus = 0,
+                model.Operational,
+                model.P1SA_C,
+                model.P1SA_M,
+                model.P1SA_R,
+                model.P1SA_P,
+                model.P1SA_W,
+                model.P1FA_FA,
+                model.P1FA_H,
+                model.M1
+            };
+
+            if (tb == "FanTraceabilityManufacturingUploadFailed")
+            {
+                rows = await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO FanTraceabilityManufacturingUploadFailed
+                    (
+                        Line, FinalShopOrder, ItemNo, Model, WC,
+                        PlanQty, PlanStartDate, DispatchDate, Note,
+                        FinalFinishedDate, FAStatus, ShipmentDate,
+                        ShipmentMode, WithSR, OrderStatus, Operational, 
+                        P1SA_C, P1SA_M, P1SA_R, P1SA_W, P1FA_FA, P1FA_H, M1, P1SA_P
+                    )
+                    VALUES
+                    (
+                        @Line, @FinalShopOrder, @ItemNo, @Model, @WC,
+                        @PlanQty, @PlanStartDate, @DispatchDate, @Note,
+                        @FinalFinishedDate, @FAStatus, @ShipmentDate,
+                        @ShipmentMode, @WithSR, @OrderStatus, @Operational, 
+                        @P1SA_C, @P1SA_M, @P1SA_R, @P1SA_W, @P1FA_FA, @P1FA_H, @M1, @P1SA_P
+                    );", parameters);
+            }
+            else
+            {
+                rows = await SqlDataAcess_Test.ExecuteAsync($@"
+                IF NOT EXISTS (
+                    SELECT 1
+                    FROM FanTraceabilityManufacturingUploadData
+                    WHERE FinalShopOrder = @FinalShopOrder
+                      AND ItemNo = @ItemNo
+                      AND Model = @Model
+                )
+                BEGIN
+                    INSERT INTO {tb}
+                    (
+                        Line, FinalShopOrder, ItemNo, Model, WC,
+                        PlanQty, PlanStartDate, DispatchDate, Note,
+                        FinalFinishedDate, FAStatus, ShipmentDate,
+                        ShipmentMode, WithSR, OrderStatus, Operational,
+                        P1SA_C, P1SA_M, P1SA_R, P1SA_W, P1FA_FA, P1FA_H, M1, P1SA_P
+                    )
+                    VALUES
+                    (
+                        @Line, @FinalShopOrder, @ItemNo, @Model, @WC,
+                        @PlanQty, @PlanStartDate, @DispatchDate, @Note,
+                        @FinalFinishedDate, @FAStatus, @ShipmentDate,
+                        @ShipmentMode, @WithSR, @OrderStatus, @Operational,
+                        @P1SA_C, @P1SA_M, @P1SA_R, @P1SA_W, @P1FA_FA, @P1FA_H, @M1, @P1SA_P
+                    );
+                END", parameters);
+            }
+
+            return rows > 0;
+
+        }
+
+        public async Task<bool> UpsertUploadData(ProductionRecord model)
+        {
+            var parameters = new
+            {
+                model.Line,
+                FinalShopOrder = model.ShopOrder,
+                ItemNo = model.PartNo,
+                model.Model,
+                model.WC,
+                PlanQty = model.Qty,
+                PlanStartDate = DateTime.TryParse(model.PlanStart, out var ps) ? ps : (DateTime?)null,
+                DispatchDate = model.DispatchDate,
+                Note = model.Note ?? string.Empty,
+                FinalFinishedDate = DateTime.TryParse(model.IfsFinish, out var ifs) ? ifs : (DateTime?)null,
+                FAStatus = model.FaStatus,
+                ShipmentDate = DateTime.TryParse(model.Shipment, out var ship) ? ship : (DateTime?)null,
+                ShipmentMode = model.Mode,
+                WithSR = model.WithSr,
+                OrderStatus = 0,
+                model.Operational,
+                model.P1SA_C,
+                model.P1SA_M,
+                model.P1SA_R,
+                model.P1SA_P,
+                model.P1SA_W,
+                model.P1FA_FA,
+                model.P1FA_H,
+                model.M1
+            };
+
+
+
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"IF EXISTS
+                    (
+                        SELECT 1
+                        FROM FanTraceabilityManufacturingUploadData
+                        WHERE FinalShopOrder = @FinalShopOrder
+                          AND ItemNo = @ItemNo
+                          AND Model = @Model
+                    )
+                    BEGIN
+                        UPDATE FanTraceabilityManufacturingUploadData
+                        SET
+                            Line = @Line,
+                            WC = @WC,
+                            PlanQty = @PlanQty,
+                            PlanStartDate = @PlanStartDate,
+                            DispatchDate = @DispatchDate,
+                            Note = @Note,
+                            FinalFinishedDate = @FinalFinishedDate,
+                            FAStatus = @FAStatus,
+                            ShipmentDate = @ShipmentDate,
+                            ShipmentMode = @ShipmentMode,
+                            WithSR = @WithSR,
+                            Operational = @Operational,
+                            P1SA_C = @P1SA_C,
+                            P1SA_M = @P1SA_M,
+                            P1SA_R = @P1SA_R,
+                            P1SA_P = @P1SA_P,
+                            P1SA_W = @P1SA_W,
+                            P1FA_FA = @P1FA_FA,
+                            P1FA_H = @P1FA_H,
+                            M1 = @M1
+                        WHERE FinalShopOrder = @FinalShopOrder
+                          AND ItemNo = @ItemNo
+                          AND Model = @Model;
+                    END
+                    ELSE
+                    BEGIN
+                        INSERT INTO FanTraceabilityManufacturingUploadData
+                        (
+                            Line, FinalShopOrder, ItemNo, Model, WC,
+                            PlanQty, PlanStartDate, DispatchDate, Note,
+                            FinalFinishedDate, FAStatus, ShipmentDate,
+                            ShipmentMode, WithSR, OrderStatus, Operational,
+                            P1SA_C, P1SA_M, P1SA_R, P1SA_W, P1FA_FA, P1FA_H, M1, P1SA_P
+                        )
+                        VALUES
+                        (
+                            @Line, @FinalShopOrder, @ItemNo, @Model, @WC,
+                            @PlanQty, @PlanStartDate, @DispatchDate, @Note,
+                            @FinalFinishedDate, @FAStatus, @ShipmentDate,
+                            @ShipmentMode, @WithSR, @OrderStatus, @Operational,
+                            @P1SA_C, @P1SA_M, @P1SA_R, @P1SA_W, @P1FA_FA, @P1FA_H, @M1, @P1SA_P
+                        );
+                    END", parameters);
 
             return rows > 0;
         }

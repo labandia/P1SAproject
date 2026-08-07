@@ -483,24 +483,23 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
 
                     for (int r = 2; r <= rowCount; r++)
                     {
-                        if (sheet.Cells[r, 2].Value == null) continue;
+                        if (string.IsNullOrWhiteSpace(GetCell(sheet, r, 2)))
+                            continue;
+
+                        var rowResult = new UploadRowResult
+                        {
+                            ShopOrder = GetCell(sheet, r, 2),
+                            PartNo = GetCell(sheet, r, 3),
+                            Model = GetCell(sheet, r, 4),
+                            Wc = GetCell(sheet, r, 5),
+                            PlanStart = GetCellAsDate(sheet, r, 7),
+                            IsSuccess = false,
+                            Message = ""
+                        };
+
 
                         try
                         {
-
-
-                            var rowResult = new UploadRowResult
-                            {
-                                ShopOrder = GetCell(sheet, r, 2),
-                                PartNo = GetCell(sheet, r, 3),
-                                Model = GetCell(sheet, r, 4),
-                                Wc = GetCell(sheet, r, 5),
-                                PlanStart = GetCellAsDate(sheet, r, 7),
-                                IsSuccess = true,
-                                Message = "OK"
-                            };
-
-
                             var obj = new ProductionRecord
                             {
                                 Model = GetCell(sheet, r, 4),
@@ -508,7 +507,9 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                                 Line = GetCell(sheet, r, 1),
                                 PartNo = GetCell(sheet, r, 3),
                                 WC = GetCell(sheet, r, 5),
-                                Qty = Convert.ToInt32(GetCell(sheet, r, 6)),
+                                Qty = int.TryParse(GetCell(sheet, r, 6), out var qty)
+                                ? qty
+                                : 0,
                                 PlanStart = GetCellAsDate(sheet, r, 7),
                                 DispatchDate = GetCell(sheet, r, 8),
                                 Note = GetCell(sheet, r, 9),
@@ -527,76 +528,75 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                                 M1 = int.TryParse(GetCell(sheet, r, 22), out var M1) ? M1 : 0,
                                 Operational = int.TryParse(GetCell(sheet, r, 23), out var op) ? op : 0
                             };
-                            Debug.WriteLine($@"
-                                ========== ProductionRecord (Row {r}) ==========
-                                Line          : {obj.Line}
-                                ShopOrder     : {obj.ShopOrder}
-                                PartNo        : {obj.PartNo}
-                                Model         : {obj.Model}
-                                WC            : {obj.WC}
-                                Qty           : {obj.Qty}
-                                PlanStart     : {obj.PlanStart:yyyy-MM-dd}
-                                DispatchDate  : {obj.DispatchDate}
-                                Note          : {obj.Note}
-                                IfsFinish     : {obj.IfsFinish:yyyy-MM-dd}
-                                FaStatus      : {obj.FaStatus}
-                                Shipment      : {obj.Shipment:yyyy-MM-dd}
-                                Mode          : {obj.Mode}
-                                WithSr        : {obj.WithSr}
-                                P1SA_C        : {obj.P1SA_C}
-                                P1SA_W        : {obj.P1SA_W}
-                                P1SA_M        : {obj.P1SA_M}
-                                P1SA_P        : {obj.P1SA_P}
-                                P1SA_R        : {obj.P1SA_R}
-                                P1FA_FA       : {obj.P1FA_FA}
-                                P1FA_H        : {obj.P1FA_H}
-                                M1            : {obj.M1}
-                                Operational   : {obj.Operational}
-                                ===============================================");
+                            //Debug.WriteLine($@"
+                            //    ========== ProductionRecord (Row {r}) ==========
+                            //    Line          : {obj.Line}
+                            //    ShopOrder     : {obj.ShopOrder}
+                            //    PartNo        : {obj.PartNo}
+                            //    Model         : {obj.Model}
+                            //    WC            : {obj.WC}
+                            //    Qty           : {obj.Qty}
+                            //    PlanStart     : {obj.PlanStart:yyyy-MM-dd}
+                            //    DispatchDate  : {obj.DispatchDate}
+                            //    Note          : {obj.Note}
+                            //    IfsFinish     : {obj.IfsFinish:yyyy-MM-dd}
+                            //    FaStatus      : {obj.FaStatus}
+                            //    Shipment      : {obj.Shipment:yyyy-MM-dd}
+                            //    Mode          : {obj.Mode}
+                            //    WithSr        : {obj.WithSr}
+                            //    P1SA_C        : {obj.P1SA_C}
+                            //    P1SA_W        : {obj.P1SA_W}
+                            //    P1SA_M        : {obj.P1SA_M}
+                            //    P1SA_P        : {obj.P1SA_P}
+                            //    P1SA_R        : {obj.P1SA_R}
+                            //    P1FA_FA       : {obj.P1FA_FA}
+                            //    P1FA_H        : {obj.P1FA_H}
+                            //    M1            : {obj.M1}
+                            //    Operational   : {obj.Operational}
+                            //    ===============================================");
                             // save to DB here if needed
-                            bool inserted = await _upload.UploadDataToDatabase(obj, "FanTraceabilityManufacturingUploadData");
+                            bool success = await _upload.UpsertUploadData(obj);
 
-                            if (!inserted)
+                            rowResult.IsSuccess = success;
+                            rowResult.Message = success ? "Imported Successfully" : "Import Failed";
+
+                            if (success)
                             {
-                                await _upload.UploadDataToDatabase(
-                                obj,
-                                "FanTraceabilityManufacturingUploadFailed");
-                            }
-
-                            lock (state)
-                            {
-                                state.Current++;
-
-                                if (inserted)
+                                lock (state)
                                 {
                                     state.Success++;
                                 }
-                                else
+
+                            }
+                            else
+                            {
+                                lock (state)
                                 {
                                     state.Failed++;
                                 }
-                                state.Rows.Add(rowResult);
                             }
+                             
 
                             System.Threading.Thread.Sleep(80);
                         }
                         catch (Exception ex)
                         {
+                            rowResult.IsSuccess = false;
+                            rowResult.Message = ex.Message;
+
+                            Debug.WriteLine($"Row {r} ERROR");
+                            Debug.WriteLine(ex);
+
                             lock (state)
                             {
-                                state.Current++;
                                 state.Failed++;
-                                state.Rows.Add(new UploadRowResult
-                                {
-                                    ShopOrder = GetCell(sheet, r, 2),
-                                    PartNo = GetCell(sheet, r, 3),
-                                    Model = GetCell(sheet, r, 4),
-                                    Wc = GetCell(sheet, r, 5),
-                                    PlanStart = "",
-                                    IsSuccess = false,
-                                    Message = ex.Message
-                                });
                             }
+                        }
+
+                        lock (state)
+                        {
+                            state.Current++;
+                            state.Rows.Add(rowResult);
                         }
                     }
                 }

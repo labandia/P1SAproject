@@ -27,6 +27,7 @@ namespace ProgramPartListWeb.Areas.Final.Interface
         Task<bool> CheckApprovalAllUploaded();
         // Insert the uploaded data to the database
         Task<bool> UploadDataToDatabase(ProductionRecord model, string tb);
+        Task<bool> UpsertUploadData(ProductionRecord model);
         Task<bool> TransferDataUploadtoMain();
     }
 }

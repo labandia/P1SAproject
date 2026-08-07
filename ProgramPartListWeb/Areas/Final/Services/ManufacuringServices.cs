@@ -230,7 +230,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         mo.Note,
                         mo.FinalFinishedDate,
                         mo.FAStatus,
-                        mo.ShipmentDate,
+                        FORMAT(mo.ShipmentDate, 'MM/dd/yy') AS ShipmentDate,
                         mo.ShipmentMode,
                         mo.WithSR,
                         mo.OrderRemarks,

@@ -45,11 +45,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                     U.IsApproved
                                 FROM FanTraceabilityManufacturingUploadData U
                                 LEFT JOIN FanTraceabilityManufacturingOrder O
-                                    ON U.FinalShopOrder = O.FinalShopOrder
-                                WHERE
-                                    O.FinalShopOrder IS NULL
-                                    OR U.PlanQty <> O.PlanQty
-                                    OR CAST(U.PlanStartDate AS DATE) <> CAST(O.PlanStartDate AS DATE); ";
+                                    ON U.FinalShopOrder = O.FinalShopOrder";
 
                  return  await SqlDataAcess_Test.QueryAsync<UploadProductionRecord>(query, new { });
                
@@ -113,6 +109,11 @@ namespace ProgramPartListWeb.Areas.Final.Services
         {
             try
             {
+                // Step 1 : Update All to Zero before transfer to main table
+                await UpdateToZeroMainManufacturingOrder(); 
+
+
+
                 var getApproveData = await SqlDataAcess_Test.QueryAsync<UploadDataModel>(@"SELECT 
                             U.RecordID,
 	                        U.Line,
@@ -196,6 +197,14 @@ namespace ProgramPartListWeb.Areas.Final.Services
             }
         }
 
+
+        public async Task UpdateToZeroMainManufacturingOrder()
+        {
+            await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingOrder 
+                 SET P1SA_C = 0, P1SA_M = 0, P1SA_R = 0, P1SA_W = 0, 
+                     P1FA_FA = 0, P1FA_H = 0, M1 = 0, P1SA_P = 0", 
+                 new {});
+        }
 
 
         // public async Task<bool> TransferDataUploadtoMain()

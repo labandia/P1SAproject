@@ -303,7 +303,9 @@
             <td><strong>${totals.M1}</strong></td>
         </tr>`;
 
-        document.getElementById("totalPlanText").textContent = totals.Plan_Start;
+        let gtotal = totals.P1SA_C + totals.P1SA_W + totals.P1SA_M + totals.P1SA_P + totals.P1SA_R + totals.P1FA_FA + totals.P1FA_H + totals.M1;
+
+        document.getElementById("totalPlanText").textContent = gtotal;
 
         this.tbody.innerHTML = rows + totalRow;
 

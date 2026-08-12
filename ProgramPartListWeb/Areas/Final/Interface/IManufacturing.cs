@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static ProgramPartListWeb.Areas.Final.Model.DisposalModels;
 
 namespace ProgramPartListWeb.Areas.Final
 {
@@ -65,5 +66,11 @@ namespace ProgramPartListWeb.Areas.Final
 
         // ====== SEPARATE FOR THE TRACEABILITY =====================
         Task<List<DailyPlanChartModel>> GetDailyPlanChart();
+
+
+        // ====== FOR THE DISPOSAL SCRAP ============================
+        Task<(TotalDisposalMonitor summary, List<DisposalSummary> list)> GetDisposalDetails(int controlID);
+
+
     }
 }

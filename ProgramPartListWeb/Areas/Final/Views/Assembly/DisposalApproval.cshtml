@@ -1,0 +1,75 @@
+﻿
+@{
+    Layout = null;
+    var intID = Request.QueryString["id"];
+}
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DisposalApproval</title>
+
+    <!-- Google Fonts (same as original) -->
+    <script src="~/Scripts/Shared/bootstrap.bundle.min.js"></script>
+    <script src="~/Scripts/iconify-icon.min.js"></script>
+    <link href="~/Content/Shared/bootstrap.min.css" rel="stylesheet" />
+
+    @Scripts.Render("~/bundles/shared-js")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <input type="hidden" id="intID" value="@intID" />
+
+    <div>
+
+
+        <h1>This is DISPOSdsad</h1>
+    </div>
+
+    <script src="~/Scripts/Shared/Global.js"></script>
+    <script type="module" asp-append-version="true">
+        import {
+            getMethod,
+            postMethod
+        } from '@Url.Content("~/Scripts/modules/index.js")';
+
+         class DisposalApprovalController {
+                 constructor() {
+                     this.recordID = document.getElementById('intID').value;
+                 }
+
+                 async init() {
+                     this.LoadDetailsinfo();
+                     this.bindEvents();
+                 }
+
+                  async LoadDetailsinfo() {
+                     try {
+                         const res = await getMethod('@Url.Action("GetDisposalData", "Assembly")', {
+                             ID: this.recordID
+                         });
+                         if (!res?.Success) return;
+                         console.log(res);
+
+                     } catch (error) {
+                         console.error('Error fetching data:', error);
+                     }
+                 }
+
+                 bindEvents() {
+
+                 }
+
+         }
+
+
+         document.addEventListener('DOMContentLoaded', function () {
+              const controller = new DisposalApprovalController();
+              controller.init();
+         });
+    </script>
+</body>
+</html>

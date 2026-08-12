@@ -979,7 +979,22 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         }
 
 
+        [HttpGet]
+        public async Task<ActionResult> GetDisposalData(int ID)
+        {
+            var data = await _manu.GetDisposalDetails(ID);
 
+            var finalobj = new
+            {
+                materialSummary = data.summary,
+                materialList = data.list,
+            };
+
+            return JsonSuccess(finalobj, "Get Data Successfully");
+        }
+
+
+        
 
 
         // GET: Final/Assembly
@@ -996,5 +1011,9 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         public ActionResult ShopOrderDetails(int id) => View();
 
         public ActionResult DailyPlanChart() => View();
+
+
+
+        public ActionResult DisposalApproval(int id) => View();   
     }
 }

@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using static ProgramPartListWeb.Areas.Final.Model.DisposalModels;
 
 namespace ProgramPartListWeb.Areas.Final.Services
 {
@@ -1104,5 +1105,42 @@ namespace ProgramPartListWeb.Areas.Final.Services
      //           ORDER BY
      //               CAST(PlanStartDate AS DATE);");
         }
+
+        public async Task<(TotalDisposalMonitor summary, List<DisposalSummary> list)> GetDisposalDetails(int controlID)
+        {
+            var summarylistTask = await SqlDataAcess_Test.QuerySingleOrDefaultAsync<TotalDisposalMonitor>($@"SELECT 
+                     c.ControlNumberID,
+                     c.ControlNumber,
+                     SUM(m.Quantity) as TotalQuantity, 
+                     m.Category, 
+                        FORMAT(c.DateDisposal, 'MM/dd HH:mm') as DateDisposal
+                     FROM DisposalControlNumber c
+                     INNER JOIN DisposalMonitor m ON m.ControlNumberID = c.ControlNumberID
+                     WHERE c.ControlNumberID = @ControlNumberID
+                     GROUP BY c.ControlNumber, c.ControlNumberID, m.Category, c.DateDisposal", new
+            {
+                ControlNumberID = controlID
+            });
+
+            var disposalListTask = await SqlDataAcess_Test.QueryAsync<DisposalSummary>($@"SELECT 
+                     d.RecordID,
+                     c.DateDisposal,
+                     m.MaterialName,
+                     d.Container,
+                     d.Quantity,
+                        m.Units,
+                     d.Remarks
+                    FROM DisposalMonitor d 
+                    INNER JOIN DisposalControlNumber c ON d.ControlNumberID = c.ControlNumberID
+                    INNER JOIN DisposalMaterial m ON m.MaterialID = d.MaterialID
+                    INNER JOIN P1SA_Department p ON p.DepartmentId = d.DepartmentId 
+                    WHERE d.ControlNumberID = @ControlNumberID", new { ControlNumberID = controlID });
+
+
+            return (summarylistTask, disposalListTask); 
+
+        }
+
+     
     }
 }

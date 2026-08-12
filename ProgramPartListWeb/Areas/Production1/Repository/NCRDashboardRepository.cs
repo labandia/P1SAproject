@@ -1,15 +1,11 @@
 ﻿using Dapper;
-using DocumentFormat.OpenXml.Spreadsheet;
 using ProgramPartListWeb.Areas.Production1.Interface;
 using ProgramPartListWeb.Areas.Production1.Model;
 using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Utilities.DataAccess;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace ProgramPartListWeb.Areas.Production1.Repository
 {

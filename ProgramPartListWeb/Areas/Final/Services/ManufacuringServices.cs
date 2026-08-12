@@ -976,53 +976,133 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
         public Task<List<DispatchPartlistRecord>> GetDispatchShortSummay()
         {
-            return SqlDataAcess_Test.QueryAsync<DispatchPartlistRecord>($@"SELECT
-                    CONVERT(VARCHAR(10), CAST(PlanStartDate AS DATE), 103) AS DateDelay,
+            return SqlDataAcess_Test.QueryAsync<DispatchPartlistRecord>($@"WITH FilteredData AS
+                    (
+                        SELECT
+                            CAST(PlanStartDate AS DATE) AS PlanStartDate,
+                            PlanQty,
+                            FinalFinishedDate,
 
-                    -- Total Planned Quantity
-                    SUM(PlanQty) AS Plan_Start,
+                            P1SA_C,
+                            P1SA_W,
+                            P1SA_M,
+                            P1SA_P,
+                            P1SA_R,
+                            P1FA_FA,
+                            P1FA_H,
+                            M1
+                        FROM FanTraceabilityManufacturingOrder
+    
+	                    WHERE
+		                    CAST(PlanStartDate AS DATE) <= CAST(GETDATE() AS DATE)
 
-                    -- Completion
-                    SUM(
-						CASE
-							WHEN FinalFinishedDate IS NOT NULL
-							 AND CAST(FinalFinishedDate AS DATE) <= CAST(GETDATE() AS DATE)
-							THEN PlanQty
-							ELSE 0
-						END
-					) AS Completion,
+                        AND (
+                               ISNULL(P1SA_C, 0)  <> 0
+                            OR ISNULL(P1SA_W, 0)  <> 0
+                            OR ISNULL(P1SA_M, 0)  <> 0
+                            OR ISNULL(P1SA_P, 0)  <> 0
+                            OR ISNULL(P1SA_R, 0)  <> 0
+                            OR ISNULL(P1FA_FA, 0) <> 0
+                            OR ISNULL(P1FA_H, 0)  <> 0
+                            OR ISNULL(M1, 0)      <> 0
+                        )
+                    )
+                    SELECT
+                        CONVERT(VARCHAR(10), PlanStartDate, 103) AS DateDelay,
 
-                    -- Totals
-                    SUM(P1SA_C + P1SA_W + P1SA_M + P1SA_P + P1SA_R) AS P1SA,
-                    SUM(P1FA_FA + P1FA_H) AS P1FA,
+                        -- PlanQty based on the HAVING conditions
+                        SUM(PlanQty) AS Plan_Start,
 
-                    -- Individual Columns
-                    SUM(P1SA_C)  AS [P1SA_C],
-                    SUM(P1SA_W)  AS [P1SA_W],
-                    SUM(P1SA_M)  AS [P1SA_M],
-                    SUM(P1SA_P)  AS [P1SA_P],
-                    SUM(P1SA_R)  AS [P1SA_R],
-                    SUM(P1FA_FA) AS [P1FA_FA],
-                    SUM(P1FA_H)  AS [P1FA_H],
-                    SUM(M1)      AS [M1]
+                        -- Completion
+                        SUM(
+                            CASE
+                                WHEN FinalFinishedDate IS NOT NULL
+                                    AND CAST(FinalFinishedDate AS DATE) <= CAST(GETDATE() AS DATE)
+                                THEN PlanQty
+                                ELSE 0
+                            END
+                        ) AS Completion,
 
-                FROM FanTraceabilityManufacturingOrder
+                        -- Totals
+                        SUM(P1SA_C + P1SA_W + P1SA_M + P1SA_P + P1SA_R) AS P1SA,
+                        SUM(P1FA_FA + P1FA_H) AS P1FA,
 
-                WHERE
-                    CAST(PlanStartDate AS DATE) <= CAST(GETDATE() AS DATE)
-                GROUP BY
-                    CAST(PlanStartDate AS DATE)
-                HAVING
-                       SUM(P1SA_C)  <> 0
-                    OR SUM(P1SA_W)  <> 0
-                    OR SUM(P1SA_M)  <> 0
-                    OR SUM(P1SA_P)  <> 0
-                    OR SUM(P1SA_R)  <> 0
-                    OR SUM(P1FA_FA) <> 0
-                    OR SUM(P1FA_H)  <> 0
-                    OR SUM(M1)      <> 0
-                ORDER BY
-                    CAST(PlanStartDate AS DATE);");
+                        -- Individual Columns
+                        SUM(P1SA_C)  AS P1SA_C,
+                        SUM(P1SA_W)  AS P1SA_W,
+                        SUM(P1SA_M)  AS P1SA_M,
+                        SUM(P1SA_P)  AS P1SA_P,
+                        SUM(P1SA_R)  AS P1SA_R,
+                        SUM(P1FA_FA) AS P1FA_FA,
+                        SUM(P1FA_H)  AS P1FA_H,
+                        SUM(M1)      AS M1
+
+                    FROM FilteredData
+
+                    GROUP BY
+                        PlanStartDate
+
+                    HAVING
+                           SUM(P1SA_C)  <> 0
+                        OR SUM(P1SA_W)  <> 0
+                        OR SUM(P1SA_M)  <> 0
+                        OR SUM(P1SA_P)  <> 0
+                        OR SUM(P1SA_R)  <> 0
+                        OR SUM(P1FA_FA) <> 0
+                        OR SUM(P1FA_H)  <> 0
+                        OR SUM(M1)      <> 0
+
+                    ORDER BY
+                        PlanStartDate;");
+
+
+     //       return SqlDataAcess_Test.QueryAsync<DispatchPartlistRecord>($@"SELECT
+     //               CONVERT(VARCHAR(10), CAST(PlanStartDate AS DATE), 103) AS DateDelay,
+
+     //               -- Total Planned Quantity
+     //               SUM(PlanQty) AS Plan_Start,
+
+     //               -- Completion
+     //               SUM(
+					//	CASE
+					//		WHEN FinalFinishedDate IS NOT NULL
+					//		 AND CAST(FinalFinishedDate AS DATE) <= CAST(GETDATE() AS DATE)
+					//		THEN PlanQty
+					//		ELSE 0
+					//	END
+					//) AS Completion,
+
+     //               -- Totals
+     //               SUM(P1SA_C + P1SA_W + P1SA_M + P1SA_P + P1SA_R) AS P1SA,
+     //               SUM(P1FA_FA + P1FA_H) AS P1FA,
+
+     //               -- Individual Columns
+     //               SUM(P1SA_C)  AS [P1SA_C],
+     //               SUM(P1SA_W)  AS [P1SA_W],
+     //               SUM(P1SA_M)  AS [P1SA_M],
+     //               SUM(P1SA_P)  AS [P1SA_P],
+     //               SUM(P1SA_R)  AS [P1SA_R],
+     //               SUM(P1FA_FA) AS [P1FA_FA],
+     //               SUM(P1FA_H)  AS [P1FA_H],
+     //               SUM(M1)      AS [M1]
+
+     //           FROM FanTraceabilityManufacturingOrder
+
+     //           WHERE
+     //               CAST(PlanStartDate AS DATE) <= CAST(GETDATE() AS DATE)
+     //           GROUP BY
+     //               CAST(PlanStartDate AS DATE)
+     //           HAVING
+     //                  SUM(P1SA_C)  <> 0
+     //               OR SUM(P1SA_W)  <> 0
+     //               OR SUM(P1SA_M)  <> 0
+     //               OR SUM(P1SA_P)  <> 0
+     //               OR SUM(P1SA_R)  <> 0
+     //               OR SUM(P1FA_FA) <> 0
+     //               OR SUM(P1FA_H)  <> 0
+     //               OR SUM(M1)      <> 0
+     //           ORDER BY
+     //               CAST(PlanStartDate AS DATE);");
         }
     }
 }

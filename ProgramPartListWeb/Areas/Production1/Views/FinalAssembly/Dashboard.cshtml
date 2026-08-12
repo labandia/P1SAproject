@@ -296,14 +296,13 @@
         }
 
         async init() {
-           
+
 
             await this.fetchMonthData();
             await this.fetch4MData();
             await this.fetchGroupData();
-            await this.SampleUserData();
 
-            this.generateData();      // <-- missing
+            this.generateData();
             this.renderLines();
 
             await this.fetchBestLines();
@@ -314,10 +313,9 @@
                 this.refreshText.textContent = 'Updated ' + new Date().toLocaleTimeString();
             }, 10000);
 
-            // Separate, slower interval just for best-lines / missing-lines data
             this.bestLinesInterval = setInterval(async () => {
                 await this.fetchBestLines();
-            }, 2 * 60 * 10000); // every 60s — adjust to taste
+            }, 60 * 1000);
 
             // Award slide: push in every 5 minutes
             this.awardSlideInterval = setInterval(() => {
@@ -329,19 +327,6 @@
             });
         }
 
-         async SampleUserData() {
-             try {
-                 const res = await getMethod('@Url.Action("SampleGet", "FinalAssembly")', {});
-                 console.log(res);
-                 if (!res?.Success) {
-                     console.log('No data found in 4M ');
-                     return;
-                 }
-                 //this.renderNcrBars(res.data);
-             } catch (error) {
-                 console.error('Error fetching 4M data:', error);
-             }
-        }
 
         // ---- Month Display dashboard ----
         async fetchMonthData() {
@@ -418,23 +403,47 @@
             // Ignore the "Total" summary row, keep only the per-type rows
             const rows = (data || []).filter(r => r['NCRType'] !== 'Total');
 
+            const updates = [];
             rows.forEach(row => {
                 const key = typeMap[row['NCRType']];
                 if (!key) return; // unmapped/unknown NCR type, skip safely
 
                 const bar = document.getElementById(`ncr-${key}`);
-                //const countEl = document.getElementById(`ncr-${key}-count`);
                 if (!bar) return;
 
-                const qty = row['Qty'] ?? 0;
                 const pct = row['Percentage'] ?? 0;
-
-                //console.log("Quantity: " + qty);
-                //console.log("Percentage: " + pct);
-
-                this.animateBarFill(bar, pct);
-                //countEl.textContent = qty;
+                updates.push({ el: bar, pct });
             });
+
+            this.batchAnimateBars(updates);
+        }
+
+        batchAnimateBars(updates) {
+            if (!updates || !updates.length) return;
+
+            // Phase 1: reset (writes only, no reads in between)
+            updates.forEach(({ el }) => {
+                el.style.transition = 'none';
+                el.style.width = '0%';
+                el.classList.add('bar-refreshing');
+            });
+
+            // Phase 2: a single forced reflow for the entire batch, instead
+            // of one per bar.
+            void document.body.offsetHeight;
+
+            // Phase 3: animate all bars together in the same frame.
+            requestAnimationFrame(() => {
+                updates.forEach(({ el, pct }) => {
+                    el.style.transition = 'width 0.8s cubic-bezier(0.22, 1, 0.36, 1)';
+                    el.style.width = pct + '%';
+                });
+            });
+
+            clearTimeout(this._shimmerBatchTimeout);
+            this._shimmerBatchTimeout = setTimeout(() => {
+                updates.forEach(({ el }) => el.classList.remove('bar-refreshing'));
+            }, 850);
         }
 
 
@@ -472,15 +481,19 @@
                 { key: 'OP', barId: 'dist-oil' },
             ];
 
+            const updates = [];
             groupMap.forEach(({ key, barId }) => {
                 const el = document.getElementById(barId);
                 if (!el) return;
 
                 const pct = finalPercentRow[key] ?? 0;
-
-                this.animateBarFill(el, pct);
+                // Set the label text once, up front, instead of inside the
+                // animation loop — keeps the batched animation phases clean.
                 el.textContent = `${pct}%`;
+                updates.push({ el, pct });
             });
+
+            this.batchAnimateBars(updates);
         }
 
         async fetchBestLines() {
@@ -491,7 +504,7 @@
                  return;
              }
 
-             console.log(res.data);
+             //console.log(res.data);
              this.applyBestLines(res.data);
          } catch (error) {
              console.error('Error fetching group data:', error);
@@ -565,38 +578,58 @@
         // ---- Typewriter cycling through lines with no NCR data ----
         startMissingLinesTyping(lines) {
             // Stop any previous cycle before starting a new one
-            clearTimeout(this._typingTimeout);
-            clearInterval(this._typingInterval);
+            if (this._typingRafId) cancelAnimationFrame(this._typingRafId);
+            clearTimeout(this._typingPauseTimeout);
 
             if (!lines || lines.length === 0) {
                 this.bestLineNumber.textContent = 'All Lines Reported';
                 return;
             }
 
+            const CHAR_INTERVAL_MS = 100;
+            const HOLD_MS = 1500;
+
             let lineIndex = 0;
+            let charIndex = 0;
+            let lastTickTime = 0;
+            let holding = false;
+            let holdStart = 0;
 
-            const typeLine = () => {
-                const text = lines[lineIndex];
-                let charIndex = 0;
-                this.bestLineNumber.textContent = '';
+            const step = (timestamp) => {
+                // Pause all work while the page/tab isn't visible.
+                if (document.hidden) {
+                    this._typingRafId = requestAnimationFrame(step);
+                    return;
+                }
 
-                this._typingInterval = setInterval(() => {
+                if (holding) {
+                    if (timestamp - holdStart >= HOLD_MS) {
+                        holding = false;
+                        lineIndex = (lineIndex + 1) % lines.length;
+                        charIndex = 0;
+                        this.bestLineNumber.textContent = '';
+                        lastTickTime = timestamp;
+                    }
+                    this._typingRafId = requestAnimationFrame(step);
+                    return;
+                }
+
+                if (timestamp - lastTickTime >= CHAR_INTERVAL_MS) {
+                    lastTickTime = timestamp;
                     charIndex++;
+                    const text = lines[lineIndex];
                     this.bestLineNumber.textContent = text.substring(0, charIndex);
 
                     if (charIndex >= text.length) {
-                        clearInterval(this._typingInterval);
-
-                        // Pause on the fully typed line before moving to the next
-                        this._typingTimeout = setTimeout(() => {
-                            lineIndex = (lineIndex + 1) % lines.length;
-                            typeLine();
-                        }, 1500); // how long the finished text stays visible, ms
+                        holding = true;
+                        holdStart = timestamp;
                     }
-                }, 100); // typing speed per character, ms
+                }
+
+                this._typingRafId = requestAnimationFrame(step);
             };
 
-            typeLine();
+            this._typingRafId = requestAnimationFrame(step);
         }
 
         //applyBestLines(data) {
@@ -667,7 +700,9 @@
 
         // ---- Render line rows ----
         renderLines() {
-            this.lineList.innerHTML = '';
+            // Build the whole list off-DOM (DocumentFragment) and attach once,
+            // instead of appending 20 rows one at a time into a live DOM tree.
+            const fragment = document.createDocumentFragment();
             this.lineData.forEach(d => {
                 const row = document.createElement('div');
                 row.className = 'line-row';
@@ -678,8 +713,12 @@
                     <span class="ncr-info"></span>
                     <span class="emoji"></span>
                 `;
-                this.lineList.appendChild(row);
+                fragment.appendChild(row);
             });
+
+            this.lineList.innerHTML = '';
+            this.lineList.appendChild(fragment);
+
             // Re-attach click events after render
             this.attachLineClicks();
         }
@@ -730,7 +769,7 @@
         async fetchAwardData() {
             try {
                 const res = await getMethod('@Url.Action("GetAwardData", "FinalAssembly")', {});
-                console.log(res);
+
 
                 if (res?.Success) {
                     return res.data; // expected: array of awardee objects
@@ -741,7 +780,32 @@
                 return null;
             }
         }
+        // Preloads certificate images so decoding happens BEFORE the slide
+        // animates in, instead of stalling mid-transition while the TV's
+        // decoder catches up. Results are cached so repeat awardees are free.
+        preloadAwardImages(awardees) {
+            const loads = awardees.map(a => {
+                if (!a.CertificateImage) return Promise.resolve();
 
+                const url = `@Url.Action("DisplaytheImage", "FinalAssembly")?filename=${encodeURIComponent('')}`.replace('filename=', 'filename=' + encodeURIComponent(a.CertificateImage));
+
+                if (this._imagePreloadCache.has(url)) {
+                    return Promise.resolve();
+                }
+
+                return new Promise(resolve => {
+                    const img = new Image();
+                    img.onload = () => {
+                        this._imagePreloadCache.set(url, true);
+                        resolve();
+                    };
+                    img.onerror = resolve;
+                    img.src = url;
+                });
+            });
+
+            return Promise.all(loads);
+        }
 
         async showAwardSlide() {
             const data = await this.fetchAwardData();
@@ -749,6 +813,18 @@
 
             const awardees = data.filter(d => d.IsDisplayed).slice(0, 3);
             if (!awardees.length) return; // nothing flagged for display — skip this cycle silently
+
+            // PERFORMANCE: skip the whole slide-in/out animation (transform of
+            // the entire dashboard) if the awardee set hasn't changed since the
+            // last time we actually showed it. This is the heaviest recurring
+            // animation on the page, so avoid re-running it needlessly.
+            const awardKey = awardees.map(a => `${a.EmployeeID}:${a.CertificateImage}`).join('|');
+            if (awardKey === this._lastAwardKey) return;
+            this._lastAwardKey = awardKey;
+
+            // Preload images before starting the visible animation so there's
+            // no decode stutter partway through the slide.
+            await this.preloadAwardImages(awardees);
 
             this.dashboardEl.classList.add('slide-out-to-award');
             this.awardSlideOverlay.classList.remove('leaving');
@@ -767,7 +843,6 @@
         // Steps through the awardees array, showing one at a time
         cycleAwardees(awardees) {
             clearInterval(this._awardCycleInterval);
-            console.log(awardees);
             let index = 0;
             const renderCurrent = () => {
                 const data = awardees[index];
@@ -917,15 +992,15 @@
 
         // === LOG DEBUG ===
         logDebug(info, tv) {
-            console.log('📺 Screen Size:', {
-                screen: `${info.screenW}×${info.screenH}`,
-                viewport: `${info.viewW}×${info.viewH}`,
-                dpr: info.dpr,
-                physical: `${info.physW}×${info.physH}`,
-                isTV: tv.isTV,
-                isTCL: tv.isTCL,
-                userAgent: navigator.userAgent
-            });
+            //console.log('📺 Screen Size:', {
+            //    screen: `${info.screenW}×${info.screenH}`,
+            //    viewport: `${info.viewW}×${info.viewH}`,
+            //    dpr: info.dpr,
+            //    physical: `${info.physW}×${info.physH}`,
+            //    isTV: tv.isTV,
+            //    isTCL: tv.isTCL,
+            //    userAgent: navigator.userAgent
+            //});
         }
 
         // === INIT ===
@@ -935,7 +1010,7 @@
             window.addEventListener('orientationchange', () => {
                 setTimeout(this.update, 300);
             });
-            console.log('✅ ScreenSizeController ready');
+            //console.log('✅ ScreenSizeController ready');
         }
 
         // === CLEANUP ===

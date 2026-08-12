@@ -198,8 +198,8 @@
                     this.isFirstLoad = false;
                 }
 
-               const res = await getMethod('@Url.Action("GetDispatchReportData", "Assembly")', {});
-               console.log(res);
+                const res = await getMethod('@Url.Action("GetDispatchReportData", "Assembly")', {});
+
                 if (!res?.Success) {
                     this.tbody.innerHTML = `
                      <tr>

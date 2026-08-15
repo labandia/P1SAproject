@@ -2,6 +2,7 @@
 @{
     Layout = null;
     var intID = Request.QueryString["id"];
+    var sectionId = Request.QueryString["section"];
 }
 
 
@@ -16,60 +17,269 @@
     <script src="~/Scripts/Shared/bootstrap.bundle.min.js"></script>
     <script src="~/Scripts/iconify-icon.min.js"></script>
     <link href="~/Content/Shared/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/MessageTemplate.css" rel="stylesheet" />
+
 
     @Scripts.Render("~/bundles/shared-js")
     @Scripts.Render("~/bundles/modernizr")
+
+
+
 </head>
 <body>
-    <input type="hidden" id="intID" value="@intID" />
 
-    <div>
+    <input type="hidden" id="disposalID" value="@intID" />
+    <input type="hidden" id="sectionID" value="@sectionId" />
 
+    <div class="card">
+        <div class="approval-container">
 
-        <h1>This is DISPOSdsad</h1>
+            <!-- ========== STEP 1: SELECTOR ========== -->
+            <div id="stepSelector" class="step-selector">
+                <div class="selector-headline">
+                    <i class="fas fa-user-check"></i> Select Approver
+                </div>
+
+                <div class="approval-selector">
+                    <span class="selector-label">
+                        <i class="fas fa-user-tie" aria-hidden="true"></i>
+                        Approver
+                    </span>
+
+                    <select class="selector-dropdown" id="approverSelect" aria-label="Select approval name">
+                        <option value="Neil Almazan">Neil Almazan</option>
+                      
+                    </select>
+
+                    <button class="proceed-btn" id="proceedBtn">
+                        Proceed <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <div style="font-size:0.85rem; color:#578b7a; opacity:0.6; margin-top:-0.2rem;">
+                    <i class="fas fa-info-circle"></i> Select an approver then proceed
+                </div>
+            </div>
+
+            <!-- ========== STEP 2: SUCCESS CARD ========== -->
+            <div id="stepSuccess" class="step-success">
+                <!-- animated checkmark -->
+                <div class="check-wrapper">
+                    <svg class="circle-svg" viewBox="0 0 130 130" aria-hidden="true">
+                        <circle class="circle-bg" cx="65" cy="65" r="60" />
+                        <circle class="circle-progress" cx="65" cy="65" r="60" />
+                    </svg>
+                    <svg class="check-svg" viewBox="0 0 130 130" aria-hidden="true">
+                        <path class="check-path"
+                              d="M38 68 L56 86 L94 46"
+                              stroke-linecap="round"
+                              stroke-linejoin="round" />
+                    </svg>
+                </div>
+
+                <span class="status-text">Approved Successfully</span>
+                <span class="sub-label">· Disposal verified ·</span>
+
+                <!-- dynamic approver name -->
+                <div class="success-approver" id="successApproverDisplay">
+                    <i class="fas fa-user-check"></i> <span id="successApproverName">Prof. James Chen</span>
+                </div>
+
+             
+            </div>
+
+        </div>
     </div>
-
-    <script src="~/Scripts/Shared/Global.js"></script>
     <script type="module" asp-append-version="true">
         import {
             getMethod,
             postMethod
         } from '@Url.Content("~/Scripts/modules/index.js")';
 
-         class DisposalApprovalController {
-                 constructor() {
-                     this.recordID = document.getElementById('intID').value;
-                 }
 
-                 async init() {
-                     this.LoadDetailsinfo();
-                     this.bindEvents();
-                 }
+           class DisposalController {
+                    constructor() {
 
-                  async LoadDetailsinfo() {
-                     try {
-                         const res = await getMethod('@Url.Action("GetDisposalData", "Assembly")', {
-                             ID: this.recordID
-                         });
-                         if (!res?.Success) return;
-                         console.log(res);
+                        this.sectionID =
+                            document.getElementById('sectionID')?.value || '';
+                        this.disposalID =
+                            document.getElementById('disposalID')?.value || '';
+                        this.approverSelect = document.getElementById('approverSelect');
 
-                     } catch (error) {
-                         console.error('Error fetching data:', error);
+                        this.proceedbtn = document.getElementById('proceedBtn');
+
+                        // DOM refs for steps
+                        this.stepSelector = document.getElementById('stepSelector');
+                        this.stepSuccess = document.getElementById('stepSuccess');
+                        this.successApproverName = document.getElementById('successApproverName');
+
+
+                        console.log("Section ID:", this.sectionID);
+                        console.log("Disposal ID:", this.disposalID);
+                    }
+
+                    async init() {
+                        await this.getListApproval();
+                        this.bindEvents();
+                        console.log("RUNNING");
+                    }
+
+                    bindEvents() {
+                        this.proceedbtn.addEventListener('click', async (e) => {
+                            e.preventDefault();
+
+                            // Disable button and show loading state
+                            this.proceedbtn.disabled = true;
+                            this.proceedbtn.classList.add('loading');
+                            const originalText = this.proceedbtn.innerHTML;
+                            this.proceedbtn.innerHTML = '<i class="fas fa-spinner"></i> Processing...';
+
+                            try {
+                                const res = await postMethod(
+                                    '@Url.Action("UpdateApprovalData", "Assembly")',
+                                    {
+                                        aprovename: this.approverSelect?.value || '',
+                                        id: parseInt(this.disposalID, 10)
+                                    }
+                                );
+
+                                if (res.Success) {
+                                    // Show success card with the selected approver name
+                                    this.showSuccess(this.approverSelect?.value || 'Approver');
+                                } else {
+                                    // Handle error - show alert or toast
+                                    alert(res.Message || 'An error occurred while processing your request.');
+                                    // Re-enable button
+                                    this.proceedbtn.disabled = false;
+                                    this.proceedbtn.classList.remove('loading');
+                                    this.proceedbtn.innerHTML = originalText;
+                                }
+                            } catch (error) {
+                                console.error('Error:', error);
+                                alert('An error occurred while processing your request.');
+                                // Re-enable button
+                                this.proceedbtn.disabled = false;
+                                this.proceedbtn.classList.remove('loading');
+                                this.proceedbtn.innerHTML = originalText;
+                            }
+
+                        });
+
+                      
+                }
+
+                   restartAnimations() {
+                       // Restart circle animation
+                       const circleProgress = this.stepSuccess.querySelector('.circle-progress');
+                       if (circleProgress) {
+                           const newCircle = circleProgress.cloneNode(true);
+                           circleProgress.parentNode.replaceChild(newCircle, circleProgress);
+                       }
+
+                       // Restart checkmark animation
+                       const checkPath = this.stepSuccess.querySelector('.check-path');
+                       if (checkPath) {
+                           const newPath = checkPath.cloneNode(true);
+                           checkPath.parentNode.replaceChild(newPath, checkPath);
+                       }
+
+                       // Force reflow for check-wrapper
+                       const wrapper = this.stepSuccess.querySelector('.check-wrapper');
+                       if (wrapper) {
+                           wrapper.style.animation = 'none';
+                           void wrapper.offsetHeight;
+                           wrapper.style.animation = '';
+                       }
+                   }
+
+
+                   showSuccess(approverName) {
+                       // Update success card with selected name
+                       this.successApproverName.textContent = approverName;
+
+                       // Switch visibility
+                       this.stepSelector.style.display = 'none';
+                       this.stepSuccess.classList.add('active');
+                       this.stepSuccess.style.display = 'flex';
+
+                       // Re-trigger animations
+                       this.restartAnimations();
+                   }
+
+                   showSelector() {
+                       this.stepSuccess.classList.remove('active');
+                       this.stepSuccess.style.display = 'none';
+                       this.stepSelector.style.display = 'flex';
+
+                       // Re-enable proceed button
+                       this.proceedbtn.disabled = false;
+                       this.proceedbtn.classList.remove('loading');
+                       this.proceedbtn.innerHTML = 'Proceed <i class="fas fa-arrow-right"></i>';
+                   }
+
+
+
+                   async getListApproval() {
+
+                       try {
+                           const res = await getMethod('@Url.Action("GetApprovalData", "Assembly")', {
+                               section: parseInt(this.sectionID, 10)
+                           });
+
+
+                            if (res?.Success && res.data) {
+                                const email = res.data;
+                                //console.log("Email:", res.data);
+                                const atIndex =
+                                    email.indexOf(String.fromCharCode(64));
+
+                                const username =
+                                    atIndex >= 0
+                                        ? email.substring(0, atIndex)
+                                        : email;
+
+
+                                console.log("Username:", username);
+                                const option =
+                                    document.createElement("option");
+
+                                const name = username.split(/[._\s]+/)
+                                    .map(x => x.charAt(0).toUpperCase() + x.slice(1).toLowerCase())
+                                    .join(" ");
+
+                                // Actual value = full email
+                                option.value = name;
+
+
+                                // Display = username only
+                                option.textContent = name;
+
+
+                                this.approverSelect.appendChild(option);
+
+                                // Select second option
+                                if (this.approverSelect.options.length > 1) {
+                                    this.approverSelect.selectedIndex = 1;
+                                }
+                            }
+
+
+                       } catch (error) {
+                           console.error('Error fetching data:', error);
+
+                       }
                      }
-                 }
-
-                 bindEvents() {
-
-                 }
-
-         }
 
 
-         document.addEventListener('DOMContentLoaded', function () {
-              const controller = new DisposalApprovalController();
-              controller.init();
-         });
+
+            }
+
+
+
+            document.addEventListener('DOMContentLoaded', function () {
+            const controller = new DisposalController();
+            controller.init();
+        });
     </script>
 </body>
 </html>

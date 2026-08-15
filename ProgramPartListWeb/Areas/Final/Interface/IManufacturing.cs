@@ -70,7 +70,7 @@ namespace ProgramPartListWeb.Areas.Final
 
         // ====== FOR THE DISPOSAL SCRAP ============================
         Task<(TotalDisposalMonitor summary, List<DisposalSummary> list)> GetDisposalDetails(int controlID);
-
-
+        Task<bool> ApproveDisposal(string name,  int id);
+        Task<string> GetApproverName(int section);
     }
 }

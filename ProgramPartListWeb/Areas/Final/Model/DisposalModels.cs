@@ -31,6 +31,11 @@ namespace ProgramPartListWeb.Areas.Final.Model
             public string Remarks { get; set; }
             public string Units { get; set; }
         }
-
+        public class DisposalEmail
+        {
+            public string EmailAddress { get; set; }
+            public string SentTo { get; set; }
+            public int DepartmentID { get; set; }
+        }
     }
 }

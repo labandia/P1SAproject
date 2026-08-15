@@ -1141,6 +1141,28 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
         }
 
-     
+        public async Task<bool> ApproveDisposal(string name, int id)
+        {
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"
+                UPDATE DisposalControlNumber SET Status = 2, Approveby = @name
+                WHERE ControlNumberID = @ControlNumberID", new
+            {
+                ControlNumberID = id,
+                name = name
+            });
+
+            return rows > 0;
+        }
+
+        public async Task<string> GetApproverName(int section)
+        {
+            string name = await SqlDataAcess_Test.ExecuteScalarAsync<string>($@"
+                SELECT SentTo FROM DisposalEmail WHERE DepartmentID = @DepartmentId", new
+            {
+                DepartmentId = section  
+            });
+
+            return name;    
+        }
     }
 }

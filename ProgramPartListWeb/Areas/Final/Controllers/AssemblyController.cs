@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
+using System.DirectoryServices.AccountManagement;
+using System.Security.Claims;
 
 namespace ProgramPartListWeb.Areas.Final.Controllers
 {
@@ -977,7 +979,15 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
-
+        //=====================================================
+        //============== APPROVAL PROCESS =====================
+        //=====================================================
+        [HttpGet]
+        public async Task<ActionResult> GetApprovalData(int section)
+        {
+            var data = await _manu.GetApproverName(section);
+            return JsonSuccess(data, "Get Data Successfully");
+        }
 
         [HttpGet]
         public async Task<ActionResult> GetDisposalData(int ID)
@@ -993,8 +1003,27 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             return JsonSuccess(finalobj, "Get Data Successfully");
         }
 
+        [HttpPost]
+        public async Task<ActionResult> UpdateApprovalData(string aprovename, int id)
+        {
+            try
+            {
 
-        
+                bool result = await _manu.ApproveDisposal(aprovename, id);
+                if (!result)
+                {
+                    Debug.WriteLine("adsdasda");
+                }
+                if (!result) return JsonError("Error Updated");
+                return JsonSuccess(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
+
 
 
         // GET: Final/Assembly
@@ -1014,6 +1043,40 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
 
 
 
-        public ActionResult DisposalApproval(int id) => View();   
+
+        public async Task<ActionResult> DisposalApproval(int id, int section)
+        {
+            //var identity = User.Identity as ClaimsIdentity;
+
+            //string email =
+            //    identity?.FindFirst("preferred_username")?.Value
+            //    ?? identity?.FindFirst(ClaimTypes.Email)?.Value;
+
+            //string name =
+            //    identity?.FindFirst("name")?.Value
+            //    ?? User.Identity.Name;
+
+            //if (string.IsNullOrEmpty(email))
+            //{
+            //    return Content("Unable to identify the Microsoft 365 account.");
+            //}
+
+            //// TODO:
+            //// Check whether this email/name is authorized
+            //// to approve this disposal.
+
+            //// TODO:
+            //// Save name + email to DisposalControlNumber
+
+            //return Content(
+            //    $"Disposal ID: {id}\n" +
+            //    $"Approved By: {name}\n" +
+            //    $"Email: {email}"
+            //);
+
+          
+
+            return View();
+        }
     }
 }

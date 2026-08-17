@@ -256,6 +256,27 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult> GetDownTimeList(string finalshopOrder)
+        {
+
+            try
+            {
+                var res = await _manu.GetDowntimeMonitor(finalshopOrder);
+                if (res == null)
+                    return JsonNotFound("No Manpower data found");
+
+                return JsonSuccess(res);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
+
+
+
 
         [HttpGet]
         public async Task<ActionResult> GetCatergoryPartslist(int cat)

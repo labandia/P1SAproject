@@ -70,9 +70,22 @@
         <!-- Traceability Table -->
         <div>
             <div class="trace-header">
-                <span class="trace-title">Production 1 Traceability Auto Search Data</span>
+             
+                <div class="trace-buttons">
 
-                <button id="OpenMEIG">Parts List Preparation</button>
+                    <button type="button" id="OpenFinalAssembly">
+                        SATAS data
+                    </button>
+
+                    <button type="button" id="OpenMEIG">
+                        Parts List Preparation
+                    </button>
+
+                    <button type="button" id="OpenDownTime">
+                        FA Down Time Monitoring
+                    </button>
+
+                </div>
             </div>
             <div class="devices-table-wrapper">
                 <div class="table-scroll" id="showTraceabilityTable">
@@ -111,6 +124,25 @@
                                 <th style="text-align: center;">Line </th>
                                 <th style="text-align: center;">Issuer</th>
                                 <th style="text-align: center;">Preparation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-scroll" id="showDownTime" style="display: none;">
+                    <table class="Downtime-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">Group  </th>
+                                <th style="text-align: center;">DownTimeCode </th>
+                                <th style="text-align: center;">DownTimeType</th>
+                                <th style="text-align: center;">Start time</th>
+                                <th style="text-align: center;">End time</th>
+                                <th style="text-align: center;">Down time</th>
+                                <th style="text-align: center;">PIC</th>
+                                <th style="text-align: center;">Details of DownTime</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -223,7 +255,36 @@
             </button>
         </form>
 
+        <!-- ================================================================================ -->
+        <!-- ======================= DOWN TIME MONITORING  ================================= -->
+        <!-- ================================================================================ -->
 
+        <form method="post" id="AddEditDownTimeMonitoring" class="panel-content" style="display: none;">
+            <input type="hidden" id="DownTimeID" />
+
+            <div class="field-group">
+                <span class="field-label">DownTimeCode</span>
+                <input type="text" class="field-box" placeholder="Enter Registration" id="Registration" name="Registration" />
+            </div>
+         
+
+            <div class="field-group">
+                <span class="field-label">PIC : </span>
+                <input type="text" class="field-box" id="PartNumber" name="PartNumber" />
+            </div>
+
+            <div class="field-group">
+                <span class="field-label">Details : </span>
+                <input type="text" class="field-box" id="PinList" name="PinList" />
+            </div>
+
+           
+            <button type="submit" class="save-btn">
+                <span class="icon-inline" style="width:13px;height:13px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" /><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7M7 3v4a1 1 0 0 0 1 1h7" /></svg>
+                </span> Save Changes
+            </button>
+        </form>
 
     </div>
 </div>
@@ -241,17 +302,29 @@
         constructor() {
             this.tbody = document.querySelector('.devices-table tbody');
             this.MEIGbody = document.querySelector('.MEIG-table tbody');
+            this.Downtimebody = document.querySelector('.Downtime-table tbody');
             this.recordID = document.getElementById('intID').value;
 
             this.changeForms = document.getElementById('OpenMEIG');
+            this.downTimeForms = document.getElementById('OpenDownTime');
+            this.openFinalAssembly =
+                document.getElementById('OpenFinalAssembly');
+
             this.selectParts = document.getElementById('selectparts');
             this.partsDropDown = document.getElementById('CartsPartID');
 
             this.finalAssemblyPanel = document.getElementById('EditFinalAsembly');
             this.partsListPanel = document.getElementById('EditRegistrationParts');
+            this.DownTimeListPanel = document.getElementById('AddEditDownTimeMonitoring');
 
-            this.traceabilityTable = document.getElementById('showTraceabilityTable');
-            this.meigTable = document.getElementById('showMEIGTable');
+            this.traceabilityTable =
+                document.getElementById('showTraceabilityTable');
+
+            this.meigTable =
+                document.getElementById('showMEIGTable');
+
+            this.downTimeTable =
+                document.getElementById('showDownTime');
 
             this.formAssembly = document.getElementById('EditFinalAsembly');
             this.formParts = document.getElementById('EditRegistrationParts');
@@ -263,18 +336,32 @@
 
         async init() {
             await this.LoadDetailsinfo();
-            
+
             this.bindEvents();
         }
 
         bindEvents() {
             this.formAssembly.addEventListener('submit', (e) => this.HandleSubmit(e));
             this.formParts.addEventListener('submit', (e) => this.HandlePartSubmit(e));
+
+            // SATAS  List button
+            this.openFinalAssembly.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.ShowFinalAssembly();
+            });
+
+            // Parts List button
             this.changeForms.addEventListener('click', (e) => {
                 e.preventDefault();
-
-                this.TogglePanels();
+                this.ShowPartsList();
             });
+
+            // Down Time button
+            this.downTimeForms.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.ShowDownTime();
+            });
+
 
 
             this.selectParts.addEventListener('change', async (e) => {
@@ -302,18 +389,50 @@
             });
         }
 
-        TogglePanels() {
-            const showingParts = this.partsListPanel.style.display !== 'none';
+        ShowFinalAssembly() {
+            // Tables
+            this.traceabilityTable.style.display = 'block';
+            this.meigTable.style.display = 'none';
+            this.downTimeTable.style.display = 'none';
 
-            this.partsListPanel.style.display = showingParts ? 'none' : 'block';
-            this.finalAssemblyPanel.style.display = showingParts ? 'block' : 'none';
+            // Forms
+            this.finalAssemblyPanel.style.display = 'block';
+            this.partsListPanel.style.display = 'none';
+            this.DownTimeListPanel.style.display = 'none';
 
-            this.traceabilityTable.style.display = showingParts ? 'block' : 'none';
-            this.meigTable.style.display = showingParts ? 'none' : 'block';
+            // Buttons
+            this.changeForms.style.display = 'block';
+            this.downTimeForms.style.display = 'block';
 
-            this.changeForms.textContent = showingParts
-                ? 'Parts List Preparation'
-                : 'Final Assembly Status';
+        }
+
+        ShowPartsList() {
+
+            // Tables
+            this.traceabilityTable.style.display = 'none';
+            this.meigTable.style.display = 'block';
+            this.downTimeTable.style.display = 'none';
+
+            // Forms
+            this.finalAssemblyPanel.style.display = 'none';
+            this.partsListPanel.style.display = 'block';
+            this.DownTimeListPanel.style.display = 'none';
+            // Buttons
+        }
+
+
+        ShowDownTime() {
+
+            // Tables
+            this.traceabilityTable.style.display = 'none';
+            this.meigTable.style.display = 'none';
+            this.downTimeTable.style.display = 'block';
+
+            // Forms
+            this.finalAssemblyPanel.style.display = 'none';
+            this.partsListPanel.style.display = 'none';
+            this.DownTimeListPanel.style.display = 'block';
+            // Buttons
         }
 
         async LoadDetailsinfo() {
@@ -344,11 +463,11 @@
                 document.getElementById("FAStatus").value = data.FAStatus;
                 document.getElementById("ShipmentDate").value = this.SetFormDate(data.ShipmentDate);
                 //document.getElementById("FAStatus").value = data.PlanQty;
-                document.getElementById("WithSR").value = data.WithSR;
                 document.getElementById("Remarks").value = data.OrderRemarks;
 
                 this.LoadTraceAbility(data.FinalShopOrder);
                 this.LoadMEIGData(data.FinalShopOrder);
+                this.LoadDownTimeData(data.FinalShopOrder);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -375,8 +494,23 @@
                 console.log(res);
               if (!res?.Success) return;
                 const data = res.data;
-              
+
                 this.renderMEIGTable(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        async LoadDownTimeData(shoporder) {
+            try {
+              const res = await getMethod('@Url.Action("GetDownTimeList", "Assembly")', {
+                  finalshopOrder: shoporder
+              });
+              console.log(res);
+              if (!res?.Success) return;
+                const data = res.data;
+
+                this.renderDownTimeTable(data);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -586,23 +720,71 @@
                 return;
             }
 
-            this.MEIGbody.innerHTML = data.map(row => {           
+            this.MEIGbody.innerHTML = data.map(row => {
                 return `
                     <tr>
                         <td>${this.escape(row.Registration)}</td>
-                        <td>${this.escape(row.CategoryName)}</td>   
+                        <td>${this.escape(row.CategoryName)}</td>
                         <td>${this.escape(row.PartsName)}</td>
-                        <td>${this.escape(row.PartNumber)}</td>        
+                        <td>${this.escape(row.PartNumber)}</td>
                         <td>${this.escape(row.PinList)}</td>
-                        <td>${this.escape(row.TimeIn)}</td>        
-                        <td>${this.escape(row.TimeOut)}</td>      
+                        <td>${this.escape(row.TimeIn)}</td>
+                        <td>${this.escape(row.TimeOut)}</td>
                           <td>${this.escape(row.Lines)}</td>
-                          <td>${this.escape(row.Issuer)}</td>        
-                          <td>${this.escape(row.Preparation)}</td> 
+                          <td>${this.escape(row.Issuer)}</td>
+                          <td>${this.escape(row.Preparation)}</td>
                     </tr>`;
                     }).join('');
         }
 
+        renderDownTimeTable(data) {
+            if (!this.Downtimebody) return;
+
+            if (data.length === 0) {
+                this.Downtimebody.innerHTML = `
+         <tr>
+             <td colspan="10" style="text-align:center; padding:32px; color:#86868b;">
+                 No data available.
+             </td>
+         </tr>`;
+                return;
+            }
+
+            this.Downtimebody.innerHTML = data.map(row => {
+                return `
+            <tr>
+                <td>${this.escape(row.GroupName)}</td>
+                <td>${this.escape(row.DownTimeCode)}</td>
+                <td>${this.escape(row.DownTimeType)}</td>
+
+                <td>${this.formatTimeSpan(row.TimeStart)}</td>
+                <td>${this.formatTimeSpan(row.TimeEnd)}</td>
+
+                <td>${this.escape(row.Downtime)}</td>
+                <td>${this.escape(row.PIC)}</td>
+                <td>${this.escape(row.Details)}</td>
+            </tr>`;
+            }).join('');
+        }
+        formatTime(time) {
+            if (!time) return '-';
+
+            // Example: "08:30:00"
+            if (typeof time === 'string') {
+                return time.substring(0, 5);
+            }
+
+            return '-';
+        }
+
+        formatTimeSpan(time) {
+            if (!time) return '-';
+
+            const hours = String(time.Hours ?? 0).padStart(2, '0');
+            const minutes = String(time.Minutes ?? 0).padStart(2, '0');
+
+            return `${hours}:${minutes}`;
+        }
 
         escape(str) {
             const d = document.createElement('div');

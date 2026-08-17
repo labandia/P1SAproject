@@ -658,6 +658,7 @@
     <Compile Include="Areas\Final\Interface\IManufacturing.cs" />
     <Compile Include="Areas\Final\Interface\IUploadServices.cs" />
     <Compile Include="Areas\Final\Model\DisposalModels.cs" />
+    <Compile Include="Areas\Final\Model\DownTimeModel.cs" />
     <Compile Include="Areas\Final\Model\FinaManufacturingOrder.cs" />
     <Compile Include="Areas\Final\Model\P1TraceablityModel.cs" />
     <Compile Include="Areas\Final\Services\ManufacuringServices.cs" />

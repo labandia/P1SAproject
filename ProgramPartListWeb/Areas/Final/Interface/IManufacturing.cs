@@ -72,5 +72,10 @@ namespace ProgramPartListWeb.Areas.Final
         Task<(TotalDisposalMonitor summary, List<DisposalSummary> list)> GetDisposalDetails(int controlID);
         Task<bool> ApproveDisposal(string name,  int id);
         Task<string> GetApproverName(int section);
+
+
+        // ====== FOR DOWNTIME MONITORING ============================
+        Task<List<DownTimeModel>> GetDowntimeMonitor(string FinalShopOrder);
+        Task<bool> AddGetTimeMonitor(DownTimeModel downtime);
     }
 }

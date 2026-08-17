@@ -1164,5 +1164,34 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
             return name;    
         }
+
+        public Task<List<DownTimeModel>> GetDowntimeMonitor(string FinalShopOrder)
+        {
+            return SqlDataAcess_Test.QueryAsync<DownTimeModel>($@"  SELECT 
+	             i.DownTimeID, 
+	             i.FinalShopOrder,
+	             i.DownTimeCode,
+	             t.DownTimeType, 
+	             i.TimeStart,
+	             i.TimeEnd,
+	             i.Downtime, 
+	             i.PIC,
+	             i.Details,
+                 t.GroupName
+              FROM FanTraceabilityDownTimeInput i 
+              INNER JOIN FanTraceabilityManufacturingOrder m ON i.FinalShopOrder = m.FinalShopOrder
+              INNER JOIN FanTraceabilityDownTimeType t ON t.DownTimeCode = i.DownTimeCode
+              WHERE i.FinalShopOrder = @FinalShopOrder ", new
+            {  FinalShopOrder });
+        }
+
+        public async Task<bool> AddGetTimeMonitor(DownTimeModel downtime)
+        {
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"INSERT 
+                INTO(FinalShopOrder, DownTimeCode, TimeStart, TimeEnd, PIC, Details) 
+                VALUES(@FinalShopOrder, @DownTimeCode, @TimeStart, @TimeEnd, @PIC, @Details)", downtime);
+
+            return rows > 0;
+        }
     }
 }

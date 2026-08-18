@@ -257,6 +257,45 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult> GetDownTimeReportList()
+        {
+            try
+            {
+                var res = await _manu.GetDowntimeDailyReport();
+                if (res == null)
+                    return JsonNotFound("No Manpower data found");
+
+                return JsonSuccess(res);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
+
+
+
+        [HttpGet]
+        public async Task<ActionResult> GetDownTimeTypeList()
+        {
+            try
+            {
+                var res = await _manu.GetDownTimeType();
+                if (res == null)
+                    return JsonNotFound("No Manpower data found");
+
+                return JsonSuccess(res);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
+
+
+        [HttpGet]
         public async Task<ActionResult> GetDownTimeList(string finalshopOrder)
         {
 
@@ -275,7 +314,37 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<ActionResult> AddDownTimeMonitoring(DownTimeModel model)
+        {
+            try
+            {
+                var res = await _manu.AddGetTimeMonitor(model);
+                if (!res) return JsonError("Error Updated");
+                return JsonSuccess(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
 
+        [HttpPost]
+        public async Task<ActionResult> EditDownTimeMonitoring(int ID)
+        {
+            try
+            {
+                var res = await _manu.EndTimeMonitor(ID);
+                if (!res) return JsonError("Error Updated");
+                return JsonSuccess(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
 
 
         [HttpGet]
@@ -1053,6 +1122,10 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         public ActionResult DispatchSummary() => View();
         // GET: Final/LineData
         public ActionResult LineData() => View();
+        // GET: Final/HistoryDownTime
+        public ActionResult HistoryDownTime() => View();
+        // GET: Final/LineData
+        public ActionResult DailyReport() => View();
         // GET: Final/UploaData
         public ActionResult UploaData() => View();
         // GET: Final/ShopOrderLine/{line}

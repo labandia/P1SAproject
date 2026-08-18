@@ -260,6 +260,33 @@
                         Online <div class="dot-indicator"></div>
                     </span>
                 </div>
+
+                <div class="card-time " style='margin-right: 20px;'>
+
+                    <div>
+                        <span class="card-time-label">Date</span>
+                        <span class="card-time-value">
+                            ${item.DateStart || '-'}
+                        </span>
+                    </div>
+
+                    <div>
+                        <span class="card-time-label">Start</span>
+                        <span class="card-time-value">
+                            ${this.formatTimeSpan(item.TimeStart)}
+                        </span>
+                    </div>
+
+                    <div>
+                        <span class="card-time-label">End</span>
+                        <span class="card-time-value">
+                            ${this.formatTimeSpan(item.TimeEnd)}
+                        </span>
+                    </div>
+
+                </div>
+
+
                 <button class="close-centered-btn" id="closeCenteredBtn">✕</button>
             </div>
 
@@ -412,7 +439,14 @@
 
     }
 
+    formatTimeSpan(time) {
+        if (!time) return '-';
 
+        const hours = String(time.Hours ?? 0).padStart(2, '0');
+        const minutes = String(time.Minutes ?? 0).padStart(2, '0');
+
+        return `${hours}:${minutes}`;
+    }
 
 
      RenderCardList(data) {
@@ -490,9 +524,23 @@
                                 </span>
                             </div>
                             <div class="card-complete-area" style="display:flex;align-items:center;gap:8px;">
-                                <div>
-                                  <span><strong>${item.InputQty === 0 ? '0' : item.InputQty}</strong>  / ${item.PlanQty || 0}</span>
+                                 <div class="card-time">
+                                   <div>
+                                        <span class="card-time-label">Date</span>
+                                        <span class="card-time-value">${item.DateStart || '-'}</span>
+                                    </div>
+
+                                    <div>
+                                        <span class="card-time-label">Start</span>
+                                        <span class="card-time-value">${formatTimeSpan(item.TimeStart) || '-'}</span>
+                                    </div>
+
+                                    <div>
+                                        <span class="card-time-label">End</span>
+                                        <span class="card-time-value">${formatTimeSpan(item.TimeEnd) || '-'}</span>
+                                    </div>
                                 </div>
+
                             </div>
                         </div>
 
@@ -519,6 +567,11 @@
                                 <p class="card-footer-label">Remarks</p>
                                 <p class="card-footer-value">${item.OrderRemarks || '-'}</p>
                             </div>
+
+                             <div class="card-footer-col">
+                                 <p class="card-footer-label">Quantity</p>
+                                 <p class="card-footer-value">${item.InputQty === 0 ? '0' : item.InputQty}</strong>  / ${item.PlanQty || 0}</p>
+                             </div>
                         </div>
                     `;
                 }

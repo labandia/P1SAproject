@@ -1,0 +1,158 @@
+﻿
+@{
+    ViewBag.Title = "DailyReport";
+    Layout = "~/Areas/Final/Views/Shared/_ManageLayout.cshtml";
+}
+
+<section style="padding: 30px 20px;">
+    <!-- MAIN PANEL -->
+    <!-- header section -->
+    <div class="headerManage  flex justify-between items-center mb-6">
+        <div class="flex items-center gap-lg-3">
+            <div>
+                <h2 class="font-semibold mb-1" style="font-size: 22px;">Daily Report Down Time</h2>
+                <p class="text-sm" style="color:#86868b;">Current Data of the Final Assembly </p>
+            </div>
+
+            <!-- filters bar -->
+            <div class="flex items-center gap-3 mb-4 flex-wrap">
+
+
+
+            </div>
+        </div>
+        <div class="flex gap-3">
+            <div class="subheader-item">
+                <iconify-icon icon="lucide:clock" style="font-size: 14px; color: #6c47ff"></iconify-icon>
+                <span>Last Upload Date: <strong id="lastUpdateText">-- : -- : -- </strong></span>
+            </div>
+
+            <select id="filterdata" class=" filter-chip text-sm font-medium">
+                <option value="">Line : ALL</option>
+                <option value="L1">L1</option>
+                <option value="L2">L2</option>
+                <option value="L3">L3</option>
+                <option value="L4">L4</option>
+                <option value="L5">L5</option>
+                <option value="L6">L6</option>
+                <option value="L7">L7</option>
+                <option value="L8">L8</option>
+                <option value="L9">L9</option>
+                <option value="L10">L10</option>
+                <option value="L11">L11</option>
+                <option value="L12">L12</option>
+                <option value="L13">L13</option>
+                <option value="L14">L14</option>
+                <option value="L15">L15</option>
+                <option value="L16">L16</option>
+                <option value="L17">L17</option>
+                <option value="L18">L18</option>
+                <option value="L19">L19</option>
+                <option value="L20">L20</option>
+                <option value="CL1">CL1</option>
+                <option value="CL5">Cl5</option>
+                <option value="CL8">Cl8</option>
+                <option value="OP">OP</option>
+            </select>
+
+            <div class="search-input">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.34-4.34" />
+                </svg>
+                <input type="text" placeholder="Search here ..." id="searchinput" />
+            </div>
+        </div>
+    </div>
+
+    @*<span id="selectedCount">0 selected</span>
+
+        <a href="#" id="clearSelectionBtn"
+           style="color: var(--color-primary); text-decoration: none;">
+            Clear selection
+        </a>*@
+
+
+    <div class="devices-table-wrapper">
+        <div class="devices-table-wrapper">
+            <div class="table-scroll TrackTable">
+                <table class="upload-table">
+                    <thead>
+                        <tr>
+                            <th>Line</th>
+                            <th>Final Shop Order</th>
+                            <th>Item No</th>
+                            <th>Model</th>
+                            <th>Plan Qty</th>
+                            <th>Start</th>
+                            <th>End</th>
+                            <th>Downtime</th>
+                            <th>Cycle Time</th>
+                            <th>Operation Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        <!-- pagination footer -->
+        <div class="flex justify-between items-center p-3 border-t" style="border-top: 1px solid #e5e5e5; background: white;">
+            <div id="resultsText" class="text-sm" style="color:#86868b;">Showing <span id="newrecords"></span> of <span id="currentrecords">1,248</span> Records</div>
+
+            @*<div class="flex gap-1">
+                    <button class="pagination-btn" id="prevBtn"><iconify-icon icon="lucide:chevron-left" style="font-size: 14px;"></iconify-icon></button>
+
+                    <button class="pagination-btn" id="nextBtn"><iconify-icon icon="lucide:chevron-right" style="font-size: 14px;"></iconify-icon></button>
+                </div>*@
+        </div>
+    </div>
+</section>
+
+
+
+<script type="module" asp-append-version="true">
+    import {
+        getMethod,
+        postMethod
+    } from '@Url.Content("~/Scripts/modules/index.js")';
+
+    class DownTimeHistoryController {
+          constructor() {
+
+          }
+
+          async init() {
+             this.bindEvents();
+
+             await this.LoadDailyReport();
+          }
+
+          bindEvents() {
+
+
+          }
+
+          async LoadDailyReport() {
+              try {
+
+                    const res = await getMethod('@Url.Action("GetLastUpdateAndTotalPartlyShort", "Assembly")', {
+                        dispatch: 1
+                    });
+
+                    if (res?.Success) {
+                        document.getElementById("lastUpdateText").textContent = res.data.LastDate;
+                    }
+
+
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+
+                }
+         }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const controller = new DownTimeHistoryController();
+        controller.init();
+    });
+</script>

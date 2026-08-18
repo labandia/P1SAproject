@@ -48,6 +48,38 @@
 
 
             <div class="header-actions">
+
+                <button id="Dailybtn" style="display: flex; align-items: center; gap: 10px;
+                        color: #fff; padding: .5em 1em; border: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="1.5em"
+                         height="1.5em"
+                         viewBox="0 0 24 24">
+
+                        <path d="M0 0h24v24H0z" fill="none" />
+
+                        <path fill="currentColor"
+                              d="M19.414 8.902a1 1 0 0 0 .293-.195l.5-.5a.999 1 0 1 0-1.414-1.414l-.5.5l-.115.173a8.97 8.97 0 0 0-5.189-2.41L13 5V4h1c.55 0 1-.45 1-1s-.45-1-1-1h-4c-.55 0-1 .45-1 1s.45 1 1 1h1v1l.012.057A9 9 0 0 0 12 23a9 9 0 0 0 7.414-14.098M12 21c-3.859 0-7-3.14-7-7s3.141-7 7-7s7 3.14 7 7s-3.141 7-7 7m1-8v-2c0-.55-.45-1-1-1s-1 .45-1 1v3c0 .55.45 1 1 1h3c.55 0 1-.45 1-1s-.45-1-1-1zm-1-5c-3.312 0-6 2.688-6 6s2.688 6 6 6s6-2.688 6-6s-2.688-6-6-6m0 11c-2.757 0-5-2.243-5-5s2.243-5 5-5s5 2.243 5 5s-2.243 5-5 5" />
+                    </svg>   Daily Report
+                </button>
+
+
+                <button id="DownTimebtn" style="display: flex; align-items: center; gap: 10px;
+                        color: #fff; padding: .5em 1em; border: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="1.5em"
+                         height="1.5em"
+                         viewBox="0 0 24 24">
+
+                        <path d="M0 0h24v24H0z" fill="none" />
+
+                        <path fill="currentColor"
+                              d="M19.414 8.902a1 1 0 0 0 .293-.195l.5-.5a.999 1 0 1 0-1.414-1.414l-.5.5l-.115.173a8.97 8.97 0 0 0-5.189-2.41L13 5V4h1c.55 0 1-.45 1-1s-.45-1-1-1h-4c-.55 0-1 .45-1 1s.45 1 1 1h1v1l.012.057A9 9 0 0 0 12 23a9 9 0 0 0 7.414-14.098M12 21c-3.859 0-7-3.14-7-7s3.141-7 7-7s7 3.14 7 7s-3.141 7-7 7m1-8v-2c0-.55-.45-1-1-1s-1 .45-1 1v3c0 .55.45 1 1 1h3c.55 0 1-.45 1-1s-.45-1-1-1zm-1-5c-3.312 0-6 2.688-6 6s2.688 6 6 6s6-2.688 6-6s-2.688-6-6-6m0 11c-2.757 0-5-2.243-5-5s2.243-5 5-5s5 2.243 5 5s-2.243 5-5 5" />
+                    </svg>   History of Downtime
+                </button>
+
+
+
                 <div class="badge calendarBackground">
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"
@@ -113,20 +145,20 @@
 
                 </a>
                 @*<a href="#" id="pagelink" class="sidebar-item active">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                <rect x="3" y="3" width="8" height="8" rx="1" />
-                <rect x="13" y="3" width="8" height="8" rx="1" />
-                <rect x="3" y="13" width="8" height="8" rx="1" />
-                <rect x="13" y="13" width="8" height="8" rx="1" />
-            </svg>
-        </a>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <rect x="3" y="3" width="8" height="8" rx="1" />
+                            <rect x="13" y="3" width="8" height="8" rx="1" />
+                            <rect x="3" y="13" width="8" height="8" rx="1" />
+                            <rect x="13" y="13" width="8" height="8" rx="1" />
+                        </svg>
+                    </a>
 
-        <a href="/Final/Assembly/UploaData" class="sidebar-item ">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" />
-                <path d="M12 12v9m-3-3 3 3 3-3" />
-            </svg>
-        </a>*@
+                    <a href="/Final/Assembly/UploaData" class="sidebar-item ">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" />
+                            <path d="M12 12v9m-3-3 3 3 3-3" />
+                        </svg>
+                    </a>*@
 
 
 
@@ -141,6 +173,73 @@
                 @RenderBody()
 
             </main>
+        </div>
+    </div>
+
+
+
+    <!-- Downtime Daily Report Modal -->
+    <div class="modal fade" id="downtimeDailyReportModal" tabindex="-1"
+         aria-labelledby="downtimeDailyReportModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="downtimeDailyReportModalLabel">
+                        Downtime Daily Report
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close">
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover align-middle"
+                               id="downtimeDailyReportTable">
+
+                            <thead>
+                                <tr>
+                                    <th>Line</th>
+                                    <th>Final Shop Order</th>
+                                    <th>Item No</th>
+                                    <th>Model</th>
+                                    <th>Plan Qty</th>
+                                    <th>Start</th>
+                                    <th>End</th>
+                                    <th>Downtime</th>
+                                    <th>Cycle Time</th>
+                                    <th>Operation Rate</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="downtimeDailyReportBody">
+                                <tr>
+                                    <td colspan="8" class="text-center">
+                                        No data available.
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+
+            </div>
         </div>
     </div>
 
@@ -216,6 +315,121 @@
 
             if (liveElement)
                 liveElement.textContent = `LIVE ${timeText}`;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+                const Reportbtn = document.getElementById("Dailybtn");
+                const downtimeBtn = document.getElementById("DownTimebtn");
+                const modalElement = document.getElementById("downtimeDailyReportModal");
+                const tableBody = document.getElementById("downtimeDailyReportBody");
+
+                if (!downtimeBtn || !modalElement || !tableBody)
+                    return;
+
+                const downtimeModal = new bootstrap.Modal(modalElement);
+
+                downtimeBtn.addEventListener("click", function () {
+
+                    // Open modal
+                    downtimeModal.show();
+
+                    // Load daily report
+                    loadDowntimeDailyReport();
+                });
+
+
+                Reportbtn.addEventListener("click", function () {
+                    window.location.href = '/Final/Assembly/DailyReport';
+                });
+
+                async function loadDowntimeDailyReport() {
+
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center">
+                            Loading...
+                        </td>
+                    </tr>
+                `;
+
+                try {
+
+                    const response = await fetch('@Url.Action("GetDownTimeReportList", "Assembly")', {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error: ${response.status}`);
+                    }
+
+                    const res = await response.json();
+                    console.log(res);
+                    renderDowntimeDailyReport(res.data);
+
+                }
+                catch (error) {
+
+                    console.error("Error loading downtime daily report:", error);
+
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="8"
+                                class="text-center text-danger">
+                                Failed to load downtime report.
+                            </td>
+                        </tr>
+                    `;
+                }
+            }
+
+
+                function renderDowntimeDailyReport(data) {
+
+                if (!data || data.length === 0) {
+
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="8"
+                                class="text-center">
+                                No downtime data available.
+                            </td>
+                        </tr>
+                    `;
+
+                    return;
+                }
+
+                tableBody.innerHTML = data.map(item => `
+                    <tr>
+                        <td>${item.Line ?? '-'}</td>
+                        <td>${item.FinalShopOrder ?? '-'}</td>
+                        <td>${item.ItemNo ?? '-'}</td>
+                        <td>${item.Model ?? '-'}</td>
+                        <td class="text-center">${item.PlanQty ?? 0}</td>
+                        <td class="text-center">${formatTimeSpan(item.TimeStart) ?? 0}</td>
+                        <td class="text-center">${formatTimeSpan(item.TimeEnd) ?? 0}</td >
+                        <td class="text-center">${item.Downtime ?? 0}</td>
+                        <td class="text-center">${item.CycleTime ?? 0}</td>
+                        <td class="text-center">${item.OperationRate ?? 0}</td>
+                    </tr>
+                `).join('');
+                    }
+
+
+
+        });
+
+        function formatTimeSpan(time) {
+            if (!time) return '-';
+
+            const hours = String(time.Hours ?? 0).padStart(2, '0');
+            const minutes = String(time.Minutes ?? 0).padStart(2, '0');
+
+            return `${hours}:${minutes}`;
         }
 
 

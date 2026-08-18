@@ -35,6 +35,9 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                  ,s.WithSR
                                  ,s.OrderRemarks
                                  ,s.OrderStatus
+                                 ,FORMAT(s.DateStart, 'MM/dd/yy') as DateStart
+                                 ,s.TimeStart
+                                 ,s.TimeEnd
                                  ,(SELECT m.Model FROM FanTraceabilityManufacturingOrder m WHERE m.Line = s.Line AND m.OrderStatus = 1)  as NextItem
                                  ,(SELECT m.FinalShopOrder FROM FanTraceabilityManufacturingOrder m WHERE m.Line = s.Line AND m.OrderStatus = 1)  as NextShop";
         public enum OrderStatus
@@ -444,7 +447,9 @@ namespace ProgramPartListWeb.Areas.Final.Services
             {
                 rows = await SqlDataAcess_Test.ExecuteAsync(@"
                     UPDATE FanTraceabilityManufacturingOrder 
-                    SET OrderStatus = 2
+                    SET   OrderStatus = 2,
+                        DateStart = CAST(GETDATE() AS DATE),
+                        TimeStart = CAST(GETDATE() AS TIME(0))
                     WHERE RecordID = @id AND line = @line",
                     new { id, status, line });
             }
@@ -695,7 +700,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
         public async Task<bool> CompletionStatusShopOrder(int id, int status, string line)
         {
             int rows = await SqlDataAcess_Test.ExecuteAsync($@"
-                UPDATE FanTraceabilityManufacturingOrder SET OrderStatus =@OrderStatus 
+                UPDATE FanTraceabilityManufacturingOrder SET OrderStatus =@OrderStatus,
+                        TimeEnd = CAST(GETDATE() AS TIME(0))
                 WHERE RecordID =@RecordID", new
             {
                 RecordID = id,
@@ -1181,17 +1187,68 @@ namespace ProgramPartListWeb.Areas.Final.Services
               FROM FanTraceabilityDownTimeInput i 
               INNER JOIN FanTraceabilityManufacturingOrder m ON i.FinalShopOrder = m.FinalShopOrder
               INNER JOIN FanTraceabilityDownTimeType t ON t.DownTimeCode = i.DownTimeCode
-              WHERE i.FinalShopOrder = @FinalShopOrder ", new
+              WHERE i.FinalShopOrder = @FinalShopOrder ORDER BY i.DownTimeID", new
             {  FinalShopOrder });
         }
 
         public async Task<bool> AddGetTimeMonitor(DownTimeModel downtime)
         {
             int rows = await SqlDataAcess_Test.ExecuteAsync($@"INSERT 
-                INTO(FinalShopOrder, DownTimeCode, TimeStart, TimeEnd, PIC, Details) 
-                VALUES(@FinalShopOrder, @DownTimeCode, @TimeStart, @TimeEnd, @PIC, @Details)", downtime);
+                INTO FanTraceabilityDownTimeInput(FinalShopOrder, DownTimeCode, PIC, Details) 
+                VALUES(@FinalShopOrder, @DownTimeCode, @PIC, @Details)", downtime);
 
             return rows > 0;
+        }
+
+        public async Task<bool> EndTimeMonitor(int DownTimeID)
+        {
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityDownTimeInput SET
+                TimeEnd = CAST(GETDATE() AS TIME(0)) WHERE DownTimeID =@DownTimeID", new
+            {
+                DownTimeID
+            });
+
+            return rows > 0;
+        }
+
+        public Task<List<DownTimeTypeModel>> GetDownTimeType()
+        {
+            return SqlDataAcess_Test.QueryAsync<DownTimeTypeModel>($@"SELECT DownTimeCode
+                  ,DownTimeType
+                  ,GroupName
+              FROM FanTraceabilityDownTimeType"); 
+        }
+
+        public Task<List<DownTimeReportModel>> GetDowntimeDailyReport()
+        {
+            return SqlDataAcess_Test.QueryAsync<DownTimeReportModel>($@" SELECT 
+				 m.Line,
+	             i.FinalShopOrder,
+				 m.ItemNo,
+				 m.Model,
+				 m.PlanQty,
+	             i.TimeStart,
+	             i.TimeEnd,
+	             i.Downtime,
+				  -- Cycle Time
+				CAST(
+					(i.Downtime * 60.0) / NULLIF(m.PlanQty, 0)
+					AS DECIMAL(10,3)
+				) AS CycleTime,
+
+				-- Operation Rate (%), rounded UP
+				CEILING(
+					8.0 
+					/ NULLIF(
+						(i.Downtime * 60.0) / NULLIF(m.PlanQty, 0),
+						0
+					) 
+					* 100
+				) AS OperationRate
+
+              FROM FanTraceabilityDownTimeInput i 
+              INNER JOIN FanTraceabilityManufacturingOrder m ON i.FinalShopOrder = m.FinalShopOrder
+              INNER JOIN FanTraceabilityDownTimeType t ON t.DownTimeCode = i.DownTimeCode");
         }
     }
 }

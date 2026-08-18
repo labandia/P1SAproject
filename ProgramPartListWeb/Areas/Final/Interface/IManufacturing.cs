@@ -75,7 +75,11 @@ namespace ProgramPartListWeb.Areas.Final
 
 
         // ====== FOR DOWNTIME MONITORING ============================
+        Task<List<DownTimeReportModel>> GetDowntimeDailyReport();
         Task<List<DownTimeModel>> GetDowntimeMonitor(string FinalShopOrder);
+        Task<List<DownTimeTypeModel>> GetDownTimeType();
         Task<bool> AddGetTimeMonitor(DownTimeModel downtime);
+
+        Task<bool> EndTimeMonitor(int DownTimeID);
     }
 }

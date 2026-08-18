@@ -70,21 +70,20 @@
         <!-- Traceability Table -->
         <div>
             <div class="trace-header">
-             
-                <div class="trace-buttons">
 
-                    <button type="button" id="OpenFinalAssembly">
-                        SATAS data
-                    </button>
-
-                    <button type="button" id="OpenMEIG">
-                        Parts List Preparation
-                    </button>
-
-                    <button type="button" id="OpenDownTime">
-                        FA Down Time Monitoring
-                    </button>
-
+                <!-- Header with modern buttons -->
+                <div class="trace-header-modern">
+                    <div class="trace-buttons-modern">
+                        <button type="button" id="OpenFinalAssembly" class="trace-btn active">
+                            <i class="fas fa-microchip"></i> SATAS data
+                        </button>
+                        <button type="button" id="OpenMEIG" class="trace-btn">
+                            <i class="fas fa-clipboard-list"></i> Parts List Preparation
+                        </button>
+                        <button type="button" id="OpenDownTime" class="trace-btn">
+                            <i class="fas fa-clock"></i> FA Down Time Monitoring
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="devices-table-wrapper">
@@ -136,11 +135,12 @@
                         <thead>
                             <tr>
                                 <th style="text-align: center;">Group  </th>
-                                <th style="text-align: center;">DownTimeCode </th>
-                                <th style="text-align: center;">DownTimeType</th>
-                                <th style="text-align: center;">Start time</th>
-                                <th style="text-align: center;">End time</th>
-                                <th style="text-align: center;">Down time</th>
+                                <th style="text-align: center;">Code </th>
+                                <th style="text-align: center;">Type of Downtime</th>
+                                <th style="text-align: center;">Start</th>
+                                <th style="text-align: center;">End</th>
+                                <th style="text-align: center;"></th>
+                                <th style="text-align: center;">Total Downtime (Minutes)</th>
                                 <th style="text-align: center;">PIC</th>
                                 <th style="text-align: center;">Details of DownTime</th>
                             </tr>
@@ -262,23 +262,36 @@
         <form method="post" id="AddEditDownTimeMonitoring" class="panel-content" style="display: none;">
             <input type="hidden" id="DownTimeID" />
 
-            <div class="field-group">
-                <span class="field-label">DownTimeCode</span>
-                <input type="text" class="field-box" placeholder="Enter Registration" id="Registration" name="Registration" />
-            </div>
-         
+            @*<div class="field-group" style="margin-bottom: .5em;">
+            <span class="field-label">Enter Code :</span>
+            <input type="text" class="field-box" placeholder="Enter Registration" id="DownTimeCode" name="DownTimeCode" />
+        </div>*@
 
             <div class="field-group">
+                <span class="field-label">Select Code : </span>
+                <select id="DownTimeCode" name="DownTimeCode">
+                    <option value="">-- Select Code</option>
+                </select>
+            </div>
+
+            <div class="field-group" style="margin-bottom: .5em;">
+                <span class="field-label">GroupName : </span>
+                <input type="text" class="field-box" id="GroupName" readonly />
+            </div>
+
+            <div class="field-group" style="margin-bottom: .5em;">
                 <span class="field-label">PIC : </span>
-                <input type="text" class="field-box" id="PartNumber" name="PartNumber" />
+                <input type="text" class="field-box" id="PIC" name="PIC" />
             </div>
 
-            <div class="field-group">
+
+
+            <div class="field-group" style="margin-bottom: .5em;">
                 <span class="field-label">Details : </span>
-                <input type="text" class="field-box" id="PinList" name="PinList" />
+                <input type="text" class="field-box" id="Details" name="Details" />
             </div>
 
-           
+
             <button type="submit" class="save-btn">
                 <span class="icon-inline" style="width:13px;height:13px;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" /><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7M7 3v4a1 1 0 0 0 1 1h7" /></svg>
@@ -332,17 +345,26 @@
             this.strLine = "";
             this.finalShopOrder = "";
             this.intRecord = 0;
+
+            this.tabButtons = [this.openFinalAssembly, this.changeForms, this.downTimeForms];
         }
 
         async init() {
             await this.LoadDetailsinfo();
 
             this.bindEvents();
+
+            this.setActiveButton(this.openFinalAssembly); // NEW — sync initial state
+        }
+
+        setActiveButton(activeBtn) {
+            this.tabButtons.forEach(btn => btn.classList.toggle('active', btn === activeBtn));
         }
 
         bindEvents() {
             this.formAssembly.addEventListener('submit', (e) => this.HandleSubmit(e));
             this.formParts.addEventListener('submit', (e) => this.HandlePartSubmit(e));
+            this.DownTimeListPanel.addEventListener('submit', (e) => this.HandleDownTimeSubmit(e));
 
             // SATAS  List button
             this.openFinalAssembly.addEventListener('click', (e) => {
@@ -362,6 +384,18 @@
                 this.ShowDownTime();
             });
 
+
+            this.Downtimebody.addEventListener('click', (e) => {
+                const stopButton = e.target.closest('.btn-edit');
+
+                if (!stopButton) return;
+
+                const downTimeID = stopButton.dataset.downtimeId;
+
+                console.log('DownTimeID:', downTimeID);
+
+                this.HandleDownTimeStop(downTimeID);
+            });
 
 
             this.selectParts.addEventListener('change', async (e) => {
@@ -390,6 +424,9 @@
         }
 
         ShowFinalAssembly() {
+            this.setActiveButton(this.openFinalAssembly);
+
+
             // Tables
             this.traceabilityTable.style.display = 'block';
             this.meigTable.style.display = 'none';
@@ -407,6 +444,7 @@
         }
 
         ShowPartsList() {
+            this.setActiveButton(this.changeForms);
 
             // Tables
             this.traceabilityTable.style.display = 'none';
@@ -422,6 +460,7 @@
 
 
         ShowDownTime() {
+            this.setActiveButton(this.downTimeForms);
 
             // Tables
             this.traceabilityTable.style.display = 'none';
@@ -511,10 +550,64 @@
                 const data = res.data;
 
                 this.renderDownTimeTable(data);
+
+
+                await this.LoadDownTimeType();
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         }
+
+        async LoadDownTimeType() {
+            try {
+                const res = await getMethod('@Url.Action("GetDownTimeTypeList", "Assembly")', {});
+               console.log(res);
+               if (!res?.Success) return;
+
+                // Adjust this depending on your API response structure
+                const data = res?.data ?? res;
+
+                if (!Array.isArray(data)) {
+                    console.error("Invalid downtime type data:", data);
+                    return;
+                }
+
+                const select = document.getElementById("DownTimeCode");
+                const groupName = document.getElementById("GroupName");
+
+                if (!select) return;
+
+                // Keep the default option
+                select.innerHTML = `
+                    <option value="">-- Select Code --</option>
+                `;
+
+                data.forEach(item => {
+                    const option = document.createElement("option");
+
+                    option.value = item.DownTimeCode ?? "";
+                    option.textContent = `${item.DownTimeCode} - ${item.DownTimeType}`;
+
+                    // Optional: store GroupName
+                    option.dataset.groupName = item.GroupName ?? "";
+
+                    select.appendChild(option);
+                });
+
+                // When DownTimeCode changes
+                select.addEventListener("change", function () {
+                    const selectedOption =
+                        this.options[this.selectedIndex];
+
+                    groupName.value =
+                        selectedOption.dataset.groupName || "";
+                });
+
+
+             } catch (error) {
+                 console.error('Error fetching data:', error);
+             }
+         }
 
 
         async HandleSubmit(e) {
@@ -539,6 +632,36 @@
             console.log(data);
 
             await this.AddRegistrationData(formdata);
+        }
+
+        async HandleDownTimeSubmit(e) {
+            e.preventDefault();
+            const formdata = new FormData(this.DownTimeListPanel);
+            formdata.append('FinalShopOrder', this.finalShopOrder);
+            const data = Object.fromEntries(formdata);
+            console.log(data);
+
+            await this.AddDownTimeMonitorData(formdata);
+        }
+
+        async HandleDownTimeStop(id) {
+            try {
+                const res = await postMethod('@Url.Action("EditDownTimeMonitoring", "Assembly")', {
+                    ID : id
+                });
+
+                console.log(res);
+                if (res?.Success) {
+                    alert('DownTime Time is  Updated successfully!');
+                    // Optionally reload data to reflect changes
+                    await this.LoadDownTimeData(this.finalShopOrder);
+                } else {
+                    alert('Error: ' + (res?.Message || 'Could not save data.'));
+                }
+            } catch (error) {
+                console.error('Save error:', error);
+                alert('An error occurred while saving.');
+            } 
         }
 
 
@@ -599,7 +722,33 @@
             }
         }
 
+         async AddDownTimeMonitorData(formdata) {
+             const savebtn = document.querySelector('#AddEditDownTimeMonitoring .save-btn');
+              savebtn.innerHTML = '<span>Saving...</span>';
+              savebtn.disabled = true;
 
+              const originalText = savebtn.innerHTML;
+
+              try {
+                  const res = await postMethod('@Url.Action("AddDownTimeMonitoring", "Assembly")', formdata);
+                  console.log(res);
+                  if (res?.Success) {
+                      alert('Add Downtime Data successfully!');
+                      // Optionally reload data to reflect changes
+                      await this.LoadDownTimeData(this.finalShopOrder);
+                  } else {
+                      alert('Error: ' + (res?.Message || 'Could not save data.'));
+                  }
+              } catch (error) {
+                  console.error('Save error:', error);
+                  alert('An error occurred while saving.');
+              } finally {
+                  // Restore button state
+                  const saveBtn = document.querySelector('#AddEditDownTimeMonitoring .save-btn');
+                  saveBtn.innerHTML = originalText;
+                  saveBtn.disabled = false;
+              }
+          }
 
         formatDate(dateString) {
             if (!dateString) return '';
@@ -751,6 +900,33 @@
             }
 
             this.Downtimebody.innerHTML = data.map(row => {
+                // Show Stop button only when TimeEnd has no value
+                const stopButton =
+                    !row.TimeEnd
+                        ? `
+                    <button
+                        type="button"
+                        class="btn-icon btn-edit"
+                        title="Stop"
+                        data-downtime-id="${row.DownTimeID}">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             width="1.5em"
+                             height="1.5em"
+                             viewBox="0 0 24 24">
+
+                            <path d="M0 0h24v24H0z" fill="none" />
+
+                            <path fill="currentColor"
+                                d="M19.414 8.902a1 1 0 0 0 .293-.195l.5-.5a.999 1 0 1 0-1.414-1.414l-.5.5l-.115.173a8.97 8.97 0 0 0-5.189-2.41L13 5V4h1c.55 0 1-.45 1-1s-.45-1-1-1h-4c-.55 0-1 .45-1 1s.45 1 1 1h1v1l.012.057A9 9 0 0 0 12 23a9 9 0 0 0 7.414-14.098M12 21c-3.859 0-7-3.14-7-7s3.141-7 7-7s7 3.14 7 7s-3.141 7-7 7m1-8v-2c0-.55-.45-1-1-1s-1 .45-1 1v3c0 .55.45 1 1 1h3c.55 0 1-.45 1-1s-.45-1-1-1zm-1-5c-3.312 0-6 2.688-6 6s2.688 6 6 6s6-2.688 6-6s-2.688-6-6-6m0 11c-2.757 0-5-2.243-5-5s2.243-5 5-5s5 2.243 5 5s-2.243 5-5 5" />
+                        </svg>
+                    </button>
+                  `
+                        : '';
+
+
+
+
                 return `
             <tr>
                 <td>${this.escape(row.GroupName)}</td>
@@ -759,10 +935,14 @@
 
                 <td>${this.formatTimeSpan(row.TimeStart)}</td>
                 <td>${this.formatTimeSpan(row.TimeEnd)}</td>
-
+                <td style="text-align:center; white-space:nowrap;">
+                     ${stopButton}
+                </td>
                 <td>${this.escape(row.Downtime)}</td>
                 <td>${this.escape(row.PIC)}</td>
                 <td>${this.escape(row.Details)}</td>
+
+
             </tr>`;
             }).join('');
         }

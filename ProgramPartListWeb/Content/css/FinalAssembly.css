@@ -3214,3 +3214,87 @@ td.status-column {
     margin: 0 8px;
     flex-shrink: 0
 }
+.card-time {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-left: auto;
+    margin-right: 10px;
+}
+
+    .card-time > div {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        line-height: 1.1;
+    }
+
+.card-time-label {
+    font-size: 0.7rem;
+    color: #86868b;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+}
+
+.card-time-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1d1d1f;
+}
+
+
+
+/* ----- header / button group (modern) ----- */
+.trace-header-modern {
+    padding: 1.25rem 2rem 0.25rem 2rem;
+    background: #ffffff;
+    border-bottom: 1px solid #eef2f6;
+}
+
+.trace-buttons-modern {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+.trace-btn {
+    background: transparent;
+    border: none;
+    padding: 0.6rem 1.6rem;
+    border-radius: 5px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #4b5563;
+    background: #f1f4f9;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: 0.01em;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+}
+
+    .trace-btn i {
+        font-size: 1rem;
+        color: #6b7280;
+        transition: color 0.2s;
+    }
+
+    .trace-btn:hover {
+        background: #e5eaf0;
+        color: #1f2937;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.02);
+    }
+
+    .trace-btn.active {
+        background: #1a1d2e;
+        color: white;
+        box-shadow: 0 4px 12px rgba(26, 29, 46, 0.20);
+    }
+
+        .trace-btn.active i {
+            color: #ffffff;
+        }

@@ -10,8 +10,8 @@
     <div class="headerManage  flex justify-between items-center mb-6">
         <div class="flex items-center gap-lg-3">
             <div>
-                <h2 class="font-semibold mb-1" style="font-size: 22px;">Daily Report Down Time</h2>
-                <p class="text-sm" style="color:#86868b;">Current Data of the Final Assembly </p>
+                <h2 class="font-semibold mb-1" style="font-size: 22px;">Daily Down Time Report</h2>
+                <p class="text-sm" style="color:#86868b;">Daily Montoring of DownTime data </p>
             </div>
 
             <!-- filters bar -->
@@ -22,10 +22,7 @@
             </div>
         </div>
         <div class="flex gap-3">
-            <div class="subheader-item">
-                <iconify-icon icon="lucide:clock" style="font-size: 14px; color: #6c47ff"></iconify-icon>
-                <span>Last Upload Date: <strong id="lastUpdateText">-- : -- : -- </strong></span>
-            </div>
+      
 
             <select id="filterdata" class=" filter-chip text-sm font-medium">
                 <option value="">Line : ALL</option>
@@ -80,15 +77,15 @@
                     <thead>
                         <tr>
                             <th>Line</th>
-                            <th>Final Shop Order</th>
-                            <th>Item No</th>
-                            <th>Model</th>
+                            <th style="">Final Shop Order/ Partno / Model</th>
                             <th>Plan Qty</th>
                             <th>Start</th>
-                            <th>End</th>
-                            <th>Downtime</th>
-                            <th>Cycle Time</th>
-                            <th>Operation Rate</th>
+                            <th>End</th>        
+                            <th>Conversion (min)</th>
+
+                            <th>Actual Cycle  Time (sec)</th>
+                            <th>Operation Rate (%)
+                            </th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -116,43 +113,112 @@
         postMethod
     } from '@Url.Content("~/Scripts/modules/index.js")';
 
-    class DownTimeHistoryController {
-          constructor() {
+    class DownTimeReportController {
+                      constructor() {
+                this.tbody = document.querySelector('.upload-table tbody');
 
-          }
+                this.inputsearch = document.getElementById('searchinput');
+                this.selectLine = document.getElementById('filterdata');
+            }
 
-          async init() {
-             this.bindEvents();
+            async init() {
+               await this.LoadDownTimeMonitor();
 
-             await this.LoadDailyReport();
-          }
+               this.bindEvents();
 
-          bindEvents() {
+            }
 
+            bindEvents() {
+                this.inputsearch.addEventListener('input', (e) => {
+                    e.preventDefault();
+                    this.LoadDownTimeMonitor();
+                });
 
-          }
+                this.selectLine.addEventListener('change', (e) => {
+                    e.preventDefault();
+                    this.LoadDownTimeMonitor();
+                });
+            }
 
-          async LoadDailyReport() {
-              try {
+            async LoadDownTimeMonitor() {
+                try {
 
-                    const res = await getMethod('@Url.Action("GetLastUpdateAndTotalPartlyShort", "Assembly")', {
-                        dispatch: 1
-                    });
+                  const res = await getMethod('@Url.Action("GetDownTimeReportList", "DownTime")', {
+                      searchtext: this.inputsearch.value,
+                      Linename: this.selectLine.value
+                  });
+                  console.log(res);
+                  if (res?.Success) {
 
-                    if (res?.Success) {
-                        document.getElementById("lastUpdateText").textContent = res.data.LastDate;
-                    }
+                      this.renderTable(res.data);
+                  }
 
 
                 } catch (error) {
                     console.error('Error fetching data:', error);
 
                 }
-         }
+            }
+
+            renderTable(data) {
+                if (!this.tbody) return;
+                if (data.length === 0) {
+                    this.tbody.innerHTML = `
+                  <tr>
+                      <td colspan="11" style="text-align:center; padding:32px; color:#86868b;">
+                          No data available.
+                      </td>
+                  </tr>`;
+                    return;
+                }
+
+                this.tbody.innerHTML = data.map(row => {
+                    return `
+                <tr  class='fade-in'  data-order-line="${row.Line}"   >
+                          <td>${row.Line}</td>
+                          <td style='text-align: left;'>
+                              <span class="text-primary font-medium">${row.FinalShopOrder}</span>
+                              <p style="margin:.2em 0;color:#8a8f9e;">${row.ItemNo}</p>
+                               <span
+                                  class="model-text"
+                                  title="${row.Model}">
+                                  ${row.Model}
+                              </span>
+                          </td>
+
+                          <td>${row.PlanQty}</td>
+                          <td>${this.formatTimeSpan(row.TimeStart)}</td>
+                          <td>${this.formatTimeSpan(row.TimeEnd)}</td>
+                          <td>${row.Downtime || ''}</td>
+                          <td class="status-column">${row.CycleTime || ''}</td>
+                          <td>${row.OperationRate || '-'} %</td>
+                  </tr>`
+
+                }).join('');
+            }
+
+            formatTime(time) {
+                if (!time) return '-';
+
+                // Example: "08:30:00"
+                if (typeof time === 'string') {
+                    return time.substring(0, 5);
+                }
+
+                return '-';
+            }
+            formatTimeSpan(time) {
+                if (!time) return '-';
+
+                const hours = String(time.Hours ?? 0).padStart(2, '0');
+                const minutes = String(time.Minutes ?? 0).padStart(2, '0');
+
+                return `${hours}:${minutes}`;
+            }
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        const controller = new DownTimeHistoryController();
+        const controller = new DownTimeReportController();
         controller.init();
     });
 </script>

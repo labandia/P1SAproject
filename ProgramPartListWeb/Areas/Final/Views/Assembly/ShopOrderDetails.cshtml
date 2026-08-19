@@ -268,17 +268,20 @@
         </div>*@
 
             <div class="field-group">
+                <span class="field-label">Select Group : </span>
+                <select id="DownTimeGroup">
+                    <option value="">-- Select Code</option>
+                </select>
+            </div>
+            
+            <div class="field-group">
                 <span class="field-label">Select Code : </span>
                 <select id="DownTimeCode" name="DownTimeCode">
                     <option value="">-- Select Code</option>
                 </select>
             </div>
 
-            <div class="field-group" style="margin-bottom: .5em;">
-                <span class="field-label">GroupName : </span>
-                <input type="text" class="field-box" id="GroupName" readonly />
-            </div>
-
+           
             <div class="field-group" style="margin-bottom: .5em;">
                 <span class="field-label">PIC : </span>
                 <input type="text" class="field-box" id="PIC" name="PIC" />
@@ -313,6 +316,8 @@
 
     class ShopOrderDetailsController {
         constructor() {
+            this.downTimeTypes = [];
+
             this.tbody = document.querySelector('.devices-table tbody');
             this.MEIGbody = document.querySelector('.MEIG-table tbody');
             this.Downtimebody = document.querySelector('.Downtime-table tbody');
@@ -351,11 +356,15 @@
 
         async init() {
             await this.LoadDetailsinfo();
-
+            await this.LoadDownTimeType();
             this.bindEvents();
 
-            this.setActiveButton(this.openFinalAssembly); // NEW — sync initial state
+            this.setActiveButton(this.openFinalAssembly);
+            //this.initializeDownTimeEvents();
         }
+
+     
+
 
         setActiveButton(activeBtn) {
             this.tabButtons.forEach(btn => btn.classList.toggle('active', btn === activeBtn));
@@ -552,11 +561,14 @@
                 this.renderDownTimeTable(data);
 
 
-                await this.LoadDownTimeType();
+             
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         }
+
+
+
 
         async LoadDownTimeType() {
             try {
@@ -571,43 +583,138 @@
                     console.error("Invalid downtime type data:", data);
                     return;
                 }
+                this.downTimeTypes = data;
+                this.populateGroupSelect(data);
 
-                const select = document.getElementById("DownTimeCode");
-                const groupName = document.getElementById("GroupName");
-
-                if (!select) return;
-
-                // Keep the default option
-                select.innerHTML = `
-                    <option value="">-- Select Code --</option>
-                `;
-
-                data.forEach(item => {
-                    const option = document.createElement("option");
-
-                    option.value = item.DownTimeCode ?? "";
-                    option.textContent = `${item.DownTimeCode} - ${item.DownTimeType}`;
-
-                    // Optional: store GroupName
-                    option.dataset.groupName = item.GroupName ?? "";
-
-                    select.appendChild(option);
-                });
-
-                // When DownTimeCode changes
-                select.addEventListener("change", function () {
-                    const selectedOption =
-                        this.options[this.selectedIndex];
-
-                    groupName.value =
-                        selectedOption.dataset.groupName || "";
-                });
-
+               
 
              } catch (error) {
                  console.error('Error fetching data:', error);
              }
          }
+
+        populateGroupSelect(data) {
+
+            const groupSelect = document.getElementById("DownTimeGroup");
+            const codeSelect = document.getElementById("DownTimeCode");
+
+            if (!groupSelect) {
+                console.error("DownTimeGroup not found");
+                return;
+            }
+
+            if (!codeSelect) {
+                console.error("DownTimeCode not found");
+                return;
+            }
+
+            // Store the complete list
+            this.downTimeTypes = data;
+
+            // ==============================
+            // Populate UNIQUE GROUPS
+            // ==============================
+
+            groupSelect.innerHTML = `
+        <option value="">-- Select Group --</option>
+    `;
+
+            const uniqueGroups = [
+                ...new Set(
+                    data
+                        .map(item => item.GroupName?.trim())
+                        .filter(Boolean)
+                )
+            ];
+
+            uniqueGroups.forEach(group => {
+
+                const option = document.createElement("option");
+
+                option.value = group;
+                option.textContent = group;
+
+                groupSelect.appendChild(option);
+            });
+
+
+            // ==============================
+            // GROUP CHANGE
+            // ==============================
+
+            groupSelect.addEventListener("change", (e) => {
+
+                const selectedGroup = e.target.value.trim();
+
+                console.log("Selected Group:", selectedGroup);
+
+                // Clear Code dropdown
+                codeSelect.innerHTML = ``;
+
+                if (!selectedGroup) {
+
+                    
+                    return;
+                }
+
+
+                // ==============================
+                // FILTER BY GROUP
+                // ==============================
+
+                const filteredData = this.downTimeTypes.filter(item =>
+                    String(item.GroupName ?? "").trim() === selectedGroup
+                );
+
+                console.log("Filtered Data:", filteredData);
+
+
+                // ==============================
+                // POPULATE DOWNTIME CODE
+                // ==============================
+
+                filteredData.forEach(item => {
+
+                    const option = document.createElement("option");
+
+                    option.value = item.DownTimeCode;
+
+                    option.textContent =
+                        `${item.DownTimeCode} - ${item.DownTimeType}`;
+
+                    codeSelect.appendChild(option);
+                });
+
+
+               
+            });
+
+
+            // ==============================
+            // CODE CHANGE
+            // ==============================
+
+            codeSelect.addEventListener("change", (e) => {
+
+                const selectedCode = e.target.value;
+
+                const selectedItem = this.downTimeTypes.find(item =>
+                    String(item.DownTimeCode ?? "").trim() ===
+                    String(selectedCode ?? "").trim()
+                );
+
+                if (!selectedItem) {
+                    return;
+                }
+
+                console.log("Selected Code:", selectedItem);
+
+            });
+        }
+
+
+      
+
 
 
         async HandleSubmit(e) {
@@ -946,6 +1053,10 @@
             </tr>`;
             }).join('');
         }
+
+
+
+
         formatTime(time) {
             if (!time) return '-';
 

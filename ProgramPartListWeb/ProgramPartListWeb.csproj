@@ -654,13 +654,16 @@
     <Compile Include="Areas\Circuit\Repository\MetalMaskTransactionServices.cs" />
     <Compile Include="Areas\Circuit\Repository\PlanScheduleRepository.cs" />
     <Compile Include="Areas\Final\Controllers\AssemblyController.cs" />
+    <Compile Include="Areas\Final\Controllers\DownTimeController.cs" />
     <Compile Include="Areas\Final\FinalAreaRegistration.cs" />
+    <Compile Include="Areas\Final\Interface\IDownTime.cs" />
     <Compile Include="Areas\Final\Interface\IManufacturing.cs" />
     <Compile Include="Areas\Final\Interface\IUploadServices.cs" />
     <Compile Include="Areas\Final\Model\DisposalModels.cs" />
     <Compile Include="Areas\Final\Model\DownTimeModel.cs" />
     <Compile Include="Areas\Final\Model\FinaManufacturingOrder.cs" />
     <Compile Include="Areas\Final\Model\P1TraceablityModel.cs" />
+    <Compile Include="Areas\Final\Services\DownTimeServices.cs" />
     <Compile Include="Areas\Final\Services\ManufacuringServices.cs" />
     <Compile Include="Areas\Final\Services\UploadServices.cs" />
     <Compile Include="Areas\Hydroponics\Controllers\HydroController.cs" />
@@ -1121,6 +1124,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Final\Data\" />
+    <Folder Include="Areas\Final\Views\DownTime\" />
     <Folder Include="Areas\Final\Views\Modal\" />
     <Folder Include="Areas\P1SA\Data\" />
   </ItemGroup>

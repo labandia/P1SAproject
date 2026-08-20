@@ -28,6 +28,7 @@ namespace ProgramPartListWeb.Areas.Final.Model
 
         public double CycleTime { get; set; }
         public int OperationRate { get; set; }
+        public int MachineCount { get; set; }
     }
 
     public class DownTimeReportModel

@@ -10,7 +10,7 @@
     <div class="headerManage  flex justify-between items-center mb-6">
         <div class="flex items-center gap-lg-3">
             <div>
-                <h2 class="font-semibold mb-1" style="font-size: 22px;">Daily Down Time Report</h2>
+                <h2 class="font-semibold mb-1" style="font-size: 22px;">Daily Report</h2>
                 <p class="text-sm" style="color:#86868b;">Daily Montoring of DownTime data </p>
             </div>
 
@@ -73,18 +73,68 @@
     <div class="devices-table-wrapper">
         <div class="devices-table-wrapper">
             <div class="table-scroll TrackTable">
-                <table class="upload-table">
+                <table class="upload-table" id="tablelayout">
                     <thead>
                         <tr>
+                            <th>
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 20 20">
+                                        <path d="M0 0h20v20H0z" fill="none" />
+                                        <path fill="currentColor" d="M5.673 0a.7.7 0 0 1 .7.7v1.309h7.517v-1.3a.7.7 0 0 1 1.4 0v1.3H18a2 2 0 0 1 2 1.999v13.993A2 2 0 0 1 18 20H2a2 2 0 0 1-2-1.999V4.008a2 2 0 0 1 2-1.999h2.973V.699a.7.7 0 0 1 .7-.699M1.4 7.742v10.259a.6.6 0 0 0 .6.6h16a.6.6 0 0 0 .6-.6V7.756zm5.267 6.877v1.666H5v-1.666zm4.166 0v1.666H9.167v-1.666zm4.167 0v1.666h-1.667v-1.666zm-8.333-3.977v1.666H5v-1.666zm4.166 0v1.666H9.167v-1.666zm4.167 0v1.666h-1.667v-1.666zM4.973 3.408H2a.6.6 0 0 0-.6.6v2.335l17.2.014V4.008a.6.6 0 0 0-.6-.6h-2.71v.929a.7.7 0 0 1-1.4 0v-.929H6.373v.92a.7.7 0 0 1-1.4 0z" />
+                                    </svg>
+                                    <span>Date</span>
+                                </div>
+                            </th>
                             <th>Line</th>
                             <th style="">Final Shop Order/ Partno / Model</th>
                             <th>Plan Qty</th>
-                            <th>Start</th>
-                            <th>End</th>        
-                            <th>Conversion (min)</th>
+                            <th>
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 256 256">
+                                        <path d="M0 0h256v256H0z" fill="none" />
+                                        <path fill="currentColor" d="M206 128a77.92 77.92 0 0 0-32.53-63.31L167.1 29.5A14 14 0 0 0 153.32 18h-50.64A14 14 0 0 0 88.9 29.5l-6.37 35.19a77.87 77.87 0 0 0 0 126.62l6.37 35.19a14 14 0 0 0 13.78 11.5h50.64a14 14 0 0 0 13.78-11.5l6.37-35.19A77.92 77.92 0 0 0 206 128M100.71 31.64a2 2 0 0 1 2-1.64h50.64a2 2 0 0 1 2 1.64l4.56 25.19a77.68 77.68 0 0 0-63.7 0Zm54.58 192.72a2 2 0 0 1-2 1.64h-50.61a2 2 0 0 1-2-1.64l-4.56-25.19a77.68 77.68 0 0 0 63.7 0ZM128 194a66 66 0 1 1 66-66a66.08 66.08 0 0 1-66 66m46-66a6 6 0 0 1-6 6h-40a6 6 0 0 1-6-6V88a6 6 0 0 1 12 0v34h34a6 6 0 0 1 6 6" />
+                                    </svg>
+                                    <span>Start -  end</span>
+                                </div>
 
-                            <th>Actual Cycle  Time (sec)</th>
-                            <th>Operation Rate (%)
+                                
+                               
+                            </th>
+                            <th>
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24">
+                                        <path d="M0 0h24v24H0z" fill="none" />
+                                        <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+                                            <path d="M12.005 21.984c5.512 0 9.98-4.468 9.98-9.979s-4.468-9.98-9.98-9.98c-5.511 0-9.98 4.469-9.98 9.98s4.469 9.98 9.98 9.98" />
+                                            <path d="m6.137 4.022l8.163 8.183l.02-4.54m3.543 12.313L9.7 11.805l-.02 4.531" />
+                                        </g>
+                                    </svg>
+                                    <span>Conversion (min)</span>
+                                </div>
+      
+                            </th>
+                            <th>
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 512 512">
+                                        <path d="M0 0h512v512H0z" fill="none" />
+                                        <path fill="currentColor" d="M405.347 277.488v119.168l48.915-48.919l30.17 30.17l-100.419 100.418l-100.418-100.418l30.17-30.17l48.915 48.877V277.488zm-149.666-213.8c106.038 0 192 85.961 192 192v.32l-21.001.147l-21.667-.017l.001-.45c0-82.475-66.859-149.334-149.333-149.334s-149.334 66.859-149.334 149.334c0 82.474 66.859 149.333 149.334 149.333c7.85 0 15.559-.606 23.082-1.773l35.368 35.38c-18.43 5.884-38.069 9.06-58.45 9.06c-106.039 0-192-85.962-192-192c0-106.039 85.961-192 192-192m21.652 85.646v95.147l54.4 36.48l-23.466 35.413l-73.6-48.853V149.334z" />
+                                    </svg>
+                                    <span> DownTime  Total</span>
+                                </div>
+                              
+                            </th>
+                            <th>
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24">
+                                        <path d="M0 0h24v24H0z" fill="none" />
+                                        <path fill="none" stroke="currentColor" d="M3 .5h18m-18 23h18m-15.5 0v-6l2.856-1.714a4.415 4.415 0 0 0 0-7.572L5.5 6.5v-6m13 0v6l-2.856 1.714a4.416 4.416 0 0 0 0 7.572L18.5 17.5v6" />
+                                    </svg>
+                                    <span> Actual Cycle  Time (sec)</span>
+                                </div>
+                             
+                            </th>
+                            <th>
+                                Operation Rate (%)
                             </th>
                         </tr>
                     </thead>
@@ -175,6 +225,7 @@
                 this.tbody.innerHTML = data.map(row => {
                     return `
                 <tr  class='fade-in'  data-order-line="${row.Line}"   >
+                          <td>${row.DateStart}</td>
                           <td>${row.Line}</td>
                           <td style='text-align: left;'>
                               <span class="text-primary font-medium">${row.FinalShopOrder}</span>
@@ -187,14 +238,16 @@
                           </td>
 
                           <td>${row.PlanQty}</td>
-                          <td>${this.formatTimeSpan(row.TimeStart)}</td>
-                          <td>${this.formatTimeSpan(row.TimeEnd)}</td>
-                          <td>${row.Downtime || ''}</td>
+                          <td>${this.formatTimeSpan(row.TimeStart)} - ${this.formatTimeSpan(row.TimeEnd)}</td>
+                          <td>${row.Downtime || '0'}</td>
+                          <td>${row.MachineCount || '0'}</td>
                           <td class="status-column">${row.CycleTime || ''}</td>
                           <td>${row.OperationRate || '-'} %</td>
                   </tr>`
 
                 }).join('');
+
+                
             }
 
             formatTime(time) {

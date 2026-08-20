@@ -81,7 +81,7 @@
                             <th>Plan Qty</th>
                             <th>Start</th>
                             <th>End</th>
-                            <th>Downtime</th>
+                            <th>Down time</th>
                             <th>Group</th>
                             <th>Code</th>
                             <th>Downtime Type</th>
@@ -142,7 +142,7 @@
       async LoadDownTimeMonitor() {
           try {
 
-            const res = await getMethod('@Url.Action("GetDownTimeReportList", "DownTime")', {
+            const res = await getMethod('@Url.Action("GetDownTimeHistoryList", "DownTime")', {
                 searchtext: this.inputsearch.value,
                 Linename: this.selectLine.value
             });

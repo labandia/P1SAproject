@@ -15,7 +15,28 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
     {
         private readonly IDownTime _downTimeService;    
 
-        public DownTimeController() => _downTimeService = new Services.DownTimeServices();  
+        public DownTimeController() => _downTimeService = new Services.DownTimeServices();
+
+
+        [HttpGet]
+        public async Task<ActionResult> GetDownTimeHistoryList(
+            string searchtext, string Linename)
+        {
+            try
+            {
+                var res = await _downTimeService.GetDowntimeMonitor(searchtext, Linename);
+                if (res == null)
+                    return JsonNotFound("No Manpower data found");
+
+                return JsonSuccess(res);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
+
 
         [HttpGet]
         public async Task<ActionResult> GetDownTimeReportList(
@@ -23,7 +44,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         {
             try
             {
-                var res = await _downTimeService.GetDowntimeMonitor(searchtext, Linename);
+                var res = await _downTimeService.GetDailyReportMonitor(searchtext, Linename);
                 if (res == null)
                     return JsonNotFound("No Manpower data found");
 

@@ -57,31 +57,9 @@ namespace ProgramPartListWeb.Areas.Final.Services
               INNER JOIN FanTraceabilityManufacturingOrder m ON i.FinalShopOrder = m.FinalShopOrder
               INNER JOIN FanTraceabilityDownTimeType t ON t.DownTimeCode = i.DownTimeCode ";
 
-        public Task<List<DownTimeModel>> GetDowntimeMonitor(string search, string Linename)
-        {
-            var parameters = new DynamicParameters();
-
-            // Line filter
-            if (!string.IsNullOrWhiteSpace(Linename))
-            {
-                strsql += " AND m.Line = @Line";
-                parameters.Add("@Line", Linename);
-            }
-
-            if (!string.IsNullOrWhiteSpace(search))
-            {
-                strsql += @" AND (
-                        m.FinalShopOrder LIKE @SearchPrefix)";
-
-                parameters.Add("@SearchPrefix", $"{search}%");
-            }
-
-            strsql += " ORDER BY i.DownTimeID DESC";
-
-
-            return SqlDataAcess_Test.QueryAsync<DownTimeModel>(strsql, parameters);
-        }
-
+        // =====================================================================
+        // =============== FOR DAILY REPORT MONITORING =========================
+        // =====================================================================
         public Task<List<DownTimeModel>> GetDailyReportMonitor(string search, string Linename)
         {
             string strsql = $@"SELECT 
@@ -151,7 +129,9 @@ namespace ProgramPartListWeb.Areas.Final.Services
                             )
                         END
                         AS DECIMAL(10,0)
-                    ) AS OperationRate
+                    ) AS OperationRate,
+
+                    (SELECT SUM(Downtime) FROM FanTraceabilityDownTimeInput WHERE FinalShopOrder = m.FinalShopOrder)  as MachineCount 
 
                 FROM FanTraceabilityManufacturingOrder m
                 WHERE m.OrderStatus = 3
@@ -174,11 +154,41 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 parameters.Add("@SearchPrefix", $"{search}%");
             }
 
+            strsql += " ORDER BY m.DateStart DESC";
+
+
+            return SqlDataAcess_Test.QueryAsync<DownTimeModel>(strsql, parameters);
+        }
+
+
+
+
+        public Task<List<DownTimeModel>> GetDowntimeMonitor(string search, string Linename)
+        {
+            var parameters = new DynamicParameters();
+
+            // Line filter
+            if (!string.IsNullOrWhiteSpace(Linename))
+            {
+                strsql += " AND m.Line = @Line";
+                parameters.Add("@Line", Linename);
+            }
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                strsql += @" AND (
+                        m.FinalShopOrder LIKE @SearchPrefix)";
+
+                parameters.Add("@SearchPrefix", $"{search}%");
+            }
+
             strsql += " ORDER BY i.DownTimeID DESC";
 
 
             return SqlDataAcess_Test.QueryAsync<DownTimeModel>(strsql, parameters);
         }
+
+       
 
         public Task<List<DownTimeModel>> GetDowntimeMonitor(string FinalShopOrder)
         {

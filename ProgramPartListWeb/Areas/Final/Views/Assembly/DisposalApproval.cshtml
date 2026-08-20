@@ -121,7 +121,6 @@
                     async init() {
                         await this.getListApproval();
                         this.bindEvents();
-                        console.log("RUNNING");
                     }
 
                     bindEvents() {
@@ -165,7 +164,7 @@
 
                         });
 
-                      
+
                 }
 
                    restartAnimations() {
@@ -222,47 +221,45 @@
                    async getListApproval() {
 
                        try {
-                           const res = await getMethod('@Url.Action("GetApprovalData", "Assembly")', {
-                               section: parseInt(this.sectionID, 10)
-                           });
+                            const res = await getMethod('@Url.Action("GetApprovalData", "Assembly")', {
+                                section: parseInt(this.sectionID, 10)
+                            });
+   
+                            // Clear any existing options before repopulating
+                            this.approverSelect.innerHTML = '';
 
+                            // Always include Neil Almazan as the first option
+                            const defaultOption = document.createElement("option");
+                            defaultOption.value = "Neil Almazan";
+                            defaultOption.textContent = "Neil Almazan";
+                            this.approverSelect.appendChild(defaultOption);
 
-                            if (res?.Success && res.data) {
-                                const email = res.data;
-                                //console.log("Email:", res.data);
-                                const atIndex =
-                                    email.indexOf(String.fromCharCode(64));
+                            if (res?.Success && Array.isArray(res.data) && res.data.length > 0) {
+                                res.data.forEach(email => {
+                                    if (!email) return;
 
-                                const username =
-                                    atIndex >= 0
-                                        ? email.substring(0, atIndex)
-                                        : email;
+                                    const atIndex = email.indexOf(String.fromCharCode(64));
+                                    const username = atIndex >= 0 ? email.substring(0, atIndex) : email;
 
+                                    const name = username.split(/[._\s]+/)
+                                        .map(x => x.charAt(0).toUpperCase() + x.slice(1).toLowerCase())
+                                        .join(" ");
 
-                                console.log("Username:", username);
-                                const option =
-                                    document.createElement("option");
+                                    const option = document.createElement("option");
+                                    // Actual value = full email
+                                    option.value = email;
+                                    // Display = formatted name
+                                    option.textContent = name;
+                                    this.approverSelect.appendChild(option);
+                                });
+                           }
 
-                                const name = username.split(/[._\s]+/)
-                                    .map(x => x.charAt(0).toUpperCase() + x.slice(1).toLowerCase())
-                                    .join(" ");
-
-                                // Actual value = full email
-                                option.value = name;
-
-
-                                // Display = username only
-                                option.textContent = name;
-
-
-                                this.approverSelect.appendChild(option);
-
-                                // Select second option
-                                if (this.approverSelect.options.length > 1) {
-                                    this.approverSelect.selectedIndex = 1;
-                                }
-                            }
-
+                           // Keep Sir Neil selected
+                           this.approverSelect.value = "Neil Almazan";
+                            // Select second option, if present
+                            //if (this.approverSelect.options.length > 1) {
+                            //    this.approverSelect.selectedIndex = 1;
+                            //}
 
                        } catch (error) {
                            console.error('Error fetching data:', error);

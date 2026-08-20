@@ -3423,3 +3423,15 @@ td.status-column {
     .dropdown-wrapper .dropdown-toggle[aria-expanded="true"] .chevron {
         transform: rotate(180deg);
     }
+
+
+#tablelayout thead th div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+#tablelayout thead th span{
+    font-weight: 600;
+}

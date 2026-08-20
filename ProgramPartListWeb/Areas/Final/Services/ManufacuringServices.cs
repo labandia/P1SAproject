@@ -1160,9 +1160,9 @@ namespace ProgramPartListWeb.Areas.Final.Services
             return rows > 0;
         }
 
-        public async Task<string> GetApproverName(int section)
+        public async Task<List<string>> GetApproverName(int section)
         {
-            string name = await SqlDataAcess_Test.ExecuteScalarAsync<string>($@"
+            var name = await SqlDataAcess_Test.QueryAsync<string>($@"
                 SELECT SentTo FROM DisposalEmail WHERE DepartmentID = @DepartmentId", new
             {
                 DepartmentId = section  

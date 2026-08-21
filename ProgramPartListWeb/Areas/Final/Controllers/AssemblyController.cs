@@ -135,7 +135,24 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             int result = await _manu.GetNumberofNextprocess(line);
             return JsonSuccess(result);
         }
-        
+
+        [HttpPost]
+        public async Task<ActionResult> cancelProcess(int recordID, string line)
+        {
+            try
+            {
+                Debug.WriteLine($@"RecordID : {recordID} - Line : {line}");
+                var res = await _manu.CancelProcess(recordID, line);
+                if (!res) return JsonError("Error Updated");
+                return JsonSuccess(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
+
         [HttpPost]
         public async Task<ActionResult> UpdateStatusLine(int recordID, int orderstats, string line)
         {
@@ -175,7 +192,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         {
             try
             {
-                var updateTask =  _manu.CompletionStatusShopOrder(recordID, 3, "");
+                var updateTask =  _manu.CompletionStatusShopOrder(recordID, 4, "");
                 var nextProcessTask =  _manu.NextModelProcess(line);
 
                 await Task.WhenAll(updateTask, nextProcessTask);

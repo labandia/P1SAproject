@@ -32,6 +32,7 @@ namespace ProgramPartListWeb.Areas.Final
         Task<bool> UpdateCompleteShopOrder(int id, int status, string line);
         Task<bool> CompletionStatusShopOrder(int id, int status, string line);
         Task<bool> NextModelProcess(string newLine);
+        Task<bool> CancelProcess(int id, string line);
         // ============================================================
 
         // ======  FOR UPLOAD DATA  ====================================

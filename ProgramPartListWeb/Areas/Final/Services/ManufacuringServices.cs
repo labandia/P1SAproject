@@ -16,7 +16,18 @@ namespace ProgramPartListWeb.Areas.Final.Services
 {
     public class ManufacuringServices : IManufacturing
     {
-        private const string SelectColumns = @"
+        private const string maintable = "FanTraceabilityManufacturingOrder_BACKV2";
+        public enum OrderStatus
+        {
+            Blank = 0,
+            NextProcess = 1,
+            Temporary = 2,
+            InProcess = 3,
+            FSI = 4,
+            CellLine = 5
+        }
+
+        private  string SelectColumns = $@"
                                    s.RecordID
                                  ,s.InputQty
                                  ,s.Line
@@ -35,19 +46,13 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                  ,s.WithSR
                                  ,s.OrderRemarks
                                  ,s.OrderStatus
+                                 ,s.QuanStatus
                                  ,FORMAT(s.DateStart, 'MM/dd/yy') as DateStart
                                  ,s.TimeStart
                                  ,s.TimeEnd
-                                 ,(SELECT m.Model FROM FanTraceabilityManufacturingOrder m WHERE m.Line = s.Line AND m.OrderStatus = 1)  as NextItem
-                                 ,(SELECT m.FinalShopOrder FROM FanTraceabilityManufacturingOrder m WHERE m.Line = s.Line AND m.OrderStatus = 1)  as NextShop";
-        public enum OrderStatus
-        {
-            Blank = 0,
-            NextProcess = 1,
-            InProcess = 2,
-            Completed = 3,
-            Temporary = 4
-        }
+                                 ,(SELECT m.Model FROM {maintable} m WHERE m.Line = s.Line AND m.OrderStatus = 1)  as NextItem
+                                 ,(SELECT m.FinalShopOrder FROM {maintable} m WHERE m.Line = s.Line AND m.OrderStatus = 1)  as NextShop";
+        
 
 
 
@@ -86,13 +91,13 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 if (getDoneLines == 6)
                 {
                     // UPDATE TO DONE
-                    await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingOrder 
+                    await SqlDataAcess_Test.ExecuteAsync($@"UPDATE {maintable} 
                         SET OrderStatus = 3 WHERE  Line =@Line AND OrderStatus = 2  ", new
                     {
                         Line = item.Line
                     });
                     // UPDATE TO ACTIVE NEXT PROCESS
-                    await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingOrder 
+                    await SqlDataAcess_Test.ExecuteAsync($@"UPDATE {maintable} 
                         SET OrderStatus = 2 WHERE   Line =@Line AND OrderStatus = 1 ", new
                     {
                         Line = item.Line
@@ -151,7 +156,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
         {
             try
             {
-                string query = $@"SELECT {SelectColumns} FROM FanTraceabilityManufacturingOrder s WHERE OrderStatus = 2 OR OrderStatus = 4 ";
+                string query = $@"SELECT {SelectColumns} FROM {maintable} s WHERE OrderStatus = 2 OR OrderStatus = 3 ";
                 var getData = await SqlDataAcess_Test.QueryAsync<FanTraceabilityManufacturingOrder>(query);
 
                 foreach (var order in getData)
@@ -239,6 +244,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         mo.WithSR,
                         mo.OrderRemarks,
                         mo.OrderStatus,
+                        mo.QuanStatus,
                            -- DepartmentID 1 OR 2  Show both AG and AF
                         CASE
                             WHEN EXISTS (
@@ -313,7 +319,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                             
                         mo.Operational
 
-                    FROM FanTraceabilityManufacturingOrder mo WHERE 1 = 1 ";
+                    FROM {maintable} mo WHERE mo.OrderStatus <> 4 ";
 
                 var parameters = new DynamicParameters();
 
@@ -359,7 +365,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
         public Task<FanTraceabilityManufacturingOrder> GetShopderDetails(int id)
         {
-            string strsql = $@"SELECT TOP 1 {SelectColumns} FROM  FanTraceabilityManufacturingOrder s
+            string strsql = $@"SELECT TOP 1 {SelectColumns} FROM  {maintable} s
                   WHERE s.RecordID =@RecordID  ";
 
             return SqlDataAcess_Test.QuerySingleOrDefaultAsync<FanTraceabilityManufacturingOrder>(strsql, new
@@ -372,7 +378,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
         public async Task<bool> NextModelProcess(string newLine)
         {
             int rows =await   SqlDataAcess_Test.ExecuteAsync($@"
-                UPDATE FanTraceabilityManufacturingOrder SET OrderStatus = 2
+                UPDATE {maintable} SET OrderStatus = 2
                 WHERE Line = @Line
                 AND OrderStatus = 1", new
             {
@@ -381,16 +387,13 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
             return rows > 0;
         }
-
-       
-
         public async Task<bool> UpdateStatusShopOrder(int id, int status, string line)
         {
-            if (status == (int)OrderStatus.InProcess || status == (int)OrderStatus.Temporary) // 2 or 4
+            if (status == (int)OrderStatus.InProcess || status == (int)OrderStatus.Temporary) // 2 or 3
             {
-                int hasOrderStats = await SqlDataAcess_Test.ExecuteScalarAsync<int>(@"
+                int hasOrderStats = await SqlDataAcess_Test.ExecuteScalarAsync<int>($@"
                     SELECT COUNT(*) 
-                    FROM FanTraceabilityManufacturingOrder
+                    FROM {maintable}
                     WHERE line = @line 
                       AND OrderStatus IN (@inProcess, @temporary)
                       AND RecordID != @id",
@@ -406,29 +409,25 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     return false;
             }
 
-            int rows =  await SqlDataAcess_Test.ExecuteAsync(@"
-                    UPDATE FanTraceabilityManufacturingOrder 
+            int rows =  await SqlDataAcess_Test.ExecuteAsync($@"
+                    UPDATE {maintable} 
                     SET OrderStatus = @status
                     WHERE RecordID = @id AND line = @line", 
                  new { id, status, line });
 
             return rows > 0;
         }
-
         public async Task<bool> UpdateCompleteShopOrder(int id, int status, string line)
         {
-            // CHecks if the orderStatus is 2 or 4 (InProcess or Temporary) and
+            // CHecks if the orderStatus is 2 or 3 (InProcess or Temporary) and
             // if there are other orders with the same line and status, it will update
             // the current order to 1 (NextProcess) instead of 2 (InProcess)
-
             int rows = 0;
-
-
-            int hasOrderStats = await SqlDataAcess_Test.ExecuteScalarAsync<int>(@"
+            int hasOrderStats = await SqlDataAcess_Test.ExecuteScalarAsync<int>($@"
                     SELECT COUNT(*) 
-                    FROM FanTraceabilityManufacturingOrder
+                    FROM {maintable}
                     WHERE line = @line 
-                      AND OrderStatus IN (2, 4)
+                      AND OrderStatus IN (2, 3)
                       AND RecordID != @id",
                     new
                     {
@@ -437,22 +436,48 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     });
 
             if (hasOrderStats > 0) {
-                rows = await SqlDataAcess_Test.ExecuteAsync(@"
-                    UPDATE FanTraceabilityManufacturingOrder 
+                rows = await SqlDataAcess_Test.ExecuteAsync($@"
+                    UPDATE {maintable} 
                     SET OrderStatus = 1
                     WHERE RecordID = @id AND line = @line",
                 new { id, status, line });
             }
             else
             {
-                rows = await SqlDataAcess_Test.ExecuteAsync(@"
-                    UPDATE FanTraceabilityManufacturingOrder 
+                rows = await SqlDataAcess_Test.ExecuteAsync($@"
+                    UPDATE {maintable} 
                     SET   OrderStatus = 2,
                         DateStart = CAST(GETDATE() AS DATE),
                         TimeStart = CAST(GETDATE() AS TIME(0))
                     WHERE RecordID = @id AND line = @line",
                     new { id, status, line });
             }
+
+            return rows > 0;
+        }
+        public async Task<bool> CompletionStatusShopOrder(int id, int status, string line)
+        {
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"
+                UPDATE {maintable} SET OrderStatus =@OrderStatus,
+                        TimeEnd = CAST(GETDATE() AS TIME(0))
+                WHERE RecordID =@RecordID", new
+            {
+                RecordID = id,
+                OrderStatus = status
+            });
+
+            return rows > 0;
+        }
+        public async Task<bool> CancelProcess(int id, string line)
+        {
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"
+                    UPDATE {maintable} 
+                    SET OrderStatus = 0
+                    WHERE RecordID = @id AND line = @line", new
+            {
+                id,
+                line
+            });
 
             return rows > 0;
         }
@@ -628,7 +653,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
         public async Task<bool> UpdateAssemblyStatus(int RecordID, string FAStatus, DateTime ShipmentDate, string mode, bool WithSR, string OrderRemarks)
         {
-            int rows = await SqlDataAcess_Test.ExecuteAsync(@"UPDATE FanTraceabilityManufacturingOrder 
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE {maintable} 
                     SET FAStatus =@FAStatus, ShipmentDate =@ShipmentDate, WithSR =@WithSR, 
                     OrderRemarks =@OrderRemarks WHERE RecordID =@RecordID", new
             {
@@ -646,7 +671,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
         {
             var count = await SqlDataAcess_Test.ExecuteScalarAsync<int>($@"
                         SELECT COUNT(*) 
-                        FROM FanTraceabilityManufacturingOrder 
+                        FROM {maintable} 
                         WHERE OrderStatus = 1 AND Line = @Line", new { Line = line });
             return count;
         }
@@ -664,7 +689,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
             {
                 int changeprocess = process - 1;
                 rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE 
-                FanTraceabilityManufacturingOrder SET  Line =@Line, Operational =@Operational
+                {maintable} SET  Line =@Line, Operational =@Operational
                 WHERE RecordID =@RecordID", new
                 {
                     RecordID = recordID,
@@ -675,7 +700,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
             else
             {
                 rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE 
-                FanTraceabilityManufacturingOrder SET  Line =@Line WHERE RecordID =@RecordID", new
+                {maintable} SET  Line =@Line WHERE RecordID =@RecordID", new
                 {
                     RecordID = recordID,
                     Line = Lineselect
@@ -687,7 +712,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
         public async Task<bool> AddInputQuantiyPerLine(int recordID, int Qty)
         {
-            int rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingOrder SET  
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE {maintable} SET  
                 InputQty =@Qty WHERE RecordID =@RecordID", new
             {
                 RecordID = recordID,
@@ -697,24 +722,12 @@ namespace ProgramPartListWeb.Areas.Final.Services
             return rows > 0;
         }
 
-        public async Task<bool> CompletionStatusShopOrder(int id, int status, string line)
-        {
-            int rows = await SqlDataAcess_Test.ExecuteAsync($@"
-                UPDATE FanTraceabilityManufacturingOrder SET OrderStatus =@OrderStatus,
-                        TimeEnd = CAST(GETDATE() AS TIME(0))
-                WHERE RecordID =@RecordID", new
-            {
-                RecordID = id,
-                OrderStatus = status
-            });
-
-            return rows > 0;
-        }
+       
 
         public Task<int> GetCountShopOrders(string line)
         {
             return SqlDataAcess_Test.ExecuteScalarAsync<int>($@"SELECT COUNT(*) AS TotalCount
-                FROM FanTraceabilityManufacturingOrder
+                FROM {maintable}
                 WHERE Line = @Line
                   AND OrderStatus != 3;", new
             {
@@ -725,7 +738,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
         public Task<int> GetActualCountOfShopOrders(string Linename)
         {
             string strquery = $@"SELECT COUNT(*) 
-                    FROM FanTraceabilityManufacturingOrder  ";
+                    FROM {maintable}  ";
 
             var parameters = new DynamicParameters();
 
@@ -830,14 +843,14 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
                 SUM(CASE WHEN ISNULL(ds.FD,0)=0 THEN mo.PlanQty ELSE 0 END) AS FD
 
-            FROM FanTraceabilityManufacturingOrder mo
+            FROM {maintable} mo
 
             LEFT JOIN DeptStatus ds
                 ON ds.FinalShopOrder = mo.FinalShopOrder
 
             WHERE
                 CAST(mo.PlanStartDate AS DATE) <= CAST(GETDATE() AS DATE) {filtercondition}
-                AND mo.OrderStatus <> 3
+                AND mo.OrderStatus <> 4
             GROUP BY
                 CAST(mo.PlanStartDate AS DATE)
 
@@ -855,10 +868,10 @@ namespace ProgramPartListWeb.Areas.Final.Services
                             CAST(
                                 (SUM(PlanQty) * 100.0) /
                                 (SELECT SUM(PlanQty)
-                                 FROM [PMACS_TEST].[dbo].[FanTraceabilityManufacturingOrder])
+                                 FROM [PMACS_TEST].[dbo].[{maintable}])
                                 AS DECIMAL(5,2)
                             ) AS AsPercentage
-                        FROM [PMACS_TEST].[dbo].[FanTraceabilityManufacturingOrder]
+                        FROM [PMACS_TEST].[dbo].[{maintable}]
                         WHERE DispatchDate = ''");
             if (getdata == null)
                 return (0, "", 0);
@@ -878,10 +891,10 @@ namespace ProgramPartListWeb.Areas.Final.Services
                             CAST(
                                 (SUM(PlanQty) * 100.0) /
                                 (SELECT SUM(PlanQty)
-                                 FROM FanTraceabilityManufacturingOrder)
+                                 FROM {maintable})
                                 AS DECIMAL(5,2)
                             ) AS AsPercentage
-                        FROM FanTraceabilityManufacturingOrder
+                        FROM {maintable}
                         {filtercondition} ");
             if (getdata == null)
                 return (0, "", 0);
@@ -998,7 +1011,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                             P1FA_FA,
                             P1FA_H,
                             M1
-                        FROM FanTraceabilityManufacturingOrder
+                        FROM {maintable}
     
 	                    WHERE
 		                    CAST(PlanStartDate AS DATE) <= CAST(GETDATE() AS DATE)
@@ -1185,7 +1198,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
 	             i.Details,
                  t.GroupName
               FROM FanTraceabilityDownTimeInput i 
-              INNER JOIN FanTraceabilityManufacturingOrder m ON i.FinalShopOrder = m.FinalShopOrder
+              INNER JOIN {maintable} m ON i.FinalShopOrder = m.FinalShopOrder
               INNER JOIN FanTraceabilityDownTimeType t ON t.DownTimeCode = i.DownTimeCode
               WHERE i.FinalShopOrder = @FinalShopOrder ORDER BY i.DownTimeID", new
             {  FinalShopOrder });
@@ -1247,8 +1260,10 @@ namespace ProgramPartListWeb.Areas.Final.Services
 				) AS OperationRate
 
               FROM FanTraceabilityDownTimeInput i 
-              INNER JOIN FanTraceabilityManufacturingOrder m ON i.FinalShopOrder = m.FinalShopOrder
+              INNER JOIN {maintable} m ON i.FinalShopOrder = m.FinalShopOrder
               INNER JOIN FanTraceabilityDownTimeType t ON t.DownTimeCode = i.DownTimeCode");
         }
+
+        
     }
 }

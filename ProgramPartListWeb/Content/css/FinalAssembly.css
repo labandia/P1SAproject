@@ -1850,9 +1850,19 @@ svg.icon-stroke {
 .bg-row-highlight {
     background-color: #e3f0fd
 }
-
+.bg-status-red {
+    background-color: #f72929
+}
 .bg-status-gray {
     background-color: #9ca3af
+}
+
+.bg-status-realyellow {
+    background-color: #e1f340;
+}
+
+.bg-status-violet {
+    background-color: #9010f8;
 }
 
 .selectedbadge {
@@ -1882,7 +1892,15 @@ svg.icon-stroke {
     }
 
     .selectedComplete, .selectedbadge.selectedComplete:disabled:hover {
-        background: #727272
+        background: #727272;
+    }
+
+    .selectedbadge.selectedFSI:disabled:hover {
+        background: #e1f340;
+    }
+
+    .selectedbadge.selectedCellLine:disabled:hover {
+        background: #9010f8;
     }
 
 .selectedComplete {
@@ -1893,6 +1911,21 @@ svg.icon-stroke {
 .selectedProcess {
     background: #0071e3;
     border: 1px solid #d2d2d7;
+    color: #fff
+}
+
+
+.selectedFSI {
+    background: #e1f340;
+    border: 1px solid #e1f340;
+    color: #fff
+}
+
+
+
+.selectedCellLine {
+    background: #9010f8;
+    border: 1px solid #9010f8;
     color: #fff
 }
 

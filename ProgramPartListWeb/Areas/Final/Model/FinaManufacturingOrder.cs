@@ -39,6 +39,7 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public string NextShop { get; set; }    
         public int InputQty { get; set; }
         public int Operational { get; set; }
+        public int QuanStatus { get; set; }
 
         public string DateStart { get; set; }
         public TimeSpan? TimeStart { get; set; }

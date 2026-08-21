@@ -62,7 +62,18 @@
                     <!-- Legends -->
                     <div class="flex items-center gap-4 flex-wrap">
                         <div class="legends-group">
-                            <span class="rounded-full bg-status-gray flex-shrink-0"></span>
+                            <span class="rounded-full bg-status-realyellow flex-shrink-0"></span>
+                            <span class="text-label">FSI Completed</span>
+                        </div>
+
+                        <div class="legends-group">
+                            <span class="rounded-full bg-status-violet flex-shrink-0"></span>
+                            <span class="text-label">Cell Line Completed</span>
+                        </div>
+
+
+                        <div class="legends-group">
+                            <span class="rounded-full bg-status-red flex-shrink-0"></span>
                             <span class="text-label">Pending Model </span>
                         </div>
 
@@ -214,9 +225,8 @@
             const isStatus = Object.freeze({
                 Blank: 0,
                 NextProcess: 1,
-                InProcess: 2,
-                Completed: 3,
-                Temporary: 4
+                Temporary: 2,
+                InProcess: 3
             });
 
             const row = badge.closest('tr');
@@ -317,8 +327,6 @@
             this.moveCellModal.show();
         })
 
-
-
         this.tbody.addEventListener('dblclick', (e) => {
             if (e.target.closest('button.selectedbadge')) return;
             const row = e.target.closest('tr');
@@ -328,9 +336,6 @@
             const label = row.querySelector('td:nth-child(2) .text-primary')?.textContent?.trim() || `Order ${id}`;
             this.openDetailTab(id, label);
         });
-
-
-
 
         // Tab bar: switch on click (close handled per-tab)
         this.tabBar.addEventListener('click', (e) => {
@@ -583,6 +588,8 @@
               if (this.currentRecord != 0) {
                    document.getElementById("currentrecords").textContent = this.currentRecord;
                   this.renderTable(res.data.payload ?? []);
+                  console.log(res.data.payload);
+
                     //this.renderPagination(total ?? res.data.payload.length);
                 } else {
                     this.tbody.innerHTML = `
@@ -663,6 +670,7 @@
               return;
           }
 
+
           this.tbody.innerHTML = filteredData.map(row => {
 
               let molding = row.Molding
@@ -711,42 +719,51 @@
 
               const orderStatus = parseInt(row.OrderStatus);
 
-              let highlighted =
-                  orderStatus === 2
-                      ? 'bg-row-highlight'
-                      : '';
 
               let selecthighlight = '';
               let isOperational = '';
 
               if (allComplete) {
-                  switch (orderStatus) {
-                      case 3:
-                          selecthighlight = 'selectedComplete';
-                          break;
-                      case 2:
-                      case 4:
-                          selecthighlight = 'selectedProcess';
-                          break;
-                      case 1:
-                          selecthighlight = 'selectedNext';
-                          break;
-
-                      default:
-                          selecthighlight = 'selectAvailable';
-                          break;
+                  if (row.QuanStatus == 1 && (orderStatus == 3)) { // Checks if he status is FSI
+                      selecthighlight = 'selectedFSI';
+                  } else if (row.QuanStatus == 2 && (orderStatus == 3)) {
+                      selecthighlight = 'selectedCellLine';
+                  } else {
+                      switch (orderStatus) {
+                          case 1:
+                              selecthighlight = 'selectedNext';
+                              break;
+                          case 2:
+                          case 3:
+                              selecthighlight = 'selectedProcess';
+                              break;
+                          default:
+                              selecthighlight = 'selectAvailable';
+                              break;
+                      }
                   }
+            
               } else {
-                  if (orderStatus === 2 || orderStatus == 4) {
-                      selecthighlight = 'selectedProcess';
-                  }
+                  if (row.QuanStatus == 1 && (orderStatus == 2 || orderStatus == 3)) { // Checks if he status is FSI
+                      selecthighlight = 'selectedFSI';
+                  } else if (row.QuanStatus == 2 && (orderStatus == 2 || orderStatus == 3)) {
+                      selecthighlight = 'selectedCellLine';
+                  } else {
+                      if (orderStatus === 2 || orderStatus == 3) {
+                          selecthighlight = 'selectedProcess';
+                      } else if (orderStatus === 4) {
+                          selecthighlight = 'selectedFSI';
+                      } else if (orderStatus === 5) {
+                          selecthighlight = 'selectedCellLine';
+                      }
+                  }     
               }
 
               isOperational = row.Operational === 2 || row.Operational === 3 ? `<span> ${row.Operational}</span>` : "";
 
 
               return `
-        <tr class="${highlighted} fade-in"
+        <tr class="bg-row-highlight fade-in"
             data-order-line="${row.Line}"
             data-order-status="${orderStatus}"
             data-operational="${row.Operational}"

@@ -47,6 +47,7 @@
             this.cloneCard = null;
             this.activeLineId = null;           // store current cards data for reset
             this.allCardsData = [];
+            this.selectStatus = 6;
 
             this.assemblyRecords = [
                 { finalShopOrder: "", Line: "L1", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
@@ -87,7 +88,6 @@
                 { finalShopOrder: "", Line: "OP", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
             ];
 
-
         }
 
         async init() {
@@ -118,7 +118,7 @@
                 }
 
                 const apiData = res.data ?? [];
-
+                console.log(apiData);
                 if (apiData.length === 0) {
                     this.allCardsData = [];
                     if (!this.isExpanded) this.RenderEmptyState();
@@ -136,9 +136,9 @@
                         NextItem: "",
                         Note: "",
                         OrderRemarks: "",
-                        RecordID: null,     // add
-                        PlanQty: 0,         // add
-                        InputQty: 0,        // add
+                        RecordID: null,
+                        PlanQty: 0,
+                        InputQty: 0,
                         ...(fromApi ?? {})
                     };
                 });
@@ -250,6 +250,8 @@
         })
         .join('');
 
+            this.selectStatus = item.QuanStatus || 6;
+
     // Modal HTML with editable input, active button, and a close button
     this.currentCenteredCard.innerHTML = `
         <div class="expanded-card-content">
@@ -313,29 +315,37 @@
                     <p class="card-footer-label" style='font-size: 1.1rem;'>Remarks</p>
                     <p class="card-footer-value" style='font-size: 1.2rem;'>${item.OrderRemarks || '-'}</p>
                 </div>
+                 <div class="card-footer-col">
+                     <p class="card-footer-label" style='font-size: 1.1rem;'>Quantity</p>
+                       <input type="number" id="modalQtyInput" class="completed-qty"
+                        min="1" max="${item.PlanQty || 0}" value="${item.InputQty === 0 ? '' : item.InputQty}" />
+                          <span> / ${item.PlanQty || 0}</span>
+                 </div>
             </div>
 
 
             <div  style="display:flex;align-items:center;gap:8px; justify-content: space-between; margin-top: 4em;">
-                <div>
-                    <small>Quantity:</small>
-             <input type="number" id="modalQtyInput" class="completed-qty"
-                    min="1" max="${item.PlanQty || 0}" value="${item.InputQty === 0 ? '' : item.InputQty}" />
-                      <span> / ${item.PlanQty || 0}</span>
+                <select id='selectedStatus'>
+                    <option value='1' ${ this.selectStatus == 1 ? 'selected' : ''}>FSI Completed</option>
+                    <option value='2' ${ this.selectStatus == 2 ? 'selected' : ''}>Cell Line Completed</option>
+                    <option value='6' ${ this.selectStatus == 6 ? 'selected' : ''}>Completed</option>
+                </select>
 
-                </div>
 
-                
                 <div style="display:flex; align-items:center; gap: 10px;">
+
+
                      <button type="button" id="modalCancel" class="btn-cancel" ${item.InputQty !== 0 ? 'disabled' : ''}><iconify-icon icon="mdi-light:cancel" width="16"></iconify-icon>  Cancel</button>
 
                     <button type="button" id="modalCompleteBtn" class="btn-completed"
-                            data-line="${item.Line}" data-order="${item.FinalShopOrder}"><iconify-icon icon="fluent-mdl2:completed" width="15"></iconify-icon>  Completed</button>
+                            data-line="${item.Line}" data-order="${item.FinalShopOrder}"><iconify-icon icon="fluent-mdl2:completed" width="15"></iconify-icon> ${this.selectStatus !== 6 ? 'Save' : 'Completed'} </button>
                 </div>
 
             </div>
         </div>
     `;
+
+
 
     // Close button listener
     const closeBtn = this.currentCenteredCard.querySelector('#closeCenteredBtn');
@@ -381,16 +391,61 @@
         });
     }
 
+    const selectionStatus = this.currentCenteredCard.querySelector('#selectedStatus');
+    if (selectionStatus) {
+            selectionStatus.addEventListener('change', async (e) => {
+                e.stopPropagation();
+                this.selectStatus = e.target.value;
+
+                document.getElementById('modalCompleteBtn').textContent = (this.selectStatus == 6) ? "Completed" : "Save";
+                //alert("Selected Status : " + this.selectStatus);
+            });
+    }
+
     // Active Completed button
     const completeBtn = this.currentCenteredCard.querySelector('#modalCompleteBtn');
     if (completeBtn) {
         // Update the row Data into a Complete
         completeBtn.addEventListener('click', async (e) => {
             e.stopPropagation();
-            const res = await postMethod('@Url.Action("CompleteStatusLine", "Assembly")', {
+            console.log(this.selectStatus);
+            if (this.selectStatus == 1 || this.selectStatus == 2) {
+                alert("FSI and Cell Line Selected");
+            } else {
+                alert("Completed Selected");
+
+                @*const res = await postMethod('@Url.Action("CompleteStatusLine", "Assembly")', {
+                    recordID: item.RecordID,
+                    line: item.Line
+                });
+                if (!res?.Success) return;
+
+                // 2. Loads the Latest Load Active ShopOrder (Online)
+                await this.LoadActiveShopOrders();
+
+                // 4. If there is NO next process (empty or null), close the modal
+                if (this.prevModelprocess === "") {
+                    await this.resetToGrid();
+                }
+
+                this.prevModelprocess = "";*@
+            }
+
+            
+        });
+    }
+
+    // Cancel  button
+    const cancelbtn = this.currentCenteredCard.querySelector('#modalCancel');
+    if (cancelbtn) {
+        cancelbtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+
+            const res = await postMethod('@Url.Action("cancelProcess", "Assembly")', {
                 recordID: item.RecordID,
                 line: item.Line
             });
+            console.log(res);
             if (!res?.Success) return;
 
             // 2. Loads the Latest Load Active ShopOrder (Online)
@@ -402,17 +457,6 @@
             }
 
             this.prevModelprocess = "";
-        });
-    }
-
-    // Cancel  button
-    const cancelbtn = this.currentCenteredCard.querySelector('#modalCancel');
-    if (cancelbtn) {
-        cancelbtn.addEventListener('click', async (e) => {
-            e.stopPropagation();
-            alert("Cancel Inprocess");
-            //let res = await this.updateOrderStatus(item.RecordID, 0, item.Line);
-          
          });
     }
 
@@ -512,7 +556,7 @@
                     let badgeopen = (item.NextItem != null && item.NextItem !== "")
                         ? `<div class="badge-row">${badges}</div>`
                         : '-';
-                  
+
 
                     card.innerHTML = `
 

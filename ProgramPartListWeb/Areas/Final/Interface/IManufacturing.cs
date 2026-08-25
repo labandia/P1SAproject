@@ -30,6 +30,7 @@ namespace ProgramPartListWeb.Areas.Final
         // ======  UPDATING STATUS OF SHOP ORDER DATA =================
         Task<bool> UpdateStatusShopOrder(int id, int status, string line);
         Task<bool> UpdateCompleteShopOrder(int id, int status, string line);
+        Task<bool> UpdateForFSAandCellLine(int id, int status);
         Task<bool> CompletionStatusShopOrder(int id, int status);
         Task<bool> NextModelProcess(string newLine);
         Task<bool> ChangeQuantityStatus(int id, int status);

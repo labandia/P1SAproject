@@ -47,7 +47,7 @@
             this.cloneCard = null;
             this.activeLineId = null;           // store current cards data for reset
             this.allCardsData = [];
-            this.selectStatus = 6;
+            this.selectStatus = 4;
 
             this.assemblyRecords = [
                 { finalShopOrder: "", Line: "L1", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
@@ -224,7 +224,7 @@
 
 
 
-        updateModalContent(item, options = {}) {
+       updateModalContent(item, options = {}) {
             const { animateNextModel = false } = options;
             if (!this.currentCenteredCard) return;
 
@@ -250,7 +250,6 @@
         })
         .join('');
 
-            this.selectStatus = item.QuanStatus ?? 0;
 
     // Modal HTML with editable input, active button, and a close button
     this.currentCenteredCard.innerHTML = `
@@ -326,11 +325,10 @@
 
             <div  style="display:flex;align-items:center;gap:8px; justify-content: space-between; margin-top: 4em;">
                 <select id='selectedStatus' class='selectionQuantity'>
-                    <option value='0' ${ this.selectStatus == 0 ? 'selected' : ''} > -- Select Status -- </option>
-                    <option value='1' ${ this.selectStatus == 1 ? 'selected' : ''}>🟡 FSI Completed</option>
-                    <option value='2' ${this.selectStatus == 2 ? 'selected' : ''}>🟣 Cell Line Completed</option>
-                    <option value='6' ${this.selectStatus == 6 ? 'selected' : ''}>Completed</option>
-
+                    <option value='0' ${this.selectStatus == 0 ? 'selected' : ''}> -- Select Status -- </option>
+                    <option value='5' ${this.selectStatus == 5 ? 'selected' : ''}>🟡 FSI Completed</option>
+                    <option value='6' ${this.selectStatus == 6 ? 'selected' : ''}>🟣 Cell Line Completed</option>
+                    <option value='4' ${this.selectStatus == 4 ? 'selected' : ''}>Completed</option>
                 </select>
 
 
@@ -399,7 +397,7 @@
                 e.stopPropagation();
                 this.selectStatus = e.target.value;
 
-                document.getElementById('modalCompleteBtn').innerHTML = (this.selectStatus == 6) ? `<iconify-icon icon="fluent-mdl2:completed" width="15"></iconify-icon> Completed` : `<iconify-icon icon="fluent-mdl2:completed" width="15"></iconify-icon> Save`;
+                document.getElementById('modalCompleteBtn').innerHTML = (this.selectStatus == 4) ? `<iconify-icon icon="fluent-mdl2:completed" width="15"></iconify-icon> Completed` : `<iconify-icon icon="fluent-mdl2:completed" width="15"></iconify-icon> Save`;
                 //alert("Selected Status : " + this.selectStatus);
             });
     }
@@ -421,34 +419,27 @@
                 alert("Please select a Status.");
                 return;
             }
-            console.log("Selected Status:", selectedStatus);
 
-            if (selectedStatus === 1 || selectedStatus === 2) {
+            let isCompleted = (selectedStatus === 5 || selectedStatus === 6) ? 0 : 1;
+            // 5 or 6 : for FSA and Cell Line Completed, 4 : for Completed
 
-            const res = await postMethod('@Url.Action("ChangeStatusQuantity", "Assembly")', {
-                    recordID: item.RecordID,
-                    stats: selectedStatus
-                });
+            const res = await postMethod('@Url.Action("CompleteStatusLine", "Assembly")', {
+                recordID: item.RecordID,
+                line: item.Line, 
+                IsStatus: isCompleted,
+                QuanStats: selectedStatus
+            });
 
-                if (!res?.Success) return;
+            if (!res?.Success) return;
 
-                alert("Update Status Successfully");
-            } else if (selectedStatus === 6) {
+            alert("Update Status Successfully");
 
-                const res = await postMethod('@Url.Action("CompleteStatusLine", "Assembly")', {
-                    recordID: item.RecordID,
-                    line: item.Line
-                });
+            const hasNextProcess = !!(item.NextItem && item.NextItem.trim() !== "");
 
-                if (!res?.Success) return;
-
-                alert("Update Status Successfully");
-            }
-
-            await this.LoadActiveShopOrders();
-
-            if (this.prevModelprocess === "") {
-                await this.resetToGrid();
+            if (!hasNextProcess) {
+                await this.resetToGrid();   // closes immediately, no race
+            } else {
+                await this.LoadActiveShopOrders(); // safe to refresh in place, next item already known
             }
 
             this.prevModelprocess = "";
@@ -502,7 +493,7 @@
 
     }
 
-    formatTimeSpan(time) {
+       formatTimeSpan(time) {
         if (!time) return '-';
 
         const hours = String(time.Hours ?? 0).padStart(2, '0');
@@ -512,7 +503,7 @@
     }
 
 
-     RenderCardList(data) {
+       RenderCardList(data) {
         const gridContainer = document.getElementById('assemblyCardsGrid');
         if (!gridContainer) return;
         if (this.isExpanded) return;
@@ -577,15 +568,6 @@
                         : '-';
 
 
-                    let badgeQuantity = '';
-
-                    if (item.QuanStatus == 1) {
-                        badgeQuantity = `<span class="BadgeQuantity fsa">FSA </span>`;
-                    } else if (item.QuanStatus == 2) {
-                        badgeQuantity = `<span class="BadgeQuantity CellLine">Cell Line </span>`;
-                    }
-
-
                     card.innerHTML = `
 
                         <div class="card-header">
@@ -642,7 +624,7 @@
 
                              <div class="card-footer-col">
                                  <p class="card-footer-label">Quantity</p>
-                                 <p class="card-footer-value" style='display: flex; align-items: center; gap: 10px;'>${item.InputQty === 0 ? '0' : item.InputQty} / ${item.PlanQty || 0} ${badgeQuantity}</p>
+                                 <p class="card-footer-value" style='display: flex; align-items: center; gap: 10px;'>${item.InputQty === 0 ? '0' : item.InputQty} / ${item.PlanQty || 0} </p>
                              </div>
                         </div>
                     `;
@@ -672,7 +654,7 @@
 
             gridContainer.innerHTML = '';
             gridContainer.appendChild(fragment);
-}
+        }
 
 
        async animateCardToCenter(cardElement, itemData) {

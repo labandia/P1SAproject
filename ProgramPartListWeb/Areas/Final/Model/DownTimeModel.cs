@@ -26,10 +26,31 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public string PIC { get; set; }
         public string Details { get; set; }
         public string GroupName { get; set; }
-
         public double CycleTime { get; set; }
         public int OperationRate { get; set; }
         public int TotalDowntime { get; set; }
+
+        public int FourM { get; set; }
+
+        public string FourName
+        {
+            get
+            {
+                switch (FourM)
+                {
+                    case 1:
+                        return "Man";
+                    case 2:
+                        return "Machine";
+                    case 3:
+                        return "Material";
+                    case 4:
+                        return "Method";
+                    default:
+                        return "-- Select FourM --";
+                }
+            }
+        }
     }
 
     public class DownTimeReportModel

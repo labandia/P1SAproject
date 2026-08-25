@@ -134,6 +134,7 @@
                     <table class="Downtime-table">
                         <thead>
                             <tr>
+                                <th style="text-align: center;">4M Category  </th>
                                 <th style="text-align: center;">Group  </th>
                                 <th style="text-align: center;">Code </th>
                                 <th style="text-align: center;">Type of Downtime</th>
@@ -158,7 +159,7 @@
     <div class="right-panel">
         <div class="panel-header">
             <div class="panel-header-line"></div>
-            <span class="panel-header-title">Assembly Status</span>
+            <span class="panel-header-title" id="titleform">Assembly Status</span>
         </div>
         <!-- ================================================================================ -->
         <!-- ======================= FINAL ASSY ASSEMBLY STATUS ============================= -->
@@ -268,12 +269,27 @@
         </div>*@
 
             <div class="field-group">
+                <span class="field-label">Select 4M Category : </span>
+                <select id="fourM" name="fourM">
+                    <option value="0">-- Select 4M --</option>
+                    <option value="1">Machine</option>
+                    <option value="2">Man</option>
+                    <option value="3">Material</option>
+                    <option value="4">Method</option>
+                </select>
+            </div>
+
+
+           
+
+
+            <div class="field-group">
                 <span class="field-label">Select Group : </span>
                 <select id="DownTimeGroup">
                     <option value="">-- Select Code</option>
                 </select>
             </div>
-            
+
             <div class="field-group">
                 <span class="field-label">Select Code : </span>
                 <select id="DownTimeCode" name="DownTimeCode">
@@ -281,7 +297,7 @@
                 </select>
             </div>
 
-           
+
             <div class="field-group" style="margin-bottom: .5em;">
                 <span class="field-label">PIC : </span>
                 <input type="text" class="field-box" id="PIC" name="PIC" />
@@ -289,7 +305,7 @@
 
 
 
-            <div class="field-group" style="margin-bottom: .5em;">
+            <div class="field-group" style="margin-bottom: 1em;">
                 <span class="field-label">Details : </span>
                 <input type="text" class="field-box" id="Details" name="Details" />
             </div>
@@ -322,6 +338,7 @@
             this.MEIGbody = document.querySelector('.MEIG-table tbody');
             this.Downtimebody = document.querySelector('.Downtime-table tbody');
             this.recordID = document.getElementById('intID').value;
+            
 
             this.changeForms = document.getElementById('OpenMEIG');
             this.downTimeForms = document.getElementById('OpenDownTime');
@@ -434,7 +451,7 @@
 
         ShowFinalAssembly() {
             this.setActiveButton(this.openFinalAssembly);
-
+            document.getElementById('titleform').innerHTML = 'Assembly Status Form';
 
             // Tables
             this.traceabilityTable.style.display = 'block';
@@ -454,6 +471,7 @@
 
         ShowPartsList() {
             this.setActiveButton(this.changeForms);
+            document.getElementById('titleform').innerHTML = 'Part list Preparation Form';
 
             // Tables
             this.traceabilityTable.style.display = 'none';
@@ -470,6 +488,7 @@
 
         ShowDownTime() {
             this.setActiveButton(this.downTimeForms);
+            document.getElementById('titleform').innerHTML = 'FA Down Time Form';
 
             // Tables
             this.traceabilityTable.style.display = 'none';
@@ -743,6 +762,14 @@
 
         async HandleDownTimeSubmit(e) {
             e.preventDefault();
+
+            let getSelected4M = document.getElementById('fourM').value;
+
+            if (parseInt(getSelected4M) === 0) {
+                alert("Select a 4M Category");
+                return;
+            }
+
             const formdata = new FormData(this.DownTimeListPanel);
             formdata.append('FinalShopOrder', this.finalShopOrder);
             const data = Object.fromEntries(formdata);
@@ -1036,6 +1063,7 @@
 
                 return `
             <tr>
+                <td>${this.escape(row.FourName)}</td>
                 <td>${this.escape(row.GroupName)}</td>
                 <td>${this.escape(row.DownTimeCode)}</td>
                 <td>${this.escape(row.DownTimeType)}</td>

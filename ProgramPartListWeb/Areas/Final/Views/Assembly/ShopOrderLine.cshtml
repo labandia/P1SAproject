@@ -226,7 +226,9 @@
                 Blank: 0,
                 NextProcess: 1,
                 Temporary: 2,
-                InProcess: 3
+                InProcess: 3, 
+                FSA: 5,
+                CellLine: 6
             });
 
             const row = badge.closest('tr');
@@ -248,7 +250,7 @@
 
             // if isCOmplete is false(incomplete from the shops)
             if (!isComplete) {
-                if (orderStatus === isStatus.Temporary) {
+                if (orderStatus === isStatus.Temporary ) {
                     alert("Already in Next or In process.");
                 } else {
                     // if not updates the OrderStatus to 4 (In Process) and updates the row
@@ -724,38 +726,32 @@
               let isOperational = '';
 
               if (allComplete) {
-                  if (row.QuanStatus == 1 && (orderStatus == 3)) { // Checks if he status is FSI
-                      selecthighlight = 'selectedFSI';
-                  } else if (row.QuanStatus == 2 && (orderStatus == 3)) {
-                      selecthighlight = 'selectedCellLine';
-                  } else {
-                      switch (orderStatus) {
-                          case 1:
-                              selecthighlight = 'selectedNext';
-                              break;
-                          case 2:
-                          case 3:
-                              selecthighlight = 'selectedProcess';
-                              break;
-                          default:
-                              selecthighlight = 'selectAvailable';
-                              break;
-                      }
+                  switch (orderStatus) {
+                      case 1:
+                          selecthighlight = 'selectedNext';
+                          break;
+                      case 2:
+                      case 3:
+                          selecthighlight = 'selectedProcess';
+                          break;
+                      case 5:
+                          selecthighlight = 'selectedFSI';
+                          break;
+                      case 6:
+                          selecthighlight = 'selectedCellLine';
+                          break;
+                      default:
+                          selecthighlight = 'selectAvailable';
+                          break;
                   }
 
               } else {
-                  if (row.QuanStatus == 1 && (orderStatus == 2 || orderStatus == 3)) { // Checks if he status is FSI
+                  if (orderStatus === 2 || orderStatus == 3) {
+                      selecthighlight = 'selectedProcess';
+                  } else if (orderStatus === 5) {
                       selecthighlight = 'selectedFSI';
-                  } else if (row.QuanStatus == 2 && (orderStatus == 2 || orderStatus == 3)) {
+                  } else if (orderStatus === 6) {
                       selecthighlight = 'selectedCellLine';
-                  } else {
-                      if (orderStatus === 2 || orderStatus == 3) {
-                          selecthighlight = 'selectedProcess';
-                      } else if (orderStatus === 4) {
-                          selecthighlight = 'selectedFSI';
-                      } else if (orderStatus === 5) {
-                          selecthighlight = 'selectedCellLine';
-                      }
                   }
               }
 

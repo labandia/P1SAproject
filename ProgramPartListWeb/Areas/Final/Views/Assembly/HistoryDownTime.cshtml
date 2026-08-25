@@ -76,11 +76,13 @@
                 <table class="upload-table">
                     <thead>
                         <tr>
+                            <th>Date</th>
                             <th>Line</th>
                             <th style="">Final Shop Order/ Partno / Model</th>
                             <th>Plan Qty</th>
                             <th>Start</th>
                             <th>End</th>
+                            <th>Shift</th>
                             <th>Down time</th>
                             <th>Group</th>
                             <th>Code</th>
@@ -172,8 +174,12 @@
           }
 
           this.tbody.innerHTML = data.map(row => {
+              const shift = this.getShift(row.TimeStart);
+
+
               return `
           <tr  class='fade-in'  data-order-line="${row.Line}"   >
+                    <td>${row.DateStart}</td>
                     <td>${row.Line}</td>
                     <td style='text-align: left;'>
                         <span class="text-primary font-medium">${row.FinalShopOrder}</span>
@@ -188,6 +194,7 @@
                     <td>${row.PlanQty}</td>
                     <td>${this.formatTimeSpan(row.TimeStart)}</td>
                     <td>${this.formatTimeSpan(row.TimeEnd)}</td>
+                     <td><span class="shift-badge shift-${shift.toLowerCase()}">${shift}</span></td>
                     <td>${row.Downtime || ''}</td>
                     <td class="status-column">${row.GroupName || ''}</td>
                     <td>${row.DownTimeCode || '-'}</td>
@@ -214,6 +221,20 @@
           const minutes = String(time.Minutes ?? 0).padStart(2, '0');
 
           return `${hours}:${minutes}`;
+      }
+
+      // Day shift: 06:30 - 18:29 | Night shift: 18:30 - 06:29 (wraps past midnight)
+      getShift(time) {
+          if (!time) return '-';
+
+          const hours = time.Hours ?? 0;
+          const minutes = time.Minutes ?? 0;
+          const totalMinutes = (hours * 60) + minutes;
+
+          const dayStart = (6 * 60) + 30;   // 06:30
+          const dayEnd = (18 * 60) + 30;    // 18:30
+
+          return (totalMinutes >= dayStart && totalMinutes < dayEnd) ? 'DS' : 'NS';
       }
 }
 

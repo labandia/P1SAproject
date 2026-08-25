@@ -206,11 +206,18 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> CompleteStatusLine(int recordID, string line)
+        public async Task<ActionResult> CompleteStatusLine(int recordID, 
+            string line, 
+            int IsStatus, 
+            int QuanStats)
         {
             try
             {
-                var updateTask = _manu.CompletionStatusShopOrder(recordID, 4);
+
+                var updateTask = IsStatus == 0 ? 
+                        _manu.UpdateForFSAandCellLine(recordID, QuanStats) : 
+                        _manu.CompletionStatusShopOrder(recordID, QuanStats);
+
                 var nextProcessTask = _manu.NextModelProcess(line);
 
                 await Task.WhenAll(updateTask, nextProcessTask);

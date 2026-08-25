@@ -16,8 +16,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
 {
     public class ManufacuringServices : IManufacturing
     {
-        //private const string maintable = "FanTraceabilityManufacturingOrder_BACKV2";
-        private const string maintable = "FanTraceabilityManufacturingOrder";
+        private const string maintable = "FanTraceabilityManufacturingOrder_BACKV2";
+        //private const string maintable = "FanTraceabilityManufacturingOrder";
 
         public enum OrderStatus
         {
@@ -163,22 +163,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
                 foreach (var order in getData)
                 {
-                    //string listdone = @"
-                    //    SELECT CAST(DepartmentID AS VARCHAR(10))
-                    //    FROM FanTraceabilityFinal
-                    //    WHERE FinalShopOrder = @FinalShopOrder
-                    //      AND DepartmentID IN (1,2,3,4,5,6,7,8)";
-
-                    //var departments = await SqlDataAcess_Test.GetDataAsync<string>(
-                    //    listdone,GetPartlyShortSummary
-                    //    new { FinalShopOrder = order.FinalShopOrder });
-
-                    //order.CompletedSection = string.Join(",",
-                    //    departments
-                    //        .Where(x => !string.IsNullOrWhiteSpace(x))
-                    //        .Distinct()
-                    //        .OrderBy(x => int.Parse(x)));
-
+                    
                     string listdone = @"
                         WITH Depts AS
                         (
@@ -391,6 +376,20 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
             return rows > 0;
         }
+        public async Task<bool> UpdateForFSAandCellLine(int id, int status)
+        {
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"
+                UPDATE {maintable}
+                SET OrderStatus = @status
+                WHERE RecordID = @id ", new
+            {
+                id,
+                status
+            });
+            return rows > 0;
+
+        }
+
         public async Task<bool> UpdateStatusShopOrder(int id, int status, string line)
         {
             // Only block the update if we're trying to move INTO InProcess/Temporary
@@ -1223,7 +1222,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
 	             i.Downtime, 
 	             i.PIC,
 	             i.Details,
-                 t.GroupName
+                 t.GroupName, 
+                 i.FourM
               FROM FanTraceabilityDownTimeInput i 
               INNER JOIN {maintable} m ON i.FinalShopOrder = m.FinalShopOrder
               INNER JOIN FanTraceabilityDownTimeType t ON t.DownTimeCode = i.DownTimeCode
@@ -1234,8 +1234,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
         public async Task<bool> AddGetTimeMonitor(DownTimeModel downtime)
         {
             int rows = await SqlDataAcess_Test.ExecuteAsync($@"INSERT 
-                INTO FanTraceabilityDownTimeInput(FinalShopOrder, DownTimeCode, PIC, Details) 
-                VALUES(@FinalShopOrder, @DownTimeCode, @PIC, @Details)", downtime);
+                INTO FanTraceabilityDownTimeInput(FinalShopOrder, DownTimeCode, PIC, Details, FourM) 
+                VALUES(@FinalShopOrder, @DownTimeCode, @PIC, @Details, @FourM)", downtime);
 
             return rows > 0;
         }
@@ -1293,6 +1293,6 @@ namespace ProgramPartListWeb.Areas.Final.Services
               INNER JOIN FanTraceabilityDownTimeType t ON t.DownTimeCode = i.DownTimeCode");
         }
 
-
+       
     }
 }

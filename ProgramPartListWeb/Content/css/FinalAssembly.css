@@ -1111,6 +1111,10 @@ text- [13px] text-[#86868b] .upload-text-action {
     border-collapse: collapse
 }
 
+.devices-table tbody tr:nth-child(even), .upload-table tbody tr:nth-child(even) {
+    background-color: #f9f9fb;
+}
+
 .completed-qty, tbody td, thead th {
     text-align: center
 }
@@ -1141,10 +1145,9 @@ text- [13px] text-[#86868b] .upload-text-action {
     transition: background-color .1s
 }
 
-    .devices-table tbody tr:hover, .upload-table tbody tr:hover {
+.devices-table tbody tr:hover, .upload-table tbody tr:hover {
         background-color: #f2ecfd;
-        cursor: pointer
-    }
+}
 
 .row-selected {
     background-color: #f0f7ff !important
@@ -2241,6 +2244,19 @@ section {
     display: flex;
     flex-direction: column;
     gap: .375rem
+}
+
+.field-group select{
+  border-radius: 6px;
+    background-color: #fff;
+    height: 2rem;
+    width: 100%;
+    padding: 0 .75rem;
+    font-size: 11px;
+    color: #111827;
+    margin-bottom: 1em;
+    border: 1px solid #d2d2d7;
+    font-family: Inter;
 }
 
 .field-label {
@@ -3499,4 +3515,22 @@ td.status-column {
 
 #tablelayout thead th span {
     font-weight: 600;
+}
+
+
+.shift-badge {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.shift-day {
+    background: #fff4d6;
+    color: #8a6d00;
+}
+
+.shift-night {
+    background: #e3e8f7;
+    color: #2f3d8f;
 }

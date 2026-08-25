@@ -11,8 +11,9 @@ namespace ProgramPartListWeb.Areas.Final.Services
 {
     public class DownTimeServices : IDownTime
     {
-        private string strsql = @"  SELECT 
+        private string strsql = @"  SELECT
 	             i.DownTimeID, 
+                 FORMAT(i.DateStart, 'MM/dd/yy') AS DateStart,
   				 m.Line,
 				 i.FinalShopOrder,
 				 m.ItemNo,

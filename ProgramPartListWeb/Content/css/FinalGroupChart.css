@@ -1,0 +1,208 @@
+﻿:root {
+    --bg-page: #0d1420;
+    --panel: #141d2e;
+    --panel-2: #0f1826;
+    --border: #26344a;
+    --text: #eef2f7;
+    --text-dim: #9fb0c3;
+    --accent-orange: #f5820a;
+    --accent-green: #3ecf5a;
+    --accent-blue: #2e9dfa;
+    --accent-red: #e2431e;
+    --accent-yellow: #e8c33e;
+}
+
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: radial-gradient(1200px 600px at 50% -10%, #1a2436, #0a0f18 70%);
+    color: var(--text);
+    padding: clamp(8px, 3vw, 24px);
+    overflow-x: hidden;
+}
+
+.dashboard {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    height: 90vh;
+}
+
+header {
+    background: linear-gradient(180deg,#1a2436,#141d2e);
+    border-bottom: 1px solid var(--border);
+    padding: clamp(14px, 3vw, 10px) clamp(12px, 4vw, 28px);
+    text-align: center;
+}
+
+header h1{
+    margin:0;
+    font-size:clamp(18px, 3.6vw, 25px);
+    letter-spacing:clamp(0.5px, 0.3vw, 3px);
+    font-weight:800;
+    color:#f4f6f9;
+    text-shadow:0 2px 8px rgba(0,0,0,.4);
+    line-height:1.2;
+  }
+
+
+ .legend{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    align-items:center;
+    gap:clamp(12px, 3vw, 36px);
+    padding:14px 4px 4px;
+    border-top:1px solid var(--border);
+    margin-top:10px;
+    font-size:clamp(11px, 1.6vw, 14px);
+    color:#c7d1de;
+  }
+  .legend .dot{
+    display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:8px;vertical-align:middle;
+  }
+
+.groups-row {
+    display: grid;
+    grid-template-columns: repeat(4,minmax(0,1fr));
+    gap: clamp(8px, 1.5vw, 14px);
+    padding: clamp(8px, 2vw, 14px) clamp(10px, 2.5vw, 20px);
+}
+
+.group-card {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: clamp(10px, 2vw, 16px) clamp(10px, 2vw, 18px) 0px;
+    min-width: 0;
+}
+
+    .group-card h2 {
+        margin: 0 0 10px;
+        font-size: clamp(13px, 1.9vw, 19px);
+        letter-spacing: .5px;
+        font-weight: 700;
+        color: #f2f5f9;
+        white-space: nowrap;
+    }
+
+
+
+.group-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+    padding: 5px 0;
+    font-size: clamp(11px, 1.5vw, 15px);
+    color: #c7d1de;
+    border-bottom: 1px dashed rgba(255,255,255,.06);
+}
+.stat-card {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    min-width: 0;
+    height: 15vh;
+    overflow: hidden;
+}
+
+
+  .stat-head{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:clamp(8px, 1.5vw, 12px) clamp(10px, 2vw, 16px);
+    background:rgba(255,255,255,.03);
+    border-bottom:1px solid var(--border);
+    font-size:clamp(11px, 1.6vw, 15px);
+    font-weight:600;
+    color:#dfe6ee;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+.stat-value.gauge-wrap {
+    font-size: initial;
+}
+  .stat-head .icon{width:18px;height:18px;flex:none;}
+.stat-value {
+    /*    padding:clamp(10px, 2vw, 1px) clamp(10px, 2vw, 16px) clamp(12px, 2vw, 20px);
+    font-size:clamp(18px, 3.4vw, 45px);*/
+    padding: clamp(10px, 2vw, 18px) clamp(10px, 2vw, 16px) clamp(12px, 2vw, 20px);
+    font-size: clamp(18px, 3.4vw, 34px);
+    font-weight: 700;
+    color: #fff;
+    overflow-wrap: anywhere;
+    text-align: center;
+}
+    .stat-value.gauge-wrap {
+        padding: 8px 12px 10px;
+        height: 94px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+        .stat-value.gauge-wrap svg {
+            width: 100%;
+            max-width: 180px;
+            height: 90px;
+            display: block;
+        }
+
+
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(4,minmax(0,1fr));
+    gap: clamp(8px, 1.5vw, 14px);
+    padding: clamp(10px, 2.5vw, 20px) clamp(10px, 2.5vw, 20px) 6px;
+}
+
+.stat-value.gauge-wrap {
+    padding: 8px 12px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+.group-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.group-gauge-label {
+    text-align: center;
+    font-size: clamp(11px, 1.5vw, 14px);
+    color: var(--text-dim);
+    margin-top: 8px;
+}
+
+.group-gauge {
+    width: 100%;
+    height: clamp(70px, 9vw, 110px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+    .group-gauge svg {
+        width: 100%;
+        height: 100%;
+        max-width: 220px;
+        display: block;
+    
+    }

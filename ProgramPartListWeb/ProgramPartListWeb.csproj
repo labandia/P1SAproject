@@ -769,6 +769,7 @@
     <Content Include="Content\css\FinalAssembly.css" />
     <Content Include="Content\css\FinalDashboard.css" />
     <Content Include="Content\css\FinalDashMangement.css" />
+    <Content Include="Content\css\FinalGroupChart.css" />
     <Content Include="Content\css\HydroDesign.css" />
     <Content Include="Content\css\HydroDesign.min.css">
       <DependentUpon>HydroDesign.css</DependentUpon>
@@ -919,6 +920,8 @@
     <Content Include="Areas\Final\Views\Assembly\DisposalApproval.cshtml" />
     <Content Include="Areas\Final\Views\Assembly\HistoryDownTime.cshtml" />
     <Content Include="Areas\Final\Views\Assembly\DailyReport.cshtml" />
+    <Content Include="Areas\Production1\Views\FinalAssembly\GroupData.cshtml" />
+    <Content Include="Areas\Production1\Views\Shared\_FinalGroupData.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <Content Include="Content\Uploads\PCFY-81013Form1L.xlsx" />
     <Content Include="Content\Uploads\FinalUploadTemplate.xlsx" />

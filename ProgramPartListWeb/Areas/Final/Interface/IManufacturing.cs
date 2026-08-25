@@ -25,14 +25,15 @@ namespace ProgramPartListWeb.Areas.Final
         Task<bool> ChangeLineShopOrder(int recordID, string Lineselect, int process);
         Task<bool> AddInputQuantiyPerLine(int recordID, int Qty);
 
-      
+
 
         // ======  UPDATING STATUS OF SHOP ORDER DATA =================
         Task<bool> UpdateStatusShopOrder(int id, int status, string line);
         Task<bool> UpdateCompleteShopOrder(int id, int status, string line);
-        Task<bool> CompletionStatusShopOrder(int id, int status, string line);
+        Task<bool> CompletionStatusShopOrder(int id, int status);
         Task<bool> NextModelProcess(string newLine);
-        Task<bool> CancelProcess(int id, string line);
+        Task<bool> ChangeQuantityStatus(int id, int status);
+        Task<bool> CancelProcess(int id);
         // ============================================================
 
         // ======  FOR UPLOAD DATA  ====================================
@@ -45,7 +46,7 @@ namespace ProgramPartListWeb.Areas.Final
 
 
         Task<int> GetNumberofNextprocess(string record);
-        Task<bool> UpdateAssemblyStatus(int recordID, string finalassy, DateTime shipdate, string mode, bool WithSR,  string remarks);
+        Task<bool> UpdateAssemblyStatus(int recordID, string finalassy, DateTime shipdate, string mode, bool WithSR, string remarks);
         Task<List<P1TraceablityModel>> TraceableShopOrderSummary(string shopOrder);
 
         // ====== PARTLY SHORT DATA SUMMARY REPORT =================
@@ -58,7 +59,7 @@ namespace ProgramPartListWeb.Areas.Final
 
         // ====== MEIG DATA ======================
         Task<List<CatergoryPartsModel>> GetCategoryRegistration(int category);
-        Task<List<MEIGpartsModel>>  GetRegistrationMEIG(string finashopOrder);
+        Task<List<MEIGpartsModel>> GetRegistrationMEIG(string finashopOrder);
         Task<bool> AddRegistrationMEIG(MEIGpartsModel mdodel);
 
 
@@ -71,7 +72,7 @@ namespace ProgramPartListWeb.Areas.Final
 
         // ====== FOR THE DISPOSAL SCRAP ============================
         Task<(TotalDisposalMonitor summary, List<DisposalSummary> list)> GetDisposalDetails(int controlID);
-        Task<bool> ApproveDisposal(string name,  int id);
+        Task<bool> ApproveDisposal(string name, int id);
         Task<List<string>> GetApproverName(int section);
 
 

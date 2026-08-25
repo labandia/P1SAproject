@@ -54,7 +54,7 @@
                     <option value="3">Filter By : Done Schedule</option>
                 </select>
 
-              
+
             </div>
 
             <div>
@@ -63,7 +63,7 @@
                     <div class="flex items-center gap-4 flex-wrap">
                         <div class="legends-group">
                             <span class="rounded-full bg-status-realyellow flex-shrink-0"></span>
-                            <span class="text-label">FSI Completed</span>
+                            <span class="text-label">FSA Completed</span>
                         </div>
 
                         <div class="legends-group">
@@ -146,15 +146,15 @@
                 <path d="M0 0h24v24H0z" fill="none" />
                 <path fill="none" stroke="currentColor" d="m17 15l-5 5l-5-5m10-6l-5-5l-5 5" />
             </svg>
-            Change line 
+            Change line
         </span>
 
-        <span class="flex gap-1"  style="color: #8a8f9e; font-size: .9rem;">
+        <span class="flex gap-1" style="color: #8a8f9e; font-size: .9rem;">
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
                 <path d="M0 0h24v24H0z" fill="none" />
                 <path fill="currentColor" d="M12 8q-1.65 0-2.825 1.175T8 12q0 1.26.716 2.277q.717 1.017 1.89 1.465q.188.085.284.28q.094.195.016.384q-.079.177-.247.275t-.344.019q-1.498-.538-2.406-1.821T7 12q0-2.077 1.462-3.538T12 7q1.583 0 2.878.909q1.295.908 1.828 2.399q.073.177-.032.354t-.282.25q-.207.078-.396-.02q-.188-.098-.273-.305q-.448-1.173-1.465-1.88T12 8m0-4Q8.65 4 6.325 6.325T4 12q0 3.342 2.248 5.63q2.248 2.29 5.546 2.359q.214.011.363.163t.143.365t-.149.364t-.357.144q-1.873-.029-3.474-.783q-1.6-.754-2.786-1.991t-1.86-2.856T3 12q0-1.864.71-3.506q.711-1.642 1.927-2.857Q6.852 4.42 8.494 3.71T12 3q3.56 0 6.251 2.512t2.774 6.263q.012.208-.132.36q-.143.154-.356.16t-.378-.15t-.176-.37q-.087-3.154-2.42-5.465Q15.229 4 12 4m7.242 16.27l-4.28-4.295l-.52 1.583q-.105.292-.398.29q-.292-.004-.378-.296l-1.449-4.825q-.061-.236.106-.404q.168-.167.404-.106l4.825 1.449q.292.086.295.378t-.29.398l-1.582.52l4.3 4.28q.214.214.214.514t-.214.513t-.516.214t-.517-.214" />
             </svg>
-           Double Click on the rows to see the Details..
+            Double Click on the rows to see the Details..
         </span>
     </div>
 </div>
@@ -264,7 +264,7 @@
                 return;
             }
 
-            
+
 
             // if the orderStatus(Next Process is set) Shows the Cancel Dialog
             if (orderStatus === isStatus.NextProcess) {
@@ -278,7 +278,7 @@
             if (orderStatus === isStatus.InProcess || orderStatus === isStatus.Completed) return;
 
             try {
-                // Check if the next process(1) has already been selected for this line    
+                // Check if the next process(1) has already been selected for this line
                 const res = await getMethod('@Url.Action("CheckIfAreadyCheckNext", "Assembly")', { lineman });
                 if (res.data > 0) {
                     alert("Already selected the next process.");
@@ -742,7 +742,7 @@
                               break;
                       }
                   }
-            
+
               } else {
                   if (row.QuanStatus == 1 && (orderStatus == 2 || orderStatus == 3)) { // Checks if he status is FSI
                       selecthighlight = 'selectedFSI';
@@ -756,7 +756,7 @@
                       } else if (orderStatus === 5) {
                           selecthighlight = 'selectedCellLine';
                       }
-                  }     
+                  }
               }
 
               isOperational = row.Operational === 2 || row.Operational === 3 ? `<span> ${row.Operational}</span>` : "";

@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="flex gap-3">
-      
+
 
             <select id="filterdata" class=" filter-chip text-sm font-medium">
                 <option value="">Line : ALL</option>
@@ -97,8 +97,8 @@
                                     <span>Start -  end</span>
                                 </div>
 
-                                
-                               
+
+
                             </th>
                             <th>
                                 <div>
@@ -111,7 +111,7 @@
                                     </svg>
                                     <span>Conversion (min)</span>
                                 </div>
-      
+
                             </th>
                             <th>
                                 <div>
@@ -121,7 +121,7 @@
                                     </svg>
                                     <span> DownTime  Total</span>
                                 </div>
-                              
+
                             </th>
                             <th>
                                 <div>
@@ -131,7 +131,7 @@
                                     </svg>
                                     <span> Actual Cycle  Time (sec)</span>
                                 </div>
-                             
+
                             </th>
                             <th>
                                 Operation Rate (%)
@@ -153,6 +153,46 @@
                 </div>*@
         </div>
     </div>
+
+
+
+
+
+
+    <!-- right-click context menu -->
+    <ul class="dropdown-menu" id="rowContextMenu" style="display:none; position:fixed; z-index:1050;">
+        <li><a class="dropdown-item" href="#" id="ctxUpdateCycleTime">Update Cycle Time</a></li>
+    </ul>
+
+    <!-- Update Cycle Time modal -->
+    <div class="modal fade" id="cycleTimeModal" tabindex="-1" aria-labelledby="cycleTimeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cycleTimeModalLabel">Update Cycle Time</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-2">
+                        <label class="form-label text-sm" style="color:#86868b;">Final Shop Order</label>
+                        <input type="text" class="form-control" id="cycleTimeShopOrder" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cycleTimeInput" class="form-label">Actual Cycle Time (sec)</label>
+                        <input type="number" class="form-control" id="cycleTimeInput" min="0" step="0.01">
+                    </div>
+                    <!-- hidden field carries the row's primary key back to the server -->
+                    <input type="hidden" id="cycleTimeRecordId">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveCycleTimeBtn">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </section>
 
 
@@ -164,18 +204,28 @@
     } from '@Url.Content("~/Scripts/modules/index.js")';
 
     class DownTimeReportController {
-                      constructor() {
+            constructor() {
                 this.tbody = document.querySelector('.upload-table tbody');
 
                 this.inputsearch = document.getElementById('searchinput');
                 this.selectLine = document.getElementById('filterdata');
+
+
+                // context menu / modal elements
+                this.contextMenu = document.getElementById('rowContextMenu');
+                this.ctxUpdateCycleTime = document.getElementById('ctxUpdateCycleTime');
+                this.cycleTimeModalEl = document.getElementById('cycleTimeModal');
+                this.cycleTimeModal = new bootstrap.Modal(this.cycleTimeModalEl);
+                this.saveCycleTimeBtn = document.getElementById('saveCycleTimeBtn');
+
+                this.activeRow = null; // the <tr> that was right-clicked
             }
 
             async init() {
                await this.LoadDownTimeMonitor();
 
                this.bindEvents();
-
+               this.bindContextMenu();
             }
 
             bindEvents() {
@@ -224,7 +274,12 @@
 
                 this.tbody.innerHTML = data.map(row => {
                     return `
-                <tr  class='fade-in'  data-order-line="${row.Line}"   >
+                <tr class='fade-in'
+                   data-order-line="${row.Line}"
+                    data-id="${row.RecordID}"
+                    data-final-shop-order="${row.FinalShopOrder}"
+                    data-date-start="${row.DateStart}"
+                    data-cycle-time="${row.CycleTime || ''}">
                           <td>${row.DateStart}</td>
                           <td>${row.Line}</td>
                           <td style='text-align: left;'>
@@ -241,14 +296,100 @@
                           <td>${this.formatTimeSpan(row.TimeStart)} - ${this.formatTimeSpan(row.TimeEnd)}</td>
                           <td>${row.Downtime || '0'}</td>
                           <td>${row.MachineCount || '0'}</td>
-                          <td class="status-column">${row.CycleTime || ''}</td>
-                          <td>${row.OperationRate || '-'} %</td>
+                          <td class="status-column">${row.CycleTime || '0'}</td>
+                          <td>${row.OperationRate || '0'} %</td>
                   </tr>`
 
                 }).join('');
 
-                
+
             }
+
+
+            async saveCycleTime() {
+                const payload = {
+                    RecordID: document.getElementById('cycleTimeRecordId').value,
+                    CycleTime: document.getElementById('cycleTimeInput').value
+                };
+
+                console.log(payload);
+
+                try {
+                    this.saveCycleTimeBtn.disabled = true; // prevent double-submit while the request is in flight
+
+                    const res = await postMethod('@Url.Action("UpdateCycleTimeReport", "DownTime")', payload);
+
+                    if (res?.Success) {
+                        this.cycleTimeModal.hide();
+                        await this.LoadDownTimeMonitor(); // refresh the row with the saved value
+                    } else {
+                        alert(res?.Message || 'Failed to update cycle time.');
+                    }
+                } catch (error) {
+                    console.error('Error updating cycle time:', error);
+                    alert('Something went wrong while saving.');
+                } finally {
+                    this.saveCycleTimeBtn.disabled = false;
+                }
+            }
+
+
+
+
+            bindContextMenu() {
+                // delegate so it works for rows re-rendered after every LoadDownTimeMonitor()
+                this.tbody.addEventListener('contextmenu', (e) => {
+                    const row = e.target.closest('tr[data-id]');
+                    if (!row) return;
+
+                    e.preventDefault();
+                    this.activeRow = row;
+                    this.showContextMenu(e.clientX, e.clientY);
+                });
+
+                // close the menu on any outside click or scroll
+                document.addEventListener('click', () => this.hideContextMenu());
+                window.addEventListener('scroll', () => this.hideContextMenu(), true);
+
+                this.ctxUpdateCycleTime.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.hideContextMenu();
+                    this.openCycleTimeModal(this.activeRow);
+                });
+
+                this.saveCycleTimeBtn.addEventListener('click', () => this.saveCycleTime());
+            }
+
+            showContextMenu(x, y) {
+                // clamp so the menu doesn't render off-screen near the right/bottom edge
+                const menuWidth = 180;
+                const menuHeight = 40;
+                const left = Math.min(x, window.innerWidth - menuWidth);
+                const top = Math.min(y, window.innerHeight - menuHeight);
+
+                this.contextMenu.style.left = `${left}px`;
+                this.contextMenu.style.top = `${top}px`;
+                this.contextMenu.style.display = 'block';
+            }
+
+            hideContextMenu() {
+                this.contextMenu.style.display = 'none';
+            }
+
+            openCycleTimeModal(row) {
+                if (!row) return;
+
+                document.getElementById('cycleTimeShopOrder').value = row.dataset.finalShopOrder;
+                document.getElementById('cycleTimeInput').value = row.dataset.cycleTime || '';
+                document.getElementById('cycleTimeRecordId').value = row.dataset.id;
+
+                this.cycleTimeModal.show();
+            }
+
+
+
+
+
 
             formatTime(time) {
                 if (!time) return '-';

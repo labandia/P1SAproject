@@ -16,7 +16,9 @@ namespace ProgramPartListWeb.Areas.Final.Services
 {
     public class ManufacuringServices : IManufacturing
     {
-        private const string maintable = "FanTraceabilityManufacturingOrder_BACKV2";
+        //private const string maintable = "FanTraceabilityManufacturingOrder_BACKV2";
+        private const string maintable = "FanTraceabilityManufacturingOrder";
+
         public enum OrderStatus
         {
             Blank = 0,
@@ -27,7 +29,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
             CellLine = 5
         }
 
-        private  string SelectColumns = $@"
+        private string SelectColumns = $@"
                                    s.RecordID
                                  ,s.InputQty
                                  ,s.Line
@@ -52,7 +54,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                  ,s.TimeEnd
                                  ,(SELECT m.Model FROM {maintable} m WHERE m.Line = s.Line AND m.OrderStatus = 1)  as NextItem
                                  ,(SELECT m.FinalShopOrder FROM {maintable} m WHERE m.Line = s.Line AND m.OrderStatus = 1)  as NextShop";
-        
+
 
 
 
@@ -92,13 +94,13 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 {
                     // UPDATE TO DONE
                     await SqlDataAcess_Test.ExecuteAsync($@"UPDATE {maintable} 
-                        SET OrderStatus = 3 WHERE  Line =@Line AND OrderStatus = 2  ", new
+                        SET OrderStatus = 4 WHERE  Line =@Line AND OrderStatus = 2  ", new
                     {
                         Line = item.Line
                     });
                     // UPDATE TO ACTIVE NEXT PROCESS
                     await SqlDataAcess_Test.ExecuteAsync($@"UPDATE {maintable} 
-                        SET OrderStatus = 2 WHERE   Line =@Line AND OrderStatus = 1 ", new
+                        SET OrderStatus = 3 WHERE   Line =@Line AND OrderStatus = 1 ", new
                     {
                         Line = item.Line
                     });
@@ -106,7 +108,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
             }
         }
 
-       
+
 
         public Task<bool> CheckCurrentStatusChange(int record)
         {
@@ -215,13 +217,13 @@ namespace ProgramPartListWeb.Areas.Final.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error retrieving active shop orders: {ex.Message}");  
+                Debug.WriteLine($"Error retrieving active shop orders: {ex.Message}");
                 return new List<FanTraceabilityManufacturingOrder>();
             }
         }
         //  GET THE LIST DETAILS BY LINE 
         public async Task<List<FanTraceabilityManufacturingOrder>> GetListofShopOrdersByLine(
-            string Linename, string searchText, 
+            string Linename, string searchText,
             int status)
         {
             try
@@ -374,117 +376,141 @@ namespace ProgramPartListWeb.Areas.Final.Services
             });
         }
 
-       
+
         public async Task<bool> NextModelProcess(string newLine)
         {
-            int rows =await   SqlDataAcess_Test.ExecuteAsync($@"
-                UPDATE {maintable} SET OrderStatus = 2
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"
+                UPDATE {maintable} SET OrderStatus = @Nextprocess
                 WHERE Line = @Line
-                AND OrderStatus = 1", new
+                AND OrderStatus = @PreviousProcess", new
             {
-                Line = newLine
+                Line = newLine,
+                PreviousProcess = (int)OrderStatus.NextProcess,
+                Nextprocess = (int)OrderStatus.InProcess
             });
 
             return rows > 0;
         }
         public async Task<bool> UpdateStatusShopOrder(int id, int status, string line)
         {
-            if (status == (int)OrderStatus.InProcess || status == (int)OrderStatus.Temporary) // 2 or 3
+            // Only block the update if we're trying to move INTO InProcess/Temporary
+            // while another order on the same line already occupies that slot.
+            if (status == (int)OrderStatus.InProcess || status == (int)OrderStatus.Temporary)
             {
-                int hasOrderStats = await SqlDataAcess_Test.ExecuteScalarAsync<int>($@"
-                    SELECT COUNT(*) 
-                    FROM {maintable}
-                    WHERE line = @line 
-                      AND OrderStatus IN (@inProcess, @temporary)
-                      AND RecordID != @id",
-                    new
-                    {
-                        line,
-                        inProcess = (int)OrderStatus.InProcess,
-                        temporary = (int)OrderStatus.Temporary,
-                        id
-                    });
-
-                if (hasOrderStats > 0)
+                if (await LineHasOtherActiveOrderAsync(line, id))
                     return false;
             }
 
-            int rows =  await SqlDataAcess_Test.ExecuteAsync($@"
-                    UPDATE {maintable} 
-                    SET OrderStatus = @status
-                    WHERE RecordID = @id AND line = @line", 
-                 new { id, status, line });
-
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"
+            UPDATE {maintable}
+            SET OrderStatus = @status,
+                DateStart = ISNULL(DateStart, CAST(GETDATE() AS DATE)),
+                TimeStart = ISNULL(TimeStart, CAST(GETDATE() AS TIME(0)))
+            WHERE RecordID = @id AND line = @line",
+                new { id, status, line });
             return rows > 0;
         }
         public async Task<bool> UpdateCompleteShopOrder(int id, int status, string line)
         {
-            // CHecks if the orderStatus is 2 or 3 (InProcess or Temporary) and
-            // if there are other orders with the same line and status, it will update
-            // the current order to 1 (NextProcess) instead of 2 (InProcess)
-            int rows = 0;
-            int hasOrderStats = await SqlDataAcess_Test.ExecuteScalarAsync<int>($@"
-                    SELECT COUNT(*) 
-                    FROM {maintable}
-                    WHERE line = @line 
-                      AND OrderStatus IN (2, 3)
-                      AND RecordID != @id",
-                    new
-                    {
-                        line,
-                        id
-                    });
+            // NOTE: original code accepted a `status` param but never used it in either
+            // branch — it always forced NextProcess (1) or InProcess (2). Keeping that
+            // forced behavior since it matches the method's actual intent (line can only
+            // have one active order), but dropping the dead parameter usage to avoid
+            // confusion. If callers actually need to pass a target status, flag it and
+            // we can wire it back in properly.
+            bool lineBusy = await LineHasOtherActiveOrderAsync(line, id);
 
-            if (hasOrderStats > 0) {
+            int rows;
+            if (lineBusy)
+            {
+                // Another order already owns the line's active slot — bump this one
+                // back to NextProcess instead of starting it.
                 rows = await SqlDataAcess_Test.ExecuteAsync($@"
-                    UPDATE {maintable} 
-                    SET OrderStatus = 1
+                    UPDATE {maintable}
+                    SET OrderStatus = @nextProcess
                     WHERE RecordID = @id AND line = @line",
-                new { id, status, line });
+                    new { id, line, nextProcess = (int)OrderStatus.NextProcess });
             }
             else
             {
                 rows = await SqlDataAcess_Test.ExecuteAsync($@"
-                    UPDATE {maintable} 
-                    SET   OrderStatus = 2,
+                    UPDATE {maintable}
+                    SET OrderStatus = @inProcess,
                         DateStart = CAST(GETDATE() AS DATE),
                         TimeStart = CAST(GETDATE() AS TIME(0))
                     WHERE RecordID = @id AND line = @line",
-                    new { id, status, line });
+                    new { id, line, inProcess = (int)OrderStatus.InProcess });
             }
-
             return rows > 0;
         }
-        public async Task<bool> CompletionStatusShopOrder(int id, int status, string line)
+        public async Task<bool> CompletionStatusShopOrder(int id, int status)
         {
+            // BUG FIX: every other method in this class scopes the UPDATE by
+            // (RecordID AND line). This one only filtered by RecordID, so `line` was
+            // accepted but silently ignored — added it back for consistency/safety.
             int rows = await SqlDataAcess_Test.ExecuteAsync($@"
-                UPDATE {maintable} SET OrderStatus =@OrderStatus,
-                        TimeEnd = CAST(GETDATE() AS TIME(0))
-                WHERE RecordID =@RecordID", new
+                UPDATE {maintable}
+                SET OrderStatus = @status,
+                    TimeEnd = CAST(GETDATE() AS TIME(0))
+                WHERE RecordID = @id ", new
             {
-                RecordID = id,
-                OrderStatus = status
+                id,
+                status
             });
-
             return rows > 0;
         }
-        public async Task<bool> CancelProcess(int id, string line)
+        public async Task<bool> CancelProcess(int id)
         {
             int rows = await SqlDataAcess_Test.ExecuteAsync($@"
                     UPDATE {maintable} 
                     SET OrderStatus = 0
-                    WHERE RecordID = @id AND line = @line", new
+                    WHERE RecordID = @id", new
+            { id });
+
+            return rows > 0;
+        }
+        public async Task<bool> ChangeQuantityStatus(int id, int status)
+        {
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE 
+                    {maintable} SET QuanStatus =@QuanStatus 
+                      WHERE RecordID = @id", new
             {
                 id,
-                line
+                QuanStatus = status
             });
 
             return rows > 0;
         }
+        // Shared by UpdateStatusShopOrder / UpdateCompleteShopOrder: only one order per
+        // line is allowed to be "active" (InProcess or Temporary) at a time, so both
+        // methods need to know if some OTHER record already holds that slot.
+        private async Task<bool> LineHasOtherActiveOrderAsync(string line, int excludeId)
+        {
+            int count = await SqlDataAcess_Test.ExecuteScalarAsync<int>($@"
+                    SELECT COUNT(*)
+                    FROM {maintable}
+                    WHERE line = @line
+                  AND OrderStatus IN (@inProcess, @temporary)
+                  AND RecordID != @excludeId",
+                new
+                {
+                    line,
+                    inProcess = (int)OrderStatus.InProcess,
+                    temporary = (int)OrderStatus.Temporary,
+                    excludeId
+                });
+            return count > 0;
+        }
+
+
+
+
+
+
 
         public async Task UploadDataToDatabase(ProductionRecord model)
         {
-            
+
             var planStartDate = DateTime.TryParse(model.PlanStart, out var ps)
                                ? ps
                                : (DateTime?)null;
@@ -659,7 +685,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
             {
                 FAStatus,
                 ShipmentDate,
-                OrderRemarks,  
+                OrderRemarks,
                 WithSR,
                 RecordID
             });
@@ -685,7 +711,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
         {
             int rows = 0;
             // Check if the Operation(process) has 2 or more  
-            if(process > 1)
+            if (process > 1)
             {
                 int changeprocess = process - 1;
                 rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE 
@@ -722,7 +748,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
             return rows > 0;
         }
 
-       
+
 
         public Task<int> GetCountShopOrders(string line)
         {
@@ -958,7 +984,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 ON f.CartsPartID = c.CartsPartID WHERE f.FinalShopOrder = @FinalShopOrder
             ", new
                 { FinalShopOrder = finashopOrder });
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 Debug.WriteLine($@"Error : " + ex.Message);
                 throw;
@@ -987,7 +1014,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     GROUP BY DAY(DatePrepared)
                     ORDER BY PlanDay;");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Debug.WriteLine($@"Error : " + ex.Message);
                 throw;
@@ -1076,53 +1103,53 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         PlanStartDate;");
 
 
-     //       return SqlDataAcess_Test.QueryAsync<DispatchPartlistRecord>($@"SELECT
-     //               CONVERT(VARCHAR(10), CAST(PlanStartDate AS DATE), 103) AS DateDelay,
+            //       return SqlDataAcess_Test.QueryAsync<DispatchPartlistRecord>($@"SELECT
+            //               CONVERT(VARCHAR(10), CAST(PlanStartDate AS DATE), 103) AS DateDelay,
 
-     //               -- Total Planned Quantity
-     //               SUM(PlanQty) AS Plan_Start,
+            //               -- Total Planned Quantity
+            //               SUM(PlanQty) AS Plan_Start,
 
-     //               -- Completion
-     //               SUM(
-					//	CASE
-					//		WHEN FinalFinishedDate IS NOT NULL
-					//		 AND CAST(FinalFinishedDate AS DATE) <= CAST(GETDATE() AS DATE)
-					//		THEN PlanQty
-					//		ELSE 0
-					//	END
-					//) AS Completion,
+            //               -- Completion
+            //               SUM(
+            //	CASE
+            //		WHEN FinalFinishedDate IS NOT NULL
+            //		 AND CAST(FinalFinishedDate AS DATE) <= CAST(GETDATE() AS DATE)
+            //		THEN PlanQty
+            //		ELSE 0
+            //	END
+            //) AS Completion,
 
-     //               -- Totals
-     //               SUM(P1SA_C + P1SA_W + P1SA_M + P1SA_P + P1SA_R) AS P1SA,
-     //               SUM(P1FA_FA + P1FA_H) AS P1FA,
+            //               -- Totals
+            //               SUM(P1SA_C + P1SA_W + P1SA_M + P1SA_P + P1SA_R) AS P1SA,
+            //               SUM(P1FA_FA + P1FA_H) AS P1FA,
 
-     //               -- Individual Columns
-     //               SUM(P1SA_C)  AS [P1SA_C],
-     //               SUM(P1SA_W)  AS [P1SA_W],
-     //               SUM(P1SA_M)  AS [P1SA_M],
-     //               SUM(P1SA_P)  AS [P1SA_P],
-     //               SUM(P1SA_R)  AS [P1SA_R],
-     //               SUM(P1FA_FA) AS [P1FA_FA],
-     //               SUM(P1FA_H)  AS [P1FA_H],
-     //               SUM(M1)      AS [M1]
+            //               -- Individual Columns
+            //               SUM(P1SA_C)  AS [P1SA_C],
+            //               SUM(P1SA_W)  AS [P1SA_W],
+            //               SUM(P1SA_M)  AS [P1SA_M],
+            //               SUM(P1SA_P)  AS [P1SA_P],
+            //               SUM(P1SA_R)  AS [P1SA_R],
+            //               SUM(P1FA_FA) AS [P1FA_FA],
+            //               SUM(P1FA_H)  AS [P1FA_H],
+            //               SUM(M1)      AS [M1]
 
-     //           FROM FanTraceabilityManufacturingOrder
+            //           FROM FanTraceabilityManufacturingOrder
 
-     //           WHERE
-     //               CAST(PlanStartDate AS DATE) <= CAST(GETDATE() AS DATE)
-     //           GROUP BY
-     //               CAST(PlanStartDate AS DATE)
-     //           HAVING
-     //                  SUM(P1SA_C)  <> 0
-     //               OR SUM(P1SA_W)  <> 0
-     //               OR SUM(P1SA_M)  <> 0
-     //               OR SUM(P1SA_P)  <> 0
-     //               OR SUM(P1SA_R)  <> 0
-     //               OR SUM(P1FA_FA) <> 0
-     //               OR SUM(P1FA_H)  <> 0
-     //               OR SUM(M1)      <> 0
-     //           ORDER BY
-     //               CAST(PlanStartDate AS DATE);");
+            //           WHERE
+            //               CAST(PlanStartDate AS DATE) <= CAST(GETDATE() AS DATE)
+            //           GROUP BY
+            //               CAST(PlanStartDate AS DATE)
+            //           HAVING
+            //                  SUM(P1SA_C)  <> 0
+            //               OR SUM(P1SA_W)  <> 0
+            //               OR SUM(P1SA_M)  <> 0
+            //               OR SUM(P1SA_P)  <> 0
+            //               OR SUM(P1SA_R)  <> 0
+            //               OR SUM(P1FA_FA) <> 0
+            //               OR SUM(P1FA_H)  <> 0
+            //               OR SUM(M1)      <> 0
+            //           ORDER BY
+            //               CAST(PlanStartDate AS DATE);");
         }
 
         public async Task<(TotalDisposalMonitor summary, List<DisposalSummary> list)> GetDisposalDetails(int controlID)
@@ -1156,7 +1183,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     WHERE d.ControlNumberID = @ControlNumberID", new { ControlNumberID = controlID });
 
 
-            return (summarylistTask, disposalListTask); 
+            return (summarylistTask, disposalListTask);
 
         }
 
@@ -1178,10 +1205,10 @@ namespace ProgramPartListWeb.Areas.Final.Services
             var name = await SqlDataAcess_Test.QueryAsync<string>($@"
                 SELECT SentTo FROM DisposalEmail WHERE DepartmentID = @DepartmentId", new
             {
-                DepartmentId = section  
+                DepartmentId = section
             });
 
-            return name;    
+            return name;
         }
 
         public Task<List<DownTimeModel>> GetDowntimeMonitor(string FinalShopOrder)
@@ -1201,7 +1228,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
               INNER JOIN {maintable} m ON i.FinalShopOrder = m.FinalShopOrder
               INNER JOIN FanTraceabilityDownTimeType t ON t.DownTimeCode = i.DownTimeCode
               WHERE i.FinalShopOrder = @FinalShopOrder ORDER BY i.DownTimeID", new
-            {  FinalShopOrder });
+            { FinalShopOrder });
         }
 
         public async Task<bool> AddGetTimeMonitor(DownTimeModel downtime)
@@ -1229,7 +1256,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
             return SqlDataAcess_Test.QueryAsync<DownTimeTypeModel>($@"SELECT DownTimeCode
                   ,DownTimeType
                   ,GroupName
-              FROM FanTraceabilityDownTimeType"); 
+              FROM FanTraceabilityDownTimeType");
         }
 
         public Task<List<DownTimeReportModel>> GetDowntimeDailyReport()
@@ -1242,14 +1269,16 @@ namespace ProgramPartListWeb.Areas.Final.Services
 				 m.PlanQty,
 	             i.TimeStart,
 	             i.TimeEnd,
-	             i.Downtime,
-				  -- Cycle Time
+	             (
+                    SELECT SUM(d.Downtime)
+                    FROM FanTraceabilityDownTimeInput d
+                    WHERE d.FinalShopOrder = i.FinalShopOrder
+                ) AS Downtime,
 				CAST(
 					(i.Downtime * 60.0) / NULLIF(m.PlanQty, 0)
 					AS DECIMAL(10,3)
 				) AS CycleTime,
 
-				-- Operation Rate (%), rounded UP
 				CEILING(
 					8.0 
 					/ NULLIF(
@@ -1264,6 +1293,6 @@ namespace ProgramPartListWeb.Areas.Final.Services
               INNER JOIN FanTraceabilityDownTimeType t ON t.DownTimeCode = i.DownTimeCode");
         }
 
-        
+
     }
 }

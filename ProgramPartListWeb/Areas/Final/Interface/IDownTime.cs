@@ -18,5 +18,8 @@ namespace ProgramPartListWeb.Areas.Final.Interface
         Task<bool> AddGetTimeMonitor(DownTimeModel downtime);
 
         Task<bool> EndTimeMonitor(int DownTimeID);
+
+        Task<bool> UpdateCycleTime(int RecordID, double CycleTime);
+
     }
 }

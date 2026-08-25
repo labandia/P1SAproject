@@ -449,9 +449,9 @@ menu, ol, ul {
     border-radius: var(--radius-xl)
 }
 
-.status-badge .ok{
-    background: red !important;
-}
+    .status-badge .ok {
+        background: red !important;
+    }
 
 .card-row-value, .status-tag {
     font-weight: 600
@@ -542,6 +542,35 @@ menu, ol, ul {
     background-color: #d68110 !important;
     color: #111827
 }
+
+.BadgeQuantity {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+    .BadgeQuantity.fsa {
+        color: #ffc000;
+    }
+
+    .BadgeQuantity.CellLine {
+        color: #9010f8;
+    }
+
+
+#selectedStatus {
+    padding: .6em;
+    border-radius: .2em;
+    outline: none;
+}
+
+    #selectedStatus option:checked,
+    #selectedStatus option:hover,
+    #selectedStatus option:focus {
+        background-color: white !important;
+        color: black !important;
+    }
+
+
 
 .btn-cancel, .btn-cancel:disabled:hover, .pagination-active, .tab:hover {
     background: #f5f5f5
@@ -1850,9 +1879,11 @@ svg.icon-stroke {
 .bg-row-highlight {
     background-color: #e3f0fd
 }
+
 .bg-status-red {
     background-color: #f72929
 }
+
 .bg-status-gray {
     background-color: #9ca3af
 }
@@ -3247,6 +3278,7 @@ td.status-column {
     margin: 0 8px;
     flex-shrink: 0
 }
+
 .card-time {
     display: flex;
     align-items: center;
@@ -3465,6 +3497,6 @@ td.status-column {
     gap: 10px;
 }
 
-#tablelayout thead th span{
+#tablelayout thead th span {
     font-weight: 600;
 }

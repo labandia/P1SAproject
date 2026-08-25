@@ -26,7 +26,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
 
         public AssemblyController(IManufacturing manu, IUploadServices upload)
         {
-            _manu = manu;   
+            _manu = manu;
             _upload = upload;
         }
 
@@ -74,11 +74,11 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         //=====================================================
         [HttpGet]
         public async Task<ActionResult> LineShopOrderData(
-            string Linename, 
-            string searchtext, 
+            string Linename,
+            string searchtext,
             int orderstatus)
         {
-            var res = await _manu.GetListofShopOrdersByLine(Linename, 
+            var res = await _manu.GetListofShopOrdersByLine(Linename,
                 searchtext, orderstatus);
 
             if (res == null || !res.Any())
@@ -90,7 +90,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                 Total = res.Count
             };
 
-   
+
 
             return JsonSuccess(finalData, "Retrieved data successfully");
         }
@@ -142,7 +142,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             try
             {
                 Debug.WriteLine($@"RecordID : {recordID} - Line : {line}");
-                var res = await _manu.CancelProcess(recordID, line);
+                var res = await _manu.CancelProcess(recordID);
                 if (!res) return JsonError("Error Updated");
                 return JsonSuccess(true);
             }
@@ -170,6 +170,24 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         }
 
         [HttpPost]
+        public async Task<ActionResult> ChangeStatusQuantity(int recordID, int stats)
+        {
+            try
+            {
+                var res = await _manu.ChangeQuantityStatus(recordID, stats);
+                if (!res) return JsonError("Error Updated");
+                return JsonSuccess(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
+
+
+
+        [HttpPost]
         public async Task<ActionResult> ForCompleteUpdateStatusLine(int recordID, int orderstats, string line)
         {
             try
@@ -192,8 +210,8 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         {
             try
             {
-                var updateTask =  _manu.CompletionStatusShopOrder(recordID, 4, "");
-                var nextProcessTask =  _manu.NextModelProcess(line);
+                var updateTask = _manu.CompletionStatusShopOrder(recordID, 4);
+                var nextProcessTask = _manu.NextModelProcess(line);
 
                 await Task.WhenAll(updateTask, nextProcessTask);
 
@@ -218,7 +236,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> UpdateLineshopOrder(int recordID, 
+        public async Task<ActionResult> UpdateLineshopOrder(int recordID,
             string Lineman, int process)
         {
             try
@@ -364,6 +382,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         }
 
 
+
         [HttpGet]
         public async Task<ActionResult> GetCatergoryPartslist(int cat)
         {
@@ -462,7 +481,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
 
         [HttpPost]
         public async Task<JsonResult> ImportUpload(HttpPostedFileBase file)
-        {        
+        {
             if (file == null || file.ContentLength == 0)
                 return Json(new { Success = false, Message = "No file uploaded." });
 
@@ -679,7 +698,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                                     state.Failed++;
                                 }
                             }
-                             
+
 
                             System.Threading.Thread.Sleep(80);
                         }
@@ -749,13 +768,13 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         [OutputCache(NoStore = true, Duration = 0)]
         public async Task ImportUploadStream(string fileName)
         {
-          
+
             string uploadPath = Server.MapPath("~/Content/Excel/");
             string filePath = Path.Combine(uploadPath, fileName);
 
 
             if (string.IsNullOrEmpty(fileName)
-                || fileName.Contains("..") 
+                || fileName.Contains("..")
                 || !System.IO.File.Exists(filePath))
             {
                 Response.StatusCode = 400;
@@ -765,7 +784,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                 return;
             }
 
-           
+
             Response.Clear();
             Response.ContentType = "text/event-stream";
             Response.Charset = "";
@@ -1155,7 +1174,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
 
 
 
-        public async Task<ActionResult> DisposalApproval(int id, int section)
+        public ActionResult DisposalApproval(int id, int section)
         {
             //var identity = User.Identity as ClaimsIdentity;
 
@@ -1185,7 +1204,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             //    $"Email: {email}"
             //);
 
-          
+
 
             return View();
         }

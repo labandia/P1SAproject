@@ -13,7 +13,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
 {
     public class DownTimeController : ExtendController
     {
-        private readonly IDownTime _downTimeService;    
+        private readonly IDownTime _downTimeService;
 
         public DownTimeController() => _downTimeService = new Services.DownTimeServices();
 
@@ -128,6 +128,26 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                 throw;
             }
         }
+
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateCycleTimeReport(int RecordID, double CycleTime)
+        {
+
+            try
+            {
+                var res = await _downTimeService.UpdateCycleTime(RecordID, CycleTime);
+                Debug.WriteLine("Checked : " + res);
+                if (!res) return JsonError("Error Updated");
+                return JsonSuccess(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
+
 
 
     }

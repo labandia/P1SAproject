@@ -7,6 +7,7 @@ namespace ProgramPartListWeb.Areas.Final.Model
 {
     public class DownTimeModel
     {
+        public int RecordID { get; set; }
         public int DownTimeID { get; set; }
         public string DateStart { get; set; }
 
@@ -19,16 +20,16 @@ namespace ProgramPartListWeb.Areas.Final.Model
 
         public string DownTimeCode { get; set; }
         public string DownTimeType { get; set; }
-        public TimeSpan? TimeStart { get; set; }  
-        public TimeSpan? TimeEnd { get; set; }     
-        public int? Downtime { get; set; }     
+        public TimeSpan? TimeStart { get; set; }
+        public TimeSpan? TimeEnd { get; set; }
+        public int? Downtime { get; set; }
         public string PIC { get; set; }
         public string Details { get; set; }
         public string GroupName { get; set; }
 
         public double CycleTime { get; set; }
         public int OperationRate { get; set; }
-        public int MachineCount { get; set; }
+        public int TotalDowntime { get; set; }
     }
 
     public class DownTimeReportModel

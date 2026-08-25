@@ -5,12 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dapper;
+using System.Diagnostics;
 
 namespace ProgramPartListWeb.Areas.Final.Services
 {
     public class DownTimeServices : IDownTime
     {
-        private  string strsql = @"  SELECT 
+        private string strsql = @"  SELECT 
 	             i.DownTimeID, 
   				 m.Line,
 				 i.FinalShopOrder,
@@ -25,34 +26,25 @@ namespace ProgramPartListWeb.Areas.Final.Services
 	             i.PIC,
 	             i.Details,
                  t.GroupName, 
-				CAST(
-					(i.Downtime * 60.0) / NULLIF(m.PlanQty, 0)
-					AS DECIMAL(10,3)
-				) AS CycleTime,
-				CAST(
-                    CASE
-                        WHEN
-                            (
-                                8.0 /
-                                NULLIF(
-                                    (i.Downtime * 60.0) / NULLIF(m.PlanQty, 0),
-                                    0
-                                )
-                                * 100
-                            ) > 100
-                        THEN 100
-                        ELSE CEILING(
-                            8.0 /
-                            NULLIF(
-                                (i.Downtime * 60.0) / NULLIF(m.PlanQty, 0),
-                                0
-                            )
-                            * 100
-                        )
-                    END
-                    AS DECIMAL(10,0)
-                ) AS OperationRate
+                 i.CycleTime,
+				 CAST(
+					CASE
+						WHEN 
+							(
+								8.0 / NULLIF(i.CycleTime, 0) * 100
+							) > 100
+						THEN 100
 
+						WHEN i.CycleTime = 0
+						THEN 0
+
+						ELSE CEILING(
+							8.0 / NULLIF(i.CycleTime, 0) * 100
+						)
+					END
+					AS DECIMAL(10,0)
+				) AS OperationRate,
+                FORMAT( i.DateStart, 'MM/dd/yy') as DateStart
               FROM FanTraceabilityDownTimeInput i 
               INNER JOIN FanTraceabilityManufacturingOrder m ON i.FinalShopOrder = m.FinalShopOrder
               INNER JOIN FanTraceabilityDownTimeType t ON t.DownTimeCode = i.DownTimeCode ";
@@ -63,7 +55,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
         public Task<List<DownTimeModel>> GetDailyReportMonitor(string search, string Linename)
         {
             string strsql = $@"SELECT 
-	                FORMAT(m.DateStart, 'MM/dd/yy') as DateStart,
+                    m.RecordID,
+                    FORMAT(m.DateStart, 'MM/dd/yy') AS DateStart,
                     m.Line,
                     m.FinalShopOrder,
                     m.ItemNo,
@@ -81,61 +74,47 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     END AS Downtime,
 
                     -- Cycle Time in seconds per unit
-                    CAST(
-                        (
-                            CASE
-                                WHEN m.TimeEnd >= m.TimeStart
-                                    THEN DATEDIFF(MINUTE, m.TimeStart, m.TimeEnd)
-                                ELSE
-                                    DATEDIFF(MINUTE, m.TimeStart, m.TimeEnd) + 1440
-                            END * 60.0
-                        ) / NULLIF(m.PlanQty, 0)
-                        AS DECIMAL(10,3)
-                    ) AS CycleTime,
+                    ISNULL(m.CycleTime, 0) AS CycleTime,
 
                     -- Operation Rate
                     CAST(
                         CASE
-                            WHEN
-                                (
-                                    8.0 /
-                                    NULLIF(
-                                        (
-                                            CASE
-                                                WHEN m.TimeEnd >= m.TimeStart
-                                                    THEN DATEDIFF(MINUTE, m.TimeStart, m.TimeEnd)
-                                                ELSE
-                                                    DATEDIFF(MINUTE, m.TimeStart, m.TimeEnd) + 1440
-                                            END * 60.0
-                                        ) / NULLIF(m.PlanQty, 0),
-                                        0
-                                    ) * 100
-                                ) > 100
-                            THEN 100
+                            WHEN ISNULL(m.CycleTime, 0) <= 0 
+                                THEN 0
+
+                            WHEN (8.0 / m.CycleTime * 100) > 100 
+                                THEN 100
 
                             ELSE CEILING(
-                                8.0 /
-                                NULLIF(
-                                    (
-                                        CASE
-                                            WHEN m.TimeEnd >= m.TimeStart
-                                                THEN DATEDIFF(MINUTE, m.TimeStart, m.TimeEnd)
-                                            ELSE
-                                                DATEDIFF(MINUTE, m.TimeStart, m.TimeEnd) + 1440
-                                        END * 60.0
-                                    ) / NULLIF(m.PlanQty, 0),
-                                    0
-                                ) * 100
+                                8.0 / m.CycleTime * 100
                             )
                         END
                         AS DECIMAL(10,0)
                     ) AS OperationRate,
 
-                    (SELECT SUM(Downtime) FROM FanTraceabilityDownTimeInput WHERE FinalShopOrder = m.FinalShopOrder)  as MachineCount 
+                    -- Total Downtime from DownTimeInput
+                    ISNULL(dt.TotalDowntime, 0) AS TotalDowntime
 
                 FROM FanTraceabilityManufacturingOrder m
-                WHERE m.OrderStatus = 3
-                  AND m.TimeEnd IS NOT NULL AND m.DateStart IS NOT NULL";
+
+                OUTER APPLY
+                (
+                    SELECT TOP 1
+                        (
+                            SELECT SUM(i2.Downtime)
+                            FROM FanTraceabilityDownTimeInput i2
+                            WHERE i2.FinalShopOrder = m.FinalShopOrder
+                        ) AS TotalDowntime
+
+                    FROM FanTraceabilityDownTimeInput i
+                    WHERE i.FinalShopOrder = m.FinalShopOrder
+                    ORDER BY i.DownTimeID DESC
+
+                ) dt
+
+                WHERE m.OrderStatus = 4
+                  AND m.TimeEnd IS NOT NULL
+                  AND m.DateStart IS NOT NULL ";
 
             var parameters = new DynamicParameters();
 
@@ -188,19 +167,19 @@ namespace ProgramPartListWeb.Areas.Final.Services
             return SqlDataAcess_Test.QueryAsync<DownTimeModel>(strsql, parameters);
         }
 
-       
+
 
         public Task<List<DownTimeModel>> GetDowntimeMonitor(string FinalShopOrder)
         {
-			var parameters = new DynamicParameters();
+            var parameters = new DynamicParameters();
 
             if (!string.IsNullOrEmpty(FinalShopOrder))
-			{
-				strsql += "  WHERE i.FinalShopOrder = @FinalShopOrder";
-				parameters.Add("@FinalShopOrder", FinalShopOrder);
+            {
+                strsql += "  WHERE i.FinalShopOrder = @FinalShopOrder";
+                parameters.Add("@FinalShopOrder", FinalShopOrder);
             }
 
-            strsql += " ORDER BY i.DownTimeID DESC"; 
+            strsql += " ORDER BY i.DownTimeID DESC";
 
             return SqlDataAcess_Test.QueryAsync<DownTimeModel>(strsql, parameters);
         }
@@ -233,6 +212,18 @@ namespace ProgramPartListWeb.Areas.Final.Services
               FROM FanTraceabilityDownTimeType");
         }
 
-       
+        public async Task<bool> UpdateCycleTime(int RecordID, double CycleTime)
+        {
+            Debug.WriteLine($@"Final Shio: {RecordID} - Cycle Time  : {CycleTime}");
+
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingOrder SET
+                CycleTime = @CycleTime WHERE RecordID = @RecordID", new
+            {
+                CycleTime,
+                RecordID
+            });
+
+            return rows > 0;
+        }
     }
 }

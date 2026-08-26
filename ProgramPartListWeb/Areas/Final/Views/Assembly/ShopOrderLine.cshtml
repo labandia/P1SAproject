@@ -49,9 +49,10 @@
                 <select id="filterdata" class="filter-chip text-sm font-medium" style="height:32px;">
                     <option value="-1">Filter By : ALL </option>
                     <option value="0">Filter By : Completed Material</option>
-                    <option value="1">Filter By : Next Process</option>
-                    <option value="2">Filter By : On Process</option>
-                    <option value="3">Filter By : Done Schedule</option>
+                    <option value="2">Filter By : Next Process</option>
+                    <option value="5">Filter By : FSA Completed</option>
+                    <option value="6">Filter By : Cell Line Completed</option>
+                    <option value="3">Filter By : On Process</option>
                 </select>
 
 
@@ -335,7 +336,7 @@
             if (!row) return;
 
             const id = row.dataset.id;
-            const label = row.querySelector('td:nth-child(2) .text-primary')?.textContent?.trim() || `Order ${id}`;
+            const label = row.querySelector('td:nth-child(2) .ShopOrderLayout_ShopOrder')?.textContent?.trim() || `Order ${id}`;
             this.openDetailTab(id, label);
         });
 
@@ -576,12 +577,7 @@
                 });
 
                 if (!res?.Success) {
-                    this.tbody.innerHTML = `
-                     <tr>
-                         <td colspan="18" style="text-align:center;color:red;">
-                             Failed to load data.
-                         </td>
-                     </tr>`;
+                    this.NoTableRowData();
                     return;
               };
 
@@ -614,6 +610,31 @@
             }
     }
 
+
+      NoTableRowData() {
+          
+          this.tbody.innerHTML = `
+             <tr>
+                 <td colspan="19" style="padding: 0; border: none;">
+                     <div class="table-empty">
+                         <div class="table-empty-icon-box">
+                             <span class="icon-wrap" style="width:28px;height:28px;color:var(--color-primary);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 1024 1024">
+	                                <path d="M0 0h1024v1024H0z" fill="none" />
+	                                <path fill="currentColor" d="M688 312v-48c0-4.4-3.6-8-8-8H296c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h384c4.4 0 8-3.6 8-8m-392 88c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h184c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8zm144 452H208V148h560v344c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V108c0-17.7-14.3-32-32-32H168c-17.7 0-32 14.3-32 32v784c0 17.7 14.3 32 32 32h272c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8m445.7 51.5l-93.3-93.3C814.7 780.7 828 743.9 828 704c0-97.2-78.8-176-176-176s-176 78.8-176 176s78.8 176 176 176c35.8 0 69-10.7 96.8-29l94.7 94.7c1.6 1.6 3.6 2.3 5.6 2.3s4.1-.8 5.6-2.3l31-31a7.9 7.9 0 0 0 0-11.2M652 816c-61.9 0-112-50.1-112-112s50.1-112 112-112s112 50.1 112 112s-50.1 112-112 112" />
+                                </svg>
+
+                             </span>
+                         </div>
+                        <div class="table-empty-content">
+                            <span class="table-empty-title">No Data Found</span>
+                            <span class="table-empty-desc">There's nothing to display yet. Try refreshing the page, or contact IT support if this persists.</span>
+                        </div>
+
+                     </div>
+                 </td>
+             </tr>`;
+      }
 
       renderTable(data) {
           if (!this.tbody) return;
@@ -792,8 +813,8 @@
                 </div>
             </td>
 
-            <td style='text-align: left;'>
-                <span class="text-primary font-medium">${row.FinalShopOrder}</span>
+            <td class='ShopOrderLayout'  style='text-align: left;'>
+                <span class='ShopOrderLayout_ShopOrder'>${row.FinalShopOrder}</span>
                 <p style="margin:.2em 0;color:#8a8f9e;">${row.ItemNo}</p>
                 <span style="font-weight:600;">${row.Model}</span>
             </td>
@@ -820,7 +841,7 @@
           }).join('');
       }
 
-    showTableSkeleton() {
+      showTableSkeleton() {
           this.tbody.innerHTML = Array(10).fill(`
         <tr>
             ${Array(19).fill(`
@@ -843,7 +864,7 @@
               ?.classList.remove('show');
       }
 
-   formatDate(dateString) {
+      formatDate(dateString) {
             if (!dateString) return '';
 
             const timestamp = parseInt(dateString.match(/\d+/)[0]);
@@ -883,7 +904,7 @@
             console.error(err);
             return false;
         }
-}
+    }
 }
 
 document.addEventListener('DOMContentLoaded', function () {

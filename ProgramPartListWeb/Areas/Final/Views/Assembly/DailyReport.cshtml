@@ -282,8 +282,8 @@
                     data-cycle-time="${row.CycleTime || ''}">
                           <td>${row.DateStart}</td>
                           <td>${row.Line}</td>
-                          <td style='text-align: left;'>
-                              <span class="text-primary font-medium">${row.FinalShopOrder}</span>
+                          <td class='ShopOrderLayout' style='text-align: left;'>
+                              <span class='ShopOrderLayout_ShopOrder'>${row.FinalShopOrder}</span>
                               <p style="margin:.2em 0;color:#8a8f9e;">${row.ItemNo}</p>
                                <span
                                   class="model-text"
@@ -295,9 +295,9 @@
                           <td>${row.PlanQty}</td>
                           <td>${this.formatTimeSpan(row.TimeStart)} - ${this.formatTimeSpan(row.TimeEnd)}</td>
                           <td>${row.Downtime || '0'}</td>
-                          <td>${row.MachineCount || '0'}</td>
+                          <td>${row.TotalDowntime || '0'}</td>
                           <td class="status-column">${row.CycleTime || '0'}</td>
-                          <td>${row.OperationRate || '0'} %</td>
+                         <td>${this.renderOperationRateCircle(row.OperationRate)}</td>
                   </tr>`
 
                 }).join('');
@@ -387,7 +387,21 @@
             }
 
 
+            // thresholds are a starting point — adjust to match your line's OK/warning/critical cutoffs
+            getOperationRateColor(rate) {
+                if (rate >= 85) return '#34c759'; // green - on target
+                if (rate >= 60) return '#ff9500'; // amber - watch
+                return '#ff3b30';                 // red - underperforming
+            }
 
+            renderOperationRateCircle(rate) {
+                const pct = Math.min(100, Math.max(0, parseFloat(rate) || 0));
+                const color = this.getOperationRateColor(pct);
+
+                return `<div class="progress-circle" style="--pct:${pct}; --ring-color:${color};">
+                    <span>${pct}%</span>
+                </div>`;
+            }
 
 
 

@@ -10,7 +10,7 @@
     <div class="headerManage  flex justify-between items-center mb-6">
         <div class="flex items-center gap-lg-3">
             <div>
-                <h2 class="font-semibold mb-1" style="font-size: 22px;">Final Assembly Data</h2>
+                <h2 class="font-semibold mb-1" style="font-size: 24px;">Final Assembly Data</h2>
                 <p class="text-sm" style="color:#86868b;">Current Data of the Final Assembly </p>
             </div>
 
@@ -301,8 +301,8 @@
                 return `
               <tr  class='fade-in'  data-order-line="${row.Line}"   >
                         <td>${row.Line}</td>
-                        <td style='text-align: left;'>
-                            <span class="text-primary font-medium">${row.FinalShopOrder}</span>
+                        <td  class='ShopOrderLayout' style='text-align: left;'>
+                            <span class='ShopOrderLayout_ShopOrder'>${row.FinalShopOrder}</span>
                             <p style="margin:.2em 0;color:#8a8f9e;">${row.ItemNo}</p>
                              <span
                                 class="model-text"

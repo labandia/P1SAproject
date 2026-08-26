@@ -16,8 +16,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
 {
     public class ManufacuringServices : IManufacturing
     {
-        private const string maintable = "FanTraceabilityManufacturingOrder_BACKV2";
-        //private const string maintable = "FanTraceabilityManufacturingOrder";
+        //private const string maintable = "FanTraceabilityManufacturingOrder_BACKV2";
+        private const string maintable = "FanTraceabilityManufacturingOrder";
 
         public enum OrderStatus
         {

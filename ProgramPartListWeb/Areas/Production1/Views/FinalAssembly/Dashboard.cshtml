@@ -197,6 +197,21 @@
 </div>
 
 
+<!-- Info Slide Overlay (shown right after the Award slide) -->
+<div class="award-slide-overlay" id="infoSlideOverlay">
+    <div class="award-slide info-slide">
+        <iframe id="infoSlideFrame"
+                class="info-slide-frame"
+                src="about:blank"
+                data-src="http://p1saportalweb.sdp.com/Production1/FinalAssembly/GroupData"
+                title="Best Final Assembly Line Dashboard"
+                loading="lazy"
+                frameborder="0">
+        </iframe>
+    </div>
+</div>
+
+
 
 
 <!-- Tooltip -->
@@ -223,7 +238,6 @@
         <span>Edit Data</span>
     </div>
 </div>
-
 
 
 <script type="module" asp-append-version="true">
@@ -263,6 +277,11 @@
             this.awardSubtitle = document.getElementById('awardSubtitle');
             this.awardSlideDuration = 8000; // how long the WHOLE slide stays on screen, ms
             this.awardPerPersonDuration = 3000; // how long each individual awardee is shown, ms
+
+            // ---- Info slide DOM refs (shown right after the award slide) ----
+            this.infoSlideOverlay = document.getElementById('infoSlideOverlay');
+            this.infoSlideFrame = document.getElementById('infoSlideFrame');
+            this.infoSlideDuration = 6000; // how long the info slide stays on screen, ms
 
 
             this.OpensDataManage = document.getElementById('commentBtn');
@@ -317,9 +336,9 @@
                 await this.fetchBestLines();
             }, 60 * 1000);
 
-            // Award slide: push in every 5 minutes
+            // Slide rotation: Main dashboard -> Info slide -> Award slide -> back to Main
             this.awardSlideInterval = setInterval(() => {
-                this.showAwardSlide();
+                this.showInfoSlide();
             }, 20 * 1000);
 
             this.OpensDataManage.addEventListener('click', (e) => {
@@ -632,61 +651,6 @@
             this._typingRafId = requestAnimationFrame(step);
         }
 
-        //applyBestLines(data) {
-        //    const typeMap = {
-        //        'In-Process': '😒',
-        //        'Rejected Lot': '😢',
-        //        'Customer Complaint': '😭'
-        //    };
-
-        //    document.querySelectorAll('.line-row').forEach(row => {
-        //        const emojiSpan = row.querySelector('.emoji');
-        //        if (emojiSpan) emojiSpan.textContent = '';
-        //        row.classList.remove('highlight');
-        //    });
-
-        //    const setEmoji = (lineName, emoji) => {
-        //        if (!lineName) return;
-        //        const row = document.querySelector(`.line-row[data-line="${lineName}"]`);
-        //        if (row) {
-        //            const span = row.querySelector('.emoji');
-        //            if (span) span.textContent = emoji;
-        //            row.classList.add('highlight');
-        //        }
-        //    };
-
-        //    const normalizeLine = (line) => {
-        //        if (!line) return line;
-        //        if (line.startsWith('CL')) return 'Cell Line';
-        //        if (line.startsWith('OP')) return 'OilProof';
-        //        return this.reverseGroupMap[line] || line;
-        //    };
-
-        //    // Exclude the 'Total' row — its BestLine is null and its Qty
-        //    // would otherwise win the "worst type" comparison below
-        //    const rows = (data || []).filter(r => r['NCRtype'] !== 'Total');
-
-        //    rows.forEach(row => {
-        //        const emoji = typeMap[row['NCRtype']];   // reverted: 'NCRtype', lowercase t
-        //        if (!emoji) return;
-
-        //        const lineName = normalizeLine(row['BestLine']);
-        //        setEmoji(lineName, emoji);
-
-        //        const entry = this.lineData.find(d => d.name === lineName);
-        //        if (entry) {
-        //            entry.total = row['Qty'] ?? 0;
-        //            entry.percentage = row['Percentage'] ?? 0;
-        //        }
-        //    });
-
-        //    const worstTypeRow = rows.reduce((max, r) => (r.Qty > (max?.Qty ?? -1) ? r : max), null);
-        //    if (worstTypeRow?.BestLine) {
-        //        this.bestLineNumber.textContent = normalizeLine(worstTypeRow.BestLine);
-        //    }
-        //}
-
-
         generateData() {
             this.lineData = this.lineNames.map(name => ({
                 name: name,
@@ -883,6 +847,50 @@
             clearTimeout(this._awardCleanupTimeout);
             this._awardCleanupTimeout = setTimeout(() => {
                 this.awardSlideOverlay.classList.remove('leaving');
+
+                // Award slide is last in the rotation — nothing more to chain,
+                // the main dashboard is back in view.
+            }, 900);
+        }
+
+        // ---- Info slide functions (shown after the main dashboard, before the award slide) ----
+        showInfoSlide() {
+            if (!this.infoSlideOverlay) return;
+
+            // Load the iframe only when the slide is about to be shown, so it
+            // isn't sitting there refreshing/running in the background the
+            // whole time the slide is hidden.
+            if (this.infoSlideFrame) {
+                const targetSrc = this.infoSlideFrame.dataset.src;
+                if (targetSrc && this.infoSlideFrame.getAttribute('src') !== targetSrc) {
+                    this.infoSlideFrame.src = targetSrc;
+                }
+            }
+
+            this.infoSlideOverlay.classList.remove('leaving');
+            this.infoSlideOverlay.classList.add('active');
+
+            clearTimeout(this._infoHideTimeout);
+            this._infoHideTimeout = setTimeout(() => this.hideInfoSlide(), this.infoSlideDuration);
+        }
+
+        hideInfoSlide() {
+            if (!this.infoSlideOverlay) return;
+
+            this.infoSlideOverlay.classList.add('leaving');
+            this.infoSlideOverlay.classList.remove('active');
+
+            clearTimeout(this._infoCleanupTimeout);
+            this._infoCleanupTimeout = setTimeout(() => {
+                this.infoSlideOverlay.classList.remove('leaving');
+
+                // Unload the iframe while the slide is off-screen.
+                if (this.infoSlideFrame) {
+                    this.infoSlideFrame.src = 'about:blank';
+                }
+
+                // Info slide is next-to-last — show the award slide right after.
+                this.showAwardSlide();
             }, 900);
         }
     }
@@ -992,15 +1000,6 @@
 
         // === LOG DEBUG ===
         logDebug(info, tv) {
-            //console.log('📺 Screen Size:', {
-            //    screen: `${info.screenW}×${info.screenH}`,
-            //    viewport: `${info.viewW}×${info.viewH}`,
-            //    dpr: info.dpr,
-            //    physical: `${info.physW}×${info.physH}`,
-            //    isTV: tv.isTV,
-            //    isTCL: tv.isTCL,
-            //    userAgent: navigator.userAgent
-            //});
         }
 
         // === INIT ===
@@ -1010,7 +1009,6 @@
             window.addEventListener('orientationchange', () => {
                 setTimeout(this.update, 300);
             });
-            //console.log('✅ ScreenSizeController ready');
         }
 
         // === CLEANUP ===

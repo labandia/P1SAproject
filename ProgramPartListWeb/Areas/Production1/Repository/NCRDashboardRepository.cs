@@ -264,6 +264,8 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                 ", null);
         }
 
+       
+
         public Task<List<GroupSummaryModel>> GetGroupSummary()
         {
             return SqlDataAcess_Test.QueryAsync<GroupSummaryModel>($@";WITH Pivoted AS (
@@ -389,5 +391,75 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                   FROM ProductionFinal_Process WHERE ProcessGroups =@ProcessGroups", new
             { ProcessGroups = groups });
         }
+
+
+
+
+
+
+        public async Task<TotalOutputChartModel> GetGroupDataSummary()
+        {
+            var getTotalSummary = await SqlDataAcess_Test.QuerySingleAsync<TotalOutputChartModel>($@"SELECT
+                        SUM(ISNULL(Group1, 0) + ISNULL(Group2, 0) + ISNULL(Group3, 0) + ISNULL(OP, 0)) AS TotalOutput,
+                        AVG(
+                                ISNULL(Group1, 0) +
+                            ISNULL(Group2, 0) +
+                            ISNULL(Group3, 0) +
+                            ISNULL(OP, 0)
+                            ) AS AverageOutput,
+                        AVG(ISNULL(TargetOutput, 0)) AS TargetOutput,
+                           CAST(
+                                AVG(ISNULL(Total, 0)) * 100.0
+                            / NULLIF(AVG(ISNULL(TargetOutput, 0)), 0)
+
+                            AS DECIMAL(10, 2)
+                            ) AS AverageEfficiency
+
+                        FROM ProductionFinal_GroupChart;");
+
+            getTotalSummary.totalGroup = await SqlDataAcess_Test.QueryAsync<TotalGroupOutputModel>($@"SELECT
+                        G.GroupName,
+                        SUM(G.Output) AS TotalOutput,
+                        AVG(G.Output) AS AvgOutput,
+                        AVG(ISNULL(P.TargetOutput, 0)) AS TargetOutput,
+                        CAST(
+                                SUM(G.Output) * 100.0
+                            / NULLIF(SUM(ISNULL(P.TargetOutput, 0)), 0)
+
+                            AS DECIMAL(10, 2)
+                            ) AS Efficiency
+                        FROM ProductionFinal_GroupChart P
+                        CROSS APPLY
+                        (
+                            VALUES
+                                ('GROUP 1', ISNULL(P.Group1, 0)),
+                                ('GROUP 2', ISNULL(P.Group2, 0)),
+                                ('GROUP 3', ISNULL(P.Group3, 0)),
+                                ('OP',      ISNULL(P.OP, 0))
+                        ) G(GroupName, Output)
+                        GROUP BY
+                            G.GroupName
+                        ORDER BY
+                            CASE G.GroupName
+                                WHEN 'GROUP 1' THEN 1
+                                WHEN 'GROUP 2' THEN 2
+                                WHEN 'GROUP 3' THEN 3
+                                WHEN 'OP'      THEN 4
+                            END;");
+
+
+            getTotalSummary.daily = await SqlDataAcess_Test.QueryAsync<DailyOutputModel>($@" SELECT
+	                   FORMAT(GroupDate, 'd-MMM') AS [date],
+	                    Total  as [value] 
+                     FROM ProductionFinal_GroupChart
+                     GROUP BY GroupDate, Total");
+
+
+            return getTotalSummary;
+        }
+
+
+
+
     }
 }

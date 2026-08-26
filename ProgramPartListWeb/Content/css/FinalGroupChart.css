@@ -206,3 +206,13 @@ header h1{
         display: block;
     
     }
+
+
+
+.chart-section h3{
+    padding: .5em 0 ;
+    color: #fff;
+    text-align: center;
+}
+
+

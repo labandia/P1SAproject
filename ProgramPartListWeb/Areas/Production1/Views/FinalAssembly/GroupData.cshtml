@@ -12,15 +12,23 @@
     <section class="stats-row">
         <div class="stat-card">
             <div class="stat-head"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#cfd8e3" stroke-width="2"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>Total Output</div>
-            <div class="stat-value" id="totalOutput">1,035,191</div>
+            <div class="stat-value" id="totalOutput">0</div>
         </div>
         <div class="stat-card">
             <div class="stat-head"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#cfd8e3" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /></svg>Average Output</div>
-            <div class="stat-value" id="avgOutput">63,473</div>
+            <div class="stat-value" id="avgOutput">0</div>
         </div>
         <div class="stat-card">
-            <div class="stat-head"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#cfd8e3" stroke-width="2"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="5" /><circle cx="12" cy="12" r="1.2" fill="#cfd8e3" /></svg>Target Output</div>
-            <div class="stat-value" id="targetOutput">90437</div>
+            <div class="stat-head">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path fill="currentColor" d="M3.496 12a8.5 8.5 0 0 0 8.235 8.498c.281.54.636 1.036 1.052 1.474q-.389.03-.785.03C6.474 22.002 1.996 17.524 1.996 12S6.474 1.998 11.998 1.998S22 6.476 22 12q0 .394-.03.781a6.5 6.5 0 0 0-1.474-1.05a8.502 8.502 0 0 0-17 .269m7.595 4.409a4.502 4.502 0 0 1 .907-8.91a4.5 4.5 0 0 1 4.409 3.593a6.6 6.6 0 0 1 1.51-.079A6.002 6.002 0 0 0 5.998 12c0 2.978 2.17 5.45 5.015 5.92a6.6 6.6 0 0 1 .078-1.512m.931-2.41h-.024a2 2 0 1 1 2-2v.024A6.5 6.5 0 0 0 12.022 14m5.478-2a5.5 5.5 0 1 1 0 11a5.5 5.5 0 0 1 0-11m.501 8.503V18h2.502a.5.5 0 1 0 0-1H18v-2.5a.5.5 0 1 0-1 0V17h-2.504a.5.5 0 0 0 0 1h2.505v2.503a.5.5 0 1 0 1 0" />
+                </svg>
+
+
+                Target Output
+            </div>
+            <div class="stat-value" id="targetOutput">0</div>
         </div>
         <div class="stat-card">
             <div class="stat-head"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#cfd8e3" stroke-width="2"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16z" /><path d="M12 12l3-3" /></svg>Overall Efficiency</div>
@@ -45,53 +53,82 @@
 
 
 
-    <script>
-/* ---------------------------------------------------------
-   DATA — swap these values to repoint the dashboard at
-   a different dataset.
---------------------------------------------------------- */
-const DATA = {
-  totalOutput: 1035191,
-  avgOutput: 63473,
-  targetOutput: 90437,
-  overallEfficiency: 20,
-  groups: [
-    { name: "GROUP 1", total: 264128, avg: 16508, target: 29505, efficiency: 68 },
-    { name: "GROUP 2", total: 457705, avg: 26924, target: 35280, efficiency: 42 },
-    { name: "GROUP 3", total: 203754, avg: 12735, target: 16832, efficiency: 93 },
-    { name: "OP",      total: 109604, avg: 7307,  target: 8820,  efficiency: 100 }
-  ],
-  daily: [
-    { date: "1-Aug",  value: 25800 },
-    { date: "2-Aug",  value: 41200 },
-    { date: "3-Aug",  value: 66500 },
-    { date: "4-Aug",  value: 58900 },
-    { date: "5-Aug",  value: 33700 },
-    { date: "6-Aug",  value: 29300 },
-    { date: "7-Aug",  value: 35600 },
-    { date: "8-Aug",  value: 47800 },
-    { date: "9-Aug",  value: 52100 },
-    { date: "10-Aug", value: 49700 },
-    { date: "11-Aug", value: 60800 },
-    { date: "12-Aug", value: 70200 },
-    { date: "13-Aug", value: 44100 },
-    { date: "14-Aug", value: 81136 },
-    { date: "15-Aug", value: 67900 },
-    { date: "16-Aug", value: 23493 }
-  ]
-};
+    <script type="module" asp-append-version="true">
+    import {
+        getMethod,
+        postMethod
+    } from '@Url.Content("~/Scripts/modules/index.js")';
 
-const fmt = n => n.toLocaleString('en-US');
+    class GroupDashboardController {
+        constructor() {
+            this._animFrames = new Map(); // track in-flight animations per element
+        }
 
-/* ---------- Semicircle gauge (SVG) ---------- */
-function gaugeColor(pct) {
-    if (pct >= 100) return '#2e9dfa';
-    if (pct >= 85) return '#3ecf5a';
-    if (pct >= 70) return '#e8c33e';
-    return '#e2431e';
-}
+        async init() {
+            await this.fetchTotalGroupData();
+        }
 
-        function buildGauge(pct, size = 200) {
+        async fetchTotalGroupData() {
+            try {
+                const res = await getMethod('@Url.Action("GetGroupDashboardData", "FinalAssembly")', {});
+                if (!res?.Success) {
+                    console.log('No data found in 4M ');
+                    return;
+                }
+                console.log(res);
+                this.renderdata(res.data);
+                this.displayGroups(res.data);
+                this.buildChart(res.data);
+            } catch (error) {
+                console.error('Error fetching 4M data:', error);
+            }
+        }
+
+
+        renderdata(data) {
+            this.animateNumber(document.getElementById("totalOutput"), data.TotalOutput, 5200);   // slower
+            this.animateNumber(document.getElementById("avgOutput"), data.AverageOutput, 5200);     // faster
+            this.animateNumber(document.getElementById("targetOutput"), data.TargetOutput, 5200);
+            this.animateGauge(document.getElementById("overallGaugeHost"), data.AverageEfficiency, 180, 5200);
+        }
+
+
+        displayGroups(DATA) {
+            const groupsRow = document.getElementById('groupsRow');
+            DATA.totalGroup.forEach((g, i) => {
+                const card = document.createElement('div');
+                card.className = 'group-card';
+                card.innerHTML = `
+                <h2>${g.GroupName}</h2>
+                <div class="group-row"><span>Total Output</span><span class="val" id="grpTotal${i}">0</span></div>
+                <div class="group-row"><span>Avg Output</span><span class="val" id="grpAvg${i}">0</span></div>
+                <div class="group-row"><span>Target</span><span class="val" id="grpTarget${i}">0</span></div>
+                <div class="group-gauge" id="grpGauge${i}"></div>
+            `;
+                groupsRow.appendChild(card);
+
+                this.animateNumber(document.getElementById(`grpTotal${i}`), g.TotalOutput, 5200);
+                this.animateNumber(document.getElementById(`grpAvg${i}`), g.AvgOutput, 5200);
+                this.animateNumber(document.getElementById(`grpTarget${i}`), g.TargetOutput, 5200);
+                this.animateGauge(document.getElementById(`grpGauge${i}`), g.Efficiency, 5200);
+            });
+        }
+
+
+        changeformatnumber(n) {
+            return n.toLocaleString('en-US');
+        }
+
+
+        /* ---------- Semicircle gauge (SVG) ---------- */
+        gaugeColor(pct) {
+            if (pct >= 100) return '#2e9dfa';
+            if (pct >= 85) return '#3ecf5a';
+            if (pct >= 70) return '#e8c33e';
+            return '#e2431e';
+        }
+
+        buildGauge(pct, size = 200) {
 
             const w = 270;
             const h = 102;
@@ -107,187 +144,252 @@ function gaugeColor(pct) {
             const endY = cy;
 
             const gaugePath = `
-        M ${startX} ${startY}
-        A ${r} ${r} 0 0 1 ${endX} ${endY}
-    `;
+            M ${startX} ${startY}
+            A ${r} ${r} 0 0 1 ${endX} ${endY}
+        `;
 
-            const valueColor = gaugeColor(pct);
+            const valueColor = this.gaugeColor(pct);
 
             return `
-        <svg
-            viewBox="0 0 ${w} ${h}"
-            preserveAspectRatio="xMidYMid meet"
-            style="width:100%;height:100%;display:block;">
+            <svg
+                viewBox="0 0 ${w} ${h}"
+                preserveAspectRatio="xMidYMid meet"
+                style="width:100%;height:100%;display:block;">
 
-            <!-- Gauge background -->
-            <path
-                d="${gaugePath}"
-                fill="none"
-                stroke="#244c36"
-                stroke-width="45"
-                stroke-linecap="butt"
-                pathLength="100"
-            />
+                <!-- Gauge background -->
+                <path
+                    d="${gaugePath}"
+                    fill="none"
+                    stroke="#244c36"
+                    stroke-width="45"
+                    stroke-linecap="butt"
+                    pathLength="100"
+                />
 
-            <!-- Red -->
-            <path
-                d="${gaugePath}"
-                fill="none"
-                stroke="#e2431e"
-                stroke-width="40"
-                stroke-dasharray="20 80"
-                pathLength="100"
-            />
+                <!-- Red -->
+                <path
+                    d="${gaugePath}"
+                    fill="none"
+                    stroke="#e2431e"
+                    stroke-width="40"
+                    stroke-dasharray="20 80"
+                    pathLength="100"
+                />
 
-            <!-- Brown -->
-            <path
-                d="${gaugePath}"
-                fill="none"
-                stroke="#8a581c"
-                stroke-width="40"
-                stroke-dasharray="20 80"
-                stroke-dashoffset="-20"
-                pathLength="100"
-            />
+                <!-- Brown -->
+                <path
+                    d="${gaugePath}"
+                    fill="none"
+                    stroke="#8a581c"
+                    stroke-width="40"
+                    stroke-dasharray="20 80"
+                    stroke-dashoffset="-20"
+                    pathLength="100"
+                />
 
-            <!-- Light Green -->
-            <path
-                d="${gaugePath}"
-                fill="none"
-                stroke="#8bd53a"
-                stroke-width="40"
-                stroke-dasharray="20 80"
-                stroke-dashoffset="-40"
-                pathLength="100"
-            />
+                <!-- Light Green -->
+                <path
+                    d="${gaugePath}"
+                    fill="none"
+                    stroke="#8bd53a"
+                    stroke-width="40"
+                    stroke-dasharray="20 80"
+                    stroke-dashoffset="-40"
+                    pathLength="100"
+                />
 
-            <!-- Green progress -->
-            <path
-                d="${gaugePath}"
-                fill="none"
-                stroke="${valueColor}"
-                stroke-width="40"
-                stroke-dasharray="${pct} ${100 - pct}"
-                pathLength="100"
-            />
+                <!-- Green progress -->
+                <path
+                    d="${gaugePath}"
+                    fill="none"
+                    stroke="${valueColor}"
+                    stroke-width="40"
+                    stroke-dasharray="${pct} ${100 - pct}"
+                    pathLength="100"
+                />
 
-            <!-- Percentage -->
-            <text
-                x="${cx}"
-                y="102"
-                text-anchor="middle"
-                font-size="40"
-                font-weight="700"
-                fill="${valueColor}">
-                ${pct}%
-            </text>
+                <!-- Percentage -->
+                <text
+                    x="${cx}"
+                    y="102"
+                    text-anchor="middle"
+                    font-size="40"
+                    font-weight="700"
+                    fill="${valueColor}">
+                    ${pct}%
+                </text>
 
-        </svg>
-    `;
+            </svg>
+        `;
         }
 
-/* ---------- Populate top stats ---------- */
-document.getElementById('totalOutput').textContent = fmt(DATA.totalOutput);
-document.getElementById('avgOutput').textContent = fmt(DATA.avgOutput);
-document.getElementById('targetOutput').textContent = fmt(DATA.targetOutput);
-document.getElementById('overallGaugeHost').innerHTML =
-    buildGauge(DATA.overallEfficiency, 180);
 
-/* ---------- Populate group cards ---------- */
-const groupsRow = document.getElementById('groupsRow');
-DATA.groups.forEach(g => {
-  const card = document.createElement('div');
-  card.className = 'group-card';
-    card.innerHTML = `
-    <h2>${g.name}</h2>
-    <div class="group-row"><span>Total Output</span><span class="val">${fmt(g.total)}</span></div>
-    <div class="group-row"><span>Avg Output</span><span class="val">${fmt(g.avg)}</span></div>
-    <div class="group-row"><span>Target</span><span class="val">${fmt(g.target)}</span></div>
-    <div class="group-gauge">${buildGauge(g.efficiency, 200)}</div>
-`;
-  groupsRow.appendChild(card);
-});
+         /* ---------- Bar chart ---------- */
+        buildChart(DATA) {
+            const host = document.getElementById('chartHost');
+            const w = host.clientWidth || 1240;
+            const h = 230;
+            const padL = 60, padR = 20, padT = 10, padB = 30;
+            const plotW = w - padL - padR;
+            const plotH = h - padT - padB;
 
-/* ---------- Bar chart ---------- */
-function buildChart(){
-  const host = document.getElementById('chartHost');
-  const w = host.clientWidth || 1240;
-  const h = 230;
-  const padL = 60, padR = 20, padT = 10, padB = 30;
-  const plotW = w - padL - padR;
-  const plotH = h - padT - padB;
+            const values = DATA.daily.map(d => d.value);
+            const maxVal = Math.max(...values);
+            const minVal = Math.min(...values);
+            const highest = Math.max(...values);
+            const lowest = Math.min(...values);
+            const targetLine = DATA.AverageOutput > maxVal ? maxVal * 0.9 : DATA.AverageOutput; // reference line
+            const yMax = Math.ceil(maxVal / 10000) * 10000 + 10000;
+            const scaleY = v => plotH - (v / yMax) * plotH;
 
-  const values = DATA.daily.map(d => d.value);
-  const maxVal = Math.max(...values);
-  const minVal = Math.min(...values);
-  const highest = Math.max(...values);
-  const lowest = Math.min(...values);
-  const targetLine = DATA.avgOutput > maxVal ? maxVal * 0.9 : DATA.avgOutput; // reference line
-  const yMax = Math.ceil(maxVal / 10000) * 10000 + 10000;
-  const scaleY = v => plotH - (v / yMax) * plotH;
+            const n = DATA.daily.length;
+            const bandW = plotW / n;
+            const barW = bandW * 0.55;
 
-  const n = DATA.daily.length;
-  const bandW = plotW / n;
-  const barW = bandW * 0.55;
+            // gridlines + y labels
+            let gridSvg = '';
+            const steps = 5;
+            for (let i = 0; i <= steps; i++) {
+                const val = (yMax / steps) * i;
+                const y = padT + scaleY(val);
+                gridSvg += `<line x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="rgba(255,255,255,0.07)" stroke-dasharray="3,4"/>`;
+                gridSvg += `<text x="${padL - 10}" y="${y + 4}" text-anchor="end" font-size="11" fill="#8a97a9">${this.changeformatnumber(val)}</text>`;
+            }
 
-  // gridlines + y labels
-  let gridSvg = '';
-  const steps = 5;
-  for(let i=0;i<=steps;i++){
-    const val = (yMax/steps)*i;
-    const y = padT + scaleY(val);
-    gridSvg += `<line x1="${padL}" y1="${y}" x2="${w-padR}" y2="${y}" stroke="rgba(255,255,255,0.07)" stroke-dasharray="3,4"/>`;
-    gridSvg += `<text x="${padL-10}" y="${y+4}" text-anchor="end" font-size="11" fill="#8a97a9">${fmt(val)}</text>`;
-  }
+            // bars
+            let barsSvg = '';
+            DATA.daily.forEach((d, i) => {
+                const x = padL + i * bandW + (bandW - barW) / 2;
+                const barH = plotH - scaleY(d.value);
+                const y = padT + scaleY(d.value);
+                let color, colorEnd;
+                if (d.value === highest) { color = '#f5820a'; colorEnd = '#e2431e'; }
+                else if (d.value === lowest) { color = '#a9e34b'; colorEnd = '#6fae1f'; }
+                else if (d.value > yMax * 0.55) { color = '#e8c33e'; colorEnd = '#8bd53a'; }
+                else { color = '#8bd53a'; colorEnd = '#3ea34a'; }
+                const gradId = `barGrad${i}`;
+                barsSvg += `
+                  <defs><linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="${color}"/><stop offset="100%" stop-color="${colorEnd}"/>
+                  </linearGradient></defs>
+                  <rect x="${x}" y="${y}" width="${barW}" height="${barH}" rx="2" fill="url(#${gradId})"/>
+                  <text x="${x + barW / 2}" y="${padT + plotH + 18}" text-anchor="middle" font-size="11" fill="#9fb0c3">${d.date}</text>
+                `;
+            });
 
-  // bars
-  let barsSvg = '';
-  DATA.daily.forEach((d,i) => {
-    const x = padL + i*bandW + (bandW-barW)/2;
-    const barH = plotH - scaleY(d.value);
-    const y = padT + scaleY(d.value);
-    let color, colorEnd;
-    if (d.value === highest){ color = '#f5820a'; colorEnd = '#e2431e'; }
-    else if (d.value === lowest){ color = '#a9e34b'; colorEnd = '#6fae1f'; }
-    else if (d.value > yMax*0.55){ color = '#e8c33e'; colorEnd = '#8bd53a'; }
-    else { color = '#8bd53a'; colorEnd = '#3ea34a'; }
-    const gradId = `barGrad${i}`;
-    barsSvg += `
-      <defs><linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="${color}"/><stop offset="100%" stop-color="${colorEnd}"/>
-      </linearGradient></defs>
-      <rect x="${x}" y="${y}" width="${barW}" height="${barH}" rx="2" fill="url(#${gradId})"/>
-      <text x="${x+barW/2}" y="${padT+plotH+18}" text-anchor="middle" font-size="11" fill="#9fb0c3">${d.date}</text>
-    `;
-  });
+            const targetY = padT + scaleY(targetLine);
 
-  const targetY = padT + scaleY(targetLine);
+            const svg = `
+                  <svg viewBox="0 0 ${w} ${h}" style="width:100%;height:100%;display:block;" preserveAspectRatio="none">
+                    ${gridSvg}
+                    ${barsSvg}
+                    <line x1="${padL}" y1="${targetY}" x2="${w - padR}" y2="${targetY}" stroke="#e2431e" stroke-width="2"/>
+                  </svg>`;
+            host.innerHTML = svg;
 
-  const svg = `
-  <svg viewBox="0 0 ${w} ${h}" style="width:100%;height:100%;display:block;" preserveAspectRatio="none">
-    ${gridSvg}
-    ${barsSvg}
-    <line x1="${padL}" y1="${targetY}" x2="${w-padR}" y2="${targetY}" stroke="#e2431e" stroke-width="2"/>
-  </svg>`;
-  host.innerHTML = svg;
-}
-buildChart();
-window.addEventListener('resize', () => {
-  clearTimeout(window._chResize);
-  window._chResize = setTimeout(buildChart, 150);
-});
-if (window.ResizeObserver){
-  const ro = new ResizeObserver(() => {
-    clearTimeout(window._chResizeObs);
-    window._chResizeObs = setTimeout(buildChart, 100);
-  });
-  ro.observe(document.getElementById('chartHost'));
-}
+            /* ---------- Legend ---------- */
+            document.getElementById('legendHigh').textContent = this.changeformatnumber(Math.max(...DATA.daily.map(d => d.value)));
+            document.getElementById('legendLow').textContent = this.changeformatnumber(Math.min(...DATA.daily.map(d => d.value)));
+            document.getElementById('legendDays').textContent = DATA.daily.length;
+        }
 
-/* ---------- Legend ---------- */
-document.getElementById('legendHigh').textContent = fmt(Math.max(...DATA.daily.map(d=>d.value)));
-document.getElementById('legendLow').textContent = fmt(Math.min(...DATA.daily.map(d=>d.value)));
-document.getElementById('legendDays').textContent = DATA.daily.length;
-    </script>
+
+
+        
+        //window.addEventListener('resize', () => {
+        //    clearTimeout(window._chResize);
+        //    window._chResize = setTimeout(buildChart, 150);
+        //});
+        //if (window.ResizeObserver) {
+        //    const ro = new ResizeObserver(() => {
+        //        clearTimeout(window._chResizeObs);
+        //        window._chResizeObs = setTimeout(buildChart, 100);
+        //    });
+        //    ro.observe(document.getElementById('chartHost'));
+        //}
+
+
+        // Animates the text content of `el` from its current numeric value to `endValue`
+        animateNumber(el, endValue, duration = 800) {
+            if (!el) return;
+
+            // Cancel any animation already running on this element
+            if (this._animFrames.has(el)) {
+                cancelAnimationFrame(this._animFrames.get(el));
+            }
+
+            const startValue = parseFloat(el.innerText.replace(/,/g, '')) || 0;
+            const change = endValue - startValue;
+
+            // If there's nothing to animate, just set it and bail
+            if (change === 0) {
+                el.innerText = this.changeformatnumber(endValue);
+                return;
+            }
+
+            const startTime = performance.now();
+
+            // easeOutCubic - fast start, gentle settle
+            const ease = t => 1 - Math.pow(1 - t, 3);
+
+            const step = (now) => {
+                const elapsed = now - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = ease(progress);
+                const current = startValue + change * eased;
+
+                el.innerText = this.changeformatnumber(Math.round(current));
+
+                if (progress < 1) {
+                    const frameId = requestAnimationFrame(step);
+                    this._animFrames.set(el, frameId);
+                } else {
+                    el.innerText = this.changeformatnumber(endValue);
+                    this._animFrames.delete(el);
+                }
+            };
+
+            const frameId = requestAnimationFrame(step);
+            this._animFrames.set(el, frameId);
+        }
+
+
+        animateGauge(hostEl, endPct, size = 200, duration = 800) {
+            if (!hostEl) return;
+
+            const startPct = parseFloat(hostEl.dataset.pct || 0);
+            const change = endPct - startPct;
+            const startTime = performance.now();
+            const ease = t => 1 - Math.pow(1 - t, 3);
+
+            const step = (now) => {
+                const elapsed = now - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = ease(progress);
+                const current = Math.round(startPct + change * eased);
+
+                hostEl.innerHTML = this.buildGauge(current, size);
+
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                } else {
+                    hostEl.innerHTML = this.buildGauge(endPct, size);
+                    hostEl.dataset.pct = endPct;
+                }
+            };
+
+            requestAnimationFrame(step);
+        }
+    }
+
+
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const controller = new GroupDashboardController();
+        controller.init();
+
+    });
+ </script>
 
 </div>

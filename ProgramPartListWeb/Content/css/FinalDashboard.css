@@ -2299,3 +2299,36 @@ tbody td {
         white-space: normal;
     }
 }
+
+
+
+
+/* Info slide: reuses #infoSlideOverlay (.award-slide-overlay) only for
+       position/transition. Deliberately does NOT reuse .award-slide, since
+       that class carries its own fixed width/padding from the shared
+       stylesheet that fought with a plain width:100% override.
+       Absolute-fill instead, so nothing else on the overlay can constrain it. */
+#infoSlideOverlay {
+    padding: 0 !important;
+}
+
+    #infoSlideOverlay .info-slide {
+        position: absolute;
+        inset: 0;
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden;
+    }
+
+.info-slide-frame {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    border: 0;
+}

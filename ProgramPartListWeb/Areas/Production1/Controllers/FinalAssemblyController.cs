@@ -341,6 +341,21 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
 
 
 
+        //======================================================
+        //============== GROUP DASHBOARD DATA  ===========
+        //====================================================
+        [HttpGet]
+        public async Task<ActionResult> GetGroupDashboardData()
+        {
+
+            var res = await _manu.GetGroupDataSummary();
+            if (res == null)
+                return JsonNotFound("No Active Lines found");
+            return JsonSuccess(res);
+        }
+
+
+
         // GET: Production1/FinalAssembly
         public ActionResult Dashboard()
         {

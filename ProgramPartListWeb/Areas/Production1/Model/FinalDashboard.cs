@@ -1,7 +1,9 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.VariantTypes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Unity.Policy;
 
 namespace ProgramPartListWeb.Areas.Production1.Model
 {
@@ -94,4 +96,34 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public string months { get; set; }
         public int years { get; set; }
     }
+
+
+    public class TotalOutputChartModel
+    {
+        public int TotalOutput { get; set; }
+        public int AverageOutput { get; set; }
+        public int TargetOutput { get; set; }
+        public double AverageEfficiency { get; set; }
+
+        public List<TotalGroupOutputModel> totalGroup { get; set;}
+
+        public List<DailyOutputModel> daily { get; set; }
+
+    }
+
+    public class TotalGroupOutputModel
+    {
+        public string GroupName { get; set; }
+        public int TotalOutput { get; set; }
+        public int AvgOutput { get; set; }
+        public int TargetOutput { get; set; }
+        public int Efficiency { get; set; }
+    }
+
+    public class DailyOutputModel
+    {
+        public string date { get; set; }
+        public int value { get; set; }
+    }
+
 }

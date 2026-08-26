@@ -29,5 +29,10 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
 
 
         Task<List<ProcessGroupsModel>> SetsProcessGroupData(int groups);
+
+
+
+
+        Task<TotalOutputChartModel> GetGroupDataSummary();
     }
 }

@@ -458,8 +458,14 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             return getTotalSummary;
         }
 
+        public Task<AuditInfoModel> GetAuditInfo()
+        {
+            const string sql = @"
+        SELECT TOP 1 AuditInfoID, Customer, AuditDate, AuditTime, CoverageArea
+        FROM dbo.FinalAssembly_AuditInfo
+        ORDER BY AuditInfoID";
 
-
-
+            return SqlDataAcess_Test.QuerySingleAsync<AuditInfoModel>(sql);
+        }
     }
 }

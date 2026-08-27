@@ -341,6 +341,7 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
 
 
 
+
         //======================================================
         //============== GROUP DASHBOARD DATA  ===========
         //====================================================
@@ -353,6 +354,43 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
                 return JsonNotFound("No Active Lines found");
             return JsonSuccess(res);
         }
+
+
+        [HttpGet]
+        public async Task<ActionResult> GetAuditInfo()
+        {
+            try
+            {
+                var res = await _manu.GetGroupDataSummary();
+                if (res == null)
+                    return JsonNotFound("No Manpower data found");
+
+                return JsonSuccess(res);
+            }
+            catch (Exception ex)
+            {
+                // TODO: log via your existing logging mechanism
+                return Json(new { Success = false, message = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public JsonResult SaveAuditInfo(AuditInfoModel model)
+        //{
+        //    try
+        //    {
+        //        var modifiedBy = User?.Identity?.Name ?? "Unknown";
+        //        var repo = new FinalAssemblyRepository();
+        //        var success = repo.SaveAuditInfo(model, modifiedBy);
+        //        return Json(new { Success = success });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { Success = false, message = ex.Message });
+        //    }
+        //}
+
 
 
 

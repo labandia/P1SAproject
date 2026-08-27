@@ -31,7 +31,7 @@ body {
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0,0,0,.5);
-    height: 90vh;
+    height: 95vh;
 }
 
 header {
@@ -103,6 +103,8 @@ header h1{
     font-size: clamp(11px, 1.5vw, 15px);
     color: #c7d1de;
     border-bottom: 1px dashed rgba(255,255,255,.06);
+    color: #fff;
+    font-weight: 600;
 }
 .stat-card {
     background: var(--panel-2);
@@ -137,9 +139,10 @@ header h1{
 .stat-value {
     /*    padding:clamp(10px, 2vw, 1px) clamp(10px, 2vw, 16px) clamp(12px, 2vw, 20px);
     font-size:clamp(18px, 3.4vw, 45px);*/
-    padding: clamp(10px, 2vw, 18px) clamp(10px, 2vw, 16px) clamp(12px, 2vw, 20px);
-    font-size: clamp(18px, 3.4vw, 34px);
-    font-weight: 700;
+    /*    padding: clamp(10px, 2vw, 18px) clamp(10px, 2vw, 16px) clamp(12px, 2vw, 20px);*/
+    line-height: 9vh;
+    font-size: clamp(18px, 3.4vw, 45px);
+    font-weight: 600;
     color: #fff;
     overflow-wrap: anywhere;
     text-align: center;

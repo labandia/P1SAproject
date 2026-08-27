@@ -126,4 +126,13 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public int value { get; set; }
     }
 
+
+    public class AuditInfoModel
+    {
+        public int AuditInfoID { get; set; }
+        public string Customer { get; set; }
+        public string AuditDate { get; set; }
+        public string AuditTime { get; set; }
+        public string CoverageArea { get; set; }
+    }
 }

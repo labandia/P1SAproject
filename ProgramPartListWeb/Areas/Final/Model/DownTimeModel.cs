@@ -29,7 +29,6 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public double CycleTime { get; set; }
         public int OperationRate { get; set; }
         public int TotalDowntime { get; set; }
-
         public int FourM { get; set; }
 
         public string FourName

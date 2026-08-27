@@ -86,10 +86,10 @@
 
 
         renderdata(data) {
-            this.animateNumber(document.getElementById("totalOutput"), data.TotalOutput, 5200);   // slower
-            this.animateNumber(document.getElementById("avgOutput"), data.AverageOutput, 5200);     // faster
-            this.animateNumber(document.getElementById("targetOutput"), data.TargetOutput, 5200);
-            this.animateGauge(document.getElementById("overallGaugeHost"), data.AverageEfficiency, 180, 5200);
+            this.animateNumber(document.getElementById("totalOutput"), data.TotalOutput, 1200);   // slowers
+            this.animateNumber(document.getElementById("avgOutput"), data.AverageOutput, 1200);     // faster
+            this.animateNumber(document.getElementById("targetOutput"), data.TargetOutput, 1200);
+            this.animateGauge(document.getElementById("overallGaugeHost"), data.AverageEfficiency, 180, 1200);
         }
 
 
@@ -100,17 +100,17 @@
                 card.className = 'group-card';
                 card.innerHTML = `
                 <h2>${g.GroupName}</h2>
-                <div class="group-row"><span>Total Output</span><span class="val" id="grpTotal${i}">0</span></div>
-                <div class="group-row"><span>Avg Output</span><span class="val" id="grpAvg${i}">0</span></div>
-                <div class="group-row"><span>Target</span><span class="val" id="grpTarget${i}">0</span></div>
+                <div class="group-row" style='font-size: 22px;'><span style='color: #9fb0c3;'>Total Output</span><span class="val" id="grpTotal${i}">0</span></div>
+                <div class="group-row" style='font-size: 20px;'><span style='color: #9fb0c3;'>Avg Output</span><span class="val" id="grpAvg${i}">0</span></div>
+                <div class="group-row" style='font-size: 20px;'><span style='color: #9fb0c3;'>Target</span><span class="val" id="grpTarget${i}">0</span></div>
                 <div class="group-gauge" id="grpGauge${i}"></div>
             `;
                 groupsRow.appendChild(card);
 
-                this.animateNumber(document.getElementById(`grpTotal${i}`), g.TotalOutput, 5200);
-                this.animateNumber(document.getElementById(`grpAvg${i}`), g.AvgOutput, 5200);
-                this.animateNumber(document.getElementById(`grpTarget${i}`), g.TargetOutput, 5200);
-                this.animateGauge(document.getElementById(`grpGauge${i}`), g.Efficiency, 5200);
+                this.animateNumber(document.getElementById(`grpTotal${i}`), g.TotalOutput, 1200);
+                this.animateNumber(document.getElementById(`grpAvg${i}`), g.AvgOutput, 1200);
+                this.animateNumber(document.getElementById(`grpTarget${i}`), g.TargetOutput, 1200);
+                this.animateGauge(document.getElementById(`grpGauge${i}`), g.Efficiency, 1200);
             });
         }
 
@@ -224,7 +224,7 @@
         }
 
 
-         /* ---------- Bar chart ---------- */
+        /* ---------- Bar chart ---------- */
         buildChart(DATA) {
             const host = document.getElementById('chartHost');
             const w = host.clientWidth || 1240;
@@ -238,7 +238,7 @@
             const minVal = Math.min(...values);
             const highest = Math.max(...values);
             const lowest = Math.min(...values);
-            const targetLine = DATA.AverageOutput > maxVal ? maxVal * 0.9 : DATA.AverageOutput; // reference line
+            const targetLine = DATA.AverageOutput > maxVal ? maxVal * 0.9 : DATA.AverageOutput;
             const yMax = Math.ceil(maxVal / 10000) * 10000 + 10000;
             const scaleY = v => plotH - (v / yMax) * plotH;
 
@@ -246,17 +246,17 @@
             const bandW = plotW / n;
             const barW = bandW * 0.55;
 
-            // gridlines + y labels
+            // gridlines + y labels (fade in)
             let gridSvg = '';
             const steps = 5;
             for (let i = 0; i <= steps; i++) {
                 const val = (yMax / steps) * i;
                 const y = padT + scaleY(val);
-                gridSvg += `<line x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="rgba(255,255,255,0.07)" stroke-dasharray="3,4"/>`;
-                gridSvg += `<text x="${padL - 10}" y="${y + 4}" text-anchor="end" font-size="11" fill="#8a97a9">${this.changeformatnumber(val)}</text>`;
+                gridSvg += `<line class="grid-line" x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="rgba(255,255,255,0.07)" stroke-dasharray="3,4" style="opacity:0; transition:opacity .5s ease ${i * 40}ms;"/>`;
+                gridSvg += `<text class="grid-line" x="${padL - 10}" y="${y + 4}" text-anchor="end" font-size="11" fill="#8a97a9" style="opacity:0; transition:opacity .5s ease ${i * 40}ms;">${this.changeformatnumber(val)}</text>`;
             }
 
-            // bars
+            // bars (grow up from baseline)
             let barsSvg = '';
             DATA.daily.forEach((d, i) => {
                 const x = padL + i * bandW + (bandW - barW) / 2;
@@ -268,32 +268,49 @@
                 else if (d.value > yMax * 0.55) { color = '#e8c33e'; colorEnd = '#8bd53a'; }
                 else { color = '#8bd53a'; colorEnd = '#3ea34a'; }
                 const gradId = `barGrad${i}`;
+                const delay = Math.min(i * 45, 450);
                 barsSvg += `
-                  <defs><linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="${color}"/><stop offset="100%" stop-color="${colorEnd}"/>
-                  </linearGradient></defs>
-                  <rect x="${x}" y="${y}" width="${barW}" height="${barH}" rx="2" fill="url(#${gradId})"/>
-                  <text x="${x + barW / 2}" y="${padT + plotH + 18}" text-anchor="middle" font-size="11" fill="#9fb0c3">${d.date}</text>
-                `;
+          <defs><linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="${color}"/><stop offset="100%" stop-color="${colorEnd}"/>
+          </linearGradient></defs>
+          <rect class="bar-rect" x="${x}" y="${y}" width="${barW}" height="${barH}" rx="2" fill="url(#${gradId})"
+                style="transform-box:fill-box; transform-origin:bottom; transform:scaleY(0); transition:transform .65s cubic-bezier(.22,1,.36,1) ${delay}ms;"/>
+          <text x="${x + barW / 2}" y="${padT + plotH + 18}" text-anchor="middle" font-size="11" fill="#9fb0c3">${d.date}</text>
+        `;
             });
 
             const targetY = padT + scaleY(targetLine);
+            const plotWpx = w - padL - padR;
 
             const svg = `
-                  <svg viewBox="0 0 ${w} ${h}" style="width:100%;height:100%;display:block;" preserveAspectRatio="none">
-                    ${gridSvg}
-                    ${barsSvg}
-                    <line x1="${padL}" y1="${targetY}" x2="${w - padR}" y2="${targetY}" stroke="#e2431e" stroke-width="2"/>
-                  </svg>`;
+          <svg viewBox="0 0 ${w} ${h}" style="width:100%;height:100%;display:block;" preserveAspectRatio="none">
+            ${gridSvg}
+            ${barsSvg}
+            <line class="target-line" x1="${padL}" y1="${targetY}" x2="${w - padR}" y2="${targetY}" stroke="#e2431e" stroke-width="2"
+                  stroke-dasharray="${plotWpx}" stroke-dashoffset="${plotWpx}"
+                  style="transition:stroke-dashoffset .8s ease .5s;"/>
+          </svg>`;
             host.innerHTML = svg;
+
+            // Trigger animations on the next paint. Double rAF flushes the initial
+            // (scaleY(0) / opacity:0) state before switching, without reading layout
+            // properties — avoids the forced-reflow cost the old approach had.
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    host.querySelectorAll('.bar-rect, .grid-line').forEach(el => {
+                        el.style.opacity = '1';
+                        if (el.classList.contains('bar-rect')) el.style.transform = 'scaleY(1)';
+                    });
+                    const targetLineEl = host.querySelector('.target-line');
+                    if (targetLineEl) targetLineEl.style.strokeDashoffset = '0';
+                });
+            });
 
             /* ---------- Legend ---------- */
             document.getElementById('legendHigh').textContent = this.changeformatnumber(Math.max(...DATA.daily.map(d => d.value)));
             document.getElementById('legendLow').textContent = this.changeformatnumber(Math.min(...DATA.daily.map(d => d.value)));
             document.getElementById('legendDays').textContent = DATA.daily.length;
         }
-
-
 
         
         //window.addEventListener('resize', () => {

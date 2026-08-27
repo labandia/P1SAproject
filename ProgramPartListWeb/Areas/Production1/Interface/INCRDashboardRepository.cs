@@ -34,5 +34,7 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
 
 
         Task<TotalOutputChartModel> GetGroupDataSummary();
+
+        Task<AuditInfoModel> GetAuditInfo();
     }
 }

@@ -5,6 +5,7 @@ using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Utilities.DataAccess;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace ProgramPartListWeb.Areas.Production1.Repository
@@ -466,6 +467,13 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         ORDER BY AuditInfoID";
 
             return SqlDataAcess_Test.QuerySingleAsync<AuditInfoModel>(sql);
+        }
+
+        public Task<bool> SaveAuditInfo(AuditInfoModel model)
+        {
+            Debug.WriteLine($@"Customer : {model.Customer} - AuditName : {model.AuditTime}");
+
+            throw new NotImplementedException();
         }
     }
 }

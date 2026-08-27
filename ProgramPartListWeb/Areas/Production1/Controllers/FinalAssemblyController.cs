@@ -1,20 +1,16 @@
-﻿using ProgramPartListWeb.Areas.Final.Interface;
-using ProgramPartListWeb.Areas.Final;
+﻿using ProgramPartListWeb.Areas.Production1.Interface;
+using ProgramPartListWeb.Areas.Production1.Model;
+using ProgramPartListWeb.Controllers;
+using ProgramPartListWeb.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using ProgramPartListWeb.Areas.Production1.Interface;
-using ProgramPartListWeb.Controllers;
-using ProgramPartListWeb.Areas.Production1.Model;
-using ProgramPartListWeb.Areas.Hydroponics.Interface;
-using System.Configuration;
-using System.IO;
-using System.Diagnostics;
-using ProgramPartListWeb.Utilities;
-using DocumentFormat.OpenXml.EMMA;
 
 namespace ProgramPartListWeb.Areas.Production1.Controllers
 {
@@ -361,7 +357,7 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
         {
             try
             {
-                var res = await _manu.GetGroupDataSummary();
+                var res = await _manu.GetAuditInfo();
                 if (res == null)
                     return JsonNotFound("No Manpower data found");
 
@@ -374,22 +370,36 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
             }
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public JsonResult SaveAuditInfo(AuditInfoModel model)
-        //{
-        //    try
-        //    {
-        //        var modifiedBy = User?.Identity?.Name ?? "Unknown";
-        //        var repo = new FinalAssemblyRepository();
-        //        var success = repo.SaveAuditInfo(model, modifiedBy);
-        //        return Json(new { Success = success });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return Json(new { Success = false, message = ex.Message });
-        //    }
-        //}
+        [HttpPost]
+        public async Task<ActionResult> SaveAuditInfo(string field, string value)
+        {
+            var allowedFields = new HashSet<string> { "Customer", "AuditDate", "AuditTime", "CoverageArea" };
+            if (string.IsNullOrWhiteSpace(field) || !allowedFields.Contains(field))
+                return Json(new { Success = false, Message = "Invalid field" });
+
+            try
+            {
+    
+                var current = await _manu.GetAuditInfo() ?? new AuditInfoModel();
+
+                switch (field)
+                {
+                    case "Customer": current.Customer = value; break;
+                    case "AuditDate": current.AuditDate = value; break;
+                    case "AuditTime": current.AuditTime = value; break;
+                    case "CoverageArea": current.CoverageArea = value; break;
+                }
+
+                current.ModifiedBy = User?.Identity?.Name ?? "Unknown";
+
+                bool success = await _manu.SaveAuditInfo(current);
+                return Json(new { Success = success });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Success = false, Message = ex.Message });
+            }
+        }
 
 
 

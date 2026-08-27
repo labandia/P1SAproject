@@ -134,5 +134,6 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public string AuditDate { get; set; }
         public string AuditTime { get; set; }
         public string CoverageArea { get; set; }
+        public string ModifiedBy { get; set; }
     }
 }

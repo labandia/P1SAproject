@@ -49,11 +49,11 @@
                         <circle id="ncr-inprocess" class="circle-progress ring-primary" cx="60" cy="60" r="52"></circle>
                     </svg>
                     <div class="circle-label">
-                        <span class="emoji">😒</span>
-                        <span class="circle-percent" id="ncr-inprocess-pct">80%</span>
+                     
+                        <span class="circle-percent" id="ncr-inprocess-pct">0%</span>
                     </div>
 
-                        <p class="circle-text">In-Process Defect</p>
+                    <p class="circle-text">   <span class="emoji">😒</span>In-Process Defect</p>
 
                 </div>
 
@@ -63,10 +63,10 @@
                         <circle id="ncr-rejected" class="circle-progress ring-orange" cx="60" cy="60" r="52"></circle>
                     </svg>
                     <div class="circle-label">
-                        <span class="emoji">😢</span>
-                        <span class="circle-percent" id="ncr-rejected-pct">70%</span>
+                       
+                        <span class="circle-percent" id="ncr-rejected-pct">0%</span>
                     </div>
-                    <p class="circle-text">Rejected Lot</p>
+                    <p class="circle-text"> <span class="emoji">😢</span>sRejected Lot</p>
 
                 </div>
 
@@ -76,10 +76,10 @@
                         <circle id="ncr-claim" class="circle-progress ring-red" cx="60" cy="60" r="52"></circle>
                     </svg>
                     <div class="circle-label">
-                        <span class="emoji">😭</span>
-                        <span class="circle-percent" id="ncr-claim-pct">65%</span>
+                        
+                        <span class="circle-percent" id="ncr-claim-pct">0%</span>
                     </div>
-                    <p class="circle-text">Customer Claim</p>
+                    <p class="circle-text"><span class="emoji">😭</span>Customer Claim</p>
 
                 </div>
             </div>
@@ -216,28 +216,28 @@
                         <span class="audit-icon chip-customer">🏭</span>
                         <div class="audit-text">
                             <span class="audit-label">Customer:</span>
-                            <span class="audit-value" contenteditable="true" data-field="customer">AMAZON MQE</span>
+                            <span class="audit-value" contenteditable="true" data-field="Customer">AMAZON MQE</span>
                         </div>
                     </div>
                     <div class="audit-chip">
                         <span class="audit-icon chip-date">📅</span>
                         <div class="audit-text">
                             <span class="audit-label">Audit Date:</span>
-                            <span class="audit-value" contenteditable="true" data-field="auditDate">September 05, 2026</span>
+                            <span class="audit-value" contenteditable="true" data-field="AuditDate">September 05, 2026</span>
                         </div>
                     </div>
                     <div class="audit-chip">
                         <span class="audit-icon chip-time">🕐</span>
                         <div class="audit-text">
                             <span class="audit-label">Audit Time:</span>
-                            <span class="audit-value" contenteditable="true" data-field="auditTime">9:00AM - 5:00PM</span>
+                            <span class="audit-value" contenteditable="true" data-field="AuditTime">9:00AM - 5:00PM</span>
                         </div>
                     </div>
                     <div class="audit-chip">
                         <span class="audit-icon chip-coverage">⚙️</span>
                         <div class="audit-text">
                             <span class="audit-label">Coverage Area:</span>
-                            <span class="audit-value" contenteditable="true" data-field="coverageArea">FA, HARNESS & OILPROOF</span>
+                            <span class="audit-value" contenteditable="true" data-field="CoverageArea">FA, HARNESS & OILPROOF</span>
                         </div>
                     </div>
                 </div>
@@ -341,7 +341,8 @@
         constructor() {
             this.CIRCLE_RADIUS = 52;
             this.CIRCLE_CIRCUMFERENCE = 2 * Math.PI * this.CIRCLE_RADIUS; // ≈326.726
-
+            // ---- Audit info bar ----
+            this.auditInfoBar = document.getElementById('auditInfoBar');
             this.refreshInterval = null;
             const today = new Date();
 
@@ -419,6 +420,8 @@
             await this.fetchMonthData();
             await this.fetch4MData();
             await this.fetchGroupData();
+            await this.fetchAuditInfo();
+            this.attachAuditInfoEditing();
 
             this.generateData();
             this.renderLines();
@@ -472,6 +475,80 @@
             }
         }
 
+        // ---- Audit info: load + auto-save on Enter ----
+        async fetchAuditInfo() {
+            try {
+                const res = await getMethod('@Url.Action("GetAuditInfo", "FinalAssembly")', {});
+                if (!res?.Success || !res.data) return;
+                //console.log(res);
+                document.querySelectorAll('.audit-value[data-field]').forEach(el => {
+                    const field = el.dataset.field;
+                    if (res.data[field] !== undefined && res.data[field] !== null) {
+                        el.textContent = res.data[field];
+                        el.dataset.lastSaved = res.data[field];
+                    }
+                });
+            } catch (error) {
+                console.error('Error fetching audit info:', error);
+            }
+        }
+
+        attachAuditInfoEditing() {
+            if (!this.auditInfoBar) return;
+
+            this.auditInfoBar.querySelectorAll('.audit-value[contenteditable]').forEach(el => {
+                // Baseline so we can tell if anything actually changed
+                if (el.dataset.lastSaved === undefined) {
+                    el.dataset.lastSaved = el.textContent.trim();
+                }
+
+                el.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();   // no newline in a single-line chip
+                        el.blur();            // triggers the blur handler below, which saves
+                    }
+                    if (e.key === 'Escape') {
+                        el.textContent = el.dataset.lastSaved;
+                        el.blur();
+                    }
+                });
+
+                el.addEventListener('blur', () => this.saveAuditField(el));
+            });
+        }
+
+        async saveAuditField(el) {
+            const field = el.dataset.field;
+            const value = el.textContent.trim();
+
+            if (value === el.dataset.lastSaved) return; // nothing changed, skip the round-trip
+
+            el.classList.add('saving');
+            try {
+                console.log(`Field ` + field);
+                console.log(`Value ` + value);
+
+                const res = await postMethod('@Url.Action("SaveAuditInfo", "FinalAssembly")', {
+                    field: field,
+                    value: value
+                });
+
+                if (res?.Success) {
+                    el.dataset.lastSaved = value;
+                    el.classList.remove('saving');
+                    el.classList.add('saved');
+                    setTimeout(() => el.classList.remove('saved'), 1000);
+                } else {
+                    throw new Error(res?.Message || 'Save failed');
+                }
+            } catch (error) {
+                console.error('Error saving audit field:', field, error);
+                el.classList.remove('saving');
+                el.classList.add('save-error');
+                el.textContent = el.dataset.lastSaved; // revert on failure
+                setTimeout(() => el.classList.remove('save-error'), 2000);
+            }
+        }
 
 
         // ---- 4M Factors dashboard ----
@@ -515,6 +592,7 @@
         }
 
         renderNcrBars(data) {
+            //console.log(data);
             const typeMap = {
                 'In-Process': 'inprocess',
                 'Rejected Lot': 'rejected',

@@ -162,7 +162,17 @@ body {
     color: var(--color-foreground);
     margin-bottom: 0.6rem;
 }
+.audit-value.saving {
+    opacity: .6;
+}
 
+.audit-value.saved {
+    outline: 2px solid #2ecc71;
+}
+
+.audit-value.save-error {
+    outline: 2px solid #e74c3c;
+}
 /* ----- NCR Bars ----- */
 /*.ncr-bars {
     display: flex;

@@ -469,11 +469,14 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             return SqlDataAcess_Test.QuerySingleAsync<AuditInfoModel>(sql);
         }
 
-        public Task<bool> SaveAuditInfo(AuditInfoModel model)
+        public async Task<bool> SaveAuditInfo(AuditInfoModel model)
         {
             Debug.WriteLine($@"Customer : {model.Customer} - AuditName : {model.AuditTime}");
 
-            throw new NotImplementedException();
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FinalAssembly_AuditInfo SET 
+                    Customer =@Customer, AuditDate =@AuditDate, AuditTime =@AuditTime, CoverageArea =@CoverageArea", model);
+
+            return rows > 0;
         }
     }
 }

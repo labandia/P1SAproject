@@ -393,7 +393,7 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
                 current.ModifiedBy = User?.Identity?.Name ?? "Unknown";
 
                 bool success = await _manu.SaveAuditInfo(current);
-                return Json(new { Success = success });
+                return JsonCreated(success, "Update Audit Successfully");
             }
             catch (Exception ex)
             {

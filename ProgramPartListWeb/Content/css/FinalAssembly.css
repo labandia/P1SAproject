@@ -1806,7 +1806,7 @@ iconify-icon {
 }
 
 svg.icon-stroke {
-    stroke-width: 2.4
+    stroke-width: 2.4;
 }
 
 @media (max-width:640px) {

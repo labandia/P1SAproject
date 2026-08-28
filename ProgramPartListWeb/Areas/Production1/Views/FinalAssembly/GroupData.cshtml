@@ -43,7 +43,9 @@
     <!-- Chart -->
     <section class="chart-section">
         <h3>Daily Output Summary</h3>
-        <div id="chartHost"></div>
+        <div class="chart-container">
+            <div id="chartHost"></div>
+        </div>
         <div class="legend">
             <span><span class="dot" style="background:var(--accent-orange)"></span>Highest: <b id="legendHigh"></b></span>
             <span><span class="dot" style="background:#8bd53a"></span>Lowest: <b id="legendLow"></b></span>
@@ -66,6 +68,20 @@
 
         async init() {
             await this.fetchTotalGroupData();
+
+
+
+            // Handle resize for chart
+            const resizeHandler = () => {
+                if (this._lastData) {
+                    clearTimeout(this._resizeTimer);
+                    this._resizeTimer = setTimeout(() => {
+                        this.buildChart(this._lastData);
+                    }, 150);
+                }
+            };
+
+            window.addEventListener('resize', resizeHandler);
         }
 
         async fetchTotalGroupData() {
@@ -76,6 +92,7 @@
                     return;
                 }
                 console.log(res);
+                this._lastData = res.data; // Store for resize
                 this.renderdata(res.data);
                 this.displayGroups(res.data);
                 this.buildChart(res.data);
@@ -83,7 +100,6 @@
                 console.error('Error fetching 4M data:', error);
             }
         }
-
 
         renderdata(data) {
             this.animateNumber(document.getElementById("totalOutput"), data.TotalOutput, 1200);   // slowers
@@ -100,9 +116,9 @@
                 card.className = 'group-card';
                 card.innerHTML = `
                 <h2>${g.GroupName}</h2>
-                <div class="group-row" style='font-size: 22px;'><span style='color: #9fb0c3;'>Total Output</span><span class="val" id="grpTotal${i}">0</span></div>
-                <div class="group-row" style='font-size: 20px;'><span style='color: #9fb0c3;'>Avg Output</span><span class="val" id="grpAvg${i}">0</span></div>
-                <div class="group-row" style='font-size: 20px;'><span style='color: #9fb0c3;'>Target</span><span class="val" id="grpTarget${i}">0</span></div>
+                <div class="group-row" >Total Output</span><span class="val" id="grpTotal${i}">0</span></div>
+                <div class="group-row" >Avg Output</span><span class="val" id="grpAvg${i}">0</span></div>
+                <div class="group-row" >Target</span><span class="val" id="grpTarget${i}">0</span></div>
                 <div class="group-gauge" id="grpGauge${i}"></div>
             `;
                 groupsRow.appendChild(card);
@@ -227,9 +243,23 @@
         /* ---------- Bar chart ---------- */
         buildChart(DATA) {
             const host = document.getElementById('chartHost');
-            const w = host.clientWidth || 1240;
-            const h = 230;
-            const padL = 60, padR = 20, padT = 10, padB = 30;
+
+            // Check if we're in the small screen mode
+            const isSmall = window.innerWidth <= 962 && window.innerHeight <= 542;
+
+            // Get container width
+            const containerWidth = host.parentElement ? host.parentElement.clientWidth : host.clientWidth;
+            const w = containerWidth || 1240;
+
+            // Adjust padding and sizes for small screens
+            const padL = isSmall ? 15 : 60;
+            const padR = isSmall ? 5 : 20;
+            const padT = isSmall ? 3 : 10;
+            const padB = isSmall ? 12 : 30;
+
+            // Adjust height for small screens
+            const h = isSmall ? 100 : 230;
+
             const plotW = w - padL - padR;
             const plotH = h - padT - padB;
 
@@ -244,19 +274,21 @@
 
             const n = DATA.daily.length;
             const bandW = plotW / n;
-            const barW = bandW * 0.55;
+            const barW = isSmall ? bandW * 0.4 : bandW * 0.55;
 
-            // gridlines + y labels (fade in)
+            // Gridlines - skip on small screens for cleaner look
             let gridSvg = '';
-            const steps = 5;
-            for (let i = 0; i <= steps; i++) {
-                const val = (yMax / steps) * i;
-                const y = padT + scaleY(val);
-                gridSvg += `<line class="grid-line" x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="rgba(255,255,255,0.07)" stroke-dasharray="3,4" style="opacity:0; transition:opacity .5s ease ${i * 40}ms;"/>`;
-                gridSvg += `<text class="grid-line" x="${padL - 10}" y="${y + 4}" text-anchor="end" font-size="11" fill="#8a97a9" style="opacity:0; transition:opacity .5s ease ${i * 40}ms;">${this.changeformatnumber(val)}</text>`;
+            if (!isSmall) {
+                const steps = 5;
+                for (let i = 0; i <= steps; i++) {
+                    const val = (yMax / steps) * i;
+                    const y = padT + scaleY(val);
+                    gridSvg += `<line class="grid-line" x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="rgba(255,255,255,0.07)" stroke-dasharray="3,4" style="opacity:0; transition:opacity .5s ease ${i * 40}ms;"/>`;
+                    gridSvg += `<text class="grid-line" x="${padL - 10}" y="${y + 4}" text-anchor="end" font-size="11" fill="#8a97a9" style="opacity:0; transition:opacity .5s ease ${i * 40}ms;">${this.changeformatnumber(val)}</text>`;
+                }
             }
 
-            // bars (grow up from baseline)
+            // Bars
             let barsSvg = '';
             DATA.daily.forEach((d, i) => {
                 const x = padL + i * bandW + (bandW - barW) / 2;
@@ -269,13 +301,17 @@
                 else { color = '#8bd53a'; colorEnd = '#3ea34a'; }
                 const gradId = `barGrad${i}`;
                 const delay = Math.min(i * 45, 450);
+
+                const fontSize = isSmall ? 6 : 11;
+                const dateLabel = isSmall && d.date.length > 5 ? d.date.substring(0, 3) : d.date;
+
                 barsSvg += `
-          <defs><linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="${color}"/><stop offset="100%" stop-color="${colorEnd}"/>
-          </linearGradient></defs>
-          <rect class="bar-rect" x="${x}" y="${y}" width="${barW}" height="${barH}" rx="2" fill="url(#${gradId})"
+            <defs><linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="${color}"/><stop offset="100%" stop-color="${colorEnd}"/>
+            </linearGradient></defs>
+            <rect class="bar-rect" x="${x}" y="${y}" width="${barW}" height="${barH}" rx="${isSmall ? 1 : 2}" fill="url(#${gradId})"
                 style="transform-box:fill-box; transform-origin:bottom; transform:scaleY(0); transition:transform .65s cubic-bezier(.22,1,.36,1) ${delay}ms;"/>
-          <text x="${x + barW / 2}" y="${padT + plotH + 18}" text-anchor="middle" font-size="11" fill="#9fb0c3">${d.date}</text>
+            <text x="${x + barW / 2}" y="${padT + plotH + (isSmall ? 12 : 18)}" text-anchor="middle" font-size="${fontSize}" fill="#9fb0c3">${dateLabel}</text>
         `;
             });
 
@@ -283,18 +319,19 @@
             const plotWpx = w - padL - padR;
 
             const svg = `
-          <svg viewBox="0 0 ${w} ${h}" style="width:100%;height:100%;display:block;" preserveAspectRatio="none">
+        <svg viewBox="0 0 ${w} ${h}"
+             style="width:100%;height:${isSmall ? '100%' : '100%'};display:block;"
+             preserveAspectRatio="xMidYMid meet">
             ${gridSvg}
             ${barsSvg}
-            <line class="target-line" x1="${padL}" y1="${targetY}" x2="${w - padR}" y2="${targetY}" stroke="#e2431e" stroke-width="2"
+            <line class="target-line" x1="${padL}" y1="${targetY}" x2="${w - padR}" y2="${targetY}"
+                  stroke="#e2431e" stroke-width="${isSmall ? 1 : 2}"
                   stroke-dasharray="${plotWpx}" stroke-dashoffset="${plotWpx}"
                   style="transition:stroke-dashoffset .8s ease .5s;"/>
-          </svg>`;
+        </svg>`;
             host.innerHTML = svg;
 
-            // Trigger animations on the next paint. Double rAF flushes the initial
-            // (scaleY(0) / opacity:0) state before switching, without reading layout
-            // properties — avoids the forced-reflow cost the old approach had.
+            // Trigger animations
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
                     host.querySelectorAll('.bar-rect, .grid-line').forEach(el => {
@@ -306,13 +343,13 @@
                 });
             });
 
-            /* ---------- Legend ---------- */
+            // Legend
             document.getElementById('legendHigh').textContent = this.changeformatnumber(Math.max(...DATA.daily.map(d => d.value)));
             document.getElementById('legendLow').textContent = this.changeformatnumber(Math.min(...DATA.daily.map(d => d.value)));
             document.getElementById('legendDays').textContent = DATA.daily.length;
         }
 
-        
+
         //window.addEventListener('resize', () => {
         //    clearTimeout(window._chResize);
         //    window._chResize = setTimeout(buildChart, 150);
@@ -407,6 +444,6 @@
         controller.init();
 
     });
- </script>
+    </script>
 
 </div>

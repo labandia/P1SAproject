@@ -702,6 +702,7 @@
     <Compile Include="Areas\PC\Repository\NotificationRepository.cs" />
     <Compile Include="Areas\PC\Repository\PatrolEmailService.cs" />
     <Compile Include="Areas\PC\Repository\RegistrationRepository.cs" />
+    <Compile Include="Areas\Production1\Controllers\DataAnalysisController.cs" />
     <Compile Include="Areas\Production1\Controllers\FinalAssemblyController.cs" />
     <Compile Include="Areas\Production1\Interface\INCRDashboardRepository.cs" />
     <Compile Include="Areas\Production1\Model\FinalDashboard.cs" />
@@ -1130,6 +1131,7 @@
     <Folder Include="Areas\Final\Views\DownTime\" />
     <Folder Include="Areas\Final\Views\Modal\" />
     <Folder Include="Areas\P1SA\Data\" />
+    <Folder Include="Areas\Production1\Views\DataAnalysis\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

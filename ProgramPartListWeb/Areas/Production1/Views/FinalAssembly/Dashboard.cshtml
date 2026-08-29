@@ -19,7 +19,7 @@
 
 
 
-<div class="dashboard" id="dashboard">
+<div class="dashboard" id="dashboard" >
 
 
     <!-- Main content -->
@@ -334,16 +334,31 @@
 
 <!-- Award Slide Overlay -->
 <div class="award-slide-overlay" id="awardSlideOverlay">
+    @*<div class="awardContent">
+        <div class="awardcol">
+            <h2 >Quality Wall of fame</h2>
+        </div>
+
+        <div class="awardcol">
+            <img id="awardCertImage" src="" alt="Certificate"
+                 onerror="this.onerror=null; this.src='@Url.Content("~/Content/Images/no-image.png")';" />
+            <div class="awardname">
+
+            </div>
+        </div>
+    </div>*@
+    
+    
     <div class="award-slide">
         <div class="award-slide-left">
             <div class="award-ribbon">🏆</div>
             <h2 class="award-heading">Quality Wall of fame</h2>
-            <div class="award-winner-name" id="awardWinnerName">—</div>
+           
             <div class="award-subtitle" id="awardSubtitle"></div>
 
             <div class="award-subtitle" id="awardID"></div>
             <div class="award-subtitle" id="Affiliation"></div>
-
+            <div class="" id="awardWinnerName"></div>
             <div>Early Defect Detection</div>
             <div class="award-subtitle" id="EarlyDefects"></div>
         </div>
@@ -503,6 +518,7 @@
 
 
             await this.fetchMonthData();
+            this.highlightToday();   
             await this.fetch4MData();
             await this.fetchGroupData();
             await this.fetchAuditInfo();
@@ -1226,6 +1242,25 @@
                 this.showAwardSlide();
             }, 900);
         }
+
+        // ---- Highlight today's date in the calendar ----
+        highlightToday() {
+            const daysContainer = document.querySelector('.calendar .grid .days');
+            if (!daysContainer) return;
+
+            const today = new Date();
+            const todayNum = String(today.getDate());
+
+            // Clear any previous highlight (useful if this ever re-runs on refresh)
+            daysContainer.querySelectorAll('.today').forEach(el => el.classList.remove('today'));
+
+            // Skip 'muted' cells (they belong to the previous month) and blanks
+            const dayEls = Array.from(daysContainer.children)
+                .filter(el => !el.classList.contains('muted') && el.textContent.trim() !== '');
+
+            const match = dayEls.find(el => el.textContent.trim() === todayNum);
+            if (match) match.classList.add('today');
+        }
     }
 
 
@@ -1349,6 +1384,8 @@
             window.removeEventListener('resize', this.handleResize);
             clearTimeout(this.resizeTimer);
         }
+
+        
     }
 
 

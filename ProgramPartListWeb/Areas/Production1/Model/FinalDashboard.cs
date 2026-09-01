@@ -136,4 +136,69 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public string CoverageArea { get; set; }
         public string ModifiedBy { get; set; }
     }
+
+
+
+    public class AttendanceSummaryModel
+    {
+        public int TotalHeadCount { get; set; }
+        public int TotalEmployees { get; set; }
+        public int TotalAbsent { get; set; }
+        public double AttendRate { get; set; }
+        public int AbsentRate { get ; set; }
+    }
+
+
+
+    public class AttendanceModel
+    {
+        public int DashID { get; set; }
+
+        public int DepartmentId { get; set; }
+        public int DayShiftCount { get; set; }
+        public int NightShiftCount { get; set; }
+
+        public int TotalHeadCount { get; set; }
+        public int PresentCount { get; set; }
+        public int Absent { get; set; }
+        public double AttendanceRate { get; set; }
+        public string DepartmentName
+        {
+            get
+            {
+                switch (DepartmentId)
+                {
+                    case 1:
+                        return "P1SA-M";
+                    case 2:
+                        return "P1SA-P";
+                    case 3:
+                        return "P1SA-R";
+                    case 4:
+                        return "P1SA-W";
+                    case 5:
+                        return "P1SA-C";
+                    case 6:
+                        return "P1SA-PC";
+                    default:
+                        return "-- Select FourM --";
+                }
+            }
+        }
+
+        public class UpdateAttendanceBreakDownRequest
+        {
+            public int DashID { get; set; }
+            public int? DayShiftCount { get; set; }
+            public int? NightShiftCount { get; set; }
+        }
+        public class AttendanceTrendModel
+        {
+            public DateTime DateToday { get; set; }
+            public double AttendRate { get; set; }
+            public double AbsentRate { get; set; }
+        }
+
+    }
+
 }

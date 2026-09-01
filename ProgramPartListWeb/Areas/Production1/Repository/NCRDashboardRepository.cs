@@ -6,7 +6,9 @@ using ProgramPartListWeb.Utilities.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
+using static ProgramPartListWeb.Areas.Production1.Model.AttendanceModel;
 
 namespace ProgramPartListWeb.Areas.Production1.Repository
 {
@@ -477,6 +479,242 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                     Customer =@Customer, AuditDate =@AuditDate, AuditTime =@AuditTime, CoverageArea =@CoverageArea", model);
 
             return rows > 0;
+        }
+
+        public async Task<List<AttendanceModel>> AttendanceBreakDown()
+        {
+            if (!await IsTodayRecorded())
+            {
+                // insert today's rows for each department
+                var lastData = await AttendanceGetLastBreakDown();
+                await InsertTodayFromLastBreakDown(lastData);
+            }
+            
+            return await SqlDataAcess_Test.QueryAsync<AttendanceModel>(AttendanceQuery(0));
+        }
+        public Task<AttendanceSummaryModel> GetAttendanceSummary()
+        {
+            
+            return SqlDataAcess_Test.QuerySingleOrDefaultAsync<AttendanceSummaryModel>(AttendanceQuery(1));
+        }
+
+        public string AttendanceQuery(int display)
+        {
+            string filterstr = (display == 0) ? $@"DashID,
+                            DepartmentId,
+                            DayShiftCount,
+                            NightShiftCount,
+                            TotalHeadCount,
+                            PresentCount,
+                            TotalHeadCount - PresentCount AS Absent, 
+                            ROUND(CAST(PresentCount AS DECIMAL(5,2)) / NULLIF(TotalHeadCount, 0) * 100, 0) AS AttendanceRate" :
+                            $@"     SUM(TotalHeadCount)                                                            AS TotalHeadCount,
+							SUM(PresentCount)                                                          AS TotalEmployees,
+							SUM(TotalHeadCount - PresentCount)                                              AS TotalAbsent,
+							ROUND(CAST(SUM(PresentCount) AS DECIMAL(5,2)) / NULLIF(SUM(TotalHeadCount), 0) * 100, 0)  AS AttendRate,
+							ROUND(CAST(SUM(TotalHeadCount) - SUM(PresentCount) AS DECIMAL(5,2)) 
+								/ NULLIF(SUM(TotalHeadCount), 0) * 100, 0)  AS AbsentRate";
+
+            string strsql = $@";WITH DashboardCalc AS (
+                            SELECT 
+		                        a.DashID,
+                                a.DepartmentId,
+                                a.DayShiftCount, 
+                                a.NightShiftCount, 
+                                a.DayShiftCount + a.NightShiftCount AS TotalHeadCount,
+                                CASE 
+                                    WHEN a.DepartmentId = 1 THEN 
+                                        (SELECT COUNT(DISTINCT m.Employee_ID)
+                                         FROM M_summary m 
+                                         WHERE CAST(m.Date_today AS DATE) = a.DateToday)
+                                    WHEN a.DepartmentId = 2 THEN 
+                                        (SELECT COUNT(DISTINCT p.Employee_ID)
+                                         FROM P_summary p 
+                                         WHERE CAST(p.Date_today AS DATE) = a.DateToday)
+			                        WHEN a.DepartmentId = 3 THEN 
+                                        (SELECT COUNT(DISTINCT r.Employee_ID)
+                                         FROM R_summary r 
+                                         WHERE CAST(r.Date_today AS DATE) = a.DateToday)
+			                        WHEN a.DepartmentId = 4 THEN 
+                                        (SELECT COUNT(DISTINCT w.Employee_ID)
+                                         FROM W_summary w 
+                                         WHERE CAST(w.Date_today AS DATE) = a.DateToday)
+			                        WHEN a.DepartmentId = 5 THEN 
+                                        (SELECT COUNT(DISTINCT c.Employee_ID)
+                                         FROM C_summary c 
+                                         WHERE CAST(c.Date_today AS DATE) = a.DateToday)
+			                        WHEN a.DepartmentId = 6 THEN 
+                                        (SELECT COUNT(DISTINCT pc.Employee_ID)
+                                         FROM PC_summary pc 
+                                         WHERE CAST(pc.Date_today AS DATE) = a.DateToday)
+                                    ELSE NULL
+                                END AS PresentCount
+                            FROM AttendanceDashboard a
+                            WHERE a.DateToday = CAST(GETDATE() AS DATE) 
+                        )
+                        SELECT 
+	                        {filterstr}
+                        FROM DashboardCalc";
+
+            return strsql;
+
+        }
+
+        public async Task<bool> UpdateAttandanceSummary(UpdateAttendanceBreakDownRequest model)
+        {
+            var setClauses = new List<string>();
+            var parameters = new DynamicParameters();
+            parameters.Add("DashID", model.DashID);
+
+            if (model.DayShiftCount.HasValue)
+            {
+                setClauses.Add("DayShiftCount = @DayShiftCount");
+                parameters.Add("DayShiftCount", model.DayShiftCount.Value);
+            }
+
+            if (model.NightShiftCount.HasValue)
+            {
+                setClauses.Add("NightShiftCount = @NightShiftCount");
+                parameters.Add("NightShiftCount", model.NightShiftCount.Value);
+            }
+
+            if (!setClauses.Any())
+                return false; // nothing to update — avoid firing a no-op UPDATE
+
+            var sql = $@"
+            UPDATE AttendanceDashboard
+            SET {string.Join(", ", setClauses)}
+            WHERE DashID = @DashID";
+
+            int rowsAffected = await SqlDataAcess_Test.ExecuteAsync(sql, parameters);
+            return rowsAffected > 0;
+        }
+
+        public Task<List<AttendanceTrendModel>> GetLatestTrendsAttendance()
+        {
+           return SqlDataAcess_Test.QueryAsync<AttendanceTrendModel>($@";WITH DashboardCalc AS (
+                    SELECT 
+                        a.DashID,
+                        a.DateToday,
+                        a.DepartmentId,
+                        a.DayShiftCount, 
+                        a.NightShiftCount, 
+                        a.DayShiftCount + a.NightShiftCount AS TotalHeadCount,
+                        CASE 
+                            WHEN a.DepartmentId = 1 THEN 
+                                (SELECT COUNT(DISTINCT m.Employee_ID)
+                                 FROM M_summary m 
+                                 WHERE CAST(m.Date_today AS DATE) = a.DateToday)
+                            WHEN a.DepartmentId = 2 THEN 
+                                (SELECT COUNT(DISTINCT p.Employee_ID)
+                                 FROM P_summary p 
+                                 WHERE CAST(p.Date_today AS DATE) = a.DateToday)
+                            WHEN a.DepartmentId = 3 THEN 
+                                (SELECT COUNT(DISTINCT r.Employee_ID)
+                                 FROM R_summary r 
+                                 WHERE CAST(r.Date_today AS DATE) = a.DateToday)
+                            WHEN a.DepartmentId = 4 THEN 
+                                (SELECT COUNT(DISTINCT w.Employee_ID)
+                                 FROM W_summary w 
+                                 WHERE CAST(w.Date_today AS DATE) = a.DateToday)
+                            WHEN a.DepartmentId = 5 THEN 
+                                (SELECT COUNT(DISTINCT c.Employee_ID)
+                                 FROM C_summary c 
+                                 WHERE CAST(c.Date_today AS DATE) = a.DateToday)
+                            WHEN a.DepartmentId = 6 THEN 
+                                (SELECT COUNT(DISTINCT pc.Employee_ID)
+                                 FROM PC_summary pc 
+                                 WHERE CAST(pc.Date_today AS DATE) = a.DateToday)
+                            ELSE NULL
+                        END AS PresentCount
+                    FROM AttendanceDashboard a
+                )
+                SELECT 
+                    DateToday,
+                    CAST(SUM(PresentCount) AS DECIMAL(10,2)) / NULLIF(SUM(TotalHeadCount), 0) * 100  AS AttendRate,
+                    CASE 
+                        WHEN SUM(TotalHeadCount) - SUM(PresentCount) < 0 THEN 0
+                        ELSE ROUND(CAST(SUM(TotalHeadCount) - SUM(PresentCount) AS DECIMAL(10,2)) 
+                                 / NULLIF(SUM(TotalHeadCount), 0) * 100, 0)
+                    END AS AbsentRate
+                FROM DashboardCalc
+                GROUP BY DateToday
+                ORDER BY DateToday");
+        }
+
+        public Task<List<AttendanceModel>> AttendanceGetLastBreakDown()
+        {
+            return SqlDataAcess_Test.QueryAsync<AttendanceModel>($@";WITH DashboardCalc AS (
+                        SELECT 
+                            a.DashID,
+                            a.DepartmentId,
+                            a.DayShiftCount, 
+                            a.NightShiftCount, 
+                            a.DayShiftCount + a.NightShiftCount AS TotalHeadCount,
+                            CASE 
+                                WHEN a.DepartmentId = 1 THEN 
+                                    (SELECT COUNT(DISTINCT m.Employee_ID)
+                                     FROM M_summary m 
+                                     WHERE CAST(m.Date_today AS DATE) = a.DateToday)
+                                WHEN a.DepartmentId = 2 THEN 
+                                    (SELECT COUNT(DISTINCT p.Employee_ID)
+                                     FROM P_summary p 
+                                     WHERE CAST(p.Date_today AS DATE) = a.DateToday)
+                                WHEN a.DepartmentId = 3 THEN 
+                                    (SELECT COUNT(DISTINCT r.Employee_ID)
+                                     FROM R_summary r 
+                                     WHERE CAST(r.Date_today AS DATE) = a.DateToday)
+                                WHEN a.DepartmentId = 4 THEN 
+                                    (SELECT COUNT(DISTINCT w.Employee_ID)
+                                     FROM W_summary w 
+                                     WHERE CAST(w.Date_today AS DATE) = a.DateToday)
+                                WHEN a.DepartmentId = 5 THEN 
+                                    (SELECT COUNT(DISTINCT c.Employee_ID)
+                                     FROM C_summary c 
+                                     WHERE CAST(c.Date_today AS DATE) = a.DateToday)
+                                WHEN a.DepartmentId = 6 THEN 
+                                    (SELECT COUNT(DISTINCT pc.Employee_ID)
+                                     FROM PC_summary pc 
+                                     WHERE CAST(pc.Date_today AS DATE) = a.DateToday)
+                                ELSE NULL
+                            END AS PresentCount
+                        FROM AttendanceDashboard a
+                        WHERE a.DateToday = (SELECT MAX(DateToday) FROM AttendanceDashboard)   -- most recent date present, not necessarily today
+                    )
+                    SELECT 
+                        DashID,
+                        DepartmentId,
+                        DayShiftCount,
+                        NightShiftCount,
+                        TotalHeadCount,
+                        PresentCount,
+                        TotalHeadCount - PresentCount AS Absent, 
+                        ROUND(CAST(PresentCount AS DECIMAL(5,2)) / NULLIF(TotalHeadCount, 0) * 100, 0) AS AttendanceRate
+                    FROM DashboardCalc");
+        }
+
+        public Task<bool> IsTodayRecorded()
+        {
+            return SqlDataAcess_Test.ExistsAsync($@"SELECT CASE WHEN EXISTS (
+                          SELECT 1 FROM AttendanceDashboard 
+                          WHERE DateToday = CAST(GETDATE() AS DATE)
+                      ) THEN 1 ELSE 0 END");
+        }
+
+        public async Task InsertTodayFromLastBreakDown(List<AttendanceModel> lastData)
+        {
+            if (lastData == null || lastData.Count == 0) return;
+
+            const string sql = @"
+                INSERT INTO AttendanceDashboard (DateToday, DepartmentId, DayShiftCount, NightShiftCount)
+                VALUES (CAST(GETDATE() AS DATE), @DepartmentId, @DayShiftCount, @NightShiftCount)";
+
+            int rows = await SqlDataAcess_Test.ExecuteAsync(sql, lastData.Select(d => new
+            {
+                d.DepartmentId,
+                d.DayShiftCount,
+                d.NightShiftCount
+            }));
         }
     }
 }

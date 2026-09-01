@@ -702,6 +702,7 @@
     <Compile Include="Areas\PC\Repository\NotificationRepository.cs" />
     <Compile Include="Areas\PC\Repository\PatrolEmailService.cs" />
     <Compile Include="Areas\PC\Repository\RegistrationRepository.cs" />
+    <Compile Include="Areas\Production1\Controllers\AttendanceController.cs" />
     <Compile Include="Areas\Production1\Controllers\DataAnalysisController.cs" />
     <Compile Include="Areas\Production1\Controllers\FinalAssemblyController.cs" />
     <Compile Include="Areas\Production1\Interface\INCRDashboardRepository.cs" />
@@ -767,6 +768,7 @@
   <ItemGroup>
     <Content Include="Content\css\AdminDesign.css" />
     <Content Include="Content\css\Animation.css" />
+    <Content Include="Content\css\Attendance.css" />
     <Content Include="Content\css\FinalAssembly.css" />
     <Content Include="Content\css\FinalDashboard.css" />
     <Content Include="Content\css\FinalDashMangement.css" />
@@ -923,6 +925,8 @@
     <Content Include="Areas\Final\Views\Assembly\DailyReport.cshtml" />
     <Content Include="Areas\Production1\Views\FinalAssembly\GroupData.cshtml" />
     <Content Include="Areas\Production1\Views\Shared\_FinalGroupData.cshtml" />
+    <Content Include="Areas\Production1\Views\Attendance\Dashboard.cshtml" />
+    <Content Include="Areas\Production1\Views\Shared\_AttendanceLayout.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <Content Include="Content\Uploads\PCFY-81013Form1L.xlsx" />
     <Content Include="Content\Uploads\FinalUploadTemplate.xlsx" />

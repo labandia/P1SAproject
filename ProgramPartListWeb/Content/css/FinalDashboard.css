@@ -282,11 +282,11 @@ body {
     letter-spacing: 0.01em;
 }
 
-    .circle-text .emoji {
-        display: inline-block;
-        margin-right: 0.3rem;
-        font-size: 1.1em;
-    }
+.circle-text .emoji {
+    display: inline-block;
+    margin-right: 0.3rem;
+    font-size: 1.1em;
+}
 
 
 
@@ -523,7 +523,6 @@ body {
     border-radius: 10px;
     padding: .7rem;
     box-shadow: 0 2px 6px rgba(44, 159, 151, 0.3);
-
 }
 
 .audit-icon {

@@ -1,0 +1,423 @@
+﻿
+@{
+    Layout = "~/Areas/Production1/Views/Shared/_AttendanceLayout.cshtml";
+}
+
+<div class="dashboard">
+
+    <!-- HEADER -->
+    <header>
+        <h2>📋 ATTENDANCE DASHBOARD - <span id="shiftDay">DAYSHIFT (8/24/2026)</span></h2>
+    </header>
+
+    <!-- KPI CARDS -->
+    <div class="attendSummary">
+        <!-- Total Headcount -->
+        <div class="attendSummary_card">
+            <div class="IconContainer">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+            </div>
+            <div class="attendSummary_content">
+                <span>Total Headcount</span>
+                <p id="totalhead">2,148</p>
+            </div>
+        </div>
+        <!-- Present -->
+        <div class="attendSummary_card">
+            <div class="IconContainer">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                    <path d="M12 11v4" />
+                    <path d="M10 13h4" />
+                </svg>
+            </div>
+            <div class="attendSummary_content">
+                <span>Present Employees</span>
+                <p id="presentCount">1,993</p>
+            </div>
+        </div>
+        <!-- Absent -->
+        <div class="attendSummary_card">
+            <div class="IconContainer">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                    <path d="M12 11v4" />
+                    <path d="M10 13h4" />
+                </svg>
+            </div>
+            <div class="attendSummary_content">
+                <span>Absent Employees</span>
+                <p id="absentCount">155</p>
+            </div>
+        </div>
+        <!-- Absent Rate -->
+        <div class="attendSummary_card">
+            <div class="attendSummary_absentRate">
+                <span>Attendance Rate</span>
+                <p id="absentrateCount">93% <small>· absent 7%</small></p>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- TWO COLUMN -->
+    <div class="analysisTables">
+
+        <!-- LEFT COLUMN -->
+        <div class="col">
+            <!-- Department Table -->
+            <div class="tablecontainer maintable">
+                <div class="tableHeader">
+                    <h3>🏢 Department Breakdown</h3>
+                </div>
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Department</th>
+                                <th>Dayshift</th>
+                                <th>NightShift</th>
+                                <th>Headcount</th>
+                                <th>Present</th>
+                                <th>Absent</th>
+                                <th>Attendance Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody id="departmentBreakdown">
+                            <tr><td>P1SA-PC</td><td>7</td><td>7</td><td>0</td><td><span class="rate-badge">100%</span></td></tr>
+                            <tr><td>P1SA-C</td><td>205</td><td>194</td><td>11</td><td><span class="rate-badge">95%</span></td></tr>
+                            <tr><td>P1SA-M</td><td>155</td><td>147</td><td>8</td><td><span class="rate-badge">95%</span></td></tr>
+                            <tr><td>P1SA-P</td><td>49</td><td>47</td><td>2</td><td><span class="rate-badge">96%</span></td></tr>
+                            <tr><td>P1SA-R</td><td>453</td><td>426</td><td>27</td><td><span class="rate-badge">94%</span></td></tr>
+                            <tr><td>P1SA-W</td><td>223</td><td>210</td><td>13</td><td><span class="rate-badge">94%</span></td></tr>
+                            <tr class="dept-total-row"><td><strong>TOTAL</strong></td><td><strong>2,148</strong></td><td><strong>1,993</strong></td><td><strong>155</strong></td><td><span class="rate-badge" style="background:#d0e2f5;">93%</span></td></tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>Total</th>
+                                <th id="TotalDay">0</th>
+                                <th id="TotalNight">0</th>
+                                <th id="TotalGHead">0</th>
+                                <th id="TotalPresent">0</th>
+                                <th id="TotalAbsent">0</th>
+                                <th id="TotalRate">0%</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Trends -->
+            <div class="Trends">
+                <div class="trendHeader">
+                    <h3>📈 Attendance & Absenteeism Trends</h3>
+                    <div class="trend-sub">Y‑axis: Percentage · X‑axis: 8/20 – 8/25</div>
+                </div>
+                <div id="ChartTrends">
+                    <canvas id="trendChart" height="100"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: SUMMARY -->
+        <div class="col">
+            <div class="summary">
+                <div class="summary_Header">
+                    <h3>📋 Total Summary</h3>
+                </div>
+                <div class="summary_content">
+                    <div class="summary_details">
+                        <i>👥</i>
+                        <p>Headcount</p>
+                        <span id="totalHeadcount">2,148</span>
+                    </div>
+                    <div class="summary_details">
+                        <i>✅</i>
+                        <p>Present</p>
+                        <span id="totalPresent">1,993</span>
+                    </div>
+                    <div class="summary_details">
+                        <i>❌</i>
+                        <p>Absent</p>
+                        <span id="totalAbsent">155</span>
+                    </div>
+                    <div class="summary_attendanceDetails">
+                        <p>📊 Attendance Rate</p>
+                        <span id="totalAntendanceRate">93%</span>
+                    </div>
+                    <div class="summary_attendanceDetails">
+                        <p>📉 Absent Rate</p>
+                        <span id="totalAbsentRate">7%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+<script src="~/Scripts/chart.js"></script>
+<script type="module" asp-append-version="true">
+    import {
+        getMethod,
+        postMethod
+    } from '@Url.Content("~/Scripts/modules/index.js")';
+
+    class AttendanceDashboardController {
+        constructor() {
+            this.summarydata = [];
+
+            this.tbody = document.querySelector('.maintable tbody');
+        }
+
+        async init() {
+            await this.GetAttendanceSummary();
+            await this.GetAttendanceBreakDown();
+            await this.GetAttendanceTrends();
+        }
+
+
+
+
+        async GetAttendanceSummary() {
+            try {
+                const res = await getMethod('@Url.Action("GetAttendanceSummary", "Attendance")', {});
+                console.log("Summary: ");
+                console.log(res);
+                if (!res?.Success) {
+                    console.log('No data found in Group Data ');
+                    return;
+                }
+                this.summarydata = res.data;
+                this.RenderAttendanceSummary(this.summarydata)
+            } catch (error) {
+                console.error('Error fetching group data:', error);
+            }
+        }
+
+        RenderAttendanceSummary(data) {
+            console.log(data);
+
+            document.getElementById("totalhead").textContent = data.TotalHeadCount;
+            document.getElementById("presentCount").textContent = data.TotalEmployees;
+            document.getElementById("absentCount").textContent = data.TotalAbsent ;
+            document.getElementById("absentrateCount").innerHTML = `${data.AttendRate}% <small>· absent 7%</small>`;
+
+
+            document.getElementById("totalHeadcount").textContent = data.TotalHeadCount;
+            document.getElementById("totalPresent").textContent = data.TotalEmployees;
+            document.getElementById("totalAbsent").textContent = data.TotalAbsent;
+            document.getElementById("absentrateCount").innerHTML = `${data.AttendRate}% <small>· absent 7%</small>`;
+
+            document.getElementById("totalAntendanceRate").innerHTML = `${data.AttendRate}% `;
+            document.getElementById("totalAbsentRate").innerHTML = `${data.AbsentRate}% `;
+
+
+
+        }
+
+
+
+
+        async GetAttendanceBreakDown() {
+            try {
+                const res = await getMethod('@Url.Action("GetAttendanceBreakDown", "Attendance")', {});
+                console.log("Breakdown: ");
+                console.log(res);
+                if (!res?.Success) {
+                    console.log('No data found in Group Data ');
+                    return;
+                }
+                this.renderTable(res.data);
+                //console.log(res.data);
+            } catch (error) {
+                console.error('Error fetching group data:', error);
+            }
+        }
+
+        renderTable(data) {
+            if (!this.tbody) return;
+
+            // keep a mutable copy so edits recompute totals without a re-fetch
+            this.currentData = data.map(row => ({ ...row }));
+
+            if (data.length === 0) {
+                this.tbody.innerHTML = `
+         <tr>
+             <td colspan="12" style="text-align:center; padding:32px; color:#86868b;">
+                 No data available.
+             </td>
+         </tr>`;
+                this.RenderTotals([]);
+                return;
+            }
+
+            this.tbody.innerHTML = this.currentData.map(row => {
+                return `
+       <tr class='fade-in'
+           data-dash-id="${row.DashID}">
+                 <td style='font-weight: 600;'>${row.DepartmentName}</td>
+                 <td>
+                     <input type="number" class="edit-input" data-dash-id="${row.DashID}" data-field="DayShiftCount" value="${row.DayShiftCount ?? 0}" min="0">
+                 </td>
+                 <td>
+                     <input type="number" class="edit-input" data-dash-id="${row.DashID}" data-field="NightShiftCount" value="${row.NightShiftCount ?? 0}" min="0">
+                 </td>
+                 <td>${row.TotalHeadCount || ''}</td>
+                 <td>${row.PresentCount}</td>
+                 <td class="status-column">${row.Absent || ''}</td>
+                 <td>${row.AttendanceRate ?? ''} %</td>
+
+         </tr>`;
+            }).join('');
+
+            this.RenderTotals(this.currentData);
+            this.BindEditInputs();
+        }
+
+        RenderTotals(data) {
+                const totals = data.reduce((acc, row) => {
+                    acc.day += Number(row.DayShiftCount) || 0;
+                    acc.night += Number(row.NightShiftCount) || 0;
+                    acc.head += Number(row.TotalHeadCount) || 0;
+                    acc.present += Number(row.PresentCount) || 0;
+                    acc.absent += Number(row.Absent) || 0;
+                    return acc;
+                }, { day: 0, night: 0, head: 0, present: 0, absent: 0 });
+
+                const rate = totals.head > 0 ? ((totals.present / totals.head) * 100).toFixed(0) : 0;
+
+                document.getElementById("TotalDay").textContent = totals.day;
+                document.getElementById("TotalNight").textContent = totals.night;
+                document.getElementById("TotalGHead").textContent = totals.head;
+                document.getElementById("TotalPresent").textContent = totals.present;
+                document.getElementById("TotalAbsent").textContent = totals.absent;
+                document.getElementById("TotalRate").textContent = `${rate}%`;
+            }
+
+            BindEditInputs() {
+                this.tbody.querySelectorAll('.edit-input').forEach(input => {
+                    input.addEventListener('change', async (e) => {
+                        const dashId = e.target.dataset.dashId;
+                        const field = e.target.dataset.field;
+                        const value = Number(e.target.value) || 0;
+
+                        const rowData = this.currentData.find(r => r.DashID == dashId);
+                        if (rowData) rowData[field] = value;
+                        console.log(`ID :${dashId} - Column : ${field} - value : ${value}`)
+                        // keep tfoot in sync with the edited value immediately
+                        // this.RenderTotals(this.currentData);
+                        await this.UpdateAttendanceBreakDown(dashId, field, value, e.target);
+                    });
+                });
+            }
+
+
+            async UpdateAttendanceBreakDown(dashId, field, value, inputEl) {
+                try {
+                    const res = await postMethod('@Url.Action("UpdateAttendanceBreakDown", "Attendance")', {
+                        DashID: dashId,
+                        [field]: value
+                    });
+
+                    console.log("Update: ");
+                    console.log(res);
+
+                    if (!res?.Success) {
+                        console.log('Update failed for DashID ' + dashId);
+                        inputEl.classList.add('input-error');
+                        return;
+                    }
+
+                    inputEl.classList.remove('input-error');
+                } catch (error) {
+                    console.error('Error updating breakdown:', error);
+                    inputEl.classList.add('input-error');
+                }
+            }
+
+             async GetAttendanceTrends() {
+                 try {
+                     const res = await getMethod('@Url.Action("GetAttendanceTrends", "Attendance")', {});
+                     console.log("Breakdown: ");
+                     console.log(res);
+                     //if (!res?.Success) {
+                     //    console.log('No data found in Group Data ');
+                     //    return;
+                     //}
+                     this.RenderTrendsChart(res.data);
+                     //console.log(res.data);
+                 } catch (error) {
+                     console.error('Error fetching group data:', error);
+                 }
+             }
+
+            RenderTrendsChart(data) {
+                const labels = data.map(d => {
+                    const date = new Date(d.DateToday);
+                    return `${date.getMonth() + 1}/${date.getDate()}`;
+                });
+                const attendRates = data.map(d => d.AttendRate);
+                const absentRates = data.map(d => d.AbsentRate);
+
+                const ctx = document.getElementById('trendChart').getContext('2d');
+                this.trendChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Attendance Rate',
+                                data: attendRates,
+                                borderColor: '#2E5AAC',
+                                backgroundColor: '#2E5AAC',
+                                pointBackgroundColor: '#fff',
+                                pointBorderColor: '#2E5AAC',
+                                pointBorderWidth: 2,
+                                tension: 0.3,
+                                fill: false
+                            },
+                            {
+                                label: 'Absent Rate',
+                                data: absentRates,
+                                borderColor: '#E8842C',
+                                backgroundColor: '#E8842C',
+                                pointBackgroundColor: '#fff',
+                                pointBorderColor: '#E8842C',
+                                pointBorderWidth: 2,
+                                tension: 0.3,
+                                fill: false
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,   // critical: lets the canvas fill #ChartTrends's actual height instead of computing its own
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { min: 0, max: 100, ticks: { callback: v => v + '%' } }
+                        }
+                    }
+                });
+            }
+
+
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const controller = new AttendanceDashboardController();
+        controller.init();
+
+    });
+</script>

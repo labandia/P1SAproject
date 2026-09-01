@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static ProgramPartListWeb.Areas.Production1.Model.AttendanceModel;
 
 namespace ProgramPartListWeb.Areas.Production1.Interface
 {
@@ -37,5 +38,18 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
 
         Task<AuditInfoModel> GetAuditInfo();
         Task<bool> SaveAuditInfo(AuditInfoModel model);
+
+        // ================================================
+        // ========== ATTENDANCE DASHBOARD ==========================
+        // ================================================
+
+        Task<List<AttendanceModel>> AttendanceBreakDown();
+        Task<List<AttendanceModel>> AttendanceGetLastBreakDown();   
+        Task<AttendanceSummaryModel> GetAttendanceSummary();
+        Task<bool> IsTodayRecorded();
+        Task InsertTodayFromLastBreakDown(List<AttendanceModel> lastData);
+        Task<bool> UpdateAttandanceSummary(UpdateAttendanceBreakDownRequest model);
+
+        Task<List<AttendanceTrendModel>> GetLatestTrendsAttendance();
     }
 }

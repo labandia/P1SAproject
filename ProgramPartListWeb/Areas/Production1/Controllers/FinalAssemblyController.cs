@@ -423,5 +423,10 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
             return View();
         }
 
+        public ActionResult NCRDashboard()
+        {
+            return View();
+        }
+
     }
 }

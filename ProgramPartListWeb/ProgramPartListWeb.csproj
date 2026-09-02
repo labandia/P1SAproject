@@ -927,6 +927,8 @@
     <Content Include="Areas\Production1\Views\Shared\_FinalGroupData.cshtml" />
     <Content Include="Areas\Production1\Views\Attendance\Dashboard.cshtml" />
     <Content Include="Areas\Production1\Views\Shared\_AttendanceLayout.cshtml" />
+    <Content Include="Areas\Production1\Views\DataAnalysis\Index.cshtml" />
+    <Content Include="Areas\Production1\Views\FinalAssembly\NCRDashboard.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <Content Include="Content\Uploads\PCFY-81013Form1L.xlsx" />
     <Content Include="Content\Uploads\FinalUploadTemplate.xlsx" />
@@ -1135,7 +1137,6 @@
     <Folder Include="Areas\Final\Views\DownTime\" />
     <Folder Include="Areas\Final\Views\Modal\" />
     <Folder Include="Areas\P1SA\Data\" />
-    <Folder Include="Areas\Production1\Views\DataAnalysis\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

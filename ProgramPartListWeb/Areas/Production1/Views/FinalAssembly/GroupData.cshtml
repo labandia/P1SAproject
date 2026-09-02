@@ -5,7 +5,7 @@
 }
 
 <div class="dashboard">
-    <header><h1>PRODUCTION OUTPUT DASHBOARD</h1></header>
+    <header><h1>FINA ASSY PRODUCTION DASHBOARD</h1></header>
 
 
     <!-- Top stats -->
@@ -28,7 +28,7 @@
 
                 Target Output
             </div>
-            <div class="stat-value" id="targetOutput">0</div>
+            <div class="stat-value" id="targetOutput">85,000</div>
         </div>
         <div class="stat-card">
             <div class="stat-head"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#cfd8e3" stroke-width="2"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16z" /><path d="M12 12l3-3" /></svg>Overall Efficiency</div>
@@ -104,7 +104,7 @@
         renderdata(data) {
             this.animateNumber(document.getElementById("totalOutput"), data.TotalOutput, 1200);   // slowers
             this.animateNumber(document.getElementById("avgOutput"), data.AverageOutput, 1200);     // faster
-            this.animateNumber(document.getElementById("targetOutput"), data.TargetOutput, 1200);
+            // this.animateNumber(document.getElementById("targetOutput"), data.TargetOutput, 1200);
             this.animateGauge(document.getElementById("overallGaugeHost"), data.AverageEfficiency, 180, 1200);
         }
 

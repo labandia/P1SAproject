@@ -2,172 +2,173 @@
 @{
     Layout = "~/Areas/Production1/Views/Shared/_AttendanceLayout.cshtml";
 }
+<div class="dashboard-wrapper">
+    <div class="dashboard">
 
-<div class="dashboard">
+        <!-- HEADER -->
+        <header>
+            <h2>📋PRODUCTION 1 ATTENDANCE DASHBOARD - <span id="shiftDay">DAYSHIFT (8/24/2026)</span></h2>
+        </header>
 
-    <!-- HEADER -->
-    <header>
-        <h2>📋 ATTENDANCE DASHBOARD - <span id="shiftDay">DAYSHIFT (8/24/2026)</span></h2>
-    </header>
+        <!-- KPI CARDS -->
+        <div class="attendSummary">
+            <!-- Total Headcount -->
+            <div class="attendSummary_card">
+                <div class="IconContainer">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                        <g fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m16.719 19.752l-.64-5.124A3 3 0 0 0 13.101 12h-2.204a3 3 0 0 0-2.976 2.628l-.641 5.124A2 2 0 0 0 9.266 22h5.468a2 2 0 0 0 1.985-2.248" />
+                            <circle cx="12" cy="5" r="3" />
+                            <circle cx="4" cy="9" r="2" />
+                            <circle cx="20" cy="9" r="2" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 14h-.306a2 2 0 0 0-1.973 1.671l-.333 2A2 2 0 0 0 3.361 20H7m13-6h.306a2 2 0 0 1 1.973 1.671l.333 2A2 2 0 0 1 20.639 20H17" />
+                        </g>
+                    </svg>
 
-    <!-- KPI CARDS -->
-    <div class="attendSummary">
-        <!-- Total Headcount -->
-        <div class="attendSummary_card">
-            <div class="IconContainer">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
-                </svg>
+
+                </div>
+                <div class="attendSummary_content">
+                    <span>Total Headcount</span>
+                    <p id="totalhead">0</p>
+                </div>
             </div>
-            <div class="attendSummary_content">
-                <span>Total Headcount</span>
-                <p id="totalhead">2,148</p>
+            <!-- Present -->
+            <div class="attendSummary_card">
+                <div class="IconContainer" style="background: radial-gradient(circle at 30% 30%, #21AA98, #057922); color: #fff !important; ">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                        <path d="M12 11v4" />
+                        <path d="M10 13h4" />
+                    </svg>
+                </div>
+                <div class="attendSummary_content">
+                    <span>Present Employees</span>
+                    <p id="presentCount">0</p>
+                </div>
             </div>
-        </div>
-        <!-- Present -->
-        <div class="attendSummary_card">
-            <div class="IconContainer">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
-                    <path d="M12 11v4" />
-                    <path d="M10 13h4" />
-                </svg>
+            <!-- Absent -->
+            <div class="attendSummary_card">
+                <div class="IconContainer" style="background: radial-gradient(circle at 30% 30%, #C55216, #EA1D1D); color: #fff !important; ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                        <g fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="7" cy="6" r="3" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 13H5.818a3 3 0 0 0-2.964 2.537L2.36 18.69A2 2 0 0 0 4.337 21H9m12.64-2.309l-.494-3.154A3 3 0 0 0 18.182 13h-2.364a3 3 0 0 0-2.964 2.537l-.493 3.154A2 2 0 0 0 14.337 21h5.326a2 2 0 0 0 1.976-2.309" />
+                            <circle cx="17" cy="6" r="3" />
+                        </g>
+                    </svg>
+
+                </div>
+                <div class="attendSummary_content">
+                    <span>Absent Employees</span>
+                    <p id="absentCount">0</p>
+                </div>
             </div>
-            <div class="attendSummary_content">
-                <span>Present Employees</span>
-                <p id="presentCount">1,993</p>
-            </div>
-        </div>
-        <!-- Absent -->
-        <div class="attendSummary_card">
-            <div class="IconContainer">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
-                    <path d="M12 11v4" />
-                    <path d="M10 13h4" />
-                </svg>
-            </div>
-            <div class="attendSummary_content">
-                <span>Absent Employees</span>
-                <p id="absentCount">155</p>
-            </div>
-        </div>
-        <!-- Absent Rate -->
-        <div class="attendSummary_card">
-            <div class="attendSummary_absentRate">
-                <span>Attendance Rate</span>
-                <p id="absentrateCount">93% <small>· absent 7%</small></p>
+            <!-- Absent Rate -->
+            <div class="attendSummary_card">
+                <div class="attendSummary_absentRate">
+                    <span>Attendance Rate</span>
+                    <p id="absentrateCount">0% </p>
+                </div>
             </div>
         </div>
+
+
+
+        <!-- TWO COLUMN -->
+        <div class="analysisTables">
+
+            <!-- LEFT COLUMN -->
+            <div class="col">
+                <!-- Department Table -->
+                <div class="tablecontainer maintable">
+                    <div class="tableHeader">
+                        <h3>🏢 Department Breakdown</h3>
+                    </div>
+                    <div class="table-scroll">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="text-align: center;">Department</th>
+                                    <th style="text-align: center; width: 60px;">Dayshift</th>
+                                    <th style="text-align: center;">NightShift</th>
+                                    <th style="text-align: center;">Headcount</th>
+                                    <th style="text-align: center;">Present</th>
+                                    <th style="text-align: center;">Absent</th>
+                                    <th style="text-align: center;">Attendance Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody id="departmentBreakdown">
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Total</th>
+                                    <th id="TotalDay">0</th>
+                                    <th id="TotalNight">0</th>
+                                    <th id="TotalGHead">0</th>
+                                    <th id="TotalPresent">0</th>
+                                    <th id="TotalAbsent">0</th>
+                                    <th id="TotalRate">0%</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Trends -->
+                <div class="Trends">
+                    <div class="trendHeader">
+                        <h3>📈 Attendance & Absenteeism Trends</h3>
+                        <div class="trend-sub">Y‑axis: Percentage · X‑axis: 8/20 – 8/25</div>
+                    </div>
+                    <div id="ChartTrends">
+                        <canvas id="trendChart" height="100"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: SUMMARY -->
+            <div class="col">
+                <div class="summary">
+                    <div class="summary_Header">
+                        <h3>📋 Total Summary</h3>
+                    </div>
+                    <div class="summary_content">
+                        <div class="summary_details">
+                            <i>👥</i>
+                            <p>Headcount</p>
+                            <span id="totalHeadcount">0</span>
+                        </div>
+                        <div class="summary_details">
+                            <i>✅</i>
+                            <p>Present</p>
+                            <span id="totalPresent">0</span>
+                        </div>
+                        <div class="summary_details">
+                            <i>❌</i>
+                            <p>Absent</p>
+                            <span id="totalAbsent">0</span>
+                        </div>
+                        <div class="summary_attendanceDetails">
+                            <p>📊 Attendance Rate</p>
+                            <span id="totalAntendanceRate">0</span>
+                        </div>
+                        <div class="summary_attendanceDetails">
+                            <p>📉 Absent Rate</p>
+                            <span id="totalAbsentRate">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
     </div>
-
-
-
-    <!-- TWO COLUMN -->
-    <div class="analysisTables">
-
-        <!-- LEFT COLUMN -->
-        <div class="col">
-            <!-- Department Table -->
-            <div class="tablecontainer maintable">
-                <div class="tableHeader">
-                    <h3>🏢 Department Breakdown</h3>
-                </div>
-                <div class="table-scroll">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Department</th>
-                                <th>Dayshift</th>
-                                <th>NightShift</th>
-                                <th>Headcount</th>
-                                <th>Present</th>
-                                <th>Absent</th>
-                                <th>Attendance Rate</th>
-                            </tr>
-                        </thead>
-                        <tbody id="departmentBreakdown">
-                            <tr><td>P1SA-PC</td><td>7</td><td>7</td><td>0</td><td><span class="rate-badge">100%</span></td></tr>
-                            <tr><td>P1SA-C</td><td>205</td><td>194</td><td>11</td><td><span class="rate-badge">95%</span></td></tr>
-                            <tr><td>P1SA-M</td><td>155</td><td>147</td><td>8</td><td><span class="rate-badge">95%</span></td></tr>
-                            <tr><td>P1SA-P</td><td>49</td><td>47</td><td>2</td><td><span class="rate-badge">96%</span></td></tr>
-                            <tr><td>P1SA-R</td><td>453</td><td>426</td><td>27</td><td><span class="rate-badge">94%</span></td></tr>
-                            <tr><td>P1SA-W</td><td>223</td><td>210</td><td>13</td><td><span class="rate-badge">94%</span></td></tr>
-                            <tr class="dept-total-row"><td><strong>TOTAL</strong></td><td><strong>2,148</strong></td><td><strong>1,993</strong></td><td><strong>155</strong></td><td><span class="rate-badge" style="background:#d0e2f5;">93%</span></td></tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>Total</th>
-                                <th id="TotalDay">0</th>
-                                <th id="TotalNight">0</th>
-                                <th id="TotalGHead">0</th>
-                                <th id="TotalPresent">0</th>
-                                <th id="TotalAbsent">0</th>
-                                <th id="TotalRate">0%</th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Trends -->
-            <div class="Trends">
-                <div class="trendHeader">
-                    <h3>📈 Attendance & Absenteeism Trends</h3>
-                    <div class="trend-sub">Y‑axis: Percentage · X‑axis: 8/20 – 8/25</div>
-                </div>
-                <div id="ChartTrends">
-                    <canvas id="trendChart" height="100"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- RIGHT COLUMN: SUMMARY -->
-        <div class="col">
-            <div class="summary">
-                <div class="summary_Header">
-                    <h3>📋 Total Summary</h3>
-                </div>
-                <div class="summary_content">
-                    <div class="summary_details">
-                        <i>👥</i>
-                        <p>Headcount</p>
-                        <span id="totalHeadcount">2,148</span>
-                    </div>
-                    <div class="summary_details">
-                        <i>✅</i>
-                        <p>Present</p>
-                        <span id="totalPresent">1,993</span>
-                    </div>
-                    <div class="summary_details">
-                        <i>❌</i>
-                        <p>Absent</p>
-                        <span id="totalAbsent">155</span>
-                    </div>
-                    <div class="summary_attendanceDetails">
-                        <p>📊 Attendance Rate</p>
-                        <span id="totalAntendanceRate">93%</span>
-                    </div>
-                    <div class="summary_attendanceDetails">
-                        <p>📉 Absent Rate</p>
-                        <span id="totalAbsentRate">7%</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
 </div>
 
-
-
-<script src="~/Scripts/chart.js"></script>
-<script type="module" asp-append-version="true">
+    <script src="~/Scripts/chart.js"></script>
+    <script type="module" asp-append-version="true">
     import {
         getMethod,
         postMethod
@@ -181,9 +182,13 @@
         }
 
         async init() {
+            this.setShift();
+            setInterval(this.setShift(), 60000);
             await this.GetAttendanceSummary();
             await this.GetAttendanceBreakDown();
             await this.GetAttendanceTrends();
+
+            //this.fitDashboard();
         }
 
 
@@ -211,13 +216,13 @@
             document.getElementById("totalhead").textContent = data.TotalHeadCount;
             document.getElementById("presentCount").textContent = data.TotalEmployees;
             document.getElementById("absentCount").textContent = data.TotalAbsent ;
-            document.getElementById("absentrateCount").innerHTML = `${data.AttendRate}% <small>· absent 7%</small>`;
+            document.getElementById("absentrateCount").innerHTML = `${data.AttendRate}% `;
 
 
             document.getElementById("totalHeadcount").textContent = data.TotalHeadCount;
             document.getElementById("totalPresent").textContent = data.TotalEmployees;
             document.getElementById("totalAbsent").textContent = data.TotalAbsent;
-            document.getElementById("absentrateCount").innerHTML = `${data.AttendRate}% <small>· absent 7%</small>`;
+            document.getElementById("absentrateCount").innerHTML = `${data.AttendRate}%`;
 
             document.getElementById("totalAntendanceRate").innerHTML = `${data.AttendRate}% `;
             document.getElementById("totalAbsentRate").innerHTML = `${data.AbsentRate}% `;
@@ -276,7 +281,7 @@
                  <td>${row.TotalHeadCount || ''}</td>
                  <td>${row.PresentCount}</td>
                  <td class="status-column">${row.Absent || ''}</td>
-                 <td>${row.AttendanceRate ?? ''} %</td>
+                 <td> <span class="rate-badge">${row.AttendanceRate ?? ''}%</span>    </td>
 
          </tr>`;
             }).join('');
@@ -305,7 +310,7 @@
                 document.getElementById("TotalRate").textContent = `${rate}%`;
             }
 
-            BindEditInputs() {
+        BindEditInputs() {
                 this.tbody.querySelectorAll('.edit-input').forEach(input => {
                     input.addEventListener('change', async (e) => {
                         const dashId = e.target.dataset.dashId;
@@ -340,6 +345,9 @@
                     }
 
                     inputEl.classList.remove('input-error');
+                    await this.GetAttendanceSummary();
+                    await this.GetAttendanceBreakDown();
+                    await this.GetAttendanceTrends();
                 } catch (error) {
                     console.error('Error updating breakdown:', error);
                     inputEl.classList.add('input-error');
@@ -411,7 +419,60 @@
                 });
             }
 
+            setShift() {
+                const now = new Date();
 
+                const hour = now.getHours();
+                const minute = now.getMinutes();
+
+                // Convert current time to minutes since midnight
+                const currentMinutes = hour * 60 + minute;
+
+                const dayShiftStart = 6 * 60 + 30;   // 06:30
+                const nightShiftStart = 18 * 60 + 30; // 18:30
+
+                let shift;
+                let shiftDate = new Date(now);
+
+                if (currentMinutes >= dayShiftStart && currentMinutes < nightShiftStart) {
+                    // 06:30 AM - 06:29 PM
+                    shift = "DAYSHIFT";
+                } else {
+                    // 06:30 PM - 06:29 AM
+                    shift = "NIGHTSHIFT";
+
+                    // After midnight, still belongs to the previous day's night shift
+                    if (currentMinutes < dayShiftStart) {
+                        shiftDate.setDate(shiftDate.getDate() - 1);
+                    }
+                }
+
+                const dateText = `${shiftDate.getMonth() + 1}/${shiftDate.getDate()}/${shiftDate.getFullYear()}`;
+
+                document.getElementById("shiftDay").textContent =
+                    `${shift} (${dateText})`;
+        }
+
+
+        // NEW METHOD — add this anywhere in the class body
+        fitDashboard() {
+            const wrapper = document.querySelector('.dashboard-wrapper');
+            const stage = document.querySelector('.dashboard');
+            if (!wrapper || !stage) return;
+
+            // reset any previous scale before measuring, or offsetHeight would read the already-scaled size
+            stage.style.transform = 'scale(1)';
+
+            const naturalWidth = stage.offsetWidth;
+            const naturalHeight = stage.offsetHeight;
+            const availWidth = wrapper.clientWidth;
+            const availHeight = wrapper.clientHeight;
+
+            const scale = Math.min(availWidth / naturalWidth, availHeight / naturalHeight);
+
+            stage.style.transform = `scale(${scale})`;
+            wrapper.style.height = `${naturalHeight * scale}px`;
+        }
     }
 
 
@@ -419,5 +480,12 @@
         const controller = new AttendanceDashboardController();
         controller.init();
 
+
+        // NEW — re-fit whenever the window/monitor size changes, debounced so resize doesn't fire this on every pixel
+        //let resizeTimer;
+        //window.addEventListener('resize', () => {
+        //    clearTimeout(resizeTimer);
+        //    resizeTimer = setTimeout(() => controller.fitDashboard(), 100);
+        //});
     });
-</script>
+    </script>

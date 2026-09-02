@@ -21,7 +21,7 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAttendanceBreakDown()
         {
- 
+
             var res = await _manu.AttendanceBreakDown();
             if (res == null || !res.Any())
                 return JsonNotFound("No Active Lines found");
@@ -31,7 +31,7 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAttendanceSummary()
         {
-          
+
             var res = await _manu.GetAttendanceSummary();
             if (res == null)
                 return JsonNotFound("No Active Lines found");
@@ -84,5 +84,8 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
 
             return View();
         }
+
+
+       
     }
 }

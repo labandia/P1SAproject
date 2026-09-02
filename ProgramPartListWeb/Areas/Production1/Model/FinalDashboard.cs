@@ -180,6 +180,8 @@ namespace ProgramPartListWeb.Areas.Production1.Model
                         return "P1SA-C";
                     case 6:
                         return "P1SA-PC";
+                    case 8:
+                        return "P1SA-FA";
                     default:
                         return "-- Select FourM --";
                 }

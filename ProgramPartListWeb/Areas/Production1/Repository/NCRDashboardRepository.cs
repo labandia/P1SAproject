@@ -507,13 +507,33 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                             TotalHeadCount,
                             PresentCount,
                             TotalHeadCount - PresentCount AS Absent, 
-                            ROUND(CAST(PresentCount AS DECIMAL(5,2)) / NULLIF(TotalHeadCount, 0) * 100, 0) AS AttendanceRate" :
-                            $@"     SUM(TotalHeadCount)                                                            AS TotalHeadCount,
-							SUM(PresentCount)                                                          AS TotalEmployees,
-							SUM(TotalHeadCount - PresentCount)                                              AS TotalAbsent,
-							ROUND(CAST(SUM(PresentCount) AS DECIMAL(5,2)) / NULLIF(SUM(TotalHeadCount), 0) * 100, 0)  AS AttendRate,
-							ROUND(CAST(SUM(TotalHeadCount) - SUM(PresentCount) AS DECIMAL(5,2)) 
-								/ NULLIF(SUM(TotalHeadCount), 0) * 100, 0)  AS AbsentRate";
+                            CAST(ROUND(PresentCount * 100.0 / NULLIF(TotalHeadCount, 0), 0) AS DECIMAL(18,2)) AS AttendanceRate" :
+                            $@"     SUM(TotalHeadCount)  AS TotalHeadCount,
+							SUM(PresentCount)   AS TotalEmployees,
+							SUM(TotalHeadCount - PresentCount)   AS TotalAbsent,
+						   -- Attendance Rate
+								ROUND(
+									CAST(SUM(ISNULL(PresentCount, 0)) AS DECIMAL(18,2))
+									/ NULLIF(
+										CAST(SUM(TotalHeadCount) AS DECIMAL(18,2)), 
+										0
+									) * 100,
+									0
+								) AS AttendRate,
+
+								-- Absent Rate
+								ROUND(
+									CAST(
+										SUM(TotalHeadCount) 
+										- SUM(ISNULL(PresentCount, 0))
+										AS DECIMAL(18,2)
+									)
+									/ NULLIF(
+										CAST(SUM(TotalHeadCount) AS DECIMAL(18,2)),
+										0
+									) * 100,
+									0
+								) AS AbsentRate";
 
             string strsql = $@";WITH DashboardCalc AS (
                             SELECT 
@@ -547,6 +567,10 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                                         (SELECT COUNT(DISTINCT pc.Employee_ID)
                                          FROM PC_summary pc 
                                          WHERE CAST(pc.Date_today AS DATE) = a.DateToday)
+                                    WHEN a.DepartmentId = 8 THEN 
+                                        (SELECT COUNT(DISTINCT f.Employee_ID)
+                                         FROM FinalAssy_summary f 
+                                         WHERE CAST(f.Date_today AS DATE) = a.DateToday)
                                     ELSE NULL
                                 END AS PresentCount
                             FROM AttendanceDashboard a
@@ -676,6 +700,10 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                                     (SELECT COUNT(DISTINCT pc.Employee_ID)
                                      FROM PC_summary pc 
                                      WHERE CAST(pc.Date_today AS DATE) = a.DateToday)
+                                WHEN a.DepartmentId = 8 THEN 
+                                    (SELECT COUNT(DISTINCT f.Employee_ID)
+                                     FROM FinalAssy_summary f 
+                                     WHERE CAST(f.Date_today AS DATE) = a.DateToday)
                                 ELSE NULL
                             END AS PresentCount
                         FROM AttendanceDashboard a
@@ -689,7 +717,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                         TotalHeadCount,
                         PresentCount,
                         TotalHeadCount - PresentCount AS Absent, 
-                        ROUND(CAST(PresentCount AS DECIMAL(5,2)) / NULLIF(TotalHeadCount, 0) * 100, 0) AS AttendanceRate
+                       	CAST(ROUND(PresentCount * 100.0 / NULLIF(TotalHeadCount, 0), 0) AS DECIMAL(18,2)) AS AttendanceRate
                     FROM DashboardCalc");
         }
 

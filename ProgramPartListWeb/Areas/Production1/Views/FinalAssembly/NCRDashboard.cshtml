@@ -1,0 +1,958 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Areas/Production1/Views/Shared/_FinalDashboard.cshtml";
+}
+
+
+<div class="dashboard" id="dashboard">
+
+
+    <!-- Main content -->
+    <div class="dashboard-main">
+        <!-- Left column -->
+        <section class="col-left">
+            <div class="dasheader">
+                <h2 class="section-title">NCR Type</h2>
+                <div class="line" style=" width: 80%;"></div>
+            </div>
+
+            <div class="ncr-bars ">
+
+                <!-- IN-PROCESS -->
+                <div class="ncr-circle" data-type="inprocess">
+                    <div class="wrapper-circle">
+                        <svg viewBox="0 0 120 120" class="circle-svg">
+
+                            <defs>
+                                <linearGradient id="gradient-green"
+                                                x1="0%" y1="0%"
+                                                x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#22c530" />
+                                    <stop offset="50%" stop-color="#0a9988" />
+                                    <stop offset="100%" stop-color="#0cb63f" />
+                                </linearGradient>
+                            </defs>
+
+                            <!-- gradient track -->
+                            <circle class="circle-bg-green"
+                                    cx="60"
+                                    cy="60"
+                                    r="52">
+                            </circle>
+
+                            <!-- gradient progress -->
+                            <circle id="ncr-inprocess"
+                                    class="circle-progress ring-primary"
+                                    cx="60"
+                                    cy="60"
+                                    r="52">
+                            </circle>
+
+                        </svg>
+
+                        <div class="circle-label">
+                            <span class="circle-percent" id="ncr-inprocess-pct">0%</span>
+                        </div>
+                    </div>
+
+                    <p class="circle-text">
+                        <span class="emoji">😒</span>
+                        In-Process Defect
+                    </p>
+                </div>
+
+
+                <!-- REJECTED -->
+                <div class="ncr-circle" data-type="rejected">
+                    <svg viewBox="0 0 120 120" class="circle-svg">
+
+                        <defs>
+                            <linearGradient id="gradient-orange"
+                                            x1="0%" y1="0%"
+                                            x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#facc15" />
+                                <stop offset="50%" stop-color="#fb923c" />
+                                <stop offset="100%" stop-color="#f97316" />
+                            </linearGradient>
+                        </defs>
+
+                        <!-- gradient track -->
+                        <circle class="circle-bg-orange"
+                                cx="60"
+                                cy="60"
+                                r="52">
+                        </circle>
+
+                        <!-- gradient progress -->
+                        <circle id="ncr-rejected"
+                                class="circle-progress ring-orange"
+                                cx="60"
+                                cy="60"
+                                r="52">
+                        </circle>
+
+                    </svg>
+
+                    <div class="circle-label">
+                        <span class="circle-percent" id="ncr-rejected-pct">0%</span>
+                    </div>
+
+                    <p class="circle-text">
+                        <span class="emoji">😢</span>
+                        Rejected Lot
+                    </p>
+                </div>
+
+
+                <!-- CUSTOMER CLAIM -->
+                <div class="ncr-circle" data-type="claim">
+                    <svg viewBox="0 0 120 120" class="circle-svg">
+
+                        <defs>
+                            <linearGradient id="gradient-red"
+                                            x1="0%" y1="0%"
+                                            x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#fb7185" />
+                                <stop offset="50%" stop-color="#ef4444" />
+                                <stop offset="100%" stop-color="#dc2626" />
+                            </linearGradient>
+                        </defs>
+
+                        <!-- gradient track -->
+                        <circle class="circle-bg-red"
+                                cx="60"
+                                cy="60"
+                                r="52">
+                        </circle>
+
+                        <!-- gradient progress -->
+                        <circle id="ncr-claim"
+                                class="circle-progress ring-red"
+                                cx="60"
+                                cy="60"
+                                r="52">
+                        </circle>
+
+                    </svg>
+
+                    <div class="circle-label">
+                        <span class="circle-percent" id="ncr-claim-pct">0%</span>
+                    </div>
+
+                    <p class="circle-text">
+                        <span class="emoji">😭</span>
+                        Customer Claim
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!--<div class="ncr-bars">-->
+            @*<div class="ncr-group">
+
+                </div>*@
+            <!--<div class="ncr-bar" data-type="inprocess">
+                    <div id="ncr-inprocess" class="bar bg-primary" style="width:80%;">
+                        <span class="emoji">😒</span>
+                        <span>In-Process Defect</span>
+                    </div>
+                </div>
+                <div class="ncr-bar" data-type="rejected">
+                    <div id="ncr-rejected" class="bar bg-orange" style="width:70%;">
+                        <span class="emoji">😢</span>
+                        <span>Rejected Lot</span>
+                    </div>
+                </div>
+                <div class="ncr-bar" data-type="claim">
+                    <div id="ncr-claim" class="bar bg-red" style="width:65%;">
+                        <span class="emoji">😭</span>
+                        <span>Customer Claim</span>
+                    </div>
+                </div>
+            </div>-->
+            @*<div class="ncr-scale">
+                    <span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span>
+                    <span>60</span><span>70</span><span>80</span><span>90</span><span>100</span>
+                </div>*@
+            <div class="dasheader">
+                <h2 class="section-title">NCR Distribution</h2>
+                <div class="line" style=" width: 65%;"></div>
+            </div>
+            <div class="dist-row" data-group="Group 1">
+                <span class="label">Group 1</span>
+                <div class="track">
+                    <div id="dist-group1" class="fill bg-secondary" style="width:40%;">24%</div>
+                </div>
+            </div>
+            <div class="dist-row" data-group="Group 2">
+                <span class="label">Group 2</span>
+                <div class="track">
+                    <div id="dist-group2" class="fill bg-secondary" style="width:20%;">12%</div>
+                </div>
+            </div>
+            <div class="dist-row" data-group="Cell Line">
+                <span class="label">Cell Line</span>
+                <div class="track">
+                    <div id="dist-cell" class="fill bg-secondary" style="width:35%;">22%</div>
+                </div>
+            </div>
+            <div class="dist-row" data-group="Harness">
+                <span class="label">Harness</span>
+                <div class="track">
+                    <div id="dist-harness" class="fill bg-yellow" style="width:38%;">24%</div>
+                </div>
+            </div>
+            <div class="dist-row" data-group="Oil Proof">
+                <span class="label">Oil Proof</span>
+                <div class="track">
+                    <div id="dist-oil" class="fill bg-secondary" style="width:30%;">19%</div>
+                </div>
+            </div>
+
+            <div class="dist-row" data-group="Oil Proof">
+                <span class="label">Material Prep</span>
+                <div class="track">
+                    <div id="dist-mat" class="fill bg-secondary" style="width:0%;">0%</div>
+                </div>
+            </div>
+
+            <div class="badge-harness">
+                <span class="icon">🐝</span>
+                <div class="info">
+                    <div class="title">WIRE HARNESS</div>
+                    <span class="group-badge">BEST GROUP</span>
+                    <div class="effort">EFFORT</div>
+                </div>
+                <span class="team">TEAM</span>
+            </div>
+        </section>
+
+        <!-- Center column -->
+        <section class="col-center">
+            <h2 id="dashboard-title">
+
+                Final Assembly Line
+                Monitoring
+            </h2>
+
+            <div class="calendar">
+                <div class="header">
+                    <div class="month" id="monthText">July</div>
+                    <div class="year" id="yearText">2026</div>
+                </div>
+                <div class="grid">
+                    <div class="weekdays">
+                        <div>SUN</div><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div>
+                    </div>
+                    <div class="days">
+                        <div class="muted">31</div><div>1</div><div>2</div><div></div><div></div><div></div><div></div>
+                        <div class="red">3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div>
+                        <div class="red">10</div><div>11</div><div>12</div><div>13</div><div>14</div><div>15</div><div>16</div>
+                        <div class="red">17</div><div>18</div><div>19</div><div>20</div><div>21</div><div>22</div><div>23</div>
+                        <div class="red">24</div><div>25</div><div>26</div><div>27</div><div>28</div><div>29</div><div>30</div>
+                    </div>
+                </div>
+            </div>
+
+            @*<div class="best-group">
+                    <div class="thinking">🤭</div>
+                    <div>
+                        <div class="best">BEST</div>
+                        <div class="line">FA LINE</div>
+                    </div>
+                </div>*@
+
+            <div class="best-block">
+
+                <div class="line-detail">
+                    <span class="emoji-big">🤩</span>
+                    <div>
+                        <div class="line-number" id="best-line-number">LINE 10</div>
+                        @*<div class="slogan">Quality starts with me!</div>*@
+                        <div class="slogan">Best FA Lines!</div>
+                    </div>
+
+                    <div class="emoji-big">🤭</div>
+                </div>
+
+                <h6>Factory Visit Line</h6>
+
+                <!-- Audit info chips -->
+                <div class="audit-info-bar" id="auditInfoBar">
+                    <div class="audit-chip">
+                        <span class="audit-icon chip-customer">🏭</span>
+                        <div class="audit-text">
+                            <span class="audit-label">Customer:</span>
+                            <span class="audit-value" contenteditable="true" data-field="Customer">AMAZON MQE</span>
+                        </div>
+                    </div>
+                    <div class="audit-chip">
+                        <span class="audit-icon chip-date">📅</span>
+                        <div class="audit-text">
+                            <span class="audit-label">Audit Date:</span>
+                            <span class="audit-value" contenteditable="true" data-field="AuditDate">September 05, 2026</span>
+                        </div>
+                    </div>
+                    <div class="audit-chip">
+                        <span class="audit-icon chip-time">🕐</span>
+                        <div class="audit-text">
+                            <span class="audit-label">Audit Time:</span>
+                            <span class="audit-value" contenteditable="true" data-field="AuditTime">9:00AM - 5:00PM</span>
+                        </div>
+                    </div>
+                    <div class="audit-chip">
+                        <span class="audit-icon chip-coverage">⚙️</span>
+                        <div class="audit-text">
+                            <span class="audit-label">Coverage Area:</span>
+                            <span class="audit-value" contenteditable="true" data-field="CoverageArea">FA, HARNESS & OILPROOF</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right column -->
+        <section class="col-right" id="line-list">
+            <!-- Line rows will be populated by JavaScript -->
+        </section>
+    </div>
+</div>
+
+
+
+
+<script type="module" asp-append-version="true">
+    import {
+        getMethod,
+        postMethod
+    } from '@Url.Content("~/Scripts/modules/index.js")';
+
+    class FinalDashboardController {
+        constructor() {
+            this.CIRCLE_RADIUS = 52;
+            this.CIRCLE_CIRCUMFERENCE = 2 * Math.PI * this.CIRCLE_RADIUS; // ≈326.726
+
+            this._imagePreloadCache = new Map();
+
+
+            // ---- Audit info bar ----
+            this.auditInfoBar = document.getElementById('auditInfoBar');
+            this.refreshInterval = null;
+            const today = new Date();
+
+            this.monthName = today.toLocaleString('en-US', { month: 'long' });
+            this.year = today.getFullYear();
+
+            // this.dashboardTitle = document.getElementById('dashboard-title');
+
+            this.MonthTitle = document.getElementById('monthText');
+            this.YearTitle = document.getElementById('yearText');
+
+
+            // ---- DOM refs ----
+            this.lineList = document.getElementById('line-list');
+            this.tooltip = document.getElementById('tooltip');
+            this.tooltipTitle = document.getElementById('tooltip-title');
+            this.tooltipList = document.getElementById('tooltip-list');
+            this.tooltipClose = document.getElementById('tooltip-close');
+            //this.refreshText = document.getElementById('refreshText');
+            this.bestLineNumber = document.getElementById('best-line-number');
+
+            // ---- Award slide DOM refs ----
+            this.dashboardEl = document.getElementById('dashboard');
+            this.awardSlideOverlay = document.getElementById('awardSlideOverlay');
+            this.awardWinnerName = document.getElementById('awardWinnerName');
+            this.awardCertImage = document.getElementById('awardCertImage');
+            this.awardSubtitle = document.getElementById('awardSubtitle');
+            this.awardSlideDuration = 8000; // how long the WHOLE slide stays on screen, ms
+            this.awardPerPersonDuration = 3000; // how long each individual awardee is shown, ms
+
+            // ---- Info slide DOM refs (shown right after the award slide) ----
+            this.infoSlideOverlay = document.getElementById('infoSlideOverlay');
+            this.infoSlideFrame = document.getElementById('infoSlideFrame');
+            this.infoSlideDuration = 6000; // how long the info slide stays on screen, ms
+
+
+            // ---- Stop/Resume slide rotation ----
+            this.stopBtn = document.getElementById('StopBtn');
+            this.isSlideStopped = false;
+
+
+            this.OpensDataManage = document.getElementById('commentBtn');
+
+
+            // ---- Data generation ----
+            this.lineNames = [
+                'Line 01', 'Line 02', 'Line 03', 'Line 04', 'Line 05',
+                'Line 06', 'Line 07', 'Line 08', 'Line 09', 'Line 10',
+                'Line 11', 'Line 12', 'Line 13', 'Line 14', 'Line 15',
+                'Line 16', 'Line 17', 'Line 18',
+                'Cell Line', 'OilProof'
+            ];
+
+            this.groupMap = {
+                'Line 01': 'L1', 'Line 02': 'L2', 'Line 03': 'L3', 'Line 04': 'L4',
+                'Line 05': 'L5', 'Line 06': 'L6', 'Line 07': 'L7', 'Line 08': 'L8',
+                'Line 09': 'L9', 'Line 10': 'L10', 'Line 11': 'L11', 'Line 12': 'L12',
+                'Line 13': 'L13', 'Line 14': 'L14', 'Line 15': 'L15', 'Line 16': 'L16',
+                'Line 17': 'L17', 'Line 18': 'L18',
+                'Cell Line': 'CL',
+                'OilProof': 'OP'
+            };
+
+            this.reverseGroupMap = Object.fromEntries(
+                Object.entries(this.groupMap).map(([fullName, code]) => [code, fullName])
+            );
+
+            this.lineData = [];
+
+        }
+
+        async init() {
+
+
+            await this.fetchMonthData();
+            this.highlightToday();
+            await this.fetch4MData();
+            await this.fetchGroupData();
+            await this.fetchAuditInfo();
+            this.attachAuditInfoEditing();
+
+            this.generateData();
+            this.renderLines();
+
+            await this.fetchBestLines();
+
+            this.refreshInterval = setInterval(async () => {
+                await this.fetch4MData();
+                await this.fetchGroupData();
+                //this.refreshText.textContent = 'Updated ' + new Date().toLocaleTimeString();
+            }, 10000);
+
+            this.bestLinesInterval = setInterval(async () => {
+                await this.fetchBestLines();
+            }, 60 * 1000);
+
+           
+        }
+
+
+        // ---- Month Display dashboard ----
+        async fetchMonthData() {
+            try {
+                const res = await getMethod('@Url.Action("GetMonthyear", "FinalAssembly")', {});
+                if (!res?.Success) {
+                    console.log('No data found in 4M ');
+                    return;
+                }
+
+                //this.dashboardTitle.innerHTML = `
+                //     ${res.data.months} ${res.data.years}<br>
+                //     FA Line<br>
+                //     Monitoring
+                //`;
+
+                this.MonthTitle.innerHTML = res.data.months;
+                this.YearTitle.innerHTML = res.data.years;
+            } catch (error) {
+                console.error('Error fetching 4M data:', error);
+            }
+        }
+
+        // ---- Audit info: load + auto-save on Enter ----
+        async fetchAuditInfo() {
+            try {
+                const res = await getMethod('@Url.Action("GetAuditInfo", "FinalAssembly")', {});
+                if (!res?.Success || !res.data) return;
+                //console.log(res);
+                document.querySelectorAll('.audit-value[data-field]').forEach(el => {
+                    const field = el.dataset.field;
+                    if (res.data[field] !== undefined && res.data[field] !== null) {
+                        el.textContent = res.data[field];
+                        el.dataset.lastSaved = res.data[field];
+                    }
+                });
+            } catch (error) {
+                console.error('Error fetching audit info:', error);
+            }
+        }
+
+        attachAuditInfoEditing() {
+            if (!this.auditInfoBar) return;
+
+            this.auditInfoBar.querySelectorAll('.audit-value[contenteditable]').forEach(el => {
+                // Baseline so we can tell if anything actually changed
+                if (el.dataset.lastSaved === undefined) {
+                    el.dataset.lastSaved = el.textContent.trim();
+                }
+
+                el.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();   // no newline in a single-line chip
+                        el.blur();            // triggers the blur handler below, which saves
+                    }
+                    if (e.key === 'Escape') {
+                        el.textContent = el.dataset.lastSaved;
+                        el.blur();
+                    }
+                });
+
+                el.addEventListener('blur', () => this.saveAuditField(el));
+            });
+        }
+
+        async saveAuditField(el) {
+            const field = el.dataset.field;
+            const value = el.textContent.trim();
+
+            if (value === el.dataset.lastSaved) return; // nothing changed, skip the round-trip
+
+            el.classList.add('saving');
+            try {
+                console.log(`Field ` + field);
+                console.log(`Value ` + value);
+
+                const res = await postMethod('@Url.Action("SaveAuditInfo", "FinalAssembly")', {
+                    field: field,
+                    value: value
+                });
+
+                if (res?.Success) {
+                    el.dataset.lastSaved = value;
+                    el.classList.remove('saving');
+                    el.classList.add('saved');
+                    setTimeout(() => el.classList.remove('saved'), 1000);
+                } else {
+                    throw new Error(res?.Message || 'Save failed');
+                }
+            } catch (error) {
+                console.error('Error saving audit field:', field, error);
+                el.classList.remove('saving');
+                el.classList.add('save-error');
+                el.textContent = el.dataset.lastSaved; // revert on failure
+                setTimeout(() => el.classList.remove('save-error'), 2000);
+            }
+        }
+
+
+        // ---- 4M Factors dashboard ----
+        async fetch4MData() {
+            try {
+                const res = await getMethod('@Url.Action("GetListof4ManFactor", "FinalAssembly")', {});
+                if (!res?.Success) {
+                    console.log('No data found in 4M ');
+                    return;
+                }
+                this.renderNcrBars(res.data);
+            } catch (error) {
+                console.error('Error fetching 4M data:', error);
+            }
+        }
+
+        // Resets a bar/fill to 0 and re-animates it to its target width,
+        // recreating a "start page" fill-in effect on every refresh.
+        animateBarFill(el, pct) {
+            if (!el) return;
+
+            // Kill any transition, snap to 0 instantly
+            el.style.transition = 'none';
+            el.style.width = '0%';
+            el.classList.add('bar-refreshing');
+
+            // Force reflow so the browser registers the 0% width
+            // before we start the new transition
+            void el.offsetWidth;
+
+            requestAnimationFrame(() => {
+                el.style.transition = 'width 0.8s cubic-bezier(0.22, 1, 0.36, 1)';
+                el.style.width = pct + '%';
+            });
+
+            // Clean up the shimmer class after it plays once
+            clearTimeout(el._shimmerTimeout);
+            el._shimmerTimeout = setTimeout(() => {
+                el.classList.remove('bar-refreshing');
+            }, 850);
+        }
+
+        renderNcrBars(data) {
+            //console.log(data);
+            const typeMap = {
+                'In-Process': 'inprocess',
+                'Rejected Lot': 'rejected',
+                'Customer Complaint': 'claim'
+            };
+
+            const rows = (data || []).filter(r => r['NCRType'] !== 'Total');
+
+            const updates = [];
+            rows.forEach(row => {
+                const key = typeMap[row['NCRType']];
+                if (!key) return;
+
+                const circle = document.getElementById(`ncr-${key}`);
+                if (!circle) return;
+
+                const pct = row['Percentage'] ?? 0;
+                const pctLabel = document.getElementById(`ncr-${key}-pct`);
+                if (pctLabel) pctLabel.textContent = `${pct}%`;
+
+                updates.push({ el: circle, pct });
+            });
+
+            this.batchAnimateCircles(updates);
+        }
+
+        batchAnimateCircles(updates) {
+            if (!updates || !updates.length) return;
+            const C = this.CIRCLE_CIRCUMFERENCE;
+
+            // Phase 1: reset (writes only)
+            updates.forEach(({ el }) => {
+                el.style.transition = 'none';
+                el.style.strokeDashoffset = C;
+                el.classList.add('bar-refreshing');
+            });
+
+            // Phase 2: single forced reflow for the whole batch
+            void document.body.offsetHeight;
+
+            // Phase 3: animate together
+            requestAnimationFrame(() => {
+                updates.forEach(({ el, pct }) => {
+                    el.style.transition = 'stroke-dashoffset 0.8s cubic-bezier(0.22, 1, 0.36, 1)';
+                    el.style.strokeDashoffset = C - (pct / 100) * C;
+                });
+            });
+
+            clearTimeout(this._shimmerCircleTimeout);
+            this._shimmerCircleTimeout = setTimeout(() => {
+                updates.forEach(({ el }) => el.classList.remove('bar-refreshing'));
+            }, 850);
+        }
+
+        batchAnimateBars(updates) {
+            if (!updates || !updates.length) return;
+
+            // Phase 1: reset (writes only, no reads in between)
+            updates.forEach(({ el }) => {
+                el.style.transition = 'none';
+                el.style.width = '0%';
+                el.classList.add('bar-refreshing');
+            });
+
+            // Phase 2: a single forced reflow for the entire batch, instead
+            // of one per bar.
+            void document.body.offsetHeight;
+
+            // Phase 3: animate all bars together in the same frame.
+            requestAnimationFrame(() => {
+                updates.forEach(({ el, pct }) => {
+                    el.style.transition = 'width 0.8s cubic-bezier(0.22, 1, 0.36, 1)';
+                    el.style.width = pct + '%';
+                });
+            });
+
+            clearTimeout(this._shimmerBatchTimeout);
+            this._shimmerBatchTimeout = setTimeout(() => {
+                updates.forEach(({ el }) => el.classList.remove('bar-refreshing'));
+            }, 850);
+        }
+
+
+        async fetchGroupData() {
+            try {
+                const res = await getMethod('@Url.Action("GetListofGroupProcess", "FinalAssembly")', {});
+                if (!res?.Success) {
+                    console.log('No data found in Group Data ');
+                    return;
+                }
+
+                //console.log(res.data);
+                this.renderDistribution(res.data);
+            } catch (error) {
+                console.error('Error fetching group data:', error);
+            }
+        }
+
+        renderDistribution(data) {
+            // Percentages are now precomputed server-side in the 'FinalPercent' row (SortOrder 2)
+            const finalPercentRow = (data || []).find(r => r['NCRType'] === 'FinalPercent');
+            if (!finalPercentRow) {
+                console.log('No FinalPercent row found in group data');
+                return;
+            }
+
+            // Map DB group columns -> the bar ids used in the HTML.
+            // 'Cell Line' = Group3, 'Harness' = Matprep, 'Oil Proof' = Oiloof per the display naming.
+            const groupMap = [
+                { key: 'Group1', barId: 'dist-group1' },
+                { key: 'Group2', barId: 'dist-group2' },
+                { key: 'Group3', barId: 'dist-cell' },
+                { key: 'Harness', barId: 'dist-harness' },
+                { key: 'MatPrep', barId: 'dist-mat' },
+                { key: 'OP', barId: 'dist-oil' },
+            ];
+
+            const updates = [];
+            groupMap.forEach(({ key, barId }) => {
+                const el = document.getElementById(barId);
+                if (!el) return;
+
+                const pct = finalPercentRow[key] ?? 0;
+                // Set the label text once, up front, instead of inside the
+                // animation loop — keeps the batched animation phases clean.
+                el.textContent = `${pct}%`;
+                updates.push({ el, pct });
+            });
+
+            this.batchAnimateBars(updates);
+        }
+
+        async fetchBestLines() {
+         try {
+             const res = await getMethod('@Url.Action("GetBestLineList", "FinalAssembly")', {});
+             if (!res?.Success) {
+                 console.log('No data found in Group Data ');
+                 return;
+             }
+
+             //console.log(res.data);
+             this.applyBestLines(res.data);
+         } catch (error) {
+             console.error('Error fetching group data:', error);
+         }
+        }
+
+        applyBestLines(data) {
+            const typeMap = {
+                'In-Process': '😒',
+                'Rejected Lot': '😢',
+                'Customer Complaint': '😭'
+            };
+
+            document.querySelectorAll('.line-row').forEach(row => {
+                const emojiSpan = row.querySelector('.emoji');
+                const ncrInfoSpan = row.querySelector('.ncr-info');
+                if (emojiSpan) emojiSpan.textContent = '';
+                if (ncrInfoSpan) ncrInfoSpan.textContent = '';
+                row.classList.remove('highlight');
+            });
+
+            const setEmoji = (lineName, emoji, ncrTypeName, qty) => {
+                if (!lineName) return;
+                const row = document.querySelector(`.line-row[data-line="${lineName}"]`);
+                if (row) {
+                    const span = row.querySelector('.emoji');
+                    const ncrInfoSpan = row.querySelector('.ncr-info');
+                    if (span) span.textContent = emoji;
+                    if (ncrInfoSpan) ncrInfoSpan.textContent = `${ncrTypeName} (${qty})`;
+                    row.classList.add('highlight');
+                }
+            };
+
+            const normalizeLine = (line) => {
+                if (!line) return line;
+                if (line.startsWith('CL')) return 'Cell Line';
+                if (line.startsWith('OP')) return 'OilProof';
+                return this.reverseGroupMap[line] || line;
+            };
+
+            const rows = data || [];
+            const linesWithData = new Set();
+
+            rows.forEach(row => {
+                const lineName = normalizeLine(row['Line']);
+                linesWithData.add(lineName);
+
+                const emoji = typeMap[row['NCRType']];
+                if (!emoji) return;
+
+                const qty = row['Qty'] ?? 0;
+                setEmoji(lineName, emoji, row['NCRType'], qty);
+
+                const entry = this.lineData.find(d => d.name === lineName);
+                if (entry) {
+                    entry.total = qty;
+                    entry.percentage = row['Percentage'] ?? 0;
+                }
+            });
+
+            const linesWithoutData = this.lineNames.filter(name => !linesWithData.has(name));
+
+            // Only restart the typing cycle if the missing-lines list actually changed
+            const newKey = linesWithoutData.join('|');
+            if (newKey !== this._lastMissingLinesKey) {
+                this._lastMissingLinesKey = newKey;
+                this.startMissingLinesTyping(linesWithoutData);
+            }
+        }
+
+        // ---- Typewriter cycling through lines with no NCR data ----
+        startMissingLinesTyping(lines) {
+            // Stop any previous cycle before starting a new one
+            if (this._typingRafId) cancelAnimationFrame(this._typingRafId);
+            clearTimeout(this._typingPauseTimeout);
+
+            if (!lines || lines.length === 0) {
+                this.bestLineNumber.textContent = 'All Lines Reported';
+                return;
+            }
+
+            const CHAR_INTERVAL_MS = 100;
+            const HOLD_MS = 1500;
+
+            let lineIndex = 0;
+            let charIndex = 0;
+            let lastTickTime = 0;
+            let holding = false;
+            let holdStart = 0;
+
+            const step = (timestamp) => {
+                // Pause all work while the page/tab isn't visible.
+                if (document.hidden) {
+                    this._typingRafId = requestAnimationFrame(step);
+                    return;
+                }
+
+                if (holding) {
+                    if (timestamp - holdStart >= HOLD_MS) {
+                        holding = false;
+                        lineIndex = (lineIndex + 1) % lines.length;
+                        charIndex = 0;
+                        this.bestLineNumber.textContent = '';
+                        lastTickTime = timestamp;
+                    }
+                    this._typingRafId = requestAnimationFrame(step);
+                    return;
+                }
+
+                if (timestamp - lastTickTime >= CHAR_INTERVAL_MS) {
+                    lastTickTime = timestamp;
+                    charIndex++;
+                    const text = lines[lineIndex];
+                    this.bestLineNumber.textContent = text.substring(0, charIndex);
+
+                    if (charIndex >= text.length) {
+                        holding = true;
+                        holdStart = timestamp;
+                    }
+                }
+
+                this._typingRafId = requestAnimationFrame(step);
+            };
+
+            this._typingRafId = requestAnimationFrame(step);
+        }
+
+        generateData() {
+            this.lineData = this.lineNames.map(name => ({
+                name: name,
+                group: this.groupMap[name] || 'Other',
+                inprocess: 0,
+                rejected: 0,
+                claim: 0
+            }));
+        }
+
+
+        // ---- Render line rows ----
+        renderLines() {
+            // Build the whole list off-DOM (DocumentFragment) and attach once,
+            // instead of appending 20 rows one at a time into a live DOM tree.
+            const fragment = document.createDocumentFragment();
+            this.lineData.forEach(d => {
+                const row = document.createElement('div');
+                row.className = 'line-row';
+                row.dataset.line = d.name;
+                row.dataset.group = d.group;
+                row.innerHTML = `
+                    <span class="name">${d.name}</span>
+                    <span class="ncr-info"></span>
+                    <span class="emoji"></span>
+                `;
+                fragment.appendChild(row);
+            });
+
+            this.lineList.innerHTML = '';
+            this.lineList.appendChild(fragment);
+
+            // Re-attach click events after render
+            this.attachLineClicks();
+        }
+
+         // ---- Click handlers ----
+        attachLineClicks() {
+            document.querySelectorAll('.line-row').forEach(row => {
+                row.addEventListener('click', (e) => {
+
+                    const name = row.dataset.line;
+                    const data = this.lineData.find(x => x.name === name);
+
+                    if (!data) return;
+
+                    const items = [
+                        { name: 'In-Process', value: data.inprocess },
+                        { name: 'Rejected', value: data.rejected },
+                        { name: 'Claim', value: data.claim },
+                        { name: 'Group', value: data.group }
+                    ];
+
+                    const rect = row.getBoundingClientRect();
+                    this.showTooltip(
+                        'Details for ' + name,
+                        items,
+                        rect.left + 10,
+                        rect.bottom + 10
+                    );
+                });
+            });
+        }
+
+        // ---- Tooltip functions ----
+        showTooltip(title, items, x, y) {
+            tooltipTitle.textContent = title;
+            tooltipList.innerHTML = '';
+            items.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span>${item.name}</span><span>${item.value}</span>`;
+                tooltipList.appendChild(li);
+            });
+            tooltip.style.left = x + 'px';
+            tooltip.style.top = y + 'px';
+            tooltip.classList.add('visible');
+        }
+
+    
+
+        // ---- Highlight today's date in the calendar ----
+        highlightToday() {
+            const daysContainer = document.querySelector('.calendar .grid .days');
+            if (!daysContainer) return;
+
+            const today = new Date();
+            const todayNum = String(today.getDate());
+
+            // Clear any previous highlight (useful if this ever re-runs on refresh)
+            daysContainer.querySelectorAll('.today').forEach(el => el.classList.remove('today'));
+
+            // Skip 'muted' cells (they belong to the previous month) and blanks
+            const dayEls = Array.from(daysContainer.children)
+                .filter(el => !el.classList.contains('muted') && el.textContent.trim() !== '');
+
+            const match = dayEls.find(el => el.textContent.trim() === todayNum);
+            if (match) match.classList.add('today');
+        }
+    }
+
+
+
+
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const controller = new FinalDashboardController();
+        controller.init();
+    });
+</script>

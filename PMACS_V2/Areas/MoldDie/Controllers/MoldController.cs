@@ -16,11 +16,13 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
     {
         private readonly IMoldDaily _mold;
         private readonly IDieMasterList _master;
+        private readonly IMoldTooling _tooling;
 
-        public MoldController(IMoldDaily mold, IDieMasterList master)
+        public MoldController(IMoldDaily mold, IDieMasterList master, IMoldTooling tooling)
         {
             _mold = mold;
             _master = master;
+            _tooling = tooling;
         }
         // ===========================================================
         // MOLD DIE SUMMARY LIST
@@ -205,6 +207,25 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
 
             return JsonCreated(success, "Delete Data Successfully");
         }
+        // ===========================================================
+        // MOLD DIE TOOLING DATA
+        // ============================================================
+        [HttpGet]
+        public async Task<ActionResult> GetMoldDieToolingList(
+          string search = "",
+          int page = 1,
+          int pageSize = 50)
+        {
+            Debug.WriteLine("GETMOLD DIE");
+            var data = await _tooling.GetMoldToolingList(search, page, pageSize);
+
+            if (data == null || !data.Any())
+                return JsonNotFound("No Mold Die Tooling data found");
+
+            return JsonSuccess(data);
+        }
+
+
 
         // GET: P1SA/DieMold
         public ActionResult DieMoldLife() => View();

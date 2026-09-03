@@ -1,0 +1,254 @@
+﻿@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Awardees</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            background-image: linear-gradient(306deg, rgba(54, 54, 54, 0.05) 0%, rgba(54, 54, 54, 0.05) 33.333%,rgba(85, 85, 85, 0.05) 33.333%, rgba(85, 85, 85, 0.05) 66.666%,rgba(255, 255, 255, 0.05) 66.666%, rgba(255, 255, 255, 0.05) 99.999%),linear-gradient(353deg, rgba(81, 81, 81, 0.05) 0%, rgba(81, 81, 81, 0.05) 33.333%,rgba(238, 238, 238, 0.05) 33.333%, rgba(238, 238, 238, 0.05) 66.666%,rgba(32, 32, 32, 0.05) 66.666%, rgba(32, 32, 32, 0.05) 99.999%),linear-gradient(140deg, rgba(192, 192, 192, 0.05) 0%, rgba(192, 192, 192, 0.05) 33.333%,rgba(109, 109, 109, 0.05) 33.333%, rgba(109, 109, 109, 0.05) 66.666%,rgba(30, 30, 30, 0.05) 66.666%, rgba(30, 30, 30, 0.05) 99.999%),linear-gradient(189deg, rgba(77, 77, 77, 0.05) 0%, rgba(77, 77, 77, 0.05) 33.333%,rgba(55, 55, 55, 0.05) 33.333%, rgba(55, 55, 55, 0.05) 66.666%,rgba(145, 145, 145, 0.05) 66.666%, rgba(145, 145, 145, 0.05) 99.999%),linear-gradient(90deg, rgb(9, 201, 186),rgb(18, 131, 221));
+        }
+        /* ---------------------------------
+            Award layout — responsive: two columns side-by-side on wide
+            screens, stacked on narrow screens. Sizing uses relative units
+            and object-fit instead of fixed pixel widths, and the old
+            "zoom: 60%" hack has been removed in favor of proper scaling.
+         --------------------------------- */
+
+        .award-container {
+            width: 100%;
+            min-height: 100vh;
+            padding: clamp(16px, 4vw, 30px) clamp(10px, 3vw, 24px);
+        }
+
+
+        .award-content {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-rows: 1fr;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(8px, 2vw, 24px);
+            /*            min-height: calc(100vh - clamp(32px, 8vw, 60px));*/
+            min-height:50vh;
+        }
+
+        .award-title,
+        .awardheader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            min-width: 0; /* grid items don't shrink below content size by default */
+            min-height: 0;
+            overflow: visible;
+        }
+
+        .award-heading {
+            position: absolute;
+            left: 50%;
+            top: 5%;
+            transform: translateX(-50%) rotate(180deg);
+            z-index: 999;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            margin: 0;
+            font-size: clamp(40px, 9vw, 100px);
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: white;
+            white-space: nowrap;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            aspect-ratio: 900 / 900; /* real source dimensions — reserves correct space before load, avoids shift/crop */
+            object-fit: contain; /* scales to fit, keeps the image's real aspect ratio */
+            background-position: center;
+            display: block;
+            border-radius: 12px;
+/*            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);*/
+            opacity: 0;
+            animation: popIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s forwards;
+        }
+
+        @@keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.6) rotate(-4deg);
+            }
+
+            60% {
+                opacity: 1;
+                transform: scale(1.05) rotate(1deg);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        /* ---------------------------------
+            Confetti surprise
+         --------------------------------- */
+
+        .confetti-piece {
+            position: fixed;
+            top: -20px;
+            width: 10px;
+            height: 16px;
+            opacity: 0.9;
+            pointer-events: none;
+            animation-name: confetti-fall;
+            animation-timing-function: linear;
+            animation-fill-mode: forwards;
+        }
+
+        @@keyframes confetti-fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(105vh) rotate(720deg);
+                opacity: 0.9;
+            }
+        }
+
+        /* ---------------------------------
+            Responsive breakpoints
+            Tablet: stack the two image slots instead of squeezing
+            them side by side, since each source image is a tall
+            portrait photo (2479x3301) that gets too narrow at 50% width.
+         --------------------------------- */
+
+        @@media (max-width: 900px) {
+            .award-content {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(2, minmax(0, 1fr));
+                min-height: calc(100vh - clamp(32px, 8vw, 60px));
+            }
+
+            .award-title,
+            .awardheader {
+                max-height: 45vh; /* each slot gets roughly half the viewport height */
+            }
+        }
+
+        /* Phones: vertical rotated heading text becomes hard to read at
+          small sizes, so switch it to normal horizontal text stacked
+          above the images instead of overlapping them. */
+        @@media (max-width: 600px) {
+            .award-heading {
+                position: static;
+                transform: none;
+                writing-mode: horizontal-tb;
+                text-orientation: initial;
+                text-align: center;
+                font-size: clamp(28px, 8vw, 48px);
+                margin-bottom: 12px;
+                opacity: 0.6;
+            }
+
+            .award-container {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .award-content {
+                flex: 1;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+
+
+    <div class="award-container">
+        <div class="award-content">
+            <div class="award-title">
+                <img class="NoImages lazy"
+                     src='@Url.Action("DisplaytheImage", "DataAnalysis", new { area = "Production1", filename = "awardee.png" })'
+                     onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
+            </div>
+            <div class="awardheader">
+                <img class="NoImages lazy"
+                     src='@Url.Action("DisplaytheImage", "DataAnalysis", new { area = "Production1", filename = "awardee.png" })'
+                     onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
+            </div>
+        </div>
+    </div>
+    <h2 class="award-heading">Congratulations</h2>
+
+    <script>
+        // Confetti bursts repeat for 1 minute, then stop.
+        (function () {
+            var colors = ['#09c9ba', '#1283dd', '#ffd166', '#ef476f', '#ffffff'];
+            var burstCount = 60;
+            var loopDurationMs = 60000; // 1 minute
+            var intervalMs = 1200;
+            var intervalId;
+
+            function launchConfettiBurst() {
+                for (var i = 0; i < burstCount; i++) {
+                    var piece = document.createElement('div');
+                    piece.className = 'confetti-piece';
+                    piece.style.left = Math.random() * 100 + 'vw';
+                    piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    piece.style.animationDuration = (2.5 + Math.random() * 2) + 's';
+                    piece.style.animationDelay = (Math.random() * 0.4) + 's';
+                    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                    document.body.appendChild(piece);
+
+                    piece.addEventListener('animationend', function () {
+                        this.remove();
+                    });
+                }
+            }
+
+            window.addEventListener('load', function () {
+                setTimeout(function () {
+                    launchConfettiBurst();
+                    intervalId = setInterval(launchConfettiBurst, intervalMs);
+                    setTimeout(function () {
+                        clearInterval(intervalId);
+                    }, loopDurationMs);
+                }, 200);
+            });
+        })();
+    </script>
+</body>
+</html>
+
+

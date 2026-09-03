@@ -929,6 +929,7 @@
     <Content Include="Areas\Production1\Views\Shared\_AttendanceLayout.cshtml" />
     <Content Include="Areas\Production1\Views\DataAnalysis\Index.cshtml" />
     <Content Include="Areas\Production1\Views\FinalAssembly\NCRDashboard.cshtml" />
+    <Content Include="Areas\Production1\Views\DataAnalysis\Awardees.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <Content Include="Content\Uploads\PCFY-81013Form1L.xlsx" />
     <Content Include="Content\Uploads\FinalUploadTemplate.xlsx" />

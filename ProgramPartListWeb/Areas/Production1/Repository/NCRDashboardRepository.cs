@@ -396,67 +396,146 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         }
 
 
+        //public async Task<TotalOutputChartModel> GetGroupDataSummary()
+        //{
+        //    var getTotalSummary = await SqlDataAcess_Test.QuerySingleAsync<TotalOutputChartModel>($@"SELECT
+        //                SUM(ISNULL(Group1, 0) + ISNULL(Group2, 0) + ISNULL(Group3, 0) + ISNULL(OP, 0)) AS TotalOutput,
+        //                AVG(
+        //                        ISNULL(Group1, 0) +
+        //                    ISNULL(Group2, 0) +
+        //                    ISNULL(Group3, 0) +
+        //                    ISNULL(OP, 0)
+        //                    ) AS AverageOutput,
+        //                AVG(ISNULL(TargetOutput, 0)) AS TargetOutput,
+        //                   CAST(
+        //                        AVG(ISNULL(Total, 0)) * 100.0
+        //                    / NULLIF(AVG(ISNULL(TargetOutput, 0)), 0)
+
+        //                    AS DECIMAL(10, 2)
+        //                    ) AS AverageEfficiency
+
+        //                FROM ProductionFinal_GroupChart;");
+
+        //    getTotalSummary.totalGroup = await SqlDataAcess_Test.QueryAsync<TotalGroupOutputModel>($@"SELECT
+        //                G.GroupName,
+        //                SUM(G.Output) AS TotalOutput,
+        //                AVG(G.Output) AS AvgOutput,
+        //                AVG(ISNULL(P.TargetOutput, 0)) AS TargetOutput,
+        //                CAST(
+        //                        SUM(G.Output) * 100.0
+        //                    / NULLIF(SUM(ISNULL(P.TargetOutput, 0)), 0)
+
+        //                    AS DECIMAL(10, 2)
+        //                    ) AS Efficiency
+        //                FROM ProductionFinal_GroupChart P
+        //                CROSS APPLY
+        //                (
+        //                    VALUES
+        //                        ('GROUP 1', ISNULL(P.Group1, 0)),
+        //                        ('GROUP 2', ISNULL(P.Group2, 0)),
+        //                        ('GROUP 3', ISNULL(P.Group3, 0)),
+        //                        ('OP',      ISNULL(P.OP, 0))
+        //                ) G(GroupName, Output)
+        //                GROUP BY
+        //                    G.GroupName
+        //                ORDER BY
+        //                    CASE G.GroupName
+        //                        WHEN 'GROUP 1' THEN 1
+        //                        WHEN 'GROUP 2' THEN 2
+        //                        WHEN 'GROUP 3' THEN 3
+        //                        WHEN 'OP'      THEN 4
+        //                    END;");
 
 
+        //    getTotalSummary.daily = await SqlDataAcess_Test.QueryAsync<DailyOutputModel>($@" SELECT
+	       //            FORMAT(GroupDate, 'd-MMM') AS [date],
+	       //             Total  as [value] 
+        //             FROM ProductionFinal_GroupChart
+        //             GROUP BY GroupDate, Total");
 
+
+        //    return getTotalSummary;
+        //}
 
         public async Task<TotalOutputChartModel> GetGroupDataSummary()
         {
-            var getTotalSummary = await SqlDataAcess_Test.QuerySingleAsync<TotalOutputChartModel>($@"SELECT
-                        SUM(ISNULL(Group1, 0) + ISNULL(Group2, 0) + ISNULL(Group3, 0) + ISNULL(OP, 0)) AS TotalOutput,
-                        AVG(
-                                ISNULL(Group1, 0) +
-                            ISNULL(Group2, 0) +
-                            ISNULL(Group3, 0) +
-                            ISNULL(OP, 0)
-                            ) AS AverageOutput,
-                        AVG(ISNULL(TargetOutput, 0)) AS TargetOutput,
-                           CAST(
-                                AVG(ISNULL(Total, 0)) * 100.0
-                            / NULLIF(AVG(ISNULL(TargetOutput, 0)), 0)
+            var getTotalSummary = await SqlDataAcess_Test.QuerySingleAsync<TotalOutputChartModel>(@"
+                    DECLARE @StartOfMonth DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);
+                        DECLARE @StartOfNextMonth DATE = DATEADD(MONTH, 1, @StartOfMonth);
+                        DECLARE @LastDayOfMonth DATE = DATEADD(DAY, -1, @StartOfNextMonth);
 
-                            AS DECIMAL(10, 2)
-                            ) AS AverageEfficiency
+                        ;WITH DateSpine AS (
+                            SELECT @StartOfMonth AS CalendarDate
+                            UNION ALL
+                            SELECT DATEADD(DAY, 1, CalendarDate)
+                            FROM DateSpine
+                            WHERE CalendarDate < @LastDayOfMonth   -- covers every day of the month, not just days with data
+                        ),
+                        DailyData AS (
+                            SELECT
+                                ds.CalendarDate,
+                                ISNULL(p.Group1, 0) + ISNULL(p.Group2, 0) + ISNULL(p.Group3, 0) + ISNULL(p.OP, 0) AS DailyOutput,
+                                ISNULL(p.TargetOutput, 0) AS DailyTarget,
+                                CASE WHEN ISNULL(p.TargetOutput, 0) = 0 THEN 0
+                                     ELSE ISNULL(p.Total, 0) * 100.0 / p.TargetOutput
+                                END AS DailyEfficiency
+                            FROM DateSpine ds
+                            LEFT JOIN ProductionFinal_GroupChart p
+                                ON p.GroupDate = ds.CalendarDate
+                        )
+                        SELECT
+                            SUM(DailyOutput)                                   AS TotalOutput,
+                            AVG(DailyOutput)                                   AS AverageOutput,
+                            AVG(DailyTarget)                                   AS TargetOutput,
+                           CAST(ROUND(AVG(DailyEfficiency), 0) AS INT) AS AverageEfficiency
+                        FROM DailyData
+                        OPTION (MAXRECURSION 31);");
 
-                        FROM ProductionFinal_GroupChart;");
+                        getTotalSummary.totalGroup = (await SqlDataAcess_Test.QueryAsync<TotalGroupOutputModel>(@"
+                    DECLARE @StartOfMonth DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);
+                    DECLARE @StartOfNextMonth DATE = DATEADD(MONTH, 1, @StartOfMonth);
 
-            getTotalSummary.totalGroup = await SqlDataAcess_Test.QueryAsync<TotalGroupOutputModel>($@"SELECT
+                    SELECT
                         G.GroupName,
                         SUM(G.Output) AS TotalOutput,
                         AVG(G.Output) AS AvgOutput,
-                        AVG(ISNULL(P.TargetOutput, 0)) AS TargetOutput,
+                         (SELECT TOP 1 TargetOutput FROM ProductionFinal_Group WHERE GroupName = G.GroupName) AS   TargetOutput,
                         CAST(
-                                SUM(G.Output) * 100.0
+                            SUM(G.Output) * 100.0
                             / NULLIF(SUM(ISNULL(P.TargetOutput, 0)), 0)
-
                             AS DECIMAL(10, 2)
-                            ) AS Efficiency
-                        FROM ProductionFinal_GroupChart P
-                        CROSS APPLY
-                        (
-                            VALUES
-                                ('GROUP 1', ISNULL(P.Group1, 0)),
-                                ('GROUP 2', ISNULL(P.Group2, 0)),
-                                ('GROUP 3', ISNULL(P.Group3, 0)),
-                                ('OP',      ISNULL(P.OP, 0))
-                        ) G(GroupName, Output)
-                        GROUP BY
-                            G.GroupName
-                        ORDER BY
-                            CASE G.GroupName
-                                WHEN 'GROUP 1' THEN 1
-                                WHEN 'GROUP 2' THEN 2
-                                WHEN 'GROUP 3' THEN 3
-                                WHEN 'OP'      THEN 4
-                            END;");
+                        ) AS Efficiency
+                    FROM ProductionFinal_GroupChart P
+                    CROSS APPLY
+                    (
+                        VALUES
+                            ('GROUP 1', ISNULL(P.Group1, 0)),
+                            ('GROUP 2', ISNULL(P.Group2, 0)),
+                            ('GROUP 3', ISNULL(P.Group3, 0)),
+                            ('OP',      ISNULL(P.OP, 0))
+                    ) G(GroupName, Output)
+                    WHERE P.GroupDate >= @StartOfMonth
+                      AND P.GroupDate < @StartOfNextMonth
+                    GROUP BY G.GroupName
+                    ORDER BY
+                        CASE G.GroupName
+                            WHEN 'GROUP 1' THEN 1
+                            WHEN 'GROUP 2' THEN 2
+                            WHEN 'GROUP 3' THEN 3
+                            WHEN 'OP'      THEN 4
+                        END")).ToList();
 
+                        getTotalSummary.daily = (await SqlDataAcess_Test.QueryAsync<DailyOutputModel>(@"
+                    DECLARE @StartOfMonth DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);
+                    DECLARE @StartOfNextMonth DATE = DATEADD(MONTH, 1, @StartOfMonth);
 
-            getTotalSummary.daily = await SqlDataAcess_Test.QueryAsync<DailyOutputModel>($@" SELECT
-	                   FORMAT(GroupDate, 'd-MMM') AS [date],
-	                    Total  as [value] 
-                     FROM ProductionFinal_GroupChart
-                     GROUP BY GroupDate, Total");
-
+                    SELECT
+                        FORMAT(GroupDate, 'd-MMM') AS [date],
+                        Total AS [value]
+                    FROM ProductionFinal_GroupChart
+                    WHERE GroupDate >= @StartOfMonth
+                      AND GroupDate < @StartOfNextMonth
+                    ORDER BY GroupDate")).ToList();
 
             return getTotalSummary;
         }

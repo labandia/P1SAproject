@@ -144,10 +144,12 @@ namespace PMACS_V2.Areas.P1SA.Models
         private string _DateRepair = string.Empty;
         private string _Incharge = string.Empty;
         private string _Remarks = string.Empty;
-
-
+        private string _PartNo = string.Empty;
+        private string _Dimension_Quality = string.Empty;
         public int RecordID { get => _RecordID; set => _RecordID = value; }
         public string RegNo { get => _RegNo; set => _RegNo = value ?? string.Empty; }
+        public string PartNo { get => _PartNo; set => _PartNo = value ?? string.Empty; }
+        public string Dimension_Quality { get => _Dimension_Quality; set => _Dimension_Quality = value ?? string.Empty; }
         public string ParNoSearch { get => _ParNoSearch; set => _ParNoSearch = value ?? string.Empty; }
         public string DimensionQuality { get => _DimensionQuality; set => _DimensionQuality = value ?? string.Empty; }
         public int Item { get => _Item; set => _Item = value; }

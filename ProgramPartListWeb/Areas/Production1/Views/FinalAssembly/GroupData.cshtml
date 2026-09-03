@@ -5,7 +5,7 @@
 }
 
 <div class="dashboard">
-    <header><h1>FINA ASSY PRODUCTION DASHBOARD</h1></header>
+    <header><h1>FINAL ASSY PRODUCTION DASHBOARD</h1></header>
 
 
     <!-- Top stats -->
@@ -82,6 +82,12 @@
             };
 
             window.addEventListener('resize', resizeHandler);
+
+
+            // Auto-refresh data every 30 seconds
+            this._refreshInterval = setInterval(() => {
+                this.fetchTotalGroupData();
+            }, 10000);
         }
 
         async fetchTotalGroupData() {
@@ -102,15 +108,26 @@
         }
 
         renderdata(data) {
-            this.animateNumber(document.getElementById("totalOutput"), data.TotalOutput, 1200);   // slowers
-            this.animateNumber(document.getElementById("avgOutput"), data.AverageOutput, 1200);     // faster
-            // this.animateNumber(document.getElementById("targetOutput"), data.TargetOutput, 1200);
-            this.animateGauge(document.getElementById("overallGaugeHost"), data.AverageEfficiency, 180, 1200);
+            const totalEl = document.getElementById("totalOutput");
+            const avgEl = document.getElementById("avgOutput");
+            const targetEl = document.getElementById("targetOutput");
+            const gaugeEl = document.getElementById("overallGaugeHost");
+
+            totalEl.innerText = "0";
+            avgEl.innerText = "0";
+            targetEl.innerText = "0";
+            gaugeEl.dataset.pct = "0";
+
+            this.animateNumber(totalEl, data.TotalOutput, 1200);
+            this.animateNumber(avgEl, data.AverageOutput, 1200);
+            this.animateNumber(targetEl, 85000, 1200);   // static target, not tied to API data
+            this.animateGauge(gaugeEl, data.AverageEfficiency, 180, 1200);
         }
 
 
         displayGroups(DATA) {
             const groupsRow = document.getElementById('groupsRow');
+            groupsRow.innerHTML = ''; // clear previous cards before re-rendering
             DATA.totalGroup.forEach((g, i) => {
                 const card = document.createElement('div');
                 card.className = 'group-card';
@@ -126,7 +143,7 @@
                 this.animateNumber(document.getElementById(`grpTotal${i}`), g.TotalOutput, 1200);
                 this.animateNumber(document.getElementById(`grpAvg${i}`), g.AvgOutput, 1200);
                 this.animateNumber(document.getElementById(`grpTarget${i}`), g.TargetOutput, 1200);
-                this.animateGauge(document.getElementById(`grpGauge${i}`), g.Efficiency, 1200);
+                this.animateGauge(document.getElementById(`grpGauge${i}`), g.Efficiency, 180, 1200);
             });
         }
 
@@ -367,23 +384,27 @@
         animateNumber(el, endValue, duration = 800) {
             if (!el) return;
 
-            // Cancel any animation already running on this element
             if (this._animFrames.has(el)) {
                 cancelAnimationFrame(this._animFrames.get(el));
+                this._animFrames.delete(el);
             }
 
             const startValue = parseFloat(el.innerText.replace(/,/g, '')) || 0;
             const change = endValue - startValue;
 
-            // If there's nothing to animate, just set it and bail
+            // Value unchanged — still give a visual "refreshed" cue instead of a silent no-op
             if (change === 0) {
                 el.innerText = this.changeformatnumber(endValue);
+                el.style.transition = 'none';
+                el.style.opacity = '0.35';
+                requestAnimationFrame(() => {
+                    el.style.transition = `opacity ${Math.min(duration, 400)}ms ease`;
+                    el.style.opacity = '1';
+                });
                 return;
             }
 
             const startTime = performance.now();
-
-            // easeOutCubic - fast start, gentle settle
             const ease = t => 1 - Math.pow(1 - t, 3);
 
             const step = (now) => {
@@ -413,6 +434,19 @@
 
             const startPct = parseFloat(hostEl.dataset.pct || 0);
             const change = endPct - startPct;
+
+            if (change === 0) {
+                hostEl.innerHTML = this.buildGauge(endPct, size);
+                hostEl.style.transition = 'none';
+                hostEl.style.opacity = '0.35';
+                requestAnimationFrame(() => {
+                    hostEl.style.transition = `opacity ${Math.min(duration, 400)}ms ease`;
+                    hostEl.style.opacity = '1';
+                });
+                hostEl.dataset.pct = endPct;
+                return;
+            }
+
             const startTime = performance.now();
             const ease = t => 1 - Math.pow(1 - t, 3);
 

@@ -13,20 +13,19 @@
 </head>
 
 <body>
+    <div class="TVContainer" id="tvContainer">
 
-    <div class="TVContainer">
-
-        <div class="TV_col">
+        <div class="TV_col" data-panel="1">
+            <div class="panel-overlay"></div>
             <iframe class="info-slide-frame"
                     src="http://p1saportalweb.sdp.com/Production1/FinalAssembly/NCRDashboard"
                     title="Dashboard 2"
                     frameborder="0">
             </iframe>
-
-
         </div>
 
-        <div class="TV_col">
+        <div class="TV_col" data-panel="2">
+            <div class="panel-overlay"></div>
             <iframe class="info-slide-frame"
                     src="http://p1saportalweb.sdp.com/Production1/FinalAssembly/GroupData"
                     title="Dashboard 4"
@@ -34,10 +33,8 @@
             </iframe>
         </div>
 
-
-
-        <div class="TV_col">
-
+        <div class="TV_col" data-panel="3">
+            <div class="panel-overlay"></div>
             <iframe class="info-slide-frame"
                     src="http://p1saportalweb.sdp.com/Production1/DataAnalysis/Awardees"
                     title="Dashboard 1"
@@ -45,8 +42,8 @@
             </iframe>
         </div>
 
-
-        <div class="TV_col">
+        <div class="TV_col" data-panel="4">
+            <div class="panel-overlay"></div>
             <iframe class="info-slide-frame"
                     src="http://p1saportalweb.sdp.com/Production1/Attendance/Dashboard"
                     title="Dashboard 3"
@@ -55,5 +52,29 @@
         </div>
 
     </div>
+
+    <script>
+        (function () {
+            var container = document.getElementById('tvContainer');
+            var panels = container.querySelectorAll('.TV_col');
+
+            panels.forEach(function (panel) {
+                panel.addEventListener('dblclick', function () {
+                    var isExpanded = container.classList.contains('expanded-mode');
+
+                    if (isExpanded) {
+                        // Any double-click while expanded -> go back to grid
+                        container.classList.remove('expanded-mode');
+                        panels.forEach(function (p) { p.classList.remove('expanded'); });
+                    } else {
+                        // Expand the double-clicked panel
+                        panels.forEach(function (p) { p.classList.remove('expanded'); });
+                        container.classList.add('expanded-mode');
+                        panel.classList.add('expanded');
+                    }
+                });
+            });
+        })();
+    </script>
 </body>
 </html>

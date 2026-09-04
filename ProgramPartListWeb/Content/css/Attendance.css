@@ -50,6 +50,10 @@ body {
 
 /* ----- HEADER ----- */
 header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
     background: #13213a;
     backdrop-filter: blur(4px);
     padding: clamp(8px, 1.2vh, 14px) clamp(14px, 2vw, 28px);
@@ -213,11 +217,17 @@ header {
 }
 
 .tableHeader {
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
     padding: clamp(0.6em, 1.2vh, 1em);
     border-bottom: 1px solid #29406a;
     flex-shrink: 0;
     background: #111e36;
 }
+
+
+
 
     .tableHeader h3 {
         font-weight: 600;
@@ -288,6 +298,13 @@ tbody tr {
     border-bottom: 1px solid #3a5a8a;
 }
 
+#filterDate {
+    background-color: #0b111e !important;
+    color: #fff;
+    padding: .2em .5em;
+}
+
+
 .rate-badge {
     background: #1d3157;
     padding: 2px 12px;
@@ -333,6 +350,36 @@ tbody tr {
     color: #98b4d9;
     margin-bottom: 8px;
 }
+
+.trends_legends {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #7aa7e6;
+    gap: 20px;
+}
+
+.trends_groupbadge{
+    display: flex;
+    align-items:center;
+    gap: 20px;
+}
+
+.Trends_badge{
+    width: 15px;
+    height: 15px;
+    display: block;
+
+}
+
+    .Trends_badge.blue {
+        background: #2E5AAC;
+    }
+
+    .Trends_badge.orange {
+        background: #E8842C;
+    }
+
 
 #ChartTrends {
     position: relative;
@@ -668,7 +715,16 @@ tbody tr {
         .summary_attendanceDetails span {
             font-size: 0.8rem;
         }
+
+   
+
 }
+@media(max-width: 1400px){
+    #filterDate {
+        font-size: .8rem !important;
+    }
+}
+
 
 /* ----- EVEN TIGHTER, in case the tile ever gets shorter than ~472px ----- */
 @media (max-height: 400px) {
@@ -685,4 +741,123 @@ tbody tr {
     .attendSummary_absentRate p {
         font-size: 0.7rem;
     }
+}
+
+.TV_col {
+    position: relative;
+}
+
+    .TV_col .panel-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+        background: transparent;
+        cursor: pointer;
+    }
+
+.TVContainer.expanded-mode .TV_col {
+    display: none;
+}
+
+    .TVContainer.expanded-mode .TV_col.expanded {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 1000;
+        margin: 0;
+    }
+
+.TV_col.expanded .info-slide-frame {
+    width: 100%;
+    height: 100%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.animToggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.85em;
+    color: #444;
+}
+
+    .animToggle input {
+        display: none;
+    }
+
+.animToggle_track {
+    width: 40px;
+    height: 20px;
+    border-radius: 999px;
+    background: #ccc;
+    position: relative;
+    transition: background 0.25s ease;
+    flex-shrink: 0;
+}
+
+.animToggle_thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    transition: transform 0.25s ease;
+}
+
+.animToggle input:checked + .animToggle_track {
+    background: #2E5AAC;
+}
+
+    .animToggle input:checked + .animToggle_track .animToggle_thumb {
+        transform: translateX(20px);
+    }
+
+
+
+@keyframes numPulse {
+    0% {
+        opacity: 0.45;
+        transform: scale(0.96);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.num-pulse {
+    animation: numPulse 250ms ease-out;
 }

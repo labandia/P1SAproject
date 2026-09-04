@@ -7,13 +7,20 @@
 
         <!-- HEADER -->
         <header>
-            <h2>📋PRODUCTION 1 ATTENDANCE DASHBOARD - <span id="shiftDay">DAYSHIFT (8/24/2026)</span></h2>
+            <h2>📋PRODUCTION 1 ATTENDANCE DASHBOARD - <span > <strong id="shiftDay">DAYSHIFT</strong>(<span id="datetoday">-/--/----</span>)</span></h2>
+            <div class="animToggleWrap">
+                <label class="animToggle" for="refreshToggleInput" title="Toggle auto-refresh">
+                    <input type="checkbox" id="refreshToggleInput" checked>
+                    <span class="animToggle_track"><span class="animToggle_thumb"></span></span>
+                    <span class="animToggle_label" id="refreshToggleLabel">Auto-Refresh: ON</span>
+                </label>
+            </div>
         </header>
 
         <!-- KPI CARDS -->
         <div class="attendSummary">
             <!-- Total Headcount -->
-            <div class="attendSummary_card">
+            <div class="attendSummary_card loop-anim">
                 <div class="IconContainer">
                     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
                         <g fill="none" stroke="currentColor" stroke-width="2">
@@ -33,7 +40,7 @@
                 </div>
             </div>
             <!-- Present -->
-            <div class="attendSummary_card">
+            <div class="attendSummary_card loop-anim">
                 <div class="IconContainer" style="background: radial-gradient(circle at 30% 30%, #21AA98, #057922); color: #fff !important; ">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
@@ -48,7 +55,7 @@
                 </div>
             </div>
             <!-- Absent -->
-            <div class="attendSummary_card">
+            <div class="attendSummary_card loop-anim">
                 <div class="IconContainer" style="background: radial-gradient(circle at 30% 30%, #C55216, #EA1D1D); color: #fff !important; ">
                     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
                         <g fill="none" stroke="currentColor" stroke-width="2">
@@ -65,7 +72,7 @@
                 </div>
             </div>
             <!-- Absent Rate -->
-            <div class="attendSummary_card">
+            <div class="attendSummary_card loop-anim">
                 <div class="attendSummary_absentRate">
                     <span>Attendance Rate</span>
                     <p id="absentrateCount">0% </p>
@@ -84,6 +91,8 @@
                 <div class="tablecontainer maintable">
                     <div class="tableHeader">
                         <h3>🏢 Department Breakdown</h3>
+
+                        <input type="date" id="filterDate" />
                     </div>
                     <div class="table-scroll">
                         <table>
@@ -116,7 +125,9 @@
                 </div>
 
                 <!-- Trends -->
-                <div class="Trends">
+                <div class="Trends loop-anim" >
+
+
                     <div class="trendHeader">
                         <h3>📈 Attendance & Absenteeism Trends</h3>
                         <div class="trend-sub">Y‑axis: Percentage · X‑axis: 8/20 – 8/25</div>
@@ -124,12 +135,24 @@
                     <div id="ChartTrends">
                         <canvas id="trendChart" height="100"></canvas>
                     </div>
+
+                    <div class="trends_legends">
+                        <div class="trends_groupbadge">
+                            <div class="Trends_badge blue"></div>
+                            <small>Attendance Rate %</small>
+                        </div>
+
+                        <div class="trends_groupbadge">
+                            <div class="Trends_badge orange"></div>
+                            <small>Absent Rate %</small>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- RIGHT COLUMN: SUMMARY -->
             <div class="col">
-                <div class="summary">
+                <div class="summary loop-anim">
                     <div class="summary_Header">
                         <h3>📋 Total Summary</h3>
                     </div>
@@ -174,61 +197,183 @@
         postMethod
     } from '@Url.Content("~/Scripts/modules/index.js")';
 
+     const REFRESH_INTERVAL_MS = 10000; // 1 minute
+
     class AttendanceDashboardController {
         constructor() {
+            this.isfilter = 0;
             this.summarydata = [];
 
-            this.tbody = document.querySelector('.maintable tbody');
+            this.filterDateSelect =
+                document.getElementById("filterDate");
+
+            this.tbody =
+                document.querySelector('.maintable tbody');
+
+            this._animFrames = new Map();
+
+            // IMPORTANT:
+            // This survives every refreshAll()
+            this._lastValues = new Map();
+
+            this._refreshTimer = null;
+            this.autoRefreshEnabled = true;
         }
 
         async init() {
             this.setShift();
-            setInterval(this.setShift(), 60000);
+            setInterval(() => this.setShift(), 10000); // fixed: was calling setShift() immediately and passing undefined to setInterval
+
+            await this.refreshAll();
+
+            this.initRefreshToggle();
+
+            this.filterDateSelect.addEventListener('change', async (e) => {
+                this.isfilter = 1;
+                await this.refreshAll();
+            });
+        }
+
+        initRefreshToggle() {
+            const toggle = document.getElementById('refreshToggleInput');
+            const label = document.getElementById('refreshToggleLabel');
+            if (!toggle) return;
+
+            // start enabled by default (checkbox is checked in the markup)
+            this.startAutoRefresh();
+
+            toggle.addEventListener('change', () => {
+                this.autoRefreshEnabled = toggle.checked;
+
+                if (this.autoRefreshEnabled) {
+                    this.startAutoRefresh();
+                    if (label) label.textContent = 'Auto-Refresh: ON';
+                } else {
+                    this.stopAutoRefresh();
+                    if (label) label.textContent = 'Auto-Refresh: OFF';
+                }
+            });
+        }
+
+        startAutoRefresh() {
+            // clear any existing timer first so toggling on/off repeatedly never stacks intervals
+            this.stopAutoRefresh();
+            this._refreshTimer = setInterval(() => this.refreshAll(), REFRESH_INTERVAL_MS);
+        }
+
+        stopAutoRefresh() {
+            if (this._refreshTimer) {
+                clearInterval(this._refreshTimer);
+                this._refreshTimer = null;
+            }
+        }
+
+        async refreshAll() {
             await this.GetAttendanceSummary();
             await this.GetAttendanceBreakDown();
             await this.GetAttendanceTrends();
-
-            //this.fitDashboard();
         }
-
-
 
 
         async GetAttendanceSummary() {
             try {
-                const res = await getMethod('@Url.Action("GetAttendanceSummary", "Attendance")', {});
-                console.log("Summary: ");
+                let strdate = document.getElementById("filterDate").value;
+
+                const res = await getMethod('@Url.Action("GetAttendanceSummary", "Attendance")', {
+                    filterDate: strdate, isfilter: this.isfilter
+                });
+
                 console.log(res);
-                if (!res?.Success) {
-                    console.log('No data found in Group Data ');
-                    return;
-                }
-                this.summarydata = res.data;
+                 if (!res?.Success) {
+                     console.log('No data found in Group Data ');
+                     return;
+                 }
+                this.summarydata = res.data.Listdata;
                 this.RenderAttendanceSummary(this.summarydata)
+
+                document.getElementById("datetoday").textContent =
+                    res.data.today.split(" ")[0];
+
+                if (this.isfilter == 0) {
+                    document.getElementById("filterDate").value =
+                        new Date().toISOString().split("T")[0];
+                }
+              
+
+
             } catch (error) {
                 console.error('Error fetching group data:', error);
             }
         }
 
         RenderAttendanceSummary(data) {
-            console.log(data);
+            console.log("Attendance Summary:", data);
 
-            document.getElementById("totalhead").textContent = data.TotalHeadCount;
-            document.getElementById("presentCount").textContent = data.TotalEmployees;
-            document.getElementById("absentCount").textContent = data.TotalAbsent ;
-            document.getElementById("absentrateCount").innerHTML = `${data.AttendRate}% `;
+            // Top KPI
+            this.animateNumberIfChanged(
+                document.getElementById("totalhead"),
+                data.TotalHeadCount,
+                800,
+                ''
+            );
+
+            this.animateNumberIfChanged(
+                document.getElementById("presentCount"),
+                data.TotalEmployees,
+                800,
+                ''
+            );
+
+            this.animateNumberIfChanged(
+                document.getElementById("absentCount"),
+                data.TotalAbsent,
+                800,
+                ''
+            );
+
+            this.animateNumberIfChanged(
+                document.getElementById("absentrateCount"),
+                data.AttendRate,
+                800,
+                '%'
+            );
 
 
-            document.getElementById("totalHeadcount").textContent = data.TotalHeadCount;
-            document.getElementById("totalPresent").textContent = data.TotalEmployees;
-            document.getElementById("totalAbsent").textContent = data.TotalAbsent;
-            document.getElementById("absentrateCount").innerHTML = `${data.AttendRate}%`;
+            // Right Summary
+            this.animateNumberIfChanged(
+                document.getElementById("totalHeadcount"),
+                data.TotalHeadCount,
+                800,
+                ''
+            );
 
-            document.getElementById("totalAntendanceRate").innerHTML = `${data.AttendRate}% `;
-            document.getElementById("totalAbsentRate").innerHTML = `${data.AbsentRate}% `;
+            this.animateNumberIfChanged(
+                document.getElementById("totalPresent"),
+                data.TotalEmployees,
+                800,
+                ''
+            );
 
+            this.animateNumberIfChanged(
+                document.getElementById("totalAbsent"),
+                data.TotalAbsent,
+                800,
+                ''
+            );
 
+            this.animateNumberIfChanged(
+                document.getElementById("totalAntendanceRate"),
+                data.AttendRate,
+                800,
+                '%'
+            );
 
+            this.animateNumberIfChanged(
+                document.getElementById("totalAbsentRate"),
+                data.AbsentRate,
+                800,
+                '%'
+            );
         }
 
 
@@ -236,9 +381,9 @@
 
         async GetAttendanceBreakDown() {
             try {
-                const res = await getMethod('@Url.Action("GetAttendanceBreakDown", "Attendance")', {});
-                console.log("Breakdown: ");
-                console.log(res);
+                let strdate = document.getElementById("filterDate").value;
+
+                const res = await getMethod('@Url.Action("GetAttendanceBreakDown", "Attendance")', { filterDate: strdate, isfilter: this.isfilter });
                 if (!res?.Success) {
                     console.log('No data found in Group Data ');
                     return;
@@ -258,32 +403,32 @@
 
             if (data.length === 0) {
                 this.tbody.innerHTML = `
-         <tr>
-             <td colspan="12" style="text-align:center; padding:32px; color:#86868b;">
-                 No data available.
-             </td>
-         </tr>`;
+                     <tr>
+                         <td colspan="12" style="text-align:center; padding:32px; color:#86868b;">
+                             No data available.
+                         </td>
+                     </tr>`;
                 this.RenderTotals([]);
                 return;
             }
 
             this.tbody.innerHTML = this.currentData.map(row => {
                 return `
-       <tr class='fade-in'
-           data-dash-id="${row.DashID}">
-                 <td style='font-weight: 600;'>${row.DepartmentName}</td>
-                 <td>
-                     <input type="number" class="edit-input" data-dash-id="${row.DashID}" data-field="DayShiftCount" value="${row.DayShiftCount ?? 0}" min="0">
-                 </td>
-                 <td>
-                     <input type="number" class="edit-input" data-dash-id="${row.DashID}" data-field="NightShiftCount" value="${row.NightShiftCount ?? 0}" min="0">
-                 </td>
-                 <td>${row.TotalHeadCount || ''}</td>
-                 <td>${row.PresentCount}</td>
-                 <td class="status-column">${row.Absent || ''}</td>
-                 <td> <span class="rate-badge">${row.AttendanceRate ?? ''}%</span>    </td>
+                   <tr class='fade-in'
+                       data-dash-id="${row.DashID}">
+                             <td style='font-weight: 600;'>${row.DepartmentName}</td>
+                             <td>
+                                 <input type="number" class="edit-input" data-dash-id="${row.DashID}" data-field="DayShiftCount" value="${row.DayShiftCount ?? 0}" min="0">
+                             </td>
+                             <td>
+                                 <input type="number" class="edit-input" data-dash-id="${row.DashID}" data-field="NightShiftCount" value="${row.NightShiftCount ?? 0}" min="0">
+                             </td>
+                             <td>${row.TotalHeadCount || ''}</td>
+                             <td>${row.PresentCount}</td>
+                             <td class="status-column">${row.Absent || ''}</td>
+                             <td> <span class="rate-badge">${row.AttendanceRate ?? ''}%</span>    </td>
 
-         </tr>`;
+                     </tr>`;
             }).join('');
 
             this.RenderTotals(this.currentData);
@@ -335,9 +480,7 @@
                         [field]: value
                     });
 
-                    console.log("Update: ");
-                    console.log(res);
-
+    
                     if (!res?.Success) {
                         console.log('Update failed for DashID ' + dashId);
                         inputEl.classList.add('input-error');
@@ -356,13 +499,13 @@
 
              async GetAttendanceTrends() {
                  try {
-                     const res = await getMethod('@Url.Action("GetAttendanceTrends", "Attendance")', {});
-                     console.log("Breakdown: ");
-                     console.log(res);
-                     //if (!res?.Success) {
-                     //    console.log('No data found in Group Data ');
-                     //    return;
-                     //}
+                     let strdate = document.getElementById("filterDate").value;
+
+                     const res = await getMethod('@Url.Action("GetAttendanceTrends", "Attendance")', { filterDate: strdate });
+                     if (!res?.Success) {
+                        console.log('No data found in Group Data ');
+                        return;
+                     }
                      this.RenderTrendsChart(res.data);
                      //console.log(res.data);
                  } catch (error) {
@@ -370,13 +513,20 @@
                  }
              }
 
-            RenderTrendsChart(data) {
+        RenderTrendsChart(data) {
                 const labels = data.map(d => {
                     const date = new Date(d.DateToday);
                     return `${date.getMonth() + 1}/${date.getDate()}`;
                 });
                 const attendRates = data.map(d => d.AttendRate);
                 const absentRates = data.map(d => d.AbsentRate);
+
+                // destroy the previous chart instance before re-creating it, or Chart.js
+                // throws "Canvas is already in use" on every refresh after the first
+                if (this.trendChart) {
+                    this.trendChart.destroy();
+                    this.trendChart = null;
+                }
 
                 const ctx = document.getElementById('trendChart').getContext('2d');
                 this.trendChart = new Chart(ctx, {
@@ -417,7 +567,7 @@
                         }
                     }
                 });
-            }
+           }
 
             setShift() {
                 const now = new Date();
@@ -450,7 +600,7 @@
                 const dateText = `${shiftDate.getMonth() + 1}/${shiftDate.getDate()}/${shiftDate.getFullYear()}`;
 
                 document.getElementById("shiftDay").textContent =
-                    `${shift} (${dateText})`;
+                    `${shift}`;
         }
 
 
@@ -473,10 +623,138 @@
             stage.style.transform = `scale(${scale})`;
             wrapper.style.height = `${naturalHeight * scale}px`;
         }
+
+        animateNumber(el, endValue, duration = 800, suffix = '') {
+            if (!el) return;
+
+            if (this._animFrames.has(el)) {
+                cancelAnimationFrame(this._animFrames.get(el));
+                this._animFrames.delete(el);
+            }
+
+            const startValue = parseFloat(el.innerText.replace(/,/g, '').replace('%', '')) || 0;
+
+            const startTime = performance.now();
+            const ease = t => 1 - Math.pow(1 - t, 3);
+            const change = endValue - startValue;
+
+            const step = (now) => {
+                const elapsed = now - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = ease(progress);
+                const current = startValue + change * eased;
+
+                el.innerText = this.changeformatnumber(Math.round(current)) + suffix;
+
+                if (progress < 1) {
+                    const frameId = requestAnimationFrame(step);
+                    this._animFrames.set(el, frameId);
+                } else {
+                    el.innerText = this.changeformatnumber(endValue) + suffix;
+                    this._animFrames.delete(el);
+                }
+            };
+
+            const frameId = requestAnimationFrame(step);
+            this._animFrames.set(el, frameId);
+        }
+
+        stopLoop(el) {
+            if (this._animFrames?.has(el)) {
+                cancelAnimationFrame(this._animFrames.get(el));
+                this._animFrames.delete(el);
+            }
+        }
+
+        animateNumberIfChanged(el, endValue, duration = 800, suffix = '') {
+            if (!el) return;
+
+            endValue = Number(endValue) || 0;
+
+            const key = el.id;
+
+            // First load
+            if (!this._lastValues.has(key)) {
+                this._lastValues.set(key, endValue);
+
+                el.textContent =
+                    this.changeformatnumber(endValue) + suffix;
+
+                return;
+            }
+
+            const previousValue = this._lastValues.get(key);
+
+            // No change -> DO NOTHING
+            if (previousValue === endValue) {
+                return;
+            }
+
+            // Cancel previous animation
+            this.stopLoop(el);
+
+            const startValue = previousValue;
+            const change = endValue - startValue;
+
+            const startTime = performance.now();
+
+            const ease = t => 1 - Math.pow(1 - t, 3);
+
+            const step = (now) => {
+
+                const elapsed = now - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = ease(progress);
+
+                const current =
+                    startValue + (change * eased);
+
+                el.textContent =
+                    this.changeformatnumber(Math.round(current)) + suffix;
+
+                if (progress < 1) {
+
+                    const frameId = requestAnimationFrame(step);
+                    this._animFrames.set(el, frameId);
+
+                } else {
+
+                    // Final value
+                    el.textContent =
+                        this.changeformatnumber(endValue) + suffix;
+
+                    // IMPORTANT:
+                    // Save the value only after animation completes
+                    this._lastValues.set(key, endValue);
+
+                    this._animFrames.delete(el);
+                }
+            };
+
+            const frameId = requestAnimationFrame(step);
+            this._animFrames.set(el, frameId);
+        }
+
+
+
+        changeformatnumber(n) {
+            return n.toLocaleString('en-US');
+        }
+
     }
 
 
     document.addEventListener('DOMContentLoaded', function() {
+        // const filterDate = document.getElementById('filterDate');
+
+        // const today = new Date();
+        // const yyyy = today.getFullYear();
+        // const mm = String(today.getMonth() + 1).padStart(2, '0');
+        // const dd = String(today.getDate()).padStart(2, '0');
+
+        // filterDate.value = `${yyyy}-${mm}-${dd}`;
+
+
         const controller = new AttendanceDashboardController();
         controller.init();
 
@@ -488,4 +766,4 @@
         //    resizeTimer = setTimeout(() => controller.fitDashboard(), 100);
         //});
     });
-    </script>
+</script>

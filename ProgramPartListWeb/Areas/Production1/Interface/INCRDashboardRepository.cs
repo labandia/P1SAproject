@@ -42,14 +42,13 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
         // ================================================
         // ========== ATTENDANCE DASHBOARD ==========================
         // ================================================
-
-        Task<List<AttendanceModel>> AttendanceBreakDown();
+        Task<List<AttendanceModel>> AttendanceBreakDown(DateTime? filterDate, int isfilter);
         Task<List<AttendanceModel>> AttendanceGetLastBreakDown();   
-        Task<AttendanceSummaryModel> GetAttendanceSummary();
+        Task<(AttendanceSummaryModel, string)> GetAttendanceSummary(DateTime? filterDate, int isfilter);
         Task<bool> IsTodayRecorded();
         Task InsertTodayFromLastBreakDown(List<AttendanceModel> lastData);
         Task<bool> UpdateAttandanceSummary(UpdateAttendanceBreakDownRequest model);
 
-        Task<List<AttendanceTrendModel>> GetLatestTrendsAttendance();
+        Task<List<AttendanceTrendModel>> GetLatestTrendsAttendance(DateTime? filterDate);
     }
 }

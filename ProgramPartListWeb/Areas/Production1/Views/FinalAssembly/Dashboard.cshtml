@@ -297,28 +297,28 @@
                         <span class="audit-icon chip-customer">🏭</span>
                         <div class="audit-text">
                             <span class="audit-label">Customer:</span>
-                            <span class="audit-value" contenteditable="true" data-field="Customer">AMAZON MQE</span>
+                            <span class="audit-value" contenteditable="true" data-field="Customer">-</span>
                         </div>
                     </div>
                     <div class="audit-chip">
                         <span class="audit-icon chip-date">📅</span>
                         <div class="audit-text">
                             <span class="audit-label">Audit Date:</span>
-                            <span class="audit-value" contenteditable="true" data-field="AuditDate">September 05, 2026</span>
+                            <span class="audit-value" contenteditable="true" data-field="AuditDate">-</span>
                         </div>
                     </div>
                     <div class="audit-chip">
                         <span class="audit-icon chip-time">🕐</span>
                         <div class="audit-text">
                             <span class="audit-label">Audit Time:</span>
-                            <span class="audit-value" contenteditable="true" data-field="AuditTime">9:00AM - 5:00PM</span>
+                            <span class="audit-value" contenteditable="true" data-field="AuditTime">-</span>
                         </div>
                     </div>
                     <div class="audit-chip">
                         <span class="audit-icon chip-coverage">⚙️</span>
                         <div class="audit-text">
                             <span class="audit-label">Coverage Area:</span>
-                            <span class="audit-value" contenteditable="true" data-field="CoverageArea">FA, HARNESS & OILPROOF</span>
+                            <span class="audit-value" contenteditable="true" data-field="CoverageArea">-</span>
                         </div>
                     </div>
                 </div>
@@ -535,14 +535,14 @@
                 //this.refreshText.textContent = 'Updated ' + new Date().toLocaleTimeString();
             }, 10000);
 
-            this.bestLinesInterval = setInterval(async () => {
-                await this.fetchBestLines();
-            }, 60 * 1000);
+            // this.bestLinesInterval = setInterval(async () => {
+            //     await this.fetchBestLines();
+            // }, 60 * 1000);
 
             // Slide rotation: Main dashboard -> Info slide -> Award slide -> back to Main
-            this.awardSlideInterval = setInterval(() => {
-                this.showInfoSlide();
-            }, 20 * 1000);
+            // this.awardSlideInterval = setInterval(() => {
+            //     this.showInfoSlide();
+            // }, 20 * 1000);
 
             this.OpensDataManage.addEventListener('click', (e) => {
                 window.location.href = '/Production1/FinalAssembly/ManagementData';

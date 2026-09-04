@@ -460,36 +460,35 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         public async Task<TotalOutputChartModel> GetGroupDataSummary()
         {
             var getTotalSummary = await SqlDataAcess_Test.QuerySingleAsync<TotalOutputChartModel>(@"
-                    DECLARE @StartOfMonth DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);
-                        DECLARE @StartOfNextMonth DATE = DATEADD(MONTH, 1, @StartOfMonth);
-                        DECLARE @LastDayOfMonth DATE = DATEADD(DAY, -1, @StartOfNextMonth);
+                    DECLARE @StartDate DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);
+                            DECLARE @EndDate   DATE = DATEADD(DAY, 1, CAST(GETDATE() AS DATE));
 
-                        ;WITH DateSpine AS (
-                            SELECT @StartOfMonth AS CalendarDate
-                            UNION ALL
-                            SELECT DATEADD(DAY, 1, CalendarDate)
-                            FROM DateSpine
-                            WHERE CalendarDate < @LastDayOfMonth   -- covers every day of the month, not just days with data
-                        ),
-                        DailyData AS (
                             SELECT
-                                ds.CalendarDate,
-                                ISNULL(p.Group1, 0) + ISNULL(p.Group2, 0) + ISNULL(p.Group3, 0) + ISNULL(p.OP, 0) AS DailyOutput,
-                                ISNULL(p.TargetOutput, 0) AS DailyTarget,
-                                CASE WHEN ISNULL(p.TargetOutput, 0) = 0 THEN 0
-                                     ELSE ISNULL(p.Total, 0) * 100.0 / p.TargetOutput
-                                END AS DailyEfficiency
-                            FROM DateSpine ds
-                            LEFT JOIN ProductionFinal_GroupChart p
-                                ON p.GroupDate = ds.CalendarDate
-                        )
-                        SELECT
-                            SUM(DailyOutput)                                   AS TotalOutput,
-                            AVG(DailyOutput)                                   AS AverageOutput,
-                            AVG(DailyTarget)                                   AS TargetOutput,
-                           CAST(ROUND(AVG(DailyEfficiency), 0) AS INT) AS AverageEfficiency
-                        FROM DailyData
-                        OPTION (MAXRECURSION 31);");
+                                SUM(
+                                    ISNULL(Group1, 0) +
+                                    ISNULL(Group2, 0) +
+                                    ISNULL(Group3, 0) +
+                                    ISNULL(OP, 0)
+                                ) AS TotalOutput,
+
+                                AVG(
+                                    ISNULL(Group1, 0) +
+                                    ISNULL(Group2, 0) +
+                                    ISNULL(Group3, 0) +
+                                    ISNULL(OP, 0)
+                                ) AS AverageOutput,
+
+                                AVG(ISNULL(TargetOutput, 0)) AS TargetOutput,
+
+                                CAST(
+                                    AVG(ISNULL(Total, 0)) * 100.0 /
+                                    NULLIF(AVG(ISNULL(TargetOutput, 0)), 0)
+                                    AS DECIMAL(10, 2)
+                                ) AS AverageEfficiency
+
+                            FROM dbo.ProductionFinal_GroupChart
+                            WHERE GroupDate >= @StartDate
+                              AND GroupDate < @EndDate;");
 
                         getTotalSummary.totalGroup = (await SqlDataAcess_Test.QueryAsync<TotalGroupOutputModel>(@"
                     DECLARE @StartOfMonth DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);
@@ -560,7 +559,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             return rows > 0;
         }
 
-        public async Task<List<AttendanceModel>> AttendanceBreakDown()
+        public async Task<List<AttendanceModel>> AttendanceBreakDown(DateTime? filterDate, int isfilter)
         {
             if (!await IsTodayRecorded())
             {
@@ -569,16 +568,23 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                 await InsertTodayFromLastBreakDown(lastData);
             }
             
-            return await SqlDataAcess_Test.QueryAsync<AttendanceModel>(AttendanceQuery(0));
+            return await SqlDataAcess_Test.QueryAsync<AttendanceModel>(AttendanceQuery(0, filterDate, isfilter));
         }
-        public Task<AttendanceSummaryModel> GetAttendanceSummary()
+        public async Task<(AttendanceSummaryModel, string)> GetAttendanceSummary(DateTime? filterDate, int isfilter)
         {
-            
-            return SqlDataAcess_Test.QuerySingleOrDefaultAsync<AttendanceSummaryModel>(AttendanceQuery(1));
+            var getdata = await SqlDataAcess_Test.QuerySingleOrDefaultAsync<AttendanceSummaryModel>(AttendanceQuery(1, filterDate, isfilter));
+            string getToday = await SqlDataAcess_Test.ExecuteScalarAsync<string>($@"SELECT CAST(GETDATE() AS DATE) AS Today;");
+            return (getdata, getToday);
         }
 
-        public string AttendanceQuery(int display)
+        public string AttendanceQuery(int display, DateTime? filterDate, int isfilter)
         {
+            DateTime selectedDate = filterDate ?? DateTime.Today;
+
+            string strfilter = isfilter == 1
+                     ? $@"WHERE a.DateToday = '{selectedDate:yyyy-MM-dd}'"
+                     : @"WHERE a.DateToday = CAST(GETDATE() AS DATE)";
+
             string filterstr = (display == 0) ? $@"DashID,
                             DepartmentId,
                             DayShiftCount,
@@ -653,7 +659,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                                     ELSE NULL
                                 END AS PresentCount
                             FROM AttendanceDashboard a
-                            WHERE a.DateToday = CAST(GETDATE() AS DATE) 
+                            {strfilter}
                         )
                         SELECT 
 	                        {filterstr}
@@ -693,9 +699,13 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             return rowsAffected > 0;
         }
 
-        public Task<List<AttendanceTrendModel>> GetLatestTrendsAttendance()
+        public Task<List<AttendanceTrendModel>> GetLatestTrendsAttendance(DateTime? filterDate)
         {
-           return SqlDataAcess_Test.QueryAsync<AttendanceTrendModel>($@";WITH DashboardCalc AS (
+           return SqlDataAcess_Test.QueryAsync<AttendanceTrendModel>($@"
+                   DECLARE @StartDate DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);
+                            DECLARE @EndDate   DATE = DATEADD(DAY, 1, CAST(GETDATE() AS DATE));
+                    
+                ;WITH DashboardCalc AS (
                     SELECT 
                         a.DashID,
                         a.DateToday,
@@ -728,9 +738,15 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                                 (SELECT COUNT(DISTINCT pc.Employee_ID)
                                  FROM PC_summary pc 
                                  WHERE CAST(pc.Date_today AS DATE) = a.DateToday)
+	                        WHEN a.DepartmentId = 8 THEN 
+                                        (SELECT COUNT(DISTINCT fa.Employee_ID)
+                                         FROM FinalAssy_Summary fa 
+                                         WHERE CAST(fa.Date_today AS DATE) = a.DateToday)
                             ELSE NULL
                         END AS PresentCount
                     FROM AttendanceDashboard a
+                    WHERE a.DateToday >= @StartDate
+                              AND a.DateToday < @EndDate
                 )
                 SELECT 
                     DateToday,
@@ -786,7 +802,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                                 ELSE NULL
                             END AS PresentCount
                         FROM AttendanceDashboard a
-                        WHERE a.DateToday = (SELECT MAX(DateToday) FROM AttendanceDashboard)   -- most recent date present, not necessarily today
+                        WHERE a.DateToday = (SELECT MAX(DateToday) FROM AttendanceDashboard)  
                     )
                     SELECT 
                         DashID,

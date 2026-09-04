@@ -19,32 +19,38 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult> GetAttendanceBreakDown()
+        public async Task<ActionResult> GetAttendanceBreakDown(DateTime? filterDate, int isfilter)
         {
 
-            var res = await _manu.AttendanceBreakDown();
+            var res = await _manu.AttendanceBreakDown(filterDate, isfilter);
             if (res == null || !res.Any())
                 return JsonNotFound("No Active Lines found");
 
             return JsonSuccess(res);
         }
         [HttpGet]
-        public async Task<ActionResult> GetAttendanceSummary()
+        public async Task<ActionResult> GetAttendanceSummary(DateTime? filterDate, int isfilter)
         {
 
-            var res = await _manu.GetAttendanceSummary();
+            var (res, today) = await _manu.GetAttendanceSummary(filterDate, isfilter);
             if (res == null)
                 return JsonNotFound("No Active Lines found");
 
-            return JsonSuccess(res);
+            var result = new
+            {
+                Listdata = res,
+                today = today,
+            };
+
+            return JsonSuccess(result);
         }
 
 
         [HttpGet]
-        public async Task<ActionResult> GetAttendanceTrends()
+        public async Task<ActionResult> GetAttendanceTrends(DateTime? filterDate)
         {
 
-            var data = await _manu.GetLatestTrendsAttendance();
+            var data = await _manu.GetLatestTrendsAttendance(filterDate);
 
 
             var chartData = data.Select(d => new {
@@ -75,17 +81,7 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
 
 
         // GET: Production1/Attendance
-        public ActionResult Dashboard()
-        {
-            Debug.WriteLine("================================");
-            Debug.WriteLine(">>> MY DEBUG MESSAGE <<<");
-            Debug.WriteLine("================================");
+        public ActionResult Dashboard() => View();
 
-
-            return View();
-        }
-
-
-       
     }
 }

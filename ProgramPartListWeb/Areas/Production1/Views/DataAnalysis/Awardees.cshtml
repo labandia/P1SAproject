@@ -9,11 +9,14 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Awardees</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+   
     <style>
-
+        @@font-face {
+            font-family: 'Poppins';
+            src: url('/Content/fonts/Poppins-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
         * {
             margin: 0;
             padding: 0;
@@ -27,6 +30,7 @@
         body {
             font-family: 'Poppins', sans-serif;
             min-height: 100vh;
+            overflow: hidden;
             background-image: linear-gradient(306deg, rgba(54, 54, 54, 0.05) 0%, rgba(54, 54, 54, 0.05) 33.333%,rgba(85, 85, 85, 0.05) 33.333%, rgba(85, 85, 85, 0.05) 66.666%,rgba(255, 255, 255, 0.05) 66.666%, rgba(255, 255, 255, 0.05) 99.999%),linear-gradient(353deg, rgba(81, 81, 81, 0.05) 0%, rgba(81, 81, 81, 0.05) 33.333%,rgba(238, 238, 238, 0.05) 33.333%, rgba(238, 238, 238, 0.05) 66.666%,rgba(32, 32, 32, 0.05) 66.666%, rgba(32, 32, 32, 0.05) 99.999%),linear-gradient(140deg, rgba(192, 192, 192, 0.05) 0%, rgba(192, 192, 192, 0.05) 33.333%,rgba(109, 109, 109, 0.05) 33.333%, rgba(109, 109, 109, 0.05) 66.666%,rgba(30, 30, 30, 0.05) 66.666%, rgba(30, 30, 30, 0.05) 99.999%),linear-gradient(189deg, rgba(77, 77, 77, 0.05) 0%, rgba(77, 77, 77, 0.05) 33.333%,rgba(55, 55, 55, 0.05) 33.333%, rgba(55, 55, 55, 0.05) 66.666%,rgba(145, 145, 145, 0.05) 66.666%, rgba(145, 145, 145, 0.05) 99.999%),linear-gradient(90deg, rgb(9, 201, 186),rgb(18, 131, 221));
         }
         /* ---------------------------------
@@ -158,6 +162,8 @@
                 min-height: calc(100vh - clamp(32px, 8vw, 60px));
             }
 
+            
+
             .award-title,
             .awardheader {
                 max-height: 45vh; /* each slot gets roughly half the viewport height */
@@ -174,7 +180,7 @@
                 writing-mode: horizontal-tb;
                 text-orientation: initial;
                 text-align: center;
-                font-size: clamp(28px, 8vw, 48px);
+                font-size: 10px;
                 margin-bottom: 12px;
                 opacity: 0.6;
             }
@@ -189,7 +195,12 @@
             }
         }
 
-
+        @@media(max-width: 1300px) and (max-height: 650px){
+            .award-heading {
+                font-size: 60px !important;
+                margin-top: 15px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -199,7 +210,7 @@
         <div class="award-content">
             <div class="award-title">
                 <img class="NoImages lazy"
-                     src='@Url.Action("DisplaytheImage", "DataAnalysis", new { area = "Production1", filename = "awardee.png" })'
+                     src='@Url.Action("DisplaytheImage", "DataAnalysis", new { area = "Production1", filename = "Winnder2.png" })'
                      onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
             </div>
             <div class="awardheader">
@@ -212,13 +223,15 @@
     <h2 class="award-heading">Congratulations</h2>
 
     <script>
-        // Confetti bursts repeat for 1 minute, then stop.
-        (function () {
+        // Confetti — reusable so it can fire on first load AND again every
+        // time the image pop-in animation replays. Each call bursts
+        // repeatedly for 1 minute, then stops until called again.
+        var runConfettiSequence = (function () {
             var colors = ['#09c9ba', '#1283dd', '#ffd166', '#ef476f', '#ffffff'];
             var burstCount = 60;
             var loopDurationMs = 60000; // 1 minute
             var intervalMs = 1200;
-            var intervalId;
+            var intervalId = null;
 
             function launchConfettiBurst() {
                 for (var i = 0; i < burstCount; i++) {
@@ -237,14 +250,74 @@
                 }
             }
 
-            window.addEventListener('load', function () {
+            return function runConfettiSequence() {
+                // If a sequence is already running, let it keep going
+                // rather than stacking a second interval on top of it.
+                if (intervalId !== null) return;
+                launchConfettiBurst();
+                intervalId = setInterval(launchConfettiBurst, intervalMs);
                 setTimeout(function () {
-                    launchConfettiBurst();
-                    intervalId = setInterval(launchConfettiBurst, intervalMs);
-                    setTimeout(function () {
-                        clearInterval(intervalId);
-                    }, loopDurationMs);
-                }, 200);
+                    clearInterval(intervalId);
+                    intervalId = null;
+                }, loopDurationMs);
+            };
+        })();
+
+        window.addEventListener('load', function () {
+            setTimeout(runConfettiSequence, 200);
+        });
+
+        // Once the pop-in animation finishes, wait, then play it again —
+        // repeating indefinitely instead of reloading the whole page.
+        // Change REPLAY_DELAY_MS below to switch between the 1-minute and
+        // 1.5-minute (1 min 30 sec) pacing.
+        (function () {
+            var images = document.querySelectorAll('.award-title img, .awardheader img');
+            var REPLAY_DELAY_MS = 60000; // 60000 = 1 minute, 90000 = 1.5 minutes
+            var pending = images.length;
+            var scheduled = false;
+
+            function replayAnimation(img) {
+                // Removing and re-adding the animation, with a forced
+                // reflow in between, restarts a CSS animation that has
+                // already finished (just toggling the class won't).
+                img.style.animation = 'none';
+                // eslint-disable-next-line no-unused-expressions
+                img.offsetHeight; // force reflow
+                img.style.animation = '';
+            }
+
+            function scheduleReplay() {
+                if (scheduled) return;
+                scheduled = true;
+                setTimeout(function () {
+                    scheduled = false;
+                    pending = images.length;
+                    images.forEach(function (img) {
+                        replayAnimation(img);
+                        img.addEventListener('animationend', onOneAnimationDone, { once: true });
+                    });
+                    runConfettiSequence();
+                }, REPLAY_DELAY_MS);
+            }
+
+            function onOneAnimationDone(e) {
+                // Only react to the popIn animation, not the confetti-fall
+                // animation which also fires animationend events elsewhere.
+                if (e.animationName && e.animationName !== 'popIn') return;
+                pending--;
+                if (pending <= 0) {
+                    scheduleReplay();
+                }
+            }
+
+            if (images.length === 0) {
+                // No images found — nothing to animate.
+                return;
+            }
+
+            images.forEach(function (img) {
+                img.addEventListener('animationend', onOneAnimationDone, { once: true });
             });
         })();
     </script>

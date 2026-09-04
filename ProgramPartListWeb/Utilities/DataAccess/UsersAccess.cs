@@ -236,6 +236,7 @@ namespace ProgramPartListWeb.Utilities
             }
             catch (Exception ex)
             {
+                Debug.WriteLine("Error " + ex.Message);
                 return false;
             }
         }

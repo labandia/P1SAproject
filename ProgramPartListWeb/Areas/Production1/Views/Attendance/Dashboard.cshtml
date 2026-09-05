@@ -7,7 +7,7 @@
 
         <!-- HEADER -->
         <header>
-            <h2>📋PRODUCTION 1 ATTENDANCE DASHBOARD - <span > <strong id="shiftDay">DAYSHIFT</strong>(<span id="datetoday">-/--/----</span>)</span></h2>
+            <h2>📋PRODUCTION 1 ATTENDANCE DASHBOARD - <span> <strong id="shiftDay">DAYSHIFT</strong>(<span id="datetoday">-/--/----</span>)</span></h2>
             <div class="animToggleWrap">
                 <label class="animToggle" for="refreshToggleInput" title="Toggle auto-refresh">
                     <input type="checkbox" id="refreshToggleInput" checked>
@@ -124,30 +124,7 @@
                     </div>
                 </div>
 
-                <!-- Trends -->
-                <div class="Trends loop-anim" >
 
-
-                    <div class="trendHeader">
-                        <h3>📈 Attendance & Absenteeism Trends</h3>
-                        <div class="trend-sub">Y‑axis: Percentage · X‑axis: 8/20 – 8/25</div>
-                    </div>
-                    <div id="ChartTrends">
-                        <canvas id="trendChart" height="100"></canvas>
-                    </div>
-
-                    <div class="trends_legends">
-                        <div class="trends_groupbadge">
-                            <div class="Trends_badge blue"></div>
-                            <small>Attendance Rate %</small>
-                        </div>
-
-                        <div class="trends_groupbadge">
-                            <div class="Trends_badge orange"></div>
-                            <small>Absent Rate %</small>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- RIGHT COLUMN: SUMMARY -->
@@ -185,7 +162,30 @@
             </div>
         </div>
 
+        <!-- Trends -->
+        <div class="Trends loop-anim">
 
+
+            <div class="trendHeader">
+                <h3>📈 Attendance & Absenteeism Trends</h3>
+                <div class="trend-sub">Y‑axis: Percentage · X‑axis: 8/20 – 8/25</div>
+            </div>
+            <div id="ChartTrends">
+                <canvas id="trendChart"></canvas>
+            </div>
+
+            <div class="trends_legends">
+                <div class="trends_groupbadge">
+                    <div class="Trends_badge blue"></div>
+                    <small>Attendance Rate %</small>
+                </div>
+
+                <div class="trends_groupbadge">
+                    <div class="Trends_badge orange"></div>
+                    <small>Absent Rate %</small>
+                </div>
+            </div>
+        </div>
 
     </div>
 </div>
@@ -308,72 +308,55 @@
 
         RenderAttendanceSummary(data) {
             console.log("Attendance Summary:", data);
+            const totalEl = document.getElementById("totalhead");
+            const presentEl = document.getElementById("presentCount");
+            const absentEl = document.getElementById("absentCount");
+            const absentRateEl = document.getElementById("absentrateCount");
 
-            // Top KPI
-            this.animateNumberIfChanged(
-                document.getElementById("totalhead"),
-                data.TotalHeadCount,
-                800,
-                ''
-            );
+            totalEl.innerText = "0";
+            presentEl.innerText = "0";
+            absentEl.innerText = "0";
+            absentRateEl.innerText = "0";
 
-            this.animateNumberIfChanged(
-                document.getElementById("presentCount"),
-                data.TotalEmployees,
-                800,
-                ''
-            );
+            // For the Summary section on the right
+            const SumtotalEl = document.getElementById("totalHeadcount");
+            const SumpresentEl = document.getElementById("totalPresent");
+            const SumabsentEl = document.getElementById("totalAbsent");
+            const SumabsentRateEl = document.getElementById("totalAntendanceRate");
+            const SumbsentRateEl = document.getElementById("totalAbsentRate");
 
-            this.animateNumberIfChanged(
-                document.getElementById("absentCount"),
-                data.TotalAbsent,
-                800,
-                ''
-            );
+            SumtotalEl.innerText = "0";
+            SumpresentEl.innerText = "0";
+            SumabsentEl.innerText = "0";
+            SumabsentRateEl.innerText = "0";
+            SumbsentRateEl.innerText = "0";
 
-            this.animateNumberIfChanged(
-                document.getElementById("absentrateCount"),
-                data.AttendRate,
-                800,
-                '%'
-            );
+            this.animateNumber(totalEl, data.TotalHeadCount, 1200);
+            this.animateNumber(presentEl, data.TotalEmployees, 1200);
+            this.animateNumber(absentEl, data.TotalAbsent, 1200);   
+            this.animateNumber(absentRateEl, data.AttendRate, 1200, ' %');   
 
 
             // Right Summary
-            this.animateNumberIfChanged(
-                document.getElementById("totalHeadcount"),
-                data.TotalHeadCount,
-                800,
-                ''
-            );
+            this.animateNumber(
+                SumtotalEl,
+                data.TotalHeadCount, 1200);
 
-            this.animateNumberIfChanged(
-                document.getElementById("totalPresent"),
-                data.TotalEmployees,
-                800,
-                ''
-            );
+            this.animateNumber(
+                SumpresentEl,
+                data.TotalEmployees, 1200);
 
-            this.animateNumberIfChanged(
-                document.getElementById("totalAbsent"),
-                data.TotalAbsent,
-                800,
-                ''
-            );
+            this.animateNumber(
+                SumabsentEl,
+                data.TotalAbsent, 1200);
 
-            this.animateNumberIfChanged(
-                document.getElementById("totalAntendanceRate"),
-                data.AttendRate,
-                800,
-                '%'
-            );
+            this.animateNumber(
+                SumabsentRateEl,
+                data.AttendRate, 1200, ' %');
 
-            this.animateNumberIfChanged(
-                document.getElementById("totalAbsentRate"),
-                data.AbsentRate,
-                800,
-                '%'
-            );
+            this.animateNumber(
+                SumbsentRateEl,
+                data.AbsentRate, 1200, ' %');
         }
 
 
@@ -514,60 +497,140 @@
              }
 
         RenderTrendsChart(data) {
-                const labels = data.map(d => {
-                    const date = new Date(d.DateToday);
-                    return `${date.getMonth() + 1}/${date.getDate()}`;
-                });
-                const attendRates = data.map(d => d.AttendRate);
-                const absentRates = data.map(d => d.AbsentRate);
+            const labels = data.map(d => {
+                const date = new Date(d.DateToday);
+                return `${date.getMonth() + 1}/${date.getDate()}`;
+            });
+            const attendRates = data.map(d => d.AttendRate);
+            const absentRates = data.map(d => d.AbsentRate);
 
-                // destroy the previous chart instance before re-creating it, or Chart.js
-                // throws "Canvas is already in use" on every refresh after the first
-                if (this.trendChart) {
-                    this.trendChart.destroy();
-                    this.trendChart = null;
+            if (this.trendChart) {
+                this.trendChart.destroy();
+                this.trendChart = null;
+            }
+            const chartContainer = document.getElementById('ChartTrends');
+            chartContainer.style.maxHeight = '160px';
+
+
+            // clips the chart area horizontally based on animation progress,
+            // giving a "drawing" effect instead of the default fade-in.
+            const drawLinePlugin = {
+                id: 'drawLine',
+                beforeDatasetsDraw(chart) {
+                    const { ctx, chartArea: { left, top, width, height } } = chart;
+                    const progress = chart.$drawLineProgress ?? 0;
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.rect(left, top, width * progress, height);
+                    ctx.clip();
+                },
+                afterDatasetsDraw(chart) {
+                    chart.ctx.restore();
                 }
+            };
 
-                const ctx = document.getElementById('trendChart').getContext('2d');
-                this.trendChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [
-                            {
-                                label: 'Attendance Rate',
-                                data: attendRates,
-                                borderColor: '#2E5AAC',
-                                backgroundColor: '#2E5AAC',
-                                pointBackgroundColor: '#fff',
-                                pointBorderColor: '#2E5AAC',
-                                pointBorderWidth: 2,
-                                tension: 0.3,
-                                fill: false
-                            },
-                            {
-                                label: 'Absent Rate',
-                                data: absentRates,
-                                borderColor: '#E8842C',
-                                backgroundColor: '#E8842C',
-                                pointBackgroundColor: '#fff',
-                                pointBorderColor: '#E8842C',
-                                pointBorderWidth: 2,
-                                tension: 0.3,
-                                fill: false
-                            }
-                        ]
+            // draws each point's value above the point, in the dataset's color.
+            // runs after the clip plugin restores the context, so labels are not
+            // clipped and only appear once the line has actually drawn past them
+            const pointLabelsPlugin = {
+                id: 'pointLabels',
+                afterDatasetsDraw(chart) {
+                    const { ctx } = chart;
+                    const progress = chart.$drawLineProgress ?? 0;
+
+                    chart.data.datasets.forEach((dataset, datasetIndex) => {
+                        const meta = chart.getDatasetMeta(datasetIndex);
+                        if (meta.hidden) return;
+
+                        meta.data.forEach((point, index) => {
+                            const pointProgress = (index + 1) / meta.data.length;
+                            if (progress < pointProgress) return;
+
+                            const value = Math.round(dataset.data[index]);
+                            ctx.save();
+                            ctx.fillStyle = dataset.borderColor;
+                            ctx.font = 'bold 11px sans-serif';
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'bottom';
+                            ctx.fillText(`${value}%`, point.x, point.y - 8);
+                            ctx.restore();
+                        });
+                    });
+                }
+            };
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            this.trendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Attendance Rate',
+                            data: attendRates,
+                            borderColor: '#2E5AAC',
+                            backgroundColor: '#2E5AAC',
+                            pointBackgroundColor: '#fff',
+                            pointBorderColor: '#2E5AAC',
+                            pointBorderWidth: 2,
+                            tension: 0.3,
+                            fill: false
+                        },
+                        {
+                            label: 'Absent Rate',
+                            data: absentRates,
+                            borderColor: '#E8842C',
+                            backgroundColor: '#E8842C',
+                            pointBackgroundColor: '#fff',
+                            pointBorderColor: '#E8842C',
+                            pointBorderWidth: 2,
+                            tension: 0.3,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: { top: 14 }
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,   // critical: lets the canvas fill #ChartTrends's actual height instead of computing its own
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            y: { min: 0, max: 100, ticks: { callback: v => v + '%' } }
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            min: 0,
+                            max: 100,
+                            ticks: {
+                                stepSize: 25,
+                                autoSkip: false,
+                                maxTicksLimit: 5,
+                                font: { size: 9 },
+                                color: '#fff',
+                                callback: v => `${v}%`
+                            },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        },
+                        x: {
+                            ticks: {
+                                font: { size: 9 },
+                                color: '#fff'
+                            },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        }
+                    },
+                    animation: {
+                        duration: 1500,
+                        easing: 'easeInOutQuart',
+                        onProgress: (animation) => {
+                            animation.chart.$drawLineProgress =
+                                animation.currentStep / animation.numSteps;
                         }
                     }
-                });
-           }
+                },
+                plugins: [drawLinePlugin, pointLabelsPlugin]
+            });
+        }
 
             setShift() {
                 const now = new Date();
@@ -624,7 +687,7 @@
             wrapper.style.height = `${naturalHeight * scale}px`;
         }
 
-        animateNumber(el, endValue, duration = 800, suffix = '') {
+        animateNumber(el, endValue, duration = 800, suffix ='') {
             if (!el) return;
 
             if (this._animFrames.has(el)) {
@@ -632,11 +695,23 @@
                 this._animFrames.delete(el);
             }
 
-            const startValue = parseFloat(el.innerText.replace(/,/g, '').replace('%', '')) || 0;
+            const startValue = parseFloat(el.innerText.replace(/,/g, '')) || 0;
+            const change = endValue - startValue;
+
+            // Value unchanged — still give a visual "refreshed" cue instead of a silent no-op
+            if (change === 0) {
+                el.innerText = this.changeformatnumber(endValue);
+                el.style.transition = 'none';
+                el.style.opacity = '0.35';
+                requestAnimationFrame(() => {
+                    el.style.transition = `opacity ${Math.min(duration, 400)}ms ease`;
+                    el.style.opacity = '1';
+                });
+                return;
+            }
 
             const startTime = performance.now();
             const ease = t => 1 - Math.pow(1 - t, 3);
-            const change = endValue - startValue;
 
             const step = (now) => {
                 const elapsed = now - startTime;

@@ -53,7 +53,7 @@
                                 cy="60"
                                 r="52">
                         </circle>
-                        
+
                         <!-- gradient progress -->
                         <circle id="ncr-inprocess"
                                 class="circle-progress ring-primary"
@@ -229,16 +229,16 @@
                     <div id="dist-mat" class="fill bg-secondary" style="width:0%;">0%</div>
                 </div>
             </div>
-
+           
             <div class="badge-harness">
-                <span class="icon">🐝</span>
-                <div class="info">
-                    <div class="title">WIRE HARNESS</div>
-                    <span class="group-badge">BEST GROUP</span>
-                    <div class="effort">EFFORT</div>
-                </div>
-                <span class="team">TEAM</span>
+            <span class="icon">🐝</span>
+            <div class="info">
+                <div class="title">WIRE HARNESS</div>
+                <span class="group-badge">BEST GROUP</span>
+                <div class="effort">EFFORT</div>
             </div>
+            <span class="team">TEAM</span>
+        </div>
         </section>
 
         <!-- Center column -->
@@ -911,6 +911,9 @@
             if (this._typingRafId) cancelAnimationFrame(this._typingRafId);
             clearTimeout(this._typingPauseTimeout);
 
+            // Clear whatever row was left highlighted from a previous cycle
+            this.clearActiveTypingRow();
+
             if (!lines || lines.length === 0) {
                 this.bestLineNumber.textContent = 'All Lines Reported';
                 return;
@@ -925,8 +928,10 @@
             let holding = false;
             let holdStart = 0;
 
+            // Highlight the row for the first line before typing starts
+            this.setActiveTypingRow(lines[lineIndex]);
+
             const step = (timestamp) => {
-                // Pause all work while the page/tab isn't visible.
                 if (document.hidden) {
                     this._typingRafId = requestAnimationFrame(step);
                     return;
@@ -939,6 +944,9 @@
                         charIndex = 0;
                         this.bestLineNumber.textContent = '';
                         lastTickTime = timestamp;
+
+                        // Sync the list highlight with the newly-typing line
+                        this.setActiveTypingRow(lines[lineIndex]);
                     }
                     this._typingRafId = requestAnimationFrame(step);
                     return;
@@ -960,6 +968,23 @@
             };
 
             this._typingRafId = requestAnimationFrame(step);
+        }
+
+        setActiveTypingRow(lineName) {
+            document.querySelectorAll('.line-row.active-typing')
+                .forEach(r => r.classList.remove('active-typing'));
+
+            if (!lineName) return;
+            const row = document.querySelector(`.line-row[data-line="${lineName}"]`);
+            if (row) {
+                row.classList.add('active-typing');
+                row.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
+        }
+
+        clearActiveTypingRow() {
+            document.querySelectorAll('.line-row.active-typing')
+                .forEach(r => r.classList.remove('active-typing'));
         }
 
         generateData() {

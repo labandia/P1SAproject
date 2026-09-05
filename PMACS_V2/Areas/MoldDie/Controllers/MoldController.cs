@@ -225,7 +225,32 @@ namespace PMACS_V2.Areas.MoldDie.Controllers
             return JsonSuccess(data);
         }
 
+        [HttpPost]
+        public async Task<ActionResult> AddUpdateMoldDieTooling(DieMoldToolingModel add)
+        {
+            bool update = await _tooling.AddEditMoldTooling(add, true);
+            if (!update) return JsonValidationError();
 
+            return JsonCreated(add, "Add Data Successfully");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateMoldDieTooling(DieMoldToolingModel add)
+        {
+            bool update = await _tooling.AddEditMoldTooling(add, false);
+            if (!update) return JsonValidationError();
+
+            return JsonCreated(add, "Update Data Successfully");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteMoldDieTooling(int ID)
+        {
+            bool update = await _tooling.DeleteMoldTooling(ID);
+            if (!update) return JsonValidationError();
+
+            return JsonCreated(update, "Delete Data Successfully");
+        }
 
         // GET: P1SA/DieMold
         public ActionResult DieMoldLife() => View();

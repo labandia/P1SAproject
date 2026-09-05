@@ -5,7 +5,16 @@
 }
 
 <div class="dashboard">
-    <header><h1>FINAL ASSY PRODUCTION DASHBOARD</h1></header>
+    <header>
+        <h1>FINAL ASSY PRODUCTION DASHBOARD</h1>
+        @*<span style="color: #fff;" class="screen-size-badge" id="screenSizeBadge">
+            <span class="size-label">Screen</span>
+            <span class="size-value" id="screenSize">-- × --</span>
+            <span class="size-separator">·</span>
+            <span class="size-label">Viewport</span>
+            <span class="size-value" id="viewportSize">-- × --</span>
+        </span>*@
+    </header>
 
 
     <!-- Top stats -->
@@ -56,19 +65,19 @@
 
 
     <script type="module" asp-append-version="true">
-    import {
-        getMethod,
-        postMethod
-    } from '@Url.Content("~/Scripts/modules/index.js")';
+        import {
+            getMethod,
+            postMethod
+        } from '@Url.Content("~/Scripts/modules/index.js")';
 
-    class GroupDashboardController {
+      class GroupDashboardController {
         constructor() {
             this._animFrames = new Map(); // track in-flight animations per element
         }
 
         async init() {
             await this.fetchTotalGroupData();
-
+            await this.fetchGroupListData();
 
 
             // Handle resize for chart
@@ -87,6 +96,7 @@
             // Auto-refresh data every 30 seconds
             this._refreshInterval = setInterval(() => {
                 this.fetchTotalGroupData();
+                this.fetchGroupListData();
             }, 10000);
         }
 
@@ -101,11 +111,26 @@
                 this._lastData = res.data; // Store for resize
                 this.renderdata(res.data);
                 this.displayGroups(res.data);
-                this.buildChart(res.data);
+                //this.buildChart(res.data);
             } catch (error) {
                 console.error('Error fetching 4M data:', error);
             }
         }
+
+         async fetchGroupListData() {
+             try {
+                 const res = await getMethod('@Url.Action("GetGroupListData", "FinalAssembly")', {});
+                 if (!res?.Success) {
+                     console.log('No data found in 4M ');
+                     return;
+                 }
+                 console.log(res);
+                 this.buildChart(res.data);
+             } catch (error) {
+                 console.error('Error fetching 4M data:', error);
+             }
+         }
+
 
         renderdata(data) {
             const totalEl = document.getElementById("totalOutput");
@@ -258,114 +283,153 @@
 
 
         /* ---------- Bar chart ---------- */
-        buildChart(DATA) {
-            const host = document.getElementById('chartHost');
+          /* ---------- Bar chart ---------- */
+          buildChart(daily) {
+              const host = document.getElementById('chartHost');
+              this._lastData = daily; // store for resize
 
-            // Check if we're in the small screen mode
-            const isSmall = window.innerWidth <= 962 && window.innerHeight <= 542;
+              // Known non-group fields — everything else on each row is treated as a group column
+              const KNOWN_KEYS = ['GroupDate', 'date', 'Total', 'value'];
 
-            // Get container width
-            const containerWidth = host.parentElement ? host.parentElement.clientWidth : host.clientWidth;
-            const w = containerWidth || 1240;
+              const getDate = d => d.GroupDate ?? d.date;
+              const getTotal = d => {
+                  if (typeof d.Total === 'number') return d.Total;
+                  if (typeof d.value === 'number') return d.value;
+                  // No total sent — sum the group columns
+                  return Object.keys(d)
+                      .filter(k => !KNOWN_KEYS.includes(k))
+                      .reduce((sum, k) => sum + (Number(d[k]) || 0), 0);
+              };
 
-            // Adjust padding and sizes for small screens
-            const padL = isSmall ? 15 : 60;
-            const padR = isSmall ? 5 : 20;
-            const padT = isSmall ? 3 : 10;
-            const padB = isSmall ? 12 : 30;
+              // Check if we're in the small screen mode
+              const isSmall = window.innerWidth <= 962 && window.innerHeight <= 542;
 
-            // Adjust height for small screens
-            const h = isSmall ? 100 : 230;
+              // Get container width
+              const containerWidth = host.parentElement ? host.parentElement.clientWidth : host.clientWidth;
+              const w = containerWidth || 1240;
 
-            const plotW = w - padL - padR;
-            const plotH = h - padT - padB;
+              // Adjust padding and sizes for small screens
+              const padL = isSmall ? 15 : 60;
+              const padR = isSmall ? 5 : 20;
+              const padT = isSmall ? 3 : 10;
+              const padB = isSmall ? 12 : 30;
 
-            const values = DATA.daily.map(d => d.value);
-            const maxVal = Math.max(...values);
-            const minVal = Math.min(...values);
-            const highest = Math.max(...values);
-            const lowest = Math.min(...values);
-            const targetLine = DATA.AverageOutput > maxVal ? maxVal * 0.9 : DATA.AverageOutput;
-            const yMax = Math.ceil(maxVal / 10000) * 10000 + 10000;
-            const scaleY = v => plotH - (v / yMax) * plotH;
+              // Adjust height for small screens
+              const h = isSmall ? 100 : 230;
 
-            const n = DATA.daily.length;
-            const bandW = plotW / n;
-            const barW = isSmall ? bandW * 0.4 : bandW * 0.55;
+              const plotW = w - padL - padR;
+              const plotH = h - padT - padB;
 
-            // Gridlines - skip on small screens for cleaner look
-            let gridSvg = '';
-            if (!isSmall) {
-                const steps = 5;
-                for (let i = 0; i <= steps; i++) {
-                    const val = (yMax / steps) * i;
-                    const y = padT + scaleY(val);
-                    gridSvg += `<line class="grid-line" x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="rgba(255,255,255,0.07)" stroke-dasharray="3,4" style="opacity:0; transition:opacity .5s ease ${i * 40}ms;"/>`;
-                    gridSvg += `<text class="grid-line" x="${padL - 10}" y="${y + 4}" text-anchor="end" font-size="11" fill="#8a97a9" style="opacity:0; transition:opacity .5s ease ${i * 40}ms;">${this.changeformatnumber(val)}</text>`;
-                }
-            }
+              const values = daily.map(getTotal);
+              const maxVal = Math.max(...values);
+              const minVal = Math.min(...values);
+              const highest = maxVal;
+              const lowest = minVal;
 
-            // Bars
-            let barsSvg = '';
-            DATA.daily.forEach((d, i) => {
-                const x = padL + i * bandW + (bandW - barW) / 2;
-                const barH = plotH - scaleY(d.value);
-                const y = padT + scaleY(d.value);
-                let color, colorEnd;
-                if (d.value === highest) { color = '#f5820a'; colorEnd = '#e2431e'; }
-                else if (d.value === lowest) { color = '#a9e34b'; colorEnd = '#6fae1f'; }
-                else if (d.value > yMax * 0.55) { color = '#e8c33e'; colorEnd = '#8bd53a'; }
-                else { color = '#8bd53a'; colorEnd = '#3ea34a'; }
-                const gradId = `barGrad${i}`;
-                const delay = Math.min(i * 45, 450);
+              const avgOutput = values.reduce((a, b) => a + b, 0) / values.length;
+              const targetLine = avgOutput > maxVal ? maxVal * 0.9 : avgOutput;
 
-                const fontSize = isSmall ? 6 : 11;
-                const dateLabel = isSmall && d.date.length > 5 ? d.date.substring(0, 3) : d.date;
+              const yMax = Math.ceil(maxVal / 10000) * 10000 + 10000;
+              const scaleY = v => plotH - (v / yMax) * plotH;
 
-                barsSvg += `
-            <defs><linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="${color}"/><stop offset="100%" stop-color="${colorEnd}"/>
-            </linearGradient></defs>
-            <rect class="bar-rect" x="${x}" y="${y}" width="${barW}" height="${barH}" rx="${isSmall ? 1 : 2}" fill="url(#${gradId})"
-                style="transform-box:fill-box; transform-origin:bottom; transform:scaleY(0); transition:transform .65s cubic-bezier(.22,1,.36,1) ${delay}ms;"/>
-            <text x="${x + barW / 2}" y="${padT + plotH + (isSmall ? 12 : 18)}" text-anchor="middle" font-size="${fontSize}" fill="#9fb0c3">${dateLabel}</text>
-        `;
-            });
+              const n = daily.length;
+              const bandW = plotW / n;
+              const barW = isSmall ? bandW * 0.4 : bandW * 0.55;
 
-            const targetY = padT + scaleY(targetLine);
-            const plotWpx = w - padL - padR;
+              // Gridlines - skip on small screens for cleaner look
+              let gridSvg = '';
+              if (!isSmall) {
+                  const steps = 5;
+                  for (let i = 0; i <= steps; i++) {
+                      const val = (yMax / steps) * i;
+                      const y = padT + scaleY(val);
+                      gridSvg += `<line class="grid-line" x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="rgba(255,255,255,0.07)" stroke-dasharray="3,4" style="opacity:0; transition:opacity .5s ease ${i * 40}ms;"/>`;
+                      gridSvg += `<text class="grid-line" x="${padL - 10}" y="${y + 4}" text-anchor="end" font-size="11" fill="#8a97a9" style="opacity:0; transition:opacity .5s ease ${i * 40}ms;">${this.changeformatnumber(val)}</text>`;
+                  }
+              }
 
-            const svg = `
-        <svg viewBox="0 0 ${w} ${h}"
-             style="width:100%;height:${isSmall ? '100%' : '100%'};display:block;"
-             preserveAspectRatio="xMidYMid meet">
-            ${gridSvg}
-            ${barsSvg}
-            <line class="target-line" x1="${padL}" y1="${targetY}" x2="${w - padR}" y2="${targetY}"
-                  stroke="#e2431e" stroke-width="${isSmall ? 1 : 2}"
-                  stroke-dasharray="${plotWpx}" stroke-dashoffset="${plotWpx}"
-                  style="transition:stroke-dashoffset .8s ease .5s;"/>
-        </svg>`;
-            host.innerHTML = svg;
+              // Bars + table rows, built in the same pass over `daily`
+              let barsSvg = '';
+              let tableRowsHtml = '';
+              let groupColumns = null;
 
-            // Trigger animations
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    host.querySelectorAll('.bar-rect, .grid-line').forEach(el => {
-                        el.style.opacity = '1';
-                        if (el.classList.contains('bar-rect')) el.style.transform = 'scaleY(1)';
-                    });
-                    const targetLineEl = host.querySelector('.target-line');
-                    if (targetLineEl) targetLineEl.style.strokeDashoffset = '0';
-                });
-            });
+              daily.forEach((d, i) => {
+                  const dateLabelFull = getDate(d);
+                  const total = getTotal(d);
 
-            // Legend
-            document.getElementById('legendHigh').textContent = this.changeformatnumber(Math.max(...DATA.daily.map(d => d.value)));
-            document.getElementById('legendLow').textContent = this.changeformatnumber(Math.min(...DATA.daily.map(d => d.value)));
-            document.getElementById('legendDays').textContent = DATA.daily.length;
-        }
+                  const x = padL + i * bandW + (bandW - barW) / 2;
+                  const barH = plotH - scaleY(total);
+                  const y = padT + scaleY(total);
+                  let color, colorEnd;
+                  if (total === highest) { color = '#f5820a'; colorEnd = '#e2431e'; }
+                  else if (total === lowest) { color = '#a9e34b'; colorEnd = '#6fae1f'; }
+                  else if (total > yMax * 0.55) { color = '#e8c33e'; colorEnd = '#8bd53a'; }
+                  else { color = '#8bd53a'; colorEnd = '#3ea34a'; }
+                  const gradId = `barGrad${i}`;
+                  const delay = Math.min(i * 45, 450);
 
+                  const fontSize = isSmall ? 6 : 11;
+                  const dateLabel = isSmall && dateLabelFull.length > 5 ? dateLabelFull.substring(0, 3) : dateLabelFull;
+
+                  barsSvg += `
+    <defs><linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${color}"/><stop offset="100%" stop-color="${colorEnd}"/>
+    </linearGradient></defs>
+    <rect class="bar-rect" x="${x}" y="${y}" width="${barW}" height="${barH}" rx="${isSmall ? 1 : 2}" fill="url(#${gradId})"
+        style="transform-box:fill-box; transform-origin:bottom; transform:scaleY(0); transition:transform .65s cubic-bezier(.22,1,.36,1) ${delay}ms;"/>
+    <text x="${x + barW / 2}" y="${padT + plotH + (isSmall ? 12 : 18)}" text-anchor="middle" font-size="${fontSize}" fill="#9fb0c3">${dateLabel}</text>
+`;
+
+                  // Everything besides GroupDate/date/Total/value is treated as a group column
+                  if (!groupColumns) {
+                      groupColumns = Object.keys(d).filter(k => !KNOWN_KEYS.includes(k));
+                  }
+
+                  const groupCells = groupColumns.map(col => `<td>${this.changeformatnumber(Number(d[col]) || 0)}</td>`).join('');
+                  tableRowsHtml += `<tr><td>${dateLabelFull}</td>${groupCells}<td>${this.changeformatnumber(total)}</td></tr>`;
+              });
+
+              const targetY = padT + scaleY(targetLine);
+              const plotWpx = w - padL - padR;
+
+              const svg = `
+<svg viewBox="0 0 ${w} ${h}"
+     style="width:100%;height:${isSmall ? '100%' : '100%'};display:block;"
+     preserveAspectRatio="xMidYMid meet">
+    ${gridSvg}
+    ${barsSvg}
+    <line class="target-line" x1="${padL}" y1="${targetY}" x2="${w - padR}" y2="${targetY}"
+          stroke="#e2431e" stroke-width="${isSmall ? 1 : 2}"
+          stroke-dasharray="${plotWpx}" stroke-dashoffset="${plotWpx}"
+          style="transition:stroke-dashoffset .8s ease .5s;"/>
+</svg>`;
+              host.innerHTML = svg;
+
+              // Trigger animations
+              requestAnimationFrame(() => {
+                  requestAnimationFrame(() => {
+                      host.querySelectorAll('.bar-rect, .grid-line').forEach(el => {
+                          el.style.opacity = '1';
+                          if (el.classList.contains('bar-rect')) el.style.transform = 'scaleY(1)';
+                      });
+                      const targetLineEl = host.querySelector('.target-line');
+                      if (targetLineEl) targetLineEl.style.strokeDashoffset = '0';
+                  });
+              });
+
+              // Legend
+              document.getElementById('legendHigh').textContent = this.changeformatnumber(highest);
+              document.getElementById('legendLow').textContent = this.changeformatnumber(lowest);
+              document.getElementById('legendDays').textContent = daily.length;
+
+              // Group breakdown table, built from the same loop above
+              const thead = document.getElementById('groupListHead');
+              const tbody = document.getElementById('groupListBody');
+              if (thead && tbody && groupColumns) {
+                  thead.innerHTML = `<tr><th>GroupDate</th>${groupColumns.map(c => `<th>${c}</th>`).join('')}<th>Total</th></tr>`;
+                  tbody.innerHTML = tableRowsHtml;
+              }
+          }
 
         //window.addEventListener('resize', () => {
         //    clearTimeout(window._chResize);
@@ -470,14 +534,144 @@
         }
     }
 
+     // ============================================
+     // Screen Size Controller - ES6 Class
+     // Displays screen and viewport dimensions
+     // ============================================
+
+        class ScreenSizeController {
+     constructor() {
+         // DOM refs
+         this.screenSizeEl = document.getElementById('screenSize');
+         this.viewportSizeEl = document.getElementById('viewportSize');
+         this.badgeEl = document.getElementById('screenSizeBadge');
+
+         // State
+         this.isTV = false;
+         this.resizeTimer = null;
+
+         // Bind methods
+         this.update = this.update.bind(this);
+         this.handleResize = this.handleResize.bind(this);
+     }
+
+     // === GET SCREEN INFO ===
+     getInfo() {
+         const { width: screenW, height: screenH } = window.screen;
+         const { innerWidth: viewW, innerHeight: viewH } = window;
+         const dpr = window.devicePixelRatio || 1;
+         const physW = Math.round(screenW * dpr);
+         const physH = Math.round(screenH * dpr);
+
+         return { screenW, screenH, viewW, viewH, dpr, physW, physH };
+     }
+
+     // === DETECT TV ===
+     detectTV() {
+         const ua = navigator.userAgent;
+         const isTVUA = /tcl|android tv|smart-tv|webos|vizio|roku|fire tv|apple tv/i.test(ua);
+         const hasCast = window.chrome?.hasOwnProperty('cast') ?? false;
+         const isAndroidTV = ua.includes('Android') && ua.includes('TV');
+         const isLarge = window.screen.width >= 1920 && window.screen.height >= 1080;
+
+         return {
+             isTV: isTVUA || hasCast || isAndroidTV || isLarge,
+             isTCL: /tcl/i.test(ua),
+             isAndroidTV
+         };
+     }
+
+     // === UPDATE DISPLAY ===
+     update() {
+         const info = this.getInfo();
+         const tv = this.detectTV();
+         this.isTV = tv.isTV;
+
+         // Update screen size
+         let screenDisplay = `${info.screenW} × ${info.screenH}`;
+         if (this.isTV && (info.screenW !== info.physW || info.screenH !== info.physH)) {
+             screenDisplay = `${info.screenW}×${info.screenH} (${info.physW}×${info.physH})`;
+         }
+         this.screenSizeEl.textContent = screenDisplay;
+
+         // Update viewport
+         this.viewportSizeEl.textContent = `${info.viewW} × ${info.viewH}`;
+
+         // Add TV badge if needed
+         let badgeHTML = '';
+         if (this.isTV) {
+             const tvLabel = tv.isTCL ? '📺 TCL' : '📺 TV';
+             badgeHTML = `<span class="tv-badge">${tvLabel}</span>`;
+         }
+
+         // Add DPR for TV
+         let dprHTML = '';
+         if (this.isTV) {
+             dprHTML = `<span class="size-separator">·</span><span class="size-label">DPR</span><span class="size-value">${info.dpr.toFixed(1)}x</span>`;
+         }
+
+         // Rebuild badge
+         this.badgeEl.innerHTML = `
+         ${badgeHTML}
+         <span class="size-label">Screen</span>
+         <span class="size-value" id="screenSize">${screenDisplay}</span>
+         <span class="size-separator">·</span>
+         <span class="size-label">Viewport</span>
+         <span class="size-value" id="viewportSize">${info.viewW} × ${info.viewH}</span>
+         ${dprHTML}
+     `;
+
+         // Re-assign refs (since we rebuilt innerHTML)
+         this.screenSizeEl = document.getElementById('screenSize');
+         this.viewportSizeEl = document.getElementById('viewportSize');
+
+         // Log debug
+         this.logDebug(info, tv);
+     }
+
+     // === RESIZE HANDLER (debounced) ===
+     handleResize() {
+         clearTimeout(this.resizeTimer);
+         this.resizeTimer = setTimeout(this.update, 150);
+     }
+
+     // === LOG DEBUG ===
+     logDebug(info, tv) {
+     }
+
+     // === INIT ===
+     init() {
+         this.update();
+         window.addEventListener('resize', this.handleResize);
+         window.addEventListener('orientationchange', () => {
+             setTimeout(this.update, 300);
+         });
+     }
+
+     // === CLEANUP ===
+     destroy() {
+         window.removeEventListener('resize', this.handleResize);
+         clearTimeout(this.resizeTimer);
+     }
+
+
+ }
 
 
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const controller = new GroupDashboardController();
-        controller.init();
+        document.addEventListener('DOMContentLoaded', function () {
+            const controller = new GroupDashboardController();
+            controller.init();
 
-    });
+
+
+            // Initialize screen size controller
+            // const screenController = new ScreenSizeController();
+            // screenController.init();
+
+            // Store for cleanup if needed
+            // window.screenController = screenController;
+        });
     </script>
 
 </div>

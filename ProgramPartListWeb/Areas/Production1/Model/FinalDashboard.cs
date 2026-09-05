@@ -137,6 +137,15 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public string ModifiedBy { get; set; }
     }
 
+    public class ProductionGroupModel
+    {
+        public string GroupDate { get; set; }
+        public int Group1 { get; set; }
+        public int Group2 { get; set; }
+        public int Group3 { get; set; }
+        public int OP { get; set; }
+        public int Total { get; set; }  
+    }
 
 
     public class AttendanceSummaryModel

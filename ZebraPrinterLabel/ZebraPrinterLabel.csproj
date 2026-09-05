@@ -71,7 +71,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BarcodeLib.Barcode.Common, Version=7.4.2.50317, Culture=neutral, PublicKeyToken=d5eb36d0d66aff70, processorArchitecture=MSIL">
-      <HintPath>..\packages\BarcodeLib.Barcode.7.4.2.11\lib\netstandard2.0\BarcodeLib.Barcode.Common.dll</HintPath>
+      <HintPath>..\packages\BarcodeLib.Barcode.7.4.2.31\lib\netstandard2.0\BarcodeLib.Barcode.Common.dll</HintPath>
     </Reference>
     <Reference Include="BarcodeStandard, Version=3.1.5.0, Culture=neutral, PublicKeyToken=5f09bda868cc39e7, processorArchitecture=MSIL">
       <HintPath>..\packages\BarcodeLib.3.1.5\lib\netstandard2.0\BarcodeStandard.dll</HintPath>

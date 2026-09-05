@@ -350,8 +350,18 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
                 return JsonNotFound("No Active Lines found");
             return JsonSuccess(res);
         }
+        [HttpGet]
+        public async Task<ActionResult> GetGroupListData()
+        {
 
-
+            var res = await _manu.GetProcessGroupData();
+            if (res == null)
+                return JsonNotFound("No Active Lines found");
+            return JsonSuccess(res);
+        }
+        //======================================================
+        //============== AUDIT DASHBOARD DATA  ===========
+        //====================================================
         [HttpGet]
         public async Task<ActionResult> GetAuditInfo()
         {

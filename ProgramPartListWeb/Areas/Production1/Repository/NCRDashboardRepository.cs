@@ -539,6 +539,28 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             return getTotalSummary;
         }
 
+
+        public Task<List<ProductionGroupModel>> GetProcessGroupData()
+        {
+            return SqlDataAcess_Test.QueryAsync<ProductionGroupModel>($@"
+                DECLARE @StartOfMonth DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);
+                    DECLARE @StartOfNextMonth DATE = DATEADD(MONTH, 1, @StartOfMonth);
+
+                     SELECT RecordId
+					 , FORMAT(GroupDate, 'd-MMM') AS GroupDate
+					 ,Group1
+					 ,Group2
+					 ,Group3
+					 ,OP
+					 ,Total
+				 FROM ProductionFinal_GroupChart
+				 WHERE GroupDate >= @StartOfMonth
+				 AND GroupDate < @StartOfNextMonth
+                    ORDER BY GroupDate");
+        }
+
+
+
         public Task<AuditInfoModel> GetAuditInfo()
         {
             const string sql = @"
@@ -839,5 +861,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                 d.NightShiftCount
             }));
         }
+
+       
     }
 }

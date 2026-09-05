@@ -433,6 +433,12 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
             return View();
         }
 
+        // GET: Production1/FinalAssembly
+        public ActionResult GroupDataMange()
+        {
+            return View();
+        }
+
         public ActionResult NCRDashboard()
         {
             return View();

@@ -1,0 +1,586 @@
+﻿
+@{
+    ViewBag.Title = "History";
+    Layout = "~/Areas/Circuit/Views/Shared/_MaskLayout.cshtml";
+}
+
+
+<div class="headerMask">
+    <div class="flex_align" style="align-items: flex-end;">
+        <div class="control-group">
+            <label class="control-label">
+                <i class="fas fa-search"></i> Search Partnumber
+            </label>
+            <div class="search-box">
+                <input type="text" id="searchID" placeholder="Search here ... " />
+            </div>
+        </div>
+        <div class="search-tag">
+            <i class="fas fa-tag"></i> Current: <span id="searchText">-- N/A --</span>
+        </div>
+    </div>
+
+
+    <div class="flex_align">
+        <button id="btnNGpage" class="ButtonNG">
+            <i class="fas fa-exclamation-triangle"></i> NG Data
+            <span id="NGcount" class="badge">0</span>
+        </button>
+        <button id="btnExport" class="btn btn-success" style="display: none;">
+            Export Selected
+        </button>
+    </div>
+</div>
+
+<div>
+
+</div>
+
+<div class="TrackTable" style="position: relative; margin-top: 1em;">
+
+
+    <table>
+        <thead>
+            <tr>
+                <th>Date </th>
+                <th>Shift</th>
+                <th>SMT Line</th>
+                <th>Area </th>
+                <th>Metal Mask Partno.</th>
+                <th>Block No.</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Total Time</th>
+                <th>Total Printed Board</th>
+                <th>SMT operator</th>
+                <th>Date cleaning</th>
+
+                <th>Time of Cleaning </th>
+                <th>Pattern</th>
+                <th>Frame</th>
+                <th>Point 1 </th>
+                <th>Point 2</th>
+                <th>Point 3</th>
+                <th>Point 4</th>
+                <th>Result</th>
+                <th>Tension Condition</th>
+                <th>Person in charge</th>
+            </tr>
+        </thead>
+        <tbody id="TransactionTable">
+        </tbody>
+    </table>
+
+
+    <div class="pagination" id="pagination">
+
+        <div class="pagination-items">
+            <!-- Pagination buttons will be inserted here -->
+        </div>
+    </div>
+</div>
+
+<section style="position: relative;">
+    <!-- Loading Overlay -->
+    <div class="loading" id="loading" style="padding: 2em 0; height: 300px;">
+        <div class="spinner"></div>
+        <p>Loading transactions...</p>
+    </div>
+
+</section>
+
+
+
+
+<script>
+    let selectedID = 0;
+    let searchCount = 0;
+    let currentPage = 1;
+    const pageSize = 20;
+    let totalRecords = 0;
+    let totalPages = 0;
+    let debounceTimer;
+    let tempPartnum = "";
+
+    let TableBody = $("#TransactionTable");
+    const loading = document.getElementById('loading');
+
+    // ==== SEARCH FUNCTIONALITY =======
+    $("#searchID").on('keyup', (e) => {
+        if (e.key !== "Enter") return;
+        let tempText = e.target.value;
+
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(async () => {
+            await GetMetalMaskIncompleteTransaction();
+            $("#searchID").val("");
+            $("#searchText").text(tempText);
+            tempPartnum = tempText;
+            await GetTotalIncompleteMask(tempText);
+        }, 400);
+    });
+
+
+
+    $("#btnExport").on("click", function () {
+
+        let selectedIds = [];
+
+        $(".row-check:checked").each(function () {
+            selectedIds.push($(this).val());
+        });
+
+        if (selectedIds.length === 0) {
+            alert("Please select at least one record to export.");
+            return;
+        }
+
+
+          $.ajax({
+              url: '@Url.Action("ExportMetalMask", "MetalMask")',
+              type: 'POST',
+              data: JSON.stringify({ recordIds: selectedIds }),
+              contentType: 'application/json; charset=utf-8',
+              xhrFields: {
+                  responseType: 'blob' // IMPORTANT for file download
+              },
+              success: function (data, status, xhr) {
+
+                  // Get filename from response header
+                  var filename = "MetalMask.xlsx";
+                  var disposition = xhr.getResponseHeader('Content-Disposition');
+                  if (disposition && disposition.indexOf('filename=') !== -1) {
+                      filename = disposition.split('filename=')[1].replace(/"/g, '');
+                  }
+
+                  // Create download
+                  var blob = new Blob([data], {
+                      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                  });
+
+                  var link = document.createElement('a');
+                  link.href = window.URL.createObjectURL(blob);
+                  link.download = filename;
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+              },
+              error: function () {
+                  alert("Export failed.");
+              }
+          });
+    });
+
+
+    $("#btnNGpage").on('click', () => {
+        if (tempPartnum === "" || searchCount === 0) {
+            $("#searchID").focus();
+            return;
+        }
+        window.location.href = "/Circuit/MetalMask/IncompleteMaskInfo?partnum=" + tempPartnum;
+    });
+
+
+    async function exportSelected(ids) {
+       let formData = new FormData();
+
+        ids.forEach((id, index) => {
+            formData.append(`recordIds[${index}]`, id);
+        });
+
+        const response = await fetch('@Url.Action("ExportMetalMask", "MetalMask")', {
+            method: "POST",
+            body: formData
+        });
+
+        if (response.status === 204) {
+            alert("No data to export.");
+            return;
+        }
+
+        if (!response.ok) {
+            alert("Export failed.");
+            return;
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "MetalMask.xlsx";
+        document.body.appendChild(a);
+        a.click();
+
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+    }
+
+
+
+    const GetMetalMaskIncompleteTransaction = async () => {
+        showLoading(true);
+        TableBody.empty();
+
+
+        try {
+            searchCount = 0;
+
+           const url = '@Url.Action("GetMetalMaskCOMPLETE", "MetalMask")';
+            // Add spinner/loading indicator
+            //$("#TransactionTable").html('<tr><td colspan="24" class="text-center"><div class="spinner-border" role="status"></div> Loading...</td></tr>');
+
+            let res = await GetMethodPublic(url, {
+                partnum: $("#searchID").val() || "",
+                pageNumber: currentPage || 1,
+                pageSize: pageSize || 10
+            });
+
+            //console.log(res);
+            if (res?.Success) {
+                let TableData = res.data.Items;
+                totalRecords = res.data.TotalRecords || 0;
+                totalPages = Math.ceil(totalRecords / pageSize);
+                let html = "";
+                $("#NGcount").text(``);
+
+                setTimeout(() => {
+                    $.each(TableData, function (index, row) {
+                        // Image Display
+                        //<td>
+                        //    <input type="checkbox"
+                        //        class="row-check"
+                        //        name="checkID"
+                        //        value="${row.RecordID}">
+                        //</td>
+
+                        html += `
+                           <tr class="fade-in MaskTable">
+
+
+                                 <td >${row.DateInput ? formatJsonDate(row.DateInput) : "-"}</td>
+                                 <td >${row.Shift ? "NS" : "DS"}</td>
+                                 <td >${row.SMTLine ? row.SMTLine : "-"}</td>
+                                 <td >${row.AREA ? row.AREA : "-"}</td>
+                                 <td >${row.Partnumber ? row.Partnumber : "-"}</td>
+                                 <td >${row.Blocks ? row.Blocks : "-"}</td>
+                                 <td >${row.SMT_start === "00:00" ? "--:--" : row.SMT_start}</td>
+                                 <td >${row.SMT_end === "00:00" ? "--:--" : row.SMT_end}</td>
+                                 <td >${row.TotalTime ? row.TotalTime : "-"}</td>
+                                 <td >${row.TotalPrintBoard ? row.TotalPrintBoard : "-"}</td>
+                                 <td >${row.SMT_Operator ? row.SMT_Operator : "-"}</td>
+
+                                <td >${row.CleanDate ? formatJsonDate(row.CleanDate) : "-"}</td>
+                                <td >${row.CleanDate ? formatJsonDate(row.CleanDate) : "-"}</td>
+                                <td >${row.Pattern ? row.Pattern : "-"}</td>
+                                <td >${row.Frame ? row.Frame : "-"}</td>
+                                <td >${row.ReadOne ? row.ReadOne : "-"}</td>
+                                <td >${row.ReadTwo ? row.ReadTwo : "-"}</td>
+                                <td >${row.ReadThree ? row.ReadThree : "-"}</td>
+                                <td >${row.ReadFour ? row.ReadFour : "-"}</td>
+                                <td >${row.Result ? row.Result : "-"}</td>
+                                <td >${row.Remarks ? row.Remarks : "-"}</td>
+                                <td >${row.PIC ? row.PIC : "-"}</td> "-"}</td>
+                           </tr>
+                       `;
+                    });
+
+                    TableBody.append(html);
+
+
+                    ///* ============================
+                    //      START REALTIME TIMERS
+                    //   ============================ */
+
+                    //document.querySelectorAll(".MaskTable").forEach((card, i) => {
+
+                    //    const row = res.data[i];
+
+                    //    // Only run if still active
+                    //    if (row.SMT_end !== "00:00") return;
+                    //    const changeDate = formatJsonDate(row.DateInput);
+                    //    const startDate = parseTime(changeDate, row.SMT_start);
+
+                    //    activeTimers.push(timer);
+                    //});
+                    // Update pagination UI
+                    updatePaginationUI();
+
+                    showLoading(false);
+                }, 500);
+
+            } else {
+                // handle specific error types
+
+                setTimeout(() => {
+                    let errorMessage = res?.Message || 'No Data Found';
+
+                    if (res?.errorType === 'NotFoundError') {
+                        errorMessage = 'Api endpoint not found. Please contact the Administrator';
+                    } else if (res?.errorType === 'UnauthorizedError') {
+                        errorMessage = 'Your Session Token is expired. please refresh the page';
+                    }
+
+                    TableBody.append(`<tr >
+                        <td colspan="23" style="text-align:center; font-weight:500;">
+                            🔍 ${errorMessage}
+                        </td>
+                    </tr>`);
+
+                    showLoading(false);
+                    console.error("API Error : ", errorMessage, res);
+                }, 500);
+                // Optional show a Toast
+
+            }
+
+        } catch (error) {
+            setTimeout(() => {
+                console.error('Unexpected error in GetMetalMaskTransaction:', error);
+                TableBody.append(`<tr >
+                      <td colspan="23" style="text-align:center; font-weight:500;">
+                          🔍 ${error.Message}
+                      </td>
+                  </tr>`);
+                showLoading(false);
+            }, 500);
+        }
+
+    }
+    const GetTotalIncompleteMask = async (partnumText) => {
+        try {
+            const url = '@Url.Action("GetMetalMaskINCOMPLETE", "MetalMask")';
+
+
+            let res = await GetMethodPublic(url, { partnum: partnumText });
+            let countpart = res?.Success ? res.data.Items.length : 0;
+            searchCount = countpart;
+
+            if (searchCount > 0) {
+                $("#NGcount").text(`${searchCount}`);
+            }
+
+
+        } catch (error) {
+            $("#NGcount").hide();
+            $("#NGcount").text("");
+        }
+    }
+
+    TableBody.empty();
+
+    TableBody.append(`<tr >
+       <td colspan="23" style="text-align:center; font-weight:500;">
+           🔍 No partnumber found
+       </td>
+   </tr>`);
+
+
+
+
+    function updatePaginationUI() {
+
+        const $pagination = $("#pagination");
+        const $paginationItems = $(".pagination-items");
+
+        // Clear existing buttons
+        $paginationItems.empty();
+
+        // Always show pagination for debugging
+        $pagination.css({
+            'display': 'flex',
+            'visibility': 'visible',
+            'opacity': '1',
+            'position': 'relative'
+        });
+
+        // Show/hide pagination based on total records
+        if (totalRecords > pageSize) {
+            $pagination.show();
+
+            // Create pagination buttons
+            const prevDisabled = currentPage === 1 ? 'disabled' : '';
+            const nextDisabled = currentPage === totalPages || totalPages === 0 ? 'disabled' : '';
+
+            $paginationItems.html(`
+        <button class="page-btn prev-btn" ${prevDisabled} data-page="${currentPage - 1}">
+            <i class="fas fa-chevron-left"></i> Previous
+        </button>
+
+        <div class="page-info">
+            Page ${currentPage} of ${totalPages || 1}
+            <span class="record-info"></span>
+        </div>
+
+        <button class="page-btn next-btn" ${nextDisabled} data-page="${currentPage + 1}">
+            Next <i class="fas fa-chevron-right"></i>
+        </button>
+    `);
+
+            // Add page number input for direct navigation (optional)
+            if (totalPages > 10) {
+                $paginationItems.append(`
+            <div class="page-jump">
+                <input type="number" id="pageJumpInput" min="1" max="${totalPages}" value="${currentPage}"
+                       style="width: 60px; padding: 5px; border: 1px solid #ddd; border-radius: 4px;">
+                <button class="page-btn jump-btn" id="pageJumpBtn">Go</button>
+            </div>
+        `);
+            }
+
+            // Add click handlers
+            $(".page-btn").off('click').on('click', function () {
+                if ($(this).is(':disabled')) return;
+
+                const pageNum = parseInt($(this).data('page'));
+
+                if (pageNum >= 1 && pageNum <= totalPages && pageNum !== currentPage) {
+                    currentPage = pageNum;
+                    GetMetalMaskIncompleteTransaction();
+                }
+            });
+
+            // Add handler for jump button if exists
+            $("#pageJumpBtn").off('click').on('click', function () {
+                const jumpPage = parseInt($("#pageJumpInput").val());
+                if (jumpPage >= 1 && jumpPage <= totalPages && jumpPage !== currentPage) {
+                    currentPage = jumpPage;
+                    GetMetalMaskIncompleteTransaction();
+                }
+            });
+
+            // Add enter key handler for jump input
+            $("#pageJumpInput").off('keypress').on('keypress', function (e) {
+                if (e.which === 13) { // Enter key
+                    $("#pageJumpBtn").click();
+                }
+            });
+
+        } else {
+            $pagination.hide();
+        }
+    }
+
+
+
+
+
+    /* ============================
+     HELPERS
+  ============================ */
+    function buildStartDate(dateInput, smtStart) {
+        const d = new Date(dateInput);
+        const [h, m] = smtStart.split(":").map(Number);
+
+        return new Date(
+            d.getFullYear(),
+            d.getMonth(),
+            d.getDate(),
+            h,
+            m,
+            0
+        );
+    }
+
+    function timeNow() {
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getMinutes()).padStart(2, '0');
+
+        const time = `${hh}:${mm}`;
+
+        return time;
+    }
+
+    function parseTime(dateInput, timeStr) {
+        const d = new Date(dateInput);
+        const [h, m] = timeStr.split(":").map(Number);
+
+        return new Date(
+            d.getFullYear(),
+            d.getMonth(),
+            d.getDate(),
+            h,
+            m,
+            0
+        );
+    }
+
+    function formatDuration(minutes) {
+        const h = Math.floor(minutes / 60);
+        const m = minutes % 60;
+        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    }
+
+    /* ============================
+       REALTIME TIMER
+    ============================ */
+
+    function startRealtimeTimer(cardEl, dateInput, smtStart) {
+
+        const startDate = buildStartDate(dateInput, smtStart);
+
+
+        function update() {
+            const now = new Date();
+            let diffMin = Math.floor((now - startDate) / 60000);
+
+            // Safety guard
+            if (diffMin < 0) diffMin = 0;
+
+            cardEl.querySelector(".total-time")
+                .textContent = formatDuration(diffMin);
+        }
+
+        update();
+        return setInterval(update, 1000);
+    }
+
+
+    function startSelectedStopwatch(dateInput, smtStart) {
+
+        // stop old timer
+        if (selectedTimer) clearInterval(selectedTimer);
+
+        const startDate = buildStartDate(dateInput, smtStart);
+
+        function update() {
+            const now = new Date();
+            let diffMin = Math.floor((now - startDate) / 60000);
+            if (diffMin < 0) diffMin = 0;
+
+            const formatted = formatDuration(diffMin);
+            $("#TotalTimeText").text(formatted);
+        }
+
+        update();
+        selectedTimer = setInterval(update, 1000);
+    }
+
+
+    function updateOperationStatus(status) {
+        const labels = [
+            'NOT STARTED',  // 0
+            'IN PROGRESS',  // 1
+            'COMPLETED'     // 2
+        ];
+
+        const colors = [
+            '#fbbf24', // 0 - pending
+            '#4cc9f0', // 1 - running
+            '#4ade80'  // 2 - completed
+        ];
+
+        operationBadge.textContent = labels[status] ?? 'UNKNOWN';
+        operationBadge.style.background = colors[status] ?? '#6c757d';
+    }
+
+    // Show loading state
+    function showLoading(show = true) {
+        loading.classList.toggle('active', show);
+    }
+
+
+    GetMetalMaskIncompleteTransaction();
+</script>

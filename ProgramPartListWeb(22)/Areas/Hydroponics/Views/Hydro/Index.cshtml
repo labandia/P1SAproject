@@ -1,0 +1,509 @@
+﻿<head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/x-icon" href="@Url.Content("~/Content/Images/inventory-management.ico")">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>San Hydro Application</title>
+    <link  href="~/Content/fonts/Manrope-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+
+
+    <link href="~/Content/Shared/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/HydroLogin.css" rel="stylesheet" />
+
+    @Styles.Render("~/Content/shared-css")
+
+</head>
+
+
+<div class="bg-animated"></div>
+
+<div class="center">
+
+    <div class="Wrapcontainer">
+        <div class="carousel-container">
+
+            <div class="hydrocenter">
+
+                <div class="slider">
+                    <div class="slide">
+                        <img style="width: 100%;" src="~/Content/Images/HydroPhonics.png" />
+                    </div>
+                    <div class="slide">
+                        <img style="width: 95%;" src="~/Content/Images/FrontImage.png" />
+                    </div>
+                    <div class="slide">
+                        <img style="width: 95%;" src="~/Content/Images/SideImage.png" />
+                    </div>
+                </div>
+
+
+                <div class="controls">
+                    <div class="control-btn" data-index="0"></div>
+                    <div class="control-btn" data-index="1"></div>
+                    <div class="control-btn" data-index="2"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="login-container">
+            <div class="formwrapper">
+                <div class="logo">
+                    <img src="~/Content/Images/SanHydroApp.png"  />
+                </div>
+
+                <form id="logincredentials" method="post">
+                    <div class="form-group mb-2">
+                        <label for="Username">Username :</label>
+                        <input type="text" name="username" id="username" placeholder="Enter Username" autocomplete="off" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password : </label>
+                        <input type="password" name="password" id="password" placeholder="Enter Password" autocomplete="new-password" required>
+
+                    </div>
+
+
+
+                    <div style="display: flex; margin-top: 1em; align-items: center;justify-content: center; flex-direction: column;">
+                        <button type="submit" style="margin: 1em 0;" class="sign-in-btn"><i class="fa-solid fa-right-to-bracket"></i> Sign in</button>
+                        <a href="#" class="forgetbtn" id="changebtn" style="margin-bottom: 1em; ">Change Password</a>
+                        <a href="#" class="addbtn" id="addbtn" style="color: hsl(178, 97%, 24%); font-weight: 600;">Create an Account</a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+<!-- Loader -->
+<div id="loader" class="loader-overlay">
+    <div class="loader-box">
+        <div class="spinner"></div>
+        <div>
+            <div>Signing you in…</div>
+            <small>Please wait while we load the Page.</small>
+        </div>
+    </div>
+</div>
+
+
+@*=================================================================================*@
+@*=========================== ADD ACCOUNT  USERS ==================================*@
+@*=================================================================================*@
+<div class="modal fade modal-l" id="AddProductModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Create Account</h5>
+
+                    <button type="button" class="btn btn-light close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post" class="addformcontainer" id="addnewform" autocomplete="off">
+                    <input type="hidden" name="Password" id="Password" value="abc12345" />
+                    <div class="row">
+                        <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                            <label>Employee ID <small style="color: #a81818; font-weight: 600;">*</small></label>
+                            <input type="text" name="Employee_ID" id="Employee_ID" placeholder="Enter Employee ID" autocomplete="off" required />
+                        </div>
+                        <div class="form_group col-12 col-sm-12 col-lg-6 mb-2">
+                            <label>Full Name <small style="color: #a81818; font-weight: 600;">*</small></label> 
+                            <input type="text" name="FullName" id="FullName" placeholder="Enter Full Name" autocomplete="off" required />
+                        </div>
+                    </div>
+
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <div class="flex_space">
+                            <label>Email Address </label>
+                            <small>(Only if you have an email)</small>
+                        </div>
+                        <input type="text" name="Email" id="Email" placeholder="Enter Email Address" autocomplete="off" />
+                    </div>
+
+                    <input type="hidden" name="Roles_ID" id="Roles_ID" value="5" />
+
+                   
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small id="Errormessage"> All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        </div>
+                        <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Submit</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@*=================================================================================*@
+@*====================== CHANGE PASSWORD OR FORGET PASSWORD =======================*@
+@*=================================================================================*@
+<div class="modal fade modal-l" id="ChangepasswordModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Change Password</h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                </div>
+
+
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="changenewform" autocomplete="off">
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Employee ID <small style="color: #a81818; font-weight: 600;">*</small></label> 
+                        <input type="text" name="CEmployee_ID" id="CEmployee_ID" placeholder="Enter Employee ID" autocomplete="off" required />
+                    </div>
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Username <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="text" name="CUsername" id="CUsername" placeholder="Enter Username" autocomplete="off" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>New Password <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="password" name="CNewPassword" id="CNewPassword" placeholder="Enter New Password" autocomplete="off" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Confirm Password <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="password" name="CConfirm" id="CConfirm" autocomplete="off" placeholder="Enter the same password" required />
+                    </div>
+
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small id="ChangeErrormessage">All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        </div>
+                        <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Submit</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Loader -->
+<div id="loader" class="loader-overlay">
+    <div class="loader-box">
+        <div class="spinner"></div>
+        <div>
+            <div>Processing your application…</div>
+            <small>Please wait while we submit your information.</small>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/sweetalert2.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script type="module" asp-append-version="true">
+    import {
+        getMethod,
+        postMethod
+    } from '@Url.Content("~/Scripts/modules/index.js?v=2")';
+
+
+    class LoginController {
+        constructor() {
+            this.isSubmitting = false;
+
+            this.loader = document.getElementById('loader');
+            this.logform = document.getElementById('logincredentials');
+            this.regform = document.getElementById('addnewform');
+            this.changeform = document.getElementById('changenewform');
+
+            this.regbtn = document.getElementById('addbtn');
+            this.changebtn = document.getElementById('changebtn');
+        }
+
+        async init() {
+            this.bindEvents();
+        }
+
+        bindEvents() {
+            this.logform?.addEventListener('submit', (e) => this.handleLogin(e));
+            this.regform?.addEventListener('submit', (e) => this.handleRegister(e));
+            this.changeform?.addEventListener('submit', (e) => this.handleChangePassword(e));
+
+            this.regbtn?.addEventListener('click', (e) => this.openRegisterModal(e));
+            this.changebtn?.addEventListener('click', (e) => this.openChangePasswordModal(e));
+        }
+
+        showLoader() {
+            this.loader?.classList.add("show");
+        }
+
+        hideLoader() {
+            this.loader?.classList.remove("show");
+        }
+
+        openRegisterModal(e) {
+            e.preventDefault();
+
+            this.regform?.reset();
+
+            const modal = new bootstrap.Modal(
+                document.getElementById("AddProductModal")
+            );
+
+            modal.show();
+        }
+        openChangePasswordModal(e) {
+            e.preventDefault();
+
+            this.changeform?.reset();
+
+            const modal = new bootstrap.Modal(
+                document.getElementById("ChangepasswordModal")
+            );
+
+            modal.show();
+        }
+
+        async handleLogin(e) {
+            e.preventDefault();
+
+            if (this.isSubmitting) return;
+            this.isSubmitting = true;
+
+            console.clear();
+            this.loader.classList.add('show');
+
+            const formData = new FormData(this.logform);
+            formData.append('proj', 10);
+
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                let res = await postMethod('/Auth/Authenticate', data);
+                if (!res?.Success) {
+                    throw new Error(res?.Message || "Authentication failed");
+                }
+
+                const user = res.data;
+
+                // For Info of the user
+                localStorage.setItem("UserID", res.data.User_ID);
+                localStorage.setItem('UserRole', res.data.role);
+                localStorage.setItem('Fullname', res.data.fullname);
+
+                // For Authorize User Access
+                localStorage.setItem('accessToken', res.data.access_token);
+                localStorage.setItem('refreshToken', res.data.refresh_token);
+
+                // Session info
+                localStorage.setItem('Logout', "/Hydroponics/Hydro/index");
+                localStorage.setItem('HydroTime', new Date().toISOString());
+                localStorage.setItem('isLoggedInHydro', 'true');
+
+                // expiresIn = seconds
+                localStorage.setItem(
+                    'tokenExpiry',
+                    Date.now() + (8 * 60 * 60 * 1000)
+                );
+
+                // Optional loader delay animation
+                setTimeout(() => {
+                    window.location.href = "/Hydroponics/Hydro/Inventorylist";
+                }, 1000);
+
+
+            } catch (error) {
+                setTimeout(() => {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Authentication failed",
+                        text: "Username and password is incorrect",
+                        timer: 1500, allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    this.loader.classList.remove('show');
+                }, 1000);
+            } finally {
+                this.isSubmitting = false;
+            }
+        }
+
+        async handleRegister(e) {
+            e.preventDefault();
+
+            //if (!this.RegisterValidationForm()) {
+            //    return;
+            //}
+
+            const formData = new FormData(this.regform);
+            formData.append('Project_ID', 10);
+            formData.append('Username', formData.get('Employee_ID'));
+            const data = Object.fromEntries(formData);
+
+            try {
+                let res = await postMethod('/User/CreateNewUser', formData);
+                if (res?.Success) {
+                    alert('Registration successful! You can now log in.');
+
+                    const modal = new bootstrap.Modal(
+                        document.getElementById("AddProductModal")
+                    );
+
+                    modal.hide();
+                    this.regform?.reset();
+                } else {
+                    alert(response.message || 'Registration failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                alert('An error occurred during registration. Please try again later.');
+            } finally {
+                this.hideLoader();
+            }
+        }
+
+        async handleChangePassword(e) {
+            e.preventDefault();
+            this.showLoader();
+            const formData = new FormData(this.changeform);
+
+            if (!this.ChangeValidationForm()) {
+                return;
+            }
+
+            try {
+                let res = await postMethod('/User/ChangePassword', formData);
+                if (response.success) {
+                    alert('Password changed successfully! You can now log in with your new password.');
+                    $('#ChangepasswordModal').modal('hide');
+                } else {
+                    alert(response.message || 'Password change failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Change password error:', error);
+                alert('An error occurred while changing the password. Please try again later.');
+            } finally {
+                this.hideLoader();
+            }
+        }
+
+        async ChangeValidationForm() {
+            let newpass = document.getElementById("CNewPassword").value;
+            let confirmpass = document.getElementById("CConfirm").value;
+            let employeeID = document.getElementById("CEmployee_ID").value;
+
+            let res = await getMethod('/User/CheckEmployeeID', { empID: employeeID });
+
+            if (!res?.Success) {
+                document.getElementById("ChangeErrormessage").textContent = "Employee ID does not exist";
+                document.getElementById("ChangeErrormessage").style.color = "darkred";
+                return false;
+            }
+
+            if (newpass !== confirmpass) {
+                document.getElementById("ChangeErrormessage").textContent = "Password does not Match";
+                document.getElementById("ChangeErrormessage").style.color = "darkred";
+                return false;
+            }
+
+            const modal = new bootstrap.Modal(
+                document.getElementById("ChangeErrormessage")
+            );
+
+            modal.show();
+        }
+
+
+        RegisterValidationForm() {
+            let errormsg = document.getElementById("Errormessage");
+            const pass = document.getElementById("RegPassword")?.value;
+            const confirm = document.getElementById("RegConfirmPassword")?.value;
+
+            if (pass !== confirmpass) {
+                errormsg.innerHTML= "Password does not Match";
+                errormsg.style.color = "darkred";
+                return false;
+            }
+
+            errormsg.textContent = "";
+            return true;
+        };
+    }
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const login = new LoginController();
+        login.init();
+    });
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+
+        // replace $("#logshow").show()
+        const logShow = document.querySelector("#logshow");
+        if (logShow) logShow.style.display = "block";
+
+        const slides = document.querySelectorAll(".slide");
+        const controls = document.querySelectorAll(".control-btn");
+
+        let current = 0;
+        let interval = null;
+
+        const goToSlide = (index) => {
+            slides[current].classList.remove("Slideactive");
+            controls[current].classList.remove("Slideactive");
+
+            current = index;
+
+            slides[current].classList.add("Slideactive");
+            controls[current].classList.add("Slideactive");
+        };
+
+        const nextSlide = () => {
+            const next = (current + 1) % slides.length;
+            goToSlide(next);
+        };
+
+        const startAutoPlay = () => {
+            interval = setInterval(nextSlide, 5000);
+        };
+
+        const stopAutoPlay = () => {
+            clearInterval(interval);
+        };
+
+        // Initialize first slide
+        if (slides.length > 0) {
+            slides[0].classList.add("Slideactive");
+            controls[0].classList.add("Slideactive");
+        }
+
+        controls.forEach((btn, i) => {
+            btn.addEventListener("click", () => {
+                goToSlide(i);
+                stopAutoPlay();
+                startAutoPlay();
+            });
+        });
+
+        startAutoPlay();
+    });
+</script>
+
+
+

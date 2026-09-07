@@ -1,0 +1,495 @@
+﻿
+@{
+    Layout = null;
+    var regno = Request.QueryString["Regno"];
+}
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/x-icon" href="@Url.Content("~/Content/Images/patrol .ico")">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title</title>
+    <link rel="preload" href="~/Content/fonts/Poppins-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+
+
+    <link href="~/Content/Shared/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/RegistrationUI.css" rel="stylesheet" />
+
+    @Styles.Render("~/Content/shared-css")
+
+    @Scripts.Render("~/bundles/shared-js")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+
+
+<body>
+    <div class="MainWrapper">
+        @Html.Partial("_StepRegister")
+
+
+        <div class="content">
+
+
+            <!-- Step 1: Create New Document -->
+            <div class="step-content active" id="step-1">
+
+            </div>
+
+            <!-- Step 2: Person in Charge -->
+            <form method="post" enctype="multipart/form-data" class="step-content active" style="padding: 1.5em 0;" id="step-2" autocomplete="off">
+
+
+
+                <div class="row mb-3">
+                    <div class="col">
+                        <label>Registration No.  </label> <br />
+                        <input type="text" id="RegNo" class="mt-2" value="@regno" name="RegNo" readonly />
+                    </div>
+                    <div class="col">
+                        <label>Department / Section  </label> <br />
+                        <input type="text" id="SectionName" class="mt-2" readonly />
+                    </div>
+                </div>
+
+
+                <hr />
+
+
+                <div class="col-12 col-sm-12 col-lg-12 mb-3">
+                    <label>1. Work Practice / Standard / Safety</label> <br />
+
+                    <p id="Inpects1"></p>
+
+
+                    <textarea placeholder="Type text here..." name="counter1" id="counter1" rows="3" cols="40"></textarea>
+                </div>
+
+                <div class="col-12 col-sm-12 col-lg-12 mb-3">
+                    <label>2. Identification and status of the product or materials.</label> <br />
+                    <p id="Inpects2"></p>
+                    <textarea placeholder="Type text here..." name="counter2" id="counter2" rows="3" cols="40"></textarea>
+                </div>
+
+                <div class="col-12 col-sm-12 col-lg-12 mb-3">
+                    <label>3. Condition and status of documents / records.</label> <br />
+                    <p id="Inpects3"></p>
+                    <textarea placeholder="Type text here..." name="counter3" id="counter3" rows="3" cols="40"></textarea>
+                </div>
+
+                <div class="col-12 col-sm-12 col-lg-12 mb-3">
+                    <label>4. Record of ‘start-up process check’ and monthly inspection</label> <br />
+                    <p id="Inpects4"></p>
+                    <textarea placeholder="Type text here..." name="counter4" id="counter4" rows="3" cols="40"></textarea>
+                </div>
+
+                <div class="col-12 col-sm-12 col-lg-12 mb-3">
+                    <label>5. Calibration of equipment and jigs used for measurement or inspection.</label> <br />
+                    <p id="Inpects5"></p>
+                    <textarea placeholder="Type text here..." name="counter5" id="counter5" rows="3" cols="40"></textarea>
+                </div>
+
+                <div class="col-12 col-sm-12 col-lg-12 mb-3">
+                    <label>6. Countermeasure and implementation of previous quality and safety</label> <br />
+                    <p id="Inpects6"></p>
+                    <textarea placeholder="Type text here..." name="counter6" id="counter6" rows="3" cols="40"></textarea>
+                </div>
+                <div class="col-12 col-sm-12 col-lg-12 mb-3">
+                    <label>PIC Comments</label>
+                    <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="3" cols="40"></textarea>
+                </div>
+
+
+
+
+                <div class="Attachmentcontainer col-12 col-sm-12 col-lg-12 mb-3">
+                    <label class="mb-2 mt-2 fw-bold">Upload Attachments : </label><br />
+
+
+                    <div class="file-upload" id="file-upload-area">
+                        <p>Click to upload files or drag and drop</p>
+                        <input type="file" id="file-input" multiple style="display: none;">
+                    </div>
+
+
+
+                    <div class="Attachmentcontainer mt-3">
+
+                        <div id="fileContainer"></div>
+                        <ul id="fileList" class="file-list"></ul>
+                    </div>
+
+                </div>
+
+                <hr />
+
+                <div class="col-4 col-sm-12 col-lg-4 mb-3">
+                    <label>Person Incharge signature</label>  <br />
+
+                    <div class="signature-container" id="signature-display">
+                        <div class="signature-placeholder" id="placeholder">
+                            <i class="fas fa-signature" style="font-size: 48px; margin-bottom: 15px; color: #bdc3c7;"></i>
+                            <p>No Signature Display Please Upload</p>
+                        </div>
+                        <img id="signature-image" class="signature-image" style="display: none;">
+
+                        <div class="signature-Input" id="signature-Input" style="display: none;">
+                            <i class="fas fa-signature" style="font-size: 48px; margin-bottom: 15px; color: #bdc3c7;"></i>
+                            <p> No Signature Found. Please upload by click the Circle Icon. </p>
+                        </div>
+
+                    </div>
+
+                    <button id="uploadSig" class="btn btn-primary text-light mt-2">Update Signation</button>
+                </div>
+
+
+                <div class="button-group">
+                    <div></div> <!-- Empty div for spacing -->
+                    <button type="submit" id="btnSave"><i class="fa-regular fa-floppy-disk"></i> Approved & Send Email</button>
+                </div>
+            </form>
+
+            <!-- Step 3: Document Details -->
+            <div class="step-content" id="step-3">
+
+            </div>
+
+            <!-- Step 4: Attachments -->
+            <div class="step-content" id="step-4">
+
+            </div>
+
+            <!-- Step 5: Review & Submit -->
+            <div class="step-content" id="step-5">
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <!-- Sequential Loader -->
+    @Html.Partial("_LoaderUpload")
+
+    <!-- Upload Files -->
+    @Html.Partial("_UploadFiles")
+
+
+
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/Popper.min.js"></script>
+    <script src="~/Scripts/signature_pad.umd.min.js"></script>
+    <script type="text/javascript">
+        $("#regtext").text("@regno");
+    </script>
+
+
+    <script type="module">
+        "use strict";
+
+         import {
+          getMethodPublic,
+          postMethodPublic
+        } from '@Url.Content("~/Scripts/modules/index.js")';
+
+        class ProcessOwner {
+            constructor() {
+
+                /* ================= STATE ================= */
+                this.currentStep = 2;
+                this.totalSteps = 5;
+                this.selectedFiles = [];
+                this.emailTable = [];
+
+                this.strRegno = "@regno";
+                this.modeset = @ViewBag.Mode;
+                this.strPIC;
+                /* ================= DOM ================= */
+                this.dom = {
+                    fileUploadArea: document.getElementById("file-upload-area"),
+                    fileList: document.getElementById("fileList"),
+                    fileInput: document.getElementById("file-input"),
+                    form: document.getElementById("step-2"),
+
+                    signatureImage: document.getElementById("signature-image"),
+                    signatureInput: document.getElementById("signature-Input"),
+                    uploadfile: document.getElementById("uploadSig"),
+                    placeholder: document.getElementById("placeholder"),
+                    loader: document.getElementById("loader"),
+                    doneBtn: document.getElementById("doneBtn"),
+
+                };
+
+                /* ================= INIT ================= */
+                this.init();
+
+            }
+
+            /* =========================================================
+               INIT
+            ========================================================= */
+            init() {
+                this.goToStep(2)
+                this.bindEvents();
+                this.loadInitialData();
+            }
+
+            bindEvents() {
+                document.querySelectorAll('.step-item').forEach(item => {
+                    item.addEventListener('click', e => e.preventDefault());
+                });
+
+                this.dom.form.addEventListener('submit', this.handleSubmit.bind(this));
+
+                this.dom.fileUploadArea.addEventListener('click', () => this.dom.fileInput.click());
+                this.dom.fileInput.addEventListener('change', this.HandleFileUpload.bind(this));
+
+                this.dom.signatureInput.addEventListener('click', () => {
+                    $("#uploadmodal").modal('show');
+                });
+
+                this.dom.doneBtn.addEventListener('click', () => {
+                    this.dom.loader.classList.remove('active');
+                    window.location.href = `/PC/Patrol/ProcessOwner?Regno=${this.strRegno}&mode=0`;
+                });
+            }
+
+
+
+
+            /* =========================================================
+               FORM SUBMIT
+            ========================================================= */
+            async handleSubmit(e) {
+                e.preventDefault();
+
+                const formData = new FormData(e.target);
+                formData.append('FindJson', this.buildFindings(e.target));
+                const data = Object.fromEntries(formData);
+                console.log(data);
+                this.selectedFiles.forEach(file => formData.append("Attachments", file));
+
+
+                this.dom.loader.classList.add("active");
+                this.startLoading(formData);
+
+            }
+
+            // ================= FINDINGS =================
+            buildFindings(form) {
+                const data = Object.fromEntries(new FormData(form));
+
+                return JSON.stringify(
+                    Array.from({ length: 6 }, (_, i) => ({
+                        RegNo: this.strRegno,
+                        FindID: i + 1,
+                        Countermeasure: data[`counter${i + 1}`]
+                    }))
+                );
+            }
+            /* =========================================================
+               STEPS
+            ========================================================= */
+            initSteps() {
+                this.goToStep(2);
+            }
+
+            goToStep(step) {
+                this.currentStep = step;
+
+                document.querySelectorAll(".step-item").forEach((item, i) => {
+                    item.classList.toggle("completed", i + 1 < step);
+                    item.classList.toggle("active", i + 1 === step);
+                });
+
+                document.querySelectorAll(".step-content")
+                    .forEach(c => c.classList.remove("active"));
+
+                document.getElementById(`step-${step}`).classList.add("active");
+            }
+
+            resetSteps() {
+                document.querySelectorAll(".step")
+                    .forEach(s => s.classList.remove("active", "completed"));
+
+                document.getElementById("progressFill").style.width = "0%";
+                document.getElementById("progressText").textContent = "0%";
+            }
+
+            async startLoading(formData) {
+                    const steps = [
+                        {
+                            id: "step1",
+                            progress: 25,
+                            action: () => postMethodPublic('@Url.Action("ProcessOwnerSubmission", "Patrol")', formData)
+                        },{
+                            id: "step2",
+                            progress: 50,
+                            action: () => postMethodPublic('@Url.Action("UpdateRegistrationPDF", "Patrol")', formData)
+                        },
+                        {
+                            id: "step3",
+                            progress: 75,
+                            action: () => postMethodPublic('@Url.Action("EmailSendToNext", "Patrol")', formData)
+                        },
+                        {
+                            id: "step4",
+                            progress: 100,
+                            action: () => Promise.resolve({ Success: true })
+                        }
+                    ];
+
+                    for (let i = 0; i < steps.length; i++) {
+                        const step = steps[i];
+                        const el = document.getElementById(step.id);
+
+                        try {
+                            el.classList.add("active");
+
+                            document.getElementById("progressFill").style.width = `${step.progress}%`;
+                            document.getElementById("progressText").textContent = `${step.progress}%`;
+
+                            //  CALL BACKEND
+                            const res = await step.action();
+
+                            if (!res?.Success) {
+                                throw new Error(res?.Message || `Step ${i + 1} failed`);
+                            }
+
+                            // 🔥 UPDATE TEXT FROM BACKEND
+                            const titleEl = el.querySelector(".step-title");
+                            const descEl = el.querySelector(".step-description");
+
+                            if (titleEl) titleEl.textContent = res.Message || "Completed";
+                            if (descEl) descEl.textContent = `Step ${i + 1} completed successfully`;
+
+                            // Mark completed
+                            el.classList.remove("active");
+                            el.classList.add("completed");
+
+                            // Optional delay (UX)
+                            await new Promise(r => setTimeout(r, 500));
+
+                        } catch (error) {
+                            console.error(error);
+
+                            el.classList.add("error");
+
+                            // 🔥 SHOW BACKEND ERROR MESSAGE
+                            const descEl = el.querySelector(".step-description");
+                            if (descEl) descEl.textContent = error.message;
+
+                            Swal.fire({
+                                icon: "error",
+                                text: error.message || `Process failed at step ${i + 1}`,
+                            });
+
+                            return;
+                        }
+                    }
+
+                    this.dom.doneBtn.classList.add("show");
+            }
+
+
+
+
+
+            /* =========================================================
+                    FILE UPLOAD
+            ========================================================= */
+            HandleFileUpload() {
+                [...this.dom.fileInput.files].forEach(file => {
+                    const exists = this.selectedFiles.some(f => f.name === file.name && f.size === file.size);
+                    if (!exists) this.selectedFiles.push(file);
+                });
+
+                this.renderFileList();
+            }
+
+            renderFileList() {
+                this.dom.fileList.innerHTML = "";
+
+                this.selectedFiles.forEach((file, index) => {
+                    const div = document.createElement("div");
+                    div.className = "pdf-container";
+
+                    const openBtn = document.createElement("button");
+                    openBtn.className = "open-pdf-btn";
+                    openBtn.innerHTML = `<i class="fa-solid fa-file-pdf"></i> ${file.name}`;
+                    openBtn.onclick = () => window.open(URL.createObjectURL(file), "_blank");
+
+                    const removeBtn = document.createElement("button");
+                    removeBtn.className = "remove-btn";
+                    removeBtn.innerHTML = `<i class="fa-regular fa-circle-xmark"></i>`;
+                    removeBtn.onclick = () => {
+                        this.selectedFiles.splice(index, 1);
+                        this.renderFileList();
+                    };
+
+                    div.append(openBtn, removeBtn);
+                    this.dom.fileList.appendChild(div);
+                });
+            }
+
+            // ================= API =================
+            async getRegistrationDetails() {
+                let res = await getMethodPublic('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: this.strRegno });
+                if (!res?.Success) return;
+
+                const { SectionName, PIC_Comments, PIC_ID } = res.data;
+
+                $("#regtext").text(this.strRegno);
+                $("#SectionName").val(`P1SA-${SectionName}`);
+                $("#PIC_Comments").val(PIC_Comments);
+                this.strPIC = PIC_ID;
+
+                const user = this.emailTable.find(e => e.Employee_ID === this.strPIC);
+
+                if (user?.Signature) {
+                    this.dom.placeholder.style.display = 'none';
+                    this.dom.signatureInput.style.display = 'none';
+                    this.dom.signatureImage.style.display = 'block';
+                    this.dom.signatureImage.src = `/User/GetSignatureImage?filename=${encodeURIComponent(user.Signature)}`;
+                }
+            }
+
+            async getRegistrationID() {
+               let res = await getMethodPublic('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: this.strRegno });
+                res?.data?.forEach(({ FindID, FindDescription, Countermeasure }) => {
+                    $(`#Inpects${FindID}`).text("- " + FindDescription);
+                    $(`#counter${FindID}`).val(Countermeasure);
+                });
+            }
+
+            async getEmailList() {
+                const res = await getMethodPublic('@Url.Action("GetEmaiRegistration", "Patrol")', {});
+                console.log(res);
+
+                if (res?.Success) this.emailTable = res.data;
+            }
+
+            async loadInitialData() {
+                try {
+                    await Promise.all([
+                        this.getEmailList(),
+                        this.getRegistrationDetails(),
+                        this.getRegistrationID()
+                    ]);
+                } catch (err) {
+                    console.error("Load error:", err);
+                }
+            }
+
+        }
+
+        /* =========================================================
+           START APP
+        ========================================================= */
+        document.addEventListener("DOMContentLoaded", () => {
+            new ProcessOwner();
+        });
+    </script>
+</body >
+

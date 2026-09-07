@@ -1,0 +1,911 @@
+﻿
+@{
+    Layout = "~/Areas/Final/Views/Shared/_ManageLayout.cshtml";
+}
+@Html.AntiForgeryToken()
+
+<div class="uploadsection">
+
+    <!-- ── PAGE HEADER ───────────────────────────────────────────────────── -->
+    <div id="page-header">
+        <div id="page-header-top">
+            <div>
+                <div id="page-title">Final Assembly Upload Data</div>
+                <div id="page-subtitle">Data Upload For the Final Assembly</div>
+            </div>
+            <div id="header-actions">
+                <a class="Downloadtemplate" href="@Url.Action("DownloadFile", "Assembly", new { fileName = "FinalUploadTemplate.xlsx" })">
+                    <iconify-icon icon="gg:push-down" width="16"></iconify-icon> Download Template
+                </a>
+                <button id="btn-failed" class="btn-primary" style="height:32px; background:#277eff; display:none;">
+                    <iconify-icon icon="gg:push-down" width="16"></iconify-icon>
+                    Failed Uploads
+                </button>
+                <button id="uploadbtn"
+                        class="btn-outline"
+                        style="height:32px;"
+                        data-upload-url="@Url.Action("ImportUpload",      "Assembly")"
+                        data-stream-url="@Url.Action("ImportUploadStream","Assembly")"
+                        data-progress-url="@Url.Action("ImportProgress",  "Assembly")">
+                    <iconify-icon icon="ic:round-upload" width="16"></iconify-icon>
+                    Import CSV
+                </button>
+                <button id="btn-proceed" class="btn-primary" style="height:32px; background:#277eff;">
+                    <span class="btn-content">
+                        <iconify-icon icon="material-symbols-light:published-with-changes" width="16"></iconify-icon>
+                        <span>Update Changes</span>
+                    </span>
+
+                    <span class="btn-loading" style="display:none;">
+                        <span class="spinner"></span>
+                        <span>Updating...</span>
+                    </span>
+                </button>
+            </div>
+        </div>
+
+        <!-- TABS — data-target must match id="pane-{target}" below -->
+        <div id="tabs">
+            <div class="tab active" data-target="success">Successful (<span id="TotalSuccess">0</span>)</div>
+            <div class="tab" data-target="failed">Failed Uploads (<span id="TotalFailed">0</span>)</div>
+        </div>
+    </div>
+
+    <!-- ── TAB CONTENT ───────────────────────────────────────────────────── -->
+    <div id="tabcontent">
+
+        <!-- ── PANE: success ── summary bar + successful-uploads table ───── -->
+        <div class="tab-pane active" id="pane-success"> 
+
+            <!-- Successful Uploads table card -->
+            <div class="section-card success">
+                <div class="section-card-header">
+                    <div class="section-card-title">
+                        <iconify-icon icon="lucide:check-circle"
+                                      style="font-size:15px;color:#16a34a;"></iconify-icon>
+                        Successful Uploads
+                        <span class="count-badge success">
+                            <span id="subsuccess">0</span>&nbsp;&nbsp;Passed
+                        </span>
+                    </div>
+                    <div class="section-card-meta">Processed correctly</div>
+                </div>
+                <div class="devices-table-wrapper">
+                    <div class="table-scroll">
+                        <table class="upload-table">
+                            <thead>
+                                <tr>
+                                    <th class="fixedcolumn" style="width:44px;">
+                                        <input type="checkbox" id="selectAllRows" />
+                                    </th>
+                                    <th style="text-align:center;">Line</th>
+                                    <th>Final Shop Order/ Partno / Model</th>
+                                    <th style="text-align:center;">Qty</th>
+                                    <th>Note</th>
+                                    <th>IFS Finish Date</th>
+                                    <th>FA Status</th>
+                                    <th>Shipment</th>
+                                    <th style="text-align:center;">Current Plan Qty</th>
+                                    <th style="text-align:center;">Upload Plan Qty</th>
+                                    <th style="text-align:center;">Current Plan Date</th>
+                                    <th style="text-align:center;">Upload Plan Date</th>
+                                    <th style="text-align:center;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                @*<div class="table-footer">
+                    <span class="table-footer-text" id="successFooterText">Showing 0 successful rows</span>
+                    <span class="btn-text">
+                        View all
+                        <iconify-icon icon="lucide:chevron-right"
+                                      style="font-size:12px;color:var(--primary);"></iconify-icon>
+                    </span>
+                </div>*@
+            </div>
+
+        </div><!-- /pane-success -->
+        <!-- ── PANE: failed ── failed-uploads table only ─────────────────── -->
+        <div class="tab-pane" id="pane-failed">
+
+            <!-- Failed Uploads table card -->
+            <div class="section-card failed">
+                <div class="section-card-header">
+                    <div class="section-card-title">
+                        <iconify-icon icon="lucide:x-circle"
+                                      style="font-size:15px;color:#dc2626;"></iconify-icon>
+                        Failed Uploads
+                        <span class="count-badge error">
+                            <span id="subfailed">0</span>&nbsp;&nbsp;Errors
+                        </span>
+                    </div>
+                    <div class="section-card-meta">Duplicate records and require correction</div>
+                </div>
+                <div class="table-scroll">
+                    <table class="failed-table">
+                        <thead>
+                            <tr>
+                                <th>Line</th>
+                                <th>Final Shop Order/ Partno / Model</th>
+                                <th>QTY</th>
+                                <th>Plan Start</th>
+                                <th>Dispatch</th>
+                                <th>Note</th>
+                                <th>IFS Finish Date</th>
+                                <th>FA Status</th>
+                                <th>Shipment</th>
+                                <th>Mode</th>
+                                <th>WITH SR</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                @*<div class="table-footer">
+                    <span class="table-footer-text" id="failedFooterText">Showing 0 failed rows</span>
+                    <span class="btn-text">
+                        View all
+                        <iconify-icon icon="lucide:chevron-right"
+                                      style="font-size:12px;color:var(--primary);"></iconify-icon>
+                    </span>
+                </div>*@
+            </div>
+
+        </div><!-- /pane-failed -->
+
+    </div><!-- /tabcontent -->
+
+</div><!-- /uploadsection -->
+
+@Html.Partial("_UploadDataDialog")
+
+
+
+
+
+
+<script type="module" asp-append-version="true">
+    import {
+        getMethod,
+        postMethod
+    } from '@Url.Content("~/Scripts/modules/index.js")';
+
+
+  class UploadDataController {
+      // ── Private fields ────────────────────────────────────────────────────────
+      #dateCache = new Map();
+      #xhr = null;
+      #pollTimer = null;
+      #evtSource = null;
+
+      // Tab state
+      #tabs = null;
+      #panes = null;
+
+     constructor() {
+         this.successtotal = 0;
+         this.failedtotal = 0;
+
+         this.uploadUrl = document.getElementById('uploadbtn').dataset.uploadUrl;
+
+         //this.failedModal = new bootstrap.Modal(document.getElementById('uploadFailedModal'), {
+         //    backdrop: 'static',
+         //    keyboard: false
+         //});
+
+         this.progressModal = new bootstrap.Modal(document.getElementById('uploadStatusModal'), {
+             backdrop: 'static',
+             keyboard: false
+         });
+
+         this.tbody = document.querySelector('.upload-table tbody');
+         this.uploadbody = document.querySelector('.failed-table tbody');
+         this.fileInput = this._createFileInput();
+
+         this.uploadUrl = document.getElementById('uploadbtn').dataset.uploadUrl;
+         this.streamUrl = document.getElementById('uploadbtn').dataset.streamUrl;
+         this.progressUrl = document.getElementById('uploadbtn').dataset.progressUrl; // ✅ add this
+
+
+         // Tab setup
+         this.#tabs = document.querySelectorAll('#tabs .tab');
+         this.#panes = new Map(
+             [...this.#tabs]
+                 .map(tab => [
+                     tab.dataset.target,
+                     document.getElementById(`pane-${tab.dataset.target}`)
+                 ])
+         );
+    }
+
+    async init() {
+        this.bindEvents();
+
+        const initialTab = [...this.#tabs].find(t => t.classList.contains('active'))
+            ?? this.#tabs[0];
+        if (initialTab) this.activateTab(initialTab.dataset.target);
+
+        await Promise.all([this.LoadUploadDataList(), this.LoadFailedDataList()]);
+
+    }
+
+      bindEvents() {
+          // Tab switching
+          this.#tabs.forEach(tab => {
+              tab.addEventListener("click", () => {
+                  console.log("Clicked:", tab.dataset.target);
+                  this.activateTab(tab.dataset.target);
+              });
+          });
+
+        this.tbody.addEventListener('click', (e) => {
+            if (e.target.classList.contains('row-checkbox')) return;
+            const row = e.target.closest('tr');
+            if (!row) return;
+            const checkbox = row.querySelector('.row-checkbox');
+            if (!checkbox) return;
+            checkbox.checked = !checkbox.checked;
+            checkbox.dispatchEvent(
+                new Event('change', { bubbles: true })
+            );
+        });
+
+        document.getElementById('uploadbtn').addEventListener('click', () => {
+            this.fileInput.click();
+        });
+
+        document.getElementById('cancelUploadBtn')
+              .addEventListener('click', () => {
+                  this.#xhr?.abort();
+                  this.#xhr = null;
+                  if (this.#pollTimer) {
+                      clearTimeout(this.#pollTimer);
+                      this.#pollTimer = null;
+                  }
+                  this.progressModal.hide();
+         });
+
+
+
+        this.fileInput.addEventListener('change', async ({ target: { files } }) => {
+              const [file] = files;
+              if (!file) return;
+              this.fileInput.value = '';
+              await this.beginUpload(file);
+        });
+
+        document.getElementById('cancelUploadBtn').addEventListener('click', () => {
+            if (this._xhr) { this._xhr.abort(); this._xhr = null; }
+            this.progressModal.hide();
+        });
+
+        document.getElementById('btn-proceed')
+            .addEventListener('click', async e => {
+                e.preventDefault();
+                const btn = e.currentTarget;
+                const content = btn.querySelector('.btn-content');
+                const loading = btn.querySelector('.btn-loading');
+
+                btn.classList.add('loading');
+                btn.disabled = true;
+                content.style.display = 'none';
+                loading.style.display = 'flex';
+
+                try {
+                    const res = await postMethod(
+                        '@Url.Action("FinalProcessUpload", "Assembly")',
+                        {}
+                    );
+
+                    if (res.Success) {
+                        await this.LoadUploadDataList();
+                        document.getElementById("TotalSuccess").textContent = 0;
+                        document.getElementById("TotalFailed").textContent = 0;
+                    }
+                } catch (err) {
+                    console.error(err);
+                } finally {
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+                    content.style.display = 'flex';
+                    loading.style.display = 'none';
+                }
+         });
+
+        document.getElementById('btn-failed')
+            .addEventListener('click', () => this.LoadUploadDataList());
+
+        document.getElementById('continueBgBtn')
+              .addEventListener('click', () => this.progressModal.hide());
+
+
+        document.addEventListener('change', async (e) => {
+              if (!e.target.classList.contains('row-checkbox')) return;
+
+                const id = e.target.dataset.id;
+                const isApproved = e.target.checked;
+                this.updateSelectedCount();
+
+                // Update header checkbox state
+                const allCheckboxes = [...document.querySelectorAll('.row-checkbox')];
+                const allChecked =
+                    allCheckboxes.length > 0 &&
+                    allCheckboxes.every(cb => cb.checked);
+
+                document.getElementById('selectAllRows').checked = allChecked;
+
+                try {
+
+                    await postMethod(
+                        '@Url.Action("UpdateUploadApproval", "Assembly")',
+                        {
+                            recordID: id,
+                            check: isApproved
+                        });
+
+                } catch (err) {
+
+                    console.error(err);
+
+                    // revert checkbox if save failed
+                    e.target.checked = !isApproved;
+                    this.updateSelectedCount();
+                }
+        });
+
+        document.getElementById('selectAllRows')
+            .addEventListener('change', async (e) => {
+                await this.toggleAllRows(e.target.checked);
+            });
+    }
+
+
+
+
+    /* ================= LOAD DATA ================= */
+    async LoadUploadDataList() {
+        try {
+            const res = await getMethod('@Url.Action("GetUploadData", "Assembly")', {});
+            if (!res?.Success) { this.NoTableRowData(); return; }
+
+
+            this.successtotal = res.data.length;
+
+            const approvedCount = res.data.filter(x => x.IsApproved).length;
+            document.getElementById("btn-proceed").disabled = approvedCount === 0;
+
+            const display = this.successtotal > 0 ? `${this.successtotal}  ` : 0;
+            document.getElementById("TotalSuccess").textContent = display;
+            document.getElementById("subsuccess").textContent = display;
+
+            this.renderTable(res.data ?? []);
+        } catch (err) {
+            console.error(err);
+        }
+      }
+
+      async LoadFailedDataList() {
+        try {
+            const res = await getMethod('@Url.Action("GetFailedUploadData", "Assembly")', {});
+            if (!res?.Success) return;
+
+            this.failedtotal = res.data?.length ?? 0;
+            document.getElementById('TotalFailed').textContent = this.failedtotal || 0;
+            document.getElementById('subfailed').textContent = this.failedtotal || 0;
+
+            this.renderFailedTable(res.data ?? []);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+
+
+      /* ================= RENDER MAIN TABLE ================= */
+      renderFailedTable(data) {
+          if (!this.uploadbody) return;
+
+          if (!data || data.length === 0) {
+              this.uploadbody.innerHTML = `
+            <tr>
+                <td colspan="13" style="text-align:center;padding:20px;">
+                    No failed uploads.
+                </td>
+            </tr>`;
+              return;
+          }
+
+          this.uploadbody.innerHTML = data.map(row => `
+            <tr class="fade-in">
+                <td>${row.Line}</td>
+                <td style='text-align: left;'>
+                    <span class="text-primary font-medium">${row.FinalShopOrder}</span>
+                    <p style="margin:.2em 0;color:#8a8f9e;">${row.ItemNo}</p>
+                     <span
+                        class="model-text"
+                        title="${row.Model}">
+                        ${row.Model}
+                    </span>
+                </td>
+                <td>${row.PlanQty}</td>
+                <td>${this.formatDate(row.PlanStartDate)}</td>
+                <td>${row.DispatchDate}</td>
+                <td>${row.Note || ''}</td>
+                <td>${this.formatDate(row.FinalFinishedDate)}</td>
+                <td>${row.FAStatus || ''}</td>
+                <td>${this.formatDate(row.ShipmentDate)}</td>
+                <td>${row.ShipmentMode || ''}</td>
+                <td>${row.WithSR || ''}</td>
+            </tr>
+        `).join('');
+      }
+
+      // ── Render: success table ─────────────────────────────────────────────────
+        renderTable(data) {
+          console.log(data);
+            if (!this.tbody) return;
+            if (!data.length) { this.NoTableRowData(); return; }
+
+
+            this.tbody.innerHTML = data.map(row => {
+                const qtyChanged =
+                    Number(row.UploadPlanQty) !== Number(row.OrderPlanQty);
+                const dateChanged =
+                    new Date(row.UploadPlanStartDate).toDateString() !==
+                    new Date(row.OrderPlanStartDate).toDateString();
+
+                const qtyColor = qtyChanged ? '#34c759' : '#515154';
+                const dateColor = dateChanged ? '#34c759' : '#515154';
+
+                return `
+                        <tr class="fade-in">
+                           <td class='fixedrow'>
+                                <input type="checkbox"
+                                       class="row-checkbox"
+                                       data-id="${row.RecordID}"
+                                       ${row.IsApproved == 1 ? 'checked' : ''} />
+                            </td>
+                             <td>${row.Line}</td>
+                            <td style='text-align: left;'>
+                                <span class="text-primary font-medium">${row.FinalShopOrder}</span>
+                                <p style="margin:.2em 0;color:#8a8f9e;">${row.ItemNo}</p>
+                                 <span
+                                    class="model-text"
+                                    title="${row.Model}">
+                                    ${row.Model}
+                                </span>
+                            </td>
+                            <td style="color:#515154; text-align:center;">${this.escape(row.PlanQty)}</td>
+                            <td>${row.Note || ''}</td>
+                            <td>${this.formatDate(row.FinalFinishedDate)}</td>
+                            <td class="status-column">${row.FAStatus || ''}</td>
+                            <td>${this.formatDate(row.ShipmentDate)}</td>
+                            <td style="color:${qtyColor};  text-align:center;">${this.escape(row.UploadPlanQty)}</td>
+                            <td style="color:${qtyColor};  text-align:center;">${this.escape(row.OrderPlanQty)}</td>
+                            <td style="color:${dateColor}; text-align:center;">${this.escape(row.UploadPlanStartDate)}</td>
+                            <td style="color:${dateColor}; text-align:center;">${this.escape(row.OrderPlanStartDate)}</td>
+                            <td style="text-align:center;">
+                                <span class="badge ${this.statusUploadClass(row.StatusCheck)}">
+                                    ${this.escape(row.StatusCheck)}
+                                </span>
+                            </td>
+                        </tr>`
+            }).join('');
+
+
+            // Sync Select All checkbox
+            const allCheckboxes = [...document.querySelectorAll('.row-checkbox')];
+
+            document.getElementById('selectAllRows').checked =
+                allCheckboxes.length > 0 &&
+                allCheckboxes.every(cb => cb.checked);
+        }
+
+
+        NoTableRowData() {
+            document.getElementById('selectAllRows').checked = false;
+
+            this.tbody.innerHTML = `
+            <tr>
+                <td colspan="13" style="padding: 0; border: none;">
+                    <div class="table-empty">
+                        <div class="table-empty-icon-box">
+                            <span class="icon-wrap" style="width:28px;height:28px;color:var(--color-primary);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24">
+                                    <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7142857142857142">
+                                        <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
+                                        <path d="M14 2v5a1 1 0 0 0 1 1h5m-8 4v6m3-3l-3-3l-3 3" />
+                                    </g>
+                                </svg>
+                            </span>
+                        </div>
+                        <div class="table-empty-content">
+                            <span class="table-empty-title">No upload data yet</span>
+                            <span class="table-empty-desc">Import a CSV or Excel file to compare planned quantities and dates against current shop orders.</span>
+                        </div>
+
+                    </div>
+                </td>
+            </tr>`;
+        }
+
+        showTableSkeleton() {
+          this.tbody.innerHTML = Array(10).fill(`
+            <tr>
+                ${Array(18).fill(`
+                    <td>
+                        <div class="skeleton-cell"></div>
+                    </td>
+                `).join('')}
+            </tr>
+            `).join('');
+        }
+
+
+        updateSelectedCount() {
+          const count = document.querySelectorAll('.row-checkbox:checked').length;
+          document.getElementById('btn-proceed').disabled = count === 0;
+        }
+
+        statusUploadClass(stats) {
+            const map = { 'SAME': 'badge-update-ready', 'UPDATED': 'badge-uptodate', 'NEW DATA': 'badge-newdata' };
+            return map[stats] ?? 'badge-uptodate';
+        }
+
+        /* ================= FILE INPUT ================= */
+        _createFileInput() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.csv,.xlsx,.xls';
+            input.style.display = 'none';
+            document.body.appendChild(input);
+            return input;
+        }
+
+      /* ================= UPLOAD FLOW ================= */
+      async beginUpload(file) {
+          const ext = file.name.split('.').pop().toUpperCase();
+          const size = this._formatSize(file.size);
+
+          document.getElementById('modalFileName').textContent = file.name;
+          document.getElementById('modalFileMeta').textContent = `${ext} · ${size}`;
+
+          this._setProgress(0);
+          this._updateFooter(0, 0, 0, 0);
+          this._updateStats(0, 1, 0, 0); // show 1 uploading
+          document.querySelector('#uploadStatusModal .file-table tbody').innerHTML = '';
+
+          this.progressModal.show();
+
+          try {
+              // step 1: upload file → get jobId
+              const uploadResult = await this._uploadFile(file);
+
+              if (!uploadResult.Success) {
+                  this._showUploadError(uploadResult.Message ?? 'Upload failed.');
+                  return;
+              }
+
+              // step 2: poll progress until done
+              await this._pollProgress(uploadResult.JobId);
+
+          } catch (err) {
+              if (err.message !== 'aborted') {
+                  this._showUploadError('Unexpected error: ' + err.message);
+              }
+          }
+      }
+
+
+      /* ================= STEP 1: UPLOAD ================= */
+      _uploadFile(file) {
+          return new Promise((resolve, reject) => {
+              const formData = new FormData();
+              formData.append('file', file);
+
+              const xhr = new XMLHttpRequest();
+              this._xhr = xhr;
+
+              xhr.upload.addEventListener('progress', (e) => {
+                  if (!e.lengthComputable) return;
+                  const pct = Math.round((e.loaded / e.total) * 100);
+                  // show upload progress in label only
+                  const label = document.querySelector('#uploadStatusModal .progress-card .progress-label');
+                  if (label) label.textContent = `Uploading... ${pct}%`;
+              });
+
+              xhr.addEventListener('load', () => {
+                  this._xhr = null;
+                  if (xhr.status < 200 || xhr.status >= 300) {
+                      reject(new Error(`Server error (${xhr.status})`));
+                      return;
+                  }
+                  try { resolve(JSON.parse(xhr.responseText)); }
+                  catch { reject(new Error('Invalid server response')); }
+              });
+
+              xhr.addEventListener('error', () => { this._xhr = null; reject(new Error('Network error')); });
+              xhr.addEventListener('abort', () => { this._xhr = null; reject(new Error('aborted')); });
+
+              xhr.open('POST', this.uploadUrl);
+              xhr.send(formData);
+          });
+      }
+
+
+      /* ================= STEP 2: POLL ================= */
+      _pollProgress(jobId) {
+          return new Promise((resolve, reject) => {
+              const pollUrl = this.progressUrl + '?jobId=' + encodeURIComponent(jobId);
+
+              const poll = async () => {
+                  try {
+                      const res = await fetch(pollUrl);
+                      if (!res.ok) throw new Error(`Poll error (${res.status})`);
+
+                      const data = await res.json();
+                      if (!data.Success) throw new Error(data.Message ?? 'Progress error');
+
+                      // append any new rowsdocument.getElementById("TotalSumUpload").textContent =
+                      this.failedtotal + this.successtotal;
+                      (data.Rows ?? []).forEach(row => this._appendRow(row));
+
+                      // update progress bar
+                      const pct = data.Total > 0
+                          ? Math.round((data.Current / data.Total) * 100)
+                          : 0;
+                      this._setProgress(pct);
+                      this._updateFooter(data.Total, data.Current, data.Success, data.Failed);
+                      this._updateStats(data.Success, data.Status === 'processing' ? 1 : 0, 0, data.Failed);
+
+                      if (data.Status === 'done') {
+                          this._setProgress(100);
+                          this._updateStats(data.Success, 0, 0, data.Failed);
+
+                          await Promise.all([this.LoadUploadDataList(), this.LoadFailedDataList()]);
+                          resolve();
+                          return;
+                      }
+
+                      if (data.Status === 'error') {
+                          this._showUploadError(data.Message ?? 'Processing error.');
+                          reject(new Error(data.Message));
+                          return;
+                      }
+
+                      // still processing — poll again in 300ms
+                      this.#pollTimer = setTimeout(poll, 300);
+
+                  } catch (err) {
+                      reject(err);
+                  }
+              };
+
+              // start polling
+              poll();
+          });
+      }
+
+      /* ================= STEP 2: SSE STREAM ROW BY ROW ================= */
+      _streamRows(fileName) {
+          return new Promise((resolve, reject) => {
+
+              // ✅ pass fileName in query string
+              const streamUrl = this.streamUrl + '?fileName=' + encodeURIComponent(fileName);
+
+              const evtSource = new EventSource(streamUrl);
+              this._evtSource = evtSource;
+
+              let timeout = setTimeout(() => {
+                  evtSource.close();
+                  reject(new Error('Stream timeout — no data received'));
+              }, 10000);
+
+              evtSource.onopen = () => {
+                  console.log('SSE connection opened');
+                  clearTimeout(timeout);
+              };
+
+              evtSource.onmessage = async (e) => {
+                  clearTimeout(timeout);
+                  try {
+                      const payload = JSON.parse(e.data);
+
+                      if (payload.type === 'row') {
+                          this._appendRow(payload.row);
+                          const pct = Math.round((payload.current / payload.total) * 100);
+                          this._setProgress(pct);
+                          this._updateFooter(payload.total, payload.current, payload.success, payload.failed);
+                          this._updateStats(payload.success, 0, 0, payload.failed);
+                      }
+
+                      if (payload.type === 'done') {
+                          evtSource.close();
+                          this._evtSource = null;
+                          this._setProgress(100);
+                          this._updateFooter(payload.total, payload.current, payload.success, payload.failed);
+                          this._updateStats(payload.success, 0, 0, payload.failed);
+                          await Promise.all([this.LoadUploadDataList(), this.LoadFailedDataList()]);
+                          resolve();
+                      }
+
+                  } catch (err) {
+                      evtSource.close();
+                      reject(new Error('Stream parse error: ' + err.message));
+                  }
+              };
+
+              evtSource.onerror = (e) => {
+                  console.error('SSE error:', e);
+                  evtSource.close();
+                  this._evtSource = null;
+                  reject(new Error('Stream connection error'));
+              };
+          });
+      }
+
+      /* ================= APPEND ROW ================= */
+      _appendRow(row) {
+          const tbody = document.querySelector('#uploadStatusModal .file-table tbody');
+          const scroll = document.getElementById('modalTableScroll');
+          const ok = row.isSuccess ?? row.IsSuccess ?? true;
+
+          const tr = document.createElement('tr');
+          tr.style.animation = 'fadeInRow 0.15s ease';
+          tr.innerHTML = `
+        <td>
+             <span class="status-badge ${ok ? 'done' : 'failed'}">
+                 <span class="status-dot"></span>
+                 ${ok ? 'OK' : (row.message ?? row.Message ?? 'Failed')}
+             </span>
+        </td>
+        <td>${this.escape(row.shopOrder ?? row.ShopOrder)}</td>
+        <td>${this.escape(row.partNo ?? row.PartNo)}</td>
+        <td>${this.escape(row.model ?? row.Model)}</td>
+        <td>${this.escape(row.wc ?? row.Wc)}</td>
+        <td>${this.escape(row.planStart ?? row.PlanStart)}</td>
+       `;
+
+          tbody.appendChild(tr);
+
+          // auto scroll to latest row
+          if (scroll) scroll.scrollTop = scroll.scrollHeight;
+      }
+
+
+
+    /* ================= PROGRESS BAR ================= */
+      _setProgress(pct) {
+        const fill  = document.querySelector('#uploadStatusModal .progress-card .progress-fill');
+        const label = document.querySelector('#uploadStatusModal .progress-card .progress-label');
+
+        if (fill)  fill.style.width  = `${pct}%`;
+        if (label) label.textContent = pct >= 100 ? 'Processing rows...' : 'Uploading file...';
+
+        document.getElementById('modalProgressPct').textContent = `${pct}%`;
+    }
+
+    /* ================= RENDER MODAL ROWS ================= */
+      _renderRows(rows) {
+          const tbody = document.querySelector('#uploadStatusModal .file-table tbody');
+          tbody.innerHTML = '';
+
+          let success = 0, failed = 0;
+
+          rows.forEach((row, i) => {
+              const ok = row.result?.success ?? true;
+              if (ok) success++; else failed++;
+
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+                <td>${this.escape(row.ShopOrder)}</td>
+                <td>${this.escape(row.PartNo)}</td>
+                <td>${this.escape(row.Model)}</td>
+                <td>${this.escape(row.Wc)}</td>
+                <td>${this.escape(row.Qty)}</td>
+                <td>
+                    <span class="status-badge ${ok ? 'done' : 'failed'}">
+                        <span class="status-dot"></span>
+                        ${ok ? 'Imported' : (row.result?.message ?? 'Failed')}
+                    </span>
+                </td>`;
+              tbody.appendChild(tr);
+
+              this._updateFooter(rows.length, i + 1, success, failed);
+          });
+
+          this._updateStats(success, 0, 0, failed);
+          this._setProgress(100);
+      }
+
+    /* ================= HELPERS ================= */
+    _updateFooter(total, current, success, failed) {
+        const footer = document.querySelector('#uploadStatusModal .modal-footer-custom p');
+        if (footer) footer.innerHTML = `Row ${current} of ${total} &nbsp;✔ ${success} &nbsp;✘ ${failed}`;
+    }
+
+    _updateStats(completed, uploading, queued, failed) {
+        const items = document.querySelectorAll('#uploadStatusModal .stat-item .stat-text');
+        if (items.length < 4) return;
+        items[0].innerHTML = `<strong>${completed}</strong> Completed`;
+        items[1].innerHTML = `<strong>${uploading}</strong> Uploading`;
+        items[2].innerHTML = `<strong>${queued}</strong> Queued`;
+        items[3].innerHTML = `<strong>${failed}</strong> Failed`;
+    }
+
+    _showUploadError(message) {
+        const label = document.querySelector('#uploadStatusModal .progress-card .progress-label');
+        if (label) { label.textContent = message; label.style.color = '#dc2626'; }
+        this._updateStats(0, 0, 0, 1);
+    }
+
+    _formatSize(bytes) {
+        if (bytes < 1024)        return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    escape(str) {
+        const d = document.createElement('div');
+        d.textContent = str ?? '';
+        return d.innerHTML;
+    }
+    formatDate(dateString) {
+        if (!dateString) return '';
+        if (this.#dateCache.has(dateString)) return this.#dateCache.get(dateString);
+        const ms = parseInt(dateString.match(/\d+/)?.[0]);
+        const result = isNaN(ms) ? '' : new Date(ms).toLocaleDateString('en-US');
+        this.#dateCache.set(dateString, result);
+        return result;
+    }
+
+    async toggleAllRows(isChecked) {
+        const checkboxes = [...document.querySelectorAll('.row-checkbox')];
+
+        document.getElementById('selectAllRows').checked = isChecked;
+       let res = await postMethod(
+           '@Url.Action("UpdateAllUploadApproval", "Assembly")', {});
+
+        if (res?.Success) {
+            await this.LoadUploadDataList();
+        }
+        //const ids = checkboxes.map(cb => cb.dataset.id);
+        //for (const cb of checkboxes) {
+        //    cb.checked = isChecked;
+
+
+        //}
+
+        this.updateSelectedCount();
+    }
+
+
+
+      // ── Tab control ───────────────────────────────────────────────────────────
+
+      activateTab(target) {
+          if (!this.#panes.has(target)) return;
+
+          // Tabs — toggle active class
+          this.#tabs.forEach(tab =>
+              tab.classList.toggle('active', tab.dataset.target === target)
+          );
+
+          // Panes — show/hide
+          this.#panes.forEach((pane, key) =>
+              pane.classList.toggle('active', key === target)
+          );
+
+          // Header actions only make sense on the success tab
+          const onSuccess = target === 'success';
+          document.getElementById('btn-proceed').style.display = onSuccess ? '' : 'none';
+      }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const controller = new UploadDataController();
+    controller.init();
+});
+</script>

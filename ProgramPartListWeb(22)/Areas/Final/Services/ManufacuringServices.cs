@@ -1,0 +1,1298 @@
+﻿using Dapper;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.InkML;
+using ProgramPartListWeb.Areas.Final.Model;
+using ProgramPartListWeb.Helper;
+using ProgramPartListWeb.Utilities.DataAccess;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using static ProgramPartListWeb.Areas.Final.Model.DisposalModels;
+
+namespace ProgramPartListWeb.Areas.Final.Services
+{
+    public class ManufacuringServices : IManufacturing
+    {
+        //private const string maintable = "FanTraceabilityManufacturingOrder_BACKV2";
+        private const string maintable = "FanTraceabilityManufacturingOrder";
+
+        public enum OrderStatus
+        {
+            Blank = 0,
+            NextProcess = 1,
+            Temporary = 2,
+            InProcess = 3,
+            FSI = 4,
+            CellLine = 5
+        }
+
+        private string SelectColumns = $@"
+                                   s.RecordID
+                                 ,s.InputQty
+                                 ,s.Line
+                                 ,s.FinalShopOrder
+                                 ,s.ItemNo
+                                 ,s.Model
+                                 ,s.WC
+                                 ,s.PlanQty
+                                 ,s.PlanStartDate
+                                 ,s.DispatchDate
+                                 ,s.Note
+                                 ,s.FinalFinishedDate
+                                 ,s.FAStatus
+                                 ,s.ShipmentDate
+                                 ,s.ShipmentMode
+                                 ,s.WithSR
+                                 ,s.OrderRemarks
+                                 ,s.OrderStatus
+                                 ,s.QuanStatus
+                                 ,FORMAT(s.DateStart, 'MM/dd/yy') as DateStart
+                                 ,s.TimeStart
+                                 ,s.TimeEnd
+                                 ,(SELECT m.Model FROM {maintable} m WHERE m.Line = s.Line AND m.OrderStatus = 1)  as NextItem
+                                 ,(SELECT m.FinalShopOrder FROM {maintable} m WHERE m.Line = s.Line AND m.OrderStatus = 1)  as NextShop";
+
+
+
+
+        public async Task AutoUpdateShopOrderLine()
+        {
+            var getdata = await GetListofActiveShopOrders();
+
+            foreach (var item in getdata)
+            {
+                int getDoneLines = await SqlDataAcess_Test.ExecuteScalarAsync<int>(
+                  @"SELECT
+                    (
+                        CASE
+                            WHEN EXISTS (
+                                SELECT 1
+                                FROM FanTraceabilityFinal
+                                WHERE FinalShopOrder = @FinalShopOrder
+                                  AND DepartmentID IN (1,2)
+                            )
+                            THEN 2
+                            ELSE 0
+                        END
+                    )
+                    +
+                    (
+                        SELECT COUNT(DISTINCT DepartmentID)
+                        FROM FanTraceabilityFinal
+                        WHERE FinalShopOrder = @FinalShopOrder
+                          AND DepartmentID IN (3,4,5,7)
+                    ) AS totalshop;", new
+                  {
+                      FinalShopOrder = item.FinalShopOrder
+                  });
+
+                // if all the section has complete the finalShopOrder updates the status of the line and Updates also the next process
+                if (getDoneLines == 6)
+                {
+                    // UPDATE TO DONE
+                    await SqlDataAcess_Test.ExecuteAsync($@"UPDATE {maintable} 
+                        SET OrderStatus = 4 WHERE  Line =@Line AND OrderStatus = 2  ", new
+                    {
+                        Line = item.Line
+                    });
+                    // UPDATE TO ACTIVE NEXT PROCESS
+                    await SqlDataAcess_Test.ExecuteAsync($@"UPDATE {maintable} 
+                        SET OrderStatus = 3 WHERE   Line =@Line AND OrderStatus = 1 ", new
+                    {
+                        Line = item.Line
+                    });
+                }
+            }
+        }
+
+
+
+        public Task<bool> CheckCurrentStatusChange(int record)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> CheckIfNextInprocessExist(string line)
+        {
+            throw new NotImplementedException();
+        }
+
+        //  Get all the Final ShopOrder of Each Section but return only the number
+        public async Task<string> GetAlreadyDoneShopOrdersBySection(string finalorder)
+        {
+            string query = $@"WITH Departments AS
+                            (
+                                SELECT 1 AS DepartmentID
+                                UNION ALL SELECT 2
+                            )
+                            SELECT DepartmentID
+                            FROM Departments
+                            WHERE EXISTS
+                            (
+                                SELECT 1
+                                FROM FanTraceabilityFinal
+                                WHERE FinalShopOrder = @FinalShopOrder
+                                  AND DepartmentID IN (1,2)
+                            )
+
+                            UNION
+
+                            SELECT DepartmentID
+                            FROM FanTraceabilityFinal
+                            WHERE FinalShopOrder = @FinalShopOrder
+                              AND DepartmentID IN (3,4,5,6,7,8)
+                            ORDER BY DepartmentID;";
+            var GetData = await SqlDataAcess_Test.QueryAsync<string>(query, new { FinalShopOrder = finalorder });
+
+            return string.Join(",",
+                     GetData
+                         .Distinct()
+                         .OrderBy(x => int.Parse(x)));
+        }
+
+        //  DISPLAY FOR THE FINAL DASHBOARD
+        public async Task<List<FanTraceabilityManufacturingOrder>> GetListofActiveShopOrders()
+        {
+            try
+            {
+                string query = $@"SELECT {SelectColumns} FROM {maintable} s WHERE OrderStatus = 2 OR OrderStatus = 3 ";
+                var getData = await SqlDataAcess_Test.QueryAsync<FanTraceabilityManufacturingOrder>(query);
+
+                foreach (var order in getData)
+                {
+                    
+                    string listdone = @"
+                        WITH Depts AS
+                        (
+                            SELECT DepartmentID
+                            FROM FanTraceabilityFinal
+                            WHERE FinalShopOrder = @FinalShopOrder
+                              AND DepartmentID IN (1,2,3,4,5,7,9) 
+                        )
+                        SELECT CAST(DepartmentID AS VARCHAR(10))
+                        FROM Depts
+
+                        UNION
+
+                        SELECT '1'
+                        WHERE EXISTS (SELECT 1 FROM Depts WHERE DepartmentID IN (1))
+
+                        UNION
+
+                        SELECT '2'
+                        WHERE EXISTS (SELECT 1 FROM Depts WHERE DepartmentID IN (2))";
+
+                    var departments = await SqlDataAcess_Test.QueryAsync<string>(
+                        listdone,
+                        new { FinalShopOrder = order.NextShop });
+
+                    order.CompletedSection = string.Join(",",
+                        departments
+                            .Where(x => !string.IsNullOrWhiteSpace(x))
+                            .Distinct()
+                            .OrderBy(x => int.Parse(x)));
+
+
+                }
+
+                return getData;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error retrieving active shop orders: {ex.Message}");
+                return new List<FanTraceabilityManufacturingOrder>();
+            }
+        }
+        //  GET THE LIST DETAILS BY LINE 
+        public async Task<List<FanTraceabilityManufacturingOrder>> GetListofShopOrdersByLine(
+            string Linename, string searchText,
+            int status)
+        {
+            try
+            {
+                string query = $@"SELECT TOP  1000
+                        mo.RecordID,
+                        mo.Line,
+                        mo.FinalShopOrder,
+                        mo.ItemNo,
+                        mo.Model,
+                        mo.WC,
+                        mo.PlanQty,
+                        mo.PlanStartDate,
+                        mo.DispatchDate,
+                        mo.Note,
+                        mo.FinalFinishedDate,
+                        mo.FAStatus,
+                        FORMAT(mo.ShipmentDate, 'MM/dd/yy') AS ShipmentDate,
+                        mo.ShipmentMode,
+                        mo.WithSR,
+                        mo.OrderRemarks,
+                        mo.OrderStatus,
+                        mo.QuanStatus,
+                           -- DepartmentID 1 OR 2  Show both AG and AF
+                        CASE
+                            WHEN EXISTS (
+                                SELECT 1
+                                FROM FanTraceabilityFinal f
+                                WHERE f.FinalShopOrder = mo.FinalShopOrder
+                                   AND f.DepartmentID = 1
+                            )
+                            THEN 'AF'
+                        END AS Molding,
+
+                        CASE
+                            WHEN EXISTS (
+                                SELECT 1
+                                FROM FanTraceabilityFinal f
+                                WHERE f.FinalShopOrder = mo.FinalShopOrder
+                                   AND f.DepartmentID = 2
+                            )
+                            THEN 'AG'
+                        END AS Press,
+
+						CASE
+                            WHEN EXISTS (
+                                SELECT 1
+                                FROM FanTraceabilityFinal f
+                                WHERE f.DepartmentID = 3
+                                  AND f.FinalShopOrder = mo.FinalShopOrder
+                            )
+                            THEN 'BF'
+                        END AS Rotor,
+
+                        CASE
+                            WHEN EXISTS (
+                                SELECT 1
+                                FROM FanTraceabilityFinal f
+                                WHERE f.DepartmentID = 4
+                                  AND f.FinalShopOrder = mo.FinalShopOrder
+                            )
+                            THEN 'STR'
+                        END AS Winding,
+                        CASE
+                            WHEN EXISTS (
+                                SELECT 1
+                                FROM FanTraceabilityFinal f
+                                WHERE f.DepartmentID = 5
+                                  AND f.FinalShopOrder = mo.FinalShopOrder
+                            )
+                            THEN 'CE'
+                        END AS Circuit,
+
+                        
+
+                        CASE
+                            WHEN EXISTS (
+                                SELECT 1
+                                FROM FanTraceabilityFinal f
+                                WHERE f.DepartmentID = 7
+                                  AND f.FinalShopOrder = mo.FinalShopOrder
+                            )
+                            THEN 'FG'
+                        END AS Harness,
+
+                        CASE
+                            WHEN EXISTS (
+                                SELECT 1
+                                FROM FanTraceabilityFinal f
+                                WHERE f.DepartmentID = 9
+                                  AND f.FinalShopOrder = mo.FinalShopOrder
+                            )
+                            THEN 'DD'
+                        END AS Material, 
+                            
+                        mo.Operational
+
+                    FROM {maintable} mo WHERE mo.OrderStatus <> 4 ";
+
+                var parameters = new DynamicParameters();
+
+
+                // Line filter
+                if (!string.IsNullOrWhiteSpace(Linename))
+                {
+                    query += " AND mo.Line = @Line";
+                    parameters.Add("@Line", Linename);
+                }
+
+                if (!string.IsNullOrWhiteSpace(searchText))
+                {
+                    query += @" AND (
+                        mo.FinalShopOrder LIKE @SearchPrefix)";
+
+                    parameters.Add("@SearchPrefix", $"{searchText}%");
+                }
+
+                if (status >= 0)
+                {
+                    query += " AND mo.OrderStatus = @OrderStatus";
+                    parameters.Add("@OrderStatus", status);
+                }
+
+                query += $@" ORDER BY mo.RecordID ASC";
+
+
+
+                return await SqlDataAcess_Test.QueryAsync<FanTraceabilityManufacturingOrder>(query, parameters);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                throw;
+            }
+        }
+
+        public Task<bool> SelectOnlineShopOrders(int recordID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<FanTraceabilityManufacturingOrder> GetShopderDetails(int id)
+        {
+            string strsql = $@"SELECT TOP 1 {SelectColumns} FROM  {maintable} s
+                  WHERE s.RecordID =@RecordID  ";
+
+            return SqlDataAcess_Test.QuerySingleOrDefaultAsync<FanTraceabilityManufacturingOrder>(strsql, new
+            {
+                RecordID = id
+            });
+        }
+
+
+        public async Task<bool> NextModelProcess(string newLine)
+        {
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"
+                UPDATE {maintable} SET OrderStatus = @Nextprocess
+                WHERE Line = @Line
+                AND OrderStatus = @PreviousProcess", new
+            {
+                Line = newLine,
+                PreviousProcess = (int)OrderStatus.NextProcess,
+                Nextprocess = (int)OrderStatus.InProcess
+            });
+
+            return rows > 0;
+        }
+        public async Task<bool> UpdateForFSAandCellLine(int id, int status)
+        {
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"
+                UPDATE {maintable}
+                SET OrderStatus = @status
+                WHERE RecordID = @id ", new
+            {
+                id,
+                status
+            });
+            return rows > 0;
+
+        }
+
+        public async Task<bool> UpdateStatusShopOrder(int id, int status, string line)
+        {
+            // Only block the update if we're trying to move INTO InProcess/Temporary
+            // while another order on the same line already occupies that slot.
+            if (status == (int)OrderStatus.InProcess || status == (int)OrderStatus.Temporary)
+            {
+                if (await LineHasOtherActiveOrderAsync(line, id))
+                    return false;
+            }
+
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"
+            UPDATE {maintable}
+            SET OrderStatus = @status,
+                DateStart = ISNULL(DateStart, CAST(GETDATE() AS DATE)),
+                TimeStart = ISNULL(TimeStart, CAST(GETDATE() AS TIME(0)))
+            WHERE RecordID = @id AND line = @line",
+                new { id, status, line });
+            return rows > 0;
+        }
+        public async Task<bool> UpdateCompleteShopOrder(int id, int status, string line)
+        {
+            // NOTE: original code accepted a `status` param but never used it in either
+            // branch — it always forced NextProcess (1) or InProcess (2). Keeping that
+            // forced behavior since it matches the method's actual intent (line can only
+            // have one active order), but dropping the dead parameter usage to avoid
+            // confusion. If callers actually need to pass a target status, flag it and
+            // we can wire it back in properly.
+            bool lineBusy = await LineHasOtherActiveOrderAsync(line, id);
+
+            int rows;
+            if (lineBusy)
+            {
+                // Another order already owns the line's active slot — bump this one
+                // back to NextProcess instead of starting it.
+                rows = await SqlDataAcess_Test.ExecuteAsync($@"
+                    UPDATE {maintable}
+                    SET OrderStatus = @nextProcess
+                    WHERE RecordID = @id AND line = @line",
+                    new { id, line, nextProcess = (int)OrderStatus.NextProcess });
+            }
+            else
+            {
+                rows = await SqlDataAcess_Test.ExecuteAsync($@"
+                    UPDATE {maintable}
+                    SET OrderStatus = @inProcess,
+                        DateStart = CAST(GETDATE() AS DATE),
+                        TimeStart = CAST(GETDATE() AS TIME(0))
+                    WHERE RecordID = @id AND line = @line",
+                    new { id, line, inProcess = (int)OrderStatus.InProcess });
+            }
+            return rows > 0;
+        }
+        public async Task<bool> CompletionStatusShopOrder(int id, int status)
+        {
+            // BUG FIX: every other method in this class scopes the UPDATE by
+            // (RecordID AND line). This one only filtered by RecordID, so `line` was
+            // accepted but silently ignored — added it back for consistency/safety.
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"
+                UPDATE {maintable}
+                SET OrderStatus = @status,
+                    TimeEnd = CAST(GETDATE() AS TIME(0))
+                WHERE RecordID = @id ", new
+            {
+                id,
+                status
+            });
+            return rows > 0;
+        }
+        public async Task<bool> CancelProcess(int id)
+        {
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"
+                    UPDATE {maintable} 
+                    SET OrderStatus = 0
+                    WHERE RecordID = @id", new
+            { id });
+
+            return rows > 0;
+        }
+        public async Task<bool> ChangeQuantityStatus(int id, int status)
+        {
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE 
+                    {maintable} SET QuanStatus =@QuanStatus 
+                      WHERE RecordID = @id", new
+            {
+                id,
+                QuanStatus = status
+            });
+
+            return rows > 0;
+        }
+        // Shared by UpdateStatusShopOrder / UpdateCompleteShopOrder: only one order per
+        // line is allowed to be "active" (InProcess or Temporary) at a time, so both
+        // methods need to know if some OTHER record already holds that slot.
+        private async Task<bool> LineHasOtherActiveOrderAsync(string line, int excludeId)
+        {
+            int count = await SqlDataAcess_Test.ExecuteScalarAsync<int>($@"
+                    SELECT COUNT(*)
+                    FROM {maintable}
+                    WHERE line = @line
+                  AND OrderStatus IN (@inProcess, @temporary)
+                  AND RecordID != @excludeId",
+                new
+                {
+                    line,
+                    inProcess = (int)OrderStatus.InProcess,
+                    temporary = (int)OrderStatus.Temporary,
+                    excludeId
+                });
+            return count > 0;
+        }
+
+
+
+
+
+
+
+        public async Task UploadDataToDatabase(ProductionRecord model)
+        {
+
+            var planStartDate = DateTime.TryParse(model.PlanStart, out var ps)
+                               ? ps
+                               : (DateTime?)null;
+
+            //var dispatchDate = DateTime.TryParse(model.DispatchDate, out var dd)
+            //    ? dd
+            //    : (DateTime?)null;
+
+            // STEP 1: Check existing ShopOrder
+            var existing = await SqlDataAcess_Test.ExecuteScalarAsync<ProductionRecord>(
+                @"SELECT TOP 1 PlanQty, PlanStartDate
+                      FROM FanTraceabilityManufacturingOrderSAMPLE
+                      WHERE FinalShopOrder = @FinalShopOrder AND Line =@Line ",
+                new
+                {
+                    FinalShopOrder = model.ShopOrder,
+                    Line = model.Line
+                });
+
+            // STEP 2: If not exist -> INSERT
+            if (existing == null)
+            {
+                await SqlDataAcess_Test.ExecuteAsync(@"
+                    INSERT INTO FanTraceabilityManufacturingOrderSAMPLE
+                    (
+                        Line,
+                        FinalShopOrder,
+                        ItemNo,
+                        Model,
+                        WC,
+                        PlanQty,
+                        PlanStartDate,
+                        DispatchDate,
+                        Note,
+                        FinalFinishedDate,
+                        FAStatus,
+                        ShipmentDate,
+                        ShipmentMode,
+                        WithSR,
+                        OrderRemarks,
+                        OrderStatus
+                    )
+                    VALUES
+                    (
+                        @Line,
+                        @FinalShopOrder,
+                        @ItemNo,
+                        @Model,
+                        @WC,
+                        @PlanQty,
+                        @PlanStartDate,
+                        @DispatchDate,
+                        @Note,
+                        @FinalFinishedDate,
+                        @FAStatus,
+                        @ShipmentDate,
+                        @ShipmentMode,
+                        @WithSR,
+                        @OrderRemarks,
+                        @OrderStatus
+                    )",
+                    new
+                    {
+                        model.Line,
+                        FinalShopOrder = model.ShopOrder,
+                        ItemNo = model.PartNo,
+                        model.Model,
+                        model.WC,
+                        PlanQty = model.Qty,
+                        PlanStartDate = planStartDate,
+                        DispatchDate = model.DispatchDate,
+                        Note = model.Note ?? string.Empty,
+                        FinalFinishedDate = (DateTime?)null,
+                        FAStatus = "Not Started",
+                        ShipmentDate = DateTime.Now.AddDays(7),
+                        ShipmentMode = "TBD",
+                        WithSR = false,
+                        OrderRemarks = string.Empty,
+                        OrderStatus = 1
+                    });
+
+                return;
+            }
+
+            // STEP 3: Compare values safely
+            bool isPlanQtyChanged =
+                existing.Qty != model.Qty;
+
+            DateTime? existingPlanStart =
+            DateTime.TryParse(existing.PlanStart, out var eps)
+            ? eps
+            : (DateTime?)null;
+
+            bool isPlanStartChanged =
+                existingPlanStart?.Date != planStartDate?.Date;
+
+            // STEP 4: Skip if no changes
+            if (!isPlanQtyChanged && !isPlanStartChanged)
+                return;
+
+            // STEP 5: Update only changed fields
+            await SqlDataAcess_Test.ExecuteAsync(@"
+            UPDATE FanTraceabilityManufacturingOrderSAMPLE
+            SET
+                PlanQty = @PlanQty,
+                PlanStartDate = @PlanStartDate
+            WHERE FinalShopOrder = @FinalShopOrder
+            AND Line = @Line",
+                new
+                {
+                    FinalShopOrder = model.ShopOrder,
+                    Line = model.Line,
+                    PlanQty = model.Qty,
+                    PlanStartDate = planStartDate
+                });
+        }
+
+        public Task<List<P1TraceablityModel>> TraceableShopOrderSummary(string shopOrder)
+        {
+            string sql = @"
+                WITH CTE AS
+                (
+                    SELECT
+                        f.RecordId,
+                        f.FinalShopOrder,
+                        s.ShopOrder,
+                        f.ProcessName,
+                        f.ItemNo,
+                        f.PlanQuan,
+                        f.DatePrepared,
+                        CONVERT(varchar(8), f.TimeInput, 108) AS TimeInput,
+                        s.PreparedQuantity,
+                        f.PreparedBy,
+                        f.Shift,
+                        f.Customer,
+                        f.Modeltype,
+                        f.Remarks,
+                        f.Incharge,
+                        s.SubAssyIssued,
+                        s.LotNo,
+                        s.Rev,
+                        f.IsDeletedFinal,
+                        f.DepartmentID,
+                        ROW_NUMBER() OVER
+                        (
+                            PARTITION BY f.DepartmentID
+                            ORDER BY f.RecordId DESC
+                        ) AS RN
+                    FROM FanTraceabilityFinal f
+                    LEFT JOIN FanTraceabilitySub s
+                        ON s.FinalId = f.RecordId
+                    WHERE f.IsDeletedFinal = 0
+                      AND s.ShopOrder IS NOT NULL
+                      AND f.FinalShopOrder = @FinalShopOrder
+                      AND f.DepartmentID IN (1, 2, 3, 4, 5, 7, 9)
+                )
+                SELECT *
+                FROM CTE
+                WHERE RN = 1;";
+            var parameters = new DynamicParameters();
+
+            parameters.Add("@FinalShopOrder", shopOrder);
+
+            return SqlDataAcess_Test.QueryAsync<P1TraceablityModel>(sql, parameters);
+        }
+
+        public async Task<bool> UpdateAssemblyStatus(int RecordID, string FAStatus, DateTime ShipmentDate, string mode, bool WithSR, string OrderRemarks)
+        {
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE {maintable} 
+                    SET FAStatus =@FAStatus, ShipmentDate =@ShipmentDate, WithSR =@WithSR, 
+                    OrderRemarks =@OrderRemarks WHERE RecordID =@RecordID", new
+            {
+                FAStatus,
+                ShipmentDate,
+                OrderRemarks,
+                WithSR,
+                RecordID
+            });
+
+            return rows > 0;
+        }
+
+        public async Task<int> GetNumberofNextprocess(string line)
+        {
+            var count = await SqlDataAcess_Test.ExecuteScalarAsync<int>($@"
+                        SELECT COUNT(*) 
+                        FROM {maintable} 
+                        WHERE OrderStatus = 1 AND Line = @Line", new { Line = line });
+            return count;
+        }
+
+        public Task<List<string>> GetListLine()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> ChangeLineShopOrder(int recordID, string Lineselect, int process)
+        {
+            int rows = 0;
+            // Check if the Operation(process) has 2 or more  
+            if (process > 1)
+            {
+                int changeprocess = process - 1;
+                rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE 
+                {maintable} SET  Line =@Line, Operational =@Operational
+                WHERE RecordID =@RecordID", new
+                {
+                    RecordID = recordID,
+                    Line = Lineselect,
+                    Operational = changeprocess
+                });
+            }
+            else
+            {
+                rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE 
+                {maintable} SET  Line =@Line WHERE RecordID =@RecordID", new
+                {
+                    RecordID = recordID,
+                    Line = Lineselect
+                });
+            }
+
+            return rows > 0;
+        }
+
+        public async Task<bool> AddInputQuantiyPerLine(int recordID, int Qty)
+        {
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE {maintable} SET  
+                InputQty =@Qty WHERE RecordID =@RecordID", new
+            {
+                RecordID = recordID,
+                Qty = Qty
+            });
+
+            return rows > 0;
+        }
+
+
+
+        public Task<int> GetCountShopOrders(string line)
+        {
+            return SqlDataAcess_Test.ExecuteScalarAsync<int>($@"SELECT COUNT(*) AS TotalCount
+                FROM {maintable}
+                WHERE Line = @Line
+                  AND OrderStatus != 3;", new
+            {
+                Line = line
+            });
+        }
+
+        public Task<int> GetActualCountOfShopOrders(string Linename)
+        {
+            string strquery = $@"SELECT COUNT(*) 
+                    FROM {maintable}  ";
+
+            var parameters = new DynamicParameters();
+
+            if (!string.IsNullOrWhiteSpace(Linename))
+            {
+                strquery += " WHERE Line = @Line";
+                parameters.Add("@Line", Linename);
+            }
+
+            return SqlDataAcess_Test.ExecuteScalarAsync<int>(strquery, parameters);
+        }
+
+        // ====== PARTLY SHORT DATA SUMMARY REPORT =================
+
+        public Task<List<AssemblyPartlistRecord>> GetPartlyShortSummary(int isdispatch)
+        {
+            string filtercondition = isdispatch == 0 ? " " : " AND mo.DispatchDate = '' ";
+
+            string strsql = $@";WITH DeptStatus AS
+                (
+                SELECT
+                    FinalShopOrder,
+
+                    -- AF & AG are both complete if either Dept 1 or Dept 2 exists
+                    MAX(CASE WHEN DepartmentID IN (1,2) THEN 1 ELSE 0 END) AS AF,
+                    MAX(CASE WHEN DepartmentID IN (1,2) THEN 1 ELSE 0 END) AS AG,
+
+                    MAX(CASE WHEN DepartmentID = 3 THEN 1 ELSE 0 END) AS BF,
+                    MAX(CASE WHEN DepartmentID = 4 THEN 1 ELSE 0 END) AS FA,
+                    MAX(CASE WHEN DepartmentID = 5 THEN 1 ELSE 0 END) AS CE,
+                    MAX(CASE WHEN DepartmentID = 7 THEN 1 ELSE 0 END) AS FG,
+                    MAX(CASE WHEN DepartmentID = 9 THEN 1 ELSE 0 END) AS DD,
+                    MAX(CASE WHEN DepartmentID = 8 THEN 1 ELSE 0 END) AS FD
+                FROM FanTraceabilityFinal
+                GROUP BY FinalShopOrder
+            )
+
+            SELECT
+
+                CONVERT(VARCHAR(10), CAST(mo.PlanStartDate AS DATE), 103) AS [DateDelay],
+
+                ------------------------------------------------------------
+                -- Plan Start
+                ------------------------------------------------------------
+                (SUM(mo.PlanQty)) AS Plan_Start,
+
+                ------------------------------------------------------------
+                -- Completion
+                ------------------------------------------------------------
+                SUM
+	            (
+		            CASE
+			            WHEN mo.FinalFinishedDate IS NOT NULL
+			             AND ISNULL(ds.AF,0)=1
+			             AND ISNULL(ds.AG,0)=1
+			             AND ISNULL(ds.BF,0)=1
+			             AND ISNULL(ds.FA,0)=1
+			             AND ISNULL(ds.CE,0)=1
+			             AND ISNULL(ds.FG,0)=1
+			             AND ISNULL(ds.DD,0)=1
+			            THEN mo.PlanQty
+			            ELSE 0
+		            END
+	            ) AS Completion,
+
+                ------------------------------------------------------------
+                -- P1SA
+                ------------------------------------------------------------
+                (
+                    SUM(CASE WHEN ISNULL(ds.CE,0)=0 THEN mo.PlanQty ELSE 0 END) +
+                    SUM(CASE WHEN ISNULL(ds.FA,0)=0 THEN mo.PlanQty ELSE 0 END) +
+                    SUM(CASE WHEN ISNULL(ds.AF,0)=0 THEN mo.PlanQty ELSE 0 END) +
+                    SUM(CASE WHEN ISNULL(ds.AG,0)=0 THEN mo.PlanQty ELSE 0 END) +
+                    SUM(CASE WHEN ISNULL(ds.BF,0)=0 THEN mo.PlanQty ELSE 0 END)
+                ) AS P1SA,
+
+                ------------------------------------------------------------
+                -- P1FA
+                ------------------------------------------------------------
+                (
+                    SUM(CASE WHEN ISNULL(ds.FG,0)=0 THEN mo.PlanQty ELSE 0 END) +
+                    SUM(CASE WHEN ISNULL(ds.DD,0)=0 THEN mo.PlanQty ELSE 0 END)
+                ) AS P1FA,
+
+                ------------------------------------------------------------
+                -- Individual Sections
+                ------------------------------------------------------------
+
+                SUM(CASE WHEN ISNULL(ds.CE,0)=0 THEN mo.PlanQty ELSE 0 END) AS CE,
+
+                SUM(CASE WHEN ISNULL(ds.FA,0)=0 THEN mo.PlanQty ELSE 0 END) AS FA,
+
+                SUM(CASE WHEN ISNULL(ds.AF,0)=0 THEN mo.PlanQty ELSE 0 END) AS AF,
+
+                SUM(CASE WHEN ISNULL(ds.AG,0)=0 THEN mo.PlanQty ELSE 0 END) AS AG,
+
+                SUM(CASE WHEN ISNULL(ds.BF,0)=0 THEN mo.PlanQty ELSE 0 END) AS BF,
+
+                SUM(CASE WHEN ISNULL(ds.FG,0)=0 THEN mo.PlanQty ELSE 0 END) AS FG,
+
+                SUM(CASE WHEN ISNULL(ds.DD,0)=0 THEN mo.PlanQty ELSE 0 END) AS DD, 
+
+                SUM(CASE WHEN ISNULL(ds.FD,0)=0 THEN mo.PlanQty ELSE 0 END) AS FD
+
+            FROM {maintable} mo
+
+            LEFT JOIN DeptStatus ds
+                ON ds.FinalShopOrder = mo.FinalShopOrder
+
+            WHERE
+                CAST(mo.PlanStartDate AS DATE) <= CAST(GETDATE() AS DATE) {filtercondition}
+                AND mo.OrderStatus <> 4
+            GROUP BY
+                CAST(mo.PlanStartDate AS DATE)
+
+            ORDER BY
+                CAST(mo.PlanStartDate AS DATE);";
+
+            return SqlDataAcess_Test.QueryAsync<AssemblyPartlistRecord>(strsql);
+        }
+
+        public async Task<(int PlanQty, string LastDate, decimal totalpercent)> GetLastUpdateAndTotal()
+        {
+            var getdata = await SqlDataAcess_Test.QuerySingleOrDefaultAsync<PartlistTotal>($@"SELECT
+                            SUM(PlanQty) AS TotalPlanQty,
+                            MAX(LastUpdated) AS LastUpdated,
+                            CAST(
+                                (SUM(PlanQty) * 100.0) /
+                                (SELECT SUM(PlanQty)
+                                 FROM [PMACS_TEST].[dbo].[{maintable}])
+                                AS DECIMAL(5,2)
+                            ) AS AsPercentage
+                        FROM [PMACS_TEST].[dbo].[{maintable}]
+                        WHERE DispatchDate = ''");
+            if (getdata == null)
+                return (0, "", 0);
+
+
+
+            return (getdata.TotalPlanQty, getdata.LastUpdated, getdata.AsPercentage);
+        }
+
+        public async Task<(int PlanQty, string LastDate, decimal totalpercent)> GetLastUpdateAndTotal(int isdispatch)
+        {
+            string filtercondition = isdispatch == 0 ? " " : " WHERE DispatchDate = ''";
+
+            var getdata = await SqlDataAcess_Test.QuerySingleOrDefaultAsync<PartlistTotal>($@"SELECT
+                            SUM(PlanQty) AS TotalPlanQty,
+                            MAX(LastUpdated) AS LastUpdated,
+                            CAST(
+                                (SUM(PlanQty) * 100.0) /
+                                (SELECT SUM(PlanQty)
+                                 FROM {maintable})
+                                AS DECIMAL(5,2)
+                            ) AS AsPercentage
+                        FROM {maintable}
+                        {filtercondition} ");
+            if (getdata == null)
+                return (0, "", 0);
+
+
+
+            return (getdata.TotalPlanQty, getdata.LastUpdated, getdata.AsPercentage);
+        }
+
+
+
+
+        // ============================================================
+
+
+        public Task<List<CatergoryPartsModel>> GetCategoryRegistration(int cat)
+        {
+            return SqlDataAcess_Test.QueryAsync<CatergoryPartsModel>($@"SELECT CartsPartID
+                    ,PartsName
+                    ,Category
+                FROM FanTraceabilityCategoryParts WHERE Category = @Category
+            ", new
+            { Category = cat });
+        }
+
+        public async Task<bool> AddRegistrationMEIG(MEIGpartsModel model)
+        {
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO FanTraceabilityMEIG
+                (FinalShopOrder, CartsPartID, Registration,PartNumber, PinList, TimeIn, TimeOut, Lines, Issuer, Preparation) 
+                VALUES (@FinalShopOrder, @CartsPartID, @Registration, @PartNumber, 
+                @PinList, @TimeIn, @TimeOut, @Lines, @Issuer, @Preparation) ", model);
+
+            return rows > 0;
+        }
+
+        public Task<List<MEIGpartsModel>> GetRegistrationMEIG(string finashopOrder)
+        {
+            try
+            {
+                return SqlDataAcess_Test.QueryAsync<MEIGpartsModel>($@"SELECT 
+                    f.RegisterdID
+                    ,f.FinalShopOrder
+                    ,f.Registration
+	                ,c.PartsName
+                    ,f.PartNumber
+                    ,f.PinList
+                    ,f.TimeIn
+                    ,f.TimeOut
+                    ,f.Lines
+                    ,f.Issuer
+                    ,f.Preparation
+	                ,f.CartsPartID
+	                ,CASE
+                        WHEN c.Category = 1 THEN 'Jig'
+                        WHEN c.Category = 2 THEN 'Inspection Tools'
+                        WHEN c.Category = 3 THEN 'Soldering Tools'
+                        WHEN c.Category = 4 THEN 'Special Unit'
+                    END AS CategoryName
+                FROM FanTraceabilityMEIG f 
+                INNER JOIN FanTraceabilityCategoryParts c 
+                ON f.CartsPartID = c.CartsPartID WHERE f.FinalShopOrder = @FinalShopOrder
+            ", new
+                { FinalShopOrder = finashopOrder });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($@"Error : " + ex.Message);
+                throw;
+            }
+        }
+
+        public Task<List<DailyPlanChartModel>> GetDailyPlanChart()
+        {
+            try
+            {
+                return SqlDataAcess_Test.QueryAsync<DailyPlanChartModel>($@"SELECT
+                        DAY(DatePrepared) AS PlanDay,
+                        SUM(CASE WHEN DepartmentID = 1 THEN PlanQuan ELSE 0 END) AS Molding,
+                        SUM(CASE WHEN DepartmentID = 2 THEN PlanQuan ELSE 0 END) AS Press,
+                        SUM(CASE WHEN DepartmentID = 3 THEN PlanQuan ELSE 0 END) AS Rotor,
+                        SUM(CASE WHEN DepartmentID = 4 THEN PlanQuan ELSE 0 END) AS Winding,
+                        SUM(CASE WHEN DepartmentID = 5 THEN PlanQuan ELSE 0 END) AS Circuit,
+                        SUM(CASE WHEN DepartmentID = 6 THEN PlanQuan ELSE 0 END) AS Oilproof,
+                        SUM(CASE WHEN DepartmentID = 7 THEN PlanQuan ELSE 0 END) AS Harness,
+                        SUM(CASE WHEN DepartmentID = 8 THEN PlanQuan ELSE 0 END) AS FinalAssembly,
+                        SUM(CASE WHEN DepartmentID = 9 THEN PlanQuan ELSE 0 END) AS MaterialPrep
+                    FROM FanTraceabilityFinal
+                    WHERE YEAR(DatePrepared) = YEAR(GETDATE())
+                      AND MONTH(DatePrepared) = MONTH(GETDATE())
+                      AND ISNULL(IsDeletedFinal, 0) = 0
+                    GROUP BY DAY(DatePrepared)
+                    ORDER BY PlanDay;");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($@"Error : " + ex.Message);
+                throw;
+            }
+        }
+
+        public Task<List<DispatchPartlistRecord>> GetDispatchShortSummay()
+        {
+            return SqlDataAcess_Test.QueryAsync<DispatchPartlistRecord>($@"WITH FilteredData AS
+                    (
+                        SELECT
+                            CAST(PlanStartDate AS DATE) AS PlanStartDate,
+                            PlanQty,
+                            FinalFinishedDate,
+
+                            P1SA_C,
+                            P1SA_W,
+                            P1SA_M,
+                            P1SA_P,
+                            P1SA_R,
+                            P1FA_FA,
+                            P1FA_H,
+                            M1
+                        FROM {maintable}
+    
+	                    WHERE
+		                    CAST(PlanStartDate AS DATE) <= CAST(GETDATE() AS DATE)
+
+                        AND (
+                               ISNULL(P1SA_C, 0)  <> 0
+                            OR ISNULL(P1SA_W, 0)  <> 0
+                            OR ISNULL(P1SA_M, 0)  <> 0
+                            OR ISNULL(P1SA_P, 0)  <> 0
+                            OR ISNULL(P1SA_R, 0)  <> 0
+                            OR ISNULL(P1FA_FA, 0) <> 0
+                            OR ISNULL(P1FA_H, 0)  <> 0
+                            OR ISNULL(M1, 0)      <> 0
+                        )
+                    )
+                    SELECT
+                        CONVERT(VARCHAR(10), PlanStartDate, 103) AS DateDelay,
+
+                        -- PlanQty based on the HAVING conditions
+                        SUM(PlanQty) AS Plan_Start,
+
+                        -- Completion
+                        SUM(
+                            CASE
+                                WHEN FinalFinishedDate IS NOT NULL
+                                    AND CAST(FinalFinishedDate AS DATE) <= CAST(GETDATE() AS DATE)
+                                THEN PlanQty
+                                ELSE 0
+                            END
+                        ) AS Completion,
+
+                        -- Totals
+                        SUM(P1SA_C + P1SA_W + P1SA_M + P1SA_P + P1SA_R) AS P1SA,
+                        SUM(P1FA_FA + P1FA_H) AS P1FA,
+
+                        -- Individual Columns
+                        SUM(P1SA_C)  AS P1SA_C,
+                        SUM(P1SA_W)  AS P1SA_W,
+                        SUM(P1SA_M)  AS P1SA_M,
+                        SUM(P1SA_P)  AS P1SA_P,
+                        SUM(P1SA_R)  AS P1SA_R,
+                        SUM(P1FA_FA) AS P1FA_FA,
+                        SUM(P1FA_H)  AS P1FA_H,
+                        SUM(M1)      AS M1
+
+                    FROM FilteredData
+
+                    GROUP BY
+                        PlanStartDate
+
+                    HAVING
+                           SUM(P1SA_C)  <> 0
+                        OR SUM(P1SA_W)  <> 0
+                        OR SUM(P1SA_M)  <> 0
+                        OR SUM(P1SA_P)  <> 0
+                        OR SUM(P1SA_R)  <> 0
+                        OR SUM(P1FA_FA) <> 0
+                        OR SUM(P1FA_H)  <> 0
+                        OR SUM(M1)      <> 0
+
+                    ORDER BY
+                        PlanStartDate;");
+
+
+            //       return SqlDataAcess_Test.QueryAsync<DispatchPartlistRecord>($@"SELECT
+            //               CONVERT(VARCHAR(10), CAST(PlanStartDate AS DATE), 103) AS DateDelay,
+
+            //               -- Total Planned Quantity
+            //               SUM(PlanQty) AS Plan_Start,
+
+            //               -- Completion
+            //               SUM(
+            //	CASE
+            //		WHEN FinalFinishedDate IS NOT NULL
+            //		 AND CAST(FinalFinishedDate AS DATE) <= CAST(GETDATE() AS DATE)
+            //		THEN PlanQty
+            //		ELSE 0
+            //	END
+            //) AS Completion,
+
+            //               -- Totals
+            //               SUM(P1SA_C + P1SA_W + P1SA_M + P1SA_P + P1SA_R) AS P1SA,
+            //               SUM(P1FA_FA + P1FA_H) AS P1FA,
+
+            //               -- Individual Columns
+            //               SUM(P1SA_C)  AS [P1SA_C],
+            //               SUM(P1SA_W)  AS [P1SA_W],
+            //               SUM(P1SA_M)  AS [P1SA_M],
+            //               SUM(P1SA_P)  AS [P1SA_P],
+            //               SUM(P1SA_R)  AS [P1SA_R],
+            //               SUM(P1FA_FA) AS [P1FA_FA],
+            //               SUM(P1FA_H)  AS [P1FA_H],
+            //               SUM(M1)      AS [M1]
+
+            //           FROM FanTraceabilityManufacturingOrder
+
+            //           WHERE
+            //               CAST(PlanStartDate AS DATE) <= CAST(GETDATE() AS DATE)
+            //           GROUP BY
+            //               CAST(PlanStartDate AS DATE)
+            //           HAVING
+            //                  SUM(P1SA_C)  <> 0
+            //               OR SUM(P1SA_W)  <> 0
+            //               OR SUM(P1SA_M)  <> 0
+            //               OR SUM(P1SA_P)  <> 0
+            //               OR SUM(P1SA_R)  <> 0
+            //               OR SUM(P1FA_FA) <> 0
+            //               OR SUM(P1FA_H)  <> 0
+            //               OR SUM(M1)      <> 0
+            //           ORDER BY
+            //               CAST(PlanStartDate AS DATE);");
+        }
+
+        public async Task<(TotalDisposalMonitor summary, List<DisposalSummary> list)> GetDisposalDetails(int controlID)
+        {
+            var summarylistTask = await SqlDataAcess_Test.QuerySingleOrDefaultAsync<TotalDisposalMonitor>($@"SELECT 
+                     c.ControlNumberID,
+                     c.ControlNumber,
+                     SUM(m.Quantity) as TotalQuantity, 
+                     m.Category, 
+                        FORMAT(c.DateDisposal, 'MM/dd HH:mm') as DateDisposal
+                     FROM DisposalControlNumber c
+                     INNER JOIN DisposalMonitor m ON m.ControlNumberID = c.ControlNumberID
+                     WHERE c.ControlNumberID = @ControlNumberID
+                     GROUP BY c.ControlNumber, c.ControlNumberID, m.Category, c.DateDisposal", new
+            {
+                ControlNumberID = controlID
+            });
+
+            var disposalListTask = await SqlDataAcess_Test.QueryAsync<DisposalSummary>($@"SELECT 
+                     d.RecordID,
+                     c.DateDisposal,
+                     m.MaterialName,
+                     d.Container,
+                     d.Quantity,
+                        m.Units,
+                     d.Remarks
+                    FROM DisposalMonitor d 
+                    INNER JOIN DisposalControlNumber c ON d.ControlNumberID = c.ControlNumberID
+                    INNER JOIN DisposalMaterial m ON m.MaterialID = d.MaterialID
+                    INNER JOIN P1SA_Department p ON p.DepartmentId = d.DepartmentId 
+                    WHERE d.ControlNumberID = @ControlNumberID", new { ControlNumberID = controlID });
+
+
+            return (summarylistTask, disposalListTask);
+
+        }
+
+        public async Task<bool> ApproveDisposal(string name, int id)
+        {
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"
+                UPDATE DisposalControlNumber SET Status = 2, Approveby = @name
+                WHERE ControlNumberID = @ControlNumberID", new
+            {
+                ControlNumberID = id,
+                name = name
+            });
+
+            return rows > 0;
+        }
+
+        public async Task<List<string>> GetApproverName(int section)
+        {
+            var name = await SqlDataAcess_Test.QueryAsync<string>($@"
+                SELECT SentTo FROM DisposalEmail WHERE DepartmentID = @DepartmentId", new
+            {
+                DepartmentId = section
+            });
+
+            return name;
+        }
+
+        public Task<List<DownTimeModel>> GetDowntimeMonitor(string FinalShopOrder)
+        {
+            return SqlDataAcess_Test.QueryAsync<DownTimeModel>($@"  SELECT 
+	             i.DownTimeID, 
+	             i.FinalShopOrder,
+	             i.DownTimeCode,
+	             t.DownTimeType, 
+	             i.TimeStart,
+	             i.TimeEnd,
+	             i.Downtime, 
+	             i.PIC,
+	             i.Details,
+                 t.GroupName, 
+                 i.FourM
+              FROM FanTraceabilityDownTimeInput i 
+              INNER JOIN {maintable} m ON i.FinalShopOrder = m.FinalShopOrder
+              INNER JOIN FanTraceabilityDownTimeType t ON t.DownTimeCode = i.DownTimeCode
+              WHERE i.FinalShopOrder = @FinalShopOrder ORDER BY i.DownTimeID", new
+            { FinalShopOrder });
+        }
+
+        public async Task<bool> AddGetTimeMonitor(DownTimeModel downtime)
+        {
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"INSERT 
+                INTO FanTraceabilityDownTimeInput(FinalShopOrder, DownTimeCode, PIC, Details, FourM) 
+                VALUES(@FinalShopOrder, @DownTimeCode, @PIC, @Details, @FourM)", downtime);
+
+            return rows > 0;
+        }
+
+        public async Task<bool> EndTimeMonitor(int DownTimeID)
+        {
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityDownTimeInput SET
+                TimeEnd = CAST(GETDATE() AS TIME(0)) WHERE DownTimeID =@DownTimeID", new
+            {
+                DownTimeID
+            });
+
+            return rows > 0;
+        }
+
+        public Task<List<DownTimeTypeModel>> GetDownTimeType()
+        {
+            return SqlDataAcess_Test.QueryAsync<DownTimeTypeModel>($@"SELECT DownTimeCode
+                  ,DownTimeType
+                  ,GroupName
+              FROM FanTraceabilityDownTimeType");
+        }
+
+        public Task<List<DownTimeReportModel>> GetDowntimeDailyReport()
+        {
+            return SqlDataAcess_Test.QueryAsync<DownTimeReportModel>($@" SELECT 
+				 m.Line,
+	             i.FinalShopOrder,
+				 m.ItemNo,
+				 m.Model,
+				 m.PlanQty,
+	             i.TimeStart,
+	             i.TimeEnd,
+	             (
+                    SELECT SUM(d.Downtime)
+                    FROM FanTraceabilityDownTimeInput d
+                    WHERE d.FinalShopOrder = i.FinalShopOrder
+                ) AS Downtime,
+				CAST(
+					(i.Downtime * 60.0) / NULLIF(m.PlanQty, 0)
+					AS DECIMAL(10,3)
+				) AS CycleTime,
+
+				CEILING(
+					8.0 
+					/ NULLIF(
+						(i.Downtime * 60.0) / NULLIF(m.PlanQty, 0),
+						0
+					) 
+					* 100
+				) AS OperationRate
+
+              FROM FanTraceabilityDownTimeInput i 
+              INNER JOIN {maintable} m ON i.FinalShopOrder = m.FinalShopOrder
+              INNER JOIN FanTraceabilityDownTimeType t ON t.DownTimeCode = i.DownTimeCode");
+        }
+
+       
+    }
+}

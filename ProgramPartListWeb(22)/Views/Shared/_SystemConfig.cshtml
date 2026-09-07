@@ -1,0 +1,85 @@
+﻿@{
+    // Detect current Area
+    var area = ViewContext.RouteData.DataTokens["area"] as string ?? "";
+
+    // Default login
+    string loginAction = "Login";
+    string loginController = "User";
+
+    // Area-specific logic
+    switch (area)
+    {
+        case "Hydroponics":
+            loginAction = "Index";
+            loginController = "Hydro";
+            break;
+
+        case "Circuit":
+            loginAction = "LogMainpage";
+            loginController = "ProgramPartList";
+            break;
+
+        case "PC":
+            loginAction = "Index";
+            loginController = "Patrol";
+            break;
+        case "P1SA":
+            loginAction = "Index";
+            loginController = "Manpower";
+            break;
+    }
+
+    // Build URL
+    string loginUrl = Url.Action(loginAction, loginController, new { area = area });
+
+    // System name
+    string systemName = area == "" ? "Main System" : $"{area} System";
+
+    // Api root (optional)
+    string apiRoot = Url.Content("~/api/");
+}
+
+<script>
+    window.AppConfig = {
+        area: "@area",
+        systemName: "@systemName",
+        loginUrl: "@loginUrl",
+        apiRoot: "@apiRoot"
+    };
+</script>
+
+
+@*<script type="module" asp-append-version="true">
+     import {
+         getMethod,
+         postMethod
+     } from '@Url.Content("~/Scripts/modules/index.js")';
+
+     class UsersJSController {
+         constructor() { }
+
+         async init() {
+             await this.SampleUserData();
+         }
+          async SampleUserData() {
+              try {
+                  const res = await getMethod('/User/SaveClienInfo', {});
+                  console.log(res);
+                  //if (!res?.Success) {
+                  //    console.log('No data found in 4M ');
+                  //    return;
+                  //}
+                  //this.renderNcrBars(res.data);
+              } catch (error) {
+                  console.error('Error fetching 4M data:', error);
+              }
+          }
+
+     }
+
+
+     document.addEventListener('DOMContentLoaded', function () {
+         const controller = new UsersJSController();
+         controller.init();
+     });
+</script>*@

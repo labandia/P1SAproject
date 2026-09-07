@@ -1,0 +1,830 @@
+﻿
+@{
+    ViewBag.Title = "Orderpage";
+    Layout = "~/Areas/Hydroponics/Views/Shared/HydroPartsLayout.cshtml";
+}
+
+<!-- Split Content Area -->
+<div class="content-area">
+    <!-- Left Panel: Table & Filters -->
+    <div class="left-panel">
+        <div class="filters-section">
+            <div class="filters-group">
+                <div class="filter-item">
+                    <span class="futuristic-label">Chamber type</span>
+                    <select id="categoryFilter" class="input-box">
+                        <option value="0">All Types</option>
+                        <option value="1">SHIBAKAWA</option>
+                        <option value="2">NUPON</option>
+                        <option value="3">SLIM TYPE</option>
+                    </select>
+
+                </div>
+                <div class="filter-item">
+                    <span class="futuristic-label">Status</span>
+                    <select id="stockStatusFilter" class="input-box">
+                        <option value="all">All Status</option>
+                        <option value="ONGOING">Ongoing</option>
+                        <option value="COMPLETED">Completed</option>
+                        <option value="PLANNED">For Planned</option>
+                        <option value="SHIPPED">For Shipping</option>
+                    </select>
+                </div>
+                <div class="filter-item" style="display: none">
+                    <span class="futuristic-label">Date Range</span>
+                    <div class="date-inputs">
+                        <input type="date" id="startDate" class="input-box" >
+                        <input type="date" id="endDate" class="input-box" >
+                    </div>
+                </div>
+            </div>
+
+
+            <button id="Showadd" class="primarybtn" type="button">
+                <iconify-icon icon="lucide:plus" style="font-size: 16px"></iconify-icon> New Orders
+            </button>
+
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Chamber Type</th>
+                        <th>Order Date</th>
+                        <th>Status</th>
+                        <th style='text-align: center;'>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody id="chamberOrdersTableBody">
+
+
+            </table>
+        </div>
+        <div class="table-footer">
+            <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+            <div id="MastertableContainer" style="display: flex; gap: 8px;">
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Right Panel: Order Details (unchanged but fully visible) -->
+    <aside class="right-panel">
+        <div class="details-header">
+            <div class="details-header-action">
+                <div class="details-subtitle">
+                    <iconify-icon icon="lucide:calendar" style="font-size: 14px"></iconify-icon>
+                    Order Date : <span id="Tdate">-- N/A --</span>
+                </div>
+                <div>
+                    <iconify-icon id="editOrder" icon="lucide:edit" style="font-size: 18px; margin-right: 10px; color: #2381ec;"></iconify-icon>
+                    <iconify-icon id="deleteOrder" icon="lucide:trash-2" style="font-size: 18px; color: #ec4123;"></iconify-icon>
+                </div>
+            </div>
+            <div style="height: 12px"></div>
+            <h2 class="details-title" id="detailTitle"> -- N/A -- </h2>
+            <div id="statusBadge" class="badgeSelect success" style="margin-top: 4px;">Completed</div>
+        </div>
+        <div class="details-content">
+            <div class="detail-row">
+                <span class="futuristic-label">Customer Name</span>
+                <span class="detail-value" id="CustomerNameValue">-- N/A --</span>
+            </div>
+            <div class="detail-row">
+                <span class="futuristic-label">Person In Charge (PIC)</span>
+                <span class="detail-value" id="PICValue">-- N/A --</span>
+            </div>
+            <div class="detail-row">
+                <span class="futuristic-label">Target Date</span>
+                <span class="detail-value" id="TargetDateValue">-- N/A --</span>
+            </div>
+            <div class="divider"></div>
+            <div class="status-grid">
+                <div class="detail-row">
+                    <span class="futuristic-label">Parts Status</span>
+                    <span class="detail-value" style="display: flex; align-items: center; gap: 6px;">
+                        <iconify-icon id="PartsStatusIcon" icon="lucide:circle" style="font-size:16px;"></iconify-icon>
+                        <span id="PartsStatusValue">0</span>
+                    </span>
+                </div>
+                <div class="detail-row">
+                    <span class="futuristic-label">Assembly Status</span>
+                    <span class="detail-value" style="display: flex; align-items: center; gap: 6px;">
+                        <iconify-icon id="AssemblyStatusIcon" icon="lucide:circle" style="font-size:16px;"></iconify-icon>
+                        <span id="AssemblyStatusValue">0</span>
+                    </span>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <div class="detail-row">
+                <span class="futuristic-label">Remarks</span>
+                <div class="remarks-box" id="remarksValue">
+                    -- N/A --
+                </div>
+            </div>
+
+            <div style="margin-top: auto; padding-top: 10px;">
+                <button id="ViewParts" class="detailsbtn detailsbtn-outline" style="width: 100%;">
+                    <iconify-icon icon="lucide:view" style="font-size: 16px"></iconify-icon>
+                    View  Details
+                </button>
+
+              
+            </div>
+
+        </div>
+    </aside>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+@*=================================================================================*@
+@*=========================== ADD PARTS CHAMBER ===================================*@
+@*=================================================================================*@
+<div class="modal fade modal-l" id="AddRequestModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>New Request Chamber</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post" enctype="multipart/form-data" class="addformcontainer" id="addnewform" autocomplete="off">
+                    <div class="form_group col-12 col-sm-12 mb-3">
+                        <label class="mb-2">Select Chamber <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                        <div class="select-container">
+                            <select id="ChamberID" name="ChamberID" required>
+                                <option value="0">-- select Chambers --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>No. of Chambers <small style="color: #a81818; font-weight: 600;">*</small></label> <br />
+                        <input type="number" value="1" placeholder="type Ojt registration No." name="Quantity" id="Quantity" min="1" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Order Date <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="date" name="OrderDate" id="OrderDate" required />
+                    </div>
+
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Target Completion Date <small style="color: #a81818; font-weight: 600;">*</small></label>
+                        <input type="date" name="TargetDate" id="TargetDate" required />
+                    </div>
+
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Customer Name </label>
+                        <input type="text" placeholder="Enter Customer name." name="CustomerName" id="CustomerName" required />
+                    </div>
+
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Person In Charge :  </label> <br />
+                        <input type="hidden" value="Aldrin, Rommel" placeholder="type Ojt registration No." name="PIC" id="PIC" />
+                        <input type="text" value="Aldrin, Rommel" placeholder="type Ojt registration No." disabled />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Remarks :  </label> <br />
+                        <textarea placeholder="type Here ..." id="Remarks" name="Remarks" cols="40" rows="3"></textarea>
+                    </div>
+
+
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <div>
+                            <small>All fields marked with (<small style="color: #a81818; font-weight: 600;">*</small>) must be filled out</small>
+                        </div>
+                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade modal-l" id="StatusUpdateModal" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>Update  Status</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+
+                <form method="post" class="addformcontainer" id="Statusnewform" autocomplete="off">
+                    <div class="form_group col-12 col-sm-12 mb-3">
+                        <input type="hidden" id="OrderID" name="OrderID">
+                        <label>Current Status</label>
+                        <input type="text" id="currentOrderStatus" readonly>
+                    </div>
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>New Status *</label>
+                        <div class="select-container">
+                            <select id="Status" name="Status">
+                                <option value="">Select Status</option>
+                                <option value="COMPLETED">Completed</option>
+                                <option value="ONGOING">Ongoing</option>
+                                <option value="For Shipped">For Shipped</option>
+                                <option value="PLANNED">For Planned</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Customer Name </label>
+                        <input type="text" placeholder="Enter Customer name." name="EditCustomerName" id="EditCustomerName" required />
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12">
+                        <label>Assembly Status : </label>
+                        <div>
+                            <input type="number" placeholder="Enter Percentage rate" name="EditAssemblyStats" id="EditAssemblyStats" min="0" max="100" />
+                        </div>
+                    </div>
+
+                    <div class="form_group col-12 col-sm-12 ">
+                        <label>Remarks :  </label> <br />
+                        <textarea placeholder="type Here ..." id="EditRemarks" name="EditRemarks" cols="40" rows="3"></textarea>
+                    </div>
+
+                    <div class="flex_end mt-4">
+
+                        <button id="btnSave" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<script type="text/javascript">
+    let requestData = [];
+    let completeData = [];
+    let currentPage = 1;
+    const rowsPerPage = 10;
+    const pageSize = 10;
+
+    let selectedOrderID = "";
+    let today = new Date();
+    //let dd = String(today.getDate()).padStart(2, '0');
+    //let mm = String(today.getMonth() + 1).padStart(2, '0');
+    //let yyyy = today.getFullYear();
+    //let todayStr = `${yyyy}-${mm}-${dd}`;
+    //document.getElementById("TargetDate").setAttribute("min", todayStr);
+
+    const addforms = document.getElementById("addnewform");
+    const changeforms = document.getElementById("Statusnewform");
+
+
+
+
+
+
+    //document.addEventListener("DOMContentLoaded", () => {
+    //    const container = document.querySelector(".table-containerV2");
+    //    let isDown = false;
+    //    let startX, startY, scrollLeft, scrollTop;
+
+    //    container.addEventListener("mousedown", (e) => {
+    //        isDown = true;
+    //        container.classList.add("dragging");
+    //        startX = e.pageX - container.offsetLeft;
+    //        startY = e.pageY - container.offsetTop;
+    //        scrollLeft = container.scrollLeft;
+    //        scrollTop = container.scrollTop;
+    //    });
+
+    //    container.addEventListener("mouseleave", () => {
+    //        isDown = false;
+    //        container.classList.remove("dragging");
+    //    });
+
+    //    container.addEventListener("mouseup", () => {
+    //        isDown = false;
+    //        container.classList.remove("dragging");
+    //    });
+
+    //    container.addEventListener("mousemove", (e) => {
+    //        if (!isDown) return;
+    //        e.preventDefault();
+
+    //        const x = e.pageX - container.offsetLeft;
+    //        const y = e.pageY - container.offsetTop;
+
+    //        const walkX = (x - startX) * 1.2;  // scroll speed
+    //        const walkY = (y - startY) * 1.2;
+
+    //        container.scrollLeft = scrollLeft - walkX;
+    //        container.scrollTop = scrollTop - walkY;
+    //    });
+
+
+
+    //    const tbody = document.getElementById("chamberOrdersTableBody");
+
+    //    tbody.addEventListener("click", (e) => {
+    //        let row = e.target.closest("tr");
+    //        if (!row) return;
+
+    //        // Remove previous highlight
+    //        tbody.querySelectorAll("tr").forEach(r => r.classList.remove("selected-row"));
+
+    //        // Highlight clicked row
+    //        row.classList.add("selected-row");
+    //    });
+
+    //    //const table = document.getElementById("chamberOrdersTable");
+    //    //const tbody = document.getElementById("chamberOrdersTableBody");
+
+    //    //// MM/DD/YYYY parser
+    //    //function parseUSDate(dateStr) {
+    //    //    const [month, day, year] = dateStr.split("/");
+    //    //    return new Date(`${year}-${month}-${day}`);
+    //    //}
+
+    //    //document.querySelectorAll("#chamberOrdersTable th.sortable").forEach(header => {
+    //    //    header.addEventListener("click", () => {
+    //    //        const colIndex = parseInt(header.dataset.column);
+    //    //        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+    //    //        const isAsc = header.classList.toggle("asc");
+
+    //    //        rows.sort((a, b) => {
+    //    //            const dateA = parseUSDate(a.children[colIndex].innerText.trim());
+    //    //            const dateB = parseUSDate(b.children[colIndex].innerText.trim());
+    //    //            return isAsc ? dateA - dateB : dateB - dateA;
+    //    //        });
+
+    //    //        rows.forEach(row => tbody.appendChild(row));
+    //    //    });
+    //    //});
+    //});
+
+
+
+    // ========================== LOAD REQUEST DATA ==============================
+    const RequesDataList = async () => {
+        const startDate = document.querySelector("#startDate").value || "";
+        const chamberType = $("#categoryFilter").val() || 0;
+        const status = $("#stockStatusFilter").val() || "all";
+        const endDate = $("#endDate").val() || "";
+
+        let obj = {
+            chamberType: chamberType,
+            prefix: "CR",
+            status: status,
+            startDate: startDate,
+            endDate: endDate,
+            page: currentPage,
+            pageSize: pageSize
+        };
+
+        try {
+            let res = await GetMethod('@Url.Action("GetAllRequestList", "Hydro")', obj);
+
+
+            if (res && res.Success) {
+                requestData = res.data.Data || res.Data || [];
+                
+                const total = res.data?.Total ?? requestData.length;
+
+                if (requestData.length === 0) {
+                    const TableData = $("#chamberOrdersTableBody");
+                    TableData.empty();
+                    $("#chamberOrdersTableBody").html(`<tr><td colspan="5" style="text-align:center; color:#888;">⚠️ No matching records</td></tr>`);
+                }
+
+
+                if (total > 0) {
+                    console.clear();
+                    renderfirstselect(requestData[0])
+                    renderTable(requestData);
+                    renderPagination(total);
+                }
+            } else {
+                $("#chamberOrdersTableBody").html(`<tr><td colspan="5" style="text-align:center; color:#888;">⚠️ No matching records</td></tr>`);
+            }
+        } catch (err) {
+            console.error("Error fetching data:", err);
+            $("#chamberOrdersTableBody").html(`
+                    <tr><td colspan="5" style="text-align:center; color:red;">Failed to load data</td></tr>
+                `);
+        }
+    };
+
+    // ========================== FIRST SELECTION ================================
+    function renderfirstselect(data) {
+        const percent = Math.round(parseFloat(data.CompletionPercent) || 0);
+        const assemblyPercent = Math.round(parseFloat(data.AssemblyStats) || 0);
+
+        const partsUI = getStatusUI(percent);
+        const assemblyUI = getStatusUI(assemblyPercent);
+
+        // Parts
+        $("#PartsStatusValue").text(partsUI.text);
+        $("#PartsStatusIcon")
+            .attr("icon", partsUI.icon)
+            .css("color", partsUI.color);
+
+        // Assembly
+        $("#AssemblyStatusValue").text(assemblyUI.text);
+        $("#AssemblyStatusIcon")
+            .attr("icon", assemblyUI.icon)
+            .css("color", assemblyUI.color);
+
+
+        selectedOrderID = data.OrderID;
+        $("#Tdate").html(data.OrderDate);
+        $("#detailTitle").text(data.OrderID);
+        $("#CustomerNameValue").text(data.CustomerName);
+        $("#PICValue").text(data.PIC);
+        $("#TargetDateValue").text(data.TargetDate);
+        $("#remarksValue").text(data.Remarks);
+
+        $("#PartsStatusValue").text(`${percent}% Complete`);
+        $("#AssemblyStatusValue").text(`${data.AssemblyStats}% Complete`);
+
+        // ===== STATUS BADGE =====
+        var status = (data.RequestStatus || "").toLowerCase();
+        var $badge = $(".badgeSelect");
+
+        // remove old classes
+        $badge.removeClass("success danger planned");
+    
+        if (status === "ongoing") {
+            $badge.addClass("danger").text("ONGOING");
+        }
+        else if (status === "completed") {
+            $badge.addClass("success").text("COMPLETED");
+        }
+        else if (status === "for shipped") {
+            $badge.addClass("warning").text("FOR SHIPPED");
+        }
+        else if (status === "planned") {
+            $badge.addClass("planned").text("FOR PLANNED");
+        }
+        else {
+            $badge.text(data.RequestStatus);
+        }
+
+    }
+
+    // ========================== RENDER TABLE + PAGINATION ======================
+    function renderTable(data) {
+        const $tableBody = $("#chamberOrdersTableBody");
+        $tableBody.empty();
+
+        // If no Data found
+        if (!data.length) {
+            TableData.append(`<tr><td colspan="8" style="text-align:center; color:#888;">⚠️ No matching records</td></tr>`);
+            return;
+        }
+
+        $.each(data, function (index, row) {
+            const percent = Math.round(parseFloat(row.CompletionPercent) || 0);
+            let barColor = "#e74c3c"; // red
+            if (percent >= 70) barColor = "#27ae60"; // green
+            else if (percent >= 40) barColor = "#f39c12"; // yellow
+            let statsCss = "";
+            let statsname = "";
+
+            if (row.RequestStatus == 'COMPLETED') {
+                statsCss = 'success';
+                statsname = 'Completed';
+            } else if (row.RequestStatus == 'For Shipped') {
+                statsCss = 'shipped'
+                statsname = 'For Shipped';
+            } else if (row.RequestStatus == 'PLANNED') {
+                statsCss = 'planned'
+                statsname = 'For Planned';
+            } else {
+                statsCss = 'danger'
+                statsname = 'Ongoing';
+            }
+
+            const daysRemaining = calculateDaysRemaining(row.TargetDate);
+
+            //let orderId = row.OrderID;
+            //let cleanId = orderId.replace("CR-", "");
+
+
+            const $row = $(`
+                <tr>
+                    <td><strong>${row.OrderID}</strong></td>
+                    <td>${row.ChamberName ?? "-"}</td>
+                    <td>${row.TargetDate ?? "-"}</td>
+                    <td><span class="badge ${statsCss}">${statsname}</span></td>
+                    <td style='text-align: center;'>${row.ChambersOrdered ?? "-"}</td>
+                </tr>
+            `);
+
+            // store data
+            $row.data("rowData", row);
+
+            // click event
+            $row.on("click", function () {
+                // remove selected from all rows
+                $("#chamberOrdersTableBody tr").removeClass("selected");
+
+                // add to clicked row
+                $(this).addClass("selected");
+
+                // update details
+                renderfirstselect($(this).data("rowData"));
+            });
+
+            $tableBody.append($row);
+
+            // ✅ auto select first row
+            if (index === 0) {
+                $row.addClass("selected");
+                renderfirstselect(row);
+            }
+
+      
+        });
+    }
+
+    function getStatusUI(percent) {
+        if (percent >= 70) {
+            return {
+                color: "#27ae60", // green
+                icon: "lucide:check-circle-2",
+                text: percent + "% Complete"
+            };
+        } else if (percent >= 40) {
+            return {
+                color: "#f39c12", // yellow
+                icon: "lucide:alert-circle",
+                text: percent + "% In Progress"
+            };
+        } else {
+            return {
+                color: "#e74c3c", // red
+                icon: "lucide:x-circle",
+                text: percent + "% Delayed"
+            };
+        }
+    }
+
+    // ========================== PAGINATION CONTROLS ============================
+    function renderPagination(totalItems) {
+        const totalPages = Math.ceil(totalItems / pageSize);
+        const pagination = $("#MastertableContainer");
+        pagination.empty();
+
+        // Calculate "from" and "to" item numbers
+        const startItem = (currentPage - 1) * pageSize + 1;
+        const endItem = Math.min(currentPage * pageSize, totalItems);
+
+        // Update text info
+        $("#pagecountID").text(startItem > totalItems ? 0 : startItem);
+        $("#totalpageID").text(endItem);
+        $("#DatalengthID").text(totalItems);
+
+        // Always render pagination, even if only 1 page
+        let html = '';
+
+        // Prev button
+        html += `<button class="btn btn-outline" style="padding: 6px 12px; font-size: 12px;  data-page="${currentPage - 1}" ${currentPage === 1 ? "disabled" : ""}>Prev</button>`;
+
+        // Page numbers
+        for (let i = 1; i <= totalPages; i++) {
+            html += `<button class="page-btn ${i === currentPage ? "active" : ""}" data-page="${i}">${i}</button>`;
+        }
+
+        // Next button
+        html += `<button class="btn btn-outline" style="padding: 6px 12px; font-size: 12px; data-page="${currentPage + 1}" ${currentPage === totalPages ? "disabled" : ""}>Next</button>`;
+
+        pagination.html(html);
+
+        // If no items, show a disabled state
+        if (totalItems === 0) {
+            pagination.html(`<button class="page-btn" disabled>No data</button>`);
+            $("#pagecountID").text(0);
+            $("#totalpageID").text(0);
+            $("#DatalengthID").text(0);
+        }
+    }
+
+    // Pagination click handler
+    $(document).on("click", ".page-btn", function () {
+        const newPage = parseInt($(this).data("page"));
+        if (!isNaN(newPage)) {
+            currentPage = newPage;
+            RequesDataList();
+        }
+    });
+
+    // Calculate the Remaining Days
+    function calculateDaysRemaining(targetDate) {
+        const target = new Date(targetDate);
+        const today = new Date();
+        const diffTime = target - today;
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    }
+
+
+    // ========================== FILTER EVENTS ================================
+    $("#categoryFilter, #stockStatusFilter, #startDate, #endDate").on("change", function (e) {
+        e.preventDefault();
+        currentPage = 1;
+        RequesDataList();
+    });
+
+    //$("#inventorySearch").on("keyup", function () {
+    //    currentPage = 1;
+    //    RequesDataList();
+    //});
+
+    // ========================== ROW CLICK EVENT ==============================
+    $("#editOrder").on('click', function (e) {
+        e.stopPropagation();
+        var getStats = requestData.filter(res => res.OrderID === selectedOrderID);
+        if (getStats) {
+            $("#currentOrderStatus").val(getStats[0].RequestStatus);
+            $("#EditCustomerName").val(getStats[0].CustomerName);
+            $("#EditAssemblyStats").val(getStats[0].AssemblyStats);
+            $("#EditRemarks").val(getStats[0].Remarks);
+            $("#OrderID").val(getStats[0].OrderID);
+            $("#Status").val(getStats[0].RequestStatus);
+            $("#StatusUpdateModal").modal('show');
+        }
+    });
+    $("#deleteOrder").on('click', function (e) {
+        e.stopPropagation();
+
+         Swal.fire({
+             title: "Are you sure?",
+             text: "You won't be able to revert this!",
+             icon: "warning",
+             showCancelButton: true,
+             confirmButtonColor: "#3085d6",
+             cancelButtonColor: "#d33",
+             confirmButtonText: "Yes, delete it!"
+         }).then(async (result) => {
+             if (result.isConfirmed) {
+                 let res = await postMethod('@Url.Action("DeleteManageOrders", "Hydro")', { OrderID: selectedOrderID });
+
+                 if (res?.Success) {
+                     Swal.fire({
+                         title: "Deleted!",
+                         text: `${selectedOrderID} is Delete successfully. All the Parts will be Back to the inventory`,
+                         icon: "success",
+                         timer: 1500,
+                         showConfirmButton: false,
+                         allowOutsideClick: false,   // prevent outside click
+                         allowEscapeKey: false,      // optional: prevent ESC key close
+                         allowEnterKey: false        // optional: prevent Enter key close
+                     });
+                     RequesDataList();
+                 }
+             }
+
+         });
+    })
+    $("#ViewParts").on('click', function (e) {
+        e.stopPropagation();
+        window.location.href = `/Hydroponics/Hydro/OrderpageDetails?orderID=${selectedOrderID}`;
+    });
+
+    $(document).on('click', '.RequestRow', function (e) {
+        e.stopPropagation();
+        const rowId = $(this).attr('id').split('_')[1];
+        window.location.href = `/Hydroponics/Hydro/OrderpageDetails?orderID=${rowId}`;
+    });
+    $(document).on('click', '.DeleteRow',  async function (e) {
+        e.stopPropagation();
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const rowId = $(this).attr('id').split('_')[1];
+
+                let res = await postMethod('@Url.Action("DeleteManageOrders", "Hydro")', { OrderID: rowId });
+                if (res?.Success) {
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: `${rowId} is Delete successfully. All the Parts will be Back to the inventory`,
+                        icon: "success",
+                        timer: 1500,
+                        showConfirmButton: false,
+                        allowOutsideClick: false,   // prevent outside click
+                        allowEscapeKey: false,      // optional: prevent ESC key close
+                        allowEnterKey: false        // optional: prevent Enter key close
+                    });
+                    RequesDataList();
+                }
+            }
+
+        });
+
+
+    });
+
+
+
+    $(document).on('click', '.EditRow', function (e) {
+        e.stopPropagation();
+        const rowId = $(this).attr('id').split('_')[1];
+        var getStats = requestData.filter(res => res.OrderID === rowId);
+        if (getStats) {
+            $("#currentOrderStatus").val(getStats[0].RequestStatus);
+            $("#EditCustomerName").val(getStats[0].CustomerName);
+            $("#EditAssemblyStats").val(getStats[0].AssemblyStats);
+            $("#EditRemarks").val(getStats[0].Remarks);
+            $("#OrderID").val(getStats[0].OrderID);
+            $("#Status").val(getStats[0].RequestStatus);
+            $("#StatusUpdateModal").modal('show');
+        }
+    });
+
+    // ========================== ADD REQUEST ==============================
+    const GetChamberDatalist = async () => {
+        let res = await GetMethod('@Url.Action("GetChamberList", "Hydro")', {});
+        if (res && res.Success) {
+            const select = $("#ChamberID").empty().append(`<option value="0">-- select Chamber --</option>`);
+            res.data.forEach(row => {
+                select.append(`<option value="${row.ChamberID}">${row.ChamberName}</option>`);
+            });
+        }
+    };
+
+    $("#Showadd").on('click', function (e) {
+        e.preventDefault();
+        $("#AddRequestModal").modal("show");
+    });
+
+    addforms.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        let formdata = new FormData(e.target);
+        formdata.append('Prefix', "CR");
+
+        let res = await postMethod('@Url.Action("NewAddRequestData", "Hydro")', formdata);
+        if (res && res.Success) {
+            RequesDataList();
+            e.target.reset();
+            $("#AddRequestModal").modal("hide");
+        }
+    });
+
+    changeforms.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        let formdata = new FormData(e.target);
+        const data = Object.fromEntries(formdata);
+        let res = await postMethod('@Url.Action("ChangeStatusRequest", "Hydro")', formdata);
+        if (res && res.Success) {
+            RequesDataList();
+            e.target.reset();
+            $("#StatusUpdateModal").modal("hide");
+        }
+    });
+
+    // ========================== INITIAL LOAD ==============================
+    $(document).ready(async () => {
+        await Promise.all([RequesDataList(), GetChamberDatalist()]);
+    });
+</script>

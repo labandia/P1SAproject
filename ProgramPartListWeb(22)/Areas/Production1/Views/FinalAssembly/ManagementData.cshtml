@@ -1,0 +1,1217 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ManagementData</title>
+    <link href="~/Content/css/FinalDashMangement.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="dashboard">
+
+        <!-- ─── Two-Column Grid ─── -->
+        <div class="dashboard-grid">
+
+            <!-- ═══ LEFT: FORMS ═══ -->
+            <section class="forms-column">
+                <div class="backcontainer">
+                    <button id="backbtn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 512 512">
+                            <path d="M0 0h512v512H0z" fill="none" />
+                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M249.38 336L170 256l79.38-80m-68.35 80H342" />
+                            <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32" d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192s192-86 192-192Z" />
+                        </svg>
+                    </button>
+                    <h4>Back to the Dashboard</h4>
+                </div>
+
+
+                <!-- ─── Tab Buttons ─── -->
+                <div class="ChangeFormstab">
+                    <button type="button" class="tab-btn active" data-tab="tabRecord">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 32 32">
+                            <path d="M0 0h32v32H0z" fill="none" />
+                            <path fill="currentColor" d="M19 21h-6a3 3 0 0 0-3 3v2h2v-2a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2h2v-2a3 3 0 0 0-3-3m-3-1a4 4 0 1 0-4-4a4 4 0 0 0 4 4m0-6a2 2 0 1 1-2 2a2 2 0 0 1 2-2" />
+                            <path fill="currentColor" d="M25 5h-3V4a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v1H7a2 2 0 0 0-2 2v21a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2M12 4h8v4h-8Zm13 24H7V7h3v3h12V7h3Z" />
+                        </svg> NCR Records
+                    </button>
+
+                    <button type="button" class="tab-btn" data-tab="tabUpload">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 32 32">
+                            <path d="M0 0h24v24H0z" fill="none" />
+                            <g fill="none" fill-rule="evenodd">
+                                <path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z" />
+                                <path fill="currentColor" d="m8.076 7.26l.095.083l8.486 8.485a1 1 0 0 1-.246 1.595l-.116.05L5.91 21.3c-1.952.72-3.853-1.115-3.26-3.064l.05-.146L6.526 7.705a1 1 0 0 1 1.447-.516zm-.214 2.602l-3.285 8.92a.5.5 0 0 0 .562.664l.08-.023l8.918-3.286zm9.245 1.742c.911.048 2.16.24 3.246.892a1 1 0 0 1-.925 1.77l-.104-.055c-.682-.41-1.554-.57-2.322-.61a8 8 0 0 0-.95.004l-.316.031a1 1 0 0 1-.281-1.98a8.6 8.6 0 0 1 1.652-.053m2.025-2.786a1 1 0 0 1 .116 1.993l-.116.007h-.708a1 1 0 0 1-.116-1.993l.116-.007zM15.95 8.05a1 1 0 0 1 .083 1.32l-.083.094l-1.06 1.061a1 1 0 0 1-1.498-1.32l.083-.094l1.06-1.06a1 1 0 0 1 1.415 0m-2.587-5.266c.448 1.346.208 2.82-.072 3.85a10 10 0 0 1-.69 1.863a1 1 0 0 1-1.79-.893a8 8 0 0 0 .55-1.496c.227-.832.341-1.735.166-2.475l-.061-.216a1 1 0 1 1 1.897-.633m5.415 2.438a1 1 0 0 1 0 1.414l-.707.707a1 1 0 1 1-1.414-1.414l.707-.707a1 1 0 0 1 1.414 0" />
+                            </g>
+                        </svg>
+                        Best Employee
+                    </button>
+                </div>
+
+
+
+
+                <!-- Add / Edit Form -->
+                <div class="form-card tab-panel active" id="formCard">
+                    <div class="card-title">
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 32 32">
+                            <path d="M0 0h32v32H0z" fill="none" />
+                            <path fill="currentColor" d="M19 21h-6a3 3 0 0 0-3 3v2h2v-2a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2h2v-2a3 3 0 0 0-3-3m-3-1a4 4 0 1 0-4-4a4 4 0 0 0 4 4m0-6a2 2 0 1 1-2 2a2 2 0 0 1 2-2" />
+                            <path fill="currentColor" d="M25 5h-3V4a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v1H7a2 2 0 0 0-2 2v21a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2M12 4h8v4h-8Zm13 24H7V7h3v3h12V7h3Z" />
+                        </svg>
+                        <span id="formTitle">Add New Record</span>
+                    </div>
+
+
+
+
+
+                    <form id="dataForm" autocomplete="off">
+                        <input type="hidden" id="editIndex" value="-1" />
+
+                        <div class="form-group">
+                            <label>Registration No. :<span class="required">*</span></label>
+                            <input type="text" id="regNo" class="uppercase-input" placeholder="e.g. P1FARN-250614" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Model :<span class="required">*</span></label>
+                            <input type="text" id="model" class="uppercase-input" placeholder="e.g. 9WPA0612P4G004" required />
+                        </div>
+
+
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>4M :</label>
+                                <select id="fourM">
+                                    <option value="0">Select 4M</option>
+                                    <option value="1">Machine</option>
+                                    <option value="2">Man</option>
+                                    <option value="3">Material</option>
+                                    <option value="4">Method</option>
+                                </select>
+                            </div>
+
+
+
+                            <div class="form-group">
+                                <label>NCR Type :</label>
+                                <select id="ncrType">
+                                    <option value="0">Select NCR Type</option>
+                                    <option value="1">Customer Complaint</option>
+                                    <option value="2">In-Process</option>
+                                    <option value="3">Rejected Lot</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Line :</label>
+                                <select id="Line">
+                                    <option value="L1">L1</option>
+                                    <option value="L2">L2</option>
+                                    <option value="L3">L3</option>
+                                    <option value="L4">L4</option>
+                                    <option value="L5">L5</option>
+                                    <option value="L6">L6</option>
+                                    <option value="L7">L7</option>
+                                    <option value="L8">L8</option>
+                                    <option value="L9">L9</option>
+                                    <option value="L10">L10</option>
+                                    <option value="L11">L11</option>
+                                    <option value="L12">L12</option>
+                                    <option value="L13">L13</option>
+                                    <option value="L14">L14</option>
+                                    <option value="L15">L15</option>
+                                    <option value="L16">L16</option>
+                                    <option value="L17">L17</option>
+                                    <option value="L18">L18</option>
+                                    <option value="L19">L19</option>
+                                    <option value="L20">L20</option>
+                                    <option value="CL2">CL2</option>
+                                    <option value="CL5">CL5</option>
+                                    <option value="CL8">CL8</option>
+                                    <option value="CL9">CL9</option>
+                                    <option value="CL11">CL11</option>
+                                    <option value="CL11">CL12</option>
+                                    <option value="MEIG">MEIG</option>
+                                    <option value="OP1">OP1</option>
+                                    <option value="OP3">OP3</option>
+                                    <option value="Harness">Harness</option>
+                                    <option value="OP-EM">OP-EM</option>
+                                    <option value="Matprep">Matprep</option>
+                                </select>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label>Groups : </label>
+                                <select id="groupID">
+                                    <option value="0">Select Group</option>
+                                    <option value="1">Group 1</option>
+                                    <option value="2">Group 2</option>
+                                    <option value="3">Group 3</option>
+                                    <option value="4">OP</option>
+                                    <option value="5">Material Prep</option>
+                                    <option value="6">Harness</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <hr style="margin: 1.2em 0;" />
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Category :</label>
+                                <select id="processGroupSelect">
+                                    <option value="0">Select Category</option>
+                                    <option value="1">Process</option>
+                                    <option value="3">Wireharness</option>
+                                    <option value="4">Oilproof</option>
+                                    <option value="2">Other Processes</option>
+                                </select>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label>Process : </label>
+                                <select id="processSelect">
+                                    <option value="0">Select process</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-primary btn-block" id="submitBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24">
+                                    <path d="M0 0h24v24H0z" fill="none" />
+                                    <path fill="currentColor" d="M20 7.423v10.962q0 .69-.462 1.153T18.384 20H5.616q-.691 0-1.153-.462T4 18.384V5.616q0-.691.463-1.153T5.616 4h10.961zm-1 .427L16.15 5H5.616q-.27 0-.443.173T5 5.616v12.769q0 .269.173.442t.443.173h12.769q.269 0 .442-.173t.173-.443zm-5.587 8.102q.587-.586.587-1.414t-.587-1.413T12 12.539t-1.413.586T10 14.538t.587 1.414t1.413.586t1.414-.586M6.768 9.769h7.423v-3H6.77zM5 7.85V19V5z" />
+                                </svg>
+                                Add Record
+                            </button>
+                            <button type="button" class="btn btn-outline btn-block" id="cancelBtn" style="display:none;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
+                                    <path d="M0 0h48v48H0z" fill="none" />
+                                    <defs>
+                                        <mask id="SVGt9zVddCE">
+                                            <path fill="#555" fill-rule="evenodd" stroke="#fff" stroke-linejoin="round" stroke-width="4" d="M44 40.836q-7.34-8.96-13.036-10.168t-10.846-.365V41L4 23.545L20.118 7v10.167q9.523.075 16.192 6.833q6.668 6.758 7.69 16.836Z" clip-rule="evenodd" />
+                                        </mask>
+                                    </defs>
+                                    <path fill="currentColor" d="M0 0h48v48H0z" mask="url(#SVGt9zVddCE)" />
+                                </svg>
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Quick Actions -->
+                <!-- Upload Form -->
+                <form id="uploadCard" class="form-card tab-panel">
+                    <input type="hidden" id="editAwardIndex" value="-1" />
+
+
+                    <div class="card-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 32 32">
+                            <path d="M0 0h24v24H0z" fill="none" />
+                            <g fill="none" fill-rule="evenodd">
+                                <path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z" />
+                                <path fill="currentColor" d="m8.076 7.26l.095.083l8.486 8.485a1 1 0 0 1-.246 1.595l-.116.05L5.91 21.3c-1.952.72-3.853-1.115-3.26-3.064l.05-.146L6.526 7.705a1 1 0 0 1 1.447-.516zm-.214 2.602l-3.285 8.92a.5.5 0 0 0 .562.664l.08-.023l8.918-3.286zm9.245 1.742c.911.048 2.16.24 3.246.892a1 1 0 0 1-.925 1.77l-.104-.055c-.682-.41-1.554-.57-2.322-.61a8 8 0 0 0-.95.004l-.316.031a1 1 0 0 1-.281-1.98a8.6 8.6 0 0 1 1.652-.053m2.025-2.786a1 1 0 0 1 .116 1.993l-.116.007h-.708a1 1 0 0 1-.116-1.993l.116-.007zM15.95 8.05a1 1 0 0 1 .083 1.32l-.083.094l-1.06 1.061a1 1 0 0 1-1.498-1.32l.083-.094l1.06-1.06a1 1 0 0 1 1.415 0m-2.587-5.266c.448 1.346.208 2.82-.072 3.85a10 10 0 0 1-.69 1.863a1 1 0 0 1-1.79-.893a8 8 0 0 0 .55-1.496c.227-.832.341-1.735.166-2.475l-.061-.216a1 1 0 1 1 1.897-.633m5.415 2.438a1 1 0 0 1 0 1.414l-.707.707a1 1 0 1 1-1.414-1.414l.707-.707a1 1 0 0 1 1.414 0" />
+                            </g>
+                        </svg>
+                        <span id="uploadFormTitle">Best Of Employees</span>
+                    </div>
+
+                    <p id="monthlyWinnerCount" style="margin:-4px 0 14px;font-size:13px;color:#64748b;"></p>
+
+
+                    <div class="form-group">
+                        <label>Employee ID <span class="required">*</span></label>
+                        <input type="text"
+                               id="employeeIDText"
+                               class="uppercase-input"
+                               placeholder="Enter Employee ID"
+                               required />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Employee Name <span class="required">*</span></label>
+                        <input type="text"
+                               id="winnerText"
+                               class="uppercase-input"
+                               placeholder="Enter Employee Name"
+                               required />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Line <span class="required">*</span></label>
+                        <input type="text"
+                               id="lineText"
+                               class="uppercase-input"
+                               placeholder="Enter Line"
+                               required />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Defective Detection <span class="required">*</span></label>
+                        <textarea type="text"
+                                  cols="30"
+                                  rows="5"
+                                  id="defectText"
+                                  class="uppercase-input"
+                                  placeholder="Enter Defective Detection"> </textarea>
+                    </div>
+
+                    <!-- Hidden file input -->
+                    <input type="file"
+                           id="certificateFile"
+                           accept=".png,.jpg,.jpeg"
+                           hidden />
+
+                    <div class="btn-group">
+
+                        <div class="upload-group">
+                            <button type="button" class="btn btn-success" id="sampleDataBtn">
+                                Update Image
+                            </button>
+
+                            <button type="button" class="btn btn-outline-secondary" id="viewimage">
+                                View
+                            </button>
+                        </div>
+
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="isDisplayed">
+                            Show in the Dashboard
+                        </label>
+
+                        <button type="submit" class="btn btn-primary" id="updateDataBtn">
+                            Save Database
+                        </button>
+
+
+                        <button type="button" class="btn btn-outline btn-block" id="uploadCancelBtn" style="display:none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
+                                <path d="M0 0h48v48H0z" fill="none" />
+                                <defs>
+                                    <mask id="SVGt9zVddCE2">
+                                        <path fill="#555" fill-rule="evenodd" stroke="#fff" stroke-linejoin="round" stroke-width="4" d="M44 40.836q-7.34-8.96-13.036-10.168t-10.846-.365V41L4 23.545L20.118 7v10.167q9.523.075 16.192 6.833q6.668 6.758 7.69 16.836Z" clip-rule="evenodd" />
+                                    </mask>
+                                </defs>
+                                <path fill="currentColor" d="M0 0h48v48H0z" mask="url(#SVGt9zVddCE2)" />
+                            </svg>
+                            Cancel
+                        </button>
+
+
+                    </div>
+
+                    <p style="margin-top:14px;font-size:13px;color:#64748b;">
+                        Image must be PNG or JPEG.
+                    </p>
+                </form>
+
+            </section>
+
+            <!-- ═══ RIGHT: TABLE ═══ -->
+            <section class="table-column">
+                <!-- ================= NCR TABLE ================= -->
+                <div id="recordTable" class="table-wrapper table-panel active">
+                    <div class="table-toolbar">
+                        <div class="left">
+                            <h2><svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="3" y1="15" x2="21" y2="15" /><line x1="9" y1="21" x2="9" y2="9" /></svg> NCR Records</h2>
+                            <span class="record-count" id="recordCount">0 entries</span>
+                        </div>
+                        <div class="search-box">
+                            <input type="text" id="searchInput" placeholder="Search anything..." />
+                            <button id="searchBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 48 48">
+                                    <path d="M0 0h48v48H0z" fill="none" />
+                                    <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="4">
+                                        <path d="M21 38c9.389 0 17-7.611 17-17S30.389 4 21 4S4 11.611 4 21s7.611 17 17 17Z" />
+                                        <path stroke-linecap="round" d="M26.657 14.343A7.98 7.98 0 0 0 21 12a7.98 7.98 0 0 0-5.657 2.343m17.879 18.879l8.485 8.485" />
+                                    </g>
+                                </svg>
+                                Search
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-scroll maintable">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th><svg xmlns="http://www.w3.org/2000/svg" width="0.9em" height="0.9em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg> Date/Time</th>
+                                    <th><svg xmlns="http://www.w3.org/2000/svg" width="0.9em" height="0.9em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg> Reg. No.</th>
+                                    <th><svg xmlns="http://www.w3.org/2000/svg" width="0.9em" height="0.9em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></svg> Model</th>
+                                    <th><svg xmlns="http://www.w3.org/2000/svg" width="0.9em" height="0.9em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg> Process</th>
+                                    <th><svg xmlns="http://www.w3.org/2000/svg" width="0.9em" height="0.9em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" /><line x1="8" y1="2" x2="8" y2="22" /><line x1="16" y1="2" x2="16" y2="22" /><line x1="2" y1="8" x2="22" y2="8" /><line x1="2" y1="16" x2="22" y2="16" /></svg> 4M</th>
+                                    <th><svg xmlns="http://www.w3.org/2000/svg" width="0.9em" height="0.9em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><polyline points="9 12 11 14 15 10" /></svg> NCR Type</th>
+                                    <th><svg xmlns="http://www.w3.org/2000/svg" width="0.9em" height="0.9em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" /></svg> Line</th>
+                                    <th style="text-align:center;"><svg xmlns="http://www.w3.org/2000/svg" width="0.9em" height="0.9em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /><circle cx="5" cy="12" r="1" /></svg> Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <!-- rows injected by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+                <!-- ================= IMAGE TABLE ================= -->
+                <div id="uploadTable" class="table-wrapper table-panel">
+
+                    <div class="table-toolbar">
+                        <div class="left">
+                            <h2>History Records</h2>
+                            <span class="record-count" id="imageRecordCount">0 entries</span>
+                        </div>
+
+                        <div class="search-box">
+                            <input type="text" id="imageSearch" placeholder="Search winner..." />
+                            <button id="imageSearchBtn">Search</button>
+                        </div>
+                    </div>
+
+                    <div class="table-scroll uploadTables">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Month</th>
+                                    <th>Image</th>
+                                    <th>Employee ID</th>
+                                    <th>Winner name</th>
+                                    <th>Line</th>
+                                    <th>Defective Detection</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="imageTableBody"></tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+
+            </section>
+
+        </div>
+
+    </div>
+
+    <!-- ─── Toast ─── -->
+    <div class="toast" id="toast">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+        <span id="toastMessage">Done!</span>
+    </div>
+
+    <!-- ─── Delete Confirm Modal ─── -->
+    <div class="modal-overlay" id="deleteModal" style="display:none;">
+        <div class="modal-box">
+            <p id="deleteModalText">Delete this NCR record? This cannot be undone.</p>
+            <div class="btn-group">
+                <button class="btn btn-danger" id="confirmDeleteBtn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg> Delete</button>
+                <button class="btn btn-outline" id="cancelDeleteBtn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg> Cancel</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="module" asp-append-version="true">
+ import {
+     getMethod,
+     postMethod
+ } from '@Url.Content("~/Scripts/modules/index.js")';
+
+    class RegistrationFinalController {
+        constructor() {
+            this.tbody = document.querySelector('.maintable tbody');
+            this.uploadtbody = document.querySelector('.uploadTables tbody');
+
+            this.form = document.getElementById('dataForm');
+            this.editIndexInput = document.getElementById('editIndex');
+            this.formTitle = document.getElementById('formTitle');
+            this.submitBtn = document.getElementById('submitBtn');
+            this.cancelBtn = document.getElementById('cancelBtn');
+            this.backbtn = document.getElementById('backbtn');
+            this.recordCount = document.getElementById('recordCount');
+            this.toast = document.getElementById('toast');
+            this.toastMessage = document.getElementById('toastMessage');
+            this.deleteModal = document.getElementById('deleteModal');
+            this.deleteModalText = document.getElementById('deleteModalText');
+            this.clicksearch = document.getElementById('searchBtn');
+
+            this.uploadForm = document.getElementById("uploadCard");
+            this.uploadFormTitle = document.getElementById('uploadFormTitle');
+            this.editAwardIndexInput = document.getElementById('editAwardIndex');
+            this.uploadCancelBtn = document.getElementById('uploadCancelBtn');
+            this.monthlyWinnerCountEl = document.getElementById('monthlyWinnerCount');
+
+            this.MAX_WINNERS_PER_MONTH = 3;
+            this.currentMonthAwardCount = 0;
+
+
+            // Tab elements
+            this.tabButtons = document.querySelectorAll('.ChangeFormstab .tab-btn');
+            this.tabPanels = {
+                record: document.getElementById('formCard'),
+                upload: document.getElementById('uploadCard')
+            };
+
+            this.tablePanels = {
+                tabRecord: document.getElementById("recordTable"),
+                tabUpload: document.getElementById("uploadTable")
+            };
+
+            // INput Value
+            this.regNoInput = document.getElementById('regNo');
+            this.modelInput = document.getElementById('model');
+            this.processSelect = document.getElementById('processSelect');
+            this.fourMSelect = document.getElementById('fourM');
+            this.ncrTypeSelect = document.getElementById('ncrType');
+            this.lineSelect = document.getElementById('Line');
+            this.GroupID = document.getElementById('groupID');
+            this.processGroupSelect = document.getElementById('processGroupSelect');
+
+            this.searchText = document.getElementById('searchInput');
+
+            this.pendingDeleteId = null;
+            this.pendingDeleteType = null; // 'ncr' | 'award'
+
+            this.refreshInterval = null;
+            const today = new Date();
+
+            this.monthName = today.toLocaleString('en-US', { month: 'long' });
+            this.year = today.getFullYear();
+
+            // File UPLOAd IMAGE
+            this.fileInput = document.getElementById('certificateFile');
+            this.uploadBtn = document.getElementById('sampleDataBtn');
+            this.employeeIDInput = document.getElementById('employeeIDText');
+            this.nameInput = document.getElementById('winnerText');
+            this.lineTextInput = document.getElementById('lineText');
+            this.defectTextInput = document.getElementById('defectText');
+            this.isDisplayedInput = document.getElementById('isDisplayed');
+            this.updateBtn = document.getElementById('updateDataBtn');
+            this.viewImageBtn = document.getElementById("viewimage");
+
+            // holds the picked File object between selection and the Update click
+            this.selectedCertificateFile = null;
+            this.imageFileName = '';
+        }
+
+        async init() {
+            await this.GetRegistrationData();
+            await this.fetchAwardData();
+
+            this.bindDeleteModalEvents();
+            this.bindFormEvents();
+            this.bindFilterDropDownEvents();
+            this.bindTableEvents();
+            this.bindUploadEvents();
+            this.bindUpdateEvents();
+            this.bindTabEvents();
+            this.bindUploadTableEvents();
+
+            this.clicksearch.addEventListener('click', async (e) => {
+                e.preventDefault();
+
+                await GetRegistrationData();
+            });
+
+            document.querySelectorAll('.uppercase-input')
+                .forEach(input => input.addEventListener('input', this.forceUpperCase));
+        }
+
+        // ─────────────────────────────────────────────
+        // Tab Switching
+        // ─────────────────────────────────────────────
+        bindTabEvents() {
+
+            this.tabButtons = document.querySelectorAll(".ChangeFormstab .tab-btn");
+
+            this.tabPanels = {
+                tabRecord: document.getElementById("formCard"),
+                tabUpload: document.getElementById("uploadCard")
+            };
+
+            this.tablePanels = {
+                tabRecord: document.getElementById("recordTable"),
+                tabUpload: document.getElementById("uploadTable")
+            };
+
+
+            const switchTab = (tabId) => {
+
+                // Buttons
+                this.tabButtons.forEach(btn => {
+                    btn.classList.toggle("active", btn.dataset.tab === tabId);
+                });
+
+                // Forms
+                Object.entries(this.tabPanels).forEach(([key, panel]) => {
+                    panel.classList.toggle("active", key === tabId);
+                });
+
+                // Tables
+                Object.entries(this.tablePanels).forEach(([key, panel]) => {
+                    panel.classList.toggle("active", key === tabId);
+                });
+
+            };
+
+            // Button events
+            this.tabButtons.forEach(btn => {
+
+                btn.addEventListener("click", (e) => {
+                    e.preventDefault();
+
+                    switchTab(btn.dataset.tab);
+                });
+
+            });
+
+            // Make callable from other methods
+            this.switchTab = switchTab;
+
+            // Default tab
+            switchTab("tabRecord");
+        }
+
+
+        async fetchAwardData() {
+            try {
+                const res = await getMethod('@Url.Action("GetAwardData", "FinalAssembly")', {});
+                console.log(res);
+
+                if(res?.Success){
+                    let getdata = res.data;
+                    this.renderUploadsTable(getdata);
+                }
+
+            } catch (error) {
+                console.error('Error fetching award data:', error);
+                return null;
+            }
+        }
+
+        async GetRegistrationData() {
+            try {
+                const currentMonth = new Date().getMonth() + 1;
+                const res = await getMethod('@Url.Action("GetRegistrationList", "FinalAssembly")',
+                    { search: this.searchText.value, month: currentMonth });
+                if (!res?.Success) {
+                    console.log('No data Registration Found ');
+                    return;
+                }
+                this.renderTable(res.data);
+            } catch (error) {
+                console.error('Error fetching 4M data:', error);
+            }
+        }
+
+
+        bindFilterDropDownEvents() {
+            this.processGroupSelect.addEventListener('change', async (e) => {
+                let val = e.target.value;
+                console.log("group Category Selected : " + val);
+
+                try {
+                    const res = await getMethod('@Url.Action("GetProcessGroupList", "FinalAssembly")', {
+                        groups: parseInt(val)
+                    });
+                    console.log(res);
+
+                    // Clear existing items
+                    this.processSelect.innerHTML = '<option value="0">Select Process</option>';
+
+                    if (res?.Success && Array.isArray(res.data)) {
+
+                        res.data.forEach(item => {
+                            const option = document.createElement('option');
+                            option.value = item.ProcessID;
+                            option.textContent = item.ProcessName;
+
+                            this.processSelect.appendChild(option);
+                        });
+                    }
+
+                } catch (error) {
+                    console.error('Error fetching process list:', error);
+
+                    // Reset dropdown on error
+                    this.processSelect.innerHTML = '<option value="0">Select Process</option>';
+                }
+            });
+        }
+
+
+
+
+        renderTable(data) {
+            if (!this.tbody) return;
+
+            this.recordCount.textContent = `${data.length} ${data.length === 1 ? 'entry' : 'entries'}`;
+
+            if (data.length === 0) {
+                this.tbody.innerHTML = `
+               <tr>
+                   <td colspan="12" style="text-align:center; padding:32px; color:#86868b;">
+                       No data available.
+                   </td>
+               </tr>`;
+                return;
+            }
+
+            this.tbody.innerHTML = data.map(row => {
+
+                return `
+             <tr class='fade-in'
+                 data-ncr-id="${row.NCRID}"
+                 data-reg-no="${row.RegistrationNo ?? ''}"
+                 data-model="${row.ModelShopOrder ?? ''}"
+                 data-process-id="${row.ProcessID  ?? 0}"
+                 data-fourm-id="${row.FourMID  ?? 0}"
+                 data-ncr-type="${row.NCRTypeID ?? 0}"
+                 data-group="${row.GroupID  ?? 0}"
+                 data-line="${row.OriginID  ?? ''}">
+                       <td>${row.CreatedDate}</td>
+                       <td style='font-weight: 600;'>${row.RegistrationNo}</td>
+                       <td>${row.ModelShopOrder}</td>
+                       <td>${row.ProcessName || ''}</td>
+                       <td>${row.FourMName}</td>
+                       <td class="status-column">${row.NCRTypeName || ''}</td>
+                       <td>${row.Line ?? row.OriginID ?? ''}</td>
+                       <td style="text-align:center; white-space:nowrap;">
+                           <button type="button" class="btn-icon btn-edit" title="Edit">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24">
+	                            <path d="M0 0h24v24H0z" fill="none" />
+	                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m5 16l-1 4l4-1L19.586 7.414a2 2 0 0 0 0-2.828l-.172-.172a2 2 0 0 0-2.828 0zM15 6l3 3m-5 11h8" />
+                            </svg>
+
+
+                           </button>
+                           <button type="button" class="btn-icon btn-delete" title="Delete">
+                               <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24">
+	                                <path d="M0 0h24v24H0z" fill="none" />
+	                                <path fill="currentColor" d="M7.616 20q-.667 0-1.141-.475T6 18.386V6h-.5q-.213 0-.356-.144T5 5.499t.144-.356T5.5 5H9q0-.31.23-.54t.54-.23h4.46q.31 0 .54.23T15 5h3.5q.213 0 .356.144t.144.357t-.144.356T18.5 6H18v12.385q0 .666-.475 1.14t-1.14.475zM17 6H7v12.385q0 .269.173.442t.443.173h8.769q.269 0 .442-.173t.173-.442zm-6.335 10.856q.143-.144.143-.356v-8q0-.213-.144-.356T10.307 8t-.356.144t-.143.356v8q0 .213.144.356q.144.144.356.144q.213 0 .357-.144m3.384 0q.143-.144.143-.356v-8q0-.213-.144-.356Q13.904 8 13.692 8q-.213 0-.357.144t-.143.356v8q0 .213.144.356t.357.144t.356-.144M7 6v13z" />
+                                </svg>
+
+                           </button>
+                       </td>
+               </tr>`;
+
+            }).join('');
+
+        }
+        renderUploadsTable(data) {
+                if (!this.uploadtbody) return;
+
+                //this.recordCount.textContent = `${data.length} ${data.length === 1 ? 'entry' : 'entries'}`;
+
+                this.currentMonthAwardCount = this.countWinnersThisMonth(data);
+                this.updateMonthlyWinnerCountUI();
+
+                if (data.length === 0) {
+                    this.uploadtbody.innerHTML = `
+                    <tr>
+                       <td colspan="7" style="text-align:center; padding:32px; color:#86868b;">
+                           No data available.
+                       </td>
+                   </tr>`;
+                    return;
+                }
+
+                this.uploadtbody.innerHTML = data.map(row => {
+                    const imagePath = row.CertificateImage ?? row.ImagePath ?? '';
+                    const isDisplayed = row.IsDisplayed ? '1' : '0';
+
+
+                    return `
+                 <tr class='fade-in'
+                     data-award-id="${row.AwardID}"
+                     data-employee-id="${row.EmployeeID ?? ''}"
+                     data-winner-name="${row.WinnerName ?? ''}"
+                     data-line="${row.AssignLine ?? ''}"
+                     data-defect="${row.DefectDetect ?? ''}"
+                     data-image="${imagePath}"
+                     data-is-displayed="${isDisplayed}">
+                           <td>${row.Months}</td>
+                           <td>${imagePath ? `<button type="button" class="btn-link btn-row-view" title="View image">View</button>` : '—'}</td>
+                           <td>${row.EmployeeID}</td>
+                           <td style='font-weight: 600;'>${row.WinnerName}</td>
+                           <td>${row.AssignLine}</td>
+                           <td>${row.DefectDetect || ''}</td>
+                           
+                           <td style="text-align:center; white-space:nowrap;">
+                               <button type="button" class="btn-icon btn-edit" title="Edit">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24">
+                                    <path d="M0 0h24v24H0z" fill="none" />
+                                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m5 16l-1 4l4-1L19.586 7.414a2 2 0 0 0 0-2.828l-.172-.172a2 2 0 0 0-2.828 0zM15 6l3 3m-5 11h8" />
+                                </svg>
+
+
+                               </button>
+                               <button type="button" class="btn-icon btn-delete" title="Delete">
+                                   <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24">
+                                        <path d="M0 0h24v24H0z" fill="none" />
+                                        <path fill="currentColor" d="M7.616 20q-.667 0-1.141-.475T6 18.386V6h-.5q-.213 0-.356-.144T5 5.499t.144-.356T5.5 5H9q0-.31.23-.54t.54-.23h4.46q.31 0 .54.23T15 5h3.5q.213 0 .356.144t.144.357t-.144.356T18.5 6H18v12.385q0 .666-.475 1.14t-1.14.475zM17 6H7v12.385q0 .269.173.442t.443.173h8.769q.269 0 .442-.173t.173-.442zm-6.335 10.856q.143-.144.143-.356v-8q0-.213-.144-.356T10.307 8t-.356.144t-.143.356v8q0 .213.144.356q.144.144.356.144q.213 0 .357-.144m3.384 0q.143-.144.143-.356v-8q0-.213-.144-.356Q13.904 8 13.692 8q-.213 0-.357.144t-.143.356v8q0 .213.144.356t.357.144t.356-.144M7 6v13z" />
+                                    </svg>
+
+                               </button>
+                           </td>
+                   </tr>`;
+
+                }).join('');
+
+        }
+
+        bindFormEvents() {
+            this.backbtn.addEventListener('click', ()=>{
+                window.location.href = '/Production1/FinalAssembly/Dashboard';
+            });
+
+            this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+            this.cancelBtn.addEventListener('click', () => this.resetForm());
+        }
+
+        bindTableEvents() {
+            this.tbody.addEventListener('click', (e) => {
+                const editBtn = e.target.closest('.btn-edit');
+                const deleteBtn = e.target.closest('.btn-delete');
+
+                if (editBtn) {
+                    const row = editBtn.closest('tr');
+                    this.populateFormForEdit(row);
+                } else if (deleteBtn) {
+                    const row = deleteBtn.closest('tr');
+                    this.openDeleteModal(row.dataset.ncrId);
+                }
+            });
+        }
+
+        bindUploadEvents() {
+            // clicking the styled button opens the real (hidden) file picker
+            this.uploadBtn.addEventListener('click', () => this.fileInput.click());
+
+            this.fileInput.addEventListener('change', () => {
+                const file = this.fileInput.files[0];
+                if (!file) return;
+
+                // client-side type check — server re-validates this too, don't trust the client alone
+                const allowedTypes = ['image/png', 'image/jpeg'];
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Only PNG or JPEG images are allowed.');
+                    this.fileInput.value = '';
+                    this.selectedCertificateFile = null;
+                    return;
+                }
+
+                // just stash it — actual submit happens on "Update" click
+                this.selectedCertificateFile = file;
+            });
+        }
+
+        bindUpdateEvents() {
+              this.uploadForm.addEventListener("submit", async (e) => {
+              e.preventDefault();
+
+                if (!this.uploadForm.reportValidity())
+                    return;
+
+
+                const isEditing = parseInt(this.editAwardIndexInput.value, 10) > 0;
+
+                if (isEditing && !this.selectedCertificateFile) {
+                    this.showToast('Please select a new image before updating this record.', true);
+                    return;
+                }
+
+                if (!isEditing && this.currentMonthAwardCount >= this.MAX_WINNERS_PER_MONTH) {
+                    this.showToast(`Only ${this.MAX_WINNERS_PER_MONTH} winners can be added per month.`, true);
+                    return;
+                }
+
+                const formData = new FormData();
+
+                formData.append("AwardID", this.editAwardIndexInput.value || -1);
+                formData.append("EmployeeID", document.getElementById("employeeIDText").value.trim());
+                formData.append("WinnerName", this.nameInput.value.trim());
+                formData.append("AssignLine", document.getElementById("lineText").value.trim());
+                formData.append("DefectDetect", document.getElementById("defectText").value.trim());
+                formData.append("isDisplayed", this.isDisplayedInput.checked);
+
+                if (this.selectedCertificateFile) {
+                    formData.append("certificateImage", this.selectedCertificateFile);
+                }
+
+                const data = Object.fromEntries(formData);
+
+                console.log(data);
+                this.updateBtn.disabled = true;
+
+                try {
+                    const res = await postMethod(
+                        '@Url.Action("SaveAwardsData", "FinalAssembly")',
+                        formData
+                    );
+                    console.log(res);
+                    if (!res?.Success) {
+                        this.showToast(res?.Message || "Update failed.", true);
+                        return;
+                    }
+
+                    this.showToast(isEditing ? "Record updated." : "Record saved successfully.");
+
+                    this.resetUploadForm();
+
+                    await this.fetchAwardData();
+
+                } catch (err) {
+                    console.error(err);
+                    this.showToast("Update failed.", true);
+                } finally {
+                    this.updateBtn.disabled = false;
+                }
+            });
+
+
+
+             @*this.updateBtn.addEventListener('click', async () => {
+                    const name = this.nameInput.value.trim();
+                    if (!name) {
+                        alert('Enter the winner\'s name first.');
+                        return;
+                    }
+
+                    const formData = new FormData();
+                    formData.append('awardeesName', name);
+                    formData.append('isDisplayed', this.isDisplayedInput.checked);
+
+                    if (this.selectedCertificateFile) {
+                        formData.append('certificateImage', this.selectedCertificateFile);
+                    }
+
+                    //const data = Object.fromEntries(formData);
+                     try {
+                        const res = await postMethod('@Url.Action("UploadCertificate", "FinalAssembly")', formData);
+
+                        if (!res?.Success) {
+                            this.showToast(res?.Message || 'Update failed.', true);
+                            return;
+                        }
+
+                        this.showToast('Update Winner Successfully.');
+                        this.fileInput.value = '';
+                        this.selectedCertificateFile = null;
+                        await this.fetchAwardData();
+                    } catch (err) {
+                        console.error(err);
+                        this.showToast('Update failed: network or server error.', true);
+                    } finally {
+                        this.updateBtn.disabled = false;
+                    }
+                });*@
+
+
+                this.viewImageBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+
+                    if (!this.imageFileName) {
+                        alert("No image available.");
+                        return;
+                    }
+
+                    const url = `@Url.Action("DisplaytheImage", "FinalAssembly")?filename=${encodeURIComponent(this.imageFileName)}`;
+
+                    window.open(url, "_blank");
+                });
+        }
+
+        bindDeleteModalEvents() {
+            document.getElementById('cancelDeleteBtn').addEventListener('click', () => this.closeDeleteModal());
+            document.getElementById('confirmDeleteBtn').addEventListener('click', () => this.handleDelete());
+        }
+
+        populateFormForEdit(row) {
+
+            this.editIndexInput.value = row.dataset.ncrId;
+            this.regNoInput.value = row.dataset.regNo;
+            this.modelInput.value = row.dataset.model;
+            this.processSelect.value = row.dataset.processId;
+            this.fourMSelect.value = row.dataset.fourmId;
+            this.ncrTypeSelect.value = row.dataset.ncrType;
+            this.lineSelect.value = row.dataset.line;
+            this.GroupID.value = row.dataset.group;
+
+            this.formTitle.textContent = 'Edit Record';
+            this.submitBtn.innerHTML = '<i class="fas fa-check"></i> Update Record';
+            this.cancelBtn.style.display = '';
+
+            document.getElementById('formCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // ─────────────────────────────────────────────
+        // Upload Images table — Edit / Delete / View
+        // ─────────────────────────────────────────────
+        bindUploadTableEvents() {
+            if (!this.uploadtbody) return;
+
+            this.uploadtbody.addEventListener('click', (e) => {
+                const editBtn = e.target.closest('.btn-edit');
+                const deleteBtn = e.target.closest('.btn-delete');
+                const viewBtn = e.target.closest('.btn-row-view');
+
+                if (editBtn) {
+                    const row = editBtn.closest('tr');
+                    this.populateUploadFormForEdit(row);
+                } else if (deleteBtn) {
+                    console.log("assdsd");
+                    const row = deleteBtn.closest('tr');
+                    console.log("ID " + row.dataset.awardId);
+                    this.openDeleteModal(row.dataset.awardId, 'award');
+                } else if (viewBtn) {
+                    const row = viewBtn.closest('tr');
+                    this.viewImage(row.dataset.image);
+                }
+            });
+
+            this.uploadCancelBtn.addEventListener('click', () => this.resetUploadForm());
+        }
+
+        populateUploadFormForEdit(row) {
+            this.editAwardIndexInput.value = row.dataset.awardId;
+            this.employeeIDInput.value = row.dataset.employeeId || '';
+            this.nameInput.value = row.dataset.winnerName || '';
+            this.lineTextInput.value = row.dataset.line || '';
+            this.defectTextInput.value = row.dataset.defect || '';
+            this.isDisplayedInput.checked = row.dataset.isDisplayed === '1';
+
+
+            this.imageFileName = row.dataset.image || '';
+            this.selectedCertificateFile = null;
+            this.fileInput.value = '';
+
+            this.uploadFormTitle.textContent = 'Edit Uploaded Image';
+            this.updateBtn.textContent = 'Update Record';
+            this.uploadCancelBtn.style.display = '';
+            this.updateMonthlyWinnerCountUI();
+
+
+            this.uploadForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        resetUploadForm() {
+            this.uploadForm.reset();
+            this.editAwardIndexInput.value = -1;
+            this.selectedCertificateFile = null;
+            this.imageFileName = '';
+
+            this.uploadFormTitle.textContent = 'Upload Images';
+            this.updateBtn.textContent = 'Save Database';
+            this.uploadCancelBtn.style.display = 'none';
+
+            this.updateMonthlyWinnerCountUI();
+        }
+
+        updateMonthlyWinnerCountUI() {
+            if (!this.monthlyWinnerCountEl) return;
+
+            const atLimit = this.currentMonthAwardCount >= this.MAX_WINNERS_PER_MONTH;
+            const isEditing = parseInt(this.editAwardIndexInput?.value, 10) > 0;
+
+            this.monthlyWinnerCountEl.textContent =
+                `${this.currentMonthAwardCount} / ${this.MAX_WINNERS_PER_MONTH} winners added this month`;
+            this.monthlyWinnerCountEl.style.color = atLimit ? '#dc2626' : '#64748b';
+
+            // Only block new adds — editing an existing winner is still allowed at the limit.
+            this.updateBtn.disabled = atLimit && !isEditing;
+        }
+
+        countWinnersThisMonth(data) {
+            if (!Array.isArray(data)) return 0;
+
+            const now = new Date();
+            const editingAwardId = parseInt(this.editAwardIndexInput?.value, 10) || -1;
+
+            return data.filter(row => {
+                // an award currently being edited shouldn't block itself
+                if (editingAwardId > 0 && parseInt(row.AwardID, 10) === editingAwardId) return false;
+
+                const raw = row.CreatedDate ?? row.UpdatedDate ?? row.ModifiedDate;
+                if (!raw) return true; // no date to check — count it to be safe
+
+                const d = new Date(raw);
+                if (isNaN(d)) return true;
+
+                return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+            }).length;
+        }
+
+
+        openDeleteModal(id, type = 'ncr') {
+            this.pendingDeleteId = id;
+            this.pendingDeleteType = type;
+
+
+            this.deleteModalText.textContent = type === 'award'
+                ? 'Delete this uploaded image record? This cannot be undone.'
+                : 'Delete this NCR record? This cannot be undone.';
+
+            this.deleteModal.style.display = 'flex';
+        }
+
+        viewImage(filename) {
+            if (!filename) {
+                alert('No image available.');
+                return;
+            }
+
+            const url = `@Url.Action("DisplaytheImage", "FinalAssembly")?filename=${encodeURIComponent(filename)}`;
+            window.open(url, '_blank');
+        }
+
+        closeDeleteModal() {
+            this.pendingDeleteId = null;
+            this.pendingDeleteType = null;
+            this.deleteModal.style.display = 'none';
+        }
+
+        resetForm() {
+            this.form.reset();
+            this.editIndexInput.value = -1;
+            this.formTitle.textContent = 'Add New Record';
+            this.submitBtn.innerHTML = '<i class="fas fa-plus"></i> Add Record';
+            this.cancelBtn.style.display = 'none';
+        }
+
+        async handleSubmit(e) {
+            e.preventDefault();
+
+            //if (!this.form.reportValidity()) return;
+
+            const ncrId = parseInt(this.editIndexInput.value, 10);
+            const payload = {
+                NCRID: ncrId > 0 ? ncrId : 0,
+                RegistrationNo: this.regNoInput.value.trim(),
+                ModelShopOrder: this.modelInput.value.trim(),
+                ProcessID: parseInt(this.processSelect.value, 10),
+                FourMID: parseInt(this.fourMSelect.value, 10),
+                NCRTypeID: parseInt(this.ncrTypeSelect.value, 10),
+                OriginID: this.lineSelect.value,
+                GroupID : this.GroupID.value
+            };
+
+               this.submitBtn.disabled = true;
+                try {
+                    const res = await postMethod('@Url.Action("SaveRegistration", "FinalAssembly")', payload);
+                    console.log(res);
+                    if (!res?.Success) {
+                        this.showToast(res?.Message || 'Save failed.', true);
+                        return;
+                    }
+
+                    this.showToast(payload.NCRID > 0 ? 'Record updated.' : 'Record added.');
+                    this.resetForm();
+                    await this.GetRegistrationData();
+                } catch (error) {
+                    console.error('Error saving record:', error);
+                    this.showToast('Save failed.', true);
+                } finally {
+                    this.submitBtn.disabled = false;
+                }
+         }
+
+        //openDeleteModal(ncrId) {
+        //    this.pendingDeleteId = ncrId;
+        //    this.deleteModal.style.display = 'flex';
+        //}
+
+        closeDeleteModal() {
+            this.pendingDeleteId = null;
+            this.deleteModal.style.display = 'none';
+        }
+
+        async handleDelete() {
+            if (!this.pendingDeleteId) return;
+
+            const isAward = this.pendingDeleteType === 'award';
+            console.log(isAward);
+            try {
+
+                const res = await postMethod(
+                    isAward
+                        ? '@Url.Action("DeleteAwardsData", "FinalAssembly")'
+                        : '@Url.Action("deleteRegistration", "FinalAssembly")',
+                    isAward
+                        ? { AwardID: this.pendingDeleteId }
+                        : { NCRID: this.pendingDeleteId }
+                );
+
+                if (!res?.Success) {
+                    this.showToast(res?.Message || 'Delete failed.', true);
+                    return;
+                }
+
+                this.showToast('Record deleted.');
+
+                if (isAward) {
+                    // If the deleted row was mid-edit, drop back to the default upload form.
+                    if (parseInt(this.editAwardIndexInput.value, 10) === parseInt(this.pendingDeleteId, 10)) {
+                        this.resetUploadForm();
+                    }
+                    await this.fetchAwardData();
+                } else {
+                    // If the deleted row was mid-edit, drop back to Add mode.
+                    if (parseInt(this.editIndexInput.value, 10) === parseInt(this.pendingDeleteId, 10)) {
+                        this.resetForm();
+                    }
+                    await this.GetRegistrationData();
+                }
+            } catch (error) {
+                console.error('Error deleting record:', error);
+                this.showToast('Delete failed.', true);
+            } finally {
+                this.closeDeleteModal();
+            }
+        }
+
+        forceUpperCase(e) {
+            const input = e.target;
+            const { selectionStart: start, selectionEnd: end } = input;
+            input.value = input.value.toUpperCase();
+            input.setSelectionRange(start, end);
+        }
+
+        showToast(message, isError = false) {
+            this.toastMessage.textContent = message;
+            this.toast.classList.toggle('toast-error', isError);
+            this.toast.classList.add('show');
+            clearTimeout(this._toastTimer);
+            this._toastTimer = setTimeout(() => this.toast.classList.remove('show'), 3000);
+        }
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const controller = new RegistrationFinalController();
+        controller.init();
+    });
+    </script>
+
+</body>
+</html>

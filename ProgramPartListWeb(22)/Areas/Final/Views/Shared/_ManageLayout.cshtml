@@ -1,0 +1,474 @@
+﻿
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    @Html.Partial("_SystemConfig")
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>FINAL ASSEMBLY SCHEDULE PERFORMANCE AND TRACKING DASHBOARD </title>
+
+    <script src="~/Scripts/Shared/bootstrap.bundle.min.js"></script>
+    <script src="~/Scripts/iconify-icon.min.js"></script>
+    <link href="~/Content/Shared/bootstrap.min.css" rel="stylesheet" />
+    @*@Styles.Render("~/Content/planning-css")*@
+    <link href="~/Content/css/Animation.css" rel="stylesheet" />
+    @Styles.Render("~/Content/FinalAssembly-css")
+
+
+    @Scripts.Render("~/bundles/shared-js")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <!-- Page Transition Overlay -->
+    <div class="page-transition-overlay" id="pageTransitionOverlay">
+        <div class="boxes">
+            <div class="box"><div></div><div></div><div></div><div></div></div>
+            <div class="box"><div></div><div></div><div></div><div></div></div>
+            <div class="box"><div></div><div></div><div></div><div></div></div>
+            <div class="box"><div></div><div></div><div></div><div></div></div>
+        </div>
+        <span class="loader-text">Loading...</span>
+    </div>
+
+
+
+    <div class="app-wrapper">
+        <!-- Header -->
+        <header class="header">
+
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z" /></svg>
+                </div>
+                <span class="logo-text">Final Assembly Schedule Performance and Tracking Data</span>
+            </div>
+
+
+
+            <div class="header-actions">
+                <!-- ===== DROPDOWN (replaces both buttons) ===== -->
+                <div class="dropdown-wrapper" id="reportDropdown">
+                    <button class="dropdown-toggle" id="dropdownToggle" aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             width="1.5em"
+                             height="1.5em"
+                             viewBox="0 0 24 24">
+
+                            <path d="M0 0h24v24H0z" fill="none" />
+
+                            <path fill="currentColor"
+                                  d="M19.414 8.902a1 1 0 0 0 .293-.195l.5-.5a.999 1 0 1 0-1.414-1.414l-.5.5l-.115.173a8.97 8.97 0 0 0-5.189-2.41L13 5V4h1c.55 0 1-.45 1-1s-.45-1-1-1h-4c-.55 0-1 .45-1 1s.45 1 1 1h1v1l.012.057A9 9 0 0 0 12 23a9 9 0 0 0 7.414-14.098M12 21c-3.859 0-7-3.14-7-7s3.141-7 7-7s7 3.14 7 7s-3.141 7-7 7m1-8v-2c0-.55-.45-1-1-1s-1 .45-1 1v3c0 .55.45 1 1 1h3c.55 0 1-.45 1-1s-.45-1-1-1zm-1-5c-3.312 0-6 2.688-6 6s2.688 6 6 6s6-2.688 6-6s-2.688-6-6-6m0 11c-2.757 0-5-2.243-5-5s2.243-5 5-5s5 2.243 5 5s-2.243 5-5 5" />
+                        </svg>
+                        <span>Down time </span>
+                        <i class="fas fa-chevron-down chevron"></i>
+                    </button>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <!-- Daily Report -->
+                        <button class="menu-item" id="Dailybtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 32 32">
+                                <path d="M0 0h32v32H0z" fill="none" />
+                                <path fill="currentColor" d="M10 18h8v2h-8zm0-5h12v2H10zm0 10h5v2h-5z" />
+                                <path fill="currentColor" d="M25 5h-3V4a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v1H7a2 2 0 0 0-2 2v21a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2M12 4h8v4h-8Zm13 24H7V7h3v3h12V7h3Z" />
+                            </svg>
+                            Daily Report
+                        </button>
+                        <!-- History of Downtime -->
+                        <button class="menu-item" id="DownTimebtn">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 width="1.5em"
+                                 height="1.5em"
+                                 viewBox="0 0 24 24">
+
+                                <path d="M0 0h24v24H0z" fill="none" />
+
+                                <path fill="currentColor"
+                                      d="M19.414 8.902a1 1 0 0 0 .293-.195l.5-.5a.999 1 0 1 0-1.414-1.414l-.5.5l-.115.173a8.97 8.97 0 0 0-5.189-2.41L13 5V4h1c.55 0 1-.45 1-1s-.45-1-1-1h-4c-.55 0-1 .45-1 1s.45 1 1 1h1v1l.012.057A9 9 0 0 0 12 23a9 9 0 0 0 7.414-14.098M12 21c-3.859 0-7-3.14-7-7s3.141-7 7-7s7 3.14 7 7s-3.141 7-7 7m1-8v-2c0-.55-.45-1-1-1s-1 .45-1 1v3c0 .55.45 1 1 1h3c.55 0 1-.45 1-1s-.45-1-1-1zm-1-5c-3.312 0-6 2.688-6 6s2.688 6 6 6s6-2.688 6-6s-2.688-6-6-6m0 11c-2.757 0-5-2.243-5-5s2.243-5 5-5s5 2.243 5 5s-2.243 5-5 5" />
+                            </svg>  History of Downtime
+                        </button>
+                        @*<div class="menu-divider"></div>
+                        <button class="menu-item" id="extraBtn" style="color:#6b7280; font-weight:400;">
+                            <i class="fas fa-chart-simple"></i> Performance Summary
+                        </button>*@
+                    </div>
+                </div>
+
+
+
+
+
+
+
+                <div class="badge calendarBackground">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"
+                         style="color:var(--color-muted-foreground)">
+                        <path d="M8 2v4m8-4v4" />
+                        <rect width="18" height="18" x="3" y="4" rx="2" />
+                        <path d="M3 10h18" />
+                    </svg>
+                    <span id="currentDate"
+                          style="font-size:var(--text-sm);font-weight:500"></span>
+                </div>
+                <div class="badge badge-online">
+                    <span class="dot-online"></span>
+                    <span id="liveTime"></span>
+                </div>
+
+
+
+                <div class="divider"></div>
+
+            </div>
+
+
+        </header>
+
+        <div class="main-layout">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <a href="/Final/Assembly/Dashboard" id="pagelink" class="sidebar-item ">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <rect x="3" y="3" width="8" height="8" rx="1" />
+                        <rect x="13" y="3" width="8" height="8" rx="1" />
+                        <rect x="3" y="13" width="8" height="8" rx="1" />
+                        <rect x="13" y="13" width="8" height="8" rx="1" />
+                    </svg>
+                </a>
+
+                <a href="/Final/Assembly/UploaData" class="sidebar-item ">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" />
+                        <path d="M12 12v9m-3-3 3 3 3-3" />
+                    </svg>
+                </a>
+
+                <a href="/Final/Assembly/LineData" class="sidebar-item ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none" />
+                        <path fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h14q.825 0 1.413.588T21 5v14q0 .825-.587 1.413T19 21zm6-6H5v4h6zm2 0v4h6v-4zm-2-2V9H5v4zm2 0h6V9h-6zM5 7h14V5H5z" />
+                    </svg>
+                </a>
+                <a href="/Final/Assembly/DelaySummary" class="sidebar-item ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 16 16">
+                        <path d="M0 0h16v16H0z" fill="none" />
+                        <path fill="none" stroke="currentColor" d="M2.5 2v1.5m11.5 10H2.5v-2m0 0h6v-3h-6m0 3v-3m0 0v-2m0 0h10v-3h-10m0 3v-3" />
+                    </svg>
+
+                </a>
+                <a href="/Final/Assembly/DispatchSummary" class="sidebar-item ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none" />
+                        <path fill="currentColor" d="M4 9h4v11H4zm12 4h4v7h-4zm-6-9h4v16h-4z" />
+                    </svg>
+
+                </a>
+                @*<a href="#" id="pagelink" class="sidebar-item active">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <rect x="3" y="3" width="8" height="8" rx="1" />
+                            <rect x="13" y="3" width="8" height="8" rx="1" />
+                            <rect x="3" y="13" width="8" height="8" rx="1" />
+                            <rect x="13" y="13" width="8" height="8" rx="1" />
+                        </svg>
+                    </a>
+
+                    <a href="/Final/Assembly/UploaData" class="sidebar-item ">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242" />
+                            <path d="M12 12v9m-3-3 3 3 3-3" />
+                        </svg>
+                    </a>*@
+
+
+
+                <div class="sidebar-bottom">
+                    <button class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3m.08 4h.01" /></svg></button>
+                    <div class="sidebar-time">8:20am</div>
+                </div>
+            </aside>
+
+            <!-- Main content -->
+            <main class="content">
+                @RenderBody()
+
+            </main>
+        </div>
+    </div>
+
+
+
+    <!-- Downtime Daily Report Modal -->
+    <div class="modal fade" id="downtimeDailyReportModal" tabindex="-1"
+         aria-labelledby="downtimeDailyReportModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="downtimeDailyReportModalLabel">
+                        Downtime Daily Report
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close">
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover align-middle"
+                               id="downtimeDailyReportTable">
+
+                            <thead>
+                                <tr>
+                                    <th>Line</th>
+                                    <th>Final Shop Order</th>
+                                    <th>Item No</th>
+                                    <th>Model</th>
+                                    <th>Plan Qty</th>
+                                    <th>Start</th>
+                                    <th>End</th>
+                                    <th>Downtime</th>
+                                    <th>Cycle Time</th>
+                                    <th>Operation Rate</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="downtimeDailyReportBody">
+                                <tr>
+                                    <td colspan="8" class="text-center">
+                                        No data available.
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <script src="~/Scripts/Shared/Global.js"></script>
+    <script type="text/javascript">
+        const pageTransition = {
+            overlay: document.getElementById('pageTransitionOverlay'),
+            show() {
+                this.overlay.classList.add('active');
+                requestAnimationFrame(() => this.overlay.classList.add('show'));
+            },
+            hide() {
+                this.overlay.classList.remove('show');
+                setTimeout(() => this.overlay.classList.remove('active'), 200);
+            }
+        };
+        window.pageTransition = pageTransition;
+        window.addEventListener('pageshow', () => pageTransition.hide());
+
+
+
+        //const nav = document.getElementById('pagelink');
+        const linkColor = document.querySelectorAll('.sidebar-item');
+        const currentPath = window.location.pathname.toLowerCase();
+
+        linkColor.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && currentPath.startsWith(href.toLowerCase())) {
+                linkColor.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+            }
+        });
+
+        @*nav.addEventListener('click', function (e) {
+            e.preventDefault();
+            let getLine = localStorage.getItem("LineSet");
+            window.location.href =
+                '@Url.Action("ShopOrderLine", "Assembly")?Line=' +
+                encodeURIComponent(getLine);
+        });
+
+        document.getElementById("ExitDash").addEventListener("click", (e) => {
+            e.preventDefault();
+             window.location.href =
+                 '@Url.Action("Dashboard", "Assembly")';
+        });*@
+
+
+        function updateClock() {
+
+            const now = new Date();
+
+            const dateText = now.toLocaleDateString('en-US', {
+                month: 'short',
+                day: '2-digit',
+                year: 'numeric'
+            });
+
+            const timeText = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+
+            const dateElement = document.getElementById('currentDate');
+            const liveElement = document.getElementById('liveTime');
+
+            if (dateElement)
+                dateElement.textContent = dateText;
+
+            if (liveElement)
+                liveElement.textContent = `LIVE ${timeText}`;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const wrapper = document.getElementById("reportDropdown");
+            const toggle = document.getElementById("dropdownToggle");
+            const menu = document.getElementById("dropdownMenu");
+
+            if (!wrapper || !toggle || !menu) {
+                console.error("Dropdown elements not found.");
+                return;
+            }
+
+            function openDropdown() {
+                menu.classList.add("open");
+                toggle.setAttribute("aria-expanded", "true");
+            }
+
+            function closeDropdown() {
+                menu.classList.remove("open");
+                toggle.setAttribute("aria-expanded", "false");
+            }
+
+            function toggleDropdown() {
+                const isOpen = menu.classList.contains("open");
+
+                if (isOpen) {
+                    closeDropdown();
+                } else {
+                    openDropdown();
+                }
+            }
+
+            // Toggle button
+            toggle.addEventListener("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                toggleDropdown();
+            });
+
+            // Prevent clicking inside menu from closing it immediately
+            menu.addEventListener("click", function (e) {
+                e.stopPropagation();
+            });
+
+            // Click outside
+            document.addEventListener("click", function (e) {
+                if (!wrapper.contains(e.target)) {
+                    closeDropdown();
+                }
+            });
+
+            // ESC
+            document.addEventListener("keydown", function (e) {
+                if (e.key === "Escape") {
+                    closeDropdown();
+                    toggle.focus();
+                }
+            });
+
+
+            // ============================
+            // DAILY REPORT
+            // ============================
+
+            const dailyBtn = document.getElementById("Dailybtn");
+
+            if (dailyBtn) {
+                dailyBtn.addEventListener("click", function (e) {
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    closeDropdown();
+
+                    window.location.href = "/Final/Assembly/DailyReport";
+                });
+            }
+
+
+            // ============================
+            // HISTORY OF DOWNTIME
+            // ============================
+
+            const downtimeBtn = document.getElementById("DownTimebtn");
+
+            if (downtimeBtn) {
+                downtimeBtn.addEventListener("click", function (e) {
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    closeDropdown();
+
+                    window.location.href = "/Final/Assembly/HistoryDownTime";
+                });
+            }
+
+
+            // ============================
+            // PERFORMANCE SUMMARY
+            // ============================
+
+            const extraBtn = document.getElementById("extraBtn");
+
+            if (extraBtn) {
+                extraBtn.addEventListener("click", function (e) {
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    closeDropdown();
+
+                    alert("📊 Performance Summary clicked");
+
+                    // window.location.href =
+                    //     "/Final/Assembly/PerformanceSummary";
+                });
+            }
+        });
+
+        function formatTimeSpan(time) {
+            if (!time) return '-';
+
+            const hours = String(time.Hours ?? 0).padStart(2, '0');
+            const minutes = String(time.Minutes ?? 0).padStart(2, '0');
+
+            return `${hours}:${minutes}`;
+        }
+
+
+        updateClock();
+        setInterval(() =>updateClock(), 1000);
+    </script>
+</body>
+</html>

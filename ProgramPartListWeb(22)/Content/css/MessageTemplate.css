@@ -1,0 +1,456 @@
+﻿/* ----- base reset & body (unchanged) ----- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(145deg, #f4f9fc 0%, #dce9f0 100%);
+    font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+    padding: 1rem;
+}
+
+/* ----- main card container (glass, animated) ----- */
+.card {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(6px);
+    padding: 2.8rem 3.5rem;
+    border-radius: 3.5rem;
+    box-shadow: 0 15px 35px -8px rgba(0, 20, 30, 0.15), inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+    transition: transform 0.2s ease;
+    animation: cardPulseLight 4.5s ease-in-out infinite alternate;
+    max-width: 700px;
+    width: 100%;
+    min-width: 320px;
+}
+
+@keyframes cardPulseLight {
+    0% {
+        box-shadow: 0 15px 35px -8px rgba(0, 30, 30, 0.10), inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+    }
+
+    100% {
+        box-shadow: 0 22px 50px -10px rgba(20, 70, 60, 0.18), inset 0 0 0 1px rgba(43, 156, 118, 0.15);
+    }
+}
+
+/* ----- approval container (flex column, gap) ----- */
+.approval-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+/* ===== STEP 1: SELECTOR CARD (active by default) ===== */
+.step-selector {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.selector-headline {
+    font-size: 1.6rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: #155a44;
+    background: linear-gradient(135deg, #1d7a5c 0%, #0f5a42 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+    .selector-headline i {
+        -webkit-text-fill-color: #2b9c76;
+        background: none;
+        font-size: 1.8rem;
+    }
+
+.approval-selector {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(4px);
+    border-radius: 4rem;
+    padding: 0.5rem 0.5rem 0.5rem 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    border: 1px solid rgba(43, 156, 118, 0.15);
+    box-shadow: 0 6px 16px rgba(0, 20, 20, 0.04);
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+    .approval-selector:hover {
+        box-shadow: 0 8px 24px rgba(43, 156, 118, 0.08);
+        border-color: rgba(43, 156, 118, 0.3);
+    }
+
+.selector-label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 500;
+    color: #1d5a44;
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+}
+
+    .selector-label i {
+        color: #2b9c76;
+        font-size: 1.1rem;
+        opacity: 0.8;
+    }
+
+.selector-dropdown {
+    flex: 1 1 180px;
+    min-width: 140px;
+    padding: 0.7rem 1rem 0.7rem 1.5rem;
+    border: none;
+    background: white;
+    border-radius: 3rem;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #0f3d30;
+    box-shadow: inset 0 1px 4px rgba(0,0,0,0.02), 0 4px 8px rgba(0, 20, 20, 0.04);
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232b9c76' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.2rem;
+    transition: border 0.15s, box-shadow 0.15s;
+    border: 1px solid transparent;
+}
+
+    .selector-dropdown:focus {
+        outline: none;
+        border-color: #2b9c76;
+        box-shadow: 0 0 0 4px rgba(43, 156, 118, 0.15), inset 0 1px 4px rgba(0,0,0,0.02);
+    }
+
+    .selector-dropdown:hover {
+        background-color: #fafffd;
+    }
+
+.proceed-btn {
+    background: #2b9c76;
+    border: none;
+    padding: 0.7rem 2rem;
+    border-radius: 3rem;
+    font-weight: 600;
+    font-size: 1rem;
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    box-shadow: 0 6px 14px rgba(43, 156, 118, 0.25);
+    border: 1px solid rgba(255,255,255,0.2);
+    letter-spacing: 0.02em;
+}
+
+    .proceed-btn i {
+        font-size: 0.9rem;
+    }
+
+    .proceed-btn:hover {
+        background: #1f8b66;
+        box-shadow: 0 8px 20px rgba(43, 156, 118, 0.35);
+        transform: scale(1.02);
+    }
+
+    .proceed-btn:active {
+        transform: scale(0.97);
+    }
+
+    .proceed-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: 0 4px 10px rgba(43, 156, 118, 0.1);
+    }
+
+/* ===== STEP 2: SUCCESS CARD (hidden by default) ===== */
+.step-success {
+    width: 100%;
+    display: none; /* hidden until proceed */
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+    .step-success.active {
+        display: flex;
+    }
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.97);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ----- animated checkmark (circle + tick) (original) ----- */
+.check-wrapper {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.circle-svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.circle-bg {
+    fill: none;
+    stroke: #c2dae6;
+    stroke-width: 6;
+    opacity: 0.4;
+}
+
+.circle-progress {
+    fill: none;
+    stroke: #2b9c76;
+    stroke-width: 7;
+    stroke-linecap: round;
+    stroke-dasharray: 377; /* 2 * pi * 60 */
+    stroke-dashoffset: 377;
+    animation: drawCircle 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    filter: drop-shadow(0 0 10px rgba(43, 156, 118, 0.25));
+}
+
+@keyframes drawCircle {
+    0% {
+        stroke-dashoffset: 377;
+    }
+
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+.check-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.check-path {
+    fill: none;
+    stroke: #1f8b66;
+    stroke-width: 12;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 80;
+    stroke-dashoffset: 80;
+    animation: drawCheck 0.55s ease 0.6s forwards;
+    filter: drop-shadow(0 0 8px rgba(43, 156, 118, 0.3));
+}
+
+@keyframes drawCheck {
+    0% {
+        stroke-dashoffset: 80;
+        opacity: 0.2;
+    }
+
+    100% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+    }
+}
+
+/* ----- success text (original) ----- */
+.status-text {
+    font-size: 2.4rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: #155a44;
+    background: linear-gradient(135deg, #1d7a5c 0%, #0f5a42 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textGlowLight 2.6s ease-in-out infinite alternate, slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+    display: inline-block;
+}
+
+@keyframes textGlowLight {
+    0% {
+        text-shadow: 0 0 6px rgba(43, 156, 118, 0.1), 0 0 18px rgba(43, 156, 118, 0.05);
+        filter: brightness(0.98);
+    }
+
+    100% {
+        text-shadow: 0 0 18px rgba(43, 156, 118, 0.25), 0 0 40px rgba(43, 156, 118, 0.12);
+        filter: brightness(1.05);
+    }
+}
+
+@keyframes slideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(14px) scale(0.96);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.sub-label {
+    margin-top: 0.2rem;
+    font-size: 0.9rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #578b7a;
+    opacity: 0.7;
+    animation: fadeIn 1.2s ease 1.2s both;
+    font-weight: 500;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    100% {
+        opacity: 0.7;
+        transform: translateY(0);
+    }
+}
+
+/* approver name inside success card */
+.success-approver {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #1d5a44;
+    background: rgba(43, 156, 118, 0.08);
+    padding: 0.4rem 1.8rem;
+    border-radius: 3rem;
+    border: 1px solid rgba(43, 156, 118, 0.15);
+    backdrop-filter: blur(2px);
+    margin-top: 0.2rem;
+    animation: fadeIn 1s ease 0.8s both;
+}
+
+    .success-approver i {
+        margin-right: 0.5rem;
+        color: #2b9c76;
+    }
+
+/* reset button (optional, shown in success) */
+.reset-btn {
+    margin-top: 0.4rem;
+    background: transparent;
+    border: 1px solid rgba(43, 156, 118, 0.2);
+    padding: 0.4rem 1.6rem;
+    border-radius: 3rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #1d5a44;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    backdrop-filter: blur(2px);
+}
+
+    .reset-btn:hover {
+        background: rgba(43, 156, 118, 0.06);
+        border-color: rgba(43, 156, 118, 0.4);
+    }
+
+/* ----- responsive (original + new) ----- */
+@media (max-width: 520px) {
+    .approval-selector {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 1rem 1.2rem;
+        gap: 0.8rem;
+        border-radius: 2.5rem;
+    }
+
+    .selector-label {
+        justify-content: center;
+        font-size: 0.95rem;
+    }
+
+    .selector-dropdown {
+        width: 100%;
+        flex: unset;
+    }
+
+    .proceed-btn {
+        justify-content: center;
+        padding: 0.7rem 1.2rem;
+    }
+
+    .selector-headline {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        padding: 2rem 1.8rem;
+        border-radius: 2.5rem;
+    }
+
+    .status-text {
+        font-size: 1.9rem;
+    }
+
+    .check-wrapper {
+        width: 100px;
+        height: 100px;
+    }
+
+    .circle-progress {
+        stroke-width: 6;
+        stroke-dasharray: 283;
+    }
+
+    @keyframes drawCircle {
+        0% {
+            stroke-dashoffset: 283;
+        }
+
+        100% {
+            stroke-dashoffset: 0;
+        }
+    }
+
+    .check-path {
+        stroke-width: 10;
+    }
+}

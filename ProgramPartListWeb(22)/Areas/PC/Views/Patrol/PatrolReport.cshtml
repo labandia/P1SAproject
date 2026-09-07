@@ -1,0 +1,514 @@
+﻿
+@{
+    ViewBag.Title = "PatrolReport";
+    Layout = "~/Areas/PC/Views/Shared/_PatrolLayout.cshtml";
+}
+
+@*<h1>@ViewBag.ClientPC</h1>*@
+
+<header class="InspectHead flex_space mb-1">
+    <div class="flex_align">
+        <div class="Inputcontainer">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search here ... " id="searchbox" autocomplete="off" />
+            <div class="line"></div>
+        </div>
+            
+        <div class="flex_align">
+            <i class="fa-solid fa-file-pdf "></i>
+            <small>PDF file</small>
+            <i class="fa-solid fa-ban text-danger"></i>
+            <small>No Attachement files</small>
+        </div>
+    </div>
+
+
+
+    <button id="Showadd" class="primarybtn" type="button"><i class="fa-solid fa-file-circle-plus"></i> Add New</button>
+</header>
+
+<div class="MainTable">
+    <table>
+        <thead>
+            <tr>
+                <th style="text-align: center; "><i class="fa-solid fa-file-contract"></i> <span style="margin-left: .5em;">Registration No.</span></th>
+                <th style="text-align: center; padding-left: 1.5em;"><i class="fa-solid fa-user-secret"></i>  <span style="margin-left: .5em;">Inspector</span> </th>
+                <th><i class="fa-regular fa-user"></i> <span style="margin-left: .5em;">PIC</span></th>
+                <th><i class="fa-regular fa-calendar"></i> <span style="margin-left: .5em;">Date Conducted</span> </th>
+                <th> For Review</th>
+                <th> <i class="fa-regular fa-file-lines"></i> <span style="margin-left: .5em;">Registration file</span></th>
+                <th> <i class="fa-regular fa-file-lines"></i> <span style="margin-left: .5em;">Attachments</span></th>
+                <th id="hiddenColumn"> <i class="fa-solid fa-bolt"></i> <span style="margin-left: .5em;">Delete</span> </th>
+
+            </tr>
+        </thead>
+        <tbody id="MasterlistData">
+        </tbody>
+    </table>
+
+    <div class="MasterlistWrap_footer">
+        <span>Showing  <span id="pagecountID">-</span> to <span id="totalpageID">-</span> of  <span id="DatalengthID">-</span> Entries</span>
+        <div id="MastertableContainer" class="paginationPartlocal flex_align"></div>
+    </div>
+</div>
+
+
+@*=================================================================================*@
+@*=========================== OPEN ATTACHMENT FILES ===============================*@
+@*=================================================================================*@
+<div class="modal fade modal-l" id="OpenAttachment" tabindex="-1" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body modalwrap">
+                <div class="custom_modal_header">
+                    <h5>File Attachments</h5>
+
+                    <button type="button" class="btn btn-light  close" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <div id="fileContainer"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    let TableDisplay = $("#MasterlistData");
+    const addmodal = document.getElementById("Showadd");
+    let regisTable = [];
+    let userRole;
+
+    const RegistrationTable = async () => {
+        loadingDisplay();
+        Loadingsteps(async () => {
+            let res = await GetMethod('@Url.Action("GetRegistrationNo", "Patrol")', {});
+            console.log(res);
+            if (res && res.Success) {
+                regisTable = res.data;
+                TableDisplay.empty();
+                MasterlistPagination(regisTable, 'MasterlistData', 'MastertableContainer', 50, 5);
+            } else {
+                const loadData = `<tr>
+                  <td colspan='8'>
+                      🔍 ${res.Message}
+                  </td>
+              </tr>`;
+
+                TableDisplay.empty();
+                TableDisplay.append(loadData);
+
+            }
+        });
+    }
+    const ActionRestrict = () => {
+        userRole = localStorage.getItem("UserRole");
+        if (userRole === "Leader" || userRole === "Users") {
+            return false;
+        }
+    }
+
+
+    addmodal.addEventListener('click', (e) => {
+        e.preventDefault();
+        //$("#AddProductModal").modal('show');
+        window.location.href = "/PC/Patrol/RegistrionNoForms";
+    });
+
+
+    function MasterlistPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 7, visibleButtons = 5) {
+        let currentPage = 1;
+        let filteredData = [...dataArray]; // Make a copy for filtering
+
+        const updatePaginationInfo = () => {
+            const totalRecords = filteredData.length;
+            const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+            $("#totalpageID").text(totalPages);
+            $("#DatalengthID").text(totalRecords);
+
+            return totalPages;
+        };
+
+        const renderTable = (page) => {
+            const totalPages = updatePaginationInfo();
+            const startIndex = (page - 1) * recordsPerPage;
+            const endIndex = Math.min(startIndex + recordsPerPage, filteredData.length);
+            const tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = '';
+
+            for (let i = startIndex; i < endIndex; i++) {
+                const rowData = filteredData[i];
+                let color;
+
+                let usercontrol = (ActionRestrict() === false)
+                    ? ``
+                    : `<td data-cell="Delete" >
+                            <div class='flex_center'>
+                                <button  class='deleteData text-danger bg-white' id='deleteData_${rowData.RegNo}' ">
+                                    <i class="fa-regular fa-trash-can"></i>
+                                </button>
+                            </div>
+                    </td>`;
+
+                let hasPDFfile = (rowData.Filepath != null && rowData.Filepath.trim() !== "")
+                            ? `<button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${rowData.Filepath}">
+                                  <i class="fa-solid fa-file-pdf"></i>
+                                </button>`
+                    : `<button class="Noattach"  >
+                                           <i class="fa-solid fa-ban text-danger"></i>  
+                                        </button>`;
+
+                let hasExcelfile = (rowData.CounterPath != null && rowData.CounterPath.trim() !== "")
+                            ? `<button class="OpenAttach"  id='OpenAttach_${rowData.RegNo}'>
+                                   <i class="fa-solid fa-paperclip"></i>
+                                </button>`
+                    : `<button class="Noattach">
+                                   <i class="fa-solid fa-ban text-danger"></i>  
+                                </button>`;
+
+
+                let Stats = "";
+
+                switch (rowData.ReportStatus) {
+                    case 1:
+                        Stats = `<span id="reportStats" style='color: rgb(9, 67, 100); font-weight: 600;'>Process Owner</span>`;
+                        break;
+                    case 2:
+                        Stats = `<span id="reportStats"  style='color: rgb(100, 30, 9); font-weight: 600;'>Inspection </span>`;
+                        break;
+                    case 3:
+                        Stats = `<span id="reportStats" style='color: rgb(33, 9, 100); font-weight: 600;'>Managers </span>`;
+                        break;
+                    case 4:
+                        Stats = `<span id="reportStats" style='color: rgb(9, 15, 100); font-weight: 600;'>Div Manager </span>`;
+                        break;
+                    case 6:
+                        Stats = `<span id="reportStats" style='color: rgb(9, 100, 73); font-weight: 600;'>Completed</span>`;
+                        break;
+                    default:
+                        Stats = `<span id="reportStats">Div Manager </span>`;
+                        break;
+                }
+
+
+
+                const rowHtml = `
+                 <tr class='row_${i} editButton' id='editButton_${rowData.RegNo}'>
+                     <td style='font-weight: 600; text-align: center; padding-left: 1.5em;' data-cell="RegNo">${rowData.RegNo}</td>
+                     <td style='font-weight: 600; text-align: left; padding-left: 1.5em; color: #0c382ce8;' data-cell="Inspector">${rowData.InspectName ?? "N/A"}</td>
+                     <td style='text-align: left; padding-left: 1.5em;' data-cell="PIC">
+                            <p style='color: #0c382ce8; margin: 0; font-weight: 600;'> ${rowData.PICName ?? "N/A"}</p>
+                     </td>
+                     <td data-cell="DateConduct">${rowData.DateConduct ?? "N/A"}</td>
+                    <td data-cell="ReportStatus">${Stats}</td>
+                     <td data-cell="Filepath" >
+                        <div class='flex_center'>
+                            ${hasPDFfile}
+                        </div>
+                     </td>
+                     <td data-cell="CounterPath" >
+                       <div class='flex_center'>
+                            ${hasExcelfile}
+                       </div>
+                    </td>
+                     ${usercontrol}
+                 </tr>`;
+
+                tableBody.innerHTML += rowHtml;
+            }
+
+            $("#pagecountID").text(currentPage);
+        };
+
+        const renderPagination = () => {
+            const totalPages = updatePaginationInfo();
+            const paginationContainer = document.getElementById(paginationId);
+            paginationContainer.innerHTML = '';
+
+            let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+            let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+            if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = Math.max(1, endPage - visibleButtons + 1);
+            }
+
+            if (totalPages <= visibleButtons) {
+                startPage = 1;
+                endPage = totalPages;
+            }
+
+            // Previous button
+            paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                                       <i class="fa-solid fa-backward"></i>
+                                   </button>`;
+
+            for (let i = startPage; i <= endPage; i++) {
+                paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+            }
+
+            // Next button
+            paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                                      <i class="fa-solid fa-forward"></i>
+                                   </button>`;
+        };
+
+        const changePage = (page) => {
+            if (page >= 1 && page <= updatePaginationInfo()) {
+                currentPage = page;
+                renderTable(currentPage);
+                renderPagination();
+            }
+        };
+
+        // Handle click event for edit button
+        $(document).on('click', '.OpenAttach', function (e) {
+            e.stopPropagation();
+
+            const buttonId = $(this).attr('id');
+            const rowIndex = buttonId.split('_')[1];
+
+            const filter = regisTable.filter(res => res.RegNo === rowIndex);
+
+
+            if (filter.length == 0) {
+                return;
+            }
+
+            let UploadCounterPath = filter[0].CounterPath;
+
+            if (UploadCounterPath) {
+                let files = UploadCounterPath.split(';');
+                let fileHtml = "";
+
+                files.forEach(f => {
+                    if (f.trim() !== "") {
+                        let filenameonly = f.replace(/\.pdf$/i, "");
+
+                        const fileExtension = f.split('.').pop().toLowerCase();
+
+                        let fileType = 'default';
+
+                        if (['pdf'].includes(fileExtension)) {
+                            fileType = 'pdf';
+                        } else if (['xlsx', 'xls', 'xlsm', 'csv'].includes(fileExtension)) {
+                            fileType = 'xlsx';
+                        } else if (['doc', 'docx', 'txt'].includes(fileExtension)) {
+                            fileType = 'doc';
+                        } else if (['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(fileExtension)) {
+                            fileType = 'img';
+                        } else if (['zip', 'rar', '7z'].includes(fileExtension)) {
+                            fileType = 'zip';
+                        }
+
+                        const fileIconClass = `file-icon ${fileType}`;
+
+
+                        let fileIcon = '';
+
+                        switch (fileType) {
+                            case 'pdf':
+                                fileIcon = '<i class="far fa-file-pdf"></i>';
+                                break;
+                            case 'doc':
+                                fileIcon = '<i class="far fa-file-word"></i>';
+                                break;
+                            case 'img':
+                                fileIcon = '<i class="far fa-file-image"></i>';
+                                break;
+                            case 'zip':
+                                fileIcon = '<i class="far fa-file-archive"></i>';
+                                break;
+                            case 'xlsx':
+                                fileIcon = '<i class="fa-regular fa-file-excel"></i>';
+                                break;
+                            default:
+                                fileIcon = '<i class="far fa-file"></i>';
+                        }
+
+                        fileHtml += `
+                <button class="open-pdf-btnV2" data-pdf-url="/Patrol/ViewPDF?strfilepath=${f}">
+                     <div class="${fileIconClass}">
+                       ${fileIcon}
+                     </div>
+                     <div class="file-info">
+                         <div class="file-name">${filenameonly}</div>
+                     </div>
+              </button>
+           `;
+                    }
+                });
+
+                document.getElementById("fileContainer").innerHTML = fileHtml;
+
+                // Attach click event
+                document.querySelectorAll(".open-pdf-btnV2").forEach(btn => {
+                    btn.addEventListener("click", function () {
+                        let pdfUrl = this.getAttribute("data-pdf-url");
+                        window.open(pdfUrl, "_blank"); // Open in new tab
+                    });
+                });
+            }
+
+
+            $("#OpenAttachment").modal("show");
+            //window.location.href = "/PC/Patrol/PatrolReportDetails?Regno=" + rowIndex;
+        });
+
+
+        $(document).on('click', '.editButton', async function (e) {
+            e.stopPropagation();
+            const buttonId = $(this).attr('id');
+            const rowIndex = buttonId.split('_')[1];
+
+            const response = await GetMethod('@Url.Action("HandleReportRoutingAsync", "Patrol")', { Regno: rowIndex });
+
+            window.location.href = response.data;
+        });
+
+
+        // Open PDF file in new tab when the paperclip button is clicked
+        $(document).on('click', '.open-pdf-btn', function (e) {
+            e.stopPropagation(); // Prevent triggering row click event
+            const pdfUrl = $(this).data('pdf-url');
+            if (pdfUrl) {
+                window.open(pdfUrl, '_blank');
+            }
+        });
+
+
+
+
+         //Handle click event for edit button
+        $(document).on('click', '.deleteData',  function (e) {
+            e.stopPropagation();
+            const buttonId = $(this).attr('id');
+            const rowIndex = buttonId.split('_')[1];
+
+
+            let searchData = regisTable.filter(item => item.RegNo === rowIndex);
+            Swal.fire({
+                title: "Remove this data?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    let formdata = new FormData();
+                    formdata.append('Registration', rowIndex);
+                    formdata.append('Filepath', searchData[0].Filepath);
+
+                    let res = await postMethod('@Url.Action("DeleteRegistration", "Patrol")', formdata);
+                    if (res?.Success) {
+                         Swal.fire({
+                             title: "Success",
+                             text: res.Message,
+                             icon: "success",
+                             showConfirmButton: false,
+                             timer: 1500
+                         }).then(() => {
+                             RegistrationTable();
+                         });
+                     }
+
+                }
+            });
+        });
+
+
+
+        // 🔍 Search functionality
+        const searchTable = () => {
+            const query = ($('#searchbox').val() || '').toLowerCase();
+
+            filteredData = dataArray.filter(item =>
+                item.RegNo.toLowerCase().includes(query)
+            );
+
+            currentPage = 1;
+            renderTable(currentPage);
+            renderPagination();
+        };
+
+        // Add event listener for search input
+        $('#searchbox').on('input', searchTable);
+
+        // Initialize table and pagination
+        window.changePage = changePage;
+        renderTable(currentPage);
+        renderPagination();
+    }
+
+    function loadingDisplay() {
+        TableDisplay.empty();
+        var loadData = `<tr>
+                        <td colspan='9'>
+                            <div class='Loadercontainer'>
+                                <span class="loader"></span>
+                                <p id="loadingStepText">Fetching data from the database..</p>
+                            </div>
+                        </td>
+                    </tr>`;
+        TableDisplay.append(loadData);
+    }
+
+    function Loadingsteps(callback) {
+        const steps = [
+            "Fetching data from the database...",
+            "Processing data...",
+            "Finalizing table view..."
+        ];
+
+        let stepIndex = 0;
+
+        const interval = setInterval(() => {
+            if (stepIndex < steps.length) {
+                const stepText = document.getElementById("loadingStepText");
+                if (stepText) stepText.innerText = steps[stepIndex];
+                stepIndex++;
+            } else {
+                clearInterval(interval);
+                if (typeof callback === "function") callback();
+            }
+        }, 800);
+    }
+
+   document.addEventListener("DOMContentLoaded", function () {
+    // Delegate click events from the table body
+    document.getElementById("MasterlistData").addEventListener("click", function (e) {
+        const button = e.target.closest(".open-pdf-btn");
+        if (button) {
+            e.preventDefault();
+
+            const fileUrl = button.getAttribute("data-pdf-url");
+
+            if (!fileUrl) {
+                alert("No file path provided.");
+                return;
+            }
+
+            // Open file in a new tab/window
+            window.open(fileUrl, "_blank");
+        }
+    });
+});
+
+    $(document).ready(() => {
+        if (ActionRestrict() === false) {
+            $('#Showadd').prop('disabled', true);
+            $("#hiddenColumn").hide();
+        }
+
+        RegistrationTable();
+    });
+
+</script>

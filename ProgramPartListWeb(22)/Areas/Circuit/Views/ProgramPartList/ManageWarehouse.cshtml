@@ -1,0 +1,591 @@
+﻿
+@{
+    ViewBag.Title = "ManageWarehouse";
+    Layout = "~/Areas/Circuit/Views/Shared/_LayoutPartlist.cshtml";
+}
+
+
+<h5>Warehouse Management</h5>
+
+
+<div class="tabs mt-4">
+    <div class="tabs__header d-flex gap-2">
+        <div class="active">Request Warehouse</div>
+        <div>PARTS REQUEST SUMMARY </div>
+        <div>PRS Database</div>
+    </div>
+
+    <div class="tabs__body">
+        <div class="active" style="width: 100%;">
+
+            <table class="SeriesTable">
+                <thead>
+                    <tr>
+                        <th>Ambassador No.</th>
+                        <th>Partname</th>
+                        <th>Code</th>
+                        <th>location</th>
+                        <th>Reel Qty</th>
+                        <th>Buyer</th>
+                        <th>Requested</th>
+                    </tr>
+                </thead>
+                <tbody id="datarequestTable">
+                </tbody>
+            </table>
+
+
+
+            <div class="Emptytablewrapper" id="empyid">
+                <img src="~/Content/Images/no-data.png" />
+                <span>No Request data</span>
+                <p>Click below button to add the request data</p>
+                <button id="requestbtn"><i class='bx bx-import'></i>  Request Forms</button>
+
+            </div>
+
+            <div class="" id="requestaction">
+                <div class="d-flex justify-content-between align-items-center">
+                    <button id="additionalrequestbtn" class="btn bg-light text-dark btn-outline-dark">Additional Request</button>
+
+                    <div>
+                        <button id="clearbtn" class="btn btn-light ">Clear</button>
+                        <button id="saveallbtn" class="btn btn-success">Save</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div style="width: 100%;">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <span>Total selected item: <span id="countselect">0</span>/20</span>
+                <button id="exportbtn"><i class='bx bx-export'></i> Export</button>
+            </div>
+
+            <table class="SeriesTable">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Date</th>
+                        <th>Part Name</th>
+                        <th>Ambassador</th>
+                        <th>BARCODE LABEL</th>
+                        <th>Location</th>
+                        <th>CODE</th>
+                        <th>Quantity Request</th>
+                    </tr>
+                </thead>
+                <tbody id="SummarylistDataTable">
+                </tbody>
+            </table>
+
+            <div id="summaryrequestContainer" class="pagination"></div>
+        </div>
+
+        <div style="width: 100%;">
+            <table class="SeriesTable">
+                <thead>
+                    <tr>
+                        <th>Ambassador No.</th>
+                        <th>Partname</th>
+                        <th>Code</th>
+                        <th>location</th>
+                        <th>Reel Qty</th>
+                        <th>Buyer</th>
+                    </tr>
+                </thead>
+                <tbody id="MasterlistdataTable">
+                </tbody>
+            </table>
+
+            <div id="paginationContainer" class="pagination"></div>
+
+            @*
+                <div class="masterlistfooter d-flex align-items-center justify-content-between">
+                    <span>Showing 1 to 10 of 60 entries</span>
+                    <div class="index_buttons">
+
+                    </div>
+                </div>*@
+        </div>
+
+    </div>
+</div>
+
+
+
+<div class="modal fade modal-m" id="addrequestmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <div class="custom_modal_header">
+                    <div class="custom_modal__icon">
+                        <div class="custom_icon_container">
+                            <i class='bx bx-plus'></i>
+                        </div>
+                        <div class="custom_modal_title">
+                            <span>Add new Series data</span>
+                            <p>Fill all the required input</p>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+                <form method="post" class="mt-4" id="requestforms" autocomplete="off">
+                    <div class="row">
+                        <div class="form_group col-12 mb-2">
+                            <label>Input Ambassador No.: </label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Enter Ambassador partnumber" name="AbassadorPartnum" id="AbassadorPartnum" required>
+                                <button id="optionsearch" class="btn btn-light btn-outline-dark" type="button"><i class='bx bx-search-alt'></i></button>
+                            </div>
+
+                        </div>
+
+                        <div class="form_group col-12  mb-2">
+                            <label>Partname: </label>
+                            <input type="text" name="partnametext" id="partnametext" />
+                        </div>
+
+
+
+                        <div class="form_group col-12 mb-2">
+                            <label>Location: </label>
+                            <input type="text" name="location" id="location" />
+                        </div>
+
+                        <div class="form_group col-12 mb-2">
+                            <label>Code: </label>
+                            <input type="text" name="Code" id="Code" />
+                        </div>
+
+                        <div class="form_group col-12 mb-2">
+                            <label>Quantity.per Reel: </label>
+                            <input type="text" name="Reel" id="Reel" />
+                        </div>
+
+                        <div class="form_group col-12 mb-2">
+                            <label>Buyer: </label>
+                            <input type="text" name="Buyer" id="Buyer" />
+                        </div>
+
+                        <div class="form_group col-12 mb-2">
+                            <label>Needed Quantity: </label>
+                            <input type="text" name="Request_Quantity" id="Request_Quantity" />
+                        </div>
+
+                        <div class="form_group col-12 mb-3">
+                            <label>Requested By: </label>
+                            <input type="text" name="Requestby" id="Requestby" />
+                        </div>
+
+                        <div class="d-flex align-items-center gap-2 justify-content-end">
+                            <button type="button" class="btn btn-light btn-outline-secondary" data-bs-dismiss="modal"><i class='bx bx-x'></i> Cancel</button>
+                            <button type="submit" class="btn btn-success"> Save <i class='bx bx-save'></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script src="~/Scripts/Utilities.js"></script>
+<script src="~/Scripts/html5-qrcode.min.js"></script>
+<script src="~/Scripts/sweetalert2.min.js"></script>
+<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+<script type="text/javascript">
+
+    const maxSelection = 20; // Limit of selected checkboxes
+    let selectedCount = 0;   // Counter for selected checkboxes
+    const selectedRows = []; // Array to store selected rows
+
+
+    // FORMS
+    const reqforms = document.getElementById("requestforms");
+    const firstinput = document.getElementById("AbassadorPartnum");
+
+    // BUTTONS
+    const allsummary = document.getElementById("saveallbtn");
+    const clearbutton = document.getElementById("clearbtn");
+    const requestbutton = document.getElementById("requestbtn");
+    const addrequestbutton = document.getElementById("additionalrequestbtn");
+    const optionsearchbtn = document.getElementById("optionsearch");
+    const exportbutton = document.getElementById("exportbtn");
+
+    let formDataArray = [];
+
+
+    reqforms.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        let formData = new FormData(reqforms);
+        const data = Object.fromEntries(formData);
+        formDataArray.push(data);
+
+        if (formDataArray.length > 0) {
+            $('#empyid').hide();
+            $("#requestaction").show();
+
+            var SetData = $("#datarequestTable");
+            $("#datarequestTable").empty();
+
+            $.each(formDataArray, function (index, rowData) {
+
+                var getdata = `
+                             <tr >
+                                 <td>${rowData.AbassadorPartnum}</td>
+                                 <td>${rowData.partnametext}</td>
+                                 <td>${rowData.Code}</td>
+                                 <td>${rowData.location}</td>
+                                 <td>${rowData.Reel}</td>
+                                 <td>${rowData.Buyer}</td>
+                                 <td>${rowData.Requestby}</td>
+                             </tr>
+                         `;
+                SetData.append(getdata);
+            });
+        } else {
+            $('#empyid').show();
+        }
+
+        // Iterate over the FormData entries and push them to the array
+
+        reqforms.reset();
+
+        firstinput.focus();
+    });
+    firstinput.addEventListener('keydown', async function (e) {
+        if (e.key === 'Enter') {
+              e.preventDefault(); // Prevent default Enter behavior (like form submission)
+              var params = "@ViewBag.SeriesNo";
+              let parts = this.value;
+
+              try {
+                  const result = await $.ajax({
+                      url: '@Url.Action("GetWarePartnumberDetails", "ProgramPartList")',
+                      type: 'GET',
+                      data: { partnum: parts.trim() }
+                  });
+
+                  $("#partnametext").val(result.Data[0].Item_name != null ? result.Data[0].Item_name : 'N/A');
+                  $("#Code").val(result.Data[0].ItemCode != null ? result.Data[0].ItemCode : 'N/A');
+                  $("#location").val(result.Data[0].Item_name != null ? result.Data[0].Item_name : 'N/A');
+                  $("#Reel").val(result.Data[0].Reel_Qty != null ? result.Data[0].Reel_Qty : 0);
+                  $("#Buyer").val(result.Data[0].Buyer != null ? result.Data[0].Buyer : 'N/A');
+
+                  $("#Request_Quantity").focus();
+
+              } catch (error) {
+                  console.error("Error loading series details:", error);
+              }
+
+        }
+    });
+    allsummary.addEventListener('click', (e) => {
+
+        fetch('/Circuit/ProgramPartList/SaveRequestSummaryList', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formDataArray)
+        })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+
+        formDataArray = [];
+        $("#datarequestTable").empty();
+        $('#empyid').show();
+        $("#requestaction").hide();
+    });
+    clearbutton.addEventListener('click', function (e) {
+        formDataArray = [];
+        $("#datarequestTable").empty();
+        reqforms.reset();
+    });
+    requestbutton.addEventListener('click', function (e) {
+        $("#addrequestmodal").modal("show");
+    });
+    addrequestbutton.addEventListener('click', function (e) {
+        $("#addrequestmodal").modal("show");
+    });
+    optionsearchbtn.addEventListener('click', async function  (e) {
+         e.preventDefault(); // Prevent default Enter behavior (like form submission)
+         var params = "@ViewBag.SeriesNo";
+        let parts = $("#AbassadorPartnum").val();
+
+         try {
+             const result = await $.ajax({
+                 url: '@Url.Action("GetWarePartnumberDetails", "ProgramPartList")',
+                 type: 'GET',
+                 data: { partnum: parts.trim() }
+             });
+
+             $("#partnametext").val(result.Data[0].Item_name != null ? result.Data[0].Item_name : 'N/A');
+             $("#Code").val(result.Data[0].ItemCode != null ? result.Data[0].ItemCode : 'N/A');
+             $("#location").val(result.Data[0].Item_name != null ? result.Data[0].Item_name : 'N/A');
+             $("#Reel").val(result.Data[0].Reel_Qty != null ? result.Data[0].Reel_Qty : 0);
+             $("#Buyer").val(result.Data[0].Buyer != null ? result.Data[0].Buyer : 'N/A');
+
+             $("#Request_Quantity").focus();
+
+         } catch (error) {
+             console.error("Error loading series details:", error);
+         }
+    });
+    exportbutton.addEventListener('click', function (e) {
+        e.preventDefault();
+    });
+
+    const GetpartnumberMasterlist = async () => {
+        let res = await FetchAuthenticate('@Url.Action("GetPartlistDatabase", "ProgramPartList")', {});
+        if (res && res.Success) {
+            $("#MasterlistdataTable").empty();
+            MasterPagination(res.Data, 'MasterlistdataTable', 'paginationContainer', 10, 5);
+        }
+    }
+    const GetPartRequestDatalist = async () => {
+         let res = await FetchAuthenticate('@Url.Action("GetPartlistRequestSummary", "ProgramPartList")', {});
+         if (res && res.Success) {
+             $("#SummarylistDataTable").empty();
+             SummaryRequestPagination(res.Data, 'SummarylistDataTable', 'summaryrequestContainer', 10, 5);
+         }
+    };
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const tabs = document.querySelector(".tabs");
+        const tabHeaders = tabs.querySelectorAll(".tabs__header > div");
+        const tabBodies = tabs.querySelectorAll(".tabs__body > div");
+
+        tabHeaders.forEach((tabHeader, index) => {
+            tabHeader.addEventListener("click", () => {
+                // Check if the clicked tab is already active
+                if (tabHeader.classList.contains("active")) return;
+
+                // Remove active class from all headers and bodies
+                tabHeaders.forEach(header => header.classList.remove("active"));
+                tabBodies.forEach(body => body.classList.remove("active"));
+
+                // Add active class to the clicked header and its corresponding body
+                tabHeader.classList.add("active");
+                tabBodies[index].classList.add("active");
+
+                // Perform additional logic based on the selected tab
+                switch (index) {
+                    case 1:
+                        document.getElementById('countselect').textContent = 0;
+                        GetPartRequestDatalist();
+                        break;
+                    case 2:
+                        GetpartnumberMasterlist();
+                        break;
+                    default:
+                        break;
+                }
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        $("#requestaction").hide();
+        $("#Request_Quantity").on('input', function () {
+            const inputvalue = $(this).val(); // Get current input value
+            // Check if the input contains non-numeric characters
+            if (/[^0-9.]/.test(inputvalue) || (inputvalue.match(/\./g) || []).length > 1) {
+                $(this).val(inputvalue.replace(/\D/g, '')); // Remove non-numeric characters
+            }
+        });
+
+    });
+
+    function MasterPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 10, visibleButtons = 5) {
+        let currentPage = 1;
+        const totalRecords = dataArray.length;
+        const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+        const renderTable = (page) => {
+            const startIndex = (page - 1) * recordsPerPage;
+            const endIndex = Math.min(startIndex + recordsPerPage, totalRecords);
+            var tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = '';
+
+            for (let i = startIndex; i < endIndex; i++) {
+                const rowData = dataArray[i];
+                let getdata = '';
+
+                getdata = `
+                         <tr>
+                            <td data-cell='Ambassador No.'>${rowData.AbassadorPartnum}</td>
+                            <td data-cell='Partname'>${rowData.Item_name}</td>
+                            <td data-cell='Code'>${rowData.ItemCode}</td>
+                            <td data-cell='location'>${rowData.Location}</td>
+                            <td data-cell='Reel Qty'>${rowData.Reel_Qty}</td>
+                            <td data-cell='Buyer'>${rowData.Buyer} </td>
+                         </tr>`;
+
+
+                tableBody.innerHTML += getdata;
+            }
+        };
+
+        const renderPagination = () => {
+            const paginationContainer = document.getElementById(paginationId);
+            paginationContainer.innerHTML = '';
+
+            // Calculate visible button range
+            let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+            let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+            if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = Math.max(1, endPage - visibleButtons + 1);
+            }
+
+            if (totalPages <= visibleButtons) {
+                startPage = 1;
+                endPage = totalPages;
+            }
+
+            // Always render "Previous" button
+            paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})"><i class='bx bx-chevron-left' ></i></button>`;
+
+            // Render pagination number buttons
+            for (let i = startPage; i <= endPage; i++) {
+                paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}"  onclick="changePage(${i})">${i}</button>`;
+            }
+
+            // Always render "Next" button
+            paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})"><i class='bx bx-chevron-right' ></i></button>`;
+        };
+
+        const changePage = (page) => {
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                renderTable(currentPage);
+                renderPagination();
+            }
+        };
+
+        window.changePage = changePage;
+
+        renderTable(currentPage);
+        renderPagination();
+    }
+    function SummaryRequestPagination(dataArray, tableBodyId, paginationId, recordsPerPage = 10, visibleButtons = 5) {
+        let currentPage = 1;
+        const totalRecords = dataArray.length;
+        const totalPages = Math.ceil(totalRecords / recordsPerPage);
+
+        let selectedRows = []; // Array to keep track of selected rows
+        const maxSelection = 20;
+
+        const renderTable = (page) => {
+            const startIndex = (page - 1) * recordsPerPage;
+            const endIndex = Math.min(startIndex + recordsPerPage, totalRecords);
+            const tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = '';
+
+            for (let i = startIndex; i < endIndex; i++) {
+                const rowData = dataArray[i];
+                const isChecked = selectedRows.includes(i); // Check if the row is already selected
+
+                const getdata = `
+               <tr>
+                  <td data-cell='Select'>
+                      <input type='checkbox'
+                             class="rowCheckbox"
+                             data-index='${i}'
+                             ${isChecked ? 'checked' : ''} />
+                  </td>
+                  <td data-cell='Date'>${rowData.DateCreated}</td>
+                  <td data-cell='Part Name'>${rowData.Item_name}</td>
+                  <td data-cell='Ambassador'>${rowData.AbassadorPartnum}</td>
+                  <td data-cell='BARCODE LABEL'>${rowData.Barcode}</td>
+                  <td data-cell='Location'>${rowData.Location}</td>
+                  <td data-cell='CODE'>${rowData.ItemCode}</td>
+                  <td data-cell='Quantity Request'>${rowData.Request_Quantity}</td>
+               </tr>`;
+
+                tableBody.innerHTML += getdata;
+            }
+        };
+
+        const renderPagination = () => {
+            const paginationContainer = document.getElementById(paginationId);
+            paginationContainer.innerHTML = '';
+
+            let startPage = Math.max(1, currentPage - Math.floor(visibleButtons / 2));
+            let endPage = Math.min(totalPages, startPage + visibleButtons - 1);
+
+            if (endPage > totalPages) {
+                endPage = totalPages;
+                startPage = Math.max(1, endPage - visibleButtons + 1);
+            }
+
+            if (totalPages <= visibleButtons) {
+                startPage = 1;
+                endPage = totalPages;
+            }
+
+            paginationContainer.innerHTML += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})"><i class='bx bx-chevron-left' ></i></button>`;
+
+            for (let i = startPage; i <= endPage; i++) {
+                paginationContainer.innerHTML += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+            }
+
+            paginationContainer.innerHTML += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})"><i class='bx bx-chevron-right' ></i></button>`;
+        };
+
+        const changePage = (page) => {
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                renderTable(currentPage);
+                renderPagination();
+            }
+        };
+
+        window.changePage = changePage;
+
+        renderTable(currentPage);
+        renderPagination();
+
+        // Event delegation for handling checkbox changes
+        document.getElementById(tableBodyId).addEventListener('change', function (e) {
+            if (e.target.classList.contains('rowCheckbox')) {
+                const rowIndex = parseInt(e.target.getAttribute('data-index'), 10);
+                const rowData = dataArray[rowIndex];
+
+                if (e.target.checked) {
+                    if (selectedRows.length >= maxSelection) {
+                        e.target.checked = false;
+                        alert(`You can select a maximum of ${maxSelection} rows.`);
+                        return;
+                    }
+                    //if (!selectedRows.includes(rowIndex)) {
+                    //    selectedRows.push(rowIndex);
+                    //}
+                    selectedRows.push(rowData); // Add the whole row data to selectedRows
+                } else {
+                    selectedRows = selectedRows.filter(row => row.Barcode !== rowData.Barcode); // Remove the row data
+                }
+
+                document.getElementById('countselect').textContent = selectedRows.length;
+                console.log("Selected checkbox count: " + selectedRows.length);
+                console.log(selectedRows);
+            }
+        });
+    }
+
+
+
+</script>

@@ -1,0 +1,1105 @@
+﻿
+@{
+    ViewBag.Title = "Inventorylist";
+    Layout = "~/Areas/Hydroponics/Views/Shared/HydroPartsLayout.cshtml";
+}
+
+
+    <div class="actions-bar">
+        <div class="search-inputs">
+            <div class="search-box">
+                <div style="display:flex;align-items:center;justify-content:centser;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48">
+                        <path d="M0 0h48v48H0z" fill="none" />
+                        <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="4">
+                            <path d="M21 38c9.389 0 17-7.611 17-17S30.389 4 21 4S4 11.611 4 21s7.611 17 17 17Z" />
+                            <path stroke-linecap="round" d="M26.657 14.343A7.98 7.98 0 0 0 21 12a7.98 7.98 0 0 0-5.657 2.343m17.879 18.879l8.485 8.485" />
+                        </g>
+                    </svg>
+
+                </div>
+                <input type="text" placeholder="Search here ..." id="searchbox">
+            </div>
+
+            <select id="StockStatusID" class="dropdown">
+                <option value="">-- Filter status --</option>
+                <option value="Sufficient">filter: Sufficient</option>
+                <option value="Restock">filter: Restock</option>
+                <option value="Out of stocks">filter: Out of Stocks</option>
+            </select>
+
+            <select id="Categoryselect" class="dropdown">
+                <option value="0">-- Category --</option>
+            </select>
+
+
+
+
+            @*<div class="select-container">
+                    <select id="StockStatusID">
+                        <option value="">-- SELECT STATUS --</option>
+                        <option value="Sufficient">Sufficient</option>
+                        <option value="Restock">Restock</option>
+                        <option value="Out of stocks">Out of Stocks</option>
+                    </select>
+                </div>
+                <div class="select-container">
+                    <select id="Categoryselect">
+                        <option value="0">-- CATEGORY --</option>
+                    </select>
+                </div>*@
+        </div>
+        <div class="action-buttons">
+            <button id="Showadd" class="custbtn custbtn-secondary" type="button">
+                <div style="width:16px;height:16px;display:flex;align-items:center;justify-content:center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16">
+                        <path d="M0 0h16v16H0z" fill="none" />
+                        <path fill="currentColor" d="M7.752.066a.5.5 0 0 1 .496 0l3.75 2.143a.5.5 0 0 1 .252.434v3.995l3.498 2A.5.5 0 0 1 16 9.07v4.286a.5.5 0 0 1-.252.434l-3.75 2.143a.5.5 0 0 1-.496 0l-3.502-2l-3.502 2.001a.5.5 0 0 1-.496 0l-3.75-2.143A.5.5 0 0 1 0 13.357V9.071a.5.5 0 0 1 .252-.434L3.75 6.638V2.643a.5.5 0 0 1 .252-.434zM4.25 7.504L1.508 9.071l2.742 1.567l2.742-1.567zM7.5 9.933l-2.75 1.571v3.134l2.75-1.571zm1 3.134l2.75 1.571v-3.134L8.5 9.933zm.508-3.996l2.742 1.567l2.742-1.567l-2.742-1.567zm2.242-2.433V3.504L8.5 5.076V8.21zM7.5 8.21V5.076L4.75 3.504v3.134zM5.258 2.643L8 4.21l2.742-1.567L8 1.076zM15 9.933l-2.75 1.571v3.134L15 13.067zM3.75 14.638v-3.134L1 9.933v3.134z" />
+                    </svg>
+
+                </div>
+                Add Stocks
+            </button>
+            <button id="AddItem" class="custbtn custbtn-primary" type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
+                    <path d="M0 0h48v48H0z" fill="none" />
+                    <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
+                        <path d="M19.158 4.362c.115-.24.281-.451.517-.575c.56-.294 1.868-.787 4.326-.787s3.765.493 4.325.787c.236.124.402.335.518.575c.335.7 1.082 2.314 1.643 3.92a17 17 0 0 1 3.878 2.242c1.672-.317 3.447-.477 4.222-.537c.265-.02.531.018.756.16c.535.339 1.616 1.224 2.844 3.353c1.23 2.129 1.456 3.507 1.482 4.14c.01.266-.089.515-.24.735c-.439.641-1.464 2.097-2.574 3.386a17.2 17.2 0 0 1 0 4.478c1.11 1.29 2.135 2.745 2.574 3.386c.15.22.25.47.24.735c-.026.633-.253 2.011-1.482 4.14s-2.31 3.014-2.844 3.353c-.225.142-.49.18-.757.16c-.775-.06-2.549-.22-4.22-.537a17 17 0 0 1-3.878 2.243c-.562 1.605-1.309 3.218-1.644 3.92c-.116.24-.282.45-.518.574c-.56.294-1.867.787-4.325.787s-3.765-.493-4.326-.787c-.236-.124-.402-.334-.517-.575c-.335-.7-1.083-2.314-1.644-3.92a17 17 0 0 1-3.878-2.242c-1.672.317-3.446.477-4.22.537c-.266.02-.532-.018-.757-.16c-.535-.339-1.616-1.224-2.845-3.353s-1.455-3.507-1.48-4.14c-.012-.266.088-.515.239-.735c.439-.641 1.464-2.097 2.574-3.386a17.2 17.2 0 0 1 0-4.478c-1.11-1.29-2.135-2.745-2.575-3.386c-.15-.22-.25-.47-.24-.735c.027-.633.253-2.011 1.482-4.14s2.31-3.014 2.844-3.353c.226-.142.491-.18.757-.16c.775.06 2.55.22 4.221.537a17 17 0 0 1 3.878-2.243c.561-1.605 1.309-3.219 1.644-3.92Z" />
+                        <path d="M14 24a10 10 0 1 0 20 0a10 10 0 1 0-20 0" />
+                    </g>
+                </svg>
+
+                Add Parts
+            </button>
+
+        </div>
+    </div>
+
+    <div class="summary-cards">
+        <div class="cardStock">
+            <div class="card-icon total-items">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path fill="currentColor" d="m15.5 19.214l-3.558-3.558l.708-.708l2.85 2.85l5.689-5.688l.707.707zM20 10h-1V5.616q0-.231-.192-.424T18.384 5H16v2.23H8V5H5.616q-.231 0-.424.192T5 5.616v12.769q0 .23.192.423t.423.192H11v1H5.616q-.672 0-1.144-.472T4 18.385V5.615q0-.67.472-1.143Q4.944 4 5.616 4h4.636q.14-.586.623-.985q.483-.4 1.125-.4q.654 0 1.134.4q.48.398.62.985h4.63q.672 0 1.144.472T20 5.616zm-7.422-4.999q.23-.23.23-.578t-.23-.578t-.578-.23t-.578.23t-.23.578t.23.578t.578.23t.578-.23" />
+                </svg>
+
+            </div>
+            <div class="card-content">
+                <h3 id="Countlist">0</h3>
+                <div class="metric-label">TOTAL PARTS</div>
+            </div>
+        </div>
+        <div class="cardStock">
+            <div class="card-icon low-stock">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path fill="currentColor" d="M20.057 22H3.943a3.023 3.023 0 0 1-2.618-4.534L9.382 3.511a3.023 3.023 0 0 1 5.236 0l8.057 13.955A3.023 3.023 0 0 1 20.057 22" opacity=".5" />
+                    <circle cx="12" cy="17" r="1" fill="currentColor" />
+                    <path fill="currentColor" d="M12 14a1 1 0 0 1-1-1V9a1 1 0 0 1 2 0v4a1 1 0 0 1-1 1" />
+                </svg>
+
+            </div>
+            <div class="card-content">
+                <h3 id="lowStockItems">0</h3>
+                <div class="metric-label">LOW STOCKS</div>
+            </div>
+        </div>
+        <div class="cardStock">
+            <div class="card-icon out-of-stock">
+
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5">
+                        <path stroke-linejoin="round" d="M12 22c-.818 0-1.6-.33-3.163-.988C4.946 19.373 3 18.554 3 17.175V7.542M12 22c.818 0 1.6-.33 3.163-.988C19.054 19.373 21 18.554 21 17.175V7.542M12 22v-9.97m9-4.488c0 .613-.802 1-2.405 1.773l-2.92 1.41c-1.804.87-2.705 1.304-3.675 1.304m9-4.487c0-.612-.802-.999-2.405-1.772L17 5M3 7.542c0 .613.802 1 2.405 1.773l2.92 1.41c1.804.87 2.705 1.304 3.675 1.304M3 7.542c0-.612.802-.999 2.405-1.772L7 5m-1 8.026l2 .997" />
+                        <path d="m10 2l2 2m0 0l2 2m-2-2l-2 2m2-2l2-2" />
+                    </g>
+                </svg>
+            </div>
+            <div class="card-content">
+                <h3 id="outOfStockItems">0</h3>
+                <div class="metric-label">OUT OF STOCKS</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="data-table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width:30%;">PART NO. / PARTNAME</th>
+                    <th>SUPPLIER</th>
+                    <th>CURRENT STOCK</th>
+                    <th >REQUIRE QTY</th>
+                    <th >STATUS</th>
+                    <th style="width:80px; text-align: center;"></th>
+                </tr>
+            </thead>
+            <tbody id="InventorylistData">
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+    @*<div class="InspecTable">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 25%; text-align: left; padding-left: 1.5em !important;"><span style="margin-left: .5em;"><i class="fa-solid fa-screwdriver-wrench"></i>  Part No. / Partname</span> </th>
+                        <th> <i class="fa-regular fa-address-card"></i> <span style="margin-left: .5em;">Supplier</span>  </th>
+                        <th> <i class="fa-solid fa-box-open"></i>   <span style="margin-left: .5em;">Current Stock</span>  </th>
+                        <th> <i class="fa-regular fa-square-check"></i> <span style="margin-left: .5em;">Require Qty</span>  </th>
+                        <th style="width: 15%;"> <i class="fa-solid fa-database"></i> <span style="margin-left: .5em;">Status</span>  </th>
+
+                    </tr>
+                </thead>
+                <tbody id="InventorylistData">
+                </tbody>
+            </table>
+        </div>*@
+
+
+
+    @Html.Partial("_AddStocksModal")
+
+
+
+    @*<script type="module" asp-append-version="true">
+            import { initInventoryPage }
+            from '@Url.Content("~/Scripts/systems/Inventory.js?v=15")';
+
+            initInventoryPage();
+        </script>*@
+
+
+<script type="text/javascript">
+    let IsRestrictRole;
+    let Inventlist = [];
+    let loadData = [];
+    let userRole;
+
+    // Modals
+    const addmodal = document.getElementById("Showadd");
+
+    // Forms
+    const addparts = document.getElementById("addinventform");
+    const editparts = document.getElementById("EditInventform");
+    const addQuanforms = document.getElementById("AddQuantityform");
+    const changeWarn = document.getElementById("changeWarning");
+
+    let TableDisplay = $("#InventorylistData");
+    const resultBox = document.querySelector(".namesdisplay");
+
+    const InventoryTable = async () => {
+        $("#Countlist").text("0");
+        $("#lowStockItems").text("0");
+        $("#outOfStockItems").text("0");
+
+        loadingDisplay();
+
+        Loadingsteps(async () => {
+            let result = await GetMethod('@Url.Action("GetHydroInventory", "Hydro")', {});
+
+            if (result && result.Success) {
+                Inventlist = result.data;
+                const lowStockCount = Inventlist.filter(item => item.Status === "Restock").length;
+                const OutStockCount = Inventlist.filter(item => item.Status === "Out of stocks").length;
+
+                $("#Countlist").text(Inventlist.length);
+                $("#lowStockItems").text(lowStockCount);
+                $("#outOfStockItems").text(OutStockCount);
+
+                TableDisplay.empty(); // Removing the Loading Display
+
+                InventoryPagination(Inventlist, 'InventorylistData');
+
+
+            } else {
+                const loadData = `<tr>
+                  <td colspan='9'>
+                      🔍 ${result.Message}
+                  </td>
+              </tr>`;
+
+                TableDisplay.empty();
+                TableDisplay.append(loadData);
+
+            }
+        });
+    }
+
+    const GetCategoryDatalist = async () => {
+        let res = await GetMethod('@Url.Action("GetCategorylist", "Hydro")', {});
+          if (res && res.Success) {
+
+              $.each(res.data, function (index, row) {
+                  $("#Categoryselect").append("<option value='" + row.CategoryID + "'>" + row.CategoryName + "</option>");
+              });
+
+              $.each(res.data, function (index, row) {
+                  $("#addCategory").append("<option value='" + row.CategoryID + "'>" + row.CategoryName + "</option>");
+              });
+          }
+     };
+
+
+    const ActionRestrict = () => {
+        userRole = localStorage.getItem("UserRole");
+        if (userRole === "Manager" || userRole === "Supervisor") {
+            return false;
+        }
+    }
+
+    function InventoryPagination(dataArray, tableBodyId) {
+        let filteredData = [...dataArray];
+
+        // === Overlay setup (once) ===
+        if (!document.getElementById("imageOverlay")) {
+            $("body").append(`
+             <div id="imageOverlay">
+                 <img id="overlayImage" src="" />
+             </div>
+         `);
+        }
+
+        const renderTable = () => {
+            const tableBody = document.getElementById(tableBodyId);
+            tableBody.innerHTML = "";
+
+            $.each(filteredData, function (index, row) {
+                let qty = formatQuantity(row.PartID, row.CurrentQty, row.Unit);
+                let warn = formatQuantity(row.PartID, row.WarningLevel, row.Unit)
+
+
+                    // Image Display
+                let imagePath = row.ImageParts
+                                    ? `/Hydro/DisplaytheImage?filename=${encodeURIComponent(row.ImageParts)}`
+                    : '@Url.Content("~/Content/Images/no-image.png")';
+
+
+                if (ActionRestrict() === false) {
+
+                }
+
+
+                let IsAccessIncrement = (ActionRestrict() === false) ?
+                    `<button id="decrement" class="btn btn-secondary" ><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                          <path d="M0 0h24v24H0z" fill="none" />
+                          <path fill="currentColor" d="M18 12.998h-5v5a1 1 0 0 1-2 0v-5H6a1 1 0 0 1 0-2h5v-5a1 1 0 0 1 2 0v5h5a1 1 0 0 1 0 2" />
+                        </svg></button>`
+                    : ` <button id="increment" class="stock-btn stock-btn-minus" onclick="incrementPart('${row.StockID}',  ${row.CurrentQty}, ${row.ReorderLevel}, '${row.Unit}')"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                          <path d="M0 0h24v24H0z" fill="none" />
+                          <path fill="currentColor" d="M18 12.998h-5v5a1 1 0 0 1-2 0v-5H6a1 1 0 0 1 0-2h5v-5a1 1 0 0 1 2 0v5h5a1 1 0 0 1 0 2" />
+                        </svg></button>`;
+
+
+                let IsAccessdecrease = (ActionRestrict() === false) ?
+                    `<button id="decrement" class="btn btn-secondary" >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+	                        <path d="M0 0h24v24H0z" fill="none" />
+	                        <path fill="currentColor" d="M18 12.998H6a1 1 0 0 1 0-2h12a1 1 0 0 1 0 2" />
+                        </svg>
+                    </button>`
+                    : `<button id="decrement" class="stock-btn stock-btn-plus" onclick="decrementPart('${row.StockID}', ${row.CurrentQty}, ${row.ReorderLevel}, '${row.Unit}')"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+	                    <path d="M0 0h24v24H0z" fill="none" />
+	                    <path fill="currentColor" d="M18 12.998H6a1 1 0 0 1 0-2h12a1 1 0 0 1 0 2" />
+                    </svg>
+                    </button>`;
+
+
+
+
+                   const rowHtml = `
+                                     <tr data-id="${row.PartID}"
+                                         data-category="${row.CategoryID}"
+                                         class='rowClick' id='editButton_${row.PartID}'>
+
+                                        <td data-cell="PartNo" >
+                                            <div class="part-info">
+                                                <div class="part-image">
+
+                                                    <img class="NoImages lazy"
+                                                       src='@Url.Content("~/Content/Images/no-image.png")'
+                                                       data-src="${imagePath}"
+                                                       loading="lazy"
+                                                       onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
+
+                                                </div>
+                                                <div class="part-details">
+                                                    <div class="part-name">${row.PartName ? row.PartName : "-"}</div>
+                                                    <div class="part-code">${row.PartNo}</div>
+                                                </div>
+                                            </div>
+                                         </td>
+
+
+                                         <td data-cell="Supplier">${row.Supplier ? row.Supplier : "-"}</td>
+                                         <td data-cell="CurrentQty" >
+                                                <div class="stock-control">
+                                                       ${IsAccessdecrease}
+                                                           <div class="stock-value">${qty}</div>
+                                                      ${IsAccessIncrement}
+                                                </div>
+                                         </td>
+                                         <td data-cell="WarningLevel" style="font-weight: 600;">${warn}</td>
+                                         <td data-cell="Approval" style='width: 100px;' >
+
+
+                                           <span class="badge ${getStatusClass(row.Status)}"> ${row.Status}</span>
+
+                                         </td>
+                                         <td data-cell="Delete" >
+
+                                              <div class="icon-btn-small">
+                                                 <button  class='Editbtnbutton' id='editButton_${row.StockID}' ">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24">
+	                                                    <path d="M0 0h24v24H0z" fill="none" />
+	                                                    <path fill="currentColor" d="M5 21h14c1.1 0 2-.9 2-2v-7h-2v7H5V5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2" />
+	                                                    <path fill="currentColor" d="M7 13v3c0 .55.45 1 1 1h3c.27 0 .52-.11.71-.29l9-9a.996.996 0 0 0 0-1.41l-3-3a.996.996 0 0 0-1.41 0l-9.01 8.99A1 1 0 0 0 7 13m10-7.59L18.59 7L17.5 8.09L15.91 6.5zm-8 8l5.5-5.5l1.59 1.59l-5.5 5.5H9z" />
+                                                    </svg>
+
+                                                 </button>
+                                             </div>
+
+                                          </td>
+                                     </tr>
+                                 `;
+                tableBody.insertAdjacentHTML("beforeend", rowHtml);
+
+                // Attach blur-up effect
+                const lazyImages = document.querySelectorAll("img.lazy[data-src]");
+                lazyImages.forEach(img => {
+                    const realSrc = img.getAttribute("data-src");
+                    img.onload = () => img.classList.add("loaded"); // smooth transition
+                    img.setAttribute("src", realSrc);
+                    img.removeAttribute("data-src");
+                });
+            });
+
+        };
+
+        // === CLICK HANDLER: Show overlay image ===
+        $(document).on('click', '.NoImages', function (e) {
+            e.stopPropagation();
+
+            let imgSrc = $(this).attr("src") || $(this).attr("data-src");
+            let $overlay = $("#imageOverlay");
+            let $overlayImg = $("#overlayImage");
+
+            // force load if only data-src exists
+            if ($overlayImg.attr("src") !== imgSrc) {
+                $overlayImg.attr("src", imgSrc);
+            }
+
+            $overlay.show(0, function () {
+                $overlay.addClass("show");
+            });
+        });
+
+        // === Hide overlay on click ===
+        $(document).on("click", "#imageOverlay", function () {
+            let $overlay = $(this);
+
+            // Remove .show → triggers scale-down + fade-out
+            $overlay.removeClass("show");
+
+            // Wait until transition ends, then hide
+            setTimeout(() => {
+                $overlay.hide();
+            }, 400); // match CSS transition
+        });
+
+
+
+        $(document).on('click', '.Editbtnbutton', function (e) {
+            e.stopPropagation(); // Prevent triggering the row click event
+            var rowId = $(this).attr('id');
+            var rowIndex = rowId.split('_')[1];
+
+
+
+            var filterdata = Inventlist.find(item => item.StockID === parseInt(rowIndex));
+            if (filterdata) {
+                let imagePath = filterdata.ImageParts
+                    ? `/Hydro/DisplaytheImage?filename=${encodeURIComponent(filterdata.ImageParts)}`
+                     : '@Url.Content("~/Content/Images/no-image.png")';
+
+                $("#EditPartID").val(filterdata.PartID);
+                $("#TempPartno").val(filterdata.PartNo);
+                $("#EditPartNo").val(filterdata.PartNo);
+                $("#EditPartName").val(filterdata.PartName);
+                $("#EditCategoryID").val(filterdata.CategoryID);
+                $("#EditUnit").val(filterdata.Unit);
+                $("#EditSupplier").val(filterdata.Supplier);
+                $("#EditReorderLevel").val(filterdata.ReorderLevel);
+                $("#EditWarningLevel").val(filterdata.WarningLevel);
+                $("#ExistingImageParts").val(filterdata.ImageParts);
+                $("#EditUnit_Price").val(filterdata.Unit_Price);
+
+
+                const previewContainer = document.getElementById('EditpreviewContainer');
+
+                if (filterdata.ImageParts !== null) {
+                    previewContainer.style.display = 'block';
+                    // ✅ Update the preview image
+                    $("#EditpreviewImage").attr("src", imagePath);
+
+
+                    // ✅ Optional: If you want to handle broken images gracefully
+                    $("#EditpreviewImage").on("error", function () {
+                        $(this).attr("src", '@Url.Content("~/Content/Images/no-image.png")');
+                    });
+                } else {
+                    previewContainer.style.display = 'None';
+                }
+
+
+
+
+                $("#EditModal").modal("show");
+
+
+
+            }
+
+        });
+
+
+        const searchTable = debounce(() => {
+            const query = $('#searchbox').val().toLowerCase();
+            $("#PartlistData tr").each(function () {
+                const partName = $(this).find("p").text().toLowerCase();
+                const partNo = $(this).find("small").text().toLowerCase();
+
+                if (partName.includes(query) || partNo.includes(query)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }, 300);
+
+
+        $('#searchbox').on('input', searchTable);
+
+        renderTable();
+    }
+
+
+
+
+
+    changeWarn.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        let forms = new FormData(e.target);
+        let res = await postMethod('@Url.Action("updateWarningStock", "Hydro")', forms);
+         if (res && res.Success) {
+              Swal.fire({
+                  title: "Success",
+                  text: res.Message,
+                  icon: "success",
+                  showConfirmButton: false,
+                  timer: 1500
+              }).then(() => {
+                  InventoryTable();
+                  $("#ChangeCostModal").modal('hide');
+              });
+          }
+
+    });
+
+
+    addparts.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        let formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        if (Inventlist.some(res => res.PartNo === data.PartNo)) {
+            Swal.fire({
+                icon: "error",
+                text: "Part no is already exist",
+                timer: 1500,
+                showConfirmButton: false
+            });
+            return;
+        }
+
+        let res = await postMethod('@Url.Action("AddInventoryParts", "Hydro")', formData);
+          if (res && res.Success) {
+               Swal.fire({
+                   title: "Success",
+                   text: res.Message,
+                   icon: "success",
+                   showConfirmButton: false,
+                   timer: 1500
+               }).then(() => {
+                   InventoryTable();
+                   e.target.reset();
+                   document.getElementById("partsimage").value = "";
+
+                   // Hide modal
+                   $("#AddnewModal").modal("hide");
+               });
+           }
+    });
+    editparts.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        let formData = new FormData(e.target);
+        const data = Object.fromEntries(formData)
+        let res = await postMethod('@Url.Action("EditInventoryParts", "Hydro")', formData);
+
+       if (res?.Success) {
+          Swal.fire({
+              title: "Success",
+              text: res.Message,
+              icon: "success",
+              showConfirmButton: false,
+              timer: 1500
+              }).then(() => {
+                  InventoryTable();
+                  $("#EditModal").modal('hide');
+              });
+          }
+
+    });
+
+     $("#btnSave").on('click', async function (e) {
+         e.preventDefault();
+       
+         let formData = new FormData();
+         formData.append('Items', JSON.stringify(requestItems));
+         const data = Object.fromEntries(formData);
+         let res = await postMethod('@Url.Action("AddNewStocks", "Hydro")', requestItems);
+         if (res?.Success) {
+             Swal.fire({
+                 title: "Success",
+                 text: res.Message,
+                 icon: "success",
+                 showConfirmButton: false,
+                 timer: 1500
+             }).then(() => {
+                 InventoryTable();
+                 $("#AddRequestModal").modal('hide');
+             });
+
+
+         }
+     });
+
+
+    //$("#Categoryselect").on('change', function (e) {
+    //    e.preventDefault();
+    //    let filterdata = Inventlist.filter(item => item.CategoryID === parseInt(e.target.value));
+    //    if (parseInt(e.target.value) !== 0) {
+    //        InventoryPagination(filterdata, 'InventorylistData', 'MastertableContainer', 50, 5);
+    //    } else {
+    //        InventoryPagination(Inventlist, 'InventorylistData', 'MastertableContainer', 50, 5);
+    //    }
+    //});
+
+    // ======= FiLTER BY CATEGORY ===============
+    $("#Categoryselect").on('change', function () {
+        const selected = parseInt(this.value);
+        $("#InventorylistData tr").each(function () {
+            const rowCategory = parseInt($(this).data("category"));
+            if (selected === 0 || rowCategory === selected) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+
+    function applyFilters() {
+        let query = $('#searchbox').val().toLowerCase() || '';
+        const selectedCategory = parseInt($('#Categoryselect').val());
+        const selectedStatus = $('#StockStatusID').val(); // <-- from dropdown
+
+        let filtered = Inventlist.filter(item => {
+            const matchesSearch =
+                item.PartName.toLowerCase().includes(query) ||
+                item.PartNo.toLowerCase().includes(query);
+
+            const matchesCategory = (selectedCategory === 0 || item.CategoryID === selectedCategory);
+
+            const matchesStatus = (selectedStatus === '' || item.Status === selectedStatus);
+
+            return matchesSearch && matchesCategory && matchesStatus;
+        });
+
+        if (filtered.length === 0) {
+            TableDisplay.empty();
+            TableDisplay.append(`<tr><td colspan='5'>🔍 No results found.</td></tr>`);
+            return;
+        }
+
+        InventoryPagination(filtered, 'InventorylistData');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const InputFile = document.getElementById('partsimage');
+        const uploadbtn = document.getElementById('uploadBtn');
+        //const savebtn = document.getElementById('saveBtn');
+
+        const previewContainer = document.getElementById('preview-container');
+        const previewImage = document.getElementById('previewImage');
+        const fileInfo = document.getElementById('file-info');
+
+        // Handle Upload button Click
+        uploadbtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            InputFile.click();
+        });
+
+        // Handle Functional of File Input Upload
+        InputFile.addEventListener('change', function (e) {
+            e.preventDefault();
+            //Check if the Image data exist
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+
+                // Check the file size (Max 1 MB)
+                if (file.size > 1024 * 1024) {
+                    alert('File size exceeds 1MB limit');
+                    return;
+                }
+                // Check file Type
+                const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/bmp', 'image/gif'];
+
+                if (!validTypes.includes(file.type)) {
+                    alert("Invalid file type, Please upload a png, jpeg, bmp or gif file");
+                    return;
+                }
+
+                // Display file info
+                const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                fileInfo.textContent = `${file.name} (${fileSize} MB)`;
+
+
+                //Create a Preview Image When the Upload the file
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+
+        // handle save button click
+        //savebtn.addEventListener('click', function (e) {
+        //    e.preventDefault();
+
+        //    //validate the form
+        //    if (!InputFile.files || InputFile.files.length === 0) {
+        //        alert("Please upload an image of your signature before saving");
+        //        return;
+        //    }
+
+
+        //    const formData = new FormData();
+        //    formData.append('SignatureImage', InputFile.files[0]);
+        //    formData.append('UserID', UserID);
+
+        //    const data = Object.fromEntries(formData);
+
+        //    //$.ajax({
+        //    //    url: '/User/UploadSignature',
+        //    //    type: 'POST',
+        //    //    data: formData,
+        //    //    processData: false,
+        //    //    contentType: false,
+        //    //    success: function (res) {
+        //    //        if (res && res.success) {
+        //    //            InputFile.value = '';
+        //    //            previewImage.src = '';
+        //    //            previewContainer.style.display = 'none';
+        //    //            $("#uploadmodal").modal("hide");
+        //    //        }
+        //    //    },
+        //    //    error: function (xhr, status, error) {
+        //    //        //$('#signatureImageError').text('An error occurred: ' + error);
+        //    //    },
+        //    //    complete: function () {
+        //    //        //saveBtn.prop('disabled', false).text('Save');
+        //    //    }
+        //    //});
+
+        //    // Reset the form
+
+
+        //});
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const InputFile = document.getElementById('Editpartsimage');
+        const uploadbtn = document.getElementById('EdituploadBtn');
+        //const savebtn = document.getElementById('saveBtn');
+
+        const previewContainer = document.getElementById('EditpreviewContainer');
+        const previewImage = document.getElementById('EditpreviewImage');
+        const fileInfo = document.getElementById('Editfile-info');
+
+        // Handle Upload button Click
+        uploadbtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            InputFile.click();
+        });
+
+        // Handle Functional of File Input Upload
+        InputFile.addEventListener('change', function (e) {
+            e.preventDefault();
+            //Check if the Image data exist
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+
+                // Check the file size (Max 1 MB)
+                if (file.size > 1024 * 1024) {
+                    alert('File size exceeds 1MB limit');
+                    return;
+                }
+                // Check file Type
+                const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/bmp', 'image/gif'];
+
+                if (!validTypes.includes(file.type)) {
+                    alert("Invalid file type, Please upload a png, jpeg, bmp or gif file");
+                    return;
+                }
+
+                // Display file info
+                const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                fileInfo.textContent = `${file.name} (${fileSize} MB)`;
+
+                //Create a Preview Image When the Upload the file
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+
+
+    });
+
+    // ==================================================================================
+    // ====================== ADD STOCK FUNCTIONALITY ===================================
+    // ==================================================================================
+    let requestItems = [];
+
+    function addItem() {
+        const partSelect = document.getElementById('partSelect');
+        const quantityInput = document.getElementById('quantity');
+
+        const selectedPart = partSelect.options[partSelect.selectedIndex];
+        const PartID = parseInt(partSelect.value);
+        const quantity = parseFloat(quantityInput.value);
+
+
+        if (!PartID || !quantity || quantity <= 0) {
+            alert('Please select a part and enter a valid quantity');
+            return;
+        }
+
+        const partName = selectedPart.text;
+
+
+        // Check if item is already exist
+        // Find and get the index of the current data
+        const existingItemIndex = requestItems.findIndex(item => item.PartID === parseInt(PartID));
+        const unit = Inventlist.find(item => item.PartID === parseInt(PartID))?.Unit;
+        const PartNo = Inventlist.find(item => item.PartID === parseInt(PartID))?.PartNo;
+        const availableStock = Inventlist.find(item => item.PartID === parseInt(PartID))?.CurrentQty;
+
+
+        if (existingItemIndex > -1) {
+            // Updates the current push data
+            requestItems[existingItemIndex].quantity += quantity;
+        } else {
+            // Insert a new data
+            requestItems.push({
+                PartID, // now NUMBER
+                PartNo,
+                partName,
+                quantity,
+                unit,
+                availableStock
+            });
+        }
+
+        updateItemsTable();
+
+        partSelect.selectedIndex = 0;
+        quantityInput.value = '';
+    }
+
+    function updateItemsTable() {
+        const tbody = document.getElementById('itemsTableBody');
+        tbody.innerHTML = '';
+
+        requestItems.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+         <td>${item.PartNo}</td>
+         <td>${item.partName}</td>
+         <td>${item.quantity}</td>
+         <td>${item.unit}</td>
+         <td>${item.availableStock}</td>
+         <td>
+             <button class="btn btn-sm btn-danger" onclick="removeItem(${item.PartID})">
+                 <i class="fas fa-trash"></i> Remove
+             </button>
+         </td>
+     `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function removeItem(ID) {
+        requestItems = requestItems.filter(item => item.PartID !== ID);
+        updateItemsTable();
+    }
+
+
+    async function incrementPart(stockID, currentQty, Required, Unit) {
+        //alert(`Stock ID : ${stockID} - CurrentQty : ${currentQty} - Required: ${Required}`);
+        let changeEqui = getStepByUnit(Unit);
+        let incrementstocks = currentQty + changeEqui;
+
+        let formData = new FormData();
+        formData.append('StockID', parseInt(stockID));
+        formData.append('CurrentQty', incrementstocks);
+        formData.append('Required', parseInt(Required));
+
+        const data = Object.fromEntries(formData);
+
+
+        let result = await postMethod('@Url.Action("AddOneStocksQuantity", "Hydro")', data, {
+            responseType: "json",
+            throwOnError: true
+        });
+
+        if (result && result.Success) {
+            Inventlist = result.data;
+
+            const lowStockCount = Inventlist.filter(item => item.Status === "Restock").length;
+            const OutStockCount = Inventlist.filter(item => item.Status === "Out of stocks").length;
+
+            $("#Countlist").text(Inventlist.length);
+            $("#lowStockItems").text(lowStockCount);
+            $("#outOfStockItems").text(OutStockCount);
+
+            TableDisplay.empty(); // Removing the Loading Display
+
+            InventoryPagination(Inventlist, 'InventorylistData');
+        } else {
+            // Handle error
+            console.error(result ? result.Message : 'Request failed');
+        }
+
+    }
+
+    async function decrementPart(stockID, currentQty, Required, Unit) {
+        //alert(`Stock ID : ${stockID} - CurrentQty : ${currentQty} - Required: ${Required}`);
+        let changeEqui = getStepByUnit(Unit);
+        let incrementstocks = currentQty - changeEqui;
+
+
+         let formData = new FormData();
+         formData.append('StockID', parseInt(stockID));
+         formData.append('CurrentQty', incrementstocks);
+         formData.append('Required', parseInt(Required));
+
+         const data = Object.fromEntries(formData);
+
+         let result = await postMethod('@Url.Action("AddOneStocksQuantity", "Hydro")', data, {
+            responseType: "json",
+            throwOnError: true
+         });
+
+         if (result && result.Success) {
+             Inventlist = result.data;
+
+             const lowStockCount = Inventlist.filter(item => item.Status === "Restock").length;
+             const OutStockCount = Inventlist.filter(item => item.Status === "Out of stocks").length;
+
+             $("#Countlist").text(Inventlist.length);
+             $("#lowStockItems").text(lowStockCount);
+             $("#outOfStockItems").text(OutStockCount);
+
+             TableDisplay.empty(); // Removing the Loading Display
+
+             InventoryPagination(Inventlist, 'InventorylistData');
+         } else {
+             // Handle error
+             console.error(result ? result.Message : 'Request failed');
+         }
+    }
+
+
+
+
+
+    // ===================================================================================
+
+
+
+
+
+
+
+
+    const getStatusClass = (status) => {
+        switch (status) {
+            case "Sufficient": return "badge-sufficient";
+            case "Out of stocks": return "badge-outstock";
+            case "Restock": return "badge-restock";
+            default: return "Incomplete";
+        }
+    };
+
+
+
+
+    addmodal.addEventListener('click', (e) => {
+        e.preventDefault();
+        let TableDisplay = $("#itemsTableBody");
+        const loadData = `<tr>
+                           <td colspan='6'>
+                               🔍 No Data Added
+                           </td>
+                       </tr>`;
+
+        TableDisplay.empty();
+        TableDisplay.append(loadData);
+
+        Inventlist.sort((a, b) => a.PartName.localeCompare(b.PartName, 'en', { sensitivity: 'base' }));
+
+
+        $.each(Inventlist, function (index, row) {
+            $("#partSelect").append("<option value='" + row.PartID + "'>" + row.PartName + "</option>");
+        });
+        requestItems = [];
+        $("#AddRequestModal").modal("show");
+    });
+
+    $("#AddItem").on('click', function (e) {
+        e.preventDefault();
+        $("#AddnewModal").modal("show");
+    });
+
+
+
+
+    function loadingDisplay() {
+        TableDisplay.empty();
+        const loadData = `<tr>
+                            <td colspan='6'>
+                                <div class='Loadercontainer'>
+                                    <span class="loader"></span>
+                                    <p id="loadingStepText">Fetching data from the database..</p>
+                                </div>
+                            </td>
+                        </tr>`;
+        TableDisplay.append(loadData);
+    }
+    function Loadingsteps(callback) {
+        const steps = [
+            "Fetching data from the database...",
+            "Processing data...",
+            "Finalizing table view..."
+        ];
+
+        let stepIndex = 0;
+
+        const interval = setInterval(() => {
+            if (stepIndex < steps.length) {
+                const stepText = document.getElementById("loadingStepText");
+                if (stepText) stepText.innerText = steps[stepIndex];
+                stepIndex++;
+            } else {
+                clearInterval(interval);
+                if (typeof callback === "function") callback();
+            }
+        }, 500);
+    }
+
+    // 🔄 Debounce helper
+    function debounce(func, delay) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+
+    const decimalUnits = ["meter", "meters", "m", "liter", "liters", "l"];
+
+    function formatQuantity(ID, value, unit) {
+        const num = Number(value);
+
+        // check valid number (but allow 0)
+        if (value === null || value === undefined || value === "" || isNaN(num)) {
+            return "0";
+        }
+
+        // safe unit handling
+        const u = unit?.toLowerCase?.() || "";
+
+        // decimal cases
+        if (ID === 7 || decimalUnits.includes(u)) {
+            return num.toFixed(1);
+        }
+
+        // default: round instead of truncate
+        return Math.round(num);
+    }
+
+    function getStepByUnit(unit) {
+        if (!unit) return 1;
+
+        return decimalUnits.includes(unit.toLowerCase())
+            ? 0.1
+            : 1;
+    }
+
+    // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+    const LoadPageData = async () => {
+        try {
+            if (ActionRestrict() === false) {
+                $("#Showadd").prop("disabled", true).css({
+                    backgroundColor: "rgb(230,230,230)",
+                    color: "rgb(172,172,172)"
+                });
+
+            }
+
+            const [invent, drop] = await Promise.all([
+                InventoryTable(),
+                GetCategoryDatalist()
+            ]);
+        } catch (error) {
+            console.error("Failed to load page data:", error);
+        } finally {
+            // Hide loading spinner whether success or failure
+            //$("#loadingSpinner").hide();
+        }
+    }
+
+
+
+    $(document).ready(() => {
+        LoadPageData();
+
+
+        $('#searchbox').on('input', applyFilters);
+        $('#Categoryselect').on('change', applyFilters);
+        $('#StockStatusID').on('change', applyFilters);
+
+    });
+</script>

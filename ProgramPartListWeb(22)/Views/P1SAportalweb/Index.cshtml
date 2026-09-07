@@ -1,0 +1,209 @@
+﻿<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="~/Content/Images/online-job-portal.ico">
+    <title>P1SA Web portal</title>
+    <link href="~/Content/css/Main.css" rel="stylesheet" />
+    <link href="~/Content/Shared/Site.min.css" rel="stylesheet" />
+    @*<script src="~/Scripts/all.min.js"></script>*@
+</head>
+
+<header>
+    <div class="CustomContainer">
+        <div class="HeadTitle">
+            <span>Production 1 Sub Assembly Web Portal</span>
+            <div class="HeadTitle__action">
+
+                <a href="#" data-pdf-url="/P1SAportalweb/ViewPDF?strfilepath=InstallDesktop.pdf" class="open-pdf-link">
+                    <span>How to set as Desktop</span>
+                    <i class="fa-solid fa-paperclip"></i>
+                </a>
+
+            </div>
+        </div>
+    </div>
+</header>
+
+<section style="margin: 2em 0 5em;">
+    <div class="CustomContainer">
+        <div class="Maincontainer">
+            <aside class="sidebar">
+                <div class="filter-group">
+                    <h4>Filter projects</h4>
+                    <small>Categories section</small>
+                    <hr />
+                    <label><input type="checkbox" id="allCheckbox" name="schedule" value="0" checked> All</label>
+                    <label><input type="checkbox" class="childCheckbox" name="schedule" value="1" checked> Molding</label>
+                    <label><input type="checkbox" class="childCheckbox" name="schedule" value="2" checked> Press</label>
+                    <label><input type="checkbox" class="childCheckbox" name="schedule" value="3" checked> Rotor</label>
+                    <label><input type="checkbox" class="childCheckbox" name="schedule" value="4" checked> Winding</label>
+                    <label><input type="checkbox" class="childCheckbox" name="schedule" value="5" checked> Circuit</label>
+                    <label><input type="checkbox" class="childCheckbox" name="schedule" value="6" checked> Others</label>
+
+                </div>
+            </aside>
+
+            <main class="Webs">
+
+                <section class="Webs_header">
+                    <h2>Select a system project</h2>
+                    <div class="Webs_search">
+                        <input type="text" placeholder="Search here ...">
+                        <div class="line"></div>
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                </section>
+
+                <div class="Web_contain" id="Web_contain">
+
+                </div>
+            </main>
+
+
+        </div>
+    </div>
+</section>
+
+
+
+
+<script type="module">
+    import {
+        getMethod,
+        postMethod,
+        getMethodPublic,
+        initLazyImages
+    } from '@Url.Content("~/Scripts/modules/index.js?v=2")';
+
+
+    const scheduleCheckboxes = document.querySelectorAll('input[name="schedule"]');
+
+    const getSelectedCategories = () => {
+        return Array.from(scheduleCheckboxes)
+            .filter(cb => cb.checked)
+            .map(cb => parseInt(cb.value));
+    };
+
+
+    const loadProjectList = async (projectList = [], searchText = "") => {
+
+        const container = document.getElementById("Web_contain");
+
+        container.innerHTML = "";
+
+        try {
+            const res = await getMethodPublic('@Url.Action("GetProjectList", "P1SAportalweb")');
+
+            if (!res || !res.Success) {
+                container.innerHTML = "<p>Failed to load projects.</p>";
+                return;
+            }
+
+            let filteredData = res.data || [];
+
+            // Category filter
+            if (projectList.length > 0 && !projectList.includes(0)) {
+                filteredData = filteredData.filter(project =>
+                    projectList.includes(project.DepartmentID)
+                );
+            }
+
+            // Search filter
+            if (searchText) {
+                const lowerSearch = searchText.toLowerCase();
+                filteredData = filteredData.filter(project =>
+                    project.Project_Name.toLowerCase().includes(lowerSearch)
+                );
+            }
+
+            if (!filteredData.length) {
+                container.innerHTML = "<p>No projects found.</p>";
+                return;
+            }
+
+            // Performance optimized rendering
+            const fragment = document.createDocumentFragment();
+
+            filteredData.forEach(res => {
+                const imageUrl = `/P1SAportalweb/Get?fileName=${res.SystemImage || 'No_Data.png'}`;
+
+                const card = document.createElement("div");
+                card.className = "Web__card";
+
+                card.innerHTML = `
+                    <div class="Web__back"></div>
+                    <div class="Web__details">
+                        <h1>${res.Project_Name}</h1>
+                    </div>
+                    <span class="fs-850 fw-bold">v${res.Version}</span>
+                    <a href="${res.Links}">
+                        <i class="fa-regular fa-eye"></i> Select
+                    </a>
+                `;
+
+                fragment.appendChild(card);
+            });
+
+            container.appendChild(fragment);
+
+        } catch (error) {
+            console.error(error);
+            container.innerHTML = "<p>Unexpected error occurred.</p>";
+        }
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+        initLazyImages();
+
+
+        const allCheckbox = document.getElementById("allCheckbox");
+        const childCheckboxes = document.querySelectorAll(".childCheckbox");
+        const searchInput = document.querySelector(".Webs_search input");
+
+        const getSelectedCategories = () =>
+            Array.from(document.querySelectorAll('input[name="schedule"]:checked'))
+                .map(cb => parseInt(cb.value));
+
+        const handleCheckboxFilter = () => {
+            const categories = getSelectedCategories();
+            const searchText = searchInput.value;
+            loadProjectList(categories, searchText);
+        };
+
+        // "All" checkbox logic
+        allCheckbox.addEventListener("change", () => {
+            if (allCheckbox.checked) {
+                childCheckboxes.forEach(cb => cb.checked = true);
+            }
+            handleCheckboxFilter();
+        });
+
+        // Child checkbox logic
+        childCheckboxes.forEach(cb => {
+            cb.addEventListener("change", () => {
+
+                if (!cb.checked) {
+                    allCheckbox.checked = false;
+                }
+                else if ([...childCheckboxes].every(c => c.checked)) {
+                    allCheckbox.checked = true;
+                }
+
+                handleCheckboxFilter();
+            });
+        });
+
+        // Search input
+        searchInput.addEventListener("input", handleCheckboxFilter);
+
+        // Initial load
+        handleCheckboxFilter();
+    });
+</script>
+
+
+
+
+
+
+
+

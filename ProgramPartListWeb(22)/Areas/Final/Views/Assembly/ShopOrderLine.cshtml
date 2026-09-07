@@ -1,0 +1,914 @@
+﻿
+@{
+    Layout = "~/Areas/Final/Views/Shared/_FinalAssemblyLayout.cshtml";
+    var strLine = Request.QueryString["line"];
+}
+
+<input type="hidden" id="strLine" value="@strLine" />
+
+<!-- TAB BAR -->
+<div class="tab-bar" id="tabBar">
+    <div class="tab active" id="tab-manage" data-tab="manage">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path fill="currentColor" d="M12 21q-3.775 0-6.387-1.162T3 17V7q0-1.65 2.638-2.825T12 3t6.363 1.175T21 7v10q0 1.675-2.613 2.838T12 21m0-11.975q2.225 0 4.475-.638T19 7.025q-.275-.725-2.512-1.375T12 5q-2.275 0-4.462.638T5 7.025q.35.75 2.538 1.375T12 9.025M12 14q1.05 0 2.025-.1t1.863-.288t1.675-.462T19 12.525v-3q-.65.35-1.437.625t-1.675.463t-1.863.287T12 11t-2.05-.1t-1.888-.288T6.4 10.15T5 9.525v3q.625.35 1.4.625t1.663.463t1.887.287T12 14m0 5q1.15 0 2.338-.175t2.187-.462t1.675-.65t.8-.738v-2.45q-.65.35-1.437.625t-1.675.463t-1.863.287T12 16t-2.05-.1t-1.888-.288T6.4 15.15T5 14.525V17q.125.375.788.725t1.662.638t2.2.462T12 19" />
+        </svg>
+
+        <span class="tab-label" id="Linename">@strLine Data</span>
+    </div>
+</div>
+
+<!-- TAB CONTENT PANELS -->
+<div class="tab-content-area">
+
+    <!-- Main panel -->
+    <div class="tab-panel active" id="panel-manage">
+
+        <div class="breadcrumb-card" style="display:none">
+            <a href="#" id="navdata" class="breadcrumb-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+                        <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    </g>
+                </svg>
+                Manage Data
+            </a>
+        </div>
+
+        <div class="page-header">
+            <div class="action-buttons">
+                <div class="search-input">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.34-4.34" />
+                    </svg>
+                    <input type="text" placeholder="Search here ..." id="searchinput" />
+                </div>
+                <select id="filterdata" class="filter-chip text-sm font-medium" style="height:32px;">
+                    <option value="-1">Filter By : ALL </option>
+                    <option value="0">Filter By : Completed Material</option>
+                    <option value="2">Filter By : Next Process</option>
+                    <option value="5">Filter By : FSA Completed</option>
+                    <option value="6">Filter By : Cell Line Completed</option>
+                    <option value="3">Filter By : On Process</option>
+                </select>
+
+
+            </div>
+
+            <div>
+                <div>
+                    <!-- Legends -->
+                    <div class="flex items-center gap-4 flex-wrap">
+                        <div class="legends-group">
+                            <span class="rounded-full bg-status-realyellow flex-shrink-0"></span>
+                            <span class="text-label">FSA Completed</span>
+                        </div>
+
+                        <div class="legends-group">
+                            <span class="rounded-full bg-status-violet flex-shrink-0"></span>
+                            <span class="text-label">Cell Line Completed</span>
+                        </div>
+
+
+                        <div class="legends-group">
+                            <span class="rounded-full bg-status-red flex-shrink-0"></span>
+                            <span class="text-label">Pending Model </span>
+                        </div>
+
+                        <div class="legends-group">
+                            <span class="rounded-full bg-status-green flex-shrink-0"></span>
+                            <span class="text-label">Completed Materials</span>
+                        </div>
+
+
+
+                        <div class="legends-group">
+                            <span class="rounded-full bg-status-yellow flex-shrink-0"></span>
+                            <span class="text-label">Next process</span>
+                        </div>
+                        <div class="legends-group">
+                            <span class="rounded-full bg-status-blue flex-shrink-0"></span>
+                            <span class="text-label">On Process Model</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="devices-table-wrapper">
+
+            <div class="table-scroll TrackTable">
+                <table class="devices-table">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Final Shop Order/ Partno / Model</th>
+                            <th>PCB</th>
+                            <th>IMP</th>
+                            <th>LW</th>
+                            <th>MF</th>
+                            <th>FP</th>
+                            <th>STR</th>
+                            <th>MP</th>
+                            <th>WC</th>
+                            <th>QTY</th>
+                            <th>Plan Start</th>
+                            <th>Dispatch</th>
+                            <th>Note</th>
+                            <th>IFS Finish Date</th>
+                            <th>FA Status</th>
+                            <th>Shipment</th>
+                            <th>Mode</th>
+                            <th>WITH SR</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+    <!-- Dynamic detail panels injected here by JS -->
+</div>
+
+
+
+
+<div class=" flex justify-between items-center p-3 border-t" style="width: 100%; position: fixed; z-index: 999; bottom: 0; left: 0; border-top: 1px solid #e5e5e5; background: white;">
+    <div id="resultsText" class="text-sm" style="color:#86868b;">Showing <span id="newrecords"></span> of <span id="currentrecords">1,248</span> Records</div>
+    <div class="flex gap-1">
+        <span class="flex gap-1" style="color: #8a8f9e; font-size: .9rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path fill="none" stroke="currentColor" d="m17 15l-5 5l-5-5m10-6l-5-5l-5 5" />
+            </svg>
+            Change line
+        </span>
+
+        <span class="flex gap-1" style="color: #8a8f9e; font-size: .9rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path fill="currentColor" d="M12 8q-1.65 0-2.825 1.175T8 12q0 1.26.716 2.277q.717 1.017 1.89 1.465q.188.085.284.28q.094.195.016.384q-.079.177-.247.275t-.344.019q-1.498-.538-2.406-1.821T7 12q0-2.077 1.462-3.538T12 7q1.583 0 2.878.909q1.295.908 1.828 2.399q.073.177-.032.354t-.282.25q-.207.078-.396-.02q-.188-.098-.273-.305q-.448-1.173-1.465-1.88T12 8m0-4Q8.65 4 6.325 6.325T4 12q0 3.342 2.248 5.63q2.248 2.29 5.546 2.359q.214.011.363.163t.143.365t-.149.364t-.357.144q-1.873-.029-3.474-.783q-1.6-.754-2.786-1.991t-1.86-2.856T3 12q0-1.864.71-3.506q.711-1.642 1.927-2.857Q6.852 4.42 8.494 3.71T12 3q3.56 0 6.251 2.512t2.774 6.263q.012.208-.132.36q-.143.154-.356.16t-.378-.15t-.176-.37q-.087-3.154-2.42-5.465Q15.229 4 12 4m7.242 16.27l-4.28-4.295l-.52 1.583q-.105.292-.398.29q-.292-.004-.378-.296l-1.449-4.825q-.061-.236.106-.404q.168-.167.404-.106l4.825 1.449q.292.086.295.378t-.29.398l-1.582.52l4.3 4.28q.214.214.214.514t-.214.513t-.516.214t-.517-.214" />
+            </svg>
+            Double Click on the rows to see the Details..
+        </span>
+    </div>
+</div>
+
+
+
+
+
+@Html.Partial("_ShopOrdersModal")
+
+
+
+
+
+
+
+
+<script type="module" asp-append-version="true">
+    import {
+        getMethod,
+        postMethod
+    } from '@Url.Content("~/Scripts/modules/index.js")';
+
+  class ShopOrderListController {
+    constructor() {
+        this.selectedID = 0;
+        this.operation = 0;
+        this.selectedLine = "";
+        this.currentRecord = 0;
+        this.pageSize = 0;
+        this.isFirstLoad = true;
+        this.isFilter = false;
+
+        this.tbody = document.querySelector('.devices-table tbody');
+        this.searchinput = document.getElementById('searchinput');
+        this.filterStatus = document.getElementById('filterdata');
+        this.refreshbutton = document.getElementById('refreshbtn');
+        this.strLine = document.getElementById('strLine').value;
+        this.tabBar = document.getElementById('tabBar');
+        this.contentArea = document.querySelector('.tab-content-area');
+        this.openTabs = new Map(); // id -> { tab, panel }
+
+
+        // For Bootstrap Modal
+        this.moveModal = new bootstrap.Modal(document.getElementById('moveOrderModal'));
+        this.moveCellModal = new bootstrap.Modal(document.getElementById('moveCellModal'));
+        this.cancelModal = new bootstrap.Modal(document.getElementById('cancelNextmodal'));
+        this.moveModalBody = document.getElementById('moveOrderModalBody');
+        this.moveConfirmBtn = document.getElementById('moveOrderConfirmBtn');
+        this.moveCellConfirmBtn = document.getElementById('moveCellConfirmBtn');
+        this.cancelConfirm = document.getElementById('CancelID');
+        this.pendingMoveId = null;
+    }
+
+    async init() {
+        this.bindEvents();
+        this.enableHorizontalDragScroll();
+        await this.LoadLineShopOrderList();
+    }
+
+      bindEvents() {
+        // Status badge click
+        this.tbody.addEventListener('click', async (e) => {
+            const badge = e.target.closest('button.selectedbadge');
+            if (!badge) return;
+            e.stopPropagation();
+
+            const isStatus = Object.freeze({
+                Blank: 0,
+                NextProcess: 1,
+                Temporary: 2,
+                InProcess: 3, 
+                FSA: 5,
+                CellLine: 6
+            });
+
+            const row = badge.closest('tr');
+            const id = parseInt(row.dataset.id); // ID
+            const orderStatus = parseInt(row.dataset.orderStatus); // OrderStatus
+            const lineman = row.dataset.orderLine; // Line
+            const operation = row.dataset.operational;
+            const isComplete = row.dataset.checkstats === 'true';
+
+
+            if (Number.isNaN(id) || Number.isNaN(orderStatus)) {
+                console.error('Row missing required data attributes', row.dataset);
+                return;
+            }
+            if (operation > 1) {
+                alert("Model needs to complete other processes before proceeding to next process.");
+                return;
+            }
+
+            // if isCOmplete is false(incomplete from the shops)
+            if (!isComplete) {
+                if (orderStatus === isStatus.Temporary ) {
+                    alert("Already in Next or In process.");
+                } else {
+                    // if not updates the OrderStatus to 4 (In Process) and updates the row
+                    const success = await this.updateOrderStatus(id, isStatus.Temporary, lineman);
+                    if (!success) return;
+
+                    row.dataset.orderStatus = String(isStatus.Temporary);
+                    badge.className = 'selectedbadge selectedProcessInProgress'; // or whatever your "in process" class is
+                    row.classList.add('bg-row-highlight');
+
+                    await this.LoadLineShopOrderList();
+                }
+                return;
+            }
+
+
+
+            // if the orderStatus(Next Process is set) Shows the Cancel Dialog
+            if (orderStatus === isStatus.NextProcess) {
+                this.selectedID = id;
+                this.selectedLine = lineman;
+                this.cancelModal.show();
+                return;
+            }
+
+
+            if (orderStatus === isStatus.InProcess || orderStatus === isStatus.Completed) return;
+
+            try {
+                // Check if the next process(1) has already been selected for this line
+                const res = await getMethod('@Url.Action("CheckIfAreadyCheckNext", "Assembly")', { lineman });
+                if (res.data > 0) {
+                    alert("Already selected the next process.");
+                    return;
+                }
+
+                const success = await this.ForCompleteupdateOrderStatus(id, isStatus.NextProcess, lineman);
+                if (!success) return;
+
+                row.dataset.orderStatus = String(isStatus.NextProcess);
+                badge.className = 'selectedbadge selectedProcess';
+                row.classList.add('bg-row-highlight');
+
+                await this.LoadLineShopOrderList();
+            } catch (err) {
+                console.error('Failed to update order status', err);
+                alert("Something went wrong updating the status. Please try again.");
+            }
+        });
+
+
+        this.tbody.addEventListener('click', async (e) => {
+             const movebtn = e.target.closest('button.selectmove');
+             if (!movebtn) return;
+             e.stopPropagation();
+
+            const row = movebtn.closest('tr');
+            const id = parseInt(row.dataset.id);
+
+            this.selectedID = id;
+            //this.operation
+            this.moveModal.show();
+        });
+
+        this.tbody.addEventListener('click', async (e) => {
+            const movebtn = e.target.closest('button.changeCell');
+            if (!movebtn) return;
+            e.stopPropagation();
+
+            const row = movebtn.closest('tr');
+            const id = parseInt(row.dataset.id);
+            const operation = row.dataset.operational;
+
+            this.selectedID = id;
+            this.Operational = operation;
+            this.moveCellModal.show();
+        })
+
+        this.tbody.addEventListener('dblclick', (e) => {
+            if (e.target.closest('button.selectedbadge')) return;
+            const row = e.target.closest('tr');
+            if (!row) return;
+
+            const id = row.dataset.id;
+            const label = row.querySelector('td:nth-child(2) .ShopOrderLayout_ShopOrder')?.textContent?.trim() || `Order ${id}`;
+            this.openDetailTab(id, label);
+        });
+
+        // Tab bar: switch on click (close handled per-tab)
+        this.tabBar.addEventListener('click', (e) => {
+            const tab = e.target.closest('.tab');
+            if (!tab || e.target.closest('.tab-close')) return;
+            const targetId = tab.dataset.tab;
+            this.switchTab(targetId);
+        });
+
+        // Manage Data tab explicit click
+        document.getElementById('tab-manage').addEventListener('click', () => {
+            this.switchTab('manage');
+        });
+
+        this.moveConfirmBtn.addEventListener('click', async () => {
+            const targetLine = document.getElementById('moveline')?.value;
+
+            if (!targetLine) {
+                alert('Please select a Target line');
+                return;
+            }
+
+            const res = await postMethod('@Url.Action("UpdateLineshopOrder", "Assembly")', {
+                 recordID: this.selectedID,
+                 Lineman: document.getElementById('moveline').value,
+                 process: 0
+             });
+
+            if (res?.Success) {
+                alert("Change Completed");
+                await this.LoadLineShopOrderList();
+              }
+
+
+
+
+            this.moveModal.hide();
+
+        });
+
+        this.moveCellConfirmBtn.addEventListener('click', async () => {
+            const targetLine = document.getElementById('moveCellline')?.value;
+
+            if (!targetLine) {
+                alert('Please select a Target line');
+                return;
+            }
+
+            const res = await postMethod('@Url.Action("UpdateLineshopOrder", "Assembly")', {
+                recordID: this.selectedID,
+                Lineman: document.getElementById('moveCellline').value,
+                process: this.Operational
+             });
+
+            if (res?.Success) {
+                alert("Change Completed");
+                await this.LoadLineShopOrderList();
+            }
+
+            this.moveCellModal.hide();
+
+        });
+
+
+
+        this.cancelConfirm.addEventListener('click', async () => {
+            let res = await this.updateOrderStatus(this.selectedID, 0, this.selectedLine);
+            if (res?.Success) {
+                this.cancelModal.hide();
+                await this.LoadLineShopOrderList();
+            }
+        });
+
+        this.refreshbutton.addEventListener('click', async (e) =>{
+            e.preventDefault();
+            this.tbody.innerHTML = "";
+
+            document.getElementById('searchinput').value = "";
+            document.getElementById('filterdata').value = "0";
+            this.currentPage = 1;
+            this.pageSize = 20;
+
+             await this.LoadLineShopOrderList();
+        });
+
+
+        // Search + filter debounce
+       let debounceTimer;
+       const debounced = () => {
+            this.isFilter = true;
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => this.LoadLineShopOrderList(), 300);
+        };
+        this.searchinput.addEventListener('input', debounced);
+        this.filterStatus.addEventListener('change', debounced);
+      }
+
+
+      enableHorizontalDragScroll() {
+
+          const container = document.querySelector(".TrackTable");
+
+          if (!container) return;
+
+          let isDown = false;
+          let startX;
+          let scrollLeft;
+
+          container.addEventListener("mousedown", (e) => {
+
+              // Ignore buttons, inputs, selects, links
+              if (
+                  e.target.closest("button") ||
+                  e.target.closest("input") ||
+                  e.target.closest("select") ||
+                  e.target.closest("a")
+              ) {
+                  return;
+              }
+
+              isDown = true;
+              startX = e.pageX;
+              scrollLeft = container.scrollLeft;
+
+              container.classList.add("dragging");
+              container.style.cursor = "grabbing";
+          });
+
+          document.addEventListener("mouseup", () => {
+              isDown = false;
+              container.classList.remove("dragging");
+              container.style.cursor = "grab";
+          });
+
+          container.addEventListener("mousemove", (e) => {
+
+              if (!isDown) return;
+
+              e.preventDefault();
+
+              const walk = (e.pageX - startX) * 2;
+
+              container.scrollLeft = scrollLeft - walk;
+          });
+
+          container.style.cursor = "grab";
+      }
+
+
+    switchTab(tabId) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+
+        document.getElementById(`tab-${tabId}`)?.classList.add('active');
+        document.getElementById(`panel-${tabId}`)?.classList.add('active');
+    }
+
+    openDetailTab(id, label) {
+        // If already open, just switch to it
+        if (this.openTabs.has(id)) {
+            this.switchTab(`row-${id}`);
+            return;
+        }
+
+        // Build tab
+        const tab = document.createElement('div');
+        tab.className = 'tab';
+        tab.id = `tab-row-${id}`;
+        tab.dataset.tab = `row-${id}`;
+        tab.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+	            <path d="M0 0h24v24H0z" fill="none" />
+	            <path fill="currentColor" d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 2h7v5h5v11H6zm2 8v2h8v-2zm0 4v2h5v-2z" />
+            </svg>
+
+            <span class="tab-label" title="${label}">${label}</span>
+            <button class="tab-close" title="Close" aria-label="Close tab">
+               <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <path fill="currentColor" d="M6.4 19L5 17.6l5.6-5.6L5 6.4L6.4 5l5.6 5.6L17.6 5L19 6.4L13.4 12l5.6 5.6l-1.4 1.4l-5.6-5.6z" />
+                </svg>
+            </button>`;
+
+        tab.querySelector('.tab-close').addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.closeDetailTab(id);
+        });
+
+        this.tabBar.appendChild(tab);
+
+        // Build panel with iframe
+        const panel = document.createElement('div');
+        panel.className = 'tab-panel';
+        panel.id = `panel-row-${id}`;
+        panel.innerHTML = `
+            <iframe
+                class="detail-iframe"
+                src="@Url.Action("ShopOrderDetails", "Assembly")?id=${id}"
+                title="Shop Order Details">
+            </iframe>`;
+
+        this.contentArea.appendChild(panel);
+        this.openTabs.set(id, { tab, panel });
+
+        this.switchTab(`row-${id}`);
+    }
+
+    closeDetailTab(id) {
+        const entry = this.openTabs.get(id);
+        if (!entry) return;
+
+        entry.tab.remove();
+        entry.panel.remove();
+        this.openTabs.delete(id);
+
+        // Return to Manage Data + refresh table
+        this.switchTab('manage');
+        this.LoadLineShopOrderList();
+    }
+
+    // ... rest of your existing methods unchanged
+      async LoadLineShopOrderList() {
+
+          try {
+
+                if (this.isFirstLoad) {
+                  this.showTableSkeleton();
+                  await new Promise(resolve => requestAnimationFrame(resolve));
+                  this.isFirstLoad = false;
+                }
+
+                const res = await getMethod('@Url.Action("LineShopOrderData", "Assembly")', {
+                    Linename: this.strLine,
+                    searchtext: document.getElementById('searchinput').value,
+                    orderstatus: document.getElementById('filterdata').value
+                });
+
+                if (!res?.Success) {
+                    this.NoTableRowData();
+                    return;
+              };
+
+              this.currentRecord = this.isFilter ? this.currentRecord : res.data.Total;
+
+              if (this.currentRecord != 0) {
+                   document.getElementById("currentrecords").textContent = this.currentRecord;
+                  this.renderTable(res.data.payload ?? []);
+                  console.log(res.data.payload);
+
+                    //this.renderPagination(total ?? res.data.payload.length);
+                } else {
+                    this.tbody.innerHTML = `
+                         <tr>
+                             <td colspan="18" style="text-align:center;color:red;">
+                                 Failed to load data.
+                             </td>
+                         </tr>`;
+                }
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+
+                this.tbody.innerHTML = `
+                <tr>
+                    <td colspan="18" style="text-align:center;color:red;">
+                        Failed to load data.
+                    </td>
+                </tr>`;
+            }
+    }
+
+
+      NoTableRowData() {
+          
+          this.tbody.innerHTML = `
+             <tr>
+                 <td colspan="19" style="padding: 0; border: none;">
+                     <div class="table-empty">
+                         <div class="table-empty-icon-box">
+                             <span class="icon-wrap" style="width:28px;height:28px;color:var(--color-primary);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 1024 1024">
+	                                <path d="M0 0h1024v1024H0z" fill="none" />
+	                                <path fill="currentColor" d="M688 312v-48c0-4.4-3.6-8-8-8H296c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h384c4.4 0 8-3.6 8-8m-392 88c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h184c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8zm144 452H208V148h560v344c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8V108c0-17.7-14.3-32-32-32H168c-17.7 0-32 14.3-32 32v784c0 17.7 14.3 32 32 32h272c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8m445.7 51.5l-93.3-93.3C814.7 780.7 828 743.9 828 704c0-97.2-78.8-176-176-176s-176 78.8-176 176s78.8 176 176 176c35.8 0 69-10.7 96.8-29l94.7 94.7c1.6 1.6 3.6 2.3 5.6 2.3s4.1-.8 5.6-2.3l31-31a7.9 7.9 0 0 0 0-11.2M652 816c-61.9 0-112-50.1-112-112s50.1-112 112-112s112 50.1 112 112s-50.1 112-112 112" />
+                                </svg>
+
+                             </span>
+                         </div>
+                        <div class="table-empty-content">
+                            <span class="table-empty-title">No Data Found</span>
+                            <span class="table-empty-desc">There's nothing to display yet. Try refreshing the page, or contact IT support if this persists.</span>
+                        </div>
+
+                     </div>
+                 </td>
+             </tr>`;
+      }
+
+      renderTable(data) {
+          if (!this.tbody) return;
+
+          const filterValue = parseInt(this.filterStatus.value);
+
+          const filteredData = data.filter(row => {
+
+              const hasCircuit = row.Circuit != null && row.Circuit.trim() !== '';
+              const hasRotor = row.Rotor != null && row.Rotor.trim() !== '';
+              const hasWinding = row.Winding != null && row.Winding.trim() !== '';
+              const hasHarness = row.Harness != null && row.Harness.trim() !== '';
+              const hasMolding = row.Molding != null && row.Molding.trim() !== '';
+              const hasPress = row.Press != null && row.Press.trim() !== '';
+              const hasMaterial = row.Material != null && row.Material.trim() !== '';
+
+              const allComplete =
+                  hasCircuit &&
+                  hasRotor &&
+                  hasWinding &&
+                  hasHarness &&
+                  hasMaterial &&
+                  (hasMolding || hasPress);
+
+              const orderStatus = parseInt(row.OrderStatus || 0);
+
+              switch (filterValue) {
+                  case 0: // Completed Material
+                      return allComplete;
+
+                  case 1: // Next Process
+                      return allComplete && orderStatus === 1;
+
+                  case 2: // On Process
+                      return orderStatus === 2;
+
+                  case 3: // Done Schedule
+                      return orderStatus === 3;
+
+                  default: // ALL
+                      return true;
+              }
+          });
+
+          // ✅ Update newrecords with the actual rendered count
+          document.getElementById("newrecords").textContent = filteredData.length;
+
+
+          if (filteredData.length === 0) {
+              this.tbody.innerHTML = `
+                <tr>
+                    <td colspan="19" style="text-align:center; padding:32px; color:#86868b;">
+                        No data available.
+                    </td>
+                </tr>`;
+              return;
+          }
+
+
+          this.tbody.innerHTML = filteredData.map(row => {
+
+              let molding = row.Molding
+                  ? '<span class="sectionbadge badge-molding">AF</span>'
+                  : '-';
+
+              let press = row.Press
+                  ? '<span class="sectionbadge badge-press">AG</span>'
+                  : '-';
+
+              let rotor = row.Rotor
+                  ? '<span class="sectionbadge badge-rotor">BF</span>'
+                  : '-';
+
+              let winding = row.Winding
+                  ? '<span class="sectionbadge badge-winding">FA</span>'
+                  : '-';
+
+              let circuit = row.Circuit
+                  ? '<span class="sectionbadge badge-circuit">CE</span>'
+                  : '-';
+
+              let harness = row.Harness
+                  ? '<span class="sectionbadge badge-harness">FG</span>'
+                  : '-';
+
+              let Material = row.Material
+                  ? '<span class="sectionbadge badge-Material">DD</span>'
+                  : '-';
+
+              const hasCircuit = row.Circuit != null && row.Circuit.trim() !== '';
+              const hasRotor = row.Rotor != null && row.Rotor.trim() !== '';
+              const hasWinding = row.Winding != null && row.Winding.trim() !== '';
+              const hasHarness = row.Harness != null && row.Harness.trim() !== '';
+              const hasMolding = row.Molding != null && row.Molding.trim() !== '';
+              const hasPress = row.Press != null && row.Press.trim() !== '';
+              const hasMaterial = row.Material != null && row.Material.trim() !== '';
+
+              const allComplete =
+                  hasCircuit &&
+                  hasWinding &&
+                  hasRotor &&
+                  hasHarness &&
+                  hasMaterial &&
+                  (hasMolding || hasPress);
+
+              const orderStatus = parseInt(row.OrderStatus);
+
+
+              let selecthighlight = '';
+              let isOperational = '';
+
+              if (allComplete) {
+                  switch (orderStatus) {
+                      case 1:
+                          selecthighlight = 'selectedNext';
+                          break;
+                      case 2:
+                      case 3:
+                          selecthighlight = 'selectedProcess';
+                          break;
+                      case 5:
+                          selecthighlight = 'selectedFSI';
+                          break;
+                      case 6:
+                          selecthighlight = 'selectedCellLine';
+                          break;
+                      default:
+                          selecthighlight = 'selectAvailable';
+                          break;
+                  }
+
+              } else {
+                  if (orderStatus === 2 || orderStatus == 3) {
+                      selecthighlight = 'selectedProcess';
+                  } else if (orderStatus === 5) {
+                      selecthighlight = 'selectedFSI';
+                  } else if (orderStatus === 6) {
+                      selecthighlight = 'selectedCellLine';
+                  }
+              }
+
+              isOperational = row.Operational === 2 || row.Operational === 3 ? `<span> ${row.Operational}</span>` : "";
+
+
+              return `
+        <tr class="bg-row-highlight fade-in"
+            data-order-line="${row.Line}"
+            data-order-status="${orderStatus}"
+            data-operational="${row.Operational}"
+            data-checkstats ="${allComplete}"
+            data-id="${row.RecordID}">
+
+            <td class="fixedrow">
+                <div style="display:flex;align-items:center;gap:1.5em;">
+                    <button
+                        class="selectedbadge ${selecthighlight}"
+                        ${orderStatus === 2 || orderStatus === 3 ? 'disabled' : ''}>
+                    </button>
+
+                    <button class="selectmove">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+	                        <path d="M0 0h24v24H0z" fill="none" />
+	                        <path fill="none" stroke="currentColor" d="m17 15l-5 5l-5-5m10-6l-5-5l-5 5" />
+                        </svg>
+
+                    </button>
+                     <button class="changeCell">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32">
+                          <path d="M0 0h32v32H0z" fill="none" />
+                          <g fill="currentColor">
+                            <path d="M6.063 14.627a5.268 5.268 0 0 1 9.766-2.74l.033.054a1.375 1.375 0 1 1-2.349 1.43l-.033-.053a2.517 2.517 0 0 0-4.667 1.309v2.76a2.536 2.536 0 0 0 4.686 1.342l.022-.035a1.375 1.375 0 1 1 2.333 1.456l-.022.035a5.286 5.286 0 0 1-9.77-2.799zM19.375 9.36c.76 0 1.375.615 1.375 1.374v8.907c0 .138.112.25.25.25h3.656a1.375 1.375 0 1 1 0 2.75h-5.281c-.76 0-1.375-.616-1.375-1.375V10.734c0-.759.616-1.375 1.375-1.375" />
+                            <path d="M6 1a5 5 0 0 0-5 5v20a5 5 0 0 0 5 5h20a5 5 0 0 0 5-5V6a5 5 0 0 0-5-5zM3 6a3 3 0 0 1 3-3h20a3 3 0 0 1 3 3v20a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3z" />
+                          </g>
+                          ${isOperational}
+                    </button>
+                </div>
+            </td>
+
+            <td class='ShopOrderLayout'  style='text-align: left;'>
+                <span class='ShopOrderLayout_ShopOrder'>${row.FinalShopOrder}</span>
+                <p style="margin:.2em 0;color:#8a8f9e;">${row.ItemNo}</p>
+                <span style="font-weight:600;">${row.Model}</span>
+            </td>
+
+            <td>${circuit}</td>
+            <td>${rotor}</td>
+            <td>${harness}</td>
+            <td>${molding}</td>
+            <td>${press}</td>
+            <td>${winding}</td>
+            <td>${Material}</td>
+
+            <td>${row.WC}</td>
+            <td>${row.PlanQty}</td>
+            <td>${this.formatDate(row.PlanStartDate)}</td>
+            <td>${row.DispatchDate}</td>
+            <td>${row.Note || ''}</td>
+            <td>${this.formatDate(row.FinalFinishedDate)}</td>
+            <td>${row.FAStatus || ''}</td>
+            <td>${this.formatDate(row.ShipmentDate)}</td>
+            <td>${row.ShipmentMode || ''}</td>
+            <td>${row.WithSR ? 'With SR' : ''}</td>
+        </tr>`;
+          }).join('');
+      }
+
+      showTableSkeleton() {
+          this.tbody.innerHTML = Array(10).fill(`
+        <tr>
+            ${Array(19).fill(`
+                <td>
+                    <div class="skeleton-cell"></div>
+                </td>
+            `).join('')}
+        </tr>
+        `).join('');
+    }
+
+
+      showLoader() {
+          document.getElementById('loadingOverlay')
+              ?.classList.add('show');
+      }
+
+      hideLoader() {
+          document.getElementById('loadingOverlay')
+              ?.classList.remove('show');
+      }
+
+      formatDate(dateString) {
+            if (!dateString) return '';
+
+            const timestamp = parseInt(dateString.match(/\d+/)[0]);
+            const date = new Date(timestamp);
+
+            return date.toLocaleDateString('en-US');
+        }
+     async updateOrderStatus(id, orderstatus, lineman) {
+             try {
+
+                 const res = await postMethod('@Url.Action("UpdateStatusLine", "Assembly")', {
+                     recordID : id,
+                     orderstats: orderstatus,
+                     line: lineman
+                 });
+
+                 return res;
+
+             } catch (err) {
+                 console.error(err);
+                 return false;
+             }
+     }
+
+     async ForCompleteupdateOrderStatus(id, orderstatus, lineman) {
+        try {
+
+            const res = await postMethod('@Url.Action("ForCompleteUpdateStatusLine", "Assembly")', {
+                recordID : id,
+                orderstats: orderstatus,
+                line: lineman
+            });
+
+            return res;
+
+        } catch (err) {
+            console.error(err);
+            return false;
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const controller = new ShopOrderListController();
+    controller.init();
+});
+</script>

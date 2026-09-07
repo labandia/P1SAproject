@@ -1,0 +1,821 @@
+﻿
+@{
+    Layout = null;
+    var regno = Request.QueryString["Regno"];
+}
+
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/x-icon" href="@Url.Content("~/Content/Images/patrol .ico")">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title</title>
+    <link rel="preload" href="~/Content/fonts/Poppins-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+
+
+    <link href="~/Content/Shared/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/css/RegistrationUI.css" rel="stylesheet" />
+
+    @Styles.Render("~/Content/shared-css")
+
+    @Scripts.Render("~/bundles/shared-js")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+
+
+<body>
+    <div class="MainWrapper">
+
+        <div class="sidebar">
+            <h2><i>📄</i><span id="regtext"></span></h2>
+            <ul class="step-list">
+                <li class="step-item active" data-step="1">
+                    <span class="step-number">1</span>
+                    Create new
+                </li>
+                <li class="step-item" data-step="2">
+                    <span class="step-number">2</span>
+                    Process Owner
+                </li>
+                <li class="step-item" data-step="3">
+                    <span class="step-number">3</span>
+                    Inspectors
+                </li>
+                <li class="step-item" data-step="4">
+                    <span class="step-number">4</span>
+                    Managers
+                </li>
+                @*<li class="step-item" data-step="5">
+                        <span class="step-number">5</span>
+                        Department Managerss
+                    </li>*@
+                <li class="step-item" data-step="5">
+                    <span class="step-number">5</span>
+                    Division Manager
+                </li>
+                <li class="step-item" data-step="6">
+                    <span class="step-number">6</span>
+                    Completed
+                </li>
+            </ul>
+        </div>
+
+        <div class="content">
+
+            <!-- Step 1: Create New Document -->
+            <div class="step-content active" id="step-1">
+
+            </div>
+
+            <!-- Step 2: Person in Charge -->
+            <div class="step-content" id="step-2">
+
+            </div>
+
+            <!-- Step 3: Document Details -->
+            <div class="step-content" id="step-3">
+
+            </div>
+
+            <!-- Step 4: Attachments -->
+            <div class="step-content" id="step-4">
+
+            </div>
+
+            <!-- Step 5: Review & Submit -->
+            <form method="post" enctype="multipart/form-data" class="step-content active" style="padding: 1.5em 0;" id="step-5" autocomplete="off">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="Attachmentcontainer mb-3">
+
+                            <label class="mb-0 fw-bold">Attachments : </label>
+                            <div id="fileContainer"></div>
+
+                        </div>
+
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label>Registration No.  </label> <br />
+                                <input type="text" id="Regno" value="@regno" name="Regno" readonly />
+                                <input type="hidden" name="Filepath" id="Filepath" />
+
+                            </div>
+                            <div class="col">
+                                <label>Department / Section  </label> <br />
+                                <input type="text" id="SectionName" readonly />
+                            </div>
+                        </div>
+
+
+
+
+
+
+                        <h5 class="mb-4 mt-4 fw-bold">Inspection Criterion / Findings</h5>
+                        <hr />
+                        <div class="row mb-3">
+                            <div class="col ">
+                                <label>1. Work Practice / Standard / Safety</label> <br />
+                                <input type="hidden" value="1" id="Find1" name="Find1" />
+                                <textarea placeholder="Type text here..." name="Inpects1" id="Inpects1" rows="3" cols="40" readonly></textarea>
+                            </div>
+
+                            <div class="col ">
+                                <label>Countermeasures</label> <br />
+                                <textarea placeholder="Type text here..." name="counter1" id="counter1" rows="3" cols="40" readonly></textarea>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="row mb-3">
+                            <div class="col ">
+                                <label>2. Identification and status of the product or materials.</label> <br />
+                                <input type="hidden" value="2" id="Find2" name="Find2" required />
+                                <textarea placeholder="Type text here..." name="Inpects2" id="Inpects2" rows="3" cols="40" readonly></textarea>
+                            </div>
+
+                            <div class="col ">
+                                <label>Countermeasures</label> <br />
+                                <textarea placeholder="Type text here..." name="counter2" id="counter2" rows="3" cols="40" readonly></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col ">
+                                <label>3. Condition and status of documents / records.</label> <br />
+                                <input type="hidden" value="3" id="Find3" name="Find3" required />
+                                <textarea placeholder="Type text here..." name="Inpects3" id="Inpects3" rows="3" cols="40" readonly></textarea>
+                            </div>
+
+                            <div class="col ">
+                                <label>Countermeasures</label> <br />
+                                <textarea placeholder="Type text here..." name="counter3" id="counter3" rows="3" cols="40" readonly> </textarea>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col ">
+                                <label>4. Record of ‘start-up process check’ and monthly inspection</label> <br />
+                                <input type="hidden" value="4" id="Find4" name="Find4" required />
+                                <textarea placeholder="Type text here..." name="Inpects4" id="Inpects4" rows="3" cols="40" readonly></textarea>
+                            </div>
+
+                            <div class="col ">
+                                <label>Countermeasures</label> <br />
+                                <textarea placeholder="Type text here..." name="counter4" id="counter4" rows="3" cols="40" readonly></textarea>
+                            </div>
+                        </div>
+
+
+                        <div class="row mb-3">
+                            <div class="col ">
+                                <label>5. Calibration of equipment and jigs used for measurement or inspection.</label> <br />
+                                <input type="hidden" value="5" id="Find5" name="Find5" required />
+                                <textarea placeholder="Type text here..." name="Inpects5" id="Inpects5" rows="3" cols="40" readonly></textarea>
+                            </div>
+
+                            <div class="col ">
+                                <label>Countermeasures</label> <br />
+                                <textarea placeholder="Type text here..." name="counter5" id="counter5" rows="3" cols="40" readonly></textarea>
+                            </div>
+                        </div>
+
+
+
+                        <div class="row mb-3">
+                            <div class="col ">
+                                <label>6. Countermeasure and implementation of previous quality and safety</label> <br />
+                                <input type="hidden" value="6" id="Find5" name="Find6" required />
+                                <textarea placeholder="Type text here..." name="Inpects6" id="Inpects6" rows="3" cols="40" readonly></textarea>
+                            </div>
+
+                            <div class="col ">
+                                <label>Countermeasures</label> <br />
+                                <textarea placeholder="Type text here..." name="counter6" id="counter6" rows="3" cols="40" readonly></textarea>
+                            </div>
+                        </div>
+
+
+                        @*<div class="row mb-3">
+                                <div class="col ">
+                                    <label>Inspector Name: </label> <br />
+                                    <input type="text" id="InspectorName" readonly />
+                                </div>
+
+                                <div class="col ">
+                                    <label>Date Conducted</label> <br />
+                                    <input type="text" id="DateConduct" readonly />
+                                </div>
+                            </div>*@
+
+                        <div class="row mb-3">
+                            @*<div class="col ">
+                                    <label>Person in charge </label> <br />
+                                    <input type="text" id="PICName" />
+                                </div>*@
+                            <div class="col-12">
+                                <label>PIC Comments</label>
+                                <textarea placeholder="Type text here..." name="PIC_Comments" id="PIC_Comments" rows="3" cols="40" readonly></textarea>
+                            </div>
+                        </div>
+
+
+
+                        <div class="mb-3">
+                            <label>Manager Comments</label>
+                            <textarea placeholder="Type text here..." name="Manager_Comments" id="Manager_Comments" rows="3" cols="40" readonly></textarea>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="approval-container">
+                    <div class="approval-box">
+                        <div class="approval_title" id="PIC_approve">LA Datu</div>
+                        <div class="approval_content">
+                            <p class="approval_status approved" id="PIC_Isapprove">Approved</p>
+
+                        </div>
+                        <div class="approval_role">Person In Charge</div>
+                    </div>
+
+                    <div class="approval-box">
+                        <div class="approval_title" id="Inspect_approve">Lionell Gomez</div>
+                        <div class="approval_content">
+                            <p class="approval_status approved" id="Ins_Isapprove">Approved</p>
+                        </div>
+                        <div class="approval_role">Inspector</div>
+                    </div>
+
+                    <div class="approval-box">
+                        <div class="approval_title" id="Dep_approve">LA Datu</div>
+                        <div class="approval_content">
+                            <p class="approval_status approved" id="Dep_Isapprove">Approved</p>
+                        </div>
+                        <div class="approval_role">Department Manager</div>
+                    </div>
+
+                    <div class="approval-box">
+                        <div class="approval_title" id="Div_approve">LA Datu</div>
+                        <div class="approval_content">
+                            <p class="approval_status approved" id="Div_Isapprove">Approved</p>
+                        </div>
+                        <div class="approval_role">Division Manager</div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+
+    </div>
+
+    <!-- Modal overlay to prevent clicking outside -->
+    <div class="modal-overlay" id="modalOverlay"></div>
+
+
+    <div class="floating-comment-btn" style="@(ViewBag.Mode == 1 ? "" : "display:none")">
+        <span class="comment-label">Moderate Comment</span>
+        <div class="comment-btn" id="commentBtn">
+            <i class="fa-regular fa-paper-plane"></i>
+        </div>
+    </div>
+
+
+    <div class="float-container" id="floatContainer">
+        <div class="float-header">
+            <h2>For Approval</h2>
+            <button class="close-btn" id="closeBtn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <form id="commentForm">
+            <label>Signatures For Approval</label><br />
+
+            <div class="signature-container" id="signature-display">
+                <div class="signature-placeholder" id="placeholder">
+                    <i class="fas fa-signature" style="font-size: 48px; margin-bottom: 15px; color: #bdc3c7;"></i>
+                    <p>No Signature Display Please Upload</p>
+                </div>
+                <img id="signature-image" class="signature-image" style="display: none;">
+
+                <div class="signature-Input" id="signature-Input" style="display: none;">
+                    <i class="fas fa-signature" style="font-size: 48px; margin-bottom: 15px; color: #bdc3c7;"></i>
+                    <p> No Signature Found. Please upload by click the Circle Icon. </p>
+                </div>
+
+            </div>
+
+            <div class="form-group" style="display: none;">
+                <label for="moderation-notes">Comments for Return (Optional)</label>
+                <textarea rows="4" id="Return_Comments" name="Return_Comments" placeholder="Send Message Back ..."></textarea>
+            </div>
+
+            <div class="action-buttons">
+                <button type="button" style="display: none;" class="return-btn" id="returnBtn">
+                    <i class="fas fa-undo"></i> Return
+                </button>
+                <button type="button" class="approve-btn" id="approveBtn">
+                    <i class="fas fa-check"></i> Approve
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="notification" id="notification"></div>
+
+    <!--########################## UPLOAD DATA #############################-->
+    <div class="modal fade modal-lg " id="uploadmodal" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog"
+         data-bs-backdrop="static"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body modalwrap">
+                    <div class="custom_modal_header">
+                        <div class="custom_modal__icon">
+                            <div class="custom_icon_container">
+                                <i class="fa-solid fa-file-import"></i>
+                            </div>
+                            <div class="custom_modal_title">
+                                <span style="font-weight: 600;">Upload your Signature</span>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-light  close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+
+                    <div class="custom_modal_body">
+
+                        <div class="Mold_tabcontainer">
+                            <div class="Mold_tabs">
+                                <button class="Mold_tab active" data-target="UploadImage">Write Signature</button>
+                                <button class="Mold_tab" data-target="WriteTable">Upload Image</button>
+                                <div class="Mold_slider"></div>
+                            </div>
+
+                            <div class="Mold_contentbox">
+                                <div class="Mold_content show" id="UploadImage">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <span>Draw a Signature :</span>
+                                            <canvas id="signature-pad" width="400" height="200" style="border:1px solid #ccc;"></canvas>
+                                        </div>
+                                        <div class="col-6">
+                                            <form class="SignatureAction" id="SignatureForms">
+                                                <input type="hidden" id="SignatureData" name="SignatureData" />
+
+                                                <button type="button" class="clearbtn" onclick="clearSignature()"><i class="fa-solid fa-eraser"></i> Clear</button>
+                                                <button type="submit" class="primarybtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    @* Hidden input to hold the base64 image *@
+                                </div>
+                                <div class="Mold_content" id="WriteTable">
+                                    <form method="post" enctype="multipart/form-data" id="ImportExcel">
+                                        <div class="upload-container flex_center" id="upload-container">
+                                            <div class="upload-icon">📷</div>
+                                            <div class="file-info">Upload a photo of your signature.<br>Max file size: 1MB<br>png, jpg, jpeg, bmp, gif</div>
+                                            <input type="file" id="fileInput" accept=".png,.jpg,.jpeg,.bmp,.gif" class="hidden">
+                                            <button class="upload-btn" id="uploadBtn">Upload Photo</button>
+                                        </div>
+
+                                    </form>
+
+                                    <div class="preview-container" id="previewContainer">
+                                        <img id="SignatureImage" class="SignatureImage" src="/Content/Images/bussiness-man.png" alt="Signature" style="display: hidden;" />
+                                        <img id="previewImage" class="preview-image" src="" alt="Signature Preview">
+                                    </div>
+
+                                    <footer class="flex_end">
+                                        <span id="Upload "></span>
+                                        <button class="primarybtn flex_end" id="saveBtn"><i class="fa-regular fa-floppy-disk"></i> Save</button>
+                                    </footer>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/Popper.min.js"></script>
+    <script src="~/Scripts/signature_pad.umd.min.js"></script>
+    <script type="text/javascript">
+        let emailTable = [];
+        let strManagerID;
+
+        let currentStep = 5;
+        const totalSteps = 5;
+
+
+        const commentBtn = document.getElementById('commentBtn');
+        const formContainer = document.getElementById('floatContainer');
+        const approveBtn = document.getElementById('approveBtn');
+        const returnBtn = document.getElementById('returnBtn');
+        const notification = document.getElementById('notification');
+        const modalOverlay = document.getElementById('modalOverlay');
+
+        let strRegno = $("#Regno").val();
+        let modeset = @ViewBag.Mode;
+
+        const signatureImage = document.getElementById('signature-image');
+        const signatureInput = document.getElementById('signature-Input');
+        const placeholder = document.getElementById('placeholder');
+
+        function goToStep(step) {
+            // Update current step
+            currentStep = step;
+
+
+
+            // Update sidebar step states
+            document.querySelectorAll('.step-item').forEach((item, index) => {
+                const stepNumber = index + 1;
+
+                // Completed (previous steps)
+                if (stepNumber < step) {
+                    item.classList.add('completed');
+                    item.classList.remove('active', 'disabled');
+                }
+                // Active (current step)
+                else if (stepNumber === step) {
+                    item.classList.add('active');
+                    item.classList.remove('completed', 'disabled');
+                }
+                // Locked (future steps)
+                else {
+                    item.classList.add('disabled');
+                    item.classList.remove('active', 'completed');
+                }
+            });
+
+            // Show/hide step content
+            document.querySelectorAll('.step-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`step-${step}`).classList.add('active');
+        }
+
+        // Initialize the form
+        document.addEventListener('DOMContentLoaded', function () {
+            goToStep(5);
+
+            // Add click event to sidebar steps
+            document.querySelectorAll('.step-item').forEach(item => {
+                item.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    return;
+                });
+            });
+        });
+
+        signatureInput.addEventListener('click', function () {
+            $("#uploadmodal").modal('show');
+        });
+
+        // Toggle form visibility
+        commentBtn.addEventListener('click', () => {
+            commentBtn.classList.toggle('active');
+            formContainer.classList.toggle('active');
+            modalOverlay.classList.toggle('active');
+        });
+
+        // Close form
+        closeBtn.addEventListener('click', () => {
+            commentBtn.classList.remove('active');
+            formContainer.classList.remove('active');
+            modalOverlay.classList.remove('active');
+        });
+
+
+           // Approve action
+       approveBtn.addEventListener('click', async (e) => {
+           e.preventDefault();
+
+           // Get the ID of the save button and Store original text
+           const savebtn = document.querySelector("#approveBtn");
+           const originalText = savebtn.innerHTML;
+
+           // Create loading icon and message container
+           savebtn.disabled = true;
+           savebtn.innerHTML = `<div class='buttonloading'></div>`;
+
+
+           let fomdata = new FormData();
+           fomdata.append("RegNo", strRegno);
+           fomdata.append("Comments", $("#Manager_Comments").val());
+
+
+           // Step 1: Simulate "Saving data..."
+           await new Promise(resolve => setTimeout(resolve, 1200)); // 1.2s delay for animation
+
+           let res = await postMethod('@Url.Action("DivisionApproveSubmit", "Patrol")', fomdata);
+           if (res?.Success) {
+               await new Promise(resolve => setTimeout(resolve, 1000));
+               savebtn.innerHTML = originalText;
+
+
+                // In a real application, you would send the approval to a server here
+                showNotification('approved successfully!', 'success');
+
+                // Reset form
+                document.getElementById('Manager_Comments').value = '';
+                document.getElementById('Return_Comments').value = '';
+
+                // Close form
+                commentBtn.classList.remove('active');
+                formContainer.classList.remove('active');
+                modalOverlay.classList.remove('active');
+
+               setTimeout(() => {
+                   window.location.href = `/PC/Patrol/CompleteRegistration?Regno=${strRegno}&mode=0`;
+               }, 3000);
+            }
+       });
+
+
+       // Return action
+       returnBtn.addEventListener('click', () => {
+           const notes = document.getElementById('moderation-notes').value;
+
+           if (!notes) {
+               showNotification('Please provide a reason for returning the comment', 'error');
+               return;
+           }
+
+           // In a real application, you would send the return action to a server here
+           showNotification('Comment returned to author with your notes', 'info');
+
+           // Reset form
+           document.getElementById('moderation-notes').value = '';
+
+           // Close form
+           commentBtn.classList.remove('active');
+           formContainer.classList.remove('active');
+           modalOverlay.classList.remove('active');
+
+           // In a real app, you would update the comment status in the UI
+           setTimeout(() => {
+               const pendingComment = document.querySelector('.comment.pending');
+               if (pendingComment) {
+                   pendingComment.classList.remove('pending');
+                   pendingComment.classList.add('returned');
+                   const statusSpan = pendingComment.querySelector('.comment-status');
+                   statusSpan.textContent = 'RETURNED';
+                   statusSpan.className = 'comment-status status-returned';
+               }
+           }, 500);
+       });
+
+
+        // Show notification
+        function showNotification(message, type) {
+            notification.textContent = message;
+            notification.className = 'notification active ' + type;
+
+            setTimeout(() => {
+                notification.classList.remove('active');
+            }, 3000);
+        }
+
+
+
+         const GetRegistrationDetails = async () => {
+             let res = await GetMethod('@Url.Action("GetRegistrationNoDetails", "Patrol")', { Regno: strRegno });
+             if (res && res.Success) {
+                 strManagerID = res.data.Manager_ID;
+
+                     $("#regtext").text(strRegno);
+                     //$("#InspectorName").val(res.Data.InspectName);
+                     //$("#PICName").val(res.Data.PICName);
+                     //$("#DateConduct").val(res.Data.DateConduct);
+                     $("#SectionName").val("P1SA-" + res.data.SectionName);
+
+
+                     $("#PIC_Comments").val(res.data.PIC_Comments);
+                     $("#Manager_Comments").val(res.data.Manager_Comments);
+
+
+                     $("#PIC_approve").text(res.data.PICName ?? 'N/A');
+                     $("#Inspect_approve").text(res.data.InspectName ?? 'N/A');
+                     $("#Dep_approve").text(res.data.DepartName ?? 'N/A');
+                     $("#Div_approve").text(res.data.DivName ?? 'N/A');
+
+
+                     $("#PIC_Isapprove").text(res.data.PIC_Comments != "" ? 'Approve' : 'Pending');
+                     $("#Ins_Isapprove").text(res.data.Inspect_IsAproved == true ? 'Approve' : 'Pending');
+                     $("#Dep_Isapprove").text(res.data.DepManager_IsAproved == true ? 'Approve' : 'Pending');
+                     $("#Div_Isapprove").text(res.data.DivManager_IsAproved == true ? 'Approve' : 'Pending');
+
+                     // Set colors
+                     setStatusColor("#PIC_Isapprove", res.data.PIC_Comments != "");
+                     setStatusColor("#Ins_Isapprove", res.data.Inspect_IsAproved);
+                     setStatusColor("#Dep_Isapprove", res.data.DepManager_IsAproved);
+                     setStatusColor("#Div_Isapprove", res.data.DivManager_IsAproved);
+
+
+
+                     //RedirectPageView(res.Data.ReportStatus, strRegno);
+
+                     let Getitems = emailTable.find(res => res.Employee_ID === strManagerID);
+                     if (Getitems) {
+                         if (Getitems.Signature) {
+                             // Display the Signature Image
+                             placeholder.style.display = 'none';
+                             signatureInput.style.display = 'none';
+                             signatureImage.style.display = 'block';
+                             signatureImage.src = '/User/GetSignatureImage?filename=' + encodeURIComponent(Getitems.Signature);
+                         } else {
+                             // If No Signature Image
+                             placeholder.style.display = 'none';
+                             signatureImage.style.display = 'none';
+                             signatureInput.style.display = 'block';
+                         }
+                     }
+                 }
+        }
+
+
+             const GetEmailList = async () => {
+                 let res = await GetMethod('@Url.Action("GetEmaiRegistration", "Patrol")', {});
+                  if (res && res.Success) {
+                      emailTable = res.data;
+                  }
+             };
+
+            // Utility function to set color
+            const setStatusColor = (selector, value) => {
+                if (value === true) {
+                    $(selector).css("color", "blue");
+                } else {
+                    $(selector).css("color", "red");
+                }
+            };
+
+             const GetRegistrationFindingsID = async () => {
+                 let res = await GetMethod('@Url.Action("GetRegistrationFindings", "Patrol")', { Regno: strRegno });
+
+                 if (res && res.Success) {
+                     res.data.forEach(item => {
+                         $(`#Inpects${item.FindID}`).val(item.FindDescription);
+                         $(`#counter${item.FindID}`).val(item.Countermeasure);
+                     });
+                 }
+             }
+
+             const GetRegistratioFiles = async () => {
+                 let filesSelect = [];
+                 let res = await GetMethod('@Url.Action("GetRegistrationAllFiles", "Patrol")', { Regno: strRegno });
+                 if (res.Success && res) {
+                     filesSelect = res.data;
+
+                     let UploadCounterPath = filesSelect[0].CounterPath;
+
+                     if (UploadCounterPath) {
+                         let files = UploadCounterPath.split(';');
+                         let fileHtml = "";
+
+                         files.forEach(f => {
+                             if (f.trim() !== "") {
+                                 let filenameonly = f.replace(/\.pdf$/i, "");
+
+                                 const fileExtension = f.split('.').pop().toLowerCase();
+
+                                 let fileType = 'default';
+
+                                 if (['pdf'].includes(fileExtension)) {
+                                     fileType = 'pdf';
+                                 } else if (['xlsx', 'xls', 'xlsm', 'csv'].includes(fileExtension)) {
+                                     fileType = 'xlsx';
+                                 } else if (['doc', 'docx', 'txt'].includes(fileExtension)) {
+                                     fileType = 'doc';
+                                 } else if (['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(fileExtension)) {
+                                     fileType = 'img';
+                                 } else if (['zip', 'rar', '7z'].includes(fileExtension)) {
+                                     fileType = 'zip';
+                                 }
+
+                                 const fileIconClass = `file-icon ${fileType}`;
+
+
+                                 let fileIcon = '';
+
+                                 switch (fileType) {
+                                     case 'pdf':
+                                         fileIcon = '<i class="far fa-file-pdf"></i>';
+                                         break;
+                                     case 'doc':
+                                         fileIcon = '<i class="far fa-file-word"></i>';
+                                         break;
+                                     case 'img':
+                                         fileIcon = '<i class="far fa-file-image"></i>';
+                                         break;
+                                     case 'zip':
+                                         fileIcon = '<i class="far fa-file-archive"></i>';
+                                         break;
+                                     case 'xlsx':
+                                         fileIcon = '<i class="fa-regular fa-file-excel"></i>';
+                                         break;
+                                     default:
+                                         fileIcon = '<i class="far fa-file"></i>';
+                                 }
+
+                                 fileHtml += `
+                                      <button class="open-pdf-btn" data-pdf-url="/Patrol/ViewPDF?strfilepath=${f}">
+                                           <div class="${fileIconClass}">
+                                             ${fileIcon}
+                                           </div>
+                                           <div class="file-info">
+                                               <div class="file-name">${filenameonly}</div>
+                                           </div>
+                                    </button>
+                                 `;
+                             }
+                         });
+
+                         document.getElementById("fileContainer").innerHTML = fileHtml;
+
+                         // Attach click event
+                         document.querySelectorAll(".open-pdf-btn").forEach(btn => {
+                             btn.addEventListener("click", function () {
+                                 let pdfUrl = this.getAttribute("data-pdf-url");
+                                 window.open(pdfUrl, "_blank"); // Open in new tab
+                             });
+                         });
+                     }
+
+
+                 }
+
+             }
+
+        const RedirectPageView = (stats, regno) => {
+
+            if (stats === 4 || stats === 5) return;
+
+            // Use encodeURIComponent to avoid issues with special characters
+            const r = encodeURIComponent(regno);
+            const m = encodeURIComponent(mode);
+
+            switch (stats) {
+                case 1:
+                    window.location.href = `/PC/Patrol/ProcessOwner?Regno=${r}&mode=${m}`;
+                    break;
+                case 2:
+                    window.location.href = `/PC/Patrol/InspectorsReview?Regno=${r}&mode=${m}`;
+                    break;
+                case 3:
+                    window.location.href = `/PC/Patrol/ManagerView?Regno=${r}&mode=${m}`;
+                    break;
+                case 4:
+                case 5:
+                    window.location.href = `/PC/Patrol/DepartmentApproval?Regno=${r}&mode=${m}`;
+                    break;
+                case 6:
+                    window.location.href = `/PC/Patrol/CompleteRegistration?Regno=${r}&mode=${m}`;
+                    break;
+                default:
+                    console.warn("Unknown status:", stats);
+            }
+        };
+
+        // ############## DISPLAY ALL THE DATA TO THE PAGE ########################
+        const LoadPageData = async () => {
+            try {
+
+                const [email, regist, find, files] = await Promise.all([
+                    GetEmailList(),
+                    GetRegistrationDetails(),
+                    GetRegistrationFindingsID(),
+                    GetRegistratioFiles()
+                ]);
+            } catch (error) {
+                console.error("Failed to load page data:", error);
+            } finally {
+                // Hide loading spinner whether success or failure
+                //$("#loadingSpinner").hide();
+            }
+        }
+
+        $(document).ready(() => {
+            LoadPageData();
+        });
+    </script>
+</body>
+

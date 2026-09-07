@@ -1,0 +1,35 @@
+﻿
+@font-face {
+    font-family: 'Poppin_reg';
+    src: url('fonts/poppins-regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Poppin_med';
+    src: url('fonts/Poppins-Medium.ttf') format('truetype');
+    font-display: block;
+}
+
+@font-face {
+    font-family: 'Poppin_bold';
+    src: url('fonts/Poppins-Bold.ttf') format('truetype');
+    font-display: block;
+}
+
+@font-face {
+    font-family: 'Quicksand_reg';
+    src: url('fonts/Quicksand-Regular.ttf') format('truetype');
+    font-display: block;
+}
+
+@font-face {
+    font-family: 'Quicksand_med';
+    src: url('../fonts/Quicksand-Medium.ttf') format('truetype');
+    font-display: block;
+}
+
+@font-face {
+    font-family: 'Quicksand_bold';
+    src: url('../fonts/Quicksand-Bold.ttf') format('truetype');
+    font-display: block;
+}

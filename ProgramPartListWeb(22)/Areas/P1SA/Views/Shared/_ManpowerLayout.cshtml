@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    @Html.Partial("_SystemConfig")
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>P1SA MANPOWER DATA</title>
+    <link href="~/Content/css/ManpowerDesign.css" rel="stylesheet" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@100;200;300;400;500;600;700;800;900&family=Geist:wght@100;200;300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@100;200;300;400;500;600;700&family=IBM+Plex+Sans:wght@100;200;300;400;500;600;700&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Nunito:wght@200;300;400;500;600;700;800;900&family=PT+Serif:wght@400;700&family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&family=Shantell+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <script src="~/Scripts/iconify-icon.min.js"></script>
+    <script src="~/Scripts/Shared/bootstrap.bundle.min.js"></script>
+    <link href="~/Content/Shared/bootstrap.min.css" rel="stylesheet" />
+
+    @Scripts.Render("~/bundles/shared-js")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="export-wrapper">
+        <div class="app-container">
+            <!-- Fixed Background Layers -->
+            <div class="app-bg">
+                <img class="bg-image" src="https://firebasestorage.googleapis.com/v0/b/banani-prod.appspot.com/o/reference-images%2F94f51b83-a716-4563-b479-7b7681862ef5?alt=media&amp;token=a936826e-e25b-4901-843d-1f4b76ed018b" alt="HUD background" />
+                <div class="bg-wash"></div>
+                <div class="bg-grid"></div>
+            </div>
+
+            <!-- Fixed Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <span class="logo-text">MANPOWER DATA.01</span>
+                    <div class="tech-accent"></div>
+                </div>
+                <nav class="sidebar-nav">
+
+                    <a href="/P1SA/Manpower/Dashboard" class="nav-item ">
+                        <span class="nav-num">01</span> OVERALL SUMMARY
+                    </a>
+
+                    <a href="/P1SA/Manpower/ManageEmployee" class="nav-item active">
+                        <span class="nav-num">02</span> EMPLOYEES DATA
+                    </a>
+                    <a href="/P1SA/Manpower/NewlyHiredpage" class="nav-item ">
+                        <span class="nav-num">03</span> NEWLY HIRE SECTION
+                    </a>
+
+
+                    <div class="nav-item" data-media-type="banani-button"><span class="nav-num">04</span> CROSS TRAINEES</div>
+                    @*<div class="nav-item" data-media-type="banani-button"><span class="nav-num">05</span> TRANSACTIONS</div>
+                        <div class="nav-item" data-media-type="banani-button"><span class="nav-num">06</span> REPORTS</div>*@
+                    <div class="nav-item" data-media-type="banani-button"><span class="nav-num">07</span> SETTINGS</div>
+                </nav>
+                <div class="sidebar-divider"></div>
+                <nav class="sidebar-nav">
+                    <div class="nav-item" data-media-type="banani-button"><span class="nav-num">09</span> HELP_CENTER</div>
+                    <div class="nav-item" data-media-type="banani-button"><span class="nav-num">10</span> FEEDBACK_LOG</div>
+                </nav>
+                <div class="sidebar-footer">
+                    <div class="barcode"></div>
+                    <div style="display: flex; justify-content: space-between"><span>MD | PRIVACY</span><span>VER_2025.1</span></div>
+                </div>
+            </aside>
+
+            <!-- Main content area with fixed top-header and scrollable body -->
+            <main class="main-content">
+                <!-- Fixed Top Header -->
+                <header class="top-header">
+                    <div class="search-container">
+                        <div style="width:20px;height:20px;display:flex;align-items:center;justify-content:center"><iconify-icon icon="lucide:search" style="font-size:20px;color:inherit"></iconify-icon></div>
+                        <div class="search-input-wrapper"><span class="bracket">[</span><input type="text" value="SEARCH_SYS_INDEX..." class="search-input" readonly /><span class="bracket">]</span></div>
+                    </div>
+                    <div class="header-actions">
+                        @*<button class="tech-button orange" data-media-type="banani-button"><div style="width:16px;height:16px;display:flex;align-items:center;justify-content:center"><iconify-icon icon="lucide:zap" style="font-size:16px;color:inherit"></iconify-icon></div> QUICK_EXEC</button>*@
+                        <div class="header-icon-btn" data-media-type="banani-button"><div style="width:20px;height:20px;display:flex;align-items:center;justify-content:center"><iconify-icon icon="lucide:bell" style="font-size:20px;color:inherit"></iconify-icon></div><span class="notification-dot"></span></div>
+                        <div class="header-icon-btn" data-media-type="banani-button"><div style="width:20px;height:20px;display:flex;align-items:center;justify-content:center"><iconify-icon icon="lucide:help-circle" style="font-size:20px;color:inherit"></iconify-icon></div></div>
+                        <div class="user-profile"><img src="https://storage.googleapis.com/banani-avatars/avatar%2Fmale%2F25-35%2FEuropean%2F1" class="user-avatar" alt="User" /><span class="user-name">ANDREW_V</span></div>
+                    </div>
+                </header>
+
+                <!-- Scrollable Page Body -->
+                <div class="page-body">
+                    @RenderBody();
+                </div>
+            </main>
+        </div>
+    </div>
+
+
+</body>
+</html>

@@ -1,0 +1,216 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/x-icon" href="~/Content/Images/inventory-management.ico">
+    <meta name="description" content="Learn how to improve your website with caching, accessibility, and SEO best practices.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>DailyPlanChart</title>
+
+    <script src="~/Scripts/iconify-icon.min.js"></script>
+    <script src="~/Scripts/Shared/bootstrap.bundle.min.js"></script>
+    <link href="~/Content/Shared/bootstrap.min.css" rel="stylesheet" />
+
+    @Styles.Render("~/Content/shared-css")
+
+    @Scripts.Render("~/bundles/shared-js")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <style>
+        body{
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            padding: 3em;
+        }
+    </style>
+</head>
+<body>
+    <div style="height:100%;">
+        <canvas id="dailyChart"></canvas>
+    </div>
+
+    <script src="~/Scripts/chart.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/Popper.min.js"></script>
+    <script src="~/Scripts/Shared/Utilities.js"></script>
+    <script src="~/Scripts/Shared/Utilities.min.js"></script>
+    <script type="text/javascript">
+        async function LoadDailyChart() {
+
+
+            const data = await GetMethodPublic('@Url.Action("GetDailyPlanChart", "Assembly")');
+
+            console.log(data);
+            DrawChart(data);
+        }
+
+        let dailyChart;
+
+        function DrawChart(data) {
+
+            if (dailyChart)
+                dailyChart.destroy();
+
+            const labels = data.map(x => x.PlanDay);
+
+            dailyChart = new Chart(
+                document.getElementById("dailyChart"),
+                {
+
+                    type: "bar",
+
+                    data: {
+
+                        labels: labels,
+
+                        datasets: [
+
+                            {
+                                label: "Molding",
+                                data: data.map(x => x.Molding),
+                                backgroundColor: "#3b82f6",
+                                stack: "Daily"
+                            },
+
+                            {
+                                label: "Press",
+                                data: data.map(x => x.Press),
+                                backgroundColor: "#94a3b8",
+                                stack: "Daily"
+                            },
+
+                            {
+                                label: "Rotor",
+                                data: data.map(x => x.Rotor),
+                                backgroundColor: "#94a9db",
+                                stack: "Daily"
+                            },
+
+                            {
+                                label: "Winding",
+                                data: data.map(x => x.Winding),
+                                backgroundColor: "#ffc000",
+                                stack: "Daily"
+                            },
+
+                            {
+                                label: "Circuit",
+                                data: data.map(x => x.Circuit),
+                                backgroundColor: "#a9d08e",
+                                stack: "Daily"
+                            },
+
+                            {
+                                label: "Oilproof",
+                                data: data.map(x => x.Oilproof),
+                                backgroundColor: "#00ACC1",
+                                stack: "Daily"
+                            },
+
+                            {
+                                label: "Harness",
+                                data: data.map(x => x.Harness),
+                                backgroundColor: "#9966ff",
+                                stack: "Daily"
+                            },
+
+                            {
+                                label: "FinalAssembly",
+                                data: data.map(x => x.FinalAssembly),
+                                backgroundColor: "#d6800f",
+                                stack: "Daily"
+                            },
+
+                            {
+                                label: "MaterialPrep",
+                                data: data.map(x => x.Warehouse),
+                                backgroundColor: "#d68110",
+                                stack: "Daily"
+                            }
+
+                        ]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        interaction: {
+
+                            mode: 'index',
+                            intersect: false
+
+                        },
+
+                        plugins: {
+
+                            legend: {
+
+                                position: 'bottom'
+
+                            },
+
+                            title: {
+
+                                display: true,
+
+                                text: 'Production 1 Traceability Daily Report Data Chart'
+
+                            }
+
+                        },
+
+                        scales: {
+
+                            x: {
+
+                                stacked: true,
+
+                                title: {
+
+                                    display: true,
+
+                                    text: 'Day of Month'
+
+                                }
+
+                            },
+
+                            y: {
+
+                                stacked: true,
+
+                                beginAtZero: true,
+
+                                title: {
+
+                                    display: true,
+
+                                    text: 'Plan Quantity'
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                });
+
+        }
+
+        LoadDailyChart();
+    </script>
+</body>
+</html>

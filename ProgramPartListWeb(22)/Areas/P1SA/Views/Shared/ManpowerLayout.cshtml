@@ -1,0 +1,65 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>_ManpowerLayout</title>
+    <link href="~/Content/css/ManpowerDesign.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="app-container">
+        <!-- SIDEBAR (modern, dark) -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-area">
+                    <div class="logo-icon">Q</div>
+                    <span class="logo-text">QSearch</span>
+                </div>
+            </div>
+            <div class="sidebar-nav">
+                <div class="nav-item active">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>Leads</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-address-card"></i>
+                    <span>Contacts</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Analytics</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </div>
+            </div>
+            <div class="sidebar-footer">
+                <div class="user-badge">
+                    <div class="avatar">JD</div>
+                    <div class="user-info" style="line-height:1.3">
+                        <div style="font-weight:500">John Doe</div>
+                        <div style="font-size:0.7rem; color:#94a3b8">admin@qsearch.com</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN: Lead table area exactly matching given data & UI features -->
+        <main class="main-content">
+            @RenderBody()
+        </main>
+
+
+    </div>
+</body>
+</html>

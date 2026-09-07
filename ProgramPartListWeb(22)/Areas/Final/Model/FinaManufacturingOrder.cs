@@ -1,0 +1,297 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace ProgramPartListWeb.Areas.Final.Model
+{
+    public class FanTraceabilityManufacturingOrder
+    {
+        public int RecordID { get; set; }
+        public string Line { get; set; } = string.Empty;
+        public string FinalShopOrder { get; set; } = string.Empty;
+        public string ItemNo { get; set; }
+        public string Model { get; set; } = string.Empty;
+        public string WC { get; set; } = string.Empty;
+        public int PlanQty { get; set; } = 0;
+        public DateTime? PlanStartDate { get; set; }
+        public string DispatchDate { get; set; }
+        public string Note { get; set; }
+        public DateTime? FinalFinishedDate { get; set; }
+        public string FAStatus { get; set; }
+        public string ShipmentDate { get; set; }
+        public string ShipmentMode { get; set; }
+        public bool WithSR { get; set; } = false;
+        public string OrderRemarks { get; set; }
+        public int OrderStatus { get; set; }
+
+        public string CompletedSection { get; set; }
+
+        public string Molding { get; set; }
+        public string Press { get; set; }
+        public string Circuit { get; set; }
+        public string Rotor { get; set; }
+        public string Winding { get; set; }
+        public string final { get; set; }
+        public string Harness { get; set; }
+        public string Material { get; set; }
+        public string NextItem { get; set; }
+        public string NextShop { get; set; }    
+        public int InputQty { get; set; }
+        public int Operational { get; set; }
+        public int QuanStatus { get; set; }
+
+        public string DateStart { get; set; }
+        public TimeSpan? TimeStart { get; set; }
+        public TimeSpan? TimeEnd { get; set; }
+    }
+
+
+    public class AssemblyPartlistRecord
+    {
+        public string DateDelay { get; set; }
+        public int Plan_Start { get; set; }
+        public int Completion { get; set; }
+        public int P1SA { get; set; }
+        public int P1FA { get; set; }
+        public string CE { get; set; }
+        public string FA { get; set; }
+        public string AF { get; set; }
+        public string AG { get; set; }
+        public string BF { get; set; }
+        public string FG { get; set; }
+        public string DD { get; set; }
+        public string FD { get; set; }
+    }
+
+
+    public class AssemblyRecord
+    {
+        public string FinalShopOrder { get; set; }
+        public string Line { get; set; }
+        public int Status { get; set; }
+        public string OnProcessModel { get; set; }
+        public string NextProcessModel { get; set; }
+        public string SpecialProcess { get; set; }
+        public string Remarks { get; set; }
+        public string NextItem { get; set; }
+
+        public string LineStatus
+        {
+            get
+            {
+                string statusText = Status == 2 ? "Online" : "Offline";
+                return $"{Line}\n{statusText}";
+            }
+        }
+    }
+
+    public class DispatchPartlistRecord
+    {
+        public string DateDelay { get; set; }
+
+        // Summary
+        public int Plan_Start { get; set; }
+        public int Completion { get; set; }
+        public int P1SA { get; set; }
+        public int P1FA { get; set; }
+
+        // Individual Process Totals
+        public int P1SA_C { get; set; }
+        public int P1SA_W { get; set; }
+        public int P1SA_M { get; set; }
+        public int P1SA_P { get; set; }
+        public int P1SA_R { get; set; }
+
+        public int P1FA_FA { get; set; }
+        public int P1FA_H { get; set; }
+
+        public int M1 { get; set; }
+    }
+
+
+
+
+
+
+
+
+
+    public class ProductionRecord
+    {
+        public int Id { get; set; }
+
+        public string Line { get; set; } = string.Empty;
+
+        private string _shopOrder = string.Empty;
+        public string ShopOrder
+        {
+            get => _shopOrder;
+            set => _shopOrder = (value ?? string.Empty).Replace(" ", "");
+        }
+
+        private string _partNo = string.Empty;
+        public string PartNo
+        {
+            get => _partNo;
+            set => _partNo = (value ?? string.Empty).Replace(" ", "");
+        }
+
+        private string _model = string.Empty;
+        public string Model
+        {
+            get => _model;
+            set => _model = (value ?? string.Empty).Replace(" ", "");
+        }
+        public string WC { get; set; } = string.Empty;
+        public int Qty { get; set; }
+        public string PlanStart { get; set; } = string.Empty;
+        public string DispatchDate { get; set; }
+        public string Note { get; set; } = string.Empty;
+        public string IfsFinish { get; set; } = string.Empty;
+        public string FaStatus { get; set; } = string.Empty;
+        public string Shipment { get; set; } = string.Empty;
+        public string Mode { get; set; } = string.Empty;
+        public bool WithSr { get; set; } = false;
+        public string Remarks { get; set; } = string.Empty;
+        public int Operational { get; set; } = 0;   
+
+        // Section Delays 
+        public int P1SA_C { get; set; } = 0;
+        public int P1SA_W { get; set; } = 0;
+        public int P1SA_M { get; set; } = 0;
+        public int P1SA_P { get; set; } = 0;
+        public int P1SA_R { get; set; } = 0;
+        public int P1FA_FA { get; set; } = 0;
+        public int P1FA_H { get; set; } = 0;
+        public int M1 { get; set; } = 0;
+
+        // ── Upload tracking (not persisted) ───────────────────────────────────
+        public int RowNumber { get; set; }
+        public string Status { get; set; } = "Pending";
+        public string ErrorMessage { get; set; } = string.Empty;
+    }
+
+    public class UploadProductionRecord
+    {
+        public int RecordID { get; set; }
+        public string Line { get; set; } = string.Empty;
+        public string FinalShopOrder { get; set; } = string.Empty;
+        public string ItemNo { get; set; }
+        public string Model { get; set; } = string.Empty;
+        public string WC { get; set; } = string.Empty;
+        public int PlanQty { get; set; } = 0;
+        public string Note { get; set; }
+        public DateTime? FinalFinishedDate { get; set; }
+        public string FAStatus { get; set; }
+        public DateTime? ShipmentDate { get; set; }
+        public int UploadPlanQty { get; set; }
+        public int OrderPlanQty { get; set; }
+
+        public string UploadPlanStartDate { get; set; } = string.Empty;
+        public string OrderPlanStartDate { get; set; } = string.Empty;
+        public string StatusCheck { get; set; } = string.Empty;
+        public bool IsApproved { get; set; } = false;
+
+
+        public int P1SA_C { get; set; } = 0;
+        public int P1SA_W { get; set; } = 0;
+        public int P1SA_M { get; set; } = 0;
+        public int P1SA_P { get; set; } = 0;
+        public int P1SA_R { get; set; } = 0;
+        public int P1FA_FA { get; set; } = 0;
+        public int P1FA_H { get; set; } = 0;
+        public int M1 { get; set; } = 0;
+    }
+
+
+
+
+
+    public class UploadDataModel
+    {
+        public int RecordID { get; set; }
+        public string Line { get; set; } = string.Empty;
+        public string FinalShopOrder { get; set; } = string.Empty;
+        public string ItemNo { get; set; }
+        public string Model { get; set; } = string.Empty;
+        public string WC { get; set; } = string.Empty;
+        public int PlanQty { get; set; } = 0;
+        public DateTime? PlanStartDate { get; set; }
+        public string DispatchDate { get; set; }
+        public string Note { get; set; }
+        public DateTime? FinalFinishedDate { get; set; }
+        public string FAStatus { get; set; }
+        public DateTime? ShipmentDate { get; set; }
+        public string ShipmentMode { get; set; }
+        public bool WithSR { get; set; } = false;
+        public string OrderRemarks { get; set; }
+        public int OrderStatus { get; set; }
+        public string StatusCheck { get; set; }
+        public bool IsApproved { get; set; }
+        public int Operational { get; set; }
+
+
+        public int P1SA_C { get; set; } = 0;
+        public int P1SA_W { get; set; } = 0;
+        public int P1SA_M { get; set; } = 0;
+        public int P1SA_P { get; set; } = 0;
+        public int P1SA_R { get; set; } = 0;
+        public int P1FA_FA { get; set; } = 0;
+        public int P1FA_H { get; set; } = 0;
+        public int M1 { get; set; } = 0;
+
+    }
+
+    public class UploadRowDto
+    {
+        public string ShopOrder { get; set; }
+        public string PartNo { get; set; }
+        public string Model { get; set; }
+        public string Wc { get; set; }
+        public int Qty { get; set; }
+        public string PlanStart { get; set; }
+        public RowResult Result { get; set; }
+    }
+
+    public class RowResult
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; }
+    }
+
+
+
+
+    public class UploadJobState
+    {
+        public string Status { get; set; }
+        public int Total { get; set; }
+        public int Current { get; set; }
+        public int Success { get; set; }
+        public int Failed { get; set; }
+        public int LastSent { get; set; }
+        public string Message { get; set; }
+        public List<UploadRowResult> Rows { get; set; }
+    }
+
+    public class UploadRowResult
+    {
+        public string ShopOrder { get; set; }
+        public string PartNo { get; set; }
+        public string Model { get; set; }
+        public string Wc { get; set; }
+        public string PlanStart { get; set; }
+        public bool IsSuccess { get; set; }
+        public string Message { get; set; }
+    }
+
+    public class PartlistTotal
+    {
+        public int TotalPlanQty { get; set; }
+        public string LastUpdated { get; set; }
+        public decimal AsPercentage { get; set; }
+    }
+
+
+}

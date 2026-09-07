@@ -17,147 +17,71 @@
 
 
 
+<!-- Header -->
+<header class="dashboard-header">
+    <div class="header-title">
+        <h1>
+            Best Final Assembly Line
+            <small>Dashboard</small>
+        </h1>
+    </div>
+    <div class="header-brand">
+        <div class="company">
+            SANYO DENKI <span>PHILIPPINES, INC.</span>
+        </div>
+        <div class="tagline" id=tagline>Turn the Time into Power</div>
+    </div>
+</header>
 
-
-<div class="dashboard" id="dashboard" >
+<div class="dashboard" id="dashboard">
 
 
     <!-- Main content -->
     <div class="dashboard-main">
         <!-- Left column -->
         <section class="col-left">
-            <div class="dasheader">
-                <h2 class="section-title">NCR Type</h2>
-                <div class="line" style=" width: 80%;"></div>
-            </div>
+            <h2 class="section-title">NCR Type</h2>
 
             <div class="ncr-bars ncr-circles">
-
-                <!-- IN-PROCESS -->
                 <div class="ncr-circle" data-type="inprocess">
                     <svg viewBox="0 0 120 120" class="circle-svg">
-
-                        <defs>
-                            <linearGradient id="gradient-green"
-                                            x1="0%" y1="0%"
-                                            x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#22c530" />
-                                <stop offset="50%" stop-color="#0a9988" />
-                                <stop offset="100%" stop-color="#0cb63f" />
-                            </linearGradient>
-                        </defs>
-
-                        <!-- gradient track -->
-                        <circle class="circle-bg-green"
-                                cx="60"
-                                cy="60"
-                                r="52">
-                        </circle>
-
-                        <!-- gradient progress -->
-                        <circle id="ncr-inprocess"
-                                class="circle-progress ring-primary"
-                                cx="60"
-                                cy="60"
-                                r="52">
-                        </circle>
-
+                        <circle class="circle-bg" cx="60" cy="60" r="52"></circle>
+                        <circle id="ncr-inprocess" class="circle-progress ring-primary" cx="60" cy="60" r="52"></circle>
                     </svg>
-
                     <div class="circle-label">
-                        <span class="circle-percent" id="ncr-inprocess-pct">0%</span>
+                        <span class="emoji">😒</span>
+                        <span class="circle-percent" id="ncr-inprocess-pct">80%</span>
                     </div>
 
-                    <p class="circle-text">
-                        <span class="emoji">😒</span>
-                        In-Process Defect
-                    </p>
+                        <p class="circle-text">In-Process Defect</p>
+
                 </div>
 
-
-                <!-- REJECTED -->
                 <div class="ncr-circle" data-type="rejected">
                     <svg viewBox="0 0 120 120" class="circle-svg">
-
-                        <defs>
-                            <linearGradient id="gradient-orange"
-                                            x1="0%" y1="0%"
-                                            x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#facc15" />
-                                <stop offset="50%" stop-color="#fb923c" />
-                                <stop offset="100%" stop-color="#f97316" />
-                            </linearGradient>
-                        </defs>
-
-                        <!-- gradient track -->
-                        <circle class="circle-bg-orange"
-                                cx="60"
-                                cy="60"
-                                r="52">
-                        </circle>
-
-                        <!-- gradient progress -->
-                        <circle id="ncr-rejected"
-                                class="circle-progress ring-orange"
-                                cx="60"
-                                cy="60"
-                                r="52">
-                        </circle>
-
+                        <circle class="circle-bg" cx="60" cy="60" r="52"></circle>
+                        <circle id="ncr-rejected" class="circle-progress ring-orange" cx="60" cy="60" r="52"></circle>
                     </svg>
-
                     <div class="circle-label">
-                        <span class="circle-percent" id="ncr-rejected-pct">0%</span>
-                    </div>
-
-                    <p class="circle-text">
                         <span class="emoji">😢</span>
-                        Rejected Lot
-                    </p>
+                        <span class="circle-percent" id="ncr-rejected-pct">70%</span>
+                    </div>
+                    <p class="circle-text">Rejected Lot</p>
+
                 </div>
 
-
-                <!-- CUSTOMER CLAIM -->
                 <div class="ncr-circle" data-type="claim">
                     <svg viewBox="0 0 120 120" class="circle-svg">
-
-                        <defs>
-                            <linearGradient id="gradient-red"
-                                            x1="0%" y1="0%"
-                                            x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#fb7185" />
-                                <stop offset="50%" stop-color="#ef4444" />
-                                <stop offset="100%" stop-color="#dc2626" />
-                            </linearGradient>
-                        </defs>
-
-                        <!-- gradient track -->
-                        <circle class="circle-bg-red"
-                                cx="60"
-                                cy="60"
-                                r="52">
-                        </circle>
-
-                        <!-- gradient progress -->
-                        <circle id="ncr-claim"
-                                class="circle-progress ring-red"
-                                cx="60"
-                                cy="60"
-                                r="52">
-                        </circle>
-
+                        <circle class="circle-bg" cx="60" cy="60" r="52"></circle>
+                        <circle id="ncr-claim" class="circle-progress ring-red" cx="60" cy="60" r="52"></circle>
                     </svg>
-
                     <div class="circle-label">
-                        <span class="circle-percent" id="ncr-claim-pct">0%</span>
-                    </div>
-
-                    <p class="circle-text">
                         <span class="emoji">😭</span>
-                        Customer Claim
-                    </p>
-                </div>
+                        <span class="circle-percent" id="ncr-claim-pct">65%</span>
+                    </div>
+                    <p class="circle-text">Customer Claim</p>
 
+                </div>
             </div>
 
 
@@ -185,13 +109,11 @@
         </div>
     </div>-->
             @*<div class="ncr-scale">
-            <span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span>
-            <span>60</span><span>70</span><span>80</span><span>90</span><span>100</span>
-        </div>*@
-            <div class="dasheader">
-                <h2 class="section-title">NCR Distribution</h2>
-                <div class="line" style=" width: 65%;"></div>
-            </div>
+                <span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span>
+                <span>60</span><span>70</span><span>80</span><span>90</span><span>100</span>
+            </div>*@
+
+            <h2 class="section-title" style="margin-top:1.2rem; margin-bottom: 1em;">NCR Distribution</h2>
             <div class="dist-row" data-group="Group 1">
                 <span class="label">Group 1</span>
                 <div class="track">
@@ -224,28 +146,28 @@
             </div>
 
             <div class="dist-row" data-group="Oil Proof">
-                <span class="label">Material Prep</span>
+                <span class="label">Materail Prep</span>
                 <div class="track">
                     <div id="dist-mat" class="fill bg-secondary" style="width:0%;">0%</div>
                 </div>
             </div>
-           
+
             <div class="badge-harness">
-            <span class="icon">🐝</span>
-            <div class="info">
-                <div class="title">WIRE HARNESS</div>
-                <span class="group-badge">BEST GROUP</span>
-                <div class="effort">EFFORT</div>
+                <span class="icon">🐝</span>
+                <div class="info">
+                    <div class="title">WIRE HARNESS</div>
+                    <span class="group-badge">BEST GROUP</span>
+                    <div class="effort">EFFORT</div>
+                </div>
+                <span class="team">TEAM</span>
             </div>
-            <span class="team">TEAM</span>
-        </div>
         </section>
 
         <!-- Center column -->
         <section class="col-center">
             <h2 id="dashboard-title">
-
-                Final Assembly Line
+                July 2026<br />
+                FA Line<br />
                 Monitoring
             </h2>
 
@@ -268,13 +190,13 @@
                 </div>
             </div>
 
-            @*<div class="best-group">
+            <div class="best-group">
                 <div class="thinking">🤭</div>
                 <div>
                     <div class="best">BEST</div>
                     <div class="line">FA LINE</div>
                 </div>
-            </div>*@
+            </div>
 
             <div class="best-block">
 
@@ -282,11 +204,8 @@
                     <span class="emoji-big">🤩</span>
                     <div>
                         <div class="line-number" id="best-line-number">LINE 10</div>
-                        @*<div class="slogan">Quality starts with me!</div>*@
-                        <div class="slogan">Best FA Lines!</div>
+                        <div class="slogan">Quality starts with me!</div>
                     </div>
-
-                    <div class="emoji-big">🤭</div>
                 </div>
 
                 <h6>Factory Visit Line</h6>
@@ -297,28 +216,28 @@
                         <span class="audit-icon chip-customer">🏭</span>
                         <div class="audit-text">
                             <span class="audit-label">Customer:</span>
-                            <span class="audit-value" contenteditable="true" data-field="Customer">-</span>
+                            <span class="audit-value" contenteditable="true" data-field="customer">AMAZON MQE</span>
                         </div>
                     </div>
                     <div class="audit-chip">
                         <span class="audit-icon chip-date">📅</span>
                         <div class="audit-text">
                             <span class="audit-label">Audit Date:</span>
-                            <span class="audit-value" contenteditable="true" data-field="AuditDate">-</span>
+                            <span class="audit-value" contenteditable="true" data-field="auditDate">September 05, 2026</span>
                         </div>
                     </div>
                     <div class="audit-chip">
                         <span class="audit-icon chip-time">🕐</span>
                         <div class="audit-text">
                             <span class="audit-label">Audit Time:</span>
-                            <span class="audit-value" contenteditable="true" data-field="AuditTime">-</span>
+                            <span class="audit-value" contenteditable="true" data-field="auditTime">9:00AM - 5:00PM</span>
                         </div>
                     </div>
                     <div class="audit-chip">
                         <span class="audit-icon chip-coverage">⚙️</span>
                         <div class="audit-text">
                             <span class="audit-label">Coverage Area:</span>
-                            <span class="audit-value" contenteditable="true" data-field="CoverageArea">-</span>
+                            <span class="audit-value" contenteditable="true" data-field="coverageArea">FA, HARNESS & OILPROOF</span>
                         </div>
                     </div>
                 </div>
@@ -334,31 +253,16 @@
 
 <!-- Award Slide Overlay -->
 <div class="award-slide-overlay" id="awardSlideOverlay">
-    @*<div class="awardContent">
-        <div class="awardcol">
-            <h2 >Quality Wall of fame</h2>
-        </div>
-
-        <div class="awardcol">
-            <img id="awardCertImage" src="" alt="Certificate"
-                 onerror="this.onerror=null; this.src='@Url.Content("~/Content/Images/no-image.png")';" />
-            <div class="awardname">
-
-            </div>
-        </div>
-    </div>*@
-    
-    
     <div class="award-slide">
         <div class="award-slide-left">
             <div class="award-ribbon">🏆</div>
             <h2 class="award-heading">Quality Wall of fame</h2>
-           
+            <div class="award-winner-name" id="awardWinnerName">—</div>
             <div class="award-subtitle" id="awardSubtitle"></div>
 
             <div class="award-subtitle" id="awardID"></div>
             <div class="award-subtitle" id="Affiliation"></div>
-            <div class="" id="awardWinnerName"></div>
+
             <div>Early Defect Detection</div>
             <div class="award-subtitle" id="EarlyDefects"></div>
         </div>
@@ -438,18 +342,13 @@
             this.CIRCLE_RADIUS = 52;
             this.CIRCLE_CIRCUMFERENCE = 2 * Math.PI * this.CIRCLE_RADIUS; // ≈326.726
 
-            this._imagePreloadCache = new Map();
-
-
-            // ---- Audit info bar ----
-            this.auditInfoBar = document.getElementById('auditInfoBar');
             this.refreshInterval = null;
             const today = new Date();
 
             this.monthName = today.toLocaleString('en-US', { month: 'long' });
             this.year = today.getFullYear();
 
-            // this.dashboardTitle = document.getElementById('dashboard-title');
+            this.dashboardTitle = document.getElementById('dashboard-title');
 
             this.MonthTitle = document.getElementById('monthText');
             this.YearTitle = document.getElementById('yearText');
@@ -493,7 +392,7 @@
                 'Line 06', 'Line 07', 'Line 08', 'Line 09', 'Line 10',
                 'Line 11', 'Line 12', 'Line 13', 'Line 14', 'Line 15',
                 'Line 16', 'Line 17', 'Line 18',
-                'Cell Line', 'OilProof', 'Harness', 'Material Prep'
+                'Cell Line', 'OilProof'
             ];
 
             this.groupMap = {
@@ -503,9 +402,7 @@
                 'Line 13': 'L13', 'Line 14': 'L14', 'Line 15': 'L15', 'Line 16': 'L16',
                 'Line 17': 'L17', 'Line 18': 'L18',
                 'Cell Line': 'CL',
-                'OilProof': 'OP',
-                'Harness': 'Harness',
-                'Material Prep': 'Matprep'
+                'OilProof': 'OP'
             };
 
             this.reverseGroupMap = Object.fromEntries(
@@ -520,11 +417,8 @@
 
 
             await this.fetchMonthData();
-            this.highlightToday();   
             await this.fetch4MData();
             await this.fetchGroupData();
-            await this.fetchAuditInfo();
-            this.attachAuditInfoEditing();
 
             this.generateData();
             this.renderLines();
@@ -537,14 +431,14 @@
                 //this.refreshText.textContent = 'Updated ' + new Date().toLocaleTimeString();
             }, 10000);
 
-            // this.bestLinesInterval = setInterval(async () => {
-            //     await this.fetchBestLines();
-            // }, 60 * 1000);
+            this.bestLinesInterval = setInterval(async () => {
+                await this.fetchBestLines();
+            }, 60 * 1000);
 
             // Slide rotation: Main dashboard -> Info slide -> Award slide -> back to Main
-            // this.awardSlideInterval = setInterval(() => {
-            //     this.showInfoSlide();
-            // }, 20 * 1000);
+            this.awardSlideInterval = setInterval(() => {
+                this.showInfoSlide();
+            }, 20 * 1000);
 
             this.OpensDataManage.addEventListener('click', (e) => {
                 window.location.href = '/Production1/FinalAssembly/ManagementData';
@@ -565,11 +459,11 @@
                     return;
                 }
 
-                //this.dashboardTitle.innerHTML = `
-                //     ${res.data.months} ${res.data.years}<br>
-                //     FA Line<br>
-                //     Monitoring
-                //`;
+                this.dashboardTitle.innerHTML = `
+                     ${res.data.months} ${res.data.years}<br>
+                     FA Line<br>
+                     Monitoring
+                `;
 
                 this.MonthTitle.innerHTML = res.data.months;
                 this.YearTitle.innerHTML = res.data.years;
@@ -578,80 +472,6 @@
             }
         }
 
-        // ---- Audit info: load + auto-save on Enter ----
-        async fetchAuditInfo() {
-            try {
-                const res = await getMethod('@Url.Action("GetAuditInfo", "FinalAssembly")', {});
-                if (!res?.Success || !res.data) return;
-                //console.log(res);
-                document.querySelectorAll('.audit-value[data-field]').forEach(el => {
-                    const field = el.dataset.field;
-                    if (res.data[field] !== undefined && res.data[field] !== null) {
-                        el.textContent = res.data[field];
-                        el.dataset.lastSaved = res.data[field];
-                    }
-                });
-            } catch (error) {
-                console.error('Error fetching audit info:', error);
-            }
-        }
-
-        attachAuditInfoEditing() {
-            if (!this.auditInfoBar) return;
-
-            this.auditInfoBar.querySelectorAll('.audit-value[contenteditable]').forEach(el => {
-                // Baseline so we can tell if anything actually changed
-                if (el.dataset.lastSaved === undefined) {
-                    el.dataset.lastSaved = el.textContent.trim();
-                }
-
-                el.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();   // no newline in a single-line chip
-                        el.blur();            // triggers the blur handler below, which saves
-                    }
-                    if (e.key === 'Escape') {
-                        el.textContent = el.dataset.lastSaved;
-                        el.blur();
-                    }
-                });
-
-                el.addEventListener('blur', () => this.saveAuditField(el));
-            });
-        }
-
-        async saveAuditField(el) {
-            const field = el.dataset.field;
-            const value = el.textContent.trim();
-
-            if (value === el.dataset.lastSaved) return; // nothing changed, skip the round-trip
-
-            el.classList.add('saving');
-            try {
-                console.log(`Field ` + field);
-                console.log(`Value ` + value);
-
-                const res = await postMethod('@Url.Action("SaveAuditInfo", "FinalAssembly")', {
-                    field: field,
-                    value: value
-                });
-
-                if (res?.Success) {
-                    el.dataset.lastSaved = value;
-                    el.classList.remove('saving');
-                    el.classList.add('saved');
-                    setTimeout(() => el.classList.remove('saved'), 1000);
-                } else {
-                    throw new Error(res?.Message || 'Save failed');
-                }
-            } catch (error) {
-                console.error('Error saving audit field:', field, error);
-                el.classList.remove('saving');
-                el.classList.add('save-error');
-                el.textContent = el.dataset.lastSaved; // revert on failure
-                setTimeout(() => el.classList.remove('save-error'), 2000);
-            }
-        }
 
 
         // ---- 4M Factors dashboard ----
@@ -695,7 +515,6 @@
         }
 
         renderNcrBars(data) {
-            //console.log(data);
             const typeMap = {
                 'In-Process': 'inprocess',
                 'Rejected Lot': 'rejected',
@@ -913,9 +732,6 @@
             if (this._typingRafId) cancelAnimationFrame(this._typingRafId);
             clearTimeout(this._typingPauseTimeout);
 
-            // Clear whatever row was left highlighted from a previous cycle
-            this.clearActiveTypingRow();
-
             if (!lines || lines.length === 0) {
                 this.bestLineNumber.textContent = 'All Lines Reported';
                 return;
@@ -930,10 +746,8 @@
             let holding = false;
             let holdStart = 0;
 
-            // Highlight the row for the first line before typing starts
-            this.setActiveTypingRow(lines[lineIndex]);
-
             const step = (timestamp) => {
+                // Pause all work while the page/tab isn't visible.
                 if (document.hidden) {
                     this._typingRafId = requestAnimationFrame(step);
                     return;
@@ -946,9 +760,6 @@
                         charIndex = 0;
                         this.bestLineNumber.textContent = '';
                         lastTickTime = timestamp;
-
-                        // Sync the list highlight with the newly-typing line
-                        this.setActiveTypingRow(lines[lineIndex]);
                     }
                     this._typingRafId = requestAnimationFrame(step);
                     return;
@@ -970,23 +781,6 @@
             };
 
             this._typingRafId = requestAnimationFrame(step);
-        }
-
-        setActiveTypingRow(lineName) {
-            document.querySelectorAll('.line-row.active-typing')
-                .forEach(r => r.classList.remove('active-typing'));
-
-            if (!lineName) return;
-            const row = document.querySelector(`.line-row[data-line="${lineName}"]`);
-            if (row) {
-                row.classList.add('active-typing');
-                row.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-            }
-        }
-
-        clearActiveTypingRow() {
-            document.querySelectorAll('.line-row.active-typing')
-                .forEach(r => r.classList.remove('active-typing'));
         }
 
         generateData() {
@@ -1088,6 +882,7 @@
         preloadAwardImages(awardees) {
             const loads = awardees.map(a => {
                 if (!a.CertificateImage) return Promise.resolve();
+
                 const url = `@Url.Action("DisplaytheImage", "FinalAssembly")?filename=${encodeURIComponent('')}`.replace('filename=', 'filename=' + encodeURIComponent(a.CertificateImage));
 
                 if (this._imagePreloadCache.has(url)) {
@@ -1269,25 +1064,6 @@
                 this.showAwardSlide();
             }, 900);
         }
-
-        // ---- Highlight today's date in the calendar ----
-        highlightToday() {
-            const daysContainer = document.querySelector('.calendar .grid .days');
-            if (!daysContainer) return;
-
-            const today = new Date();
-            const todayNum = String(today.getDate());
-
-            // Clear any previous highlight (useful if this ever re-runs on refresh)
-            daysContainer.querySelectorAll('.today').forEach(el => el.classList.remove('today'));
-
-            // Skip 'muted' cells (they belong to the previous month) and blanks
-            const dayEls = Array.from(daysContainer.children)
-                .filter(el => !el.classList.contains('muted') && el.textContent.trim() !== '');
-
-            const match = dayEls.find(el => el.textContent.trim() === todayNum);
-            if (match) match.classList.add('today');
-        }
     }
 
 
@@ -1411,8 +1187,6 @@
             window.removeEventListener('resize', this.handleResize);
             clearTimeout(this.resizeTimer);
         }
-
-        
     }
 
 

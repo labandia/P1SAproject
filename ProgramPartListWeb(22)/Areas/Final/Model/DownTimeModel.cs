@@ -1,0 +1,77 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace ProgramPartListWeb.Areas.Final.Model
+{
+    public class DownTimeModel
+    {
+        public int RecordID { get; set; }
+        public int DownTimeID { get; set; }
+        public string DateStart { get; set; }
+
+        public string Line { get; set; }
+        public string FinalShopOrder { get; set; }
+        public string ItemNo { get; set; }
+        public string Model { get; set; }
+        public int? PlanQty { get; set; }
+
+
+        public string DownTimeCode { get; set; }
+        public string DownTimeType { get; set; }
+        public TimeSpan? TimeStart { get; set; }
+        public TimeSpan? TimeEnd { get; set; }
+        public int? Downtime { get; set; }
+        public string PIC { get; set; }
+        public string Details { get; set; }
+        public string GroupName { get; set; }
+        public double CycleTime { get; set; }
+        public int OperationRate { get; set; }
+        public int TotalDowntime { get; set; }
+        public int FourM { get; set; }
+
+        public string FourName
+        {
+            get
+            {
+                switch (FourM)
+                {
+                    case 1:
+                        return "Man";
+                    case 2:
+                        return "Machine";
+                    case 3:
+                        return "Material";
+                    case 4:
+                        return "Method";
+                    default:
+                        return "-- Select FourM --";
+                }
+            }
+        }
+    }
+
+    public class DownTimeReportModel
+    {
+        public string Line { get; set; }
+        public string FinalShopOrder { get; set; }
+        public string ItemNo { get; set; }
+        public string Model { get; set; }
+        public int? PlanQty { get; set; }
+        public TimeSpan? TimeStart { get; set; }
+        public TimeSpan? TimeEnd { get; set; }
+
+        public int Downtime { get; set; }
+        public double CycleTime { get; set; }
+        public int OperationRate { get; set; }
+
+    }
+
+    public class DownTimeTypeModel
+    {
+        public string DownTimeCode { get; set; }
+        public string DownTimeType { get; set; }
+        public string GroupName { get; set; }
+    }
+}

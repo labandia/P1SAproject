@@ -1,0 +1,69 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    @Html.Partial("_SystemConfig")
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/x-icon" href="~/Content/Images/inventory-management.ico">
+    <meta name="description" content="Learn how to improve your website with caching, accessibility, and SEO best practices.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Best Final Assembly Line Dashboard</title>
+    <link href="~/Content/css/FinalGroupChart.css" rel="stylesheet" />
+    <script src="~/Scripts/iconify-icon.min.js"></script>
+    <script src="~/Scripts/Shared/bootstrap.bundle.min.js"></script>
+    <link href="~/Content/Shared/bootstrap.min.css" rel="stylesheet" />
+
+    @Styles.Render("~/Content/shared-css")
+
+    @Scripts.Render("~/bundles/shared-js")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+
+    <div>
+        @RenderBody()
+    </div>
+
+
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/Popper.min.js"></script>
+
+    <script type="module" asp-append-version="true">
+        import {
+            getMethod,
+            postMethod
+        } from '@Url.Content("~/Scripts/modules/index.js")';
+
+        class UsersJSController {
+            constructor() { }
+
+            async init() {
+                await this.SampleUserData();
+            }
+             async SampleUserData() {
+                 try {
+                     const res = await getMethod('/User/SaveClienInfo', {});
+                     console.log(res);
+                     //if (!res?.Success) {
+                     //    console.log('No data found in 4M ');
+                     //    return;
+                     //}
+                     //this.renderNcrBars(res.data);
+                 } catch (error) {
+                     console.error('Error fetching 4M data:', error);
+                 }
+             }
+
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const controller = new UsersJSController();
+            controller.init();
+        });
+    </script>
+
+
+
+</body>
+</html>

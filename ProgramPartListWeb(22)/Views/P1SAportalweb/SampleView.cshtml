@@ -1,0 +1,65 @@
+﻿@using System.Net
+@using System.Net.Sockets
+
+@{
+    string clientIp = null;
+
+    // 1️⃣ Get forwarded IP (proxy / load balancer)
+    var forwarded = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+    if (!string.IsNullOrEmpty(forwarded))
+    {
+        // Take first IP only
+        clientIp = forwarded.Split(',')[0].Trim();
+    }
+
+    // 2️⃣ Fallback to REMOTE_ADDR
+    if (string.IsNullOrEmpty(clientIp))
+    {
+        clientIp = Request.ServerVariables["REMOTE_ADDR"];
+    }
+
+    // 3️⃣ If IPv6, try to resolve IPv4
+    if (IPAddress.TryParse(clientIp, out var ipAddr))
+    {
+        // If IPv6 → try get IPv4 instead
+        if (ipAddr.AddressFamily == AddressFamily.InterNetworkV6)
+        {
+            try
+            {
+                var host = Dns.GetHostEntry(ipAddr);
+                var ipv4 = host.AddressList
+                               .FirstOrDefault(x => x.AddressFamily == AddressFamily.InterNetwork);
+
+                if (ipv4 != null)
+                {
+                    clientIp = ipv4.ToString();
+                }
+            }
+            catch
+            {
+                // keep IPv6 if IPv4 not found
+            }
+        }
+    }
+
+    // 4️⃣ Final fallback
+    if (string.IsNullOrEmpty(clientIp))
+    {
+        clientIp = "127.0.0.1";
+    }
+
+    // Resolve hostname (optional)
+    string clientHostName = "Unknown";
+    try
+    {
+        clientHostName = Dns.GetHostEntry(clientIp).HostName;
+    }
+    catch
+    {
+        clientHostName = "Could not resolve hostname";
+    }
+}
+
+<h3>Client Info</h3>
+<p><strong>Client IP:</strong> @clientIp</p>
+<p><strong>Client Hostname:</strong> @clientHostName</p>

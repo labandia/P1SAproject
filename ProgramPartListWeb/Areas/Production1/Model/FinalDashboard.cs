@@ -103,7 +103,7 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public int TotalOutput { get; set; }
         public int AverageOutput { get; set; }
         public int TargetOutput { get; set; }
-        public double AverageEfficiency { get; set; }
+        public int AverageEfficiency { get; set; }
 
         public List<TotalGroupOutputModel> totalGroup { get; set;}
 

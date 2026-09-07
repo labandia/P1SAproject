@@ -32,6 +32,7 @@ body {
 .dashboard-wrapper {
     width: 100%;
     height: 100%;
+    overflow: hidden;
 }
 /* ----- MAIN CONTAINER - FULL WIDTH & HEIGHT ----- */
 .dashboard {
@@ -304,12 +305,77 @@ tbody tr {
     border-bottom: 1px solid #3a5a8a;
 }
 
-#filterDate {
-    background-color: #0b111e !important;
-    color: #fff;
-    padding: .2em .5em;
+/* =========================================
+   SAMSUNG TIZEN TV DATE FILTER
+   ========================================= */
+
+.date-filter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 34px;
+    min-width: 150px;
+    background: #0b111e;
+    border: 1px solid #3a5a8a;
+    border-radius: 8px;
+    padding: 0 10px;
+    box-sizing: border-box;
 }
 
+/* Native date input */
+#filterDate {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+    /* Remove native styling where supported */
+    #filterDate::-webkit-datetime-edit {
+        color: #ffffff;
+    }
+
+    #filterDate::-webkit-datetime-edit-fields-wrapper {
+        color: #ffffff;
+        background: transparent;
+    }
+
+    #filterDate::-webkit-datetime-edit-text {
+        color: #8fa9d0;
+    }
+
+    #filterDate::-webkit-datetime-edit-month-field,
+    #filterDate::-webkit-datetime-edit-day-field,
+    #filterDate::-webkit-datetime-edit-year-field {
+        color: #ffffff;
+    }
+
+    /* Calendar icon */
+    #filterDate::-webkit-calendar-picker-indicator {
+        opacity: 1;
+        filter: invert(1);
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
+
+    /* Focus */
+    #filterDate:focus {
+        outline: none;
+    }
+
+.date-filter:focus-within {
+    border-color: #5d7fe6;
+    box-shadow: 0 0 0 1px rgba(93,127,230,.35);
+}
 
 .rate-badge {
     background: #1d3157;
@@ -809,49 +875,59 @@ tbody tr {
     display: flex;
     align-items: center;
     cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-    font-size: 0.85em;
+    font-size: 14px;
     color: #444;
+    white-space: nowrap;
 }
 
+    /* Don't use display:none */
     .animToggle input {
-        display: none;
+        position: absolute;
+        left: -9999px;
+        width: 1px;
+        height: 1px;
     }
 
 .animToggle_track {
+    display: block;
+    position: relative;
     width: 40px;
     height: 20px;
     margin-right: 8px;
-    border-radius: 999px;
     background: #ccc;
-    position: relative;
-    transition: background 0.25s ease;
+    border: 1px solid #aaa;
+    border-radius: 10px;
     flex-shrink: 0;
 }
 
+/* OFF position */
 .animToggle_thumb {
+    display: block;
     position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
+    top: 1px;
+    left: 1px;
+    width: 18px;
+    height: 18px;
     background: #fff;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-    transition: transform 0.25s ease;
+    border-radius: 9px;
 }
 
+/* ON */
 .animToggle input:checked + .animToggle_track {
     background: #2E5AAC;
+    border-color: #2E5AAC;
 }
 
+    /* ON position - use left instead of transform */
     .animToggle input:checked + .animToggle_track .animToggle_thumb {
-        transform: translateX(20px);
+        left: 20px;
     }
 
-.animToggle_label{
+.animToggle_label {
+    display: inline-block;
     color: #7aa7e6;
+    font-size: 14px;
+    line-height: 20px;
 }
 
 
@@ -889,7 +965,7 @@ tbody tr {
 
 
 
-@media (max-width: 956px) and (max-height: 538px) {
+@media (max-width: 1000px) and (max-height: 600px) {
 
     body {
         padding: 0px;
@@ -967,7 +1043,7 @@ tbody tr {
         }
 
     .summary_Header {
-        padding:  8px;
+        padding: 8px;
     }
 
     #filterDate {
@@ -1061,5 +1137,23 @@ tbody tr {
 
         .summary_attendanceDetails span {
             font-size: 0.65rem;
+        }
+
+
+
+
+        .date-filter {
+            height: 28px;
+            min-width: 125px;
+            padding: 0 6px;
+        }
+
+        #filterDate {
+            font-size: 11px !important;
+        }
+
+        #filterDate::-webkit-calendar-picker-indicator {
+            width: 16px;
+            height: 16px;
         }
 }

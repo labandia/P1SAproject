@@ -480,49 +480,78 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 
                                 AVG(ISNULL(TargetOutput, 0)) AS TargetOutput,
 
-                                CAST(
+                               ROUND(CAST(
                                     AVG(ISNULL(Total, 0)) * 100.0 /
                                     NULLIF(AVG(ISNULL(TargetOutput, 0)), 0)
                                     AS DECIMAL(10, 2)
-                                ) AS AverageEfficiency
+                                ), 0) AS AverageEfficiency
 
                             FROM dbo.ProductionFinal_GroupChart
                             WHERE GroupDate >= @StartDate
                               AND GroupDate < @EndDate;");
 
                         getTotalSummary.totalGroup = (await SqlDataAcess_Test.QueryAsync<TotalGroupOutputModel>(@"
-                    DECLARE @StartOfMonth DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);
-                    DECLARE @StartOfNextMonth DATE = DATEADD(MONTH, 1, @StartOfMonth);
+                  DECLARE @StartOfMonth DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);
+                        DECLARE @StartOfNextMonth DATE = DATEADD(MONTH, 1, @StartOfMonth);
 
-                    SELECT
-                        G.GroupName,
-                        SUM(G.Output) AS TotalOutput,
-                        AVG(G.Output) AS AvgOutput,
-                         (SELECT TOP 1 TargetOutput FROM ProductionFinal_Group WHERE GroupName = G.GroupName) AS   TargetOutput,
-                        CAST(
-                            SUM(G.Output) * 100.0
-                            / NULLIF(SUM(ISNULL(P.TargetOutput, 0)), 0)
-                            AS DECIMAL(10, 2)
-                        ) AS Efficiency
-                    FROM ProductionFinal_GroupChart P
-                    CROSS APPLY
-                    (
-                        VALUES
-                            ('GROUP 1', ISNULL(P.Group1, 0)),
-                            ('GROUP 2', ISNULL(P.Group2, 0)),
-                            ('GROUP 3', ISNULL(P.Group3, 0)),
-                            ('OP',      ISNULL(P.OP, 0))
-                    ) G(GroupName, Output)
-                    WHERE P.GroupDate >= @StartOfMonth
-                      AND P.GroupDate < @StartOfNextMonth
-                    GROUP BY G.GroupName
-                    ORDER BY
-                        CASE G.GroupName
-                            WHEN 'GROUP 1' THEN 1
-                            WHEN 'GROUP 2' THEN 2
-                            WHEN 'GROUP 3' THEN 3
-                            WHEN 'OP'      THEN 4
-                        END")).ToList();
+                        SELECT
+                            G.GroupName,
+
+                            SUM(G.Output) AS TotalOutput,
+
+                            AVG(
+                                CASE 
+                                    WHEN G.Output > 0 THEN G.Output
+                                END
+                            ) AS AvgOutput,
+
+                            (
+                                SELECT TOP 1 TargetOutput
+                                FROM ProductionFinal_Group
+                                WHERE GroupName = G.GroupName
+                            ) AS TargetOutput,
+
+                            CAST(
+                                AVG(
+                                    CASE 
+                                        WHEN G.Output > 0 THEN G.Output
+                                    END
+                                ) * 100.0
+                                /
+                                NULLIF(
+                                    (
+                                        SELECT TOP 1 TargetOutput
+                                        FROM ProductionFinal_Group
+                                        WHERE GroupName = G.GroupName
+                                    ),
+                                    0
+                                )
+                                AS DECIMAL(10,2)
+                            ) AS Efficiency
+
+                        FROM ProductionFinal_GroupChart P
+
+                        CROSS APPLY
+                        (
+                            VALUES
+                                ('GROUP 1', ISNULL(P.Group1, 0)),
+                                ('GROUP 2', ISNULL(P.Group2, 0)),
+                                ('GROUP 3', ISNULL(P.Group3, 0)),
+                                ('OP',      ISNULL(P.OP, 0))
+                        ) G(GroupName, Output)
+
+                        WHERE P.GroupDate >= @StartOfMonth
+                          AND P.GroupDate < @StartOfNextMonth
+
+                        GROUP BY G.GroupName
+
+                        ORDER BY
+                            CASE G.GroupName
+                                WHEN 'GROUP 1' THEN 1
+                                WHEN 'GROUP 2' THEN 2
+                                WHEN 'GROUP 3' THEN 3
+                                WHEN 'OP'      THEN 4
+                            END;")).ToList();
 
                         getTotalSummary.daily = (await SqlDataAcess_Test.QueryAsync<DailyOutputModel>(@"
                     DECLARE @StartOfMonth DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);

@@ -359,6 +359,62 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
                 return JsonNotFound("No Active Lines found");
             return JsonSuccess(res);
         }
+
+        [HttpGet]
+        public async Task<ActionResult> GetManageGroupDataList(string month)
+        {
+
+            var res = await _manu.GetGroupDataList(month);
+            if (res == null)
+                return JsonNotFound("No Active Lines found");
+            return JsonSuccess(res);
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> AddGroupDataPerformance(ProductionGroupModel prod)
+        {
+            try
+            {
+                bool result = false;
+                Debug.WriteLine($@"ID : {prod.RecordId}");
+                if (prod.RecordId > 0)
+                {
+                    Debug.WriteLine($@"EDIT");
+                    result = await _manu.EditGroupPermanceList(prod);
+                }
+                else
+                {
+                    Debug.WriteLine($@"INSERT");
+                    result = await _manu.AddGroupPermanceList(prod);
+                }
+
+                if (!result) return JsonPostError("Update INSERT failed.", 500);
+                return JsonCreated(result, "Group data update successfully");
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message, 500);
+            }
+        }
+
+       
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteGroupDataPerformance(int reordID)
+        {
+            try
+            {
+                bool result = await _manu.DeleteGroupList(reordID);
+                if (!result) return JsonPostError("Insert failed.", 500);
+                return JsonCreated(result, "Delete Registration Successfully");
+            }
+            catch (Exception ex)
+            {
+                return JsonError(ex.Message, 500);
+            }
+        }
+
         //======================================================
         //============== AUDIT DASHBOARD DATA  ===========
         //====================================================
@@ -414,35 +470,11 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
 
 
 
-        // GET: Production1/FinalAssembly
-        public ActionResult Dashboard()
-        {
-            return View();
-        }
-
-
-        // GET: Production1/FinalAssembly
-        public ActionResult ManagementData()
-        {
-            return View();
-        }
-
-        // GET: Production1/FinalAssembly
-        public ActionResult GroupData()
-        {
-            return View();
-        }
-
-        // GET: Production1/FinalAssembly
-        public ActionResult GroupDataMange()
-        {
-            return View();
-        }
-
-        public ActionResult NCRDashboard()
-        {
-            return View();
-        }
+        public ActionResult Dashboard() => View();
+        public ActionResult ManagementData() => View();
+        public ActionResult GroupData() => View();
+        public ActionResult GroupDataMange() => View();
+        public ActionResult NCRDashboard() => View();
 
     }
 }

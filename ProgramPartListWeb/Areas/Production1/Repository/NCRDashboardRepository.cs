@@ -14,6 +14,9 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 {
     public class NCRDashboardRepository : INCRDashboardRepository
     {
+        // ================================================================
+        // =================== WINNERS AND AWARDS LOGIC ===================
+        // ================================================================
         public async Task<bool> AddAwardsData(AwardDto model)
         {
             int rows = await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO ProductionFinal_Awardees
@@ -92,6 +95,9 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             return SqlDataAcess_Test.ExecuteScalarAsync<string>($@"SELECT TOP 1 AwardeesName FROM ProductionFinal_Awardees ", null);
         }
 
+        // ================================================================
+        // =================== FINAL DASHBOARDS NCR ===================
+        // ================================================================
         public async Task<List<AwardDto>> GetAwardsData()
         {
             string sql = @"
@@ -266,9 +272,6 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                 ORDER BY SortOrder, [NCRType];
                 ", null);
         }
-
-       
-
         public Task<List<GroupSummaryModel>> GetGroupSummary()
         {
             return SqlDataAcess_Test.QueryAsync<GroupSummaryModel>($@";WITH Pivoted AS (
@@ -332,7 +335,6 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                     ORDER BY SortOrder, [NCRType];
                                 ", null);   
         }
-
         public Task<Monthyear> GetMonthName()
         {
             return SqlDataAccess.QuerySingleAsync<Monthyear>($@"SELECT
@@ -395,68 +397,10 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             { ProcessGroups = groups });
         }
 
-
-        //public async Task<TotalOutputChartModel> GetGroupDataSummary()
-        //{
-        //    var getTotalSummary = await SqlDataAcess_Test.QuerySingleAsync<TotalOutputChartModel>($@"SELECT
-        //                SUM(ISNULL(Group1, 0) + ISNULL(Group2, 0) + ISNULL(Group3, 0) + ISNULL(OP, 0)) AS TotalOutput,
-        //                AVG(
-        //                        ISNULL(Group1, 0) +
-        //                    ISNULL(Group2, 0) +
-        //                    ISNULL(Group3, 0) +
-        //                    ISNULL(OP, 0)
-        //                    ) AS AverageOutput,
-        //                AVG(ISNULL(TargetOutput, 0)) AS TargetOutput,
-        //                   CAST(
-        //                        AVG(ISNULL(Total, 0)) * 100.0
-        //                    / NULLIF(AVG(ISNULL(TargetOutput, 0)), 0)
-
-        //                    AS DECIMAL(10, 2)
-        //                    ) AS AverageEfficiency
-
-        //                FROM ProductionFinal_GroupChart;");
-
-        //    getTotalSummary.totalGroup = await SqlDataAcess_Test.QueryAsync<TotalGroupOutputModel>($@"SELECT
-        //                G.GroupName,
-        //                SUM(G.Output) AS TotalOutput,
-        //                AVG(G.Output) AS AvgOutput,
-        //                AVG(ISNULL(P.TargetOutput, 0)) AS TargetOutput,
-        //                CAST(
-        //                        SUM(G.Output) * 100.0
-        //                    / NULLIF(SUM(ISNULL(P.TargetOutput, 0)), 0)
-
-        //                    AS DECIMAL(10, 2)
-        //                    ) AS Efficiency
-        //                FROM ProductionFinal_GroupChart P
-        //                CROSS APPLY
-        //                (
-        //                    VALUES
-        //                        ('GROUP 1', ISNULL(P.Group1, 0)),
-        //                        ('GROUP 2', ISNULL(P.Group2, 0)),
-        //                        ('GROUP 3', ISNULL(P.Group3, 0)),
-        //                        ('OP',      ISNULL(P.OP, 0))
-        //                ) G(GroupName, Output)
-        //                GROUP BY
-        //                    G.GroupName
-        //                ORDER BY
-        //                    CASE G.GroupName
-        //                        WHEN 'GROUP 1' THEN 1
-        //                        WHEN 'GROUP 2' THEN 2
-        //                        WHEN 'GROUP 3' THEN 3
-        //                        WHEN 'OP'      THEN 4
-        //                    END;");
-
-
-        //    getTotalSummary.daily = await SqlDataAcess_Test.QueryAsync<DailyOutputModel>($@" SELECT
-	       //            FORMAT(GroupDate, 'd-MMM') AS [date],
-	       //             Total  as [value] 
-        //             FROM ProductionFinal_GroupChart
-        //             GROUP BY GroupDate, Total");
-
-
-        //    return getTotalSummary;
-        //}
-
+        // =====================================================================
+        // =================== GROUP DATA PERFORMANCE SUMMARY ===================
+        // ======================================================================
+        // =========== Top Summary of Group Output, Average Output, Target Output, and Efficiency ==========
         public async Task<TotalOutputChartModel> GetGroupDataSummary()
         {
             var getTotalSummary = await SqlDataAcess_Test.QuerySingleAsync<TotalOutputChartModel>(@"
@@ -567,8 +511,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 
             return getTotalSummary;
         }
-
-
+        // ================== Group Output Data ==================
         public Task<List<ProductionGroupModel>> GetProcessGroupData()
         {
             return SqlDataAcess_Test.QueryAsync<ProductionGroupModel>($@"
@@ -587,9 +530,84 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 				 AND GroupDate < @StartOfNextMonth
                     ORDER BY GroupDate");
         }
+        // ================== For Group Manage Data ==================
+        public Task<List<ProductionGroupModel>> GetGroupDataList(string months)
+        {
+            Debug.WriteLine($@"Months: {months}");
 
+            string strsql = @"
+                    SELECT 
+                         RecordId,
+                         GroupDate,
+                         Group1,
+                         Group2,
+                         Group3,
+                         OP,
+                         TargetOutput,
+                         Total,
+                         Average
+                    FROM ProductionFinal_GroupChart
+                    WHERE 1 = 1 ";
 
+            var parameters = new DynamicParameters();
 
+            if (!string.IsNullOrWhiteSpace(months))
+            {
+                strsql += @"
+            AND GroupDate >= @StartDate
+            AND GroupDate < DATEADD(MONTH, 1, @StartDate)";
+
+                parameters.Add(
+                    "@StartDate",
+                    DateTime.ParseExact(months, "yyyy-MM", null)
+                );
+            }
+
+            strsql += " ORDER BY RecordId DESC ";
+
+            return SqlDataAcess_Test.QueryAsync<ProductionGroupModel>(
+                strsql,
+                parameters
+            );
+
+        }
+        // ================== Add Group Performance Data ==================
+        public async Task<bool> AddGroupPermanceList(ProductionGroupModel prod)
+        {
+            bool DataExist = await SqlDataAcess_Test.ExistsAsync($@"SELECT 1 
+                FROM ProductionFinal_GroupChart WHERE GroupDate = @GroupDate", 
+                new { prod.GroupDate });
+
+            if(DataExist) return false; // Data already exists for the given GroupDate
+
+            int result = await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO ProductionFinal_GroupChart
+                (GroupDate, Group1, Group2, Group3, OP) 
+                VALUES(@GroupDate, @Group1, @Group2, @Group3, @OP)", prod);
+             return result > 0;
+        }
+        // ================== Edit Group Performance Data ==================
+        public async Task<bool> EditGroupPermanceList(ProductionGroupModel prod)
+        {
+            Debug.WriteLine($@"DateGroup :{prod.GroupDate} - Group :{prod.Group1} - ID : {prod.RecordId}");
+
+             int result = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE 
+                ProductionFinal_GroupChart SET 
+                Group1 = @Group1, Group2 = @Group2, Group3 = @Group3, OP = @OP
+                WHERE RecordId = @RecordId", prod);
+
+            return result > 0;
+        }
+        // ================== Delete Performance Data ==================
+        public async Task<bool> DeleteGroupList(int ID)
+        {
+            int result = await SqlDataAcess_Test.ExecuteAsync($@"
+                DELETE FROM ProductionFinal_GroupChart 
+                WHERE RecordId = @RecordId", new { RecordId = ID });
+            return result > 0;
+        }
+        // =====================================================================
+        // =================== AUDIT INFORMATION ================================
+        // ======================================================================
         public Task<AuditInfoModel> GetAuditInfo()
         {
             const string sql = @"
@@ -610,6 +628,10 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             return rows > 0;
         }
 
+
+        // =====================================================================
+        // =================== ATTENDANCE RATE DATA INFORMATION ==============
+        // ======================================================================
         public async Task<List<AttendanceModel>> AttendanceBreakDown(DateTime? filterDate, int isfilter)
         {
             if (!await IsTodayRecorded())
@@ -891,6 +913,6 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             }));
         }
 
-       
+     
     }
 }

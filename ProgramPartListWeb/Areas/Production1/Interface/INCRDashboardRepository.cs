@@ -32,16 +32,26 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
         Task<List<ProcessGroupsModel>> SetsProcessGroupData(int groups);
 
 
-
+        // ================================================
+        // ========== GROUP PERFORMANCE DATA ==============
+        // ================================================
 
         Task<TotalOutputChartModel> GetGroupDataSummary();
         Task<List<ProductionGroupModel>> GetProcessGroupData();
+
+        Task<List<ProductionGroupModel>> GetGroupDataList(string months);
+        Task<bool> AddGroupPermanceList(ProductionGroupModel prod);
+        Task<bool> EditGroupPermanceList(ProductionGroupModel prod);
+        Task<bool> DeleteGroupList(int ID);
+        // ================================================
+        // ========== AUDIT INFORMATION ===================
+        // ================================================
 
         Task<AuditInfoModel> GetAuditInfo();
         Task<bool> SaveAuditInfo(AuditInfoModel model);
 
         // ================================================
-        // ========== ATTENDANCE DASHBOARD ==========================
+        // ========== ATTENDANCE DASHBOARD ================
         // ================================================
         Task<List<AttendanceModel>> AttendanceBreakDown(DateTime? filterDate, int isfilter);
         Task<List<AttendanceModel>> AttendanceGetLastBreakDown();   

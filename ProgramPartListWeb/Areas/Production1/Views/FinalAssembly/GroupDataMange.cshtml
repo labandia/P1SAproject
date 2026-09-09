@@ -1,38 +1,24 @@
 ﻿
 @{
     ViewBag.Title = "GroupDataMange";
-    Layout = "~/Areas/Production1/Views/Shared/_FinalGroupData.cshtml";
+    Layout = null;
 }
 
 
 <!DOCTYPE html>
-
-
-
 <html>
 
 <head>
-
     <meta name="viewport" content="width=device-width" />
-
     <title>Group Performance Management</title>
-
     <link href="~/Content/css/FinalDashMangement.css" rel="stylesheet" />
-
 </head>
 
 <body>
 
     <div class="dashboard">
-
-
-
         <!-- ─── Two-Column Grid ─── -->
-
         <div class="dashboard-grid">
-
-
-
             <!-- ═══ LEFT: FORMS ═══ -->
 
             <section class="forms-column">
@@ -56,12 +42,6 @@
                     <h4>Back to the Dashboard</h4>
 
                 </div>
-
-
-
-          
-
-
 
                 <!-- Add / Edit Form -->
 
@@ -145,11 +125,11 @@
 
 
 
-                        
 
 
 
-                        
+
+
 
 
 
@@ -375,10 +355,7 @@
 
             </section>
 
-
-
             <!-- ═══ RIGHT: TABLES ═══ -->
-
             <section class="table-column">
 
                 <!-- ================= GROUP RECORDS TABLE ================= -->
@@ -546,16 +523,8 @@
 
 
             </section>
-
-
-
         </div>
-
-
-
     </div>
-
-
 
     <!-- ─── Toast ─── -->
 
@@ -566,8 +535,6 @@
         <span id="toastMessage">Done!</span>
 
     </div>
-
-
 
     <!-- ─── Delete Confirm Modal ─── -->
 
@@ -588,3 +555,179 @@
         </div>
 
     </div>
+
+    <script type="module" asp-append-version="true">
+        import {
+            getMethod,
+            postMethod
+        } from '@Url.Content("~/Scripts/modules/index.js")';
+
+        class GroupDataManageController {
+               constructor() {
+                   this.tbody = document.getElementById('tableBody');
+
+                   this.form = document.getElementById('dataForm');
+                   this.editIndexInput = document.getElementById('editIndex');
+                   this.cancelBtn = document.getElementById('cancelBtn');
+                   this.submitBtn = document.getElementById('submitBtn');
+
+                   this.searchMonth = document.getElementById('searchMonth');
+                   this.searchBtn = document.getElementById('searchBtn');
+                   
+
+                   const today = new Date();
+                   this.currentMonthValue = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+               }
+
+               async init() {
+                  this.searchMonth.value = this.currentMonthValue;
+
+                   this.bindEvents();
+                   await this.GetGroupDataList(this.currentMonthValue);
+              }
+
+            bindEvents() {
+                this.form.addEventListener('submit', e => this.onSubmitRecord(e));
+                // this.cancelBtn.addEventListener('click', () => this.resetRecordForm());
+
+                // this.summaryForm.addEventListener('submit', e => this.onSubmitSummary(e));
+                // this.uploadCancelBtn.addEventListener('click', () => this.resetSummaryForm());
+
+                this.searchBtn.addEventListener('click', () => this.GetGroupDataList(this.searchMonth.value));
+           
+
+                // this.summarySearchBtn.addEventListener('click', () => this.GetSummaryData(this.summarySearchMonth.value));
+                // this.summaryClearBtn.addEventListener('click', () => {
+                //     this.summarySearchMonth.value = this.currentMonthValue;
+                //     this.GetSummaryData(this.currentMonthValue);
+                // });
+
+                // Row-level buttons are added dynamically, so delegate from the tbody instead
+                // of binding one listener per row (rows get rebuilt on every render).
+                this.tbody.addEventListener('click', e => this.onRecordTableClick(e));
+                // this.summaryTbody.addEventListener('click', e => this.onSummaryTableClick(e));
+
+                // this.confirmDeleteBtn.addEventListener('click', () => this.onConfirmDelete());
+                // this.cancelDeleteBtn.addEventListener('click', () => this.closeDeleteModal());
+            }
+
+
+               async GetGroupDataList(month) {
+                   try {
+                       const res = await getMethod('@Url.Action("GetManageGroupDataList", "FinalAssembly")', { month });
+                       if (!res?.Success) {
+                           console.log('No data Registration Found ');
+                           return;
+                       }
+                       this.renderTable(res.data);
+                   } catch (error) {
+                       console.error('Error fetching 4M data:', error);
+                   }
+               }
+
+            renderTable(data) {
+                document.getElementById('recordCount').textContent = `${data.length} entries`;
+                this.tbody.innerHTML = data.map(r => `
+                        <tr data-id="${r.RecordId}">
+                            <td>${this.formatDate(r.GroupDate)}</td>
+                            <td>${r.Group1}</td>
+                            <td>${r.Group2}</td>
+                            <td>${r.Group3}</td>
+                            <td>${r.OP}</td>
+                            <td>${r.Target ?? ''}</td>
+                            <td>${r.Total ?? ''}</td>
+                            <td>${r.Average ?? ''}</td>
+                            <td style="text-align:center;">
+                                <button class="btn-icon edit-record" data-id="${r.RecordId}" title="Edit">✏️</button>
+                            </td>
+                        </tr>
+                    `).join('');
+            }
+            // ───────────────────────── EDIT (populate form) ─────────────────────────
+            onRecordTableClick(e) {
+                const editBtn = e.target.closest('.edit-record');
+                if (editBtn) this.loadRecordIntoForm(editBtn.dataset.id);
+                // if (delBtn) this.openDeleteModal('record', delBtn.dataset.id);
+            }
+            loadRecordIntoForm(id) {
+                const row = this.tbody.querySelector(`tr[data-id="${id}"]`);
+                if (!row) return;
+                const cells = row.children;
+
+                this.editIndexInput.value = id;
+                document.getElementById('groupDate').value = this.toDateInputValue(cells[0].textContent);
+                document.getElementById('group1').value = cells[1].textContent;
+                document.getElementById('group2').value = cells[2].textContent;
+                document.getElementById('group3').value = cells[3].textContent;
+                document.getElementById('opGroup').value = cells[4].textContent;
+
+                document.getElementById('formTitle').textContent = 'Edit Group Performance Record';
+                this.submitBtn.lastChild.textContent = ' Update Record';
+                this.cancelBtn.style.display = 'inline-flex';
+                this.form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            // ───────────────────────── CREATE / UPDATE ─────────────────────────
+            async onSubmitRecord(e) {
+                e.preventDefault();
+
+                const payload = {
+                    RecordId: parseInt(this.editIndexInput.value, 10) || 0, // 0 = new record, backend inserts
+                    GroupDate: document.getElementById('groupDate').value,
+                    Group1: parseFloat(document.getElementById('group1').value),
+                    Group2: parseFloat(document.getElementById('group2').value),
+                    Group3: parseFloat(document.getElementById('group3').value),
+                    OP: parseFloat(document.getElementById('opGroup').value)
+                };
+                console.log(payload);
+                try {
+                    const res = await postMethod('@Url.Action("AddGroupDataPerformance", "FinalAssembly")', payload);
+                    if (!res?.Success) {
+                        this.showToast(res?.Message || 'Save failed.', false);
+                        return;
+                    }
+                    this.showToast(payload.RecordId ? 'Record updated.' : 'Record added.', true);
+                    this.resetRecordForm();
+                    await this.GetGroupDataList(this.searchMonth.value);
+                } catch (error) {
+                    console.error('Error saving record:', error);
+                    this.showToast('Save failed.', false);
+                }
+            }
+
+            resetRecordForm() {
+                this.form.reset();
+                this.editIndexInput.value = -1;
+                document.getElementById('formTitle').textContent = 'Add Group Performance Record';
+                this.submitBtn.lastChild.textContent = ' Add Record';
+                // this.cancelBtn.style.display = 'none';
+            }
+
+            // ───────────────────────── Helpers ─────────────────────────
+
+            formatDate(iso) {
+                const d = new Date(iso);
+                return d.toLocaleDateString('en-CA'); // yyyy-MM-dd, matches <input type="date">
+            }
+
+            toDateInputValue(displayDate) {
+                return new Date(displayDate).toISOString().slice(0, 10);
+            }
+
+            showToast(message, success = true) {
+                const toast = document.getElementById('toast');
+                document.getElementById('toastMessage').textContent = message;
+                toast.classList.toggle('toast-error', !success);
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2500);
+            }
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const controller = new GroupDataManageController();
+               controller.init();
+        });
+    </script>
+</body>
+</html>

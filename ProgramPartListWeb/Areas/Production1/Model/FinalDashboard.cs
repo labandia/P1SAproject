@@ -139,12 +139,14 @@ namespace ProgramPartListWeb.Areas.Production1.Model
 
     public class ProductionGroupModel
     {
+        public int RecordId { get; set; }
         public string GroupDate { get; set; }
         public int Group1 { get; set; }
         public int Group2 { get; set; }
         public int Group3 { get; set; }
         public int OP { get; set; }
-        public int Total { get; set; }  
+        public int Total { get; set; }
+        public int Average { get; set; }
     }
 
 

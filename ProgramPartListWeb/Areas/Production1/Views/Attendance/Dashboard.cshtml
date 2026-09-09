@@ -9,6 +9,15 @@
         <header>
             <h2>📋PRODUCTION 1 ATTENDANCE DASHBOARD - <span> <strong id="shiftDay">DAYSHIFT</strong>(<span id="datetoday">-/--/----</span>)</span></h2>
             <div class="animToggleWrap">
+                <button id="manualRefreshBtn" class="manualRefreshBtn" title="Refresh now" type="button">
+                    <svg id="refreshIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                        <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                              d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6" />
+                    </svg>
+                    <span>Refresh</span>
+                </button>
+
+
                 <label class="animToggle" for="refreshToggleInput" title="Toggle auto-refresh">
                     <input type="checkbox" id="refreshToggleInput" checked>
                     <span class="animToggle_track"><span class="animToggle_thumb"></span></span>
@@ -229,10 +238,26 @@
             await this.refreshAll();
 
             this.initRefreshToggle();
+            this.initManualRefresh(); 
+
 
             this.filterDateSelect.addEventListener('change', async (e) => {
                 this.isfilter = 1;
                 await this.refreshAll();
+            });
+        }
+
+        initManualRefresh() {
+            const btn = document.getElementById('manualRefreshBtn');
+            if (!btn) return;
+
+            btn.addEventListener('click', () => {
+                // Hard refresh: cache-busting param forces the browser to bypass
+                // cache and re-request everything (HTML, scripts, styles) fresh —
+                // same effect as Ctrl+Shift+R.
+                const url = new URL(window.location.href);
+                url.searchParams.set('_hardrefresh', Date.now());
+                window.location.href = url.toString();
             });
         }
 

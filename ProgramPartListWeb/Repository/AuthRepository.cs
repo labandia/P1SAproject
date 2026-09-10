@@ -52,7 +52,7 @@ namespace ProgramPartListWeb.Repository
                     WHERE ComputerName = @ComputerName
                       AND IpAddress = @IpAddress;";
 
-            bool exists = await SqlDataAccess.ExistsAsync(checkSql, new
+            bool exists = await SqlDataAccess_Test.ExistsAsync(checkSql, new
             {
                 client.ComputerName,
                 client.IpAddress
@@ -68,7 +68,7 @@ namespace ProgramPartListWeb.Repository
                 INSERT INTO UsersInfoAccount (ComputerName, IpAddress, AccountName, Email)
                 VALUES (@ComputerName, @IpAddress, @AccountName, @Email);";
 
-            int rowsAffected = await SqlDataAccess.ExecuteAsync(insertSql, new
+            int rowsAffected = await SqlDataAccess_Test.ExecuteAsync(insertSql, new
             {
                 client.ComputerName,
                 client.IpAddress,

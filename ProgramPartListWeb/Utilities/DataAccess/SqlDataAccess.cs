@@ -18,7 +18,7 @@ using System.Diagnostics;
 
 namespace ProgramPartListWeb.Helper
 {
-    public sealed class SqlDataAccess
+    public sealed class SqlDataAccess_Test
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private static readonly Regex ProcRegex = new Regex(@"^[a-zA-Z_]\w*(\.[a-zA-Z_]\w*)?$", RegexOptions.Compiled);

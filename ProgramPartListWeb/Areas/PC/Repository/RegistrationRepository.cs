@@ -68,13 +68,13 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                             WHERE r.RegNo LIKE '%{prefix}%'      
                             ORDER BY DateCreated DESC";
 
-            return SqlDataAccess.QueryAsync<PatrolRegistrationViewModel>(strsql);
+            return SqlDataAccess_Test.QueryAsync<PatrolRegistrationViewModel>(strsql);
         }
         public Task<List<EmailModelV2>> PatrolEmailData()
         {
             string strsql = $@"SELECT Employee_ID, FullName, Email, Position, Department_ID, DepPrefix, Signature
                                FROM Patrol_UserEmail";
-            return SqlDataAccess.QueryAsync<EmailModelV2>(strsql);
+            return SqlDataAccess_Test.QueryAsync<EmailModelV2>(strsql);
         }
 
 
@@ -83,7 +83,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             string strsql = $@"SELECT FullName, Email, Position, Department_ID, Signature
                                FROM Patrol_UserEmail 
                                WHERE Employee_ID =@Employee_ID AND Position =@Position AND DepPrefix =@DepPrefix";
-            return SqlDataAccess.QuerySingleAsync<EmailModelV2>(strsql, 
+            return SqlDataAccess_Test.QuerySingleAsync<EmailModelV2>(strsql, 
                 new { 
                     Employee_ID  = emp,
                     Position = pos,
@@ -94,18 +94,18 @@ namespace ProgramPartListWeb.Areas.PC.Repository
 
         public Task<List<FindingModel>> GetRegisterFindings(string regNo)
         {
-            return SqlDataAccess.QueryAsync<FindingModel>("GetFindings", new { Regno = regNo }, true);
+            return SqlDataAccess_Test.QueryAsync<FindingModel>("GetFindings", new { Regno = regNo }, true);
         }
 
         public Task<List<RegistrationFiles>> GetRegisterFiles(string regNo)
         {
-             return SqlDataAccess.QueryAsync<RegistrationFiles>($@"SELECT RegNo, FilePath, CounterPath FROM Patrol_Registration_Files WHERE RegNo =@RegNo ", new { RegNo = regNo });
+             return SqlDataAccess_Test.QueryAsync<RegistrationFiles>($@"SELECT RegNo, FilePath, CounterPath FROM Patrol_Registration_Files WHERE RegNo =@RegNo ", new { RegNo = regNo });
         }
 
         public async Task<bool> AddRegistration(AddFormRegistrationModel reg, string json)
         {
             //INSERT MAIN REGISTRATION PROCESS
-            int result = await SqlDataAccess.ExecuteAsync("InsertRegistration", new
+            int result = await SqlDataAccess_Test.ExecuteAsync("InsertRegistration", new
             {
                 RegNo = reg.RegNo,
                 Department_ID = reg.Department_ID,
@@ -124,7 +124,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             //}, CommandType.StoredProcedure);
 
             // ========== 3. INSERT APPROVAL LIST ==========
-            await SqlDataAccess.ExecuteAsync(@"
+            await SqlDataAccess_Test.ExecuteAsync(@"
                 INSERT INTO Patrol_Registration_Approvelist
                 (RegNo, PIC_ID, Inspect_ID, Inspect_IsAproved, Inspect_IsSent) 
                 VALUES(@RegNo, @PIC_ID, @Inspect_ID, 1, 1)",
@@ -142,7 +142,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             {
                 foreach (var f in findings)
                 {
-                    await SqlDataAccess.ExecuteAsync("InsertFindings", new
+                    await SqlDataAccess_Test.ExecuteAsync("InsertFindings", new
                     {
                         RegNo = "P1SA-" + f.RegNo,
                         FindID = f.FindID,
@@ -162,7 +162,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                                 SET ReportStatus = 3, Manager_ID =@Manager_ID,  DepManager_ID =@DepManager_ID
                                 WHERE RegNo = @RegNo";
 
-            var regMain = SqlDataAccess.ExecuteAsync(mainsql, new 
+            var regMain = SqlDataAccess_Test.ExecuteAsync(mainsql, new 
             { 
                 RegNo = reg.RegNo,
                 Manager_ID = reg.DepManager_ID,
@@ -175,7 +175,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                                 PIC_IsSent = 1
                                 WHERE RegNo = @RegNo";
 
-            var regApp = SqlDataAccess.ExecuteAsync(appsql, new
+            var regApp = SqlDataAccess_Test.ExecuteAsync(appsql, new
             {
                 RegNo = reg.RegNo,
                 PIC_Comments = reg.PIC_Comments,
@@ -184,7 +184,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
             });
 
             // UPDATE THE UPLOADED FILES
-            var regFiles = SqlDataAccess.ExecuteAsync("EditPatrolFilesRegister", new
+            var regFiles = SqlDataAccess_Test.ExecuteAsync("EditPatrolFilesRegister", new
             {
                 FilePath = reg.Filepath,
                 CounterPath = reg.CounterPath,
@@ -205,7 +205,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
                     FindID = f.FindID,
                     Countermeasure = f.Countermeasure
                 };
-                await SqlDataAccess.ExecuteAsync(@" UPDATE Patrol_Findngs SET  
+                await SqlDataAccess_Test.ExecuteAsync(@" UPDATE Patrol_Findngs SET  
                             Countermeasure =@Countermeasure
                             WHERE RegNo =@RegNo AND FindID =@FindID", findparams);
             }
@@ -215,15 +215,15 @@ namespace ProgramPartListWeb.Areas.PC.Repository
 
         public async Task<bool> ApproveByInspector(string reg, string datecon, string newfilepath, string ManagerID)
         {
-            var regsql = SqlDataAccess.ExecuteAsync(@" UPDATE Patrol_Registration SET  
+            var regsql = SqlDataAccess_Test.ExecuteAsync(@" UPDATE Patrol_Registration SET  
                             ReportStatus = 3, DateConduct = @DateConduct, Manager_ID = @Manager_ID, DepManager_ID =@DepManager_ID
                             WHERE RegNo =@RegNo", new { RegNo = reg, DateConduct = datecon, Manager_ID = ManagerID, DepManager_ID = ManagerID });
 
-            var revsql = SqlDataAccess.ExecuteAsync(@"UPDATE Patrol_Registration_Approvelist SET  
+            var revsql = SqlDataAccess_Test.ExecuteAsync(@"UPDATE Patrol_Registration_Approvelist SET  
                             Inspect_IsAproved =  1, Manager_ID = @Manager_ID, DepManager_ID =@DepManager_ID
                             WHERE RegNo =@RegNo", new { RegNo = reg, Manager_ID = ManagerID, DepManager_ID = ManagerID });
 
-            var regFiles = SqlDataAccess.ExecuteAsync(@"UPDATE Patrol_Registration_Files SET 
+            var regFiles = SqlDataAccess_Test.ExecuteAsync(@"UPDATE Patrol_Registration_Files SET 
                             FilePath =@FilePath
                             WHERE RegNo =@RegNo", new { FilePath = newfilepath,  RegNo = reg });
 
@@ -234,15 +234,15 @@ namespace ProgramPartListWeb.Areas.PC.Repository
 
         public async Task<bool> ApproveByManager(string reg, string comments, string newfilepath, string DepManager)
         {
-            var regsql = SqlDataAccess.ExecuteAsync(@" UPDATE Patrol_Registration SET  
+            var regsql = SqlDataAccess_Test.ExecuteAsync(@" UPDATE Patrol_Registration SET  
                             ReportStatus = 5, DepManager_ID =@DepManager_ID, 
                             WHERE RegNo =@RegNo", new { RegNo = reg, DepManager_ID = DepManager });
 
-            var revsql = SqlDataAccess.ExecuteAsync(@"UPDATE Patrol_Registration_Approvelist SET  
+            var revsql = SqlDataAccess_Test.ExecuteAsync(@"UPDATE Patrol_Registration_Approvelist SET  
                             Inspect_IsAproved =  1, DepManager_IsAproved = 1,  Manager_Comments =@Manager_Comments, DepManager_ID =@DepManager_ID
                             WHERE RegNo =@RegNo", new { RegNo = reg, Manager_Comments = comments, DepManager_ID = DepManager });
 
-            var regFiles = SqlDataAccess.ExecuteAsync(@"UPDATE Patrol_Registration_Files SET FilePath =@FilePath
+            var regFiles = SqlDataAccess_Test.ExecuteAsync(@"UPDATE Patrol_Registration_Files SET FilePath =@FilePath
                             WHERE RegNo =@RegNo", new
             {
                 FilePath = newfilepath,
@@ -256,15 +256,15 @@ namespace ProgramPartListWeb.Areas.PC.Repository
 
         public async Task<bool> ApproveByDepartment(string reg, string comments, string newfilepath, string DepManager)
         {
-            var regsql = SqlDataAccess.ExecuteAsync(@" UPDATE Patrol_Registration SET  
+            var regsql = SqlDataAccess_Test.ExecuteAsync(@" UPDATE Patrol_Registration SET  
                             ReportStatus = 5, DivManager_ID =@DivManager_ID
                             WHERE RegNo =@RegNo", new { RegNo = reg, DivManager_ID = DepManager });
 
-            var revsql = SqlDataAccess.ExecuteAsync(@"UPDATE Patrol_Registration_Approvelist SET  
+            var revsql = SqlDataAccess_Test.ExecuteAsync(@"UPDATE Patrol_Registration_Approvelist SET  
                             DepManager_IsAproved =  1,  Manager_Comments =@Manager_Comments, DivManager_ID =@DivManager_ID
                             WHERE RegNo =@RegNo", new { RegNo = reg, Manager_Comments = comments, DivManager_ID = DepManager });
 
-            var regFiles = SqlDataAccess.ExecuteAsync(@"UPDATE Patrol_Registration_Files SET FilePath =@FilePath
+            var regFiles = SqlDataAccess_Test.ExecuteAsync(@"UPDATE Patrol_Registration_Files SET FilePath =@FilePath
                             WHERE RegNo =@RegNo", new
             {
                 FilePath = newfilepath,
@@ -279,15 +279,15 @@ namespace ProgramPartListWeb.Areas.PC.Repository
 
         public async Task<bool> ApproveByDivManager(string reg, string newfilepath, string DivManagerID)
         {
-            var regsql = SqlDataAccess.ExecuteAsync(@"UPDATE Patrol_Registration SET  
+            var regsql = SqlDataAccess_Test.ExecuteAsync(@"UPDATE Patrol_Registration SET  
                             ReportStatus = 6, IsApproved = 1, ApprovalDate = GETDATE()
                             WHERE RegNo =@RegNo", new { RegNo = reg });
 
-            var revsql = SqlDataAccess.ExecuteAsync(@"UPDATE Patrol_Registration_Approvelist SET  
+            var revsql = SqlDataAccess_Test.ExecuteAsync(@"UPDATE Patrol_Registration_Approvelist SET  
                             DivManager_IsAproved =  1
                             WHERE RegNo =@RegNo", new { RegNo = reg });
 
-            var regFiles = SqlDataAccess.ExecuteAsync(@"UPDATE Patrol_Registration_Files SET FilePath =@FilePath
+            var regFiles = SqlDataAccess_Test.ExecuteAsync(@"UPDATE Patrol_Registration_Files SET FilePath =@FilePath
                             WHERE RegNo =@RegNo", new
             {
                 FilePath = newfilepath,
@@ -322,14 +322,14 @@ namespace ProgramPartListWeb.Areas.PC.Repository
         {
             string strsql = "UPDATE Patrol_UserEmail Set Signature =@Signature WHERE Employee_ID =@Employee_ID";
 
-            int rows = await SqlDataAccess.ExecuteAsync(strsql, new { Signature = fileName, Employee_ID = userID });
+            int rows = await SqlDataAccess_Test.ExecuteAsync(strsql, new { Signature = fileName, Employee_ID = userID });
 
             return rows > 0;
         }
 
         public async Task<bool> InsertFileRawRegistration(string regno, string FilePath)
         {
-            int rows = await SqlDataAccess.ExecuteAsync("InserFiles", new
+            int rows = await SqlDataAccess_Test.ExecuteAsync("InserFiles", new
             {
                 RegNo = regno,
                 FilePath = FilePath
@@ -340,7 +340,7 @@ namespace ProgramPartListWeb.Areas.PC.Repository
 
         public async Task<bool> UpdateRegistrationFiles(string RegNo, string FilePath)
         {
-            int rows = await SqlDataAccess.ExecuteAsync($@"UPDATE Patrol_Registration_Files SET FilePath =@FilePath
+            int rows = await SqlDataAccess_Test.ExecuteAsync($@"UPDATE Patrol_Registration_Files SET FilePath =@FilePath
                     WHERE RegNo =@RegNo ", new { FilePath, RegNo });
 
             return rows > 0;

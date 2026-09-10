@@ -75,7 +75,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 								END,
 								s.CurrentQty ASC;";
 
-            return SqlDataAccess.QueryAsync<StockPartsModel>(strsql, null);
+            return SqlDataAccess_Test.QueryAsync<StockPartsModel>(strsql, null);
         }
 
         public async Task<int> GenerateStockNotification(List<int> userIds, int hoursInterval = 6)
@@ -92,7 +92,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
 
 
-                var lastCreatedList = await SqlDataAccess.QuerySingleOrDefaultAsync<DateTime>(lastSql, null);
+                var lastCreatedList = await SqlDataAccess_Test.QuerySingleOrDefaultAsync<DateTime>(lastSql, null);
                 DateTime? lastCreated = lastCreatedList;
 
                 if (!lastCreated.HasValue)
@@ -117,7 +117,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                 VALUES (@Title);
                                 SELECT CAST(SCOPE_IDENTITY() as int);";
 
-                    notifiResult = await SqlDataAccess.ExecuteScalarAsync<int>(Mainsql, new { Title = "Low / Critical Stock Alert" });
+                    notifiResult = await SqlDataAccess_Test.ExecuteScalarAsync<int>(Mainsql, new { Title = "Low / Critical Stock Alert" });
 
 
 
@@ -138,7 +138,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                             Status = item.Status
                         };
 
-                        await SqlDataAccess.ExecuteAsync(insertDetails, parameter);
+                        await SqlDataAccess_Test.ExecuteAsync(insertDetails, parameter);
                     }
 
 
@@ -148,7 +148,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
                     foreach (var userId in userIds)
                     {
-                        await SqlDataAccess.ExecuteAsync(insertUsers, new { NotificationId = notifiResult, User_ID = userId });
+                        await SqlDataAccess_Test.ExecuteAsync(insertUsers, new { NotificationId = notifiResult, User_ID = userId });
                     }
 
 
@@ -202,7 +202,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 Status = product.Status
             };
 
-            await SqlDataAccess.ExecuteAsync(sql, param);
+            await SqlDataAccess_Test.ExecuteAsync(sql, param);
         }
 
 
@@ -218,7 +218,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 Status = product.Status
             };
 
-            await SqlDataAccess.ExecuteAsync(sql, param);
+            await SqlDataAccess_Test.ExecuteAsync(sql, param);
         }
 
 
@@ -236,13 +236,13 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                         INNER JOIN Hydro_InventoryParts i ON i.PartID = s.PartID
                         WHERE a.IsRead = 0";
 
-            return SqlDataAccess.QueryAsync<StockAlert>(sql, null);
+            return SqlDataAccess_Test.QueryAsync<StockAlert>(sql, null);
         }
 
         public Task MarkAlertAsReadAsync(int alertId)
         {
             string sql = "UPDATE Hydro_StockAlerts SET IsRead = 1 WHERE AlertId = @AlertId;";
-            return SqlDataAccess.ExecuteAsync(sql, new { AlertId = alertId });
+            return SqlDataAccess_Test.ExecuteAsync(sql, new { AlertId = alertId });
         }
 
         public Task SendNotificationsAsync(StockAlert alert)
@@ -340,7 +340,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                     // first log today
                     if (latestLog == null)
                     {
-                        await SqlDataAccess.ExecuteAsync(@"
+                        await SqlDataAccess_Test.ExecuteAsync(@"
                             INSERT INTO Hydro_StockAlertLog(EmailSent, Sequence)
                             VALUES (@EmailSent, @Sequence)",
                             new
@@ -352,7 +352,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                     else
                     {
                         // update existing log with incremented sequence
-                        await SqlDataAccess.ExecuteAsync(@"
+                        await SqlDataAccess_Test.ExecuteAsync(@"
                                 UPDATE Hydro_StockAlertLog
                                 SET SentAt = GETDATE(), Sequence = Sequence + 1
                                 WHERE StockLogId = @StockLogId",
@@ -380,7 +380,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
         public Task<List<StockSendLogs>> GetStockSendEmailLogs()
         {
             string strsql = $@"SELECT StockLogId, EmailSent, SentAt FROM Hydro_StockAlertLog";
-            return SqlDataAccess.QueryAsync<StockSendLogs>(strsql, null);
+            return SqlDataAccess_Test.QueryAsync<StockSendLogs>(strsql, null);
 
         }
 
@@ -453,7 +453,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
         public async Task<IEnumerable<StockNotification>> GetLowStockNotificationList(int userId)
         {
-            return await SqlDataAccess.QueryAsync<StockNotification>($@"
+            return await SqlDataAccess_Test.QueryAsync<StockNotification>($@"
                             SELECT 
 	                            n.NotificationId, 
 	                            n.Title, 
@@ -470,9 +470,9 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             string sql = $@"UPDATE Hyrdo_StockNotificationUsers 
                             SET IsRead = 1, ReadDate = GETDATE()
                             WHERE NotificationId = @NotificationId AND User_ID =@User_ID;";
-            await SqlDataAccess.ExecuteAsync(sql, new { NotificationId = Id, User_ID  = userID });
+            await SqlDataAccess_Test.ExecuteAsync(sql, new { NotificationId = Id, User_ID  = userID });
 
-            return await SqlDataAccess.QueryAsync<StockNotificationDetail>($@"SELECT 
+            return await SqlDataAccess_Test.QueryAsync<StockNotificationDetail>($@"SELECT 
 	                                                                        i.PartNo,
 	                                                                        i.PartName,
 	                                                                        d.CurrentQty, 
@@ -489,7 +489,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             string sql = $@"UPDATE Hyrdo_StockNotificationUsers 
                             SET IsRead = 1, ReadDate = GETDATE()
                             WHERE User_ID =@User_ID;";
-            int row = await  SqlDataAccess.ExecuteAsync(sql, new { User_ID = alertId });
+            int row = await  SqlDataAccess_Test.ExecuteAsync(sql, new { User_ID = alertId });
 
             return row > 0;
         }

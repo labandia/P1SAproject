@@ -285,6 +285,7 @@
         /* ---------- Bar chart ---------- */
           /* ---------- Bar chart ---------- */
           buildChart(daily) {
+              console.log(daily);
               const host = document.getElementById('chartHost');
               this._lastData = daily; // store for resize
 
@@ -371,15 +372,20 @@
                   const fontSize = isSmall ? 6 : 11;
                   const dateLabel = isSmall && dateLabelFull.length > 5 ? dateLabelFull.substring(0, 3) : dateLabelFull;
 
+                  // NEW: label showing the actual output value above the bar
+                  const valueFontSize = isSmall ? 6 : 11;
+                  const valueLabelY = y - (isSmall ? 3 : 6); // sits just above the bar top
+
                   barsSvg += `
     <defs><linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0%" stop-color="${color}"/><stop offset="100%" stop-color="${colorEnd}"/>
     </linearGradient></defs>
     <rect class="bar-rect" x="${x}" y="${y}" width="${barW}" height="${barH}" rx="${isSmall ? 1 : 2}" fill="url(#${gradId})"
         style="transform-box:fill-box; transform-origin:bottom; transform:scaleY(0); transition:transform .65s cubic-bezier(.22,1,.36,1) ${delay}ms;"/>
+    <text class="bar-value" x="${x + barW / 2}" y="${valueLabelY}" text-anchor="middle" font-size="${valueFontSize}" font-weight="600" fill="#e8edf3"
+        style="opacity:0; transition:opacity .5s ease ${delay + 300}ms;">${this.changeformatnumber(total)}</text>
     <text x="${x + barW / 2}" y="${padT + plotH + (isSmall ? 12 : 18)}" text-anchor="middle" font-size="${fontSize}" fill="#9fb0c3">${dateLabel}</text>
 `;
-
                   // Everything besides GroupDate/date/Total/value is treated as a group column
                   if (!groupColumns) {
                       groupColumns = Object.keys(d).filter(k => !KNOWN_KEYS.includes(k));
@@ -408,7 +414,7 @@
               // Trigger animations
               requestAnimationFrame(() => {
                   requestAnimationFrame(() => {
-                      host.querySelectorAll('.bar-rect, .grid-line').forEach(el => {
+                      host.querySelectorAll('.bar-rect, .grid-line, .bar-value').forEach(el => {
                           el.style.opacity = '1';
                           if (el.classList.contains('bar-rect')) el.style.transform = 'scaleY(1)';
                       });

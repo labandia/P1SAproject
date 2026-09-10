@@ -84,7 +84,7 @@ namespace ProgramPartListWeb.Utilities
         {
             string strsql = $@"INSERT INTO P1SA_EmailSend(Subject, Sender, Recipient, Body, BCC)
                                VALUES(@Subject, @Sender, @Recipient, @Body, @BCC)";
-            int rows = await  SqlDataAccess.ExecuteAsync(strsql, em);
+            int rows = await  SqlDataAccess_Test.ExecuteAsync(strsql, em);
             return rows > 0;
         }
 

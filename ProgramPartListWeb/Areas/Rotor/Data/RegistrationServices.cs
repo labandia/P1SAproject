@@ -55,13 +55,13 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
                     );
                 END";
 
-            int rows = await SqlDataAccess.ExecuteAsync(strquery, masterlist);
+            int rows = await SqlDataAccess_Test.ExecuteAsync(strquery, masterlist);
             return rows > 0;
         }
 
         public async Task<bool> DeleteRegistration(int registID)
         {
-            int rows = await SqlDataAccess.ExecuteAsync($@"UPDATE Registration
+            int rows = await SqlDataAccess_Test.ExecuteAsync($@"UPDATE Registration
                                     SET IsDeleted = 1
                                     WHERE RegistrationID = @RegistrationID;", 
                                     new { RegistrationID = registID });
@@ -70,7 +70,7 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
 
         public async Task<bool> EditRegistration(RotorRegistrationModel masterlist)
         {
-            int rows = await SqlDataAccess.ExecuteAsync(@"
+            int rows = await SqlDataAccess_Test.ExecuteAsync(@"
                         UPDATE Registration
                         SET
                             RegistrationNo = @RegistrationNo,
@@ -182,10 +182,10 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
             }
 
 
-            var items = await SqlDataAccess.QueryAsync<RotorRegistrationModel>(strquery, parameters);
+            var items = await SqlDataAccess_Test.QueryAsync<RotorRegistrationModel>(strquery, parameters);
 
             // Now get the total count
-            int TotalRecords = await SqlDataAccess.ExecuteScalarAsync<int>(countQuery, parameters);
+            int TotalRecords = await SqlDataAccess_Test.ExecuteScalarAsync<int>(countQuery, parameters);
 
             return new PagedResult<RotorRegistrationModel>
             {
@@ -198,7 +198,7 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
 
         public Task<List<string>> GetRegistrationYear()
         {
-            return SqlDataAccess.StringListAsync($@"SELECT 
+            return SqlDataAccess_Test.StringListAsync($@"SELECT 
                         RegYear as GetYear
                     FROM Registration
                     GROUP BY RegYear

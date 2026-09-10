@@ -21,7 +21,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                 i.Unit
                             FROM Hydro_InventoryParts i
                             INNER JOIN Hydro_CategoryParts c ON c.CategoryID = i.CategoryID";
-            return await SqlDataAccess.QueryAsync<MasterlistPartsModel>(strsql, null);
+            return await SqlDataAccess_Test.QueryAsync<MasterlistPartsModel>(strsql, null);
         }
 
         public async Task<bool> AddMasterlistParts(MasterlistPartsModel p)
@@ -41,7 +41,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 ImageParts = p.ImageParts
             };
 
-            int rows = await SqlDataAccess.ExecuteAsync(partinsertquery, insertparams);
+            int rows = await SqlDataAccess_Test.ExecuteAsync(partinsertquery, insertparams);
 
             return rows > 0;
         }
@@ -66,7 +66,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             };
 
             
-            int rows = await SqlDataAccess.ExecuteAsync(partinsertquery, insertparams);
+            int rows = await SqlDataAccess_Test.ExecuteAsync(partinsertquery, insertparams);
             return rows > 0;
         }
 

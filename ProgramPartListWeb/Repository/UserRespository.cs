@@ -57,11 +57,11 @@ namespace ProgramPartListWeb.Data
                             VALUES (@Employee_ID, @FullName, @Email)
                         END";
 
-                await SqlDataAccess.ExecuteAsync(insertUser, reg);
+                await SqlDataAccess_Test.ExecuteAsync(insertUser, reg);
 
                 // Get User ID
                 string getUserId = @"SELECT User_ID FROM Users WHERE Employee_ID = @Employee_ID";
-                int? userId = await SqlDataAccess.ExecuteScalarAsync<int>(getUserId, new { reg.Employee_ID });
+                int? userId = await SqlDataAccess_Test.ExecuteScalarAsync<int>(getUserId, new { reg.Employee_ID });
 
                 if (userId == null)
                     return false;
@@ -70,7 +70,7 @@ namespace ProgramPartListWeb.Data
                 if (!string.IsNullOrWhiteSpace(reg.Email))
                 {
                     string updateEmail = @"UPDATE Users SET Email = @Email WHERE User_ID = @User_ID";
-                    await SqlDataAccess.ExecuteAsync(updateEmail, new { User_ID = userId, reg.Email });
+                    await SqlDataAccess_Test.ExecuteAsync(updateEmail, new { User_ID = userId, reg.Email });
                 }
 
                 // Check if account exists
@@ -80,7 +80,7 @@ namespace ProgramPartListWeb.Data
                         WHERE User_ID = @User_ID 
                         AND Project_ID = @Project_ID";
 
-                bool accountExists = await SqlDataAccess.ExistsAsync(
+                bool accountExists = await SqlDataAccess_Test.ExistsAsync(
                     checkAccountQuery,
                     new { User_ID = userId.Value, reg.Project_ID });
 
@@ -134,7 +134,7 @@ namespace ProgramPartListWeb.Data
                 const string getUserIdQuery =
                     "SELECT User_ID FROM Users WHERE Employee_ID = @Employee_ID";
 
-                int? userId = await SqlDataAccess.ExecuteScalarAsync<int>(
+                int? userId = await SqlDataAccess_Test.ExecuteScalarAsync<int>(
                     getUserIdQuery,
                     new { reg.Employee_ID });
 
@@ -155,7 +155,7 @@ namespace ProgramPartListWeb.Data
                             (@User_ID, @Project_ID, @Username, @Password, @Role_ID)
                     END";
 
-                int rows = await SqlDataAccess.ExecuteAsync(insertAccountQuery, new
+                int rows = await SqlDataAccess_Test.ExecuteAsync(insertAccountQuery, new
                 {
                     User_ID = userId.Value,
                     reg.Project_ID,
@@ -196,7 +196,7 @@ namespace ProgramPartListWeb.Data
             }
 
 
-            int rows = await SqlDataAccess.ExecuteAsync(strsql, new { Signature  = fileName, User_ID = userID});
+            int rows = await SqlDataAccess_Test.ExecuteAsync(strsql, new { Signature  = fileName, User_ID = userID});
 
             return rows > 0;
         }
@@ -204,7 +204,7 @@ namespace ProgramPartListWeb.Data
         {
             string strsql = $@"UPDATE UserAccounts SET Password =@Password
                                WHERE User_ID =@User_ID AND Project_ID = @Project_ID";
-            int rows = await SqlDataAccess.ExecuteAsync(strsql, ch);
+            int rows = await SqlDataAccess_Test.ExecuteAsync(strsql, ch);
 
             return rows > 0;
         }

@@ -337,7 +337,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         }
         public Task<Monthyear> GetMonthName()
         {
-            return SqlDataAccess.QuerySingleAsync<Monthyear>($@"SELECT
+            return SqlDataAccess_Test.QuerySingleAsync<Monthyear>($@"SELECT
                 DATENAME(MONTH, GETDATE()) as months,
                 CAST(YEAR(GETDATE()) AS VARCHAR(4)) AS years;");
         }

@@ -47,8 +47,8 @@
             <option value="0">COMPANY : ALL</option>
             <option value="1">SDP</option>
             <option value="2">TMS(Techinics MS)</option>
-            <option value="3">SynergyOne</option>
-            <option value="4">Onesource</option>
+            <option value="3">Onesource</option>
+            <option value="4">SynergyOne </option>
         </select>
 
 
@@ -193,7 +193,7 @@
 
             const objparams = {
                 search: searchText,
-                depid: 3,
+                depid: 1,
                 gender: gender,
                 pos: pos,
                 agency: agency,
@@ -206,10 +206,9 @@
             try {
 
                 const res = await getMethod('@Url.Action("GetEmployeelist", "Manpower")', objparams);
-
                 if (!res?.Success) {
-                    this.renderEmpty();
-                    return;
+                   this.renderEmpty();
+                   return;
                 }
 
                 this.EmployeeData = res.data.payload ?? [];
@@ -238,28 +237,46 @@
             }
 
             const fragment = document.createDocumentFragment();
+            const imageBaseUrl = '@Url.Action("DisplaytheImage", "Manpower", new { area = "P1SA" })';
 
             data.forEach(row => {
+                 console.log("ImageFileName:", row.ImageFileName);
 
+
+              const imagePath = row.ImageFileName
+        ? `${imageBaseUrl}?filename=${encodeURIComponent(row.ImageFileName)}`
+        : '@Url.Content("~/Content/Images/no-image.png")';
+
+      
+
+                //console.log(imagePath);
                 const tr = document.createElement("tr");
 
                 tr.style.cursor = "pointer";
 
                 tr.innerHTML = `  <tr>
                                 <td>
-                                  <div class="user-cell"><img src="https://storage.googleapis.com/banani-avatars/avatar%2Fmale%2F25-35%2FEuropean%2F2" class="cell-avatar" />
+                                  <div class="user-cell">
+                                   <img
+                                        class="cell-avatar"
+                                        src="${imagePath}"
+                                        loading="lazy"
+                                        onerror="this.onerror=null; this.src='@Url.Content("~/Content/Images/no-image.png")';"
+                                    />
+
+
                                       <div class="user-details">
                                           <span class="user-name-bold">${row.FullName}</span>
                                           <span class="user-time">${row.EmployeeCode}</span>
                                       </div>
                                   </div>
                                 </td>
-                                    
+
                                 <td>
-                                 <div  class="source-text">${row.Gender ? 'FEMALE' : 'MALE'}</div>
+                                 <div  class="source-text">${row.Gender == 1 ? 'FEMALE' : 'MALE'}</div>
                                 </td>
 
-                                <td> 
+                                <td>
                                   <div class="contact-cell">
                                     <span>
                                       <div style="width:14px;height:14px;display:flex;align-items:center;justify-content:center;margin-right:8px">
@@ -274,7 +291,7 @@
                                    </span>
                                  </div>
                                </td>
-   
+
                              <td>
                                <div class="contact-cell">
                                    <span>
@@ -295,7 +312,7 @@
                                 <td>
                                   <span class="status-text success">${row.StatusName}</span>
                                 </td>
-    
+
                                 <td>
                                   <span class="source-text">${row.CategoryName}</span>
                                 </td>
@@ -313,7 +330,7 @@
 
         }
 
-        
+
         renderEmpty() {
             this.tbody.innerHTML = `<tr>
                  <td colspan="5" style="text-align:center;color:#999">

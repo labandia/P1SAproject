@@ -41,7 +41,7 @@ namespace ProgramPartListWeb
 
             try
             {
-                SqlDataAccess.StartSqlDependency();
+                SqlDataAccess_Test.StartSqlDependency();
             }
             catch (Exception ex)
             {
@@ -63,7 +63,7 @@ namespace ProgramPartListWeb
 
         protected void Application_End()
         {
-            SqlDependency.Stop(SqlDataAccess.ConnectionString());
+            SqlDependency.Stop(SqlDataAccess_Test.ConnectionString());
 
             if (Response.StatusCode == 401)
             {

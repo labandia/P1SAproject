@@ -56,7 +56,11 @@
                     </div>
 
                     <div class="flex gap-4 items-start mb-8">
-                        <img src="https://storage.googleapis.com/banani-avatars/avatar/female/18-25/European/4" class="w-16 h-20 object-cover grayscale border border-border">
+                        <img id="EmployeeImage"
+                             src='@Url.Content("~/Content/Images/no-image.png")'
+                             class="w-16 h-20 object-cover grayscale border border-border"
+                             onerror="this.onerror=null; this.src='@Url.Content("~/Content/Images/no-image.png")';">
+
                         <div class="flex flex-col gap-3">
                             <div>
                                 <div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-0.5">NAME</div>
@@ -184,6 +188,23 @@
             document.querySelector('#UserFullname').textContent = data.FullName;
             document.querySelector('#Department').textContent = data.DepartmentName;
             document.querySelector('#StatusName').textContent = data.StatusName;
+
+              const imageBaseUrl = '@Url.Action("DisplaytheImage", "Manpower", new { area = "P1SA" })';
+
+
+              const imagePath = data.ImageFileName
+                  ? `${imageBaseUrl}?filename=${encodeURIComponent(data.ImageFileName)}`
+                      : '@Url.Content("~/Content/Images/no-image.png")';
+
+               // Employee image
+                  const employeeImage = document.querySelector('#EmployeeImage');
+
+                if (data.ImageFileName) {
+                    employeeImage.src = imagePath;
+                  } else {
+                      employeeImage.src =
+                          '@Url.Content("~/Content/Images/no-image.png")';
+                  }
         }
     }
 

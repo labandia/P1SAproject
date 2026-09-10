@@ -30,7 +30,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
            
 
-            return SqlDataAccess.QueryAsync<StockAlertModel>(strquery);
+            return SqlDataAccess_Test.QueryAsync<StockAlertModel>(strquery);
         }
 
 
@@ -52,7 +52,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                 LEFT JOIN Hydro_CategoryParts c ON c.CategoryID = p.CategoryID
                                 LEFT JOIN Hydro_Stocks s ON s.PartID = p.PartID";
 
-            return SqlDataAccess.QueryAsync<StockPartsModel>(strquery);
+            return SqlDataAccess_Test.QueryAsync<StockPartsModel>(strquery);
         }
 
         public Task<List<StockPartsModel>> GetTransactionStocks()
@@ -69,7 +69,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             double latestQty = filterdata.CurrentQty + Quan;
 
             // 1. Updates the Stocks Quantity 
-            int rows = await SqlDataAccess.ExecuteAsync($@"UPDATE Hydro_Stocks 
+            int rows = await SqlDataAccess_Test.ExecuteAsync($@"UPDATE Hydro_Stocks 
                                                 SET CurrentQty =@CurrentQty 
                                                 WHERE  PartID =@PartID",
                                              new

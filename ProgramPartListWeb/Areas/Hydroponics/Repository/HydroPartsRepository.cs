@@ -36,7 +36,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
 
 
 
-            int partID = await SqlDataAccess.ExecuteScalarAsync<int>(insertPartQuery, partParaers);
+            int partID = await SqlDataAccess_Test.ExecuteScalarAsync<int>(insertPartQuery, partParaers);
 
             if (partID <= 0)
             {
@@ -59,7 +59,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 model.Unit
             };
 
-            int rows =  await SqlDataAccess.ExecuteAsync(
+            int rows =  await SqlDataAccess_Test.ExecuteAsync(
                 insertStockQuery, stockPramers);
 
             return rows > 0;
@@ -119,7 +119,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                               SET CurrentQty = CurrentQty + @CurrentQty 
                                WHERE  PartID =@PartID";
 
-                await SqlDataAccess.ExecuteAsync(strsql, new
+                await SqlDataAccess_Test.ExecuteAsync(strsql, new
                 {
                     PartID = item.PartID,
                     CurrentQty = item.quantity
@@ -203,12 +203,12 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                 model.PartID
             };
 
-            int parstResult = await SqlDataAccess.ExecuteAsync(
+            int parstResult = await SqlDataAccess_Test.ExecuteAsync(
                 updateQuery, parameters);
 
             if (parstResult == 0) return false;
 
-            int rows = await SqlDataAccess.ExecuteAsync(updateStockQuery, stocksparams);
+            int rows = await SqlDataAccess_Test.ExecuteAsync(updateStockQuery, stocksparams);
 
             return rows > 0;
         }
@@ -224,7 +224,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                             INNER JOIN Hydro_InventoryParts i ON i.PartNo = s.PartNo
                             WHERE s.RequestID = @RequestID";
 
-            return await SqlDataAccess.QueryAsync<StockAddDetailsModel>(strquery, new { RequestID  = ID });
+            return await SqlDataAccess_Test.QueryAsync<StockAddDetailsModel>(strquery, new { RequestID  = ID });
         }
 
         public async Task<IEnumerable<StockAddModel>> GetAddStocksList()
@@ -239,19 +239,19 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                             FROM Hydro_StockRequests s
                             ORDER BY RequestID DESC";
 
-            return await SqlDataAccess.QueryAsync<StockAddModel>(strquery, null);
+            return await SqlDataAccess_Test.QueryAsync<StockAddModel>(strquery, null);
         }
 
         public Task<List<StockPartsModel>> GetInventoryList()
         {
-            return SqlDataAccess.QueryAsync<StockPartsModel>(
+            return SqlDataAccess_Test.QueryAsync<StockPartsModel>(
                 "HydroInventory", 
                 null, true);
         }
 
         public async Task<bool> IncrementAndDecreaseStocks(int StockID, double CurrentQty, int Required)
         {
-            int rows = await SqlDataAccess.ExecuteAsync("UPDATE Hydro_Stocks SET CurrentQty =@CurrentQty WHERE StockID =@StockID",
+            int rows = await SqlDataAccess_Test.ExecuteAsync("UPDATE Hydro_Stocks SET CurrentQty =@CurrentQty WHERE StockID =@StockID",
                 new
                 {
                     CurrentQty = CurrentQty,
@@ -266,7 +266,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
             string strsql = $@"UPDATE Hydro_Stocks SET CurrentQty =@CurrentQty 
                                WHERE  PartID =@PartID";
 
-            int rows = await SqlDataAccess.ExecuteAsync(strsql, new { 
+            int rows = await SqlDataAccess_Test.ExecuteAsync(strsql, new { 
                                                     PartID = ID, 
                                                     CurrentQty = Quan 
                                                 });
@@ -280,7 +280,7 @@ namespace ProgramPartListWeb.Areas.Hydroponics.Repository
                                SET WarningLevel =@WarningLevel 
                                WHERE  StockID =@StockID";
 
-            int rows = await SqlDataAccess.ExecuteAsync(strsql,
+            int rows = await SqlDataAccess_Test.ExecuteAsync(strsql,
                                                 new
                                                 {
                                                     StockID = StockID,

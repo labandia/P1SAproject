@@ -171,16 +171,32 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         }
         public async Task<bool> AddDailyInput(DieMoldDaily daily)
         {
-            int results = await SqlDataAccess.ExecuteAsync($@"INSERT INTO 
-                DieMold_DailyInputChecker(DieSerial, DateInput, Count)
-                VALUES(@DieSerial, @DateInput, @Count)", new
-            {
-                DieSerial = daily.DieSerial,
-                DateInput = daily.DateInput,
-                Count = 1
-            });
+            string checkerSql = @"
+                IF EXISTS (
+                    SELECT 1
+                    FROM DieMold_DailyInputChecker
+                    WHERE DieSerial = @DieSerial
+                      AND DateInput = @DateInput
+                )
+                BEGIN
+                    UPDATE DieMold_DailyInputChecker
+                    SET Count = Count + 1
+                    WHERE DieSerial = @DieSerial
+                      AND DateInput = @DateInput
+                END
+                ELSE
+                BEGIN
+                    INSERT INTO DieMold_DailyInputChecker
+                        (DieSerial, DateInput, Count)
+                    VALUES
+                        (@DieSerial, @DateInput, 1)
+                END";
 
-            if (results == 0) return false;
+            await SqlDataAccess.ExecuteAsync(checkerSql, new
+            {
+                daily.DieSerial,
+                daily.DateInput
+            });
 
             string sql = @"INSERT INTO DieMold_Daily (DieSerial, DateInput, CycleShot, 
                         Total, MachineNo, Remarks, Mincharge, Status)
@@ -216,25 +232,40 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                         WHERE p.DieSerial = @DieSerial AND p.ProcessID = @Process
                             ", obj);
 
-            var getlist = await SqlDataAccess.QueryAsync<DieMoldDaily>($@"SELECT 
-                            d.RecordID,
-                            FORMAT(d.DateInput, 'MM/dd/yy') AS DateInput,             
-	                        p.DieSerial,
-                            d.CycleShot, 
-                            d.Total, 
-                            d.MachineNo, 
-                            d.Status, 
-                            d.Remarks, 
-                            d.Mincharge
-                        FROM DieMold_Daily d 
-                        INNER JOIN DieMold_MoldingMainParts p 
-                            ON d.DieSerial = p.DieSerial
-                        WHERE 
-                            p.DieSerial = @DieSerial
-                            AND p.ProcessID = @Process
-                        GROUP BY d.RecordID, p.DieSerial, d.DateInput, d.CycleShot,
-                        d.Total, d.MachineNo, d.Status, d.Remarks, d.Mincharge
-                            ORDER BY d.DateInput DESC;", obj);
+            var getlist = await SqlDataAccess.QueryAsync<DieMoldDaily>($@"
+                    SELECT 
+                        d.RecordID,
+                        FORMAT(d.DateInput, 'MM/dd/yy') AS DateInput,             
+                        p.DieSerial,
+                        d.CycleShot, 
+                        d.Total, 
+                        d.MachineNo, 
+                        d.Status, 
+                        d.Remarks, 
+                        d.Mincharge
+                    FROM DieMold_Daily d 
+                    INNER JOIN DieMold_MoldingMainParts p 
+                        ON d.DieSerial = p.DieSerial
+                    WHERE 
+                        p.DieSerial = @DieSerial
+                        AND p.ProcessID = @Process
+                    GROUP BY 
+                        d.RecordID, 
+                        p.DieSerial, 
+                        d.DateInput, 
+                        d.CycleShot,
+                        d.Total, 
+                        d.MachineNo, 
+                        d.Status, 
+                        d.Remarks, 
+                        d.Mincharge
+                    ORDER BY 
+                        d.DateInput DESC,
+                        CASE 
+                            WHEN d.CycleShot = 0 THEN 0
+                            ELSE 1
+                        END,
+                        d.RecordID ASC;", obj);
 
             var newlist = MoldieSetTotalsList(getlist);
 

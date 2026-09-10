@@ -2,6 +2,7 @@
 using ProgramPartListWeb.Areas.P1SA.Interface;
 using ProgramPartListWeb.Areas.P1SA.Models;
 using ProgramPartListWeb.Helper;
+using ProgramPartListWeb.Utilities.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -23,13 +24,10 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
             CAST(DATEDIFF(DAY, e.DateHired, GETDATE()) / 365.25 AS DECIMAL(5,2)) AS LOS,
             DATEDIFF(DAY,  e.DateHired, GETDATE())                               AS LOD,
             e.DateOfBirth,
-            e.Email,
             e.Phone,
             e.Address,
             e.PickUpPoint,
             e.DateResigned,
-            e.Province,
-            e.EducationalAttain,
             e.DirectedBy,
             CASE e.Category WHEN 0 THEN 'Direct' WHEN 1 THEN 'Indirect' ELSE '' END AS CategoryName,
             e.Remarks,
@@ -37,15 +35,16 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
             d.DepartmentName,
             s.Name   AS StatusName,
             a.Name   AS AgencyName,
-            e.UpdatedAt ";
+            i.ImageFileName";
 
         private const string FromJoins = @"
             FROM   P1SA_Employees        e
             JOIN   P1SA_Department       d ON d.DepartmentId = e.DepartmentId
-            JOIN   P1SA_ManpowerStatus s ON s.StatusId     = e.StatusId
+            JOIN   P1SA_EmploymentStatus s ON s.StatusId     = e.StatusId
+            LEFT  JOIN P1SA_EmployeeImages  i ON i.EmployeeId     = e.EmployeeId
             LEFT JOIN P1SA_JobTitles     j ON j.JobTitleId   = e.JobTitleId
             LEFT JOIN P1SA_Agencies      a ON a.AgencyId     = e.AgencyId
-            WHERE  e.IsDeleted = 0";
+            WHERE  e.IsDeleted = 0 ";
 
 
 
@@ -69,7 +68,7 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
                 SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
 
-            return  SqlDataAccess.ExecuteScalarAsync<int>(sql, model);
+            return SqlDataAcess_Test.ExecuteScalarAsync<int>(sql, model);
         }
 
         public Task<bool> CodeExistsAsync(string employeeCode)
@@ -108,13 +107,13 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
 
             Debug.WriteLine(strquery);
 
-            return SqlDataAccess.ExecuteScalarAsync<int>(strquery, parameters);
+            return SqlDataAcess_Test.ExecuteScalarAsync<int>(strquery, parameters);
         }
 
         public async Task<P1SAEmployeesModel> GetEmployees(int empID)
         {
             var sql = $"SELECT {SelectColumns} {FromJoins} AND e.EmployeeId =@EmployeeId ORDER BY e.FullName";
-            return await SqlDataAccess.QuerySingleOrDefaultAsync<P1SAEmployeesModel>(sql, new { EmployeeId  = empID });
+            return await SqlDataAcess_Test.QuerySingleOrDefaultAsync<P1SAEmployeesModel>(sql, new { EmployeeId  = empID });
         }
 
         public async Task<List<P1SAEmployeesModel>> GetEmployees(
@@ -176,7 +175,7 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
             }
 
 
-            return await SqlDataAccess.QueryAsync<P1SAEmployeesModel>(strquery, parameters);
+            return await SqlDataAcess_Test.QueryAsync<P1SAEmployeesModel>(strquery, parameters);
         }
 
         public async Task<List<P1SAEmployeesModel>> GetProductionEmployees(
@@ -235,7 +234,7 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
 
             //Debug.WriteLine(strquery);
 
-            return await SqlDataAccess.QueryAsync<P1SAEmployeesModel>(strquery, parameters);
+            return await SqlDataAcess_Test.QueryAsync<P1SAEmployeesModel>(strquery, parameters);
         }
 
 
@@ -248,7 +247,7 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
                        UpdatedAt    = GETDATE()
                 WHERE  EmployeeId = @EmployeeId AND IsDeleted = 0";
 
-            int rows = await SqlDataAccess.ExecuteAsync(sql, new { EmployeeId = employeeId, DateAwol = dateAwol });
+            int rows = await SqlDataAcess_Test.ExecuteAsync(sql, new { EmployeeId = employeeId, DateAwol = dateAwol });
 
             return rows > 0;
         }
@@ -262,7 +261,7 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
                        UpdatedAt    = GETDATE()
                 WHERE  EmployeeId = @EmployeeId AND IsDeleted = 0";
 
-            int rows = await  SqlDataAccess.ExecuteAsync(sql, new { EmployeeId = employeeId, DateResigned = dateResigned });
+            int rows = await SqlDataAcess_Test.ExecuteAsync(sql, new { EmployeeId = employeeId, DateResigned = dateResigned });
 
             return rows > 0;
         }
@@ -275,7 +274,7 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
                        UpdatedAt = GETDATE()
                 WHERE  EmployeeId = @EmployeeId";
 
-            int rows = await SqlDataAccess.ExecuteAsync(sql, new { EmployeeId = employeeId });
+            int rows = await SqlDataAcess_Test.ExecuteAsync(sql, new { EmployeeId = employeeId });
             return rows > 0;
         }
 
@@ -304,7 +303,7 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
                     UpdatedAt          = GETDATE()
                 WHERE EmployeeId = @EmployeeId AND IsDeleted = 0";
 
-            int rows = await SqlDataAccess.ExecuteAsync(sql, model);
+            int rows = await SqlDataAcess_Test.ExecuteAsync(sql, model);
             return rows > 0;
         }
     }

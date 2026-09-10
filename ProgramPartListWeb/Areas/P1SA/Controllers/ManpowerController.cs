@@ -6,6 +6,8 @@ using ProgramPartListWeb.Controllers;
 using ProgramPartListWeb.Helper;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -41,13 +43,13 @@ namespace ProgramPartListWeb.Areas.P1SA.Controllers
                     int page = 1,
                     int pageSize = 10)
         {
-          
+            var data = await _emp.GetEmployees(search, depid, gender, pos, agency, status, page, pageSize);
 
-            var data = role == 0 
-                    ? await _emp.GetEmployees(search, depid, gender,pos, agency, status, page, pageSize)
-                    : await _emp.GetProductionEmployees(search, gender, agency, status, page, pageSize);
+            //var data = role == 0 
+            //        ? await _emp.GetEmployees(search, depid, gender,pos, agency, status, page, pageSize)
+            //        : await _emp.GetProductionEmployees(search, gender, agency, status, page, pageSize);
 
-            int totalCount = await _emp.GetActualCountEmployee(depid, agency, status, gender);
+            //int totalCount = await _emp.GetActualCountEmployee(depid, agency, status, gender);
 
 
             if (data == null)
@@ -56,7 +58,7 @@ namespace ProgramPartListWeb.Areas.P1SA.Controllers
             var finaldata = new
             {
                 payload = data,
-                Total = totalCount
+                Total = 1
             };
 
             return JsonSuccess(finaldata, "Retrieved data successfully");
@@ -74,8 +76,63 @@ namespace ProgramPartListWeb.Areas.P1SA.Controllers
 
             return JsonSuccess(data, "Retrieved data successfully");
         }
+        [HttpGet]
+        public ActionResult DisplaytheImage(string filename)
+        {
+            Debug.WriteLine("FILE NAME : " + filename);
 
+            if (string.IsNullOrWhiteSpace(filename))
+                return HttpNotFound();
 
+            string folderPath =
+                @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\Manpower\Molding\";
+
+            string fullPath = Path.Combine(folderPath, filename);
+
+            Debug.WriteLine("FULL PATH : " + fullPath);
+
+            if (!System.IO.File.Exists(fullPath))
+            {
+                Debug.WriteLine("IMAGE NOT FOUND");
+
+                return File(
+                    Server.MapPath("~/Content/Images/no-image.png"),
+                    "image/png"
+                );
+            }
+
+            string extension = Path.GetExtension(fullPath).ToLowerInvariant();
+
+            string contentType;
+
+            switch (extension)
+            {
+                case ".jpg":
+                case ".jpeg":
+                    contentType = "image/jpeg";
+                    break;
+
+                case ".png":
+                    contentType = "image/png";
+                    break;
+
+                case ".gif":
+                    contentType = "image/gif";
+                    break;
+
+                case ".webp":
+                    contentType = "image/webp";
+                    break;
+
+                default:
+                    contentType = "application/octet-stream";
+                    break;
+            }
+
+            byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
+
+            return File(fileBytes, contentType);
+        }
 
 
         //[HttpPost]

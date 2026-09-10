@@ -10,7 +10,7 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
     {
         public async Task<bool> AddCategory(string CategoryName)
         {
-            int rows = await SqlDataAccess.ExecuteAsync("INSERT INTO Register_Category(CategoryName) VALUES(@CategoryName)",
+            int rows = await SqlDataAccess_Test.ExecuteAsync("INSERT INTO Register_Category(CategoryName) VALUES(@CategoryName)",
                  new { CategoryName });
 
             return rows > 0;
@@ -18,14 +18,14 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
 
         public async Task<bool> DeleteCategory(int ID)
         {
-            int rows = await SqlDataAccess.ExecuteAsync("DELETE FROM Register_Category WHERE CategoryID = @ID",
+            int rows = await SqlDataAccess_Test.ExecuteAsync("DELETE FROM Register_Category WHERE CategoryID = @ID",
                  new { ID });
             return rows > 0;
         }
 
         public async Task<bool> EditCategory(int ID, string catName)
         {
-            int rows = await SqlDataAccess.ExecuteAsync("UPDATE Register_Category SET CategoryName = @catName WHERE CategoryID = @ID", new
+            int rows = await SqlDataAccess_Test.ExecuteAsync("UPDATE Register_Category SET CategoryName = @catName WHERE CategoryID = @ID", new
             {
                 catName,
                 ID
@@ -35,7 +35,7 @@ namespace ProgramPartListWeb.Areas.Rotor.Data
 
         public Task<List<RotorCatergoryModel>> GetCategoryList()
         {
-            return SqlDataAccess.QueryAsync<RotorCatergoryModel>("SELECT * FROM Register_Category");
+            return SqlDataAccess_Test.QueryAsync<RotorCatergoryModel>("SELECT * FROM Register_Category");
         }
     }
 }

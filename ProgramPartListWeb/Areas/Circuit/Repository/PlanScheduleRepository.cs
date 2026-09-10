@@ -20,7 +20,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                                @Shift, @Remarks, @SetupNavi, 
                                @VisualManage, @Status, @MachineSerial, 
                                @Modelno, @SetGroup)";
-            int row = await SqlDataAccess.ExecuteAsync(strquery, plan);
+            int row = await SqlDataAccess_Test.ExecuteAsync(strquery, plan);
 
             return row > 0;
         }
@@ -28,7 +28,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
         public async Task<bool> DeletePlanSched(string plan)
         {
             string strquery = @"DELETE FROM PartList_Series_tbl WHERE Series_no =@Series_no";
-            int rows = await SqlDataAccess.ExecuteAsync(strquery, new { Series_no  = plan});
+            int rows = await SqlDataAccess_Test.ExecuteAsync(strquery, new { Series_no  = plan});
 
             return rows > 0;
         }
@@ -45,7 +45,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
 
             };
             
-            int rows = await SqlDataAccess.ExecuteAsync(strquery, parameters);
+            int rows = await SqlDataAccess_Test.ExecuteAsync(strquery, parameters);
             return rows > 0;
         }
 
@@ -77,7 +77,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                                 GROUP BY Series_ID
                             ) cs ON cs.Series_ID = s.Series_ID
                               ORDER BY Series_ID DESC";
-            return SqlDataAccess.QueryAsync<PlanScheduleMode>(strquery, 
+            return SqlDataAccess_Test.QueryAsync<PlanScheduleMode>(strquery, 
                 null);
         }
 

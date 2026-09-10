@@ -78,9 +78,9 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
 
             //Debug.WriteLine(strquery);
            
-            var items = await SqlDataAccess.QueryAsync<MetalMaskModel>(strquery, parameters);
+            var items = await SqlDataAccess_Test.QueryAsync<MetalMaskModel>(strquery, parameters);
 
-            int TotalRecords = await SqlDataAccess.ExecuteScalarAsync<int>(countstring, parameters);
+            int TotalRecords = await SqlDataAccess_Test.ExecuteScalarAsync<int>(countstring, parameters);
 
             return new PagedResult<MetalMaskModel>
             {
@@ -121,7 +121,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                               WHERE IsDelete = 0 ";
             var parameter = new { RecordID = ID };
 
-            return SqlDataAccess.QuerySingleOrDefaultAsync<MetalMaskModel>(strquery, parameter);
+            return SqlDataAccess_Test.QuerySingleOrDefaultAsync<MetalMaskModel>(strquery, parameter);
         }
 
         public async Task<List<MetalMaskModel>> SearchMetalMaskData(string partnum, int model)
@@ -154,7 +154,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                                 ) p WHERE Partnumber =@Partnumber AND ModelType = @model";
             var parameter = new { Partnumber = partnum, model = model };
 
-            return await SqlDataAccess.QueryAsync<MetalMaskModel>(strquery, parameter);
+            return await SqlDataAccess_Test.QueryAsync<MetalMaskModel>(strquery, parameter);
         }
 
         public async Task<bool> AddMasterlist(MetalMaskModel masterlist)
@@ -201,7 +201,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                                     )
                                 END";
 
-            int rows = await SqlDataAccess.ExecuteAsync(strquery, masterlist);
+            int rows = await SqlDataAccess_Test.ExecuteAsync(strquery, masterlist);
 
             return rows > 0;
         }
@@ -233,7 +233,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                             Remarks      = @Remarks
                         WHERE RecordID = @RecordID";
 
-            int rows = await SqlDataAccess.ExecuteAsync(strquery, masterlist);
+            int rows = await SqlDataAccess_Test.ExecuteAsync(strquery, masterlist);
             return rows > 0;
         }
 
@@ -273,8 +273,8 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
                 parameters.Add("@Offset", offset);
                 parameters.Add("@PageSize", pageSize);
             }
-            var items = await SqlDataAccess.QueryAsync<MetalMaskPWBModel>(strquery, parameters);
-            int TotalRecords = await SqlDataAccess.ExecuteScalarAsync<int>(countstring, parameters);
+            var items = await SqlDataAccess_Test.QueryAsync<MetalMaskPWBModel>(strquery, parameters);
+            int TotalRecords = await SqlDataAccess_Test.ExecuteScalarAsync<int>(countstring, parameters);
 
             return new PagedResult<MetalMaskPWBModel>
             {
@@ -287,7 +287,7 @@ namespace ProgramPartListWeb.Areas.Circuit.Repository
 
         public async Task<bool> AddPWBMetalMask(MetalMaskPWBModel masterlist)
         {
-            int rows = await SqlDataAccess.ExecuteAsync($@"INSERT INTO MetalMask_MasterlistPWB(Partnumber, MetalMask, Alternate, AREA, Remarks)
+            int rows = await SqlDataAccess_Test.ExecuteAsync($@"INSERT INTO MetalMask_MasterlistPWB(Partnumber, MetalMask, Alternate, AREA, Remarks)
                                                  VALUES(@Partnumber, @MetalMask, @Alternate, @AREA, @Remarks)", masterlist);
 
             return rows > 0;

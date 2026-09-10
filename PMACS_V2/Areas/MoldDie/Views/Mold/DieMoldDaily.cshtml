@@ -61,7 +61,7 @@
                     <!-- Cycle Shot -->
                     <div class="formcustomgroup with-icon">
                         <label class="form-label required" for="cycleShot">CYCLE SHOT </label>
-                        <input type="number" id="CycleShot" name="CycleShot" placeholder="Enter Cycle Shot" required min="0">
+                        <input type="number" id="CycleShot" name="CycleShot" placeholder="Enter Cycle Shot" required >
                     </div>
 
                     <!-- Machine No -->
@@ -806,14 +806,13 @@
                  ProcessID: this.processSelection.value,
                  DieSerial: this.DieSerial.value,
                  DateInput: this.DateInput.value,
-                 CycleShot: parseInt(this.CycleShot.value, 10),
+                 CycleShot: parseInt(this.CycleShot.value || 0, 10),
                  MachineNo: parseInt(this.MachineNo.value, 10),
                  Remarks: this.remarks.value,
                  Mincharge: this.Mincharge.value
             };
 
             const d = new Date(payload.DateInput);
-
              // Checks if the Cycle Shot Input is Already Exists
             let checkduplicate = await GetMethod('@Url.Action("CheckDialyMoldExist", "Mold")',
             {
@@ -821,7 +820,9 @@
                  DateInput: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
             });
 
-            if (checkduplicate && payload.cycleShot !== 0) {
+         
+
+            if (checkduplicate && payload.CycleShot !== 0) {
                 console.log(payload.DateInput + " is Already Input");
                 return;
             }

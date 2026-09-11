@@ -638,6 +638,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         s.ShopOrder,
                         f.ProcessName,
                         f.ItemNo,
+                        s.PartNo,
                         f.PlanQuan,
                         f.DatePrepared,
                         CONVERT(varchar(8), f.TimeInput, 108) AS TimeInput,

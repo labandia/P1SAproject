@@ -906,6 +906,8 @@
 
         /* ================= RENDER MAIN TABLE ================= */
         renderTable(data) {
+            console.log(data);
+
             if (!this.tbody) return;
 
             if (data.length === 0) {
@@ -942,6 +944,8 @@
 
 
             this.tbody.innerHTML = data.map(row => {
+                let itemNodisplay = (row.DepartmentID === 5) ? row.PartNo : row.ItemNo;
+
                 let sectionLabel = '';
 
                 switch (row.DepartmentID) {
@@ -980,7 +984,7 @@
                         <td style="color:#515154; text-align:center;">${this.escape(row.TimeInput)}</td>
                         <td style="color:#515154; text-align:center;">${this.escape(row.ShopOrder)}</td>
                         <td style="color:#515154;">${this.escape(row.ProcessName)}</td>
-                        <td style="color:#515154; text-align:center;">${this.escape(row.ItemNo)}</td>
+                        <td style="color:#515154; text-align:center;">${this.escape(itemNodisplay)}</td>
                         <td style="color:#515154; text-align:center;">${this.escape(row.PreparedQuantity)}</td>
                         <td style="color:#515154; text-align:center;">${this.escape(row.Customer)}</td>
                         <td style="color:#515154; text-align:center;">${this.escape(row.Modeltype)}</td>

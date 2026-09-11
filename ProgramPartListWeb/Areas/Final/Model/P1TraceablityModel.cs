@@ -18,7 +18,7 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public string PreparedBy { get; set; }
         public int PlanQuan { get; set; }
         public int? Shift { get; set; }
-
+        public string PartNo { get; set; }
         public string Customer { get; set; }
 
         public string Modeltype { get; set; }

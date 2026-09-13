@@ -537,7 +537,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 				 FROM ProductionFinal_GroupChart
 				 WHERE GroupDate >= @StartOfMonth
 				 AND GroupDate < @StartOfNextMonth
-                    ORDER BY GroupDate");
+                    ORDER BY RecordId");
         }
         // ================== For Group Manage Data ==================
         public Task<List<ProductionGroupModel>> GetGroupDataList(string months)

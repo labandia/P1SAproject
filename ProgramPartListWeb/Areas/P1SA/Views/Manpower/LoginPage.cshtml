@@ -22,112 +22,128 @@
     <script src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
 </head>
 <body>
-    <div class="login-container">
-        <!-- grid background pattern -->
-        <div class="grid-pattern"></div>
 
-        <div class="card-wrapper">
-            <div class="login-card">
-                <div class="card-accent-bar"></div>
-                <div class="card-inner">
+    <div class="shell">
 
-                    <!-- logo / hexagon -->
-                    <div class="logo-wrapper">
-                        <div class="logo-square">
-                            <div class="logo-icon">
-                                <iconify-icon icon="lucide:hexagon"></iconify-icon>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- titles -->
-                    <div class="section-title">
-                        <div class="terminal-badge">P1 Manpower Data</div>
-                        <h1 class="main-title">SYSTEM LOGIN</h1>
-                    </div>
-
-                    <!-- form fields -->
-                    <div class="gap-6" style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2rem;">
-                        <!-- operative id -->
-                        <div class="form-group">
-                            <label class="form-label">OPERATIVE ID</label>
-                            <div class="input-field">
-                                <span class="input-icon">
-                                    <iconify-icon icon="lucide:user"></iconify-icon>
-                                </span>
-                                <input class="input-text" placeholder="UI-ID" />
-                            </div>
-                        </div>
-
-                        <!-- security passcode with reset & eye toggle -->
-                        <div class="form-group">
-                            <div class="flex-between">
-                                <label class="form-label">SECURITY PASSCODE</label>
-                                <a href="#" class="reset-link">RESET?</a>
-                            </div>
-                            <div class="input-field password-row">
-                                <div style="display: flex; align-items: center;">
-                                    <span class="input-icon">
-                                        <iconify-icon icon="lucide:key"></iconify-icon>
-                                    </span>
-
-                                    <input type="password" class="password-dots" placeholder="********" />
-                                </div>
-                                <button type="button" class="eye-button" id="togglePassBtn" aria-label="Toggle password visibility">
-                                    <iconify-icon icon="lucide:eye-off"></iconify-icon>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- authenticate button -->
-                    <button class="auth-button" id="loginBtn">
-                        <span>AUTHENTICATE</span>
-                        <iconify-icon icon="lucide:arrow-right"></iconify-icon>
-                    </button>
-
-                    <!-- footer with signal bars & secure connection -->
-                    <div class="card-footer">
-                        <div class="signal-bars">
-                            <div style="--width: 2px; --height: 4px;" class="signal-bar"></div>
-                            <div style="--width: 4px; --height: 8px;" class="signal-bar"></div>
-                            <div style="--width: 8px; --height: 16px;" class="signal-bar"></div>
-                            <div style="--width: 2px; --height: 4px;" class="signal-bar"></div>
-                            <div style="--width: 6px; --height: 12px;" class="signal-bar"></div>
-                            <div style="--width: 2px; --height: 4px;" class="signal-bar"></div>
-                            <div style="--width: 2px; --height: 4px;" class="signal-bar"></div>
-                            <div style="--width: 8px; --height: 16px;" class="signal-bar"></div>
-                            <div style="--width: 4px; --height: 8px;" class="signal-bar"></div>
-                            <div style="--width: 2px; --height: 4px;" class="signal-bar"></div>
-                            <div style="--width: 2px; --height: 4px;" class="signal-bar"></div>
-                            <div style="--width: 6px; --height: 12px;" class="signal-bar"></div>
-                            <div style="--width: 4px; --height: 8px;" class="signal-bar"></div>
-                            <div style="--width: 2px; --height: 4px;" class="signal-bar"></div>
-                        </div>
-                        <div class="secure-text">SECURE CONNECTION</div>
-                    </div>
+        <!-- ============ LEFT: BRAND PANEL ============ -->
+        <div class="brand-panel">
+            <div class="brand-mark">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="3" stroke="#7C97A3" stroke-width="1.6" /><path d="M7 12h10M7 8h6M7 16h4" stroke="#7C97A3" stroke-width="1.6" stroke-linecap="round" /></svg>
+                <div>
+                    <div class="brand-name">Production Manpower Systems Portal</div>
+                    <div class="brand-sub">SANYO DENKI PHILIPPINES, INC.</div>
                 </div>
             </div>
+
+            <div class="brand-message">
+                <h1>Manpower &amp; New Hired Employee systems, in one place.</h1>
+                <p>Sign in with your department to view employee records, attendance, and onboarding for your section.</p>
+            </div>
+
+            <div class="brand-stats">
+                <div class="brand-stat"><div class="v">248</div><div class="k">Active employees</div></div>
+                <div class="brand-stat"><div class="v">6</div><div class="k">Sections online</div></div>
+                <div class="brand-stat"><div class="v">7</div><div class="k">Pending hires</div></div>
+            </div>
         </div>
+
+        <!-- ============ RIGHT: LOGIN FORM ============ -->
+        <div class="form-panel">
+            <div class="login-card">
+                <h2>Sign in</h2>
+                <div class="sub">Enter your credentials and select your department.</div>
+
+                <div class="error-banner" id="errorBanner">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7" /><path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" /></svg>
+                    <span>Employee ID, password, and department are all required.</span>
+                </div>
+
+                <form id="loginForm" novalidate>
+                    <div class="field-group">
+                        <label for="empId">Employee ID</label>
+                        <input type="text" id="empId" placeholder="e.g. EMP-02145" autocomplete="username">
+                    </div>
+
+                    <div class="field-group">
+                        <label for="password">Password</label>
+                        <div class="pw-wrap">
+                            <input type="password" id="password" placeholder="Enter your password" autocomplete="current-password">
+                            <button type="button" class="pw-toggle" id="pwToggle" aria-label="Show password">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" id="eyeIcon"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z" stroke="currentColor" stroke-width="1.6" /><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6" /></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="department">Department</label>
+                        <select id="department" required>
+                            <option value="0" disabled selected>Select your department</option>
+                            <option value="1">Molding Section</option>
+                            <option value="2">Press Section</option>
+                            <option value="3">Rotor Section</option>
+                            <option value="4">Winding Section</option>
+                            <option value="5">Circuit Section</option>
+                            <option value="6">Process Control Section</option>
+                            <option value="7">Final Assembly Section</option>
+                        </select>
+                    </div>
+
+                    <div class="row-between">
+                        <label class="remember"><input type="checkbox" id="remember"> Remember this device</label>
+                        <a href="#" class="forgot-link">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn-signin">Sign In</button>
+                </form>
+
+                <div class="divider-note">Internal use only · Contact IT if you can't access your account</div>
+            </div>
+        </div>
+
     </div>
 
     <script type="text/javascript">
-        let logbtn = document.getElementById('loginBtn');
+        const pwInput = document.getElementById('password');
+        const pwToggle = document.getElementById('pwToggle');
+        pwToggle.addEventListener('click', () => {
+            const isPw = pwInput.type === 'password';
+            pwInput.type = isPw ? 'text' : 'password';
+            pwToggle.setAttribute('aria-label', isPw ? 'Hide password' : 'Show password');
+        });
 
-        if (logbtn) {
-            logbtn.addEventListener('click', function (e) {
-                e.preventDefault();
+        const form = document.getElementById('loginForm');
+        const errorBanner = document.getElementById('errorBanner');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const empId = document.getElementById('empId').value.trim();
+            const pw = pwInput.value.trim();
+            const dept = document.getElementById('department').value;
 
-                let roles = document.getElementById("roleid").value;
+            if (!empId || !pw || !dept) {
+                errorBanner.classList.add('show');
+                return;
+            }
+            errorBanner.classList.remove('show');
+            // On successful sign-in, continue to the system selector
+            window.location.href = '/P1SA/Manpower/LoginPage';
+        });
 
-                if (parseInt(roles) === 0) {
-                    window.location.href = '/P1SA/Manpower/ManageEmployee';
-                } else {
-                    window.location.href = '/P1SA/Manpower/Productions';
-                }
-                
-            });
-        }
+        // let logbtn = document.getElementById('loginBtn');
+
+        // if (logbtn) {
+        //     logbtn.addEventListener('click', function (e) {
+        //         e.preventDefault();
+
+        //         let roles = document.getElementById("roleid").value;
+
+        //         if (parseInt(roles) === 0) {
+        //             window.location.href = '/P1SA/Manpower/ManageEmployee';
+        //         } else {
+        //             window.location.href = '/P1SA/Manpower/Productions';
+        //         }
+
+        //     });
+        // }
     </script>
 </body>
 </html>

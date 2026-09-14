@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using ProgramPartListWeb.Areas.P1SA.Interface;
 using ProgramPartListWeb.Areas.P1SA.Models;
+using ProgramPartListWeb.Areas.PC.Models;
 using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Utilities.DataAccess;
 using System;
@@ -12,6 +13,7 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
 {
     public class EmployeeServices : IP1SAEmployeeRepository
     {
+        private string testTable = "P1SA_Employees_Backup";
 
         // ── SELECT COLUMNS(view model) ───────────────────────
         // Reused in every SELECT to keep projections consistent.
@@ -35,7 +37,11 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
             d.DepartmentName,
             s.Name   AS StatusName,
             a.Name   AS AgencyName,
-            i.ImageFileName";
+            i.ImageFileName, 
+            e.JobTitleId, 
+            e.DepartmentId,
+            e.StatusId, 
+            e.AgencyId ";
 
         private const string FromJoins = @"
             FROM   P1SA_Employees        e
@@ -48,27 +54,51 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
 
 
 
-        public Task<int> AddAsync(P1SAEmployeesInputModel model)
+        public async Task<(int id, string code)> InsertEmployeeAsync(P1SAEmployeesInputModel model)
         {
-            var sql = @"
-                INSERT INTO P1SA_Employees (
-                    EmployeeCode, FullName, Gender, DateHired, DateOfBirth,
-                    Email, Phone, Address, PickUpPoint, DateResigned,
-                    Province, EducationalAttain, DirectedBy, Category, Remarks,
-                    JobTitleId, DepartmentId, StatusId, AgencyId,
-                    IsDeleted, CreatedAt, UpdatedAt
-                )
-                VALUES (
-                    @EmployeeCode, @FullName, @Gender, @DateHired, @DateOfBirth,
-                    @Email, @Phone, @Address, @PickUpPoint, @DateResigned,
-                    @Province, @EducationalAttain, @DirectedBy, @Category, @Remarks,
-                    @JobTitleId, @DepartmentId, @StatusId, @AgencyId,
-                    0, GETDATE(), NULL
-                );
-                SELECT CAST(SCOPE_IDENTITY() AS INT);";
+            const string sql = @"
+            INSERT INTO P1SA_Employees_Backup
+                (EmployeeCode, FullName, Gender, DateHired, DateOfBirth, FacebookAccount, Phone,
+                 Address, PickUpPoint,
+                 Category, Remarks, JobTitleId, DepartmentId, StatusId, AgencyId, DeployType)
+            OUTPUT INSERTED.EmployeeId
+            VALUES
+            (@EmployeeCode, @FullName, @Gender, @DateHired, @DateOfBirth, @FacebookAccount, @Phone,
+             @Address, @PickUpPoint,
+             @Category, @Remarks, @JobTitleId, @DepartmentId, @StatusId, @AgencyId, @DeployType);";
+
+            // QuerySingleAsync<int> reads the OUTPUT clause — matches the SqlDataAccess QueryAsync overloads
+            int rows = await SqlDataAccess_Test.QuerySingleAsync<int>(sql, model);
+
+            if (rows == 0) return (0, "");
 
 
-            return SqlDataAcess_Test.ExecuteScalarAsync<int>(sql, model);
+            string newcode = await SqlDataAccess_Test.ExecuteScalarAsync<string>($@"
+                  SELECT TOP 1 EmployeeCode 
+                  FROM P1SA_Employees_Backup
+                  WHERE EmployeeId =@EmployeeId", new
+                     {
+                         EmployeeId = rows
+                     });
+
+            return (rows, newcode);
+
+        }
+
+        public async Task<bool> AddEmployeeImageFileName(int EmployeeId, string ImageFileName)
+        {
+            // 1. Check if the EmployeeId Exist in the P1SA_EmployeeImages
+
+            // 2. if Exist updates only the ImageFilename if not INSERT a new Record 
+
+            // 3.
+            const string sql = @"
+                    INSERT INTO P1SA_EmployeeImages_Backup(EmployeeId, ImageFileName)
+                    VALUES(@EmployeeId, @ImageFileName)";
+
+            int records = await SqlDataAcess_Test.ExecuteAsync(sql, new { EmployeeId, ImageFileName });
+
+            return records > 0; 
         }
 
         public Task<bool> CodeExistsAsync(string employeeCode)
@@ -83,7 +113,7 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
 
         public Task<int> GetActualCountEmployee(int depid, int agency, int status, int gender)
         {
-            string strquery = @"SELECT COUNT(*) FROM P1SA_Employees WHERE IsDeleted = 0 ";
+            string strquery = @"SELECT COUNT(*) FROM P1SA_Employees_Backup WHERE IsDeleted = 0 ";
 
             var parameters = new DynamicParameters();
 
@@ -241,7 +271,7 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
         public async Task<bool> MarkAwolAsync(int employeeId, DateTime dateAwol)
         {
             var sql = @"
-                UPDATE P1SA_Employees
+                UPDATE P1SA_Employees_Backup
                 SET    StatusId     = 3,
                        DateResigned = @DateAwol,
                        UpdatedAt    = GETDATE()
@@ -255,7 +285,7 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
         public async Task<bool> ResignAsync(int employeeId, DateTime dateResigned)
         {
             var sql = @"
-                UPDATE P1SA_Employees
+                UPDATE P1SA_Employees_Backup
                 SET    StatusId     = 2,
                        DateResigned = @DateResigned,
                        UpdatedAt    = GETDATE()
@@ -269,7 +299,7 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
         public async Task<bool> SoftDeleteAsync(int employeeId)
         {
             var sql = @"
-                UPDATE P1SA_Employees
+                UPDATE P1SA_Employees_Backup
                 SET    IsDeleted = 1,
                        UpdatedAt = GETDATE()
                 WHERE  EmployeeId = @EmployeeId";
@@ -281,7 +311,7 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
         public async Task<bool> UpdateAsync(P1SAEmployeesInputModel model)
         {
             var sql = @"
-                UPDATE P1SA_Employees SET
+                UPDATE P1SA_Employees_Backup SET
                     EmployeeCode       = @EmployeeCode,
                     FullName           = @FullName,
                     Gender             = @Gender,
@@ -306,5 +336,7 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
             int rows = await SqlDataAcess_Test.ExecuteAsync(sql, model);
             return rows > 0;
         }
+
+        
     }
 }

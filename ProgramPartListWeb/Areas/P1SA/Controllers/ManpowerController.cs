@@ -1,11 +1,15 @@
-﻿using ProgramPartListWeb.Areas.Hydroponics.Interface;
+﻿using DocumentFormat.OpenXml.EMMA;
+using ProgramPartListWeb.Areas.Hydroponics.Interface;
 using ProgramPartListWeb.Areas.Hydroponics.Models;
 using ProgramPartListWeb.Areas.P1SA.Interface;
 using ProgramPartListWeb.Areas.P1SA.Models;
+using ProgramPartListWeb.Areas.PC.Models;
 using ProgramPartListWeb.Controllers;
 using ProgramPartListWeb.Helper;
+using ProgramPartListWeb.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -79,7 +83,6 @@ namespace ProgramPartListWeb.Areas.P1SA.Controllers
         [HttpGet]
         public ActionResult DisplaytheImage(string filename)
         {
-            Debug.WriteLine("FILE NAME : " + filename);
 
             if (string.IsNullOrWhiteSpace(filename))
                 return HttpNotFound();
@@ -89,7 +92,6 @@ namespace ProgramPartListWeb.Areas.P1SA.Controllers
 
             string fullPath = Path.Combine(folderPath, filename);
 
-            Debug.WriteLine("FULL PATH : " + fullPath);
 
             if (!System.IO.File.Exists(fullPath))
             {
@@ -135,15 +137,72 @@ namespace ProgramPartListWeb.Areas.P1SA.Controllers
         }
 
 
-        //[HttpPost]
-        //public async Task<ActionResult> AddEmployeeList(P1SAEmployeesInputModel mode)
-        //{
-        //    bool result = await _emp.CreateEmployee(mode);
+        [HttpPost]
+        public async Task<ActionResult> AddEmployeeList(P1SAEmployeesInputModel model)
+        {
+            if (model == null || string.IsNullOrWhiteSpace(model.EmployeeCode) || string.IsNullOrWhiteSpace(model.FullName))
+            {
+                return Json(new { Success = false, Message = "Employee Code and Full Name are required." });
+            }
 
-        //    if (!result) JsonValidationError("Input Validation error");
+            try
+            {
+                model.IsDeleted = false;
+                model.CreatedAt = DateTime.Now;
 
-        //    return JsonCreated(mode, "Add Employee Records Successfully");
-        //}
+                var getinfo = await _emp.InsertEmployeeAsync(model);
+
+                return JsonCreated(new { EmployeeId = getinfo.id,  EmployeeCode = getinfo.code }, "Add Employee Records Successfully");
+            }
+            catch (Exception ex)
+            {
+                // TODO: swap for your logging call — kept explicit rather than swallowed silently
+                return Json(new { Success = false, Message = "Failed to save employee." });
+            }
+
+            //bool result = await _emp.AddAsync(model);
+
+            //if (!result) JsonValidationError("Input Validation error");
+
+            //return JsonCreated(model, "Add Employee Records Successfully");
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> UploadEmployeePhoto(int EmployeeId, string EmployeeCode, HttpPostedFileBase photo)
+        {
+            if (photo == null || photo.ContentLength == 0)
+            {
+                return Json(new { Success = false, Message = "No file received." });
+            }
+
+            const string basePath = @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\Manpower\Molding";
+
+            var ext = Path.GetExtension(photo.FileName);
+            var fileName = $"{EmployeeCode}{ext}";
+            var savePath = Path.Combine(basePath, fileName);
+
+            try
+            {
+           
+                photo.SaveAs(savePath);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return Json(new { Success = false, Message = "No write access to the image share." });
+            }
+            catch (DirectoryNotFoundException)
+            {
+                return Json(new { Success = false, Message = "Image share path not found or unreachable." });
+            }
+
+            // Only the filename is stored — DisplaytheImage presumably prepends the same base path when reading it back
+            bool imageresult = await _emp.AddEmployeeImageFileName(EmployeeId, fileName);
+
+            return Json(new { Success = imageresult });
+        }
+
+
 
         //[HttpPost]
         //public async Task<ActionResult> EditEmployeeList(P1SAEmployeesInputModel mode)

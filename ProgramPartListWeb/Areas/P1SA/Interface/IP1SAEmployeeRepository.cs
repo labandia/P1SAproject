@@ -42,8 +42,8 @@ namespace ProgramPartListWeb.Areas.P1SA.Interface
         // ── WRITE ─────────────────────────────────────────────
 
         /// <summary>Inserts a new employee. Returns the generated EmployeeId.</summary>
-        Task<int> AddAsync(P1SAEmployeesInputModel model);
-
+        Task<(int id, string code)> InsertEmployeeAsync(P1SAEmployeesInputModel model);
+        Task<bool> AddEmployeeImageFileName(int employeeid, string imagefilename);
         /// <summary>Updates an existing employee record. Returns true if successful.</summary>
         Task<bool> UpdateAsync(P1SAEmployeesInputModel model);
 

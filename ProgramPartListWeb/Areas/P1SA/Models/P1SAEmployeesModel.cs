@@ -36,7 +36,14 @@ namespace ProgramPartListWeb.Areas.P1SA.Models
         public string DepartmentName { get; set; }
         public string StatusName { get; set; }
         public string AgencyName { get; set; }
-        
+
+
+        public int? JobTitleId { get; set; }
+        public int DepartmentId { get; set; }
+        public byte StatusId { get; set; }
+        public int? AgencyId { get; set; }
+
+
         public DateTime? UpdatedAt { get; set; }
     }
     // FOR DATA INPUT 
@@ -50,7 +57,7 @@ namespace ProgramPartListWeb.Areas.P1SA.Models
         public DateTime DateHired { get; set; }
         public DateTime? DateOfBirth { get; set; }
 
-        public string Email { get; set; }
+        public string FacebookAccount { get; set; }
         public string Phone { get; set; }
         public string Address { get; set; }
         public string PickUpPoint { get; set; }
@@ -66,7 +73,7 @@ namespace ProgramPartListWeb.Areas.P1SA.Models
         public int DepartmentId { get; set; }
         public byte StatusId { get; set; }
         public int? AgencyId { get; set; }
-
+        public int? DeployType { get; set; } = 0;
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }

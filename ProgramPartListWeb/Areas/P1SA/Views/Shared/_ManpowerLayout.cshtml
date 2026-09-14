@@ -8,9 +8,9 @@
     <title>P1SA MANPOWER DATA</title>
     <link href="~/Content/css/ManpowerDesign.css" rel="stylesheet" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@100;200;300;400;500;600;700;800;900&family=Geist:wght@100;200;300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@100;200;300;400;500;600;700&family=IBM+Plex+Sans:wght@100;200;300;400;500;600;700&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Nunito:wght@200;300;400;500;600;700;800;900&family=PT+Serif:wght@400;700&family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&family=Shantell+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
 
     <script src="~/Scripts/iconify-icon.min.js"></script>
     <script src="~/Scripts/Shared/bootstrap.bundle.min.js"></script>
@@ -20,75 +20,60 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <div class="export-wrapper">
-        <div class="app-container">
-            <!-- Fixed Background Layers -->
-            <div class="app-bg">
-                <img class="bg-image" src="https://firebasestorage.googleapis.com/v0/b/banani-prod.appspot.com/o/reference-images%2F94f51b83-a716-4563-b479-7b7681862ef5?alt=media&amp;token=a936826e-e25b-4901-843d-1f4b76ed018b" alt="HUD background" />
-                <div class="bg-wash"></div>
-                <div class="bg-grid"></div>
+    <div class="shell">
+        <!-- ============ SIDEBAR ============ -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-mark">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="3" stroke="#5C7A87" stroke-width="1.6" /><path d="M7 12h10M7 8h6M7 16h4" stroke="#5C7A87" stroke-width="1.6" stroke-linecap="round" /></svg>
+                    <div><div class="brand-name">Manpower System</div></div>
+                </div>
+                <div class="brand-sub">SANYO DENKI PHILIPPINES</div>
             </div>
 
-            <!-- Fixed Sidebar -->
-            <aside class="sidebar">
-                <div class="sidebar-header">
-                    <span class="logo-text">MANPOWER DATA.01</span>
-                    <div class="tech-accent"></div>
+            <nav class="nav" id="nav">
+                <div class="nav-item" data-module="dashboard">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="4" y="13" width="4" height="7" rx="0.8" stroke="currentColor" stroke-width="1.6" /><rect x="10" y="8" width="4" height="12" rx="0.8" stroke="currentColor" stroke-width="1.6" /><rect x="16" y="4" width="4" height="16" rx="0.8" stroke="currentColor" stroke-width="1.6" /></svg>
+                    <span>Dashboard Overall</span>
                 </div>
-                <nav class="sidebar-nav">
 
-                    <a href="/P1SA/Manpower/Dashboard" class="nav-item ">
-                        <span class="nav-num">01</span> OVERALL SUMMARY
-                    </a>
-
-                    <a href="/P1SA/Manpower/ManageEmployee" class="nav-item active">
-                        <span class="nav-num">02</span> EMPLOYEES DATA
-                    </a>
-                    <a href="/P1SA/Manpower/NewlyHiredpage" class="nav-item ">
-                        <span class="nav-num">03</span> NEWLY HIRE SECTION
-                    </a>
-
-
-                    <div class="nav-item" data-media-type="banani-button"><span class="nav-num">04</span> CROSS TRAINEES</div>
-                    @*<div class="nav-item" data-media-type="banani-button"><span class="nav-num">05</span> TRANSACTIONS</div>
-                        <div class="nav-item" data-media-type="banani-button"><span class="nav-num">06</span> REPORTS</div>*@
-                    <div class="nav-item" data-media-type="banani-button"><span class="nav-num">07</span> SETTINGS</div>
-                </nav>
-                <div class="sidebar-divider"></div>
-                <nav class="sidebar-nav">
-                    <div class="nav-item" data-media-type="banani-button"><span class="nav-num">09</span> HELP_CENTER</div>
-                    <div class="nav-item" data-media-type="banani-button"><span class="nav-num">10</span> FEEDBACK_LOG</div>
-                </nav>
-                <div class="sidebar-footer">
-                    <div class="barcode"></div>
-                    <div style="display: flex; justify-content: space-between"><span>MD | PRIVACY</span><span>VER_2025.1</span></div>
+                <div class="nav-item active" data-module="employees">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.6" /><path d="M5 20c1.2-3.8 4-5.6 7-5.6s5.8 1.8 7 5.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+                    <span>Employee List</span>
                 </div>
-            </aside>
-
-            <!-- Main content area with fixed top-header and scrollable body -->
-            <main class="main-content">
-                <!-- Fixed Top Header -->
-                <header class="top-header">
-                    <div class="search-container">
-                        <div style="width:20px;height:20px;display:flex;align-items:center;justify-content:center"><iconify-icon icon="lucide:search" style="font-size:20px;color:inherit"></iconify-icon></div>
-                        <div class="search-input-wrapper"><span class="bracket">[</span><input type="text" value="SEARCH_SYS_INDEX..." class="search-input" readonly /><span class="bracket">]</span></div>
-                    </div>
-                    <div class="header-actions">
-                        @*<button class="tech-button orange" data-media-type="banani-button"><div style="width:16px;height:16px;display:flex;align-items:center;justify-content:center"><iconify-icon icon="lucide:zap" style="font-size:16px;color:inherit"></iconify-icon></div> QUICK_EXEC</button>*@
-                        <div class="header-icon-btn" data-media-type="banani-button"><div style="width:20px;height:20px;display:flex;align-items:center;justify-content:center"><iconify-icon icon="lucide:bell" style="font-size:20px;color:inherit"></iconify-icon></div><span class="notification-dot"></span></div>
-                        <div class="header-icon-btn" data-media-type="banani-button"><div style="width:20px;height:20px;display:flex;align-items:center;justify-content:center"><iconify-icon icon="lucide:help-circle" style="font-size:20px;color:inherit"></iconify-icon></div></div>
-                        <div class="user-profile"><img src="https://storage.googleapis.com/banani-avatars/avatar%2Fmale%2F25-35%2FEuropean%2F1" class="user-avatar" alt="User" /><span class="user-name">ANDREW_V</span></div>
-                    </div>
-                </header>
-
-                <!-- Scrollable Page Body -->
-                <div class="page-body">
-                    @RenderBody();
+                <div class="nav-item" data-module="attendance">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="15" rx="1.5" stroke="currentColor" stroke-width="1.6" /><path d="M4 9.5h16M8 3v3.5M16 3v3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+                    <span>Attendance Summary</span>
                 </div>
-            </main>
-        </div>
+                <div class="nav-item" data-module="absence">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.4" stroke="currentColor" stroke-width="1.6" /><path d="M8.5 12h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+                    <span>Absence</span>
+                </div>
+                <div class="nav-item" data-module="crosstrainee">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 7l6 4-6 4V7z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" /><path d="M20 7l-6 4 6 4V7z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" /></svg>
+                    <span>Cross Trainee</span>
+                </div>
+
+            </nav>
+
+            <div class="sidebar-foot">
+                <div class="who">HR Manpower Admin</div>
+                Production Support · Shift A
+            </div>
+        </aside>
+
+        <!-- ============ MAIN ============ -->
+        <main class="main">
+            
+
+            <div class="contentV2">
+                @RenderBody();
+            </div>
+        </main>
     </div>
-
-
 </body>
 </html>
+
+
+
+

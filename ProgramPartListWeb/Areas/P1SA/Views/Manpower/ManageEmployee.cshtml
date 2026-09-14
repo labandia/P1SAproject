@@ -4,122 +4,333 @@
     Layout = "~/Areas/P1SA/Views/Shared/_ManpowerLayout.cshtml";
 }
 
-@*<div class="decorator-bar"><span>// SYS.OP.LEADS</span><span>LAT: 45.92</span><span>LONG: -12.03</span><div class="tech-line flex-1"></div><span>[ STATUS: ONLINE ]</span></div>*@
-
-<div class="page-header">
-    <div class="page-title-container"><div class="title-accent-block"></div><h1 class="page-title">EMPLOYEE DATA LIST</h1></div>
-
-    <div class="flex gap-2">
-        <button class="tech-button orange" data-media-type="banani-button" id="openaddform">
-            <div style="width:16px;height:16px;display:flex;align-items:center;justify-content:center">
-                <iconify-icon icon="lucide:zap" style="font-size:16px;color:inherit"></iconify-icon>
-            </div> ADD_DATA
+<div class="topbar">
+    <div>
+        <h1 id="topbarTitle">Employee List</h1>
+        <p id="topbarSub">Loading…</p>
+    </div>
+    <div class="topbar-actions" id="topbarActions">
+        <button class="cusbtn" id="btnDownloadTemplate">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 4v11M7 10l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /><path d="M4 19h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+            Download Template
         </button>
-
-        <button class="tech-button default" data-media-type="banani-button">
-            <div style="width:16px;height:16px;display:flex;align-items:center;justify-content:center">
-                <iconify-icon icon="lucide:download" style="font-size:16px;color:inherit"></iconify-icon>
-            </div> EXPORT_LOG
+        <button class="cusbtn" id="btnImport">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 15V4M7 9l5-5 5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /><path d="M4 19h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+            Import Excel
+        </button>
+        <button class="cusbtn cusbtn-primary" id="openaddform"
+                data-bs-toggle="modal"
+                data-bs-target="#addEmployeeModal">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" /></svg>
+            Add Employee
         </button>
     </div>
 </div>
 
-<div class="filters-bar">
 
-    <div class="filter-dropdowns">
-        <select id="GenderID" class="tech-dropdown">
-            <option value="2">GENDER : ALL</option>
-            <option value="0">MALE</option>
-            <option value="1">FEMALE</option>
-        </select>
+@*<div class="decorator-bar"><span>// SYS.OP.LEADS</span><span>LAT: 45.92</span><span>LONG: -12.03</span><div class="tech-line flex-1"></div><span>[ STATUS: ONLINE ]</span></div>*@
 
-        <select id="AffiliID" class="tech-dropdown">
-            <option value="0">POSITION : ALL</option>
-            <option value="1">SUPERVISOR</option>
-            <option value="2">JUNIOR SUPERVISOR</option>
-            <option value="3">LEADER</option>
-            <option value="4">TECHNICAL TRAINER</option>
-            <option value="5">PRODUCTION OPERATOR</option>
-            <option value="6">SDP</option>
-        </select>
+<div class="filterbar">
+    <input id="searchinput" class="search-input" type="text" placeholder="Search by Employee Code or Full Name...">
+    <div class="divider"></div>
+    <select class="filter-select" id="AgencyID">
+        <option value="0">Agency : ALL</option>
+        <option value="1">SDP</option>
+        <option value="2">TMS(Techinics MS)</option>
+        <option value="3">Onesource</option>
+        <option value="4">SynergyOne </option>
+    </select>
+    <select class="filter-select" id="GenderID">
+        <option value="2">GENDER : ALL</option>
+        <option value="0">MALE</option>
+        <option value="1">FEMALE</option>
+    </select>
+    <select class="filter-select" id="AffiliID">
+        <option value="0">POSITION : ALL</option>
+        <option value="1">SUPERVISOR</option>
+        <option value="2">JUNIOR SUPERVISOR</option>
+        <option value="3">LEADER</option>
+        <option value="4">TECHNICAL TRAINER</option>
+        <option value="5">PRODUCTION OPERATOR</option>
+        <option value="6">SDP</option>
+    </select>
 
-        <select id="AgencyID" class="tech-dropdown">
-            <option value="0">COMPANY : ALL</option>
-            <option value="1">SDP</option>
-            <option value="2">TMS(Techinics MS)</option>
-            <option value="3">Onesource</option>
-            <option value="4">SynergyOne </option>
-        </select>
-
-
-
-
-    </div>
-    <div class="spacer"></div>
-    
-
-    <div class="search-small">
-        <div style="width:14px;height:14px;display:flex;align-items:center;justify-content:center">
-            <iconify-icon icon="lucide:search" style="font-size:14px;color:inherit"></iconify-icon>
-        </div>
-        <input placeholder="SEARCH_NAME" id="searchinput" />
-    </div>
-
-    <select id="StatusID" class="tech-dropdown">
+    <select id="StatusID" class="filter-select">
         <option value="0">SORT : Active</option>
         <option value="1">SORT : AWOL</option>
         <option value="2">SORT : Resigned</option>
     </select>
-
-
-  
+    <div class="divider"></div>
+    <span class="filter-count" id="employeeCount">— of — shown</span>
 </div>
 
-<div class="results-info" id="results-info">
-    <div class="tech-line"></div>
-    <span class="results-text" id="resultsText">
-        SHOWING_INDEX: 0-0 OF 0
-    </span>
-    <div class="tech-line flex-1"></div>
-
-    <div class="pagination-controls">
-        <div class="pag-btn" id="prevBtn">&lt; PREV</div>
-        <div class="pag-btn" id="nextBtn">NEXT &gt;</div>
-    </div>
-</div>
-
-
-<div class="tech-table-container">
-    <div class="table-corner tl"></div><div class="table-corner tr"></div><div class="table-corner bl"></div><div class="table-corner br"></div>
-    <table class="tech-table">
+<div class="table-wrap">
+    <table>
         <thead>
             <tr>
                 <th>
-                    <div class="th-content">ID // FULLNAME</div>
+                    Employee ID
                 </th>
                 <th>
-                    <div class="th-content">GENDER</div>
+                    Gender
                 </th>
                 <th>
-                    <div class="th-content">POSITION // AFFILIATION</div>
+                    Position
                 </th>
 
                 <th>
-                    <div class="th-content">DATE_HIRED // LOS</div>
+                    Date Hired
                 </th>
                 <th>
-                    <div class="th-content">STAT_COND</div>
+                    Status
                 </th>
                 <th>
-                    <div class="th-content">CATEGORY</div>
+                    Category
                 </th>
             </tr>
         </thead>
-        <tbody id="EmployeeBody">
-          
-        </tbody>
+        <tbody id="employeeTableBody"></tbody>
     </table>
 </div>
+
+
+<!-- ============ ADD EMPLOYEE MODAL ============ -->
+<div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <!-- HEADER -->
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title" id="addEmployeeModalLabel">Add New Employee</h5>
+                    <small class="text-muted">Fields match the P1SA_Employees record.</small>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- BODY -->
+            <div class="modal-body">
+
+                <!-- PHOTO -->
+                <div class="photo-upload">
+                    <div class="avatar mb-2" id="newAvatarPreview"><span>+</span></div>
+                    <label class="btn btn-ghost photo-upload-btn">
+                        Upload Photo
+                        <input type="file" accept="image/*" id="newPhotoInput" hidden>
+                    </label>
+                </div>
+
+                @*<div class="photo-upload">
+            <div class="avatar" id="newAvatarPreview">+</div>
+            <button class="btn btn-ghost photo-upload-btn">
+                Upload Photo
+                <input type="file" accept="image/*" id="newPhotoInput">
+            </button>
+        </div>*@
+
+                <!-- BASIC INFORMATION -->
+                <div class="border-bottom mb-3 pb-2">
+                    <h6 class="fw-bold mb-0">Basic Information</h6>
+                </div>
+
+                <!-- FULL NAME -->
+                <div class="mb-3">
+                    <label for="n-name" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="n-name" placeholder="Juan Dela Cruz">
+                </div>
+
+                <!-- CODE / GENDER / DOB -->
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="n-code" class="form-label">Employee Code</label>
+                        <input type="text" class="form-control" id="n-code" placeholder="SDP01912">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="n-gender" class="form-label">Gender</label>
+                        <select class="form-select" id="n-gender">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="n-dob" class="form-label">Date of Birth (Optional)</label>
+                        <input type="date" class="form-control" id="n-dob">
+                    </div>
+                </div>
+
+                <!-- EMAIL / PHONE -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="n-email" class="form-label">Email (Optional)</label>
+                        <input type="email" class="form-control" id="n-email" placeholder="optional">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="n-phone" class="form-label">Contact No.</label>
+                        <input type="text" class="form-control" id="n-phone" placeholder="09xxxxxxxxx">
+                    </div>
+                </div>
+
+                <!-- ADDRESS -->
+                <div class="mb-3">
+                    <label for="n-address" class="form-label">Present Address</label>
+                    <input type="text" class="form-control" id="n-address">
+                </div>
+
+                <!-- PICKUP / PROVINCE -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="n-pickup" class="form-label">Pick-up Point</label>
+                        <input type="text" class="form-control" id="n-pickup">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="n-province" class="form-label">Civil Status</label>
+                        <select class="form-select" id="n-civilStats">
+                            <option value="1">Single</option>
+                            <option value="2">Married</option>
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <!-- EMPLOYMENT -->
+                <div class="border-bottom mb-3 pb-2 mt-3">
+                    <h6 class="fw-bold mb-0">Employment</h6>
+                </div>
+
+                <!-- CATEGORY -->
+                <div class="mb-3">
+                    <label class="form-label">Category</label>
+
+                    <div class="radio-pair">
+                        <label class="form-check" for="catDirect">
+                            <input class="form-check-input"
+                                   type="radio"
+                                   name="cat"
+                                   id="catDirect"
+                                   value="Direct"
+                                   checked>
+                            <span class="form-check-label">Direct Hired</span>
+                        </label>
+
+                        <label class="form-check" for="catIndirect">
+                            <input class="form-check-input"
+                                   type="radio"
+                                   name="cat"
+                                   id="catIndirect"
+                                   value="Indirect">
+                            <span class="form-check-label">Indirect Hired</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- DEPARTMENT / JOB TITLE -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="n-department" class="form-label">Department</label>
+                        <select class="form-select" id="n-department">
+                            <option value="1">Molding</option>
+                            <option value="2">Press</option>
+                            <option value="3">Rotor</option>
+                            <option value="4">Winding</option>
+                            <option value="5">Circuit</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="n-jobtitle" class="form-label">Job Title</label>
+                        <select class="form-select" id="n-jobtitle">
+                            <option value="5">Production Operator</option>
+                            <option value="1">Supervisor</option>
+                            <option value="2">Junior Supervisor</option>
+                            <option value="3">Leader</option>
+                            <option value="4">Technical Trainer</option>
+                            <option value="6">Regular</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- AGENCY / DATE HIRED -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="n-agency" class="form-label">Agency</label>
+                        <select class="form-select" id="n-agency">
+                            <option value="1">SDP</option>
+                            <option value="2">TMS</option>
+                            <option value="3">SYNERGY</option>
+                            <option value="4">ONESOURCE</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="n-hired" class="form-label">Date Hired</label>
+                        <input type="date" class="form-control" id="n-hired">
+                    </div>
+                </div>
+
+                <!-- REMARKS -->
+                <div class="mb-3">
+                    <label for="n-remarks" class="form-label">Remarks</label>
+                    <textarea class="form-control" rows="3" id="n-remarks" placeholder="Optional"></textarea>
+                </div>
+
+            </div>
+
+            <!-- FOOTER -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="modalSave">Save Employee</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@*
+
+
+    <div class="results-info" id="results-info">
+        <div class="tech-line"></div>
+        <span class="results-text" id="resultsText">
+            SHOWING_INDEX: 0-0 OF 0
+        </span>
+        <div class="tech-line flex-1"></div>
+
+        <div class="pagination-controls">
+            <div class="pag-btn" id="prevBtn">&lt; PREV</div>
+            <div class="pag-btn" id="nextBtn">NEXT &gt;</div>
+        </div>
+    </div>
+
+
+    <div class="tech-table-container">
+        <div class="table-corner tl"></div><div class="table-corner tr"></div><div class="table-corner bl"></div><div class="table-corner br"></div>
+        <table class="tech-table">
+            <thead>
+                <tr>
+                    <th>
+                        <div class="th-content">ID // FULLNAME</div>
+                    </th>
+                    <th>
+                        <div class="th-content">GENDER</div>
+                    </th>
+                    <th>
+                        <div class="th-content">POSITION // AFFILIATION</div>
+                    </th>
+
+                    <th>
+                        <div class="th-content">DATE_HIRED // LOS</div>
+                    </th>
+                    <th>
+                        <div class="th-content">STAT_COND</div>
+                    </th>
+                    <th>
+                        <div class="th-content">CATEGORY</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="EmployeeBody">
+            </tbody>
+        </table>
+    </div>*@
 
 
 <script type="module" asp-append-version="true">
@@ -133,10 +344,13 @@
         constructor() {
             this.EmployeeData = [];
             this.currentPage = 1;
-            this.pageSize = 20;
+            this.pageSize = 100;
 
-            this.tbody = document.getElementById("EmployeeBody");
+            this.tbody = document.getElementById("employeeTableBody");
             //this.paginationContainer = document.getElementById("EmployeePagination");
+
+
+            this.modalOverlay = document.getElementById('modalOverlay');
         }
 
         async init() {
@@ -178,8 +392,49 @@
 
             document.getElementById("openaddform")
                 .addEventListener("click", () => {
-                    window.location.href = '/P1SA/Manpower/AddNewEmployee';
+                    // window.location.href = '/P1SA/Manpower/AddNewEmployee';
+                    // this.modalOverlay.classList.add('open');
+                    document.getElementById("n-hired").value =
+                        new Date().toISOString().split("T")[0];
                 });
+
+            document.getElementById("modalSave")
+                .addEventListener("click", () => this.SaveNewEmployee());
+
+
+
+            // ============================================================
+            // PHOTO PREVIEW
+            // ============================================================
+            document.getElementById("newPhotoInput")
+                .addEventListener("change", (event) => {
+
+                    const file = event.target.files[0];
+                    const preview = document.getElementById("newAvatarPreview");
+
+                    if (!file) {
+                        preview.textContent = "+";
+                        preview.style.backgroundImage = "";
+                        return;
+                    }
+
+                    if (!file.type.startsWith("image/")) {
+                        alert("Please select a valid image file.");
+                        event.target.value = "";
+                        preview.textContent = "+";
+                        preview.style.backgroundImage = "";
+                        return;
+                    }
+
+                    const imageUrl = URL.createObjectURL(file);
+
+                    preview.textContent = "";
+                    preview.style.backgroundImage = `url("${imageUrl}")`;
+                    preview.style.backgroundSize = "cover";
+                    preview.style.backgroundPosition = "center";
+                    preview.style.backgroundRepeat = "no-repeat";
+                });
+
         }
 
         /* ================= LOAD DATA ================= */
@@ -210,12 +465,13 @@
                    this.renderEmpty();
                    return;
                 }
-
                 this.EmployeeData = res.data.payload ?? [];
                 const total = res.data?.Total ?? this.EmployeeData.length;
 
                 this.renderTable(this.EmployeeData);
-                this.renderPagination(total);
+
+                document.getElementById('topbarSub').textContent = `${this.EmployeeData.length} records in total `;
+                //this.renderPagination(total);
 
             }
             catch (err) {
@@ -227,7 +483,6 @@
 
 
         renderTable(data) {
-            console.log(data);
 
             this.tbody.innerHTML = "";
 
@@ -240,14 +495,13 @@
             const imageBaseUrl = '@Url.Action("DisplaytheImage", "Manpower", new { area = "P1SA" })';
 
             data.forEach(row => {
-                 console.log("ImageFileName:", row.ImageFileName);
 
 
               const imagePath = row.ImageFileName
         ? `${imageBaseUrl}?filename=${encodeURIComponent(row.ImageFileName)}`
         : '@Url.Content("~/Content/Images/no-image.png")';
 
-      
+
 
                 //console.log(imagePath);
                 const tr = document.createElement("tr");
@@ -391,6 +645,115 @@
                     this.LoadEmployeeData();
                 }
             });
+        }
+
+
+        /* ================= ADD EMPLOYEE ================= */
+        async SaveNewEmployee() {
+            const employeeCode = document.getElementById("n-code").value.trim();
+            const fullName = document.getElementById("n-name").value.trim();
+            const dateHired = document.getElementById("n-hired").value;
+
+            // Minimal required-field guard — mirrors P1SAEmployeesInputModel's non-nullable members
+            if (!employeeCode || !fullName || !dateHired) {
+                alert("Employee Code, Full Name, and Date Hired are required.");
+                return;
+            }
+
+            const model = {
+                EmployeeCode: employeeCode,
+                FullName: fullName,
+                Gender: document.getElementById("n-gender").value === "Female",
+                DateHired: dateHired,
+                DateOfBirth: document.getElementById("n-dob").value || null,
+                Email: document.getElementById("n-email").value.trim(),
+                Phone: document.getElementById("n-phone").value.trim(),
+                Address: document.getElementById("n-address").value.trim(),
+                PickUpPoint: document.getElementById("n-pickup").value.trim(),
+                Province: null, // no field in modal yet — left null, not omitted, so the model shape stays explicit
+                Category: document.querySelector('input[name="cat"]:checked').value === "Direct" ? 0 : 1,
+                JobTitleId: parseInt(document.getElementById("n-jobtitle").value, 10),
+                DepartmentId: parseInt(document.getElementById("n-department").value, 10),
+                AgencyId: parseInt(document.getElementById("n-agency").value, 10),
+                StatusId: 0, // Active — new hires default to Active status
+                Remarks: document.getElementById("n-remarks").value.trim() || null
+            };
+
+            const saveBtn = document.getElementById("modalSave");
+            saveBtn.disabled = true;
+            saveBtn.textContent = "Saving...";
+
+
+
+            try {
+                const res = await postMethod('@Url.Action("AddEmployeeList", "Manpower")', model);
+                console.log(res);
+                if (!res?.Success) {
+                    alert(res?.Message ?? "Failed to save employee.");
+                    return;
+                }
+                const newEmployeeId = res.data.EmployeeId;
+                const newEmployeeCode = res.data.EmployeeCode;
+                // Photo is optional and uploaded separately since it needs the new EmployeeId for the filename
+                const photoInput = document.getElementById("newPhotoInput");
+                if (photoInput.files.length > 0) {
+                    const formData = new FormData();
+                    formData.append("EmployeeId", newEmployeeId);
+                    formData.append("EmployeeCode", newEmployeeCode);
+                    formData.append("photo", photoInput.files[0]);
+
+                    const photo = await postMethod('@Url.Action("UploadEmployeePhoto", "Manpower")', formData);
+                    console.log("IMAGE HERE");
+                    console.log(photo);
+                    
+                }
+
+                bootstrap.Modal.getInstance(document.getElementById("addEmployeeModal")).hide();
+                this.resetAddForm();
+                this.currentPage = 1;
+                await this.LoadEmployeeData();
+
+            } catch (err) {
+                console.error(err);
+                alert("An error occurred while saving the employee.");
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = "Save Employee";
+            }
+        }
+
+
+        resetAddForm() {
+            [
+                "n-name",
+                "n-code",
+                "n-dob",
+                "n-email",
+                "n-phone",
+                "n-address",
+                "n-pickup",
+                "n-hired",
+                "n-remarks"
+            ].forEach(id => {
+                document.getElementById(id).value = "";
+            });
+
+            document.getElementById("n-gender").selectedIndex = 0;
+            document.getElementById("n-civilStats").selectedIndex = 0;
+            document.getElementById("n-department").selectedIndex = 0;
+            document.getElementById("n-jobtitle").selectedIndex = 0;
+            document.getElementById("n-agency").selectedIndex = 0;
+
+            document.getElementById("catDirect").checked = true;
+
+            // Reset photo
+            const photoInput = document.getElementById("newPhotoInput");
+            const preview = document.getElementById("newAvatarPreview");
+
+            photoInput.value = "";
+
+            preview.textContent = "+";
+            preview.style.backgroundImage = "";
         }
 
     }

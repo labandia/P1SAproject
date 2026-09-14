@@ -1,7 +1,7 @@
 ﻿
 @{
     ViewBag.Title = "EmployeeProductionDetails";
-    Layout = "~/Areas/P1SA/Views/Shared/_ProductionLayout.cshtml";
+    Layout = "~/Areas/P1SA/Views/Shared/_ManpowerLayout.cshtml";
     var empID = Request.QueryString["employeeID"];
     var roles = Request.QueryString["role"];
 
@@ -26,111 +26,147 @@
 <input type="hidden" id="employID" value="@empID" />
 <input type="hidden" id="rolesID" value="@roles" />
 
-<div class="relative z-10 max-w-6xl mx-auto w-full ">
+<div class="empdetail-head panel">
+    <div class="drawer-head-main">
+        <div class="avatar avatar-lg" id="drawerAvatar">
+            <img id="drawerAvatarImage"
+                 src="@Url.Content("~/Content/Images/no-image.png")"
+                 alt="Employee Photo">
+        </div>
+        <div>
+            <h2 id="drawerName">Employee Name</h2>
+            <div class="emp-sub" id="drawerSub">Code · Department · Agency</div>
+        </div>
+    </div>
+    <button class="drawer-close" id="Backbtn" title="Back to Employee List">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+    </button>
+</div>
 
-    <div class="flex items-center gap-3 text-xs mb-8 font-bold tracking-wider">
-        <button class="flex items-center gap-2 text-muted-foreground hover:text-foreground uppercase" id="Backbtn">
-            <iconify-icon icon="lucide:arrow-left" class="block size-[14px]"></iconify-icon>
-            <span>BACK TO DIRECTORY</span>
-        </button>
-        <span class="text-border">/</span>
-        <span class="text-primary uppercase">EMPLOYEE PROFILE</span>
+
+<div class="drawer-tabs panel" style="padding:0 20px;margin-top:14px;">
+    <div class="drawer-tab active" data-tab="details">Details</div>
+    <div class="drawer-tab" data-tab="edit">Edit</div>
+    <div class="drawer-tab" data-tab="records">Attendance &amp; Absence</div>
+    <div class="drawer-tab" data-tab="status">Change Status</div>
+</div>
+
+<div class="panel" style="margin-top:14px;">
+    <!-- DETAILS -->
+    <div class="drawer-pane active detail-grid" id="pane-details">
+        <div class="detail-row"><span class="k">Employee Code</span><span class="v mono" id="d-code"></span></div>
+        <div class="detail-row"><span class="k">Gender</span><span class="v" id="d-gender"></span></div>
+        <div class="detail-row"><span class="k">Date Hired</span><span class="v mono" id="d-hired"></span></div>
+        <div class="detail-row"><span class="k">Date of Birth</span><span class="v mono" id="d-dob"></span></div>
+        <div class="detail-row"><span class="k">Email</span><span class="v" id="d-email"></span></div>
+        <div class="detail-row"><span class="k">Phone</span><span class="v mono" id="d-phone"></span></div>
+        <div class="detail-row"><span class="k">Address</span><span class="v" id="d-address"></span></div>
+        <div class="detail-row"><span class="k">Pick-up Point</span><span class="v" id="d-pickup"></span></div>
+        <div class="detail-row"><span class="k">Province</span><span class="v" id="d-province"></span></div>
+        <div class="detail-row"><span class="k">Educational Attainment</span><span class="v" id="d-education"></span></div>
+        <div class="detail-row"><span class="k">Directed By</span><span class="v" id="d-directedby"></span></div>
+        <div class="detail-row"><span class="k">Category</span><span class="v" id="d-category"></span></div>
+        <div class="detail-row"><span class="k">Department</span><span class="v" id="d-department"></span></div>
+        <div class="detail-row"><span class="k">Job Title</span><span class="v" id="d-jobtitle"></span></div>
+        <div class="detail-row"><span class="k">Agency</span><span class="v" id="d-agency"></span></div>
+        <div class="detail-row"><span class="k">Status</span><span class="v" id="d-status"></span></div>
+        <div class="detail-row"><span class="k">Date Resigned</span><span class="v mono" id="d-dateresigned"></span></div>
+        <div class="detail-row"><span class="k">Remarks</span><span class="v" id="d-remarks"></span></div>
     </div>
 
+    <!-- EDIT -->
+    <div class="drawer-pane" id="pane-edit">
+        <div class="photo-upload">
+            <div class="avatar" id="editAvatarPreview">+</div>
+            <button class="btn btn-ghost photo-upload-btn">
+                Change Photo
+                @*<input type="file" accept="image/*" id="editPhotoInput">*@
+            </button>
+        </div>
+        <div class="section-label" style="margin-top:0;">Basic Information</div>
+        <div class="field-group"><label>Full Name</label><input type="text" id="e-name"></div>
+        <div class="field-row-3">
+            <div class="field-group">
+                <label>Gender</label>
+                <select id="e-gender"><option value="False">Male</option><option value="True">Female</option></select>
+            </div>
+            <div class="field-group"><label>Date of Birth</label><input type="date" id="e-dob"></div>
+            <div class="field-group"><label>Email</label><input type="email" id="e-email"></div>
+        </div>
+        <div class="field-row-3">
+            <div class="field-group"><label>Phone</label><input type="text" id="e-phone"></div>
+            <div class="field-group"><label>Pick-up Point</label><input type="text" id="e-pickup"></div>
+            <div class="field-group"><label>Province</label><input type="text" id="e-province"></div>
+        </div>
+        <div class="field-group"><label>Address</label><input type="text" id="e-address"></div>
+        <div class="section-label">Assignment</div>
+        <div class="field-row-3">
+            <div class="field-group">
+                <label>Department</label>
+                <select id="e-department"><option>Molding</option><option>Press</option><option>Rotor</option><option>Winding</option><option>Circuit</option></select>
+            </div>
+            <div class="field-group">
+                <label>Job Title</label>
+                <select id="e-jobtitle"><option>Supervisor</option><option>Junior Supervisor</option><option>Leader</option><option>Technical Trainer</option><option>Production Operator</option><option>Regular</option></select>
+            </div>
+            <div class="field-group">
+                <label>Agency</label>
+                <select id="e-agency"><option>SDP</option><option>TMS</option><option>SYNERGY</option><option>ONESOURCE</option></select>
+            </div>
+        </div>
+        <div class="field-row">
+            <div class="field-group"><label>Date Hired</label><input type="date" id="e-hired"></div>
+            <div class="field-group"><label>Remarks</label><input type="text" id="e-remarks" placeholder="Optional notes for this record"></div>
+        </div>
+    </div>
 
-    <div class="flex gap-8 items-start">
-        <!-- Left panel -->
-        <div class="w-[340px] flex flex-col gap-6 shrink-0">
-            <div class="bg-white border border-border flex flex-col relative shadow-sm">
-
-                <div class="absolute top-0 bottom-0 left-0 w-1.5 bg-primary"></div>
-                <div class="p-6 pl-8">
-                    <div class="flex justify-between items-start mb-6">
-                        <div>
-                            <div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-1">GLOBAL IDENTIFIER</div>
-                            <div class="text-lg font-bold"><span id="EmployeeID">894-X-7741</span></div>
-                        </div>
-                        <div class="text-primary">
-                            <iconify-icon icon="lucide:fingerprint" class="block size-[24px]"></iconify-icon>
-                        </div>
-                    </div>
-
-                    <div class="flex gap-4 items-start mb-8">
-                        <img id="EmployeeImage"
-                             src='@Url.Content("~/Content/Images/no-image.png")'
-                             class="w-16 h-20 object-cover grayscale border border-border"
-                             onerror="this.onerror=null; this.src='@Url.Content("~/Content/Images/no-image.png")';">
-
-                        <div class="flex flex-col gap-3">
-                            <div>
-                                <div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-0.5">NAME</div>
-                                <div class="text-xs font-bold uppercase" id="UserFullname">ELARA VANCE</div>
-                            </div>
-                            <div>
-                                <div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-0.5">DEPARTMENT </div>
-                                <div class="text-xs font-bold uppercase"><span id="Department">QUANTUM SYSTEMS LEAD</span></div>
-                            </div>
-
-                            <div>
-                                <div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-0.5">LENGTH OF SERVICE</div>
-                                <div class="text-xs font-bold uppercase">6 YEARS 4 MONTHS</div>
-                            </div>
-                            <div>
-                                <div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-0.5">STATUS</div>
-                                <div class="text-xs font-bold text-primary uppercase" id="StatusName">ACTIVE DUTY</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="border border-border bg-muted p-4 mb-4">
-                        <div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-1">EMAIL</div>
-                        <div class="text-xs">elara.vance@nexus-secure.net</div>
-                    </div>
-                    <div class="border border-border bg-muted p-4 mb-8">
-                        <div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-1">ADDRESS</div>
-                        <div class="text-xs leading-relaxed">214 Meridian Habitat, Sector 4, Neo City, CA 94016</div>
-                    </div>
-                    <div class="flex justify-between items-end border-t border-border pt-6">
-                        <div class="flex flex-col gap-1">
-                            <div class="flex h-8 items-end gap-[2px]">
-                                <div class="bg-foreground h-full" style="width:2px"></div>
-                                <div class="bg-foreground h-full" style="width:4px"></div>
-                                <div class="bg-foreground h-full" style="width:8px"></div>
-                                <div class="bg-foreground h-full" style="width:2px"></div>
-                                <div class="bg-foreground h-full" style="width:6px"></div>
-                                <div class="bg-foreground h-full" style="width:2px"></div>
-                                <div class="bg-foreground h-full" style="width:2px"></div>
-                                <div class="bg-foreground h-full" style="width:8px"></div>
-                                <div class="bg-foreground h-full" style="width:4px"></div>
-                                <div class="bg-foreground h-full" style="width:2px"></div>
-                                <div class="bg-foreground h-full" style="width:2px"></div>
-                                <div class="bg-foreground h-full" style="width:6px"></div>
-                                <div class="bg-foreground h-full" style="width:4px"></div>
-                                <div class="bg-foreground h-full" style="width:2px"></div>
-                                <div class="bg-foreground h-full" style="width:8px"></div>
-                                <div class="bg-foreground h-full" style="width:2px"></div>
-                                <div class="bg-foreground h-full" style="width:4px"></div>
-                                <div class="bg-foreground h-full" style="width:2px"></div>
-                                <div class="bg-foreground h-full" style="width:2px"></div>
-                                <div class="bg-foreground h-full" style="width:6px"></div>
-                            </div>
-                        </div>
-
-                        <div class="text-[8px] text-muted-foreground uppercase font-bold tracking-widest text-right max-w-[100px]">SCANNABLE AUTHENTICATION</div>
-                    </div>
+    <!-- ATTENDANCE & ABSENCE RECORDS -->
+    <div class="drawer-pane" id="pane-records">
+        <div class="mini-stat-row" id="recordsStatRow"></div>
+        <div class="records-grid">
+            <div>
+                <div class="section-label" style="margin-top:0;">Recent Attendance</div>
+                <div class="mini-table-wrap">
+                    <table class="mini-table">
+                        <thead><tr><th>Date</th><th>Time In</th><th>Time Out</th><th>Late</th><th>OT</th></tr></thead>
+                        <tbody id="recordsAttendanceBody"></tbody>
+                    </table>
                 </div>
             </div>
-
-
-            <div class="bg-white border border-border p-6 shadow-sm"><div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-4">PERSONNEL ACTIONS</div><div class="flex gap-4"><button class="flex-1 bg-primary text-primary-foreground py-3 text-xs font-bold uppercase tracking-widest flex justify-center items-center gap-2 hover:bg-primary/90 transition-colors shadow-sm"><iconify-icon icon="lucide:lock" class="block size-[14px]"></iconify-icon><span>REVOKE ACCESS</span></button><button class="flex-1 border border-border bg-muted/50 text-foreground py-3 text-xs font-bold uppercase tracking-widest flex justify-center items-center gap-2 hover:bg-muted transition-colors shadow-sm"><iconify-icon icon="lucide:refresh-cw" class="block size-[14px]"></iconify-icon><span>UPDATE ID</span></button></div></div>
-        </div>
-        <!-- Right panels -->
-        <div class="flex-1 flex flex-col gap-6">
-            <div class="bg-white border border-border p-6 shadow-sm"><div class="flex justify-between items-center mb-6"><div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">ATTENDANCE OVERVIEW</div><button><iconify-icon icon="lucide:maximize" class="block size-[14px]"></iconify-icon></button></div><div class="flex gap-0 border-b border-border mb-6"><button class="px-4 py-2 border-b-2 border-primary text-primary text-[10px] font-bold uppercase tracking-widest flex items-center gap-2"><iconify-icon icon="lucide:calendar" class="block size-[14px]"></iconify-icon><span>ATTENDANCE MONITOR</span></button><button class="px-4 py-2 border-b-2 border-transparent text-muted-foreground hover:text-foreground text-[10px] font-bold uppercase tracking-widest flex items-center gap-2"><iconify-icon icon="lucide:calendar-off" class="block size-[14px]"></iconify-icon><span>ABSENCE MONITOR</span></button></div><div class="grid grid-cols-3 gap-6 mb-8"><div class="border border-border bg-muted/30 p-6 flex flex-col justify-center"><div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-4">PRESENT DAYS</div><div class="text-4xl font-bold mb-2">218</div><div class="text-[10px] text-muted-foreground">Current annual total</div></div><div class="border border-border bg-muted/30 p-6 flex flex-col justify-center"><div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-4">LATE CHECK-INS</div><div class="text-4xl font-bold mb-2">04</div><div class="text-[10px] text-muted-foreground">Last 90 days</div></div><div class="border border-border bg-muted/30 p-6 flex flex-col justify-center"><div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-4">ABSENCE DAYS</div><div class="text-4xl font-bold mb-2">07</div><div class="text-[10px] text-muted-foreground">Approved + unplanned</div></div></div><div class="flex flex-col gap-4"><div class="border border-primary bg-primary/5 flex items-center justify-between p-4 text-xs font-bold uppercase tracking-wider"><div class="flex items-center gap-8 text-muted-foreground"><span class="w-24">MON - 08 JAN</span><span class="text-foreground">CHECKED IN 08:01 / CHECKED OUT 17:15</span></div><div class="bg-primary text-primary-foreground px-3 py-1 rounded-full text-[10px] tracking-widest">ON TIME</div></div><div class="border border-primary bg-primary/5 flex items-center justify-between p-4 text-xs font-bold uppercase tracking-wider"><div class="flex items-center gap-8 text-muted-foreground"><span class="w-24">TUE - 09 JAN</span><span class="text-foreground">CHECKED IN 07:56 / CHECKED OUT 18:30</span></div><div class="bg-primary text-primary-foreground px-3 py-1 rounded-full text-[10px] tracking-widest">PRESENT</div></div><div class="border border-accent bg-accent/5 flex items-center justify-between p-4 text-xs font-bold uppercase tracking-wider"><div class="flex items-center gap-8 text-muted-foreground"><span class="w-24">WED - 10 JAN</span><span class="text-foreground">NO CHECK-IN DETECTED / LOGGED 10:14</span></div><div class="bg-accent text-accent-foreground px-3 py-1 rounded-full text-[10px] tracking-widest">FLAGGED</div></div><div class="border border-primary bg-primary/5 flex items-center justify-between p-4 text-xs font-bold uppercase tracking-wider"><div class="flex items-center gap-8 text-muted-foreground"><span class="w-24">THU - 11 JAN</span><span class="text-foreground">CHECKED IN 08:12 / REMOTE WORK</span></div><div class="bg-primary text-primary-foreground px-3 py-1 rounded-full text-[10px] tracking-widest">REMOTE</div></div></div></div>
-            <div class="bg-white border border-border p-6 shadow-sm"><div class="flex justify-between items-center mb-6"><div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">EMPLOYEE DETAILS</div><button><iconify-icon icon="lucide:info" class="block size-[14px]"></iconify-icon></button></div><div class="grid grid-cols-2 gap-6"><div class="border border-border bg-muted/30 p-4"><div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-2">BUSINESS EMAIL</div><div class="text-xs font-bold">elara.vance@nexus-secure.net</div></div><div class="border border-border bg-muted/30 p-4"><div class="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-2">RESIDENCE ZONE</div><div class="text-xs font-bold">Sector 4, Neo City, CA 94016</div></div></div></div>
+            <div>
+                <div class="section-label" style="margin-top:0;">Recent Absences</div>
+                <div class="mini-table-wrap">
+                    <table class="mini-table">
+                        <thead><tr><th>Date</th><th>Reason</th><th>Status</th></tr></thead>
+                        <tbody id="recordsAbsenceBody"></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- CHANGE STATUS -->
+    <div class="drawer-pane" id="pane-status">
+        <div class="status-options" id="statusOptions" style="max-width:480px;">
+            <label class="status-option sel-active"><input type="radio" name="stat" value="Active"><span>Active — return to work</span></label>
+            <label class="status-option sel-awol"><input type="radio" name="stat" value="AWOL"><span>AWOL — absent without leave</span></label>
+            <label class="status-option sel-resigned"><input type="radio" name="stat" value="Resigned"><span>Resigned</span></label>
+        </div>
+        <div class="field-row" style="max-width:480px;">
+            <div class="field-group"><label>Date Resigned / AWOL</label><input type="date" id="statusDate"></div>
+        </div>
+        <div class="field-group" style="max-width:480px;"><label>Remarks</label><textarea rows="3" id="statusRemarks" placeholder="Reason for this status change (required for AWOL and Resigned)"></textarea></div>
+    </div>
+
+
 </div>
+
+<div class="addemp-actions">
+    <button class="btn btn-ghost" id="drawerCancel">Cancel</button>
+    <button class="btn btn-primary" id="drawerSave">Save Changes</button>
+</div>
+
+
 
 
 
@@ -162,7 +198,31 @@
                     }
                 });
 
+            // ============================================================ // DRAWER TABS // ============================================================
+            const tabs = document.querySelectorAll(".drawer-tab");
+            const panes = document.querySelectorAll(".drawer-pane");
 
+
+           tabs.forEach(tab => {
+                tab.addEventListener("click", function () {
+                    // Get the tab name
+                    const tabName = this.getAttribute("data-tab");
+                    if (!tabName) { return; }
+                    // ---------------------------------------------------- // Remove ACTIVE from all tabs // ----------------------------------------------------
+                    tabs.forEach(item => { item.classList.remove("active"); });
+                    // ---------------------------------------------------- // Remove ACTIVE from all panes // ----------------------------------------------------
+                    panes.forEach(pane => { pane.classList.remove("active"); });
+                    // ---------------------------------------------------- // Activate clicked tab // ----------------------------------------------------
+                    this.classList.add("active");
+                    // ---------------------------------------------------- // Activate matching pane // // details -> pane-details // edit -> pane-edit // records -> pane-records // status -> pane-status // ----------------------------------------------------
+                    const selectedPane = document.getElementById(`pane-${tabName}`);
+                    if (selectedPane)
+                    {
+                        selectedPane.classList.add("active");
+                    }
+                    console.log("Active Tab:", tabName);
+                });
+            });
 
         }
 
@@ -184,28 +244,65 @@
         populateEmployeeDetails(data) {
             // Populate the employee details in the UI using the fetched data
             // For example:
-            document.querySelector('#EmployeeID').textContent = data.EmployeeCode;
-            document.querySelector('#UserFullname').textContent = data.FullName;
-            document.querySelector('#Department').textContent = data.DepartmentName;
-            document.querySelector('#StatusName').textContent = data.StatusName;
+            document.querySelector('#drawerName').textContent = data.FullName;
+            document.getElementById('drawerSub').textContent = `${data.EmployeeCode} · ${data.DepartmentName} · ${data.StatusName}`;
 
-              const imageBaseUrl = '@Url.Action("DisplaytheImage", "Manpower", new { area = "P1SA" })';
+            const imageBaseUrl = '@Url.Action("DisplaytheImage", "Manpower", new { area = "P1SA" })';
+            const defaultImage = '@Url.Content("~/Content/Images/no-image.png")';
 
 
-              const imagePath = data.ImageFileName
-                  ? `${imageBaseUrl}?filename=${encodeURIComponent(data.ImageFileName)}`
-                      : '@Url.Content("~/Content/Images/no-image.png")';
+             const imagePath = data.ImageFileName ? `${imageBaseUrl}?filename=${encodeURIComponent(data.ImageFileName)}` : defaultImage;
 
-               // Employee image
-                  const employeeImage = document.querySelector('#EmployeeImage');
+            const drawerAvatarImage = document.querySelector('#drawerAvatarImage');
+            if (drawerAvatarImage) {
+                drawerAvatarImage.src = imagePath;
+                drawerAvatarImage.onerror = function ()
+                {
+                    this.onerror = null;
+                    this.src = defaultImage;
+                };
+            }
 
-                if (data.ImageFileName) {
-                    employeeImage.src = imagePath;
-                  } else {
-                      employeeImage.src =
-                          '@Url.Content("~/Content/Images/no-image.png")';
-                  }
+
+            // Inside the Panel
+            document.querySelector('#d-code').textContent = data.EmployeeCode ?? '-';
+            document.querySelector('#d-gender').value = data.Gender ;
+            document.querySelector('#d-hired').textContent = data.DateHired ?? '-';
+            document.querySelector('#d-dob').textContent = data.DateOfBirth ?? '-';
+            document.querySelector('#d-email').textContent = data.Email ?? '-';
+            document.querySelector('#d-phone').textContent = data.Phone ?? '-';
+            document.querySelector('#d-address').textContent = data.Address ?? '-';
+            document.querySelector('#d-pickup').textContent = data.PickUpPoint ?? '-';
+            document.querySelector('#d-province').textContent = data.Province ?? '-';
+            document.querySelector('#d-education').textContent = data.EducationalAttain ?? '-';
+            document.querySelector('#d-directedby').textContent = data.DirectedBy ?? '-';
+            document.querySelector('#d-category').textContent = data.CategoryName ?? '-';
+            document.querySelector('#d-department').textContent = data.DepartmentName ?? '-';
+            document.querySelector('#d-jobtitle').textContent = data.JobName ?? '-';
+            document.querySelector('#d-agency').textContent = data.AgencyName ?? '-';
+            document.querySelector('#d-status').textContent = data.StatusName ?? '-';
+            document.querySelector('#d-dateresigned').textContent = data.DateHired ?? '-';
+            document.querySelector('#d-remarks').textContent = data.Remarks ?? '-';
+
+
+
+            document.getElementById('e-name').value = data.FullName ?? '';
+            document.getElementById('e-gender').value = data.Gender;
+            document.getElementById('e-dob').value = data.dob;
+            document.getElementById('e-email').value = data.email ?? '';
+            document.getElementById('e-phone').value = data.phone ?? '';
+            document.getElementById('e-address').value = data.address ?? '';
+            document.getElementById('e-pickup').value = data.pickup ?? '';
+            document.getElementById('e-province').value = data.province ?? '';
+            document.getElementById('e-department').value = data.department;
+            document.getElementById('e-jobtitle').value = data.JobTitleId;
+            document.getElementById('e-agency').value = data.AgencyId;
+            //document.getElementById('e-hired').value = e.hired;
+            document.getElementById('e-remarks').value = data.remarks ?? '';
         }
+
+
+
     }
 
     document.addEventListener("DOMContentLoaded", () => {

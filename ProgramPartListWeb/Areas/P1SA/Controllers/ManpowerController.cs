@@ -7,6 +7,7 @@ using ProgramPartListWeb.Areas.PC.Models;
 using ProgramPartListWeb.Controllers;
 using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Models;
+using ProgramPartListWeb.Utilities.Security;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -27,6 +28,35 @@ namespace ProgramPartListWeb.Areas.P1SA.Controllers
         {
             _emp = emp;
         }
+
+        //-----------------------------------------------------------------------------------------
+        //---------------------------- USERS LOGIN   -------------------------------------====-----
+        //-----------------------------------------------------------------------------------------
+        [HttpPost]
+        public async Task<ActionResult> Authenticate(string username, string password, int dept)
+        {
+            // Get the Users Information
+            var user = _emp.Userslogin(username, dept);
+
+            // Check If the user Exist
+            if (user == null)
+                return JsonPostError("Invalid credentials / Username Doesn't is Exist", 400, "VALIDATION_ERROR");
+            // Check If the Password is Correct
+            if (!PasswordHasher.VerifyPassword(user.PasswordHash, password))
+                return JsonPostError("Invalid credentials / password is incorrect", 400, "VALIDATION_ERROR");
+
+            string role = _auth.GetuserRolename(user.Role_ID);
+            string fullname = user.Fullname;
+
+            var accessToken = JWTAuthentication.GenerateAccessToken(fullname, role, user.User_ID);
+            var refreshToken = _auth.GetRefreshToken(fullname, role, user.User_ID);
+
+            var data = new { access_token = accessToken, refresh_token = refreshToken, fullname, role, user.User_ID };
+
+            return JsonSuccess(data, "Login Successfully");
+        }
+
+
         //-----------------------------------------------------------------------------------------
         //---------------------------- OVERALL SUMMARY   ------------------------------------------
         //-----------------------------------------------------------------------------------------
@@ -214,6 +244,47 @@ namespace ProgramPartListWeb.Areas.P1SA.Controllers
         //    return JsonCreated(mode, "Data Modified Successfully");
         //}
 
+        [HttpPost]
+        public async Task<ActionResult> EditEmployeeDetails(P1SAEmployeesInputModel model)
+        {
+            Debug.Write($@"
+                ID : {model.EmployeeId}
+                Full name : {model.FullName}");
+     
+
+            try
+            {
+                // UpdatedAt is set server-side, not trusted from the client payload
+                model.UpdatedAt = DateTime.Now;
+
+                bool result = await _emp.UpdateAsync(model);
+
+                if (!result) JsonValidationError("Input Validation error");
+
+                return JsonCreated(model, "Data Modified Successfully");
+            }
+            catch (Exception ex)
+            {
+                // Log the real exception server-side; keep the client message generic
+                // _logger.LogError(ex, "UpdateEmployee failed for EmployeeId {Id}", model.EmployeeId);
+                return Json(new { Success = false, Message = "An error occurred while saving. Please try again." });
+            }
+        }
+
+        //-----------------------------------------------------------------------------------------
+        //---------------------------- P1SA ATTENDANCE SUMMARY ------------------------------------
+        //-----------------------------------------------------------------------------------------
+        [HttpGet]
+        public async Task<ActionResult> GetAttendanceSummaryList(
+                    string search,
+                    int depid = 0,
+                    int shift = -1)
+        {
+            var data = await _emp.GetAttendanceSummary(search, depid, shift);
+            return JsonSuccess(data, "Retrieved data successfully");
+        }
+
+
         // GET: P1SA/Manpower/NewlyHiredpage
         public ActionResult Dashboard() => View();
 
@@ -238,5 +309,10 @@ namespace ProgramPartListWeb.Areas.P1SA.Controllers
 
         // GET: P1SA/Selection
         public ActionResult Index() => View();
+
+        public ActionResult AttendanceSummary() => View();
+        public ActionResult ManageAbsence() => View();
+
+        public ActionResult CrossTrainee() => View();
     }
 }

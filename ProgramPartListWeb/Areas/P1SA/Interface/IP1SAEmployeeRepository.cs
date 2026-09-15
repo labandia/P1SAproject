@@ -43,6 +43,7 @@ namespace ProgramPartListWeb.Areas.P1SA.Interface
 
         /// <summary>Inserts a new employee. Returns the generated EmployeeId.</summary>
         Task<(int id, string code)> InsertEmployeeAsync(P1SAEmployeesInputModel model);
+        Task<bool> EditEmployeeDetails(P1SAEmployeesInputModel model);
         Task<bool> AddEmployeeImageFileName(int employeeid, string imagefilename);
         /// <summary>Updates an existing employee record. Returns true if successful.</summary>
         Task<bool> UpdateAsync(P1SAEmployeesInputModel model);
@@ -69,5 +70,33 @@ namespace ProgramPartListWeb.Areas.P1SA.Interface
 
         /// <summary>Returns true if the EmployeeCode belongs to a different EmployeeId (duplicate check on update).</summary>
         Task<bool> CodeExistsForOtherAsync(string employeeCode, int excludeEmployeeId);
+
+
+
+
+
+
+
+
+
+        // ===============================================================================
+        // ===================== ATTENDANCE SUMMARY ======================================
+        // ===============================================================================
+        Task<List<AttendanceSummaryModel>> GetAttendanceSummary(string search, int department, int Shift);
+
+        // ===============================================================================
+        // ===================== ABSENCE SUMMARY ======================================
+        // ===============================================================================
+
+        // ===============================================================================
+        // ===================== CROSS TRAINEE SUMMARY ======================================
+        // ===============================================================================
+
+
+
+        // ===============================================================================
+        // ===================== LOGIN USER  ======================================
+        // ===============================================================================
+        Task<ProductionUserlogin> Userslogin(string usercode, int department);
     }
 }

@@ -1,0 +1,45 @@
+﻿
+@{
+    ViewBag.Title = "ManageAbsence";
+    Layout = "~/Areas/P1SA/Views/Shared/_ManpowerLayout.cshtml";
+}
+
+<div class="topbar">
+    <div>
+        <h1 id="topbarTitle">Absences</h1>
+        <p id="topbarSub">
+            Filed absences with excused / unexcused status
+        </p>
+    </div>
+    <div class="topbar-actions" id="topbarActions">
+        <button class="cusbtn" id="btnDownloadTemplate">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 4v11M7 10l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /><path d="M4 19h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+            Download Template
+        </button>
+        <button class="cusbtn" id="btnImport">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 15V4M7 9l5-5 5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /><path d="M4 19h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+            Import Excel
+        </button>
+        <button class="cusbtn cusbtn-primary" id="openaddform"
+                data-bs-toggle="modal"
+                data-bs-target="#addEmployeeModal">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" /></svg>
+            Add Employee
+        </button>
+    </div>
+</div>
+
+
+<div class="filterbar">
+    <select class="filter-select"><option>Date Range: This Month</option><option>This Week</option><option>Last Month</option><option>Custom Range</option></select>
+    <select class="filter-select"><option>Reason: All</option><option>Sick</option><option>Emergency</option><option>Unreported</option><option>Approved Leave</option></select>
+    <select class="filter-select"><option>Status: All</option><option>Excused</option><option>Unexcused</option></select>
+    <div class="divider"></div>
+    <span class="filter-count">31 records this month</span>
+</div>
+<div class="table-wrap">
+    <table>
+        <thead><tr><th>Employee</th><th>Department</th><th>Date</th><th>Reason</th><th>Filed By</th><th>Status</th></tr></thead>
+        <tbody id="absenceTableBody"></tbody>
+    </table>
+</div>

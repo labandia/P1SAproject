@@ -285,7 +285,7 @@ namespace PracticeC_
             }
 
             byte[] hash = KeyDerivation.Pbkdf2(
-                password: "sdp1234a*",
+                password: "abc12345",
                 salt: salt,
                 prf: KeyDerivationPrf.HMACSHA256,
                 iterationCount: 10000,

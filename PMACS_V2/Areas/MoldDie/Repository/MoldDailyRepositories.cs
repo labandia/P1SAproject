@@ -92,8 +92,8 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         public async Task<List<DieMoldDaily>> GetDailyMoldData(DateTime selectedDate, 
             int? month, string process)
         {
-            var sql = new StringBuilder(@"
-                            SELECT 
+            string query = $@" SELECT 
+                                TOP 100
                                 c.DieSerial,
                                 c.DateInput,
                                 p.PartNo,
@@ -107,15 +107,16 @@ namespace PMACS_V2.Areas.MoldDie.Repository
                                 ON c.DieSerial = d.DieSerial
                             LEFT JOIN DieMold_MoldingMainParts p
                                 ON c.DieSerial = p.DieSerial
-                            WHERE 1 = 1
-                        ");
+                            WHERE 1 = 1 ";
+
+         
 
             var parameters = new DynamicParameters();
 
             // Filter by month
             if (month.HasValue && month.Value > 0)
             {
-                sql.Append(" AND MONTH(c.DateInput) = @Month");
+                query += " AND MONTH(c.DateInput) = @Month ";
                 parameters.Add("@Month", month.Value);
             }
 
@@ -130,16 +131,16 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             // Filter by process
             if (!string.IsNullOrWhiteSpace(process))
             {
-                sql.Append(" AND p.ProcessID = @Process");
+                query += " AND p.ProcessID = @Process";
                 parameters.Add("@Process", process);
             }
 
-           
-
-            sql.Append(" ORDER BY c.DateInput DESC");
 
 
-            return await SqlDataAccess.QueryAsync<DieMoldDaily>(sql.ToString(), parameters);
+            query += " ORDER BY c.DateInput DESC";
+
+
+            return await SqlDataAccess.QueryAsync<DieMoldDaily>(query, parameters);
         }
 
         public Task<DieMoldDaily> GetDailyMoldDetails(int recordID)

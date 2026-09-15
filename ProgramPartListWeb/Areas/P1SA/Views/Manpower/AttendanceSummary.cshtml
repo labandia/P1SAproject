@@ -1,0 +1,373 @@
+﻿
+@{
+    ViewBag.Title = "AttendanceSummary";
+    Layout = "~/Areas/P1SA/Views/Shared/_ManpowerLayout.cshtml";
+}
+
+
+<div class="topbar">
+    <div>
+        <h1 id="topbarTitle">Attendance Summary</h1>
+        <p id="topbarSub">Time in / out, lateness and overtime by day</p>
+    </div>
+    <div class="topbar-actions" id="topbarActions">
+        <button class="cusbtn" id="btnDownloadTemplate">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 4v11M7 10l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /><path d="M4 19h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+            Download Template
+        </button>
+        <button class="cusbtn" id="btnImport">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 15V4M7 9l5-5 5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /><path d="M4 19h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+            Import Excel
+        </button>
+        <button class="cusbtn cusbtn-primary" id="openaddform"
+                data-bs-toggle="modal"
+                data-bs-target="#addEmployeeModal">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" /></svg>
+            Add Employee
+        </button>
+    </div>
+</div>
+
+
+
+
+
+<div class="filterbar">
+    <select class="filter-select" id="DayId">
+        <option>Date Range: This Week</option>
+        <option>Today</option>
+        <option>Last 7 Days</option>
+        <option>This Month</option>
+    </select>
+    <select class="filter-select" id="DepartID">
+        <option value="0">Department: All</option>
+        <option value="1">Molding</option>
+        <option value="2">Press</option>
+        <option value="3">Rotor</option>
+        <option value="4">Winding</option>
+        <option value="5">Circuit</option>
+        <option value="6">Process Control</option>
+    </select>
+
+    <select class="filter-select" id="ShiftID">
+        <option value="-1">Shift: All</option>
+        <option value="0">Day Shift</option>
+        <option value="1">Night Shift</option>
+     </select>
+
+    <div class="divider"></div>
+    <span class="filter-count">Sep 8 – Sep 13, 2026</span>
+</div>
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Employee</th>
+                <th>Department</th>
+                <th>Shift</th>
+                <th>Time In</th>
+                <th>Time Out</th>
+                <th>Regular </th>
+                <th>OverTime</th>
+                <th>Total Time</th>
+                <th>Late</th>
+            </tr>
+        </thead>
+        <tbody id="attendanceTableBody"></tbody>
+    </table>
+</div>
+
+
+
+
+
+<script type="module" asp-append-version="true">
+    import {
+        getMethod,
+        postMethod
+    } from '@Url.Content("~/Scripts/modules/index.js")';
+
+
+    class AttendanceSummaryController {
+        constructor() {
+            this.AttendanceData = [];
+            this.currentPage = 1;
+            this.pageSize = 100;
+
+            this.tbody = document.getElementById("attendanceTableBody");
+            //this.paginationContainer = document.getElementById("EmployeePagination");
+        }
+
+        async init() {
+            this.bindEvents();
+
+            await this.LoadAttendanceData();
+        }
+
+        bindEvents() {
+            document.getElementById("DayId")
+                .addEventListener("change", () => {
+                    this.currentPage = 1;
+                    this.LoadAttendanceData();
+                });
+
+            document.getElementById("DepartID")
+                .addEventListener("change", () => {
+                    this.currentPage = 1;
+                    this.LoadAttendanceData();
+                });
+
+            document.getElementById("ShiftID")
+                .addEventListener("change", () => {
+                    this.currentPage = 1;
+                    this.LoadAttendanceData();
+                });
+
+            // document.getElementById("searchinput")
+            //     .addEventListener("input", () => {
+            //         this.currentPage = 1;
+            //         this.LoadEmployeeData();
+            //     });
+
+        }
+
+        /* ================= LOAD DATA ================= */
+        async LoadAttendanceData() {
+            // let searchText = document.getElementById("searchinput").value.trim();
+
+            const DepartID = document.getElementById("DepartID").value;
+            const shiftID = document.getElementById("ShiftID").value;
+
+            const objparams = {
+                search: "",
+                depid: DepartID,
+                shift: shiftID
+            };
+
+            try {
+
+                const res = await getMethod('@Url.Action("GetAttendanceSummaryList", "Manpower")', objparams);
+                if (!res?.Success) {
+                   return;
+                }
+
+                console.log(res);
+
+                this.AttendanceData = res.data ?? [];
+                //const total = res.data?.Total ?? this.EmployeeData.length;
+
+                this.renderTable(this.AttendanceData);
+
+                //document.getElementById('topbarSub').textContent = `${this.EmployeeData.length} records in total `;
+                //this.renderPagination(total);
+
+            }
+            catch (err) {
+                console.error(err);
+            }
+
+        }
+
+
+        renderTable(data) {
+
+            this.tbody.innerHTML = "";
+
+            if (!data.length) {
+                this.renderEmpty();
+                return;
+            }
+            const fragment = document.createDocumentFragment();
+            const imageBaseUrl = '@Url.Action("DisplaytheImage", "Manpower", new { area = "P1SA" })';
+
+
+            data.forEach(row => {
+
+
+                   const imagePath = row.ImageFileName
+                    ? `${imageBaseUrl}?filename=${encodeURIComponent(row.ImageFileName)}`
+                    : '@Url.Content("~/Content/Images/no-image.png")';
+
+
+                //console.log(imagePath);
+                const tr = document.createElement("tr");
+
+
+
+
+                tr.style.cursor = "pointer";
+
+                tr.innerHTML = `  <tr>
+                               <td>
+                                <div class="source-text">${this.formatDate(row.TimeIn)}</div>
+                               </td>
+
+
+                                <td>
+                                  <div class="user-cell">
+                                     <img
+                                          class="cell-avatar"
+                                          src="${imagePath}"
+                                          loading="lazy"
+                                          onerror="this.onerror=null; this.src='@Url.Content("~/Content/Images/no-image.png")';"
+                                      />
+
+
+                                        <div class="user-details">
+                                            <span class="user-name-bold">${row.FullName}</span>
+                                            <span class="user-time">${row.EmployeeCode}</span>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td>
+                                 <div  class="source-text">${row.DepartmentName}</div>
+                                </td>
+
+
+                                <td>
+                                  <span class="status-text success">${row.ShiftTypeId ? 'Day Shift' : 'Night Shift'}</span>
+                                </td>
+                                <td>
+                                  <span class="status-text success">${this.formatTime(row.TimeIn)}</span>
+                                </td>
+                                <td>
+                                  <span class="status-text success">${this.formatTime(row.TimeOut)}</span>
+                                </td>
+
+                                <td>
+                                  <span class="source-text">${row.RegularHours ?? '0.00'}</span>
+                                </td>
+                                 <td>
+                                   <span class="status-text success">${row.OvertimeHours ?? '0.00'}</span>
+                                 </td>
+
+                                    <td>
+                                     <span class="source-text">${row.TotalHours ?? '0.00'}</span>
+                                   </td>
+                                    <td>
+                                      <span class="status-text success">${row.LateTime ?? '0.00'}</span>
+                                    </td>
+                            </tr>
+                     `;
+
+
+
+                  fragment.appendChild(tr);
+            });
+
+            this.tbody.appendChild(fragment);
+
+        }
+
+
+        renderEmpty() {
+            this.tbody.innerHTML = `<tr>
+                 <td colspan="5" style="text-align:center;color:#999">
+                     ⚠️ No records found
+                 </td>
+             </tr>`;
+        }
+
+        renderError() {
+            this.tbody.innerHTML = `<tr>
+             <td colspan="5" style="text-align:center;color:red">
+                 Failed to load data
+             </td>
+         </tr>`;
+        }
+
+
+        renderPagination(totalItems) {
+            const totalPages = Math.ceil(totalItems / this.pageSize);
+
+
+            const startItem = totalItems === 0
+                ? 0
+                : (this.currentPage - 1) * this.pageSize + 1;
+
+
+            const endItem = Math.min(this.currentPage * this.pageSize, totalItems);
+
+            // Update text info
+            // update text
+            document.getElementById("resultsText").textContent =
+                `SHOWING_INDEX: ${startItem}-${endItem} OF ${totalItems}`;
+
+            const prevBtn = document.getElementById("prevBtn");
+            const nextBtn = document.getElementById("nextBtn");
+
+            // button states
+            prevBtn.classList.toggle("disabled", this.currentPage === 1);
+            nextBtn.classList.toggle("disabled", this.currentPage === totalPages || totalPages === 0);
+
+            // remove old listeners by cloning
+            prevBtn.replaceWith(prevBtn.cloneNode(true));
+            nextBtn.replaceWith(nextBtn.cloneNode(true));
+
+            const newPrevBtn = document.getElementById("prevBtn");
+            const newNextBtn = document.getElementById("nextBtn");
+
+            newPrevBtn.addEventListener("click", () => {
+                if (this.currentPage > 1) {
+                    this.currentPage--;
+                    this.LoadEmployeeData();
+                }
+            });
+
+            newNextBtn.addEventListener("click", () => {
+                if (this.currentPage < totalPages) {
+                    this.currentPage++;
+                    this.LoadEmployeeData();
+                }
+            });
+        }
+
+        // ---- helper: parse ASP.NET's /Date(ticks)/ format, ISO strings, or bare TimeSpan strings ----
+        parseDateValue(value) {
+            if (!value) return null;
+
+            // ASP.NET JsonResult format: "/Date(1788859201017)/"
+            const aspNetMatch = /\/Date\((-?\d+)\)\//.exec(value);
+            if (aspNetMatch) {
+                return new Date(parseInt(aspNetMatch[1], 10));
+            }
+
+            // Full ISO datetime
+            if (value.includes("T")) {
+                return new Date(value);
+            }
+
+            // Bare TimeSpan string, e.g. "08:03:00"
+            return new Date(`1970-01-01T${value}`);
+        }
+
+        formatDate(value) {
+            const date = this.parseDateValue(value);
+            if (!date || isNaN(date.getTime())) return value ?? "-";
+
+            return date.toLocaleDateString("en-US", {
+                month: "short",
+                day: "2-digit",
+                year: "numeric"
+            });
+        }
+
+        formatTime(value) {
+            const date = this.parseDateValue(value);
+            if (!date || isNaN(date.getTime())) return value ?? "-";
+
+            return date.toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true
+            });
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const req = new AttendanceSummaryController();
+        req.init();
+    });
+</script>

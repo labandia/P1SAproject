@@ -60,24 +60,11 @@ namespace PMACS_V2.Areas.MoldDie.Repository
         {
             try
             {
-                // 1. Checks if the Die Serial on DieMold_DieMaster list Exist
-                bool IsExist = await SqlDataAccess.ExistsAsync($@"SELECT COUNT(*) 
-                FROM DieMold_DieMaster WHERE DieSerial =@DieSerial", new
-                {
-                    model.PartNo,
-                    model.DieSerial
-                });
+                await EnsureDieMasterExistsAsync(model);
 
-                if (!IsExist)
-                {
-                    await SqlDataAccess.ExecuteAsync($@"INSERT INTO DieMold_DieMaster(DieSerial, 
-                        DieNumber, Cavity) 
-                        VALUES(@DieSerial, @DieNumber, @Cavity)", model);
-                }
-
-                int rows = await SqlDataAccess.ExecuteAsync($@"INSERT INTO DieMold_MoldingMainParts(PartNo, 
-                PartDescription, DieSerial, DieNumber, Cavity, ProcessID) 
-                  VALUES(@PartNo, @PartDescription, @DieSerial, @DieNumber, @Cavity, @ProcessID)", model);
+                int rows = await SqlDataAccess.ExecuteAsync($@"INSERT INTO DieMold_MoldingMainParts
+            (PartNo, PartDescription, DieSerial, DieNumber, Cavity, ProcessID)
+            VALUES(@PartNo, @PartDescription, @DieSerial, @DieNumber, @Cavity, @ProcessID)", model);
 
                 return rows > 0;
             }
@@ -90,13 +77,34 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
         public async Task<bool> EditMoldieMasterList(MoldieMasterModel model)
         {
-            int rows = await SqlDataAccess.ExecuteAsync($@"UPDATE DieMold_MoldingMainParts SET 
-                PartDescription =@PartDescription, Dimension_Quality =@Dimension_Quality, DieSerial =@DieSerial, 
-                DieNumber =@DieNumber, Cavity =@Cavity, ProcessID =@ProcessID WHERE PartNo =@PartNo", model);
+            try
+            {
+                await EnsureDieMasterExistsAsync(model);
 
-            return rows > 0;
+                int rows = await SqlDataAccess.ExecuteAsync($@"UPDATE DieMold_MoldingMainParts SET
+            PartDescription =@PartDescription, Dimension_Quality =@Dimension_Quality, DieSerial =@DieSerial,
+            DieNumber =@DieNumber, Cavity =@Cavity, ProcessID =@ProcessID WHERE PartNo =@PartNo", model);
+
+                return rows > 0;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error" + ex);
+                throw;
+            }
         }
+        private async Task EnsureDieMasterExistsAsync(MoldieMasterModel model)
+        {
+            bool isExist = await SqlDataAccess.ExistsAsync($@"SELECT COUNT(*)
+        FROM DieMold_DieMaster WHERE DieSerial = @DieSerial", new { model.DieSerial });
 
+            if (!isExist)
+            {
+                await SqlDataAccess.ExecuteAsync($@"INSERT INTO DieMold_DieMaster
+            (DieSerial, DieNumber, Cavity)
+            VALUES(@DieSerial, @DieNumber, @Cavity)", model);
+            }
+        }
         public Task<bool> DeleteMoldieMaster(string partno)
         {
             throw new NotImplementedException();

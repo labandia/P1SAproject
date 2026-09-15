@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿
+
+
+
+
+
+
+<!DOCTYPE html>
 
 <html>
 <head>
@@ -32,23 +39,27 @@
             </div>
 
             <nav class="nav" id="nav">
-                <div class="nav-item" data-module="dashboard">
+
+                @*<div class="nav-item" data-module="dashboard">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="4" y="13" width="4" height="7" rx="0.8" stroke="currentColor" stroke-width="1.6" /><rect x="10" y="8" width="4" height="12" rx="0.8" stroke="currentColor" stroke-width="1.6" /><rect x="16" y="4" width="4" height="16" rx="0.8" stroke="currentColor" stroke-width="1.6" /></svg>
                     <span>Dashboard Overall</span>
-                </div>
+                </div>*@
 
-                <div class="nav-item active" data-module="employees">
+                <div class="nav-item" data-module="employees">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.6" /><path d="M5 20c1.2-3.8 4-5.6 7-5.6s5.8 1.8 7 5.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
                     <span>Employee List</span>
                 </div>
+
                 <div class="nav-item" data-module="attendance">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="15" rx="1.5" stroke="currentColor" stroke-width="1.6" /><path d="M4 9.5h16M8 3v3.5M16 3v3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
                     <span>Attendance Summary</span>
                 </div>
+
                 <div class="nav-item" data-module="absence">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.4" stroke="currentColor" stroke-width="1.6" /><path d="M8.5 12h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
                     <span>Absence</span>
                 </div>
+
                 <div class="nav-item" data-module="crosstrainee">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 7l6 4-6 4V7z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" /><path d="M20 7l-6 4 6 4V7z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" /></svg>
                     <span>Cross Trainee</span>
@@ -64,13 +75,85 @@
 
         <!-- ============ MAIN ============ -->
         <main class="main">
-            
+
 
             <div class="contentV2">
                 @RenderBody();
             </div>
         </main>
     </div>
+
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        var navItems = document.querySelectorAll("#nav .nav-item");
+          // dashboard: '@Url.Action("Dashboard", "Manpower", new { area = "P1SA" })',
+        var navRoutes = {
+            employees: '@Url.Action("ManageEmployee", "Manpower", new { area = "P1SA" })',
+            attendance: '@Url.Action("AttendanceSummary", "Manpower", new { area = "P1SA" })',
+            absence: '@Url.Action("ManageAbsence", "Manpower", new { area = "P1SA" })',
+            crosstrainee: '@Url.Action("CrossTrainee", "Manpower", new { area = "P1SA" })'
+        };
+
+
+        // ============================================================
+        // CURRENT URL
+        // ============================================================
+        var currentPath = window.location.pathname.toLowerCase();
+
+
+        // ============================================================
+        // ACTIVE NAV
+        // ============================================================
+        navItems.forEach(function (item) {
+
+            var module = item.getAttribute("data-module");
+            var route = navRoutes[module];
+
+            if (route &&
+                currentPath === new URL(route, window.location.origin)
+                    .pathname
+                    .toLowerCase()) {
+
+                item.classList.add("active");
+            }
+
+        });
+
+
+        // ============================================================
+        // CLICK NAV
+        // ============================================================
+        navItems.forEach(function (item) {
+
+            item.style.cursor = "pointer";
+
+            item.addEventListener("click", function () {
+
+                var module = this.getAttribute("data-module");
+                var route = navRoutes[module];
+
+                if (!route) {
+                    console.warn("Route not found:", module);
+                    return;
+                }
+
+                // Active immediately
+                navItems.forEach(function (nav) {
+                    nav.classList.remove("active");
+                });
+
+                this.classList.add("active");
+
+                // Navigate
+                window.location.href = route;
+            });
+
+        });
+
+    });
+    </script>
 </body>
 </html>
 

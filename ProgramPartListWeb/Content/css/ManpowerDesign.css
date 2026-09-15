@@ -1454,3 +1454,12 @@ tbody tr.clickable {
         transform: translateY(0);
         opacity: 1;
     }
+
+
+
+.addemp-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 2px 4px;
+}

@@ -70,7 +70,7 @@
         <div class="detail-row"><span class="k">Job Title</span><span class="v" id="d-jobtitle"></span></div>
         <div class="detail-row"><span class="k">Agency</span><span class="v" id="d-agency"></span></div>
         <div class="detail-row"><span class="k">Status</span><span class="v" id="d-status"></span></div>
-        <div class="detail-row"><span class="k">Date Resigned</span><span class="v mono" id="d-dateresigned"></span></div>
+        @*<div class="detail-row"><span class="k">Date Hired</span><span class="v mono" id="d-hired"></span></div>*@
         <div class="detail-row"><span class="k">Remarks</span><span class="v" id="d-remarks"></span></div>
     </div>
 
@@ -89,7 +89,10 @@
         <div class="field-row-3">
             <div class="field-group">
                 <label>Gender</label>
-                <select id="e-gender"><option value="False">Male</option><option value="True">Female</option></select>
+                <select id="e-gender" class="form-select">
+                    <option value="False">Male</option>
+                    <option value="True">Female</option>
+                </select>
             </div>
             <div class="field-group"><label>Date of Birth</label><input type="date" id="e-dob"></div>
             <div class="field-group"><label>Email</label><input type="email" id="e-email"></div>
@@ -104,15 +107,35 @@
         <div class="field-row-3">
             <div class="field-group">
                 <label>Department</label>
-                <select id="e-department"><option>Molding</option><option>Press</option><option>Rotor</option><option>Winding</option><option>Circuit</option></select>
+                <select id="e-department">
+                    <option value="1">Molding</option>
+                    <option value="2">Press</option>
+                    <option value="3">Rotor</option>
+                    <option value="4">Winding</option>
+                    <option value="5">Circuit</option>
+                </select>
             </div>
             <div class="field-group">
                 <label>Job Title</label>
-                <select id="e-jobtitle"><option>Supervisor</option><option>Junior Supervisor</option><option>Leader</option><option>Technical Trainer</option><option>Production Operator</option><option>Regular</option></select>
+                <select id="e-jobtitle">
+                    <option value="1">Supervisor</option>
+                    <option value="2">Junior Supervisor</option>
+                    <option value="3">Leader</option>
+                    <option value="4">Technical Trainer</option>
+                    <option value="5">Production Operator</option>
+                    <option value="6">Regular/GGWP</option>
+                    <option value="8">Casual</option>
+                </select>
             </div>
             <div class="field-group">
                 <label>Agency</label>
-                <select id="e-agency"><option>SDP</option><option>TMS</option><option>SYNERGY</option><option>ONESOURCE</option></select>
+                <select id="e-agency">
+                    <option value="1">SDP</option>
+                    <option value="2">TMS</option>
+                    <option value="4">SYNERGY</option>
+                    <option value="3">ONESOURCE</option>
+                    <option value="5">Golden</option>
+                </select>
             </div>
         </div>
         <div class="field-row">
@@ -154,9 +177,15 @@
             <label class="status-option sel-resigned"><input type="radio" name="stat" value="Resigned"><span>Resigned</span></label>
         </div>
         <div class="field-row" style="max-width:480px;">
-            <div class="field-group"><label>Date Resigned / AWOL</label><input type="date" id="statusDate"></div>
+            <div class="field-group">
+              <label>Date Resigned / AWOL</label>
+              <input type="date" id="statusDate">
+            </div>
         </div>
-        <div class="field-group" style="max-width:480px;"><label>Remarks</label><textarea rows="3" id="statusRemarks" placeholder="Reason for this status change (required for AWOL and Resigned)"></textarea></div>
+        <div class="field-group" style="max-width:480px;">
+            <label>Remarks</label>
+            <textarea rows="3" id="statusRemarks" placeholder="Reason for this status change (required for AWOL and Resigned)"></textarea>
+        </div>
     </div>
 
 
@@ -179,6 +208,8 @@
 
     class EmployeeDetailsController {
         constructor() {
+            this.avatarPalette = ["#2C5F74", "#8A7C5C", "#B98A2E", "#6B4A4A", "#4A7856", "#5C6B8A", "#8A5C6B", "#5C8A78"];
+
 
             this.editPhotoData = null;
 
@@ -186,7 +217,6 @@
 
             this.savedata = document.getElementById('drawerSave');
 
-            this.init();
         }
 
         async init() {
@@ -220,7 +250,75 @@
              });
 
 
-            this.savedata.addEventListener('click', () => {
+            this.savedata.addEventListener('click', async () => {
+                // Basic required-field guard before hitting the server
+                const fullName = document.getElementById('e-name').value.trim();
+                if (!fullName) {
+                    alert('Full Name is required.');
+                    return;
+                }
+
+                const selectedStatus = document.querySelector('input[name="stat"]:checked');
+
+                let statusId = 1; // Default Active
+
+                if (selectedStatus) {
+                    switch (selectedStatus.value) {
+                        case 'Active':
+                            statusId = 1;
+                            break;
+
+                        case 'AWOL':
+                            statusId = 2;
+                            break;
+
+                        case 'Resigned':
+                            statusId = 3;
+                            break;
+                    }
+                }
+
+                const payload = {
+                    EmployeeId: parseInt(document.getElementById('employID').value, 10),
+                    FullName: fullName,
+                    Gender: document.getElementById('e-gender').value === 'True',
+                    DateOfBirth: document.getElementById('e-dob').value || null,
+                    Email: document.getElementById('e-email').value,
+                    Phone: document.getElementById('e-phone').value,
+                    Address: document.getElementById('e-address').value,
+                    PickUpPoint: document.getElementById('e-pickup').value,
+                    Province: document.getElementById('e-province').value,
+                    DepartmentId: parseInt(document.getElementById('e-department').value, 10),
+                    JobTitleId: parseInt(document.getElementById('e-jobtitle').value, 10),
+                    AgencyId: parseInt(document.getElementById('e-agency').value, 10),
+                    DateHired: document.getElementById('e-hired').value || null,
+                    Remarks: document.getElementById('e-remarks').value,
+                    StatusId: statusId,
+
+                    DateResigned: document.getElementById('statusDate').value || null
+                };
+
+                this.savedata.disabled = true; // prevent double-submit while the request is in flight
+
+
+                console.log(payload);
+                try {
+                    const res = await postMethod('@Url.Action("EditEmployeeDetails", "Manpower")', payload);
+
+                    if (res?.Success) {
+                        await this.fetchEmployeeData(); // re-pull so Details tab reflects the saved values
+                        // switch back to the Details tab
+                        document.querySelector('.drawer-tab[data-tab="details"]').click();
+                    } else {
+                        alert(res?.Message || 'Save failed.');
+                    }
+                } catch (error) {
+                    console.error('Error saving employee:', error);
+                    alert('An error occurred while saving.');
+                } finally {
+                    this.savedata.disabled = false;
+                }
+
 
             });
 
@@ -267,80 +365,293 @@
             }
         }
 
-        populateEmployeeDetails(data) {
-            // Populate the employee details in the UI using the fetched data
-            // For example:
-            document.querySelector('#drawerName').textContent = data.FullName;
-            document.getElementById('drawerSub').textContent = `${data.EmployeeCode} · ${data.DepartmentName} · ${data.StatusName}`;
+       populateEmployeeDetails(data) {
 
-            const imageBaseUrl = '@Url.Action("DisplaytheImage", "Manpower", new { area = "P1SA" })';
-            const defaultImage = '@Url.Content("~/Content/Images/no-image.png")';
+                console.log(data);
+
+                // ============================================================
+                // BASIC EMPLOYEE INFORMATION
+                // ============================================================
+
+                document.querySelector('#drawerName').textContent =
+                    data.FullName ?? '-';
+
+                document.getElementById('drawerSub').textContent =
+                    `${data.EmployeeCode ?? '-'} · ${data.DepartmentName ?? '-'} · ${data.StatusName ?? '-'}`;
 
 
-             const imagePath = data.ImageFileName ? `${imageBaseUrl}?filename=${encodeURIComponent(data.ImageFileName)}` : defaultImage;
+                // ============================================================
+                // IMAGE PATHS
+                // ============================================================
 
-            const drawerAvatarImage = document.querySelector('#drawerAvatarImage');
-            if (drawerAvatarImage) {
-                drawerAvatarImage.src = imagePath;
-                drawerAvatarImage.onerror = function ()
-                {
-                    this.onerror = null;
-                    this.src = defaultImage;
-                };
+                const imageBaseUrl =
+                    '@Url.Action("DisplaytheImage", "Manpower", new { area = "P1SA" })';
+
+                const defaultImage =
+                    '@Url.Content("~/Content/Images/no-image.png")';
+
+
+                const imagePath = data.ImageFileName
+                    ? `${imageBaseUrl}?filename=${encodeURIComponent(data.ImageFileName)}`
+                    : defaultImage;
+
+
+                // ============================================================
+                // DRAWER AVATAR
+                // ============================================================
+
+                const drawerAvatarImage =
+                    document.querySelector('#drawerAvatarImage');
+
+                if (drawerAvatarImage) {
+
+                    drawerAvatarImage.src = imagePath;
+
+                    drawerAvatarImage.onerror = function () {
+                        this.onerror = null;
+                        this.src = defaultImage;
+                    };
+                }
+
+
+                // ============================================================
+                // DETAILS PANEL
+                // ============================================================
+
+                document.querySelector('#d-code').textContent =
+                    data.EmployeeCode ?? '-';
+
+                document.querySelector('#d-gender').textContent =
+                    data.Gender ? 'Female' : 'Male';
+
+                document.querySelector('#d-hired').textContent =
+                    data.DateHired ?? '-';
+
+                document.querySelector('#d-dob').textContent =
+                    data.DateOfBirth ?? '-';
+
+                document.querySelector('#d-email').textContent =
+                    data.Email ?? '-';
+
+                document.querySelector('#d-phone').textContent =
+                    data.Phone ?? '-';
+
+                document.querySelector('#d-address').textContent =
+                    data.Address ?? '-';
+
+                document.querySelector('#d-pickup').textContent =
+                    data.PickUpPoint ?? '-';
+
+                document.querySelector('#d-province').textContent =
+                    data.Province ?? '-';
+
+                document.querySelector('#d-education').textContent =
+                    data.EducationalAttain ?? '-';
+
+                document.querySelector('#d-directedby').textContent =
+                    data.DirectedBy ?? '-';
+
+                document.querySelector('#d-category').textContent =
+                    data.CategoryName ?? '-';
+
+                document.querySelector('#d-department').textContent =
+                    data.DepartmentName ?? '-';
+
+                document.querySelector('#d-jobtitle').textContent =
+                    data.JobName ?? '-';
+
+                document.querySelector('#d-agency').textContent =
+                    data.AgencyName ?? '-';
+
+                document.querySelector('#d-status').textContent =
+                    data.StatusName ?? '-';
+
+                // FIXED: DateResigned instead of DateHired
+               document.querySelector('#d-hired').textContent =
+                   data.DateHired ?? '-';
+
+                document.querySelector('#d-remarks').textContent =
+                    data.Remarks ?? '-';
+
+
+                // ============================================================
+                // EDIT FORM
+                // ============================================================
+
+                document.getElementById('e-name').value =
+                    data.FullName ?? '';
+
+
+                // ------------------------------------------------------------
+                // Gender
+                // ------------------------------------------------------------
+
+                const gender = data.Gender;
+
+                if (
+                    gender === true ||
+                    gender === 'True' ||
+                    gender === 'true' ||
+                    gender === 1 ||
+                    gender === '1'
+                ) {
+                    document.getElementById('e-gender').value = 'True';
+                }
+                else {
+                    // Default = Male
+                    document.getElementById('e-gender').value = 'False';
+                }
+
+
+                // ------------------------------------------------------------
+                // Other fields
+                // ------------------------------------------------------------
+
+                document.getElementById('e-dob').value =
+                    data.DateOfBirth
+                        ? data.DateOfBirth.substring(0, 10)
+                        : '';
+
+                document.getElementById('e-email').value =
+                    data.Email ?? '';
+
+                document.getElementById('e-phone').value =
+                    data.Phone ?? '';
+
+                document.getElementById('e-address').value =
+                    data.Address ?? '';
+
+                document.getElementById('e-pickup').value =
+                    data.PickUpPoint ?? '';
+
+                document.getElementById('e-province').value =
+                    data.Province ?? '';
+
+                document.getElementById('e-department').value =
+                    data.DepartmentId ?? '';
+
+                document.getElementById('e-jobtitle').value =
+                    data.JobTitleId ?? '';
+
+                document.getElementById('e-agency').value =
+                    data.AgencyId ?? '';
+
+                document.getElementById('e-remarks').value =
+                    data.Remarks ?? '';
+
+
+                // ============================================================
+                // DATE HIRED
+                // ============================================================
+
+                document.getElementById('e-hired').value =
+                    data.DateHired
+                        ? data.DateHired.substring(0, 10)
+                        : new Date().toISOString().split('T')[0];
+
+
+                // ============================================================
+                // EDIT EMPLOYEE PHOTO
+                // ============================================================
+
+                this.editPhotoData = data.ImageFileName || null;
+
+                const editAvatar =
+                    document.getElementById('editAvatarPreview');
+
+                if (editAvatar) {
+
+                    if (data.ImageFileName) {
+
+                        // Use the SAME image URL as drawer
+                        const editImagePath =
+                            `${imageBaseUrl}?filename=${encodeURIComponent(data.ImageFileName)}`;
+
+                        editAvatar.style.background = 'transparent';
+                        editAvatar.style.color = '';
+
+                        editAvatar.innerHTML =
+                            `<img src="${editImagePath}"
+                                  alt="${data.FullName || 'Employee'}"
+                                  style="width:100%;height:100%;object-fit:cover;"
+                                  onerror="this.onerror=null; this.src='${defaultImage}';">`;
+
+                    }
+                    else {
+
+                        editAvatar.style.background =
+                            this.colorFor(data.FullName || '');
+
+                        editAvatar.style.color = '#fff';
+
+                        editAvatar.innerHTML =
+                            this.initials(data.FullName || '');
+                    }
+                }
+
+
+                // ============================================================
+                // STATUS
+                // ============================================================
+
+                let statusId = data.StatusId;
+
+                if (
+                    statusId === null ||
+                    statusId === undefined ||
+                    statusId === ''
+                ) {
+                    statusId = 1; // Default Active
+                }
+
+                let statusValue = 'Active';
+
+                if (statusId == 1) {
+                    statusValue = 'Active';
+                }
+                else if (statusId == 2) {
+                    statusValue = 'AWOL';
+                }
+                else if (statusId == 3) {
+                    statusValue = 'Resigned';
+                }
+
+                const statusRadio =
+                    document.querySelector(
+                        `input[name="stat"][value="${statusValue}"]`
+                    );
+
+                if (statusRadio) {
+                    statusRadio.checked = true;
+                }
+
+
+                // ============================================================
+                // STATUS DATE
+                // ============================================================
+
+                document.getElementById('statusDate').value =
+                    data.DateResigned
+                        ? data.DateResigned.substring(0, 10)
+                        : '';
+
+
+                // ============================================================
+                // STATUS REMARKS
+                // ============================================================
+
+                document.getElementById('statusRemarks').value =
+                    data.Remarks ?? '';
             }
 
-
-            // Inside the Panel
-            document.querySelector('#d-code').textContent = data.EmployeeCode ?? '-';
-            document.querySelector('#d-gender').value = data.Gender ;
-            document.querySelector('#d-hired').textContent = data.DateHired ?? '-';
-            document.querySelector('#d-dob').textContent = data.DateOfBirth ?? '-';
-            document.querySelector('#d-email').textContent = data.Email ?? '-';
-            document.querySelector('#d-phone').textContent = data.Phone ?? '-';
-            document.querySelector('#d-address').textContent = data.Address ?? '-';
-            document.querySelector('#d-pickup').textContent = data.PickUpPoint ?? '-';
-            document.querySelector('#d-province').textContent = data.Province ?? '-';
-            document.querySelector('#d-education').textContent = data.EducationalAttain ?? '-';
-            document.querySelector('#d-directedby').textContent = data.DirectedBy ?? '-';
-            document.querySelector('#d-category').textContent = data.CategoryName ?? '-';
-            document.querySelector('#d-department').textContent = data.DepartmentName ?? '-';
-            document.querySelector('#d-jobtitle').textContent = data.JobName ?? '-';
-            document.querySelector('#d-agency').textContent = data.AgencyName ?? '-';
-            document.querySelector('#d-status').textContent = data.StatusName ?? '-';
-            document.querySelector('#d-dateresigned').textContent = data.DateHired ?? '-';
-            document.querySelector('#d-remarks').textContent = data.Remarks ?? '-';
-
-
-
-            document.getElementById('e-name').value = data.FullName ?? '';
-            document.getElementById('e-gender').value = data.Gender;
-            document.getElementById('e-dob').value = data.dob;
-            document.getElementById('e-email').value = data.email ?? '';
-            document.getElementById('e-phone').value = data.phone ?? '';
-            document.getElementById('e-address').value = data.address ?? '';
-            document.getElementById('e-pickup').value = data.pickup ?? '';
-            document.getElementById('e-province').value = data.province ?? '';
-            document.getElementById('e-department').value = data.department;
-            document.getElementById('e-jobtitle').value = data.JobTitleId;
-            document.getElementById('e-agency').value = data.AgencyId;
-            //document.getElementById('e-hired').value = e.hired;
-            document.getElementById('e-remarks').value = data.remarks ?? '';
-
-            //this.editPhotoData = data.photo || null;
-            //const editAvatar = document.getElementById('editAvatarPreview');
-            //if (e.photo) {
-            //    editAvatar.style.background = 'transparent';
-            //    editAvatar.innerHTML = `<img src="${e.photo}" style="width:100%;height:100%;object-fit:cover;">`;
-            //} else {
-            //    editAvatar.style.background = colorFor(e.name);
-            //    editAvatar.style.color = '#fff';
-            //    editAvatar.innerHTML = initials(e.name);
-            //}
-
-
+        initials(name) {
+            return name.trim().split(/\s+/).map(p => p[0]).slice(0, 2).join('').toUpperCase();
         }
 
-
+        colorFor(name) {
+            let sum = 0; for (let i = 0; i < name.length; i++) sum += name.charCodeAt(i);
+            return this.avatarPalette[sum % avatarPalette.length];
+        }
 
     }
 

@@ -1,8 +1,10 @@
 ﻿using Dapper;
+using DocumentFormat.OpenXml.Bibliography;
 using ProgramPartListWeb.Areas.P1SA.Interface;
 using ProgramPartListWeb.Areas.P1SA.Models;
 using ProgramPartListWeb.Areas.PC.Models;
 using ProgramPartListWeb.Helper;
+using ProgramPartListWeb.Models;
 using ProgramPartListWeb.Utilities.DataAccess;
 using System;
 using System.Collections.Generic;
@@ -41,7 +43,10 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
             e.JobTitleId, 
             e.DepartmentId,
             e.StatusId, 
-            e.AgencyId ";
+            e.AgencyId, 
+            e.Email, 
+            e.Province, 
+            e.EducationalAttain ";
 
         private const string FromJoins = @"
             FROM   P1SA_Employees        e
@@ -310,14 +315,17 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
 
         public async Task<bool> UpdateAsync(P1SAEmployeesInputModel model)
         {
+            Debug.Write($@"
+                ID : {model.EmployeeId}
+                Code : {model.EmployeeCode}
+                Full name : {model.FullName}");
+
+
             var sql = @"
-                UPDATE P1SA_Employees_Backup SET
-                    EmployeeCode       = @EmployeeCode,
+                UPDATE P1SA_Employees SET
                     FullName           = @FullName,
                     Gender             = @Gender,
-                    DateHired          = @DateHired,
-                    DateOfBirth        = @DateOfBirth,
-                    Email              = @Email,
+                    Email    = @Email,
                     Phone              = @Phone,
                     Address            = @Address,
                     PickUpPoint        = @PickUpPoint,
@@ -337,6 +345,85 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
             return rows > 0;
         }
 
-        
+        public Task<bool> EditEmployeeDetails(P1SAEmployeesInputModel model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<List<AttendanceSummaryModel>> GetAttendanceSummary(string search, int department, int Shift)
+        {
+            string query = $@"SELECT AttendanceId
+                              ,e.EmployeeId
+	                          ,e.EmployeeCode
+	                          ,e.FullName
+                              ,a.TimeIn
+                              ,a.TimeOut
+                              ,a.RegularHours
+                              ,a.OvertimeHours
+                              ,a.TotalHours
+                              ,a.ShiftTypeId
+                              ,a.LateTime
+	                          ,(SELECT DepartmentName FROM P1SA_Department WHERE DepartmentId = e.DepartmentId) AS DepartmentName
+                              ,(SELECT ImageFileName FROM P1SA_EmployeeImages WHERE EmployeeId = e.EmployeeId) AS ImageFileName
+                          FROM P1SA_AttendanceMonitor a 
+                          INNER JOIN P1SA_Employees e ON a.EmployeeId = e.EmployeeId
+                          WHERE 1 = 1 ";
+
+            var parameters = new DynamicParameters();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                query += " AND (e.FullName LIKE @Search OR e.EmployeeCode LIKE @Search) ";
+                parameters.Add("@Search", $"%{search}%");
+            }
+
+            if(department != 0)
+            {
+                query += " AND e.DepartmentId =@DepartmentId ";
+                parameters.Add("@DepartmentId", department);
+            }
+
+            if(Shift > 0)
+            {
+                query += " AND a.ShiftTypeId =@ShiftTypeId ";
+                parameters.Add("@ShiftTypeId", Shift);
+            }
+
+            query += " ORDER BY AttendanceId DESC";
+
+
+            return await SqlDataAcess_Test.QueryAsync<AttendanceSummaryModel>(query, parameters);
+
+        }
+
+        public async Task<ProductionUserlogin> Userslogin(string usercode, int department)
+        {
+            string query = $@"SELECT
+                                TOP 1
+                                U.UserId,
+                                U.EmployeeId,
+                                E.EmployeeCode,
+                                E.FullName,
+                                E.DepartmentId,
+                                U.PasswordHash,
+                                U.IsActive,
+                                U.IsDeleted,
+                                U.LastLogin
+                            FROM dbo.P1SA_UserAccounts U
+                            INNER JOIN dbo.P1SA_Employees E
+                                ON E.EmployeeId = U.EmployeeId
+                            WHERE E.EmployeeCode = @EmployeeCode
+                              AND E.DepartmentId = @DepartmentId
+                              AND U.IsActive = 1
+                              AND U.IsDeleted = 0
+                              AND E.IsDeleted = 0; ";
+
+            return await SqlDataAcess_Test.QuerySingleAsync<ProductionUserlogin>(query, new
+            {
+                EmployeeCode = usercode,
+                DepartmentId = department
+            });
+
+        }
     }
 }

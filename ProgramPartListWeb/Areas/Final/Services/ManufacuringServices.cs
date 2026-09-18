@@ -277,7 +277,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                 SELECT 1
                                 FROM FanTraceabilityFinal f
                                 WHERE f.DepartmentID = 5
-                                  AND f.FinalShopOrder = mo.FinalShopOrder
+                                  AND f.FinalShopOrder LIKE '%' + mo.FinalShopOrder + '%'
                             )
                             THEN 'CE'
                         END AS Circuit,
@@ -334,7 +334,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
                 query += $@" ORDER BY mo.RecordID ASC";
 
-
+                //Debug.WriteLine(query);
 
                 return await SqlDataAcess_Test.QueryAsync<FanTraceabilityManufacturingOrder>(query, parameters);
             }
@@ -630,51 +630,59 @@ namespace ProgramPartListWeb.Areas.Final.Services
         public Task<List<P1TraceablityModel>> TraceableShopOrderSummary(string shopOrder)
         {
             string sql = @"
-                WITH CTE AS
-                (
-                    SELECT
-                        f.RecordId,
-                        f.FinalShopOrder,
-                        s.ShopOrder,
-                        f.ProcessName,
-                        f.ItemNo,
-                        s.PartNo,
-                        f.PlanQuan,
-                        f.DatePrepared,
-                        CONVERT(varchar(8), f.TimeInput, 108) AS TimeInput,
-                        s.PreparedQuantity,
-                        f.PreparedBy,
-                        f.Shift,
-                        f.Customer,
-                        f.Modeltype,
-                        f.Remarks,
-                        f.Incharge,
-                        s.SubAssyIssued,
-                        s.LotNo,
-                        s.Rev,
-                        f.IsDeletedFinal,
-                        f.DepartmentID,
-                        ROW_NUMBER() OVER
-                        (
-                            PARTITION BY f.DepartmentID
-                            ORDER BY f.RecordId DESC
-                        ) AS RN
-                    FROM FanTraceabilityFinal f
-                    LEFT JOIN FanTraceabilitySub s
-                        ON s.FinalId = f.RecordId
-                    WHERE f.IsDeletedFinal = 0
-                      AND s.ShopOrder IS NOT NULL
-                      AND f.FinalShopOrder = @FinalShopOrder
-                      AND f.DepartmentID IN (1, 2, 3, 4, 5, 7, 9)
-                )
-                SELECT *
-                FROM CTE
-                WHERE RN = 1;";
+                    WITH CTE AS
+                    (
+                        SELECT
+                            f.RecordId,
+                            f.FinalShopOrder,
+                            s.ShopOrder,
+                            f.ProcessName,
+                            f.ItemNo,
+                            s.PartNo,
+                            f.PlanQuan,
+                            f.DatePrepared,
+                            CONVERT(varchar(8), f.TimeInput, 108) AS TimeInput,
+                            s.PreparedQuantity,
+                            f.PreparedBy,
+                            f.Shift,
+                            f.Customer,
+                            f.Modeltype,
+                            f.Remarks,
+                            f.Incharge,
+                            s.SubAssyIssued,
+                            s.LotNo,
+                            s.Rev,
+                            f.IsDeletedFinal,
+                            f.DepartmentID,
+
+                            ROW_NUMBER() OVER
+                            (
+                                PARTITION BY f.DepartmentID
+                                ORDER BY f.RecordId DESC
+                            ) AS RN
+
+                        FROM FanTraceabilityFinal f
+
+                        LEFT JOIN FanTraceabilitySub s
+                            ON s.FinalId = f.RecordId
+
+                        WHERE f.IsDeletedFinal = 0
+                          AND s.ShopOrder IS NOT NULL
+                          AND f.FinalShopOrder LIKE @FinalShopOrder
+                          AND f.DepartmentID IN (1, 2, 3, 4, 5, 7, 9)
+                    )
+
+                    SELECT *
+                    FROM CTE
+                    WHERE RN = 1;";
+
             var parameters = new DynamicParameters();
 
-            parameters.Add("@FinalShopOrder", shopOrder);
+            parameters.Add("@FinalShopOrder", "%" + shopOrder + "%");
 
-            return SqlDataAcess_Test.QueryAsync<P1TraceablityModel>(sql, parameters);
+            return SqlDataAcess_Test.QueryAsync<P1TraceablityModel>(
+                sql,
+                parameters);
         }
 
         public async Task<bool> UpdateAssemblyStatus(int RecordID, string FAStatus, DateTime ShipmentDate, string mode, bool WithSR, string OrderRemarks)

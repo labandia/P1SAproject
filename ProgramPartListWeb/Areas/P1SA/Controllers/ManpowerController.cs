@@ -38,22 +38,22 @@ namespace ProgramPartListWeb.Areas.P1SA.Controllers
             // Get the Users Information
             var user = _emp.Userslogin(username, dept);
 
-            // Check If the user Exist
-            if (user == null)
-                return JsonPostError("Invalid credentials / Username Doesn't is Exist", 400, "VALIDATION_ERROR");
-            // Check If the Password is Correct
-            if (!PasswordHasher.VerifyPassword(user.PasswordHash, password))
-                return JsonPostError("Invalid credentials / password is incorrect", 400, "VALIDATION_ERROR");
+            //// Check If the user Exist
+            //if (user == null)
+            //    return JsonPostError("Invalid credentials / Username Doesn't is Exist", 400, "VALIDATION_ERROR");
+            //// Check If the Password is Correct
+            //if (!PasswordHasher.VerifyPassword(user.PasswordHash, password))
+            //    return JsonPostError("Invalid credentials / password is incorrect", 400, "VALIDATION_ERROR");
 
-            string role = _auth.GetuserRolename(user.Role_ID);
-            string fullname = user.Fullname;
+            //string role = _auth.GetuserRolename(user.Role_ID);
+            //string fullname = user.Fullname;
 
-            var accessToken = JWTAuthentication.GenerateAccessToken(fullname, role, user.User_ID);
-            var refreshToken = _auth.GetRefreshToken(fullname, role, user.User_ID);
+            //var accessToken = JWTAuthentication.GenerateAccessToken(fullname, role, user.User_ID);
+            //var refreshToken = _auth.GetRefreshToken(fullname, role, user.User_ID);
 
-            var data = new { access_token = accessToken, refresh_token = refreshToken, fullname, role, user.User_ID };
+            //var data = new { access_token = accessToken, refresh_token = refreshToken, fullname, role, user.User_ID };
 
-            return JsonSuccess(data, "Login Successfully");
+            return JsonSuccess("", "Login Successfully");
         }
 
 

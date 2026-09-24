@@ -88,6 +88,6 @@ namespace ProgramPartListWeb.Areas.Final
         // ======== FOR PARTS PREPARATION ==================================
         Task<List<FanTraceabilityPartsPreparation>> GetPreparationList(string FinalShopOrder);
         Task<bool> AddPreparetionList(FanTraceabilityPartsPreparation downtime);
-
+        Task<bool> EditPreparetionList(FanTraceabilityPartsPreparation downtime);
     }
 }

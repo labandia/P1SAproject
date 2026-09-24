@@ -200,7 +200,11 @@
             </div>
             <div class="field-group">
                 <span class="field-label">Part Name :  </span>
-                <input type="text" class="field-box" placeholder="Enter Registration" id="PartName" name="PartName" />
+                @*<input type="text" class="field-box" placeholder="Enter Registration" id="PartName" name="PartName" />*@
+
+                <select id="PartName" name="PartName">
+                    <option value="0">-- Select Item Name --</option>      
+                </select>
             </div>
 
             <div class="field-group">
@@ -225,7 +229,7 @@
 
             <div class="field-group">
                 <span class="field-label">OUT : </span>
-                <input type="text" class="field-box" id="TimeEnd" name="TimeEnd" />
+                <input type="time" class="field-box" id="TimeEnd" name="TimeEnd" />
             </div>
 
             <div class="field-group">
@@ -327,6 +331,8 @@
     class ShopOrderDetailsController {
         constructor() {
             this.downTimeTypes = [];
+            this.partsPreparationData = [];
+            this.selectedPreparedID = 0;
 
             this.tbody = document.querySelector('.devices-table tbody');
             this.PartsPreparebody = document.querySelector('.MEIG-table tbody');
@@ -340,7 +346,7 @@
             this.openFinalAssembly =
                 document.getElementById('OpenFinalAssembly');
 
-            this.selectParts = document.getElementById('selectparts');
+            // this.selectParts = document.getElementById('selectparts');
             this.partsDropDown = document.getElementById('CartsPartID');
 
             this.finalAssemblyPanel = document.getElementById('EditFinalAsembly');
@@ -420,7 +426,7 @@
             });
 
 
-            this.selectParts.addEventListener('change', async (e) => {
+            @*this.selectParts.addEventListener('change', async (e) => {
                 e.preventDefault();
 
                 const res = await getMethod('@Url.Action("GetCatergoryPartslist", "Assembly")', {
@@ -442,7 +448,24 @@
                     });
                 }
                 console.log(res);
+            });*@
+
+            this.PartsPreparebody.addEventListener('click', (e) => {
+
+                const row = e.target.closest('tr.prepare-row');
+
+                if (!row) {
+                    return;
+                }
+
+                const preparedID = row.getAttribute('data-id');
+
+                console.log('CLICKED ROW');
+                console.log('PreparedID:', preparedID);
+
+                this.populatePartsPreparationForm(preparedID);
             });
+
         }
 
         ShowFinalAssembly() {
@@ -543,6 +566,26 @@
 
               if (!res?.Success) return;
                 const data = res.data;
+                const partName = document.getElementById('PartName');
+
+                partName.innerHTML = '<option value="0">-- Select Item Name --</option>';
+
+                const processNames = [...new Set(
+                    data
+                        .map(x => x.ProcessName)
+                        .filter(x => x)
+                )];
+
+                processNames.forEach(processName => {
+                    const option = document.createElement('option');
+
+                    option.value = processName;
+                    option.textContent = processName;
+
+                    partName.appendChild(option);
+                });
+
+
                 this.renderTable(data);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -556,16 +599,112 @@
                });
                console.log(res);
                if (!res?.Success) return;
-                const data = res.data;
+                 const data = res.data;
 
-                this.renderPrepareListTable(data);
+                 this.partsPreparationData = data;
+
+                 this.renderPrepareListTable(data);
 
 
 
              } catch (error) {
                  console.error('Error fetching data:', error);
              }
-         }
+        }
+
+
+        populatePartsPreparationForm(preparedID) {
+
+            const data = this.partsPreparationData || [];
+
+            const row = data.find(x =>
+                String(x.PreparedID) === String(preparedID)
+            );
+
+            if (!row) {
+                console.warn('Preparation record not found:', preparedID);
+                return;
+            }
+
+            console.log('Selected preparation:', row);
+
+            // Store selected ID
+            this.selectedPreparedID = row.PreparedID;
+
+            // ============================
+            // Populate form
+            // ============================
+
+            document.getElementById('IssueCum').value =
+                row.IssueCum ?? '';
+
+            document.getElementById('PartNumber').value =
+                row.PartNumber ?? '';
+
+            document.getElementById('PlanQty').value =
+                row.PlanQty ?? '';
+
+            document.getElementById('Location').value =
+                row.Location ?? '';
+
+            document.getElementById('TimeStart').value =
+                this.formatTimeSpan(row.TimeStart);
+
+            document.getElementById('TimeEnd').value =
+                this.formatTimeSpan(row.TimeEnd);
+
+            document.getElementById('Lines').value =
+                row.Lines ?? '';
+
+            document.getElementById('Issuer').value =
+                row.Issuer ?? '';
+
+            document.getElementById('Preparation').value =
+                row.Preparation ?? '';
+
+
+            // ============================
+            // Select Part Name
+            // ============================
+
+            const partName = document.getElementById('PartName');
+
+            const partValue = row.PartName ?? '';
+
+            // Check if option already exists
+            let optionExists = Array.from(partName.options).some(
+                option => option.value === String(partValue)
+            );
+
+            // If it doesn't exist, add it
+            if (!optionExists && partValue) {
+                const option = document.createElement('option');
+
+                option.value = partValue;
+                option.textContent = partValue;
+
+                partName.appendChild(option);
+            }
+
+            partName.value = partValue;
+
+
+            // ============================
+            // Show selected row
+            // ============================
+
+            document.querySelectorAll('.prepare-row').forEach(tr => {
+                tr.classList.remove('selected');
+            });
+
+            const selectedRow = document.querySelector(
+                `.prepare-row[data-id="${CSS.escape(String(preparedID))}"]`
+            );
+
+            if (selectedRow) {
+                selectedRow.classList.add('selected');
+            }
+        }
 
         async LoadDownTimeData(shoporder) {
             try {
@@ -747,7 +886,7 @@
             await this.EditAssemblyStatus(formData);
         }
 
-       
+
 
         async HandleDownTimeSubmit(e) {
             e.preventDefault();
@@ -771,14 +910,101 @@
             e.preventDefault();
 
             const formdata = new FormData(this.partsListPanel);
+
+            // Always send Shop Order
             formdata.append('FinalShopOrder', this.finalShopOrder);
-            const data = Object.fromEntries(formdata);
-            console.log(data);
+
+            // If a row was selected, this is EDIT mode
+            if (this.selectedPreparedID) {
+
+                formdata.append(
+                    'PreparedID',
+                    this.selectedPreparedID
+                );
+
+                console.log('EDIT Preparation');
+                console.log(
+                    Object.fromEntries(formdata)
+                );
+
+                await this.EditPartPreparationData(formdata);
+
+                return;
+            }
+
+            // Otherwise this is ADD mode
+            console.log('ADD Preparation');
+            console.log(
+                Object.fromEntries(formdata)
+            );
 
             await this.AddPartPreparationData(formdata);
         }
 
+        async EditPartPreparationData(formdata) {
 
+                const savebtn = document.querySelector(
+                    '#EditRegistrationParts .save-btn'
+                );
+
+                const originalText = savebtn.innerHTML;
+
+                savebtn.innerHTML = '<span>Updating...</span>';
+                savebtn.disabled = true;
+
+                try {
+
+                    const res = await postMethod(
+                        '@Url.Action("EditPartsPreparationData", "Assembly")',
+                        formdata
+                    );
+
+                    console.log('Edit response:', res);
+
+                    if (res?.Success) {
+
+                        alert('Preparation Data updated successfully!');
+
+                        // Reload table
+                        await this.LoadPartsPreparation(
+                            this.finalShopOrder
+                        );
+
+                        // Clear selected record
+                        this.selectedPreparedID = null;
+
+                        // Optional: remove row highlight
+                        document
+                            .querySelectorAll('.prepare-row')
+                            .forEach(tr => {
+                                tr.classList.remove('selected');
+                            });
+
+                    } else {
+
+                        alert(
+                            'Error: ' +
+                            (res?.Message || 'Could not update data.')
+                        );
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        'Update preparation error:',
+                        error
+                    );
+
+                    alert(
+                        'An error occurred while updating.'
+                    );
+
+                } finally {
+
+                    savebtn.innerHTML = originalText;
+                    savebtn.disabled = false;
+                }
+            }
 
         async HandleDownTimeStop(id) {
             try {
@@ -830,7 +1056,7 @@
         }
 
 
-       
+
 
          async AddDownTimeMonitorData(formdata) {
              const savebtn = document.querySelector('#AddEditDownTimeMonitoring .save-btn');
@@ -1004,11 +1230,11 @@
 
             if (data.length === 0) {
                 this.Downtimebody.innerHTML = `
-         <tr>
-             <td colspan="10" style="text-align:center; padding:32px; color:#86868b;">
-                 No data available.
-             </td>
-         </tr>`;
+                     <tr>
+                         <td colspan="10" style="text-align:center; padding:32px; color:#86868b;">
+                             No data available.
+                         </td>
+                     </tr>`;
                 return;
             }
 
@@ -1074,22 +1300,24 @@
                 return;
             }
 
-
             this.PartsPreparebody.innerHTML = data.map(row => {
 
                 return `
-                      <tr>
+                        <tr
+                                data-id="${this.escape(row.PreparedID)}"
+                                class="prepare-row"
+                                style="cursor:pointer;"
+                            >
                           <td>${this.escape(row.IssueCum)}</td>
-                          <td>${this.escape(row.PartName) }</td>
+                          <td>${this.escape(row.PartName)}</td>
                           <td>${this.escape(row.PartNumber)}</td>
+                          <td>${this.escape(row.PlanQty)}</td>
                           <td>${this.escape(row.Location)}</td>
 
-                          <td>${this.escape(row.PartNumber)}</td>
-
-                          <td>${this.escape(row.PartNumber)}</td>
-                          <td>${this.escape(row.Location)}</td>
-
+                          <td>${this.formatTimeSpan(row.TimeStart)}</td>
+                           <td>${this.formatTimeSpan(row.TimeEnd)}</td>
                           <td>${this.escape(row.Lines)}</td>
+
                           <td>${this.escape(row.Issuer)}</td>
                           <td>${this.escape(row.Preparation)}</td>
 

@@ -1196,6 +1196,21 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<ActionResult> EditPartsPreparationData(FanTraceabilityPartsPreparation model)
+        {
+            try
+            {
+                var res = await _manu.EditPreparetionList(model);
+                if (!res) return JsonError("Error Updated");
+                return JsonSuccess(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
 
         // GET: Final/Assembly
         public ActionResult Dashboard() => View();

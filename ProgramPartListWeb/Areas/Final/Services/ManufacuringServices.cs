@@ -1328,5 +1328,21 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
             return rows > 0;
         }
+
+        public async Task<bool> EditPreparetionList(FanTraceabilityPartsPreparation downtime)
+        {
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE 
+                        FanTraceabilityPartsPreparation SET  
+                        IssueCum =@IssueCum, 
+                        PartName =@PartName, 
+                        PartNumber =@PartNumber, 
+                        PlanQty =@PlanQty,
+                        Location =@Location, Lines =@Lines, 
+                        Issuer =@Issuer, 
+                        Preparation =@Preparation, TimeEnd =@TimeEnd
+                        WHERE PreparedID =@PreparedID", downtime);
+
+            return rows > 0;
+        }
     }
 }

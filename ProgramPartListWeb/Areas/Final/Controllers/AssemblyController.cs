@@ -1158,10 +1158,43 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                 throw;
             }
         }
+        //=====================================================
+        //============== PARTLIST PEPARATION  =====================
+        //=====================================================
+        [HttpGet]
+        public async Task<ActionResult> GetPartlisPreparationList(string finalshopOrder)
+        {
 
-       
+            try
+            {
+                var res = await _manu.GetPreparationList(finalshopOrder);
+                if (res == null)
+                    return JsonNotFound("No Manpower data found");
 
+                return JsonSuccess(res);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
 
+        [HttpPost]
+        public async Task<ActionResult> AddPartsPreparationData(FanTraceabilityPartsPreparation model)
+        {
+            try
+            {
+                var res = await _manu.AddPreparetionList(model);
+                if (!res) return JsonError("Error Updated");
+                return JsonSuccess(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
 
 
         // GET: Final/Assembly

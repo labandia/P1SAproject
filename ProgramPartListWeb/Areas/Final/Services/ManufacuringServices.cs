@@ -277,7 +277,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                 SELECT 1
                                 FROM FanTraceabilityFinal f
                                 WHERE f.DepartmentID = 5
-                                  AND f.FinalShopOrder LIKE '%' + mo.FinalShopOrder + '%'
+                                    AND f.FinalShopOrder = mo.FinalShopOrder
                             )
                             THEN 'CE'
                         END AS Circuit,
@@ -334,7 +334,6 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
                 query += $@" ORDER BY mo.RecordID ASC";
 
-                //Debug.WriteLine(query);
 
                 return await SqlDataAcess_Test.QueryAsync<FanTraceabilityManufacturingOrder>(query, parameters);
             }
@@ -668,7 +667,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
                         WHERE f.IsDeletedFinal = 0
                           AND s.ShopOrder IS NOT NULL
-                          AND f.FinalShopOrder LIKE @FinalShopOrder
+                          AND f.FinalShopOrder = @FinalShopOrder
                           AND f.DepartmentID IN (1, 2, 3, 4, 5, 7, 9)
                     )
 
@@ -678,8 +677,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
             var parameters = new DynamicParameters();
 
-            parameters.Add("@FinalShopOrder", "%" + shopOrder + "%");
-
+            //parameters.Add("@FinalShopOrder", "%" + shopOrder + "%");
+            parameters.Add("@FinalShopOrder", shopOrder);
             return SqlDataAcess_Test.QueryAsync<P1TraceablityModel>(
                 sql,
                 parameters);
@@ -1302,6 +1301,32 @@ namespace ProgramPartListWeb.Areas.Final.Services
               INNER JOIN FanTraceabilityDownTimeType t ON t.DownTimeCode = i.DownTimeCode");
         }
 
-       
+        public Task<List<FanTraceabilityPartsPreparation>> GetPreparationList(string FinalShopOrder)
+        {
+            return SqlDataAcess_Test.QueryAsync<FanTraceabilityPartsPreparation>($@"
+                   SELECT PreparedID
+                      ,FinalShopOrder
+                      ,IssueCum
+                      ,PartName
+                      ,PartNumber
+                      ,PlanQty
+                      ,Location
+                      ,DateStart
+                      ,TimeStart
+                      ,TimeEnd
+                      ,Lines
+                      ,Issuer
+                      ,Preparation
+                  FROM FanTraceabilityPartsPreparation WHERE FinalShopOrder =@FinalShopOrder", new { FinalShopOrder });
+        }
+
+        public async Task<bool> AddPreparetionList(FanTraceabilityPartsPreparation downtime)
+        {
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"INSERT 
+                INTO FanTraceabilityPartsPreparation(FinalShopOrder, IssueCum, PartName, PartNumber, PlanQty, Location, Lines, Issuer, Preparation) 
+                VALUES(@FinalShopOrder, @IssueCum, @PartName, @PartNumber, @PlanQty, @Location, @Lines, @Issuer, @Preparation)", downtime);
+
+            return rows > 0;
+        }
     }
 }

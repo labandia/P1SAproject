@@ -242,6 +242,8 @@ namespace PMACS_V2.Areas.Planning.Controllers
         }
         public async Task<ActionResult> GetShopOrderResult(string stardate, string endDate)
         {
+            //Debug.WriteLine($@"FIRST Start : {dstart} - End : {dend}");
+
             var dates = new List<string>();
             var data = await _pl.ShopOrderSummary(stardate, endDate);
             await Task.Delay(500);

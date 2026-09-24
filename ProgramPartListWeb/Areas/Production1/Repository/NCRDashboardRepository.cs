@@ -664,91 +664,90 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             DateTime selectedDate = filterDate ?? DateTime.Today;
 
             string strfilter = isfilter == 1
-                     ? $@"WHERE a.DateToday = '{selectedDate:yyyy-MM-dd}'"
-                     : @"WHERE a.DateToday = CAST(GETDATE() AS DATE)";
+                ? $@"WHERE CAST(a.DateToday AS DATE) = '{selectedDate:yyyy-MM-dd}'"
+                : @"WHERE CAST(a.DateToday AS DATE) = CAST(GETDATE() AS DATE)";
 
-            string filterstr = (display == 0) ? $@"DashID,
-                            DepartmentId,
-                            DayShiftCount,
-                            NightShiftCount,
-                            TotalHeadCount,
-                            PresentCount,
-                            TotalHeadCount - PresentCount AS Absent, 
-                            CAST(ROUND(PresentCount * 100.0 / NULLIF(TotalHeadCount, 0), 0) AS DECIMAL(18,2)) AS AttendanceRate" :
-                            $@"     SUM(TotalHeadCount)  AS TotalHeadCount,
-							SUM(PresentCount)   AS TotalEmployees,
-							SUM(TotalHeadCount - PresentCount)   AS TotalAbsent,
-						   -- Attendance Rate
-								ROUND(
-									CAST(SUM(ISNULL(PresentCount, 0)) AS DECIMAL(18,2))
-									/ NULLIF(
-										CAST(SUM(TotalHeadCount) AS DECIMAL(18,2)), 
-										0
-									) * 100,
-									0
-								) AS AttendRate,
+            string filterstr = (display == 0)
+                ? $@"DashID,
+            DepartmentId,
+            DayShiftCount,
+            NightShiftCount,
+            TotalHeadCount,
+            PresentCount,
+            TotalHeadCount - PresentCount AS Absent,
+            CAST(
+                ROUND(
+                    PresentCount * 100.0 / NULLIF(TotalHeadCount, 0),
+                    0
+                )
+                AS DECIMAL(18,2)
+            ) AS AttendanceRate"
+                : $@"SUM(TotalHeadCount) AS TotalHeadCount,
+            SUM(PresentCount) AS TotalEmployees,
+            SUM(TotalHeadCount - PresentCount) AS TotalAbsent,
 
-								-- Absent Rate
-								ROUND(
-									CAST(
-										SUM(TotalHeadCount) 
-										- SUM(ISNULL(PresentCount, 0))
-										AS DECIMAL(18,2)
-									)
-									/ NULLIF(
-										CAST(SUM(TotalHeadCount) AS DECIMAL(18,2)),
-										0
-									) * 100,
-									0
-								) AS AbsentRate";
+            -- Attendance Rate
+            ROUND(
+                CAST(SUM(ISNULL(PresentCount, 0)) AS DECIMAL(18,2))
+                / NULLIF(
+                    CAST(SUM(TotalHeadCount) AS DECIMAL(18,2)),
+                    0
+                ) * 100,
+                0
+            ) AS AttendRate,
 
-            string strsql = $@";WITH DashboardCalc AS (
-                            SELECT 
-		                        a.DashID,
-                                a.DepartmentId,
-                                a.DayShiftCount, 
-                                a.NightShiftCount, 
-                                a.DayShiftCount + a.NightShiftCount AS TotalHeadCount,
-                                CASE 
-                                    WHEN a.DepartmentId = 1 THEN 
-                                        (SELECT COUNT(DISTINCT m.Employee_ID)
-                                         FROM M_summary m 
-                                         WHERE CAST(m.Date_today AS DATE) = a.DateToday)
-                                    WHEN a.DepartmentId = 2 THEN 
-                                        (SELECT COUNT(DISTINCT p.Employee_ID)
-                                         FROM P_summary p 
-                                         WHERE CAST(p.Date_today AS DATE) = a.DateToday)
-			                        WHEN a.DepartmentId = 3 THEN 
-                                        (SELECT COUNT(DISTINCT r.Employee_ID)
-                                         FROM R_summary r 
-                                         WHERE CAST(r.Date_today AS DATE) = a.DateToday)
-			                        WHEN a.DepartmentId = 4 THEN 
-                                        (SELECT COUNT(DISTINCT w.Employee_ID)
-                                         FROM W_summary w 
-                                         WHERE CAST(w.Date_today AS DATE) = a.DateToday)
-			                        WHEN a.DepartmentId = 5 THEN 
-                                        (SELECT COUNT(DISTINCT c.Employee_ID)
-                                         FROM C_summary c 
-                                         WHERE CAST(c.Date_today AS DATE) = a.DateToday)
-			                        WHEN a.DepartmentId = 6 THEN 
-                                        (SELECT COUNT(DISTINCT pc.Employee_ID)
-                                         FROM PC_summary pc 
-                                         WHERE CAST(pc.Date_today AS DATE) = a.DateToday)
-                                    WHEN a.DepartmentId = 8 THEN 
-                                        (SELECT COUNT(DISTINCT f.Employee_ID)
-                                         FROM FinalAssy_summary f 
-                                         WHERE CAST(f.Date_today AS DATE) = a.DateToday)
-                                    ELSE NULL
-                                END AS PresentCount
-                            FROM AttendanceDashboard a
-                            {strfilter}
-                        )
-                        SELECT 
-	                        {filterstr}
-                        FROM DashboardCalc";
+            -- Absent Rate
+            ROUND(
+                CAST(
+                    SUM(TotalHeadCount)
+                    - SUM(ISNULL(PresentCount, 0))
+                    AS DECIMAL(18,2)
+                )
+                / NULLIF(
+                    CAST(SUM(TotalHeadCount) AS DECIMAL(18,2)),
+                    0
+                ) * 100,
+                0
+            ) AS AbsentRate";
+
+            string strsql = $@";
+        WITH AttendanceCount AS
+        (
+            SELECT
+                e.DepartmentId,
+                CAST(att.WorkDate AS DATE) AS WorkDate,
+                COUNT(DISTINCT att.EmployeeId) AS PresentCount
+            FROM [PMACS_TEST].[dbo].[P1SA_AttendanceMonitor_Temp] att
+            INNER JOIN [PMACS_TEST].[dbo].[P1SA_Employees_Temp] e
+                ON e.EmployeeId = att.EmployeeId
+            WHERE att.IsDeleted = 0
+              AND e.IsDeleted = 0
+            GROUP BY
+                e.DepartmentId,
+                CAST(att.WorkDate AS DATE)
+        ),
+        DashboardCalc AS
+        (
+            SELECT
+                a.DashID,
+                a.DepartmentId,
+                a.DayShiftCount,
+                a.NightShiftCount,
+                a.DayShiftCount + a.NightShiftCount AS TotalHeadCount,
+                ISNULL(ac.PresentCount, 0) AS PresentCount
+            FROM AttendanceDashboard a
+            LEFT JOIN AttendanceCount ac
+                ON ac.DepartmentId = a.DepartmentId
+                AND ac.WorkDate = CAST(a.DateToday AS DATE)
+            {strfilter}
+        )
+        SELECT
+            {filterstr}
+        FROM DashboardCalc";
+
+
 
             return strsql;
-
         }
 
         public async Task<bool> UpdateAttandanceSummary(UpdateAttendanceBreakDownRequest model)

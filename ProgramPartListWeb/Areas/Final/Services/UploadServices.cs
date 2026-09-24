@@ -160,7 +160,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
                     if (isCount == 0)
                     {
-                        Debug.WriteLine($@"INSERT HERE : ");
+                        //Debug.WriteLine($@"INSERT HERE : ");
                         await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO FanTraceabilityManufacturingOrder (Line, FinalShopOrder, ItemNo, Model, WC, PlanQty, PlanStartDate, DispatchDate, Note, FinalFinishedDate,
                                     FAStatus, ShipmentDate, ShipmentMode, WithSR, OrderRemarks, OrderStatus, Operational, P1SA_C, P1SA_M, P1SA_R, P1SA_W, P1FA_FA, P1FA_H, M1, P1SA_P)
                                     VALUES
@@ -170,13 +170,16 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     }
                     else
                     {
-                        Debug.WriteLine($@"UPDATE HERE : ");
+                        //Debug.WriteLine($@"UPDATE HERE : ");
                         await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingOrder SET Line =@Line, WC =@WC, 
                                     DispatchDate =@DispatchDate, Note =@Note, FinalFinishedDate =@FinalFinishedDate, 
                                     FAStatus =@FAStatus, 
                                     WithSR =@WithSR,
                                     PlanQty =@PlanQty, PlanStartDate =@PlanStartDate, 
-                                    P1SA_C =@P1SA_C, P1SA_M =@P1SA_M, P1SA_R =@P1SA_R, P1SA_W =@P1SA_W, P1FA_FA =@P1FA_FA, P1FA_H =@P1FA_H, M1 =@M1, P1SA_P =@P1SA_P
+                                    P1SA_C =@P1SA_C, P1SA_M =@P1SA_M, P1SA_R =@P1SA_R, 
+                                    P1SA_W =@P1SA_W, P1FA_FA =@P1FA_FA, 
+                                    P1FA_H =@P1FA_H, M1 =@M1, P1SA_P =@P1SA_P, 
+                                    LastUpdated = getdate()
                                     WHERE  FinalShopOrder =@FinalShopOrder", item);
                     }
 

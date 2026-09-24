@@ -113,11 +113,11 @@
                     <table class="MEIG-table">
                         <thead>
                             <tr>
-                                <th style="text-align: center;">Registration </th>
-                                <th style="text-align: center;">Category</th>
-                                <th style="text-align: center;">Name</th>
-                                <th style="text-align: center;">Part number </th>
-                                <th style="text-align: center;">Location Pins</th>
+                                <th style="text-align: center;">Issue Cum </th>
+                                <th style="text-align: center;">Partname</th>
+                                <th style="text-align: center;">Partnumber</th>
+                                <th style="text-align: center;">Plan Quantity </th>
+                                <th style="text-align: center;">Location</th>
                                 <th style="text-align: center;">TIME</th>
                                 <th style="text-align: center;">OUT</th>
                                 <th style="text-align: center;">Line </th>
@@ -195,43 +195,37 @@
 
         <form method="post" id="EditRegistrationParts" class="panel-content" style="display: none;">
             <div class="field-group">
-                <span class="field-label">Registration</span>
-                <input type="text" class="field-box" placeholder="Enter Registration" id="Registration" name="Registration" />
+                <span class="field-label">Issue Cum Lot Number</span>
+                <input type="text" class="field-box" placeholder="Enter Issue Cum" id="IssueCum" name="IssueCum" />
             </div>
             <div class="field-group">
-                <span class="field-label">Category </span>
-                <select id="selectparts">
-                    <option value="1">jig</option>
-                    <option value="2">Inspection Tools</option>
-                    <option value="3">Soldering Tools</option>
-                    <option value="4">Special Unit</option>
-                </select>
+                <span class="field-label">Part Name :  </span>
+                <input type="text" class="field-box" placeholder="Enter Registration" id="PartName" name="PartName" />
             </div>
 
             <div class="field-group">
-                <span class="field-label">Select Names </span>
-                <select id="CartsPartID" name="CartsPartID">
-                </select>
-            </div>
-
-            <div class="field-group">
-                <span class="field-label">Partnumber : </span>
+                <span class="field-label">Part Number : </span>
                 <input type="text" class="field-box" id="PartNumber" name="PartNumber" />
             </div>
 
             <div class="field-group">
-                <span class="field-label">Pin List : </span>
-                <input type="text" class="field-box" id="PinList" name="PinList" />
+                <span class="field-label">Plan Quantity : </span>
+                <input type="text" class="field-box" id="PlanQty" name="PlanQty" />
+            </div>
+
+            <div class="field-group">
+                <span class="field-label">Location : </span>
+                <input type="text" class="field-box" id="Location" name="Location" />
             </div>
 
             <div class="field-group">
                 <span class="field-label">TIME : </span>
-                <input type="text" class="field-box" id="TimeIn" name="TimeIn" />
+                <input type="text" class="field-box" id="TimeStart" name="TimeStart" />
             </div>
 
             <div class="field-group">
                 <span class="field-label">OUT : </span>
-                <input type="text" class="field-box" id="TimeOut" name="TimeOut" />
+                <input type="text" class="field-box" id="TimeEnd" name="TimeEnd" />
             </div>
 
             <div class="field-group">
@@ -335,10 +329,11 @@
             this.downTimeTypes = [];
 
             this.tbody = document.querySelector('.devices-table tbody');
-            this.MEIGbody = document.querySelector('.MEIG-table tbody');
+            this.PartsPreparebody = document.querySelector('.MEIG-table tbody');
             this.Downtimebody = document.querySelector('.Downtime-table tbody');
+
             this.recordID = document.getElementById('intID').value;
-            
+
 
             this.changeForms = document.getElementById('OpenMEIG');
             this.downTimeForms = document.getElementById('OpenDownTime');
@@ -352,6 +347,8 @@
             this.partsListPanel = document.getElementById('EditRegistrationParts');
             this.DownTimeListPanel = document.getElementById('AddEditDownTimeMonitoring');
 
+
+
             this.traceabilityTable =
                 document.getElementById('showTraceabilityTable');
 
@@ -362,7 +359,6 @@
                 document.getElementById('showDownTime');
 
             this.formAssembly = document.getElementById('EditFinalAsembly');
-            this.formParts = document.getElementById('EditRegistrationParts');
 
             this.strLine = "";
             this.finalShopOrder = "";
@@ -380,7 +376,7 @@
             //this.initializeDownTimeEvents();
         }
 
-     
+
 
 
         setActiveButton(activeBtn) {
@@ -389,8 +385,8 @@
 
         bindEvents() {
             this.formAssembly.addEventListener('submit', (e) => this.HandleSubmit(e));
-            this.formParts.addEventListener('submit', (e) => this.HandlePartSubmit(e));
             this.DownTimeListPanel.addEventListener('submit', (e) => this.HandleDownTimeSubmit(e));
+            this.partsListPanel.addEventListener('submit', (e) => this.HandlePartsPrepareSubmit(e));
 
             // SATAS  List button
             this.openFinalAssembly.addEventListener('click', (e) => {
@@ -533,8 +529,8 @@
                 document.getElementById("Remarks").value = data.OrderRemarks;
 
                 this.LoadTraceAbility(data.FinalShopOrder);
-                this.LoadMEIGData(data.FinalShopOrder);
                 this.LoadDownTimeData(data.FinalShopOrder);
+                this.LoadPartsPreparation(data.FinalShopOrder);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -553,46 +549,47 @@
             }
         }
 
-        async LoadMEIGData(shoporder) {
-            try {
-              const res = await getMethod('@Url.Action("GetRegistrationList", "Assembly")', {
-                  finalshopOrder: shoporder
-              });
-                console.log(res);
-              if (!res?.Success) return;
+         async LoadPartsPreparation(shoporder) {
+             try {
+               const res = await getMethod('@Url.Action("GetPartlisPreparationList", "Assembly")', {
+                   finalshopOrder: shoporder
+               });
+               console.log(res);
+               if (!res?.Success) return;
                 const data = res.data;
 
-                this.renderMEIGTable(data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        }
+                this.renderPrepareListTable(data);
+
+
+
+             } catch (error) {
+                 console.error('Error fetching data:', error);
+             }
+         }
 
         async LoadDownTimeData(shoporder) {
             try {
               const res = await getMethod('@Url.Action("GetDownTimeList", "Assembly")', {
                   finalshopOrder: shoporder
               });
-              console.log(res);
+              //console.log(res);
               if (!res?.Success) return;
                 const data = res.data;
 
                 this.renderDownTimeTable(data);
 
 
-             
+
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         }
 
 
-
-
         async LoadDownTimeType() {
             try {
                 const res = await getMethod('@Url.Action("GetDownTimeTypeList", "Assembly")', {});
-               console.log(res);
+               //console.log(res);
                if (!res?.Success) return;
 
                 // Adjust this depending on your API response structure
@@ -605,7 +602,7 @@
                 this.downTimeTypes = data;
                 this.populateGroupSelect(data);
 
-               
+
 
              } catch (error) {
                  console.error('Error fetching data:', error);
@@ -672,7 +669,7 @@
 
                 if (!selectedGroup) {
 
-                    
+
                     return;
                 }
 
@@ -685,7 +682,7 @@
                     String(item.GroupName ?? "").trim() === selectedGroup
                 );
 
-                console.log("Filtered Data:", filteredData);
+                // console.log("Filtered Data:", filteredData);
 
 
                 // ==============================
@@ -705,7 +702,7 @@
                 });
 
 
-               
+
             });
 
 
@@ -732,7 +729,7 @@
         }
 
 
-      
+
 
 
 
@@ -750,15 +747,7 @@
             await this.EditAssemblyStatus(formData);
         }
 
-        async HandlePartSubmit(e) {
-            e.preventDefault();
-            const formdata = new FormData(this.formParts);
-            formdata.append('FinalShopOrder', this.finalShopOrder);
-            const data = Object.fromEntries(formdata);
-            console.log(data);
-
-            await this.AddRegistrationData(formdata);
-        }
+       
 
         async HandleDownTimeSubmit(e) {
             e.preventDefault();
@@ -773,10 +762,23 @@
             const formdata = new FormData(this.DownTimeListPanel);
             formdata.append('FinalShopOrder', this.finalShopOrder);
             const data = Object.fromEntries(formdata);
-            console.log(data);
+            // console.log(data);
 
             await this.AddDownTimeMonitorData(formdata);
         }
+
+        async HandlePartsPrepareSubmit(e) {
+            e.preventDefault();
+
+            const formdata = new FormData(this.partsListPanel);
+            formdata.append('FinalShopOrder', this.finalShopOrder);
+            const data = Object.fromEntries(formdata);
+            console.log(data);
+
+            await this.AddPartPreparationData(formdata);
+        }
+
+
 
         async HandleDownTimeStop(id) {
             try {
@@ -784,7 +786,7 @@
                     ID : id
                 });
 
-                console.log(res);
+                //console.log(res);
                 if (res?.Success) {
                     alert('DownTime Time is  Updated successfully!');
                     // Optionally reload data to reflect changes
@@ -795,7 +797,7 @@
             } catch (error) {
                 console.error('Save error:', error);
                 alert('An error occurred while saving.');
-            } 
+            }
         }
 
 
@@ -828,33 +830,7 @@
         }
 
 
-        async AddRegistrationData(formdata) {
-            const savebtn = document.querySelector('#EditRegistrationParts .save-btn');
-            savebtn.innerHTML = '<span>Saving...</span>';
-            savebtn.disabled = true;
-
-            const originalText = savebtn.innerHTML;
-
-            try {
-                const res = await postMethod('@Url.Action("AddRegistrationMEIG", "Assembly")', formdata);
-                console.log(res);
-                if (res?.Success) {
-                    alert('Assembly status updated successfully!');
-                    // Optionally reload data to reflect changes
-                    //await this.LoadDetailsinfo();
-                } else {
-                    alert('Error: ' + (res?.Message || 'Could not save data.'));
-                }
-            } catch (error) {
-                console.error('Save error:', error);
-                alert('An error occurred while saving.');
-            } finally {
-                // Restore button state
-                const saveBtn = document.querySelector('#EditFinalAsembly .save-btn');
-                saveBtn.innerHTML = originalText;
-                saveBtn.disabled = false;
-            }
-        }
+       
 
          async AddDownTimeMonitorData(formdata) {
              const savebtn = document.querySelector('#AddEditDownTimeMonitoring .save-btn');
@@ -882,7 +858,36 @@
                   saveBtn.innerHTML = originalText;
                   saveBtn.disabled = false;
               }
-          }
+        }
+
+
+        async AddPartPreparationData(formdata) {
+            const savebtn = document.querySelector('#EditRegistrationParts .save-btn');
+             savebtn.innerHTML = '<span>Saving...</span>';
+             savebtn.disabled = true;
+
+             const originalText = savebtn.innerHTML;
+
+             try {
+                 const res = await postMethod('@Url.Action("AddPartsPreparationData", "Assembly")', formdata);
+                 if (res?.Success) {
+                     alert('Add Preparation Data successfully!');
+                     await this.LoadPartsPreparation(this.finalShopOrder);
+                 } else {
+                     alert('Error: ' + (res?.Message || 'Could not save data.'));
+                 }
+             } catch (error) {
+                 console.error('Save error:', error);
+                 alert('An error occurred while saving.');
+             } finally {
+                 // Restore button state
+                 const saveBtn = document.querySelector('#EditRegistrationParts .save-btn');
+                 saveBtn.innerHTML = originalText;
+                 saveBtn.disabled = false;
+             }
+         }
+
+
 
         formatDate(dateString) {
             if (!dateString) return '';
@@ -906,7 +911,7 @@
 
         /* ================= RENDER MAIN TABLE ================= */
         renderTable(data) {
-            console.log(data);
+            // console.log(data);
 
             if (!this.tbody) return;
 
@@ -994,36 +999,6 @@
         }
 
 
-        renderMEIGTable(data) {
-            if (!this.MEIGbody) return;
-
-            if (data.length === 0) {
-                this.MEIGbody.innerHTML = `
-                 <tr>
-                     <td colspan="10" style="text-align:center; padding:32px; color:#86868b;">
-                         No data available.
-                     </td>
-                 </tr>`;
-                return;
-            }
-
-            this.MEIGbody.innerHTML = data.map(row => {
-                return `
-                    <tr>
-                        <td>${this.escape(row.Registration)}</td>
-                        <td>${this.escape(row.CategoryName)}</td>
-                        <td>${this.escape(row.PartsName)}</td>
-                        <td>${this.escape(row.PartNumber)}</td>
-                        <td>${this.escape(row.PinList)}</td>
-                        <td>${this.escape(row.TimeIn)}</td>
-                        <td>${this.escape(row.TimeOut)}</td>
-                          <td>${this.escape(row.Lines)}</td>
-                          <td>${this.escape(row.Issuer)}</td>
-                          <td>${this.escape(row.Preparation)}</td>
-                    </tr>`;
-                    }).join('');
-        }
-
         renderDownTimeTable(data) {
             if (!this.Downtimebody) return;
 
@@ -1086,7 +1061,42 @@
             }).join('');
         }
 
+        renderPrepareListTable(data) {
+            if (!this.PartsPreparebody) return;
 
+            if (data.length === 0) {
+                this.PartsPreparebody.innerHTML = `
+                   <tr>
+                       <td colspan="10" style="text-align:center; padding:32px; color:#86868b;">
+                           No data available.
+                       </td>
+                   </tr>`;
+                return;
+            }
+
+
+            this.PartsPreparebody.innerHTML = data.map(row => {
+
+                return `
+                      <tr>
+                          <td>${this.escape(row.IssueCum)}</td>
+                          <td>${this.escape(row.PartName) }</td>
+                          <td>${this.escape(row.PartNumber)}</td>
+                          <td>${this.escape(row.Location)}</td>
+
+                          <td>${this.escape(row.PartNumber)}</td>
+
+                          <td>${this.escape(row.PartNumber)}</td>
+                          <td>${this.escape(row.Location)}</td>
+
+                          <td>${this.escape(row.Lines)}</td>
+                          <td>${this.escape(row.Issuer)}</td>
+                          <td>${this.escape(row.Preparation)}</td>
+
+
+                      </tr>`;
+                            }).join('');
+        }
 
 
         formatTime(time) {

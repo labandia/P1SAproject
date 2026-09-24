@@ -293,5 +293,23 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public decimal AsPercentage { get; set; }
     }
 
+    public class FanTraceabilityPartsPreparation
+    {
+        public int PreparedID { get; set; }
+        public string FinalShopOrder { get; set; }
+        public string IssueCum { get; set; }
+        public string PartName { get; set; }
+        public string PartNumber { get; set; }
+        public int? PlanQty { get; set; }
+        public string Location { get; set; }
+        public DateTime? DateStart { get; set; }
+        public TimeSpan? TimeStart { get; set; }
+        public TimeSpan? TimeEnd { get; set; }
+        public string Lines { get; set; }
+        public string Issuer { get; set; }
+        public string Preparation { get; set; }
+        public bool IsDelete { get; set; }
+    }
+
 
 }

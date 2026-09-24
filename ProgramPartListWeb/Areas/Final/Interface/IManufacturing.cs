@@ -84,5 +84,10 @@ namespace ProgramPartListWeb.Areas.Final
         Task<bool> AddGetTimeMonitor(DownTimeModel downtime);
 
         Task<bool> EndTimeMonitor(int DownTimeID);
+
+        // ======== FOR PARTS PREPARATION ==================================
+        Task<List<FanTraceabilityPartsPreparation>> GetPreparationList(string FinalShopOrder);
+        Task<bool> AddPreparetionList(FanTraceabilityPartsPreparation downtime);
+
     }
 }

@@ -93,6 +93,7 @@ namespace PMACS_V2.Areas.Planning.Repository
 
         public async Task<DataTable> ShopOrderSummary(string dstart, string dend)
         {
+            Debug.WriteLine($@"Start : {dstart} - End : {dend}");
             var columns = new List<string>();
             var dates = await GetcolumnDates(dstart, dend);
             DataTable result;
@@ -121,6 +122,9 @@ namespace PMACS_V2.Areas.Planning.Repository
                               "FROM (SELECT Imports, CAST(Datetoday AS DATE) AS DateImport, ShopCount " +
                               "FROM M1_DailyOrder_Summary) AS SourceTable " +
                               $"PIVOT (SUM(ShopCount) FOR DateImport IN ({joinOrders})) AS PivotTable;";
+
+
+                Debug.WriteLine(strquery);
 
                 result = await SqlDataAccess.GetDataByDataTable(strquery);
             }
@@ -339,9 +343,9 @@ namespace PMACS_V2.Areas.Planning.Repository
             //var strquery = "SELECT SalesRequest, MonthUpload, DateYearupload " +
             //              "FROM M1_RequestSales_table " +
             //              "ORDER BY SalesRequest, DateYearupload ASC";
-            var strquery = "SELECT SalesRequest, DateYearupload " +
-                           "FROM M1_RequestSales_table " +
-                           "GROUP BY SalesRequest, DateYearupload ";
+            var strquery = $@"SELECT SalesRequest, DateYearupload 
+                           FROM M1_RequestSales_table 
+                           GROUP BY SalesRequest, DateYearupload ";
 
             var result = await SqlDataAccess.GetDataByDataTable(strquery);
             return result;
@@ -659,6 +663,8 @@ namespace PMACS_V2.Areas.Planning.Repository
 
             foreach (var item in groupedSalesData)
             {
+
+                Debug.WriteLine("CHECK INSERT SALES ");
                 var DateUpload = item.Dateupload.ToString("MM/dd/yyyy");
                 var UploadParts = DateUpload.Split('/');
                 var UploadFullyear = UploadParts[2];
@@ -667,39 +673,24 @@ namespace PMACS_V2.Areas.Planning.Repository
                 var dateParts = salesDate.Split('/');
                 var Fullyear = dateParts[2];
 
-                var strquery = "SELECT DISTINCT COALESCE(TotalCountOrder, 0) as TotalCountOrder " +
-                         "FROM M1_RequestSales_table " +
-                         "WHERE SalesRequest = @SalesRequest " +
-                         "AND MonthUpload = @MonthUpload";
-                var paramsObj = new
+                string strquery = $@"SELECT DISTINCT COALESCE(TotalCountOrder, 0) as TotalCountOrder 
+                         FROM M1_RequestSales_table 
+                         WHERE SalesRequest = @SalesRequest 
+                         AND MonthUpload = @MonthUpload";
+      
+                //Debug.WriteLine($"SalesRequest  : {Convert.ToInt32(dateParts[0])}  -  MonthUpload : {Convert.ToInt32(UploadParts[0])} ");
+
+
+                int results = await SqlDataAccess.ExecuteAsync(strquery, new
                 {
                     SalesRequest = Convert.ToInt32(dateParts[0]),
                     MonthUpload = Convert.ToInt32(UploadParts[0])
-                };
+                });
+                Debug.WriteLine("Results : " + results);
 
-                int CurrentCount = await SqlDataAccess.ExecuteAsync(strquery, paramsObj);
-                //Debug.WriteLine("COUNT : " + CurrentCount);
-                if (CurrentCount == 0)
+                if (results > 0)
                 {
-                    //Debug.WriteLine($"Date Upload : {DateUpload}  -  INserted ");
-                    var insertquery = "INSERT INTO M1_RequestSales_table(MonthUpload, SalesRequest, " +
-                                    "TotalCountOrder, DateYearupload, TodayYearupload) " +
-                                    "VALUES(@MonthUpload, @SalesRequest, @TotalCountOrder, @DateYearupload, @TodayYearupload)";
-                    var insertObj = new
-                    {
-                        SalesRequest = Convert.ToInt32(dateParts[0]),
-                        MonthUpload = Convert.ToInt32(UploadParts[0]),
-                        DateYearupload = dateParts[2],
-                        TotalCountOrder = 1,
-                        TodayYearupload = todayear
-                    };
-
-                    await SqlDataAccess.ExecuteAsync(insertquery, insertObj);
-                }
-                else
-                {
-                    
-                    int getotal = CurrentCount + 1;
+                    int getotal = results + 1;
                     //Debug.WriteLine($"Date Upload : {DateUpload}  -  UPdates ");
                     //Debug.WriteLine($"Updated Count  : {getotal}");
                     var insertquery = "UPDATE M1_RequestSales_table SET TotalCountOrder = @TotalCountOrder " +
@@ -714,13 +705,49 @@ namespace PMACS_V2.Areas.Planning.Repository
 
                     await SqlDataAccess.ExecuteAsync(insertquery, insertObj);
                 }
+                else
+                {
+                    var insertquery = "INSERT INTO M1_RequestSales_table(MonthUpload, SalesRequest, " +
+                     "TotalCountOrder, DateYearupload, TodayYearupload) " +
+                     "VALUES(@MonthUpload, @SalesRequest, @TotalCountOrder, @DateYearupload, @TodayYearupload)";
+                    var insertObj = new
+                    {
+                        SalesRequest = Convert.ToInt32(dateParts[0]),
+                        MonthUpload = Convert.ToInt32(UploadParts[0]),
+                        DateYearupload = dateParts[2],
+                        TotalCountOrder = 1,
+                        TodayYearupload = todayear
+                    };
+
+                    Debug.WriteLine("========================================");
+                    Debug.WriteLine("INSERT HERE");
+                    Debug.WriteLine("SQL:");
+                    Debug.WriteLine(insertquery);
+
+
+
+                    Debug.WriteLine("----- Insert Values -----");
+                    Debug.WriteLine($"MonthUpload    = {insertObj.MonthUpload}");
+                    Debug.WriteLine($"SalesRequest   = {insertObj.SalesRequest}");
+                    Debug.WriteLine($"TotalCountOrder = {insertObj.TotalCountOrder}");
+                    Debug.WriteLine($"DateYearupload = {insertObj.DateYearupload}");
+                    Debug.WriteLine($"TodayYearupload = {insertObj.TodayYearupload}");
+
+                    Debug.WriteLine("========================================");
+
+
+
+                    await SqlDataAccess.ExecuteAsync(insertquery, insertObj);
+                }
+
+
 
 
                 var strorderTable = "INSERT INTO M1_RequestDetails_table(Branch, SDP_Shoporder, SDP_Sales_Number, " +
                                   "DateUpload, DateSales, DateYear, SDP_Sales_Partnum, Sales_Request_Date, PC_Proposed_Date) " +
                                   "VALUES(@Branch, @SDP_Shoporder, @SDP_Sales_Number, " +
                                   "@DateUpload, @DateSales, @DateYear, @SDP_Sales_Partnum, @Sales_Request_Date, @PC_Proposed_Date)";
-                
+
                 var orderTableparam = new
                 {
                     Branch = item.Branches,
@@ -738,7 +765,7 @@ namespace PMACS_V2.Areas.Planning.Repository
             }
 
 
-            
+
             await Task.Delay(500);
         }
 
@@ -1012,7 +1039,7 @@ namespace PMACS_V2.Areas.Planning.Repository
                         (SUM(TotalCountOrder) 
                          FOR SalesMonth IN ({joinOrders})) AS PivotTable;";
 
-            //Debug.WriteLine(strquery);
+            Debug.WriteLine(strquery);
 
             DataTable result = await SqlDataAccess.GetDataByDataTable(strquery);
             return result;

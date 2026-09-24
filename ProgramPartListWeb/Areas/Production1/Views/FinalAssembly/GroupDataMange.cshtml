@@ -705,9 +705,18 @@
 
             // ───────────────────────── Helpers ─────────────────────────
 
-            formatDate(iso) {
-                const d = new Date(iso);
-                return d.toLocaleDateString('en-CA'); // yyyy-MM-dd, matches <input type="date">
+            formatDate(value) {
+                if (!value) return '';
+
+                // Example:
+                // 22/09/2026 12:00:00 am
+                const match = String(value).match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+
+                if (match) {
+                    return `${match[2]}/${match[1]}/${match[3]}`;
+                }
+
+                return String(value);
             }
 
             toDateInputValue(displayDate) {

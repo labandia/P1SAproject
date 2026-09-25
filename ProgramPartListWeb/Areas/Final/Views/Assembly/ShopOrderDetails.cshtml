@@ -224,7 +224,7 @@
 
             <div class="field-group">
                 <span class="field-label">TIME : </span>
-                <input type="text" class="field-box" id="TimeStart" name="TimeStart" />
+                <input type="time" class="field-box" id="TimeStart" name="TimeStart" />
             </div>
 
             <div class="field-group">
@@ -637,18 +637,28 @@
 
             document.getElementById('IssueCum').value =
                 row.IssueCum ?? '';
+            document.getElementById('IssueCum').readOnly = true;
+
+            document.getElementById('PartName').value =
+                row.IssueCum ?? '';
+            document.getElementById('PartName').disabled = true;
+
 
             document.getElementById('PartNumber').value =
                 row.PartNumber ?? '';
+            document.getElementById('PartNumber').readOnly = true;
 
             document.getElementById('PlanQty').value =
                 row.PlanQty ?? '';
+            document.getElementById('PlanQty').readOnly = true;
 
             document.getElementById('Location').value =
                 row.Location ?? '';
+            document.getElementById('Location').readOnly = true;
 
             document.getElementById('TimeStart').value =
                 this.formatTimeSpan(row.TimeStart);
+            document.getElementById('TimeStart').readOnly = true;
 
             document.getElementById('TimeEnd').value =
                 this.formatTimeSpan(row.TimeEnd);

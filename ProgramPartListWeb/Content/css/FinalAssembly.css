@@ -3576,3 +3576,9 @@ td.status-column {
     font-weight: 600;
     color: #1d1d1f;
 }
+
+
+.field-box[readonly] {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+}

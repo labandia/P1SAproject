@@ -950,7 +950,10 @@
 
             await this.AddPartPreparationData(formdata);
         }
-
+        clearPartPreparationForm() {
+            const form = document.getElementById('EditRegistrationParts');
+            form.reset();
+        }
         async EditPartPreparationData(formdata) {
 
                 const savebtn = document.querySelector(
@@ -989,6 +992,8 @@
                             .forEach(tr => {
                                 tr.classList.remove('selected');
                             });
+
+                        this.clearPartPreparationForm();    
 
                     } else {
 
@@ -1109,6 +1114,8 @@
                  if (res?.Success) {
                      alert('Add Preparation Data successfully!');
                      await this.LoadPartsPreparation(this.finalShopOrder);
+
+                     this.clearPartPreparationForm();    
                  } else {
                      alert('Error: ' + (res?.Message || 'Could not save data.'));
                  }

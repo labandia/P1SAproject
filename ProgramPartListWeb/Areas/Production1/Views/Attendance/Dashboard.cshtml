@@ -30,19 +30,7 @@
         <div class="attendSummary">
             <!-- Total Headcount -->
             <div class="attendSummary_card loop-anim">
-                <div class="IconContainer">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
-                        <g fill="none" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m16.719 19.752l-.64-5.124A3 3 0 0 0 13.101 12h-2.204a3 3 0 0 0-2.976 2.628l-.641 5.124A2 2 0 0 0 9.266 22h5.468a2 2 0 0 0 1.985-2.248" />
-                            <circle cx="12" cy="5" r="3" />
-                            <circle cx="4" cy="9" r="2" />
-                            <circle cx="20" cy="9" r="2" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 14h-.306a2 2 0 0 0-1.973 1.671l-.333 2A2 2 0 0 0 3.361 20H7m13-6h.306a2 2 0 0 1 1.973 1.671l.333 2A2 2 0 0 1 20.639 20H17" />
-                        </g>
-                    </svg>
-
-
-                </div>
+                
                 <div class="attendSummary_content">
                     <span>Total Headcount</span>
                     <p id="totalhead">0</p>
@@ -50,14 +38,7 @@
             </div>
             <!-- Present -->
             <div class="attendSummary_card loop-anim">
-                <div class="IconContainer" style="background: radial-gradient(circle at 30% 30%, #21AA98, #057922); color: #fff !important; ">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                        <circle cx="12" cy="7" r="4" />
-                        <path d="M12 11v4" />
-                        <path d="M10 13h4" />
-                    </svg>
-                </div>
+                
                 <div class="attendSummary_content">
                     <span>Present Employees</span>
                     <p id="presentCount">0</p>
@@ -65,16 +46,7 @@
             </div>
             <!-- Absent -->
             <div class="attendSummary_card loop-anim">
-                <div class="IconContainer" style="background: radial-gradient(circle at 30% 30%, #C55216, #EA1D1D); color: #fff !important; ">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
-                        <g fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="7" cy="6" r="3" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 13H5.818a3 3 0 0 0-2.964 2.537L2.36 18.69A2 2 0 0 0 4.337 21H9m12.64-2.309l-.494-3.154A3 3 0 0 0 18.182 13h-2.364a3 3 0 0 0-2.964 2.537l-.493 3.154A2 2 0 0 0 14.337 21h5.326a2 2 0 0 0 1.976-2.309" />
-                            <circle cx="17" cy="6" r="3" />
-                        </g>
-                    </svg>
-
-                </div>
+                
                 <div class="attendSummary_content">
                     <span>Absent Employees</span>
                     <p id="absentCount">0</p>
@@ -87,9 +59,57 @@
                     <p id="absentrateCount">0% </p>
                 </div>
             </div>
+
+            <!-- 10% Reduction Target -->
+            <div class="attendSummary_card loop-anim">
+                <div class="attendSummary_absentRate">
+                    <span>10% Reduction Target</span>
+                    <p id="targetCount">0</p>
+                </div>
+            </div>
+            <!-- Actual Result -->
+            <div class="attendSummary_card loop-anim">
+                <div class="attendSummary_absentRate">
+                    <span>Actual Result</span>
+                    <p id="actualCount">0</p>
+                </div>
+            </div>
+            <!-- Achievement -->
+            <div class="attendSummary_card loop-anim">
+                <div class="attendSummary_absentRate">
+                    <span>Overall Achievement</span>
+                    <p id="achieveRate">0%</p>
+                </div>
+            </div>
         </div>
 
-
+        <div class="chartsRow">
+            <div class="chartCard">
+                <div class="chartCardHead">
+                    <h3>Target vs. Actual Result</h3>
+                    <div class="chartLegend">
+                        <span><i style="background:#4f8cff"></i>Target</span>
+                        <span><i style="background:#f5b73d"></i>Actual</span>
+                        <span><i style="background:#f0596a"></i>Below target</span>
+                    </div>
+                </div>
+                <div class="chartBox"><canvas id="targetChart"></canvas></div>
+            </div>
+            <div class="chartCard">
+                <div class="chartCardHead">
+                    <h3>Department Status</h3>
+                    <div class="chartLegend">
+                        <span><i style="background:#34c77b"></i>Achieved <b id="achCnt" style="margin-left:4px">0</b></span>
+                        <span><i style="background:#f0596a"></i>Not <b id="notCnt" style="margin-left:4px">0</b></span>
+                    </div>
+                </div>
+                <div class="chartBox"><canvas id="statusChart"></canvas></div>
+            </div>
+            <div class="chartCard">
+                <div class="chartCardHead"><h3>Actual Result Breakdown</h3></div>
+                <div class="chartBox"><canvas id="otChart"></canvas></div>
+            </div>
+        </div>
 
         <!-- TWO COLUMN -->
         <div class="analysisTables">
@@ -109,13 +129,23 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th style="text-align: center;">Department</th>
-                                    <th style="text-align: center; width: 60px;">Dayshift</th>
-                                    <th style="text-align: center;">NightShift</th>
-                                    <th style="text-align: center;">Headcount</th>
-                                    <th style="text-align: center;">Present</th>
-                                    <th style="text-align: center;">Absent</th>
-                                    <th style="text-align: center;">Attendance Rate</th>
+                                    <th rowspan="2" >Department</th>
+                                    <th colspan="5" class="grp sepL" style="text-align:center;">Attendance</th>
+                                    <th colspan="7" class="grp sepL" style="text-align:center;">10% reduction and overtime</th>
+                                </tr>
+                                <tr>
+                                    <th class="sepL">Headcount</th>
+                                    <th>Dayshift</th>
+                                    <th>Nightshift</th>
+                                    <th>Absent</th>
+                                    <th>Rate</th>
+                                    <th class="sepL">Target</th>
+                                    <th>1 hr OT</th>
+                                    <th>2 hrs OT</th>
+                                    <th>3 hrs OT</th>
+                                    <th>Actual</th>
+                                    <th>Gap</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody id="departmentBreakdown">
@@ -129,6 +159,12 @@
                                     <th id="TotalPresent">0</th>
                                     <th id="TotalAbsent">0</th>
                                     <th id="TotalRate">0%</th>
+                                    <th class="rc rc-first" id="TotalTarget">0</th>
+                                    <th class="rc" id="TotalOt1">0</th>
+                                    <th class="rc" id="TotalOt2">0</th>
+                                    <th class="rc" id="TotalOt3">0</th>
+                                    <th class="rc" id="TotalActual">0</th>
+                                    <th class="rc" id="TotalGap">0</th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -139,7 +175,7 @@
             </div>
 
             <!-- RIGHT COLUMN: SUMMARY -->
-            <div class="col">
+            <div class="col" style="display: none;">
                 <div class="summary loop-anim">
                     <div class="summary_Header">
                         <h3>📋 Total Summary</h3>
@@ -439,6 +475,12 @@
                              <td class="status-column">${row.Absent || ''}</td>
                              <td> <span class="rate-badge">${row.AttendanceRate ?? ''}%</span>    </td>
 
+                             <td>${row.TotalHeadCount || ''}</td>
+                             <td>${row.TotalHeadCount || ''}</td>
+                             <td>${row.TotalHeadCount || ''}</td>
+                             <td>${row.TotalHeadCount || ''}</td>
+                             <td>${row.TotalHeadCount || ''}</td>
+                             <td>${row.TotalHeadCount || ''}</td>
                      </tr>`;
             }).join('');
 

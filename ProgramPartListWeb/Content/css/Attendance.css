@@ -114,7 +114,7 @@ header {
 /* ----- KPI GRID (dark blue cards) ----- */
 .attendSummary {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* column count/order unchanged, per your request */
+    grid-template-columns: repeat(7, 1fr); /* column count/order unchanged, per your request */
     gap: 14px;
     gap: clamp(8px, 1vw, 14px); /* grid gap has been fine since Chromium 57, no fallback strictly needed, kept for consistency */
     flex-shrink: 0;
@@ -224,14 +224,14 @@ header {
 
 /* ----- TWO-COLUMN LAYOUT ----- */
 .analysisTables {
-    display: grid;
+/*    display: grid;
     grid-template-columns: 1fr 325px;
     grid-template-columns: 1fr clamp(200px, 20vw, 325px);
     gap: 18px;
     gap: clamp(10px, 1.4vw, 18px);
     flex: 1;
     min-height: 0;
-    align-items: stretch;
+    align-items: stretch;*/
     /*    align-items: flex-start;*/
 }
 
@@ -306,7 +306,7 @@ th {
     font-weight: 600;
     color: #b8cef0;
     background: #13213a;
-    border-bottom: 2px solid #2a4a72;
+    border-bottom: 1px solid #2a4a72;
     font-size: 0.75rem;
     font-size: clamp(0.65rem, 0.75vw, 0.75rem);
     letter-spacing: 0.3px;
@@ -342,6 +342,10 @@ tfoot tr th {
 
 tbody tr {
     border-bottom: 1px solid #3a5a8a;
+}
+
+.table-scroll thead  tr th{
+    border: 1px solid #29406a !important;
 }
 
 /* =========================================
@@ -1262,5 +1266,208 @@ tbody tr {
 
     to {
         transform: rotate(360deg);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+/* 7 KPI cards instead of 4 (4 attendance + target, actual, achievement) */
+.attendSummary.attendSummary--7 {
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.attendSummary--7 .attendSummary_card {
+    padding: 8px 10px;
+}
+
+.attendSummary--7 .IconContainer {
+    width: 34px;
+    height: 34px;
+    margin-right: 8px;
+}
+
+.attendSummary--7 .attendSummary_content p,
+.attendSummary--7 .attendSummary_absentRate p {
+    font-size: 1.3rem;
+    font-size: clamp(0.95rem, 1.4vw, 1.3rem);
+}
+
+.attendSummary--7 .attendSummary_content span,
+.attendSummary--7 .attendSummary_absentRate span {
+    white-space: normal;
+}
+
+/* ----- CHARTS ROW (second row, under the KPI cards) ----- */
+.chartsRow {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr;
+    gap: 14px;
+    gap: clamp(8px, 1vw, 14px);
+    height: 210px;
+    height: clamp(120px, 26vh, 230px);
+    flex-shrink: 0;
+}
+
+.chartCard {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    background: #16243f;
+    border: 1px solid #29406a;
+    border-radius: 10px;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+    padding: 8px 12px 8px 12px;
+}
+
+.chartCardHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    margin-bottom: 4px;
+}
+
+    .chartCardHead h3 {
+        font-weight: 600;
+        color: #d6e5ff;
+        font-size: 0.9rem;
+        font-size: clamp(0.75rem, 0.95vw, 0.9rem);
+    }
+
+.chartLegend {
+    display: flex;
+    align-items: center;
+    font-size: 0.7rem;
+    font-size: clamp(0.6rem, 0.7vw, 0.7rem);
+    color: #9bb5e0;
+}
+
+    .chartLegend span {
+        display: inline-flex;
+        align-items: center;
+        margin-left: 10px;
+    }
+
+    .chartLegend i {
+        display: inline-block;
+        width: 9px;
+        height: 9px;
+        border-radius: 2px;
+        margin-right: 5px;
+    }
+
+.chartBox {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+}
+
+    .chartBox canvas {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+/* ----- Reduction columns inside the department table ----- */
+th.rc,
+td.rc {
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+th.rc-first,
+td.rc-first {
+    border-left: 1px solid #2a4a72;
+}
+
+td.gap-pos {
+    color: #f0596a !important;
+    font-weight: 600;
+}
+
+.status-ok,
+.status-bad {
+    font-weight: 600;
+}
+
+.status-ok {
+    background: rgba(52, 199, 123, 0.16);
+    color: #34c77b;
+    border-color: rgba(52, 199, 123, 0.5);
+}
+
+.status-bad {
+    background: rgba(240, 89, 106, 0.18);
+    color: #f0596a;
+    border-color: rgba(240, 89, 106, 0.5);
+}
+
+/* ----- Responsive / TV tile ----- */
+@media (max-width: 1100px) {
+    .attendSummary.attendSummary--7 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .attendSummary.attendSummary--7 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .chartsRow {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+
+    .chartCard {
+        height: 160px;
+    }
+}
+
+@media (max-height: 550px) {
+    .chartsRow {
+        height: 120px;
+        gap: 5px;
+    }
+
+    .chartCard {
+        padding: 4px 8px;
+        border-radius: 8px;
+    }
+
+    .chartCardHead h3 {
+        font-size: 0.6rem;
+    }
+
+    .chartLegend {
+        font-size: 0.5rem;
+    }
+
+    .attendSummary--7 .attendSummary_card {
+        padding: 4px 6px;
+    }
+
+    .attendSummary--7 .IconContainer {
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+    }
+
+    .attendSummary--7 .attendSummary_content p,
+    .attendSummary--7 .attendSummary_absentRate p {
+        font-size: 0.8rem;
+    }
+
+    th.rc,
+    td.rc {
+        padding-left: 2px !important;
+        padding-right: 2px !important;
     }
 }

@@ -1309,6 +1309,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                       ,IssueCum
                       ,PartName
                       ,PartNumber
+                      ,Package
                       ,PlanQty
                       ,Location
                       ,DateStart
@@ -1323,8 +1324,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
         public async Task<bool> AddPreparetionList(FanTraceabilityPartsPreparation downtime)
         {
             int rows = await SqlDataAcess_Test.ExecuteAsync($@"INSERT 
-                INTO FanTraceabilityPartsPreparation(FinalShopOrder, IssueCum, PartName, PartNumber, PlanQty, Location, Lines, Issuer, Preparation) 
-                VALUES(@FinalShopOrder, @IssueCum, @PartName, @PartNumber, @PlanQty, @Location, @Lines, @Issuer, @Preparation)", downtime);
+                INTO FanTraceabilityPartsPreparation(FinalShopOrder, IssueCum, PartName, PartNumber, Package, PlanQty, Location, Lines, Issuer, Preparation) 
+                VALUES(@FinalShopOrder, @IssueCum, @PartName, @PartNumber, @Package, @PlanQty, @Location, @Lines, @Issuer, @Preparation)", downtime);
 
             return rows > 0;
         }
@@ -1337,6 +1338,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         PartName =@PartName, 
                         PartNumber =@PartNumber, 
                         PlanQty =@PlanQty,
+                        Package =@Package,
                         Location =@Location, Lines =@Lines, 
                         Issuer =@Issuer, 
                         Preparation =@Preparation, TimeEnd =@TimeEnd

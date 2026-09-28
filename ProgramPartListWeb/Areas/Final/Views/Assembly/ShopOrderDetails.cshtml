@@ -116,6 +116,7 @@
                                 <th style="text-align: center;">Issue Cum </th>
                                 <th style="text-align: center;">Partname</th>
                                 <th style="text-align: center;">Partnumber</th>
+                                <th style="text-align: center;">Packaging</th>
                                 <th style="text-align: center;">Plan Quantity </th>
                                 <th style="text-align: center;">Location</th>
                                 <th style="text-align: center;">TIME</th>
@@ -203,13 +204,18 @@
                 @*<input type="text" class="field-box" placeholder="Enter Registration" id="PartName" name="PartName" />*@
 
                 <select id="PartName" name="PartName">
-                    <option value="0">-- Select Item Name --</option>      
+                    <option value="0">-- Select Item Name --</option>
                 </select>
             </div>
 
             <div class="field-group">
                 <span class="field-label">Part Number : </span>
                 <input type="text" class="field-box" id="PartNumber" name="PartNumber" />
+            </div>
+
+            <div class="field-group">
+                <span class="field-label">Packaging : </span>
+                <input type="text" class="field-box" id="Package" name="Package" />
             </div>
 
             <div class="field-group">
@@ -643,6 +649,9 @@
                 row.IssueCum ?? '';
             document.getElementById('PartName').disabled = true;
 
+            document.getElementById('Package').value =
+                row.Package ?? '';
+            document.getElementById('Package').disabled = true;
 
             document.getElementById('PartNumber').value =
                 row.PartNumber ?? '';
@@ -781,8 +790,8 @@
             // ==============================
 
             groupSelect.innerHTML = `
-        <option value="">-- Select Group --</option>
-    `;
+                <option value="">-- Select Group --</option>
+            `;
 
             const uniqueGroups = [
                 ...new Set(
@@ -1328,6 +1337,7 @@
                           <td>${this.escape(row.IssueCum)}</td>
                           <td>${this.escape(row.PartName)}</td>
                           <td>${this.escape(row.PartNumber)}</td>
+                          <td>${this.escape(row.Package)}</td>
                           <td>${this.escape(row.PlanQty)}</td>
                           <td>${this.escape(row.Location)}</td>
 

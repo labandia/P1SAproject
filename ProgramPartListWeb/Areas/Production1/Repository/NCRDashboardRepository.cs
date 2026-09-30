@@ -669,83 +669,183 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 
             string filterstr = (display == 0)
                 ? $@"DashID,
-            DepartmentId,
-            DayShiftCount,
-            NightShiftCount,
-            TotalHeadCount,
-            PresentCount,
-            TotalHeadCount - PresentCount AS Absent,
-            CAST(
-                ROUND(
-                    PresentCount * 100.0 / NULLIF(TotalHeadCount, 0),
-                    0
-                )
-                AS DECIMAL(18,2)
-            ) AS AttendanceRate"
-                : $@"SUM(TotalHeadCount) AS TotalHeadCount,
-            SUM(PresentCount) AS TotalEmployees,
-            SUM(TotalHeadCount - PresentCount) AS TotalAbsent,
+                    DepartmentId,
+                    DayShiftCount,
+                    NightShiftCount,
+                    TotalHeadCount,
+                    PresentCount,
 
-            -- Attendance Rate
-            ROUND(
-                CAST(SUM(ISNULL(PresentCount, 0)) AS DECIMAL(18,2))
-                / NULLIF(
-                    CAST(SUM(TotalHeadCount) AS DECIMAL(18,2)),
-                    0
-                ) * 100,
-                0
-            ) AS AttendRate,
+                    -- Absent
+                    TotalHeadCount - PresentCount AS Absent,
 
-            -- Absent Rate
-            ROUND(
-                CAST(
-                    SUM(TotalHeadCount)
-                    - SUM(ISNULL(PresentCount, 0))
-                    AS DECIMAL(18,2)
-                )
-                / NULLIF(
-                    CAST(SUM(TotalHeadCount) AS DECIMAL(18,2)),
-                    0
-                ) * 100,
-                0
-            ) AS AbsentRate";
+                    -- Reduction = PresentCount × 10%
+                    CAST(
+                        ROUND(PresentCount * 10.0 / 100.0, 0)
+                        AS INT
+                    ) AS ReductionPercent,
+
+                    Overtime,
+                    Overtime_1,
+                    Overtime_2,
+                    Overtime_3,
+
+                    -- Actual Result
+                    ISNULL(Overtime, 0)
+                        + ISNULL(Overtime_1, 0)
+                        + ISNULL(Overtime_2, 0)
+                        + ISNULL(Overtime_3, 0) AS ActualResult,
+
+                       -- Gap Result
+			            ABS(
+				            (
+					            ISNULL(Overtime, 0)
+					            + ISNULL(Overtime_1, 0)
+					            + ISNULL(Overtime_2, 0)
+					            + ISNULL(Overtime_3, 0)
+				            ) - PresentCount
+			            ) AS GapResult,
+
+                          -- Result Status
+                          CASE
+					            WHEN
+						            (
+							            ISNULL(Overtime, 0)
+							            + ISNULL(Overtime_1, 0)
+							            + ISNULL(Overtime_2, 0)
+							            + ISNULL(Overtime_3, 0)
+						            ) - PresentCount <> 0
+					            THEN 'Not Achieved'
+					            ELSE 'Achieved'
+				            END AS ResultStatus,
+
+                    -- Attendance Rate
+                    CAST(
+                        ROUND(
+                            PresentCount * 100.0 / NULLIF(TotalHeadCount, 0),
+                            0
+                        )
+                        AS DECIMAL(18,2)
+                    ) AS AttendanceRate"
+
+                                : $@"SUM(TotalHeadCount) AS TotalHeadCount,
+                    SUM(PresentCount) AS TotalEmployees,
+
+                    -- Total Absent
+                    SUM(TotalHeadCount - PresentCount) AS TotalAbsent,
+
+                    -- Total Reduction
+                    CAST(
+                        ROUND(
+                            SUM(PresentCount) * 10.0 / 100.0,
+                            0
+                        )
+                        AS INT
+                    ) AS ReductionPercent,
+
+                    -- Overtime
+                    SUM(ISNULL(Overtime, 0)) AS Overtime,
+                    SUM(ISNULL(Overtime_1, 0)) AS Overtime_1,
+                    SUM(ISNULL(Overtime_2, 0)) AS Overtime_2,
+                    SUM(ISNULL(Overtime_3, 0)) AS Overtime_3,
+
+                    -- Actual Result
+                    SUM(
+                        ISNULL(Overtime, 0)
+                        + ISNULL(Overtime_1, 0)
+                        + ISNULL(Overtime_2, 0)
+                        + ISNULL(Overtime_3, 0)
+                    ) AS ActualResult,
+
+                    -- Gap Result
+                    SUM(
+                        ISNULL(Overtime, 0)
+                        + ISNULL(Overtime_1, 0)
+                        + ISNULL(Overtime_2, 0)
+                        + ISNULL(Overtime_3, 0)
+                    ) - SUM(PresentCount) AS GapResult,
+
+                    -- Result Status
+                    CASE
+                        WHEN
+                            SUM(
+                                ISNULL(Overtime, 0)
+                                + ISNULL(Overtime_1, 0)
+                                + ISNULL(Overtime_2, 0)
+                                + ISNULL(Overtime_3, 0)
+                            ) - SUM(PresentCount) > 0
+                        THEN 'Not Achieved'
+                        ELSE 'Achieved'
+                    END AS ResultStatus,
+
+                    -- Attendance Rate
+                    ROUND(
+                        CAST(SUM(ISNULL(PresentCount, 0)) AS DECIMAL(18,2))
+                        / NULLIF(
+                            CAST(SUM(TotalHeadCount) AS DECIMAL(18,2)),
+                            0
+                        ) * 100,
+                        0
+                    ) AS AttendRate,
+
+                    -- Absent Rate
+                    ROUND(
+                        CAST(
+                            SUM(TotalHeadCount)
+                            - SUM(ISNULL(PresentCount, 0))
+                            AS DECIMAL(18,2)
+                        )
+                        / NULLIF(
+                            CAST(SUM(TotalHeadCount) AS DECIMAL(18,2)),
+                            0
+                        ) * 100,
+                        0
+                    ) AS AbsentRate";
 
             string strsql = $@";
-        WITH AttendanceCount AS
-        (
-            SELECT
-                e.DepartmentId,
-                CAST(att.WorkDate AS DATE) AS WorkDate,
-                COUNT(DISTINCT att.EmployeeId) AS PresentCount
-            FROM [PMACS_TEST].[dbo].[P1SA_AttendanceMonitor_Temp] att
-            INNER JOIN [PMACS_TEST].[dbo].[P1SA_Employees_Temp] e
-                ON e.EmployeeId = att.EmployeeId
-            WHERE att.IsDeleted = 0
-              AND e.IsDeleted = 0
-            GROUP BY
-                e.DepartmentId,
-                CAST(att.WorkDate AS DATE)
-        ),
-        DashboardCalc AS
-        (
-            SELECT
-                a.DashID,
-                a.DepartmentId,
-                a.DayShiftCount,
-                a.NightShiftCount,
-                a.DayShiftCount + a.NightShiftCount AS TotalHeadCount,
-                ISNULL(ac.PresentCount, 0) AS PresentCount
-            FROM AttendanceDashboard a
-            LEFT JOIN AttendanceCount ac
-                ON ac.DepartmentId = a.DepartmentId
-                AND ac.WorkDate = CAST(a.DateToday AS DATE)
-            {strfilter}
-        )
-        SELECT
-            {filterstr}
-        FROM DashboardCalc";
+                WITH AttendanceCount AS
+                (
+                    SELECT
+                        e.DepartmentId,
+                        CAST(att.WorkDate AS DATE) AS WorkDate,
+                        COUNT(DISTINCT att.EmployeeId) AS PresentCount
+                    FROM [PMACS_TEST].[dbo].[P1SA_AttendanceMonitor_Temp] att
+                    INNER JOIN [PMACS_TEST].[dbo].[P1SA_Employees_Temp] e
+                        ON e.EmployeeId = att.EmployeeId
+                    WHERE att.IsDeleted = 0
+                      AND e.IsDeleted = 0
+                    GROUP BY
+                        e.DepartmentId,
+                        CAST(att.WorkDate AS DATE)
+                ),
+                DashboardCalc AS
+                (
+                    SELECT
+                        a.DashID,
+                        a.DepartmentId,
+                        a.DayShiftCount,
+                        a.NightShiftCount,
+                        a.DayShiftCount + a.NightShiftCount AS TotalHeadCount,
 
+                        -- Overtime targets/values
+                        a.Overtime,
+                        a.Overtime_1,
+                        a.Overtime_2,
+                        a.Overtime_3,
 
+                        ISNULL(ac.PresentCount, 0) AS PresentCount
+
+                    FROM AttendanceDashboard a
+                    LEFT JOIN AttendanceCount ac
+                        ON ac.DepartmentId = a.DepartmentId
+                        AND ac.WorkDate = CAST(a.DateToday AS DATE)
+
+                    {strfilter}
+                )
+                SELECT
+                    {filterstr}
+                FROM DashboardCalc";
+
+            Debug.WriteLine(strsql);
 
             return strsql;
         }
@@ -824,36 +924,75 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         public Task<List<AttendanceModel>> AttendanceGetLastBreakDown()
         {
             return SqlDataAcess_Test.QueryAsync<AttendanceModel>($@"
-                ;WITH DashboardCalc AS (
-                    SELECT 
-                        a.DashID,
-                        a.DepartmentId,
-                        a.DayShiftCount, 
-                        a.NightShiftCount, 
-                        a.DayShiftCount + a.NightShiftCount AS TotalHeadCount,
+                ;WITH DashboardCalc AS
                         (
-                            SELECT COUNT(DISTINCT am.EmployeeId)
-                            FROM PMACS_TEST.dbo.P1SA_AttendanceMonitor_Temp am
-                            INNER JOIN PMACS_TEST.dbo.P1SA_Employees_Temp e 
-                                ON e.EmployeeId = am.EmployeeId
-                            WHERE CAST(am.WorkDate AS DATE) = a.DateToday
-                              AND e.DepartmentId = a.DepartmentId
-                              AND am.IsDeleted = 0
-                              AND e.IsDeleted = 0
-                        ) AS PresentCount
-                    FROM AttendanceDashboard a
-                    WHERE a.DateToday = (SELECT MAX(DateToday) FROM AttendanceDashboard)  
-                )
-                SELECT 
-                    DashID,
-                    DepartmentId,
-                    DayShiftCount,
-                    NightShiftCount,
-                    TotalHeadCount,
-                    PresentCount,
-                    TotalHeadCount - PresentCount AS Absent, 
-                    CAST(ROUND(PresentCount * 100.0 / NULLIF(TotalHeadCount, 0), 0) AS DECIMAL(18,2)) AS AttendanceRate
-                FROM DashboardCalc");
+                            SELECT 
+                                a.DashID,
+                                a.DepartmentId,
+                                a.DayShiftCount, 
+                                a.NightShiftCount, 
+                                a.DayShiftCount + a.NightShiftCount AS TotalHeadCount,
+
+                                -- Present Count
+                                (
+                                    SELECT COUNT(DISTINCT am.EmployeeId)
+                                    FROM PMACS_TEST.dbo.P1SA_AttendanceMonitor_Temp am
+                                    INNER JOIN PMACS_TEST.dbo.P1SA_Employees_Temp e 
+                                        ON e.EmployeeId = am.EmployeeId
+                                    WHERE CAST(am.WorkDate AS DATE) = CAST(a.DateToday AS DATE)
+                                      AND e.DepartmentId = a.DepartmentId
+                                      AND am.IsDeleted = 0
+                                      AND e.IsDeleted = 0
+                                ) AS PresentCount,
+
+                                -- Overtime values
+                                ISNULL(a.Overtime, 0) AS Overtime,
+                                ISNULL(a.Overtime_1, 0) AS Overtime_1,
+                                ISNULL(a.Overtime_2, 0) AS Overtime_2,
+                                ISNULL(a.Overtime_3, 0) AS Overtime_3
+
+                            FROM AttendanceDashboard a
+                            WHERE a.DateToday = (
+                                SELECT MAX(DateToday)
+                                FROM AttendanceDashboard
+                            )
+                        )
+                        SELECT 
+                            DashID,
+                            DepartmentId,
+                            DayShiftCount,
+                            NightShiftCount,
+
+                            TotalHeadCount,
+                            PresentCount,
+
+                            -- Absent
+                            TotalHeadCount - PresentCount AS Absent,
+
+                            -- Overtime
+                            Overtime,
+                            Overtime_1,
+                            Overtime_2,
+                            Overtime_3,
+
+                            -- Actual Overtime Result
+                            Overtime
+                                + Overtime_1
+                                + Overtime_2
+                                + Overtime_3 AS ActualResult,
+
+                            -- Attendance Rate
+                            CAST(
+                                ROUND(
+                                    PresentCount * 100.0 
+                                    / NULLIF(TotalHeadCount, 0),
+                                    0
+                                )
+                                AS DECIMAL(18,2)
+                            ) AS AttendanceRate
+
+                        FROM DashboardCalc
+                        ORDER BY DepartmentId ASC;");
         }
 
 
@@ -987,14 +1126,18 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             if (lastData == null || lastData.Count == 0) return;
 
             const string sql = @"
-                INSERT INTO AttendanceDashboard (DateToday, DepartmentId, DayShiftCount, NightShiftCount)
-                VALUES (CAST(GETDATE() AS DATE), @DepartmentId, @DayShiftCount, @NightShiftCount)";
+                INSERT INTO AttendanceDashboard (DateToday, DepartmentId, DayShiftCount, NightShiftCount, Overtime, Overtime_1, Overtime_2, Overtime_3)
+                VALUES (CAST(GETDATE() AS DATE), @DepartmentId, @DayShiftCount, @NightShiftCount,  @Overtime, @Overtime_1, @Overtime_2, @Overtime_3)";
 
             int rows = await SqlDataAcess_Test.ExecuteAsync(sql, lastData.Select(d => new
             {
                 d.DepartmentId,
                 d.DayShiftCount,
-                d.NightShiftCount
+                d.NightShiftCount, 
+                d.Overtime,
+                d.Overtime_1,
+                d.Overtime_2,
+                d.Overtime_3
             }));
         }
 

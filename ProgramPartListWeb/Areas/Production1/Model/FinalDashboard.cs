@@ -165,13 +165,21 @@ namespace ProgramPartListWeb.Areas.Production1.Model
     {
         public int DashID { get; set; }
 
-        public int DepartmentId { get; set; }
-        public int DayShiftCount { get; set; }
-        public int NightShiftCount { get; set; }
+        public int DepartmentId { get; set; } = 0;
+        public int DayShiftCount { get; set; } = 0;
+        public int NightShiftCount { get; set; } = 0;
 
-        public int TotalHeadCount { get; set; }
-        public int PresentCount { get; set; }
+        public int TotalHeadCount { get; set; } = 0;
+        public int ReductionPercent { get; set; } = 0;
+        public int PresentCount { get; set; } = 0;
         public int Absent { get; set; }
+        public int Overtime { get; set; } = 0;
+        public int Overtime_1 { get; set; } = 0;
+        public int Overtime_2 { get; set; } = 0;
+        public int Overtime_3 { get; set; } = 0;
+        public int ActualResult { get; set; } = 0;
+        public int GapResult { get; set; }
+        public string ResultStatus { get; set; }
         public double AttendanceRate { get; set; }
         public string DepartmentName
         {

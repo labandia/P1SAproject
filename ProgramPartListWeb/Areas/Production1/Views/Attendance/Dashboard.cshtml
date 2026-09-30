@@ -88,9 +88,8 @@
                 <div class="chartCardHead">
                     <h3>Target vs. Actual Result</h3>
                     <div class="chartLegend">
-                        <span><i style="background:#4f8cff"></i>Target</span>
-                        <span><i style="background:#f5b73d"></i>Actual</span>
-                        <span><i style="background:#f0596a"></i>Below target</span>
+                        <span><i style="background:#2f80d8"></i>10% Reduction Target</span>
+                        <span><i style="background:#f57c2b"></i>Actual Result</span>
                     </div>
                 </div>
                 <div class="chartBox"><canvas id="targetChart"></canvas></div>
@@ -130,22 +129,24 @@
                             <thead>
                                 <tr>
                                     <th rowspan="2" >Department</th>
-                                    <th colspan="5" class="grp sepL" style="text-align:center;">Attendance</th>
-                                    <th colspan="7" class="grp sepL" style="text-align:center;">10% reduction and overtime</th>
+                                    <th colspan="6" class="grp sepL" style="text-align:center;">Attendance</th>
+                                    <th colspan="9" class="grp sepL" style="text-align:center;">10% reduction and overtime</th>
                                 </tr>
                                 <tr>
-                                    <th class="sepL">Headcount</th>
                                     <th>Dayshift</th>
                                     <th>Nightshift</th>
+                                    <th class="sepL">Headcount</th>
+                                    <th>Present</th>
                                     <th>Absent</th>
                                     <th>Rate</th>
-                                    <th class="sepL">Target</th>
-                                    <th>1 hr OT</th>
-                                    <th>2 hrs OT</th>
-                                    <th>3 hrs OT</th>
-                                    <th>Actual</th>
+                                    <th>Reduction 10%</th>
+                                    <th>1 </th>
+                                    <th>2 </th>
+                                    <th>3 </th>
+                                    <th>Actual Result</th>
                                     <th>Gap</th>
                                     <th>Status</th>
+                                    <th>Achievements</th>
                                 </tr>
                             </thead>
                             <tbody id="departmentBreakdown">
@@ -159,12 +160,14 @@
                                     <th id="TotalPresent">0</th>
                                     <th id="TotalAbsent">0</th>
                                     <th id="TotalRate">0%</th>
-                                    <th class="rc rc-first" id="TotalTarget">0</th>
+                                    <th class="rc rc-first" id="TotalReduct">0</th>
                                     <th class="rc" id="TotalOt1">0</th>
                                     <th class="rc" id="TotalOt2">0</th>
                                     <th class="rc" id="TotalOt3">0</th>
                                     <th class="rc" id="TotalActual">0</th>
                                     <th class="rc" id="TotalGap">0</th>
+                                    <th class="rc" id="IsStatus">0</th>
+                                    <th class="rc" id="TotalAchieve">0</th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -265,6 +268,8 @@
 
             this._refreshTimer = null;
             this.autoRefreshEnabled = true;
+
+            this.targetChart = this.statusChart = this.otChart = null;
         }
 
         async init() {
@@ -456,10 +461,14 @@
                          </td>
                      </tr>`;
                 this.RenderTotals([]);
+                this.RenderCharts([]);       
                 return;
             }
-
+         
             this.tbody.innerHTML = this.currentData.map(row => {
+
+
+
                 return `
                    <tr class='fade-in'
                        data-dash-id="${row.DashID}">
@@ -470,43 +479,73 @@
                              <td>
                                  <input type="number" class="edit-input" data-dash-id="${row.DashID}" data-field="NightShiftCount" value="${row.NightShiftCount ?? 0}" min="0">
                              </td>
-                             <td>${row.TotalHeadCount || ''}</td>
-                             <td>${row.PresentCount}</td>
-                             <td class="status-column">${row.Absent || ''}</td>
-                             <td> <span class="rate-badge">${row.AttendanceRate ?? ''}%</span>    </td>
 
                              <td>${row.TotalHeadCount || ''}</td>
-                             <td>${row.TotalHeadCount || ''}</td>
-                             <td>${row.TotalHeadCount || ''}</td>
-                             <td>${row.TotalHeadCount || ''}</td>
-                             <td>${row.TotalHeadCount || ''}</td>
-                             <td>${row.TotalHeadCount || ''}</td>
+                             <td>${row.PresentCount}</td>
+                             <td class="status-column">${row.Absent || '0'}</td>
+                             <td> <span class="rate-badge">${row.AttendanceRate ?? '0'}%</span>    </td>
+
+                             <td>${row.ReductionPercent || ''}</td>
+                             <td>${row.Overtime_1 || '0'}</td>
+                             <td>${row.Overtime_2 || '0'}</td>
+                             <td>${row.Overtime_3 || '0'}</td>
+                             <td>${row.ActualResult || '0'}</td>
+                             <td>${row.GapResult || '0'}</td>
+                            
+                             <td> <span class="status-pill ${row.ResultStatus == 'Achieved' ? 'ok' : 'bad'}">${row.ResultStatus || ''}</span></td>
+                             <td>${row.ActualResult || ''}</td>
                      </tr>`;
             }).join('');
 
             this.RenderTotals(this.currentData);
+            this.RenderCharts(this.currentData);    // <-- add
             this.BindEditInputs();
         }
 
         RenderTotals(data) {
-                const totals = data.reduce((acc, row) => {
-                    acc.day += Number(row.DayShiftCount) || 0;
-                    acc.night += Number(row.NightShiftCount) || 0;
-                    acc.head += Number(row.TotalHeadCount) || 0;
-                    acc.present += Number(row.PresentCount) || 0;
-                    acc.absent += Number(row.Absent) || 0;
-                    return acc;
-                }, { day: 0, night: 0, head: 0, present: 0, absent: 0 });
+            const totals = data.reduce((acc, row) => {
+                acc.day += Number(row.DayShiftCount) || 0;
+                acc.night += Number(row.NightShiftCount) || 0;
+                acc.head += Number(row.TotalHeadCount) || 0;
+                acc.present += Number(row.PresentCount) || 0;
+                acc.absent += Number(row.Absent) || 0;
+                acc.reduct += Number(row.ReductionPercent) || 0;
+                acc.over1 += Number(row.Overtime_1) || 0;
+                acc.over2 += Number(row.Overtime_2) || 0;
+                acc.over3 += Number(row.Overtime_3) || 0;
+                acc.actual += Number(row.ActualResult) || 0;
+                acc.gap += Number(row.GapResult) || 0;
+                return acc;
+            }, { day: 0, night: 0, head: 0, present: 0, absent: 0, reduct: 0, over1: 0, over2: 0, over3: 0, actual: 0, gap: 0 });
 
-                const rate = totals.head > 0 ? ((totals.present / totals.head) * 100).toFixed(0) : 0;
+            const attendRate = totals.head > 0 ? ((totals.present / totals.head) * 100).toFixed(0) : 0;
+            const achieve = totals.reduct > 0 ? ((totals.actual / totals.reduct) * 100).toFixed(2) : '0.00';
 
-                document.getElementById("TotalDay").textContent = totals.day;
-                document.getElementById("TotalNight").textContent = totals.night;
-                document.getElementById("TotalGHead").textContent = totals.head;
-                document.getElementById("TotalPresent").textContent = totals.present;
-                document.getElementById("TotalAbsent").textContent = totals.absent;
-                document.getElementById("TotalRate").textContent = `${rate}%`;
-            }
+            const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+
+            set('TotalDay', totals.day);
+            set('TotalNight', totals.night);
+            set('TotalGHead', totals.head);
+            set('TotalPresent', totals.present);
+            set('TotalAbsent', totals.absent);
+            set('TotalRate', `${attendRate}%`);
+            set('TotalReduct', totals.reduct);
+            set('TotalOt1', totals.over1);
+            set('TotalOt2', totals.over2);
+            set('TotalOt3', totals.over3);
+            set('TotalActual', totals.actual);
+            set('TotalGap', totals.gap);
+            set('IsStatus', '');
+            set('TotalAchieve', `${achieve}%`);
+
+            // KPI cards
+            set('targetCount', totals.reduct);
+            set('actualCount', totals.actual);
+            set('achieveRate', `${achieve}%`);
+            set('ot1Count', totals.over1);   // only if you add the OT cards
+            set('ot2Count', totals.over2);
+            set('ot3Count', totals.over3);
+        }
 
         BindEditInputs() {
                 this.tbody.querySelectorAll('.edit-input').forEach(input => {
@@ -880,7 +919,136 @@
             this._animFrames.set(el, frameId);
         }
 
+        RenderCharts(data) {
+            if (typeof Chart === 'undefined') return;
 
+            const TEXT = '#fff';        // use '#1f2d3d' if you switch to the light theme in the picture
+            const GRID = 'rgba(255,255,255,0.1)';
+
+            const labels = data.map(r => r.DepartmentName);
+            const targets = data.map(r => Number(r.ReductionPercent) || 0);
+            const actuals = data.map(r => Number(r.ActualResult) || 0);
+
+            const sum = f => data.reduce((a, r) => a + (Number(r[f]) || 0), 0);
+            const ot = [sum('Overtime_1'), sum('Overtime_2'), sum('Overtime_3')];
+
+            const achieved = actuals.filter((a, i) => a >= targets[i]).length;
+            const notAchieved = data.length - achieved;
+
+            document.getElementById('achCnt').textContent = achieved;
+            document.getElementById('notCnt').textContent = notAchieved;
+
+            // value labels above bars
+            const barLabels = {
+                id: 'barLabels',
+                afterDatasetsDraw(chart) {
+                    const { ctx } = chart;
+                    chart.data.datasets.forEach((ds, i) => {
+                        const meta = chart.getDatasetMeta(i);
+                        if (meta.hidden) return;
+                        meta.data.forEach((bar, idx) => {
+                            ctx.save();
+                            ctx.fillStyle = TEXT;
+                            ctx.font = 'bold 10px sans-serif';
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'bottom';
+                            ctx.fillText(ds.data[idx], bar.x, bar.y - 3);
+                            ctx.restore();
+                        });
+                    });
+                }
+            };
+
+            // count + % inside each slice, total in the middle
+            const donutLabels = {
+                id: 'donutLabels',
+                afterDatasetsDraw(chart) {
+                    const { ctx } = chart;
+                    const values = chart.data.datasets[0].data;
+                    const total = values.reduce((a, b) => a + b, 0);
+                    const meta = chart.getDatasetMeta(0);
+
+                    meta.data.forEach((arc, i) => {
+                        if (!values[i]) return;
+                        const p = arc.getCenterPoint();
+                        const pct = ((values[i] / total) * 100).toFixed(1);
+                        ctx.save();
+                        ctx.fillStyle = '#fff';
+                        ctx.textAlign = 'center';
+                        ctx.font = 'bold 13px sans-serif';
+                        ctx.fillText(values[i], p.x, p.y - 2);
+                        ctx.font = '11px sans-serif';
+                        ctx.fillText(`(${pct}%)`, p.x, p.y + 12);
+                        ctx.restore();
+                    });
+
+                    const { left, right, top, bottom } = chart.chartArea;
+                    const cx = (left + right) / 2, cy = (top + bottom) / 2;
+                    ctx.save();
+                    ctx.fillStyle = TEXT;
+                    ctx.textAlign = 'center';
+                    ctx.font = 'bold 26px sans-serif';
+                    ctx.fillText(total, cx, cy + 2);
+                    ctx.font = '11px sans-serif';
+                    ctx.fillText('Departments', cx, cy + 18);
+                    ctx.restore();
+                }
+            };
+
+            const axes = {
+                y: { beginAtZero: true, ticks: { font: { size: 9 }, color: TEXT, precision: 0 }, grid: { color: GRID } },
+                x: { ticks: { font: { size: 9 }, color: TEXT, maxRotation: 0 }, grid: { display: false } }
+            };
+            const base = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } };
+
+            // 1. Target vs Actual (blue / orange, like the picture)
+            this._upsert('targetChart', 'targetChart', {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [
+                        { label: '10% Reduction Target', data: targets, backgroundColor: '#2f80d8', borderRadius: 2 },
+                        { label: 'Actual Result', data: actuals, backgroundColor: '#f57c2b', borderRadius: 2 }
+                    ]
+                },
+                options: { ...base, scales: axes },
+                plugins: [barLabels]
+            });
+
+            // 2. Department status donut
+            this._upsert('statusChart', 'statusChart', {
+                type: 'doughnut',
+                data: {
+                    labels: ['Achieved', 'Not Achieved'],
+                    datasets: [{ data: [achieved, notAchieved], backgroundColor: ['#43a047', '#d94a38'], borderWidth: 2 }]
+                },
+                options: { ...base, cutout: '48%' },
+                plugins: [donutLabels]
+            });
+
+            // 3. Actual result breakdown (1 / 2 / 3 hrs OT)
+            this._upsert('otChart', 'otChart', {
+                type: 'bar',
+                data: {
+                    labels: ['1 hr OT', '2 hrs OT', '3 hrs OT'],
+                    datasets: [{ data: ot, backgroundColor: ['#2f80d8', '#fbb417', '#e53935'], borderRadius: 2, barPercentage: 0.45 }]
+                },
+                options: { ...base, scales: axes },
+                plugins: [barLabels]
+            });
+        }
+
+        // update in place on refresh so nothing flickers every 10s
+        _upsert(key, canvasId, config) {
+            const chart = this[key];
+            if (chart && chart.canvas && document.body.contains(chart.canvas)) {
+                chart.data.labels = config.data.labels;
+                config.data.datasets.forEach((ds, i) => Object.assign(chart.data.datasets[i], ds));
+                chart.update();
+                return;
+            }
+            this[key] = new Chart(document.getElementById(canvasId).getContext('2d'), config);
+        }
 
         changeformatnumber(n) {
             return n.toLocaleString('en-US');

@@ -24,6 +24,12 @@
                     <span class="animToggle_label" id="refreshToggleLabel">Auto-Refresh: ON</span>
                 </label>
             </div>
+
+            <div id="screenSizeBadge" class="screenSizeBadge" title="Screen / Viewport size">
+                🖥️ Screen: <strong id="screenSize">-- x --</strong>
+                &nbsp;|&nbsp;
+                Viewport: <strong id="viewportSize">-- x --</strong>
+            </div>
         </header>
 
         <!-- KPI CARDS -->
@@ -40,7 +46,7 @@
             <div class="attendSummary_card loop-anim">
                 
                 <div class="attendSummary_content">
-                    <span>Present Employees</span>
+                    <span>Present</span>
                     <p id="presentCount">0</p>
                 </div>
             </div>
@@ -48,13 +54,13 @@
             <div class="attendSummary_card loop-anim">
                 
                 <div class="attendSummary_content">
-                    <span>Absent Employees</span>
+                    <span>Absent</span>
                     <p id="absentCount">0</p>
                 </div>
             </div>
             <!-- Absent Rate -->
             <div class="attendSummary_card loop-anim">
-                <div class="attendSummary_absentRate">
+                <div class="attendSummary_content">
                     <span>Attendance Rate</span>
                     <p id="absentrateCount">0% </p>
                 </div>
@@ -62,21 +68,21 @@
 
             <!-- 10% Reduction Target -->
             <div class="attendSummary_card loop-anim">
-                <div class="attendSummary_absentRate">
+                <div class="attendSummary_content">
                     <span>10% Reduction Target</span>
                     <p id="targetCount">0</p>
                 </div>
             </div>
             <!-- Actual Result -->
             <div class="attendSummary_card loop-anim">
-                <div class="attendSummary_absentRate">
+                <div class="attendSummary_content">
                     <span>Actual Result</span>
                     <p id="actualCount">0</p>
                 </div>
             </div>
             <!-- Achievement -->
             <div class="attendSummary_card loop-anim">
-                <div class="attendSummary_absentRate">
+                <div class="attendSummary_content">
                     <span>Overall Achievement</span>
                     <p id="achieveRate">0%</p>
                 </div>
@@ -96,7 +102,7 @@
             </div>
             <div class="chartCard">
                 <div class="chartCardHead">
-                    <h3>Department Status</h3>
+                    <h3>Production 1 Status</h3>
                     <div class="chartLegend">
                         <span><i style="background:#34c77b"></i>Achieved <b id="achCnt" style="margin-left:4px">0</b></span>
                         <span><i style="background:#f0596a"></i>Not <b id="notCnt" style="margin-left:4px">0</b></span>
@@ -118,35 +124,38 @@
                 <!-- Department Table -->
                 <div class="tablecontainer maintable">
                     <div class="tableHeader">
-                        <h3>🏢 Department Breakdown</h3>
+                        <h3>🏢 Attendance Breakdown</h3>
 
                         <div class="date-filter">
-                            <input type="date" id="filterDate" />
+                            <button type="button" id="datePrev" class="dateBtn" tabindex="0">&#9664;</button>
+                            <input type="text" id="filterDate" readonly />
+                            <button type="button" id="dateNext" class="dateBtn" tabindex="0">&#9654;</button>
+                            <button type="button" id="dateToday" class="dateBtn" tabindex="0" style="width:auto;padding:0 6px;">Today</button>
                         </div>
                     </div>
                     <div class="table-scroll">
                         <table>
                             <thead>
                                 <tr>
-                                    <th rowspan="2" >Department</th>
+                                    <th rowspan="2" >Section</th>
                                     <th colspan="6" class="grp sepL" style="text-align:center;">Attendance</th>
                                     <th colspan="9" class="grp sepL" style="text-align:center;">10% reduction and overtime</th>
                                 </tr>
-                                <tr>
-                                    <th>Dayshift</th>
-                                    <th>Nightshift</th>
-                                    <th class="sepL">Headcount</th>
+                                <tr class="subtheader">
+                                    <th >DS</th>
+                                    <th>NS</th>
+                                    <th class="sepL">Total</th>
                                     <th>Present</th>
                                     <th>Absent</th>
                                     <th>Rate</th>
-                                    <th>Reduction 10%</th>
+                                    <th>Reduct 10%</th>
+                                    <th>0 </th>
                                     <th>1 </th>
                                     <th>2 </th>
                                     <th>3 </th>
-                                    <th>Actual Result</th>
+                                    <th>Total OT</th>
                                     <th>Gap</th>
                                     <th>Status</th>
-                                    <th>Achievements</th>
                                 </tr>
                             </thead>
                             <tbody id="departmentBreakdown">
@@ -161,13 +170,13 @@
                                     <th id="TotalAbsent">0</th>
                                     <th id="TotalRate">0%</th>
                                     <th class="rc rc-first" id="TotalReduct">0</th>
+                                    <th class="rc" id="TotalOt">0</th>
                                     <th class="rc" id="TotalOt1">0</th>
                                     <th class="rc" id="TotalOt2">0</th>
                                     <th class="rc" id="TotalOt3">0</th>
                                     <th class="rc" id="TotalActual">0</th>
                                     <th class="rc" id="TotalGap">0</th>
                                     <th class="rc" id="IsStatus">0</th>
-                                    <th class="rc" id="TotalAchieve">0</th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -247,7 +256,9 @@
         postMethod
     } from '@Url.Content("~/Scripts/modules/index.js")';
 
-     const REFRESH_INTERVAL_MS = 10000; // 1 minute
+    const REFRESH_INTERVAL_MS = 10000; // 1 minute
+
+
 
     class AttendanceDashboardController {
         constructor() {
@@ -276,16 +287,51 @@
             this.setShift();
             setInterval(() => this.setShift(), 10000); // fixed: was calling setShift() immediately and passing undefined to setInterval
 
+            this.updateScreenSize();
+            window.addEventListener('resize', () => this.updateScreenSize());
+
             await this.refreshAll();
 
             this.initRefreshToggle();
-            this.initManualRefresh(); 
-
+            this.initManualRefresh();
+            this.initDateButtons();
 
             this.filterDateSelect.addEventListener('change', async (e) => {
                 this.isfilter = 1;
                 await this.refreshAll();
             });
+        }
+
+        initDateButtons() {
+            const input = this.filterDateSelect;
+            const pad = n => (n < 10 ? '0' : '') + n;
+            const fmt = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+
+            const shift = async (days) => {
+                const parts = (input.value || fmt(new Date())).split('-');
+                const d = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+                d.setDate(d.getDate() + days);
+                input.value = fmt(d);
+
+                this.isfilter = 1;          // lock to the chosen date so auto-refresh keeps it
+                await this.refreshAll();
+            };
+
+            const prev = document.getElementById('datePrev');
+            const next = document.getElementById('dateNext');
+            const today = document.getElementById('dateToday');
+
+            if (prev) prev.addEventListener('click', () => shift(-1));
+            if (next) next.addEventListener('click', () => shift(1));
+
+            // null-guarded, so a missing button can't break init() again
+            if (today) {
+                today.addEventListener('click', async () => {
+                    input.value = fmt(new Date());
+                    this.isfilter = 0;      // back to live mode
+                    await this.refreshAll();
+                });
+            }
         }
 
         initManualRefresh() {
@@ -351,7 +397,7 @@
                     filterDate: strdate, isfilter: this.isfilter
                 });
 
-                console.log(res);
+                //console.log(res);
                  if (!res?.Success) {
                      console.log('No data found in Group Data ');
                      return;
@@ -363,8 +409,10 @@
                     res.data.today.split(" ")[0];
 
                 if (this.isfilter == 0) {
+                    const n = new Date();
+                    const pad = v => (v < 10 ? '0' : '') + v;
                     document.getElementById("filterDate").value =
-                        new Date().toISOString().split("T")[0];
+                        n.getFullYear() + '-' + pad(n.getMonth() + 1) + '-' + pad(n.getDate());
                 }
 
 
@@ -375,16 +423,23 @@
         }
 
         RenderAttendanceSummary(data) {
-            console.log("Attendance Summary:", data);
+            // console.log("Attendance Summary:", data);
             const totalEl = document.getElementById("totalhead");
             const presentEl = document.getElementById("presentCount");
             const absentEl = document.getElementById("absentCount");
             const absentRateEl = document.getElementById("absentrateCount");
 
+            const reductEl = document.getElementById("targetCount");
+            const actualEl = document.getElementById("actualCount");
+            const achievEL = document.getElementById("achieveRate");
+
             totalEl.innerText = "0";
             presentEl.innerText = "0";
             absentEl.innerText = "0";
             absentRateEl.innerText = "0";
+            reductEl.innerText = "0";
+            actualEl.innerText = "0";
+            achievEL.innerText = "0";
 
             // For the Summary section on the right
             const SumtotalEl = document.getElementById("totalHeadcount");
@@ -392,6 +447,8 @@
             const SumabsentEl = document.getElementById("totalAbsent");
             const SumabsentRateEl = document.getElementById("totalAntendanceRate");
             const SumbsentRateEl = document.getElementById("totalAbsentRate");
+
+  
 
             SumtotalEl.innerText = "0";
             SumpresentEl.innerText = "0";
@@ -403,6 +460,10 @@
             this.animateNumber(presentEl, data.TotalEmployees, 1200);
             this.animateNumber(absentEl, data.TotalAbsent, 1200);
             this.animateNumber(absentRateEl, data.AttendRate, 1200, ' %');
+
+            // this.animateNumber(reductEl, data.TotalEmployees, 1200);
+            // this.animateNumber(actualEl, data.TotalAbsent, 1200);
+            // this.animateNumber(achievEL, data.AttendRate, 1200, ' %');
 
 
             // Right Summary
@@ -440,7 +501,7 @@
                     return;
                 }
                 this.renderTable(res.data);
-                console.log(res.data);
+                //console.log(res.data);
                 //console.log(res.data);
             } catch (error) {
                 console.error('Error fetching group data:', error);
@@ -461,10 +522,10 @@
                          </td>
                      </tr>`;
                 this.RenderTotals([]);
-                this.RenderCharts([]);       
+                this.RenderCharts([]);
                 return;
             }
-         
+
             this.tbody.innerHTML = this.currentData.map(row => {
 
 
@@ -483,17 +544,17 @@
                              <td>${row.TotalHeadCount || ''}</td>
                              <td>${row.PresentCount}</td>
                              <td class="status-column">${row.Absent || '0'}</td>
-                             <td> <span class="rate-badge">${row.AttendanceRate ?? '0'}%</span>    </td>
+                             <td style='border: 1px solid #2a4a72;  border-left: none;'> <span class="rate-badge">${row.AttendanceRate ?? '0'}%</span>    </td>
 
                              <td>${row.ReductionPercent || ''}</td>
+                             <td>${row.Overtime || '0'}</td>
                              <td>${row.Overtime_1 || '0'}</td>
                              <td>${row.Overtime_2 || '0'}</td>
                              <td>${row.Overtime_3 || '0'}</td>
                              <td>${row.ActualResult || '0'}</td>
                              <td>${row.GapResult || '0'}</td>
-                            
+
                              <td> <span class="status-pill ${row.ResultStatus == 'Achieved' ? 'ok' : 'bad'}">${row.ResultStatus || ''}</span></td>
-                             <td>${row.ActualResult || ''}</td>
                      </tr>`;
             }).join('');
 
@@ -510,13 +571,14 @@
                 acc.present += Number(row.PresentCount) || 0;
                 acc.absent += Number(row.Absent) || 0;
                 acc.reduct += Number(row.ReductionPercent) || 0;
+                acc.over += Number(row.Overtime) || 0;
                 acc.over1 += Number(row.Overtime_1) || 0;
                 acc.over2 += Number(row.Overtime_2) || 0;
                 acc.over3 += Number(row.Overtime_3) || 0;
                 acc.actual += Number(row.ActualResult) || 0;
                 acc.gap += Number(row.GapResult) || 0;
                 return acc;
-            }, { day: 0, night: 0, head: 0, present: 0, absent: 0, reduct: 0, over1: 0, over2: 0, over3: 0, actual: 0, gap: 0 });
+            }, { day: 0, night: 0, head: 0, present: 0, absent: 0, reduct: 0, over: 0, over1: 0, over2: 0, over3: 0, actual: 0, gap: 0 });
 
             const attendRate = totals.head > 0 ? ((totals.present / totals.head) * 100).toFixed(0) : 0;
             const achieve = totals.reduct > 0 ? ((totals.actual / totals.reduct) * 100).toFixed(2) : '0.00';
@@ -530,6 +592,7 @@
             set('TotalAbsent', totals.absent);
             set('TotalRate', `${attendRate}%`);
             set('TotalReduct', totals.reduct);
+            set('TotalOt', totals.over);
             set('TotalOt1', totals.over1);
             set('TotalOt2', totals.over2);
             set('TotalOt3', totals.over3);
@@ -714,7 +777,7 @@
                                 stepSize: 25,
                                 autoSkip: false,
                                 maxTicksLimit: 5,
-                                font: { size: 9 },
+                                font: { size: 7 },
                                 color: '#fff',
                                 callback: v => `${v}%`
                             },
@@ -722,7 +785,7 @@
                         },
                         x: {
                             ticks: {
-                                font: { size: 9 },
+                                font: { size: 7 },
                                 color: '#fff'
                             },
                             grid: { color: 'rgba(255, 255, 255, 0.1)' }
@@ -919,10 +982,14 @@
             this._animFrames.set(el, frameId);
         }
 
+
+
         RenderCharts(data) {
+
+
             if (typeof Chart === 'undefined') return;
 
-            const TEXT = '#fff';        // use '#1f2d3d' if you switch to the light theme in the picture
+            const TEXT = '#fff';
             const GRID = 'rgba(255,255,255,0.1)';
 
             const labels = data.map(r => r.DepartmentName);
@@ -930,7 +997,12 @@
             const actuals = data.map(r => Number(r.ActualResult) || 0);
 
             const sum = f => data.reduce((a, r) => a + (Number(r[f]) || 0), 0);
-            const ot = [sum('Overtime_1'), sum('Overtime_2'), sum('Overtime_3')];
+            const ot = [
+                sum('Overtime'),
+                sum('Overtime_1'),
+                sum('Overtime_2'),
+                sum('Overtime_3')
+            ];
 
             const achieved = actuals.filter((a, i) => a >= targets[i]).length;
             const notAchieved = data.length - achieved;
@@ -938,121 +1010,389 @@
             document.getElementById('achCnt').textContent = achieved;
             document.getElementById('notCnt').textContent = notAchieved;
 
-            // value labels above bars
+
+            // ============================================================
+            // BAR VALUE LABELS
+            // ============================================================
             const barLabels = {
                 id: 'barLabels',
+
                 afterDatasetsDraw(chart) {
                     const { ctx } = chart;
+
                     chart.data.datasets.forEach((ds, i) => {
                         const meta = chart.getDatasetMeta(i);
+
                         if (meta.hidden) return;
+
                         meta.data.forEach((bar, idx) => {
+
                             ctx.save();
+
                             ctx.fillStyle = TEXT;
-                            ctx.font = 'bold 10px sans-serif';
+
+                            // Smaller value text
+                            ctx.font = 'bold 8px sans-serif';
+
                             ctx.textAlign = 'center';
                             ctx.textBaseline = 'bottom';
-                            ctx.fillText(ds.data[idx], bar.x, bar.y - 3);
+
+                            // Smaller gap from bar
+                            ctx.fillText(
+                                ds.data[idx],
+                                bar.x,
+                                bar.y - 2
+                            );
+
                             ctx.restore();
                         });
                     });
                 }
             };
 
-            // count + % inside each slice, total in the middle
+
+            // ============================================================
+            // DONUT LABELS
+            // ============================================================
             const donutLabels = {
                 id: 'donutLabels',
+
                 afterDatasetsDraw(chart) {
+
                     const { ctx } = chart;
+
                     const values = chart.data.datasets[0].data;
-                    const total = values.reduce((a, b) => a + b, 0);
+
+                    const total = values.reduce(
+                        (a, b) => a + b,
+                        0
+                    );
+
                     const meta = chart.getDatasetMeta(0);
 
                     meta.data.forEach((arc, i) => {
+
                         if (!values[i]) return;
+
                         const p = arc.getCenterPoint();
-                        const pct = ((values[i] / total) * 100).toFixed(1);
+
+                        const pct = (
+                            (values[i] / total) * 100
+                        ).toFixed(1);
+
                         ctx.save();
+
                         ctx.fillStyle = '#fff';
                         ctx.textAlign = 'center';
-                        ctx.font = 'bold 13px sans-serif';
-                        ctx.fillText(values[i], p.x, p.y - 2);
-                        ctx.font = '11px sans-serif';
-                        ctx.fillText(`(${pct}%)`, p.x, p.y + 12);
+
+                        // Smaller count
+                        ctx.font = 'bold 10px sans-serif';
+
+
+
+                        // Smaller percentage
+                        ctx.font = '8px sans-serif';
+
+                        ctx.fillText(
+                            `(${pct}%)`,
+                            p.x,
+                            p.y + 0
+                        );
+
                         ctx.restore();
                     });
 
-                    const { left, right, top, bottom } = chart.chartArea;
-                    const cx = (left + right) / 2, cy = (top + bottom) / 2;
+
+                    // Center total
+                    const {
+                        left,
+                        right,
+                        top,
+                        bottom
+                    } = chart.chartArea;
+
+                    const cx = (left + right) / 2;
+                    const cy = (top + bottom) / 2;
+
                     ctx.save();
+
                     ctx.fillStyle = TEXT;
                     ctx.textAlign = 'center';
-                    ctx.font = 'bold 26px sans-serif';
-                    ctx.fillText(total, cx, cy + 2);
-                    ctx.font = '11px sans-serif';
-                    ctx.fillText('Departments', cx, cy + 18);
+
+                    // Smaller center number
+                    ctx.font = 'bold 18px sans-serif';
+
+
+
+                    // Smaller center text
+                    ctx.font = '8px sans-serif';
+
+                    ctx.fillText(
+                        'Production 1',
+                        cx,
+                        cy + 4
+                    );
+
                     ctx.restore();
                 }
             };
 
+
+            // ============================================================
+            // AXIS SETTINGS
+            // ============================================================
             const axes = {
-                y: { beginAtZero: true, ticks: { font: { size: 9 }, color: TEXT, precision: 0 }, grid: { color: GRID } },
-                x: { ticks: { font: { size: 9 }, color: TEXT, maxRotation: 0 }, grid: { display: false } }
+
+                y: {
+                    beginAtZero: true,
+
+                    ticks: {
+                        font: {
+                            size: 7
+                        },
+                        color: TEXT,
+                        precision: 0,
+                        padding: 2
+                    },
+
+                    grid: {
+                        color: GRID
+                    }
+                },
+
+                x: {
+
+                    ticks: {
+                        font: {
+                            size: 7
+                        },
+
+                        color: TEXT,
+
+                        maxRotation: 0,
+                        minRotation: 0,
+
+                        padding: 2
+                    },
+
+                    grid: {
+                        display: false
+                    }
+                }
             };
-            const base = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } };
 
-            // 1. Target vs Actual (blue / orange, like the picture)
-            this._upsert('targetChart', 'targetChart', {
-                type: 'bar',
-                data: {
-                    labels,
-                    datasets: [
-                        { label: '10% Reduction Target', data: targets, backgroundColor: '#2f80d8', borderRadius: 2 },
-                        { label: 'Actual Result', data: actuals, backgroundColor: '#f57c2b', borderRadius: 2 }
+
+            // ============================================================
+            // BASE OPTIONS
+            // ============================================================
+            const base = {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                // Re-enabled so charts animate again on every refresh
+                // (_upsert destroys and recreates them each time)
+                animation: {
+                    duration: 900,
+                    easing: 'easeOutQuart'
+                },
+
+                layout: {
+                    padding: {
+                        top: 4,
+                        right: 2,
+                        bottom: 2,
+                        left: 2
+                    }
+                },
+
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            };
+
+
+            // ============================================================
+            // 1. TARGET VS ACTUAL
+            // ============================================================
+            this._upsert(
+                'targetChart',
+                'targetChart',
+                {
+                    type: 'bar',
+
+                    data: {
+                        labels,
+
+                        datasets: [
+                            {
+                                label: '10% Reduction Target',
+                                data: targets,
+                                backgroundColor: '#2f80d8',
+                                borderRadius: 2,
+
+                                // Make bars slightly thinner
+                                barPercentage: 0.55,
+                                categoryPercentage: 0.75
+                            },
+
+                            {
+                                label: 'Actual Result',
+                                data: actuals,
+                                backgroundColor: '#f57c2b',
+                                borderRadius: 2,
+
+                                barPercentage: 0.55,
+                                categoryPercentage: 0.75
+                            }
+                        ]
+                    },
+
+                    options: {
+                        ...base,
+
+                        scales: axes
+                    },
+
+                    plugins: [
+                        barLabels
                     ]
-                },
-                options: { ...base, scales: axes },
-                plugins: [barLabels]
-            });
+                }
+            );
 
-            // 2. Department status donut
-            this._upsert('statusChart', 'statusChart', {
-                type: 'doughnut',
-                data: {
-                    labels: ['Achieved', 'Not Achieved'],
-                    datasets: [{ data: [achieved, notAchieved], backgroundColor: ['#43a047', '#d94a38'], borderWidth: 2 }]
-                },
-                options: { ...base, cutout: '48%' },
-                plugins: [donutLabels]
-            });
 
-            // 3. Actual result breakdown (1 / 2 / 3 hrs OT)
-            this._upsert('otChart', 'otChart', {
-                type: 'bar',
-                data: {
-                    labels: ['1 hr OT', '2 hrs OT', '3 hrs OT'],
-                    datasets: [{ data: ot, backgroundColor: ['#2f80d8', '#fbb417', '#e53935'], borderRadius: 2, barPercentage: 0.45 }]
-                },
-                options: { ...base, scales: axes },
-                plugins: [barLabels]
-            });
+            // ============================================================
+            // 2. DEPARTMENT STATUS
+            // ============================================================
+            this._upsert(
+                'statusChart',
+                'statusChart',
+                {
+                    type: 'doughnut',
+
+                    data: {
+                        labels: [
+                            'Achieved',
+                            'Not Achieved'
+                        ],
+
+                        datasets: [
+                            {
+                                data: [
+                                    achieved,
+                                    notAchieved
+                                ],
+
+                                backgroundColor: [
+                                    '#43a047',
+                                    '#d94a38'
+                                ],
+
+                                borderWidth: 2
+                            }
+                        ]
+                    },
+
+                    options: {
+                        ...base,
+
+                        cutout: '55%',
+
+                        // sweep + grow effect for the donut
+                        animation: {
+                            ...base.animation,
+                            animateRotate: true,
+                            animateScale: true
+                        }
+                    },
+
+                    plugins: [
+                        donutLabels
+                    ]
+                }
+            );
+
+
+            // ============================================================
+            // 3. OVERTIME
+            // ============================================================
+            this._upsert(
+                'otChart',
+                'otChart',
+                {
+                    type: 'bar',
+
+                    data: {
+                        labels: [
+                            'No OT', 
+                            '1 hr OT',
+                            '2 hrs OT',
+                            '3 hrs OT'
+                        ],
+
+                        datasets: [
+                            {
+                                data: ot,
+
+                                backgroundColor: [
+                                    '#2f80d8',
+                                    '#2f80d8',
+                                    '#fbb417',
+                                    '#e53935'
+                                ],
+
+                                borderRadius: 2,
+
+                                barPercentage: 0.40,
+                                categoryPercentage: 0.65
+                            }
+                        ]
+                    },
+
+                    options: {
+                        ...base,
+
+                        scales: axes
+                    },
+
+                    plugins: [
+                        barLabels
+                    ]
+                }
+            );
         }
 
-        // update in place on refresh so nothing flickers every 10s
         _upsert(key, canvasId, config) {
-            const chart = this[key];
-            if (chart && chart.canvas && document.body.contains(chart.canvas)) {
-                chart.data.labels = config.data.labels;
-                config.data.datasets.forEach((ds, i) => Object.assign(chart.data.datasets[i], ds));
-                chart.update();
-                return;
+            // Same pattern as RenderTrendsChart: destroy + recreate so the
+            // initial animation plays on every refresh.
+            if (this[key]) {
+                this[key].destroy();
+                this[key] = null;
             }
-            this[key] = new Chart(document.getElementById(canvasId).getContext('2d'), config);
+
+            this[key] = new Chart(
+                document.getElementById(canvasId).getContext('2d'),
+                config
+            );
         }
 
         changeformatnumber(n) {
             return n.toLocaleString('en-US');
         }
+        updateScreenSize() {
+            const screenEl = document.getElementById('screenSize');
+            const viewportEl = document.getElementById('viewportSize');
+
+            // Physical monitor resolution
+            if (screenEl) screenEl.textContent = `${window.screen.width} x ${window.screen.height}`;
+
+            // Actual usable browser area (what your dashboard really has to fit in)
+            if (viewportEl) viewportEl.textContent = `${window.innerWidth} x ${window.innerHeight}`;
+    }
+
 
     }
 

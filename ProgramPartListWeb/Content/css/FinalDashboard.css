@@ -1218,21 +1218,216 @@ body {
 
 
 
+@media (max-width: 1000px) and (max-height: 560px) {
 
+    html, body {
+        padding: 3px;
+    }
 
-.status-pill {
-    display: block;
-    padding: 3px 6px;
-    font-weight: 600;
-    text-align: center;
+    .dashboard {
+        height: calc(100dvh - 6px);
+        max-height: calc(100dvh - 6px);
+    }
+
+    .col-left, .col-center, .col-right {
+        padding: 6px 8px;
+    }
+
+    /* ---------- LEFT COLUMN ---------- */
+    .dasheader {
+        padding: .3em 0;
+        margin-bottom: 1em;
+    }
+
+    .section-title {
+        font-size: .75rem;
+        margin: 0;
+    }
+
+    .ncr-bars {
+        height: auto;
+        gap: 4px;
+        margin-bottom: 3rem;
+    }
+
+    .ncr-circle,
+    .circle-svg {
+        width: 64px;
+        height: 64px;
+    }
+
+    .circle-label .circle-percent {
+        font-size: .75rem;
+    }
+
+    /* replaces the translateX hack; centers the pill under the 64px ring */
+    .circle-text {
+        width: 96px;
+        margin: .3rem 0 0 -16px;
+        padding: .2em .3em;
+        font-size: .55rem;
+        line-height: 1.2;
+        transform: none;
+    }
+
+    .dist-row {
+        margin: .2rem 0;
+        gap: .25rem;
+    }
+
+        .dist-row .label {
+            font-size: .65rem;
+            width: 72px;
+        }
+
+        .dist-row .track {
+            height: 1.5rem;
+            margin: .3em 0;
+        }
+
+            .dist-row .track .fill {
+                font-size: .55rem;
+                min-width: 22px;
+                padding-right: .2rem;
+            }
+
+    .badge-harness {
+        padding: .3rem .4rem;
+        margin-top: 1rem;
+        gap: .3rem;
+    }
+
+        .badge-harness .icon {
+            font-size: 1.4rem;
+        }
+
+        .badge-harness .info .title {
+            font-size: .8rem;
+        }
+
+        .badge-harness .info .group-badge,
+        .badge-harness .info .effort {
+            font-size: .55rem;
+            margin-bottom: 0;
+        }
+
+    /* ---------- CENTER COLUMN ---------- */
+    #dashboard-title {
+        font-size: 1.4rem;
+        margin: 0 0 1rem;
+        line-height: 1.15;
+        letter-spacing: 0;
+    }
+
+    .calendar {
+        margin: .25rem auto 1.6em;
+        border-width: 2px;
+    }
+
+        .calendar .header .month,
+        .calendar .header .year {
+            padding: .15rem 0;
+            font-size: .6rem;
+        }
+
+        .calendar .grid {
+            padding: .15rem .2rem .2rem;
+        }
+
+            .calendar .grid .weekdays div {
+                font-size: .45rem;
+            }
+
+            .calendar .grid .days div {
+                font-size: .5rem;
+                padding: .05rem 0;
+            }
+
+            .calendar .grid .days .today {
+                width: 1.5em;
+                height: 1.5em;
+                padding: 0;
+            }
+
+    .best-block h6 {
+        font-size: .6rem;
+        padding: .5em 0;
+        margin: .3em 0 1em;
+    }
+
+    .best-block .line-detail {
+        gap: .25rem;
+        margin-top: .1rem;
+        flex-wrap: nowrap;
+    }
+
+        .best-block .line-detail .emoji-big {
+            font-size: 1.4rem;
+        }
+
+        .best-block .line-detail .line-number {
+            font-size: 1rem;
+        }
+
+        .best-block .line-detail .slogan {
+            font-size: .55rem;
+        }
+
+    .audit-info-bar {
+        gap: 3px;
+    }
+
+    .audit-chip {
+        gap: .3rem;
+        padding: .6rem .35rem;
+        border-radius: 6px;
+    }
+
+    .audit-icon {
+        width: 18px;
+        height: 18px;
+        font-size: .65rem;
+    }
+
+    .audit-label {
+        font-size: .4rem;
+    }
+
+    .audit-value {
+        font-size: .6rem !important;
+        padding: 1px 0;
+    }
+
+    /* ---------- RIGHT COLUMN ---------- */
+    #line-list {
+        gap: 1px;
+    }
+
+    .line-row {
+        padding: 0 6px;
+        gap: .2rem;
+    }
+
+        .line-row .name,
+        .line-row .ncr-info {
+            font-size: .55rem;
+        }
+
+        .line-row .emoji {
+            font-size: .65rem;
+        }
+
+        .line-row:hover {
+            transform: none;
+        }
+    /* avoids the 1.02 scale causing overflow/jitter on tiny rows */
+    .line-detail{
+        margin-bottom: 1.5em;
+    }
+    .line-number {
+        font-size: 1.6rem !important;
+    }
+    .slogan{
+        font-size: 1rem !important;
+    }
 }
-
-    .status-pill.ok {
-        background: #d7f0d9;
-        color: #1b5e20;
-    }
-
-    .status-pill.bad {
-        background: #fbdcdc;
-        color: #b71c1c;
-    }

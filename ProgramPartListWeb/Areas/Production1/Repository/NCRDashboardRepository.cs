@@ -639,19 +639,257 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 
 
         // =====================================================================
-        // =================== ATTENDANCE RATE DATA INFORMATION ==============
-        // ======================================================================
-        public async Task<List<AttendanceModel>> AttendanceBreakDown(DateTime? filterDate, int isfilter)
+        // =================== ATTENDANCE RATE DATA INFORMATION ================
+        // =====================================================================
+        public async Task<List<AttendanceModel>> AttendanceBreakDown(
+            DateTime? filterDate,
+            int isfilter)
         {
+            // ================================================================
+            // 1. Make sure today's AttendanceDashboard records exist
+            // ================================================================
             if (!await IsTodayRecorded())
             {
-                // insert today's rows for each department
                 var lastData = await AttendanceGetLastBreakDown();
+
                 await InsertTodayFromLastBreakDown(lastData);
             }
-            
-            return await SqlDataAcess_Test.QueryAsync<AttendanceModel>(AttendanceQuery(0, filterDate, isfilter));
+
+            // ================================================================
+            // 2. Update overtime according to shift/time window
+            //
+            // DAY SHIFT
+            // 03:30 PM - 09:30 PM
+            // Update TODAY
+            //
+            // NIGHT SHIFT
+            // 03:30 AM - 09:30 AM
+            // Update YESTERDAY
+            // ================================================================
+            TimeSpan currentTime = DateTime.Now.TimeOfDay;
+
+            TimeSpan dayShiftStart = new TimeSpan(15, 30, 0); // 03:30 PM
+            TimeSpan dayShiftEnd = new TimeSpan(21, 30, 0); // 09:30 PM
+
+            TimeSpan nightShiftStart = new TimeSpan(3, 30, 0); // 03:30 AM
+            TimeSpan nightShiftEnd = new TimeSpan(9, 30, 0); // 09:30 AM
+
+
+            // ================================================================
+            // DAY SHIFT
+            // 03:30 PM - 09:30 PM
+            // ================================================================
+            if (currentTime >= dayShiftStart &&
+                currentTime <= dayShiftEnd)
+            {
+                await UpdateTodayDayShiftOvertime();
+            }
+
+
+            // ================================================================
+            // NIGHT SHIFT
+            // 03:30 AM - 09:30 AM
+            // ================================================================
+            else if (currentTime >= nightShiftStart &&
+                     currentTime <= nightShiftEnd)
+            {
+                await UpdateYesterdayNightShiftOvertime();
+            }
+
+
+            // ================================================================
+            // 3. Return dashboard
+            // ================================================================
+            return await SqlDataAcess_Test.QueryAsync<AttendanceModel>(
+                AttendanceQuery(0, filterDate, isfilter));
         }
+
+        // =====================================================================
+        // Update yesterday's Night Shift overtime
+        // =====================================================================
+        public async Task UpdateYesterdayNightShiftOvertime()
+        {
+            const string sql = @"
+                    ;WITH OvertimeData AS
+                    (
+                        SELECT
+                            e.DepartmentId,
+
+                            -- Total number of employees with overtime
+                            COUNT(
+                                CASE
+                                    WHEN ISNULL(a.OvertimeHours, 0) > 0
+                                        THEN 1
+                                END
+                            ) AS Overtime,
+
+                            -- Overtime 1 = 1.00 hour
+                            COUNT(
+                                CASE
+                                    WHEN ISNULL(a.OvertimeHours, 0) = 1.00
+                                        THEN 1
+                                END
+                            ) AS Overtime_1,
+
+                            -- Overtime 2 = 1.83 hours
+                            COUNT(
+                                CASE
+                                    WHEN ISNULL(a.OvertimeHours, 0) = 1.83
+                                        THEN 1
+                                END
+                            ) AS Overtime_2,
+
+                            -- Overtime 3 = 2.83 hours
+                            COUNT(
+                                CASE
+                                    WHEN ISNULL(a.OvertimeHours, 0) = 2.83
+                                        THEN 1
+                                END
+                            ) AS Overtime_3
+
+                        FROM PMACS_TEST.dbo.P1SA_AttendanceMonitor_Temp a
+
+                        INNER JOIN PMACS_TEST.dbo.P1SA_Employees_Temp e
+                            ON e.EmployeeId = a.EmployeeId
+
+                        WHERE
+                            a.IsDeleted = 0
+                            AND e.IsDeleted = 0
+
+                            -- NIGHT SHIFT
+                            AND a.ShiftTypeId = 1
+
+                            -- Yesterday's WorkDate
+                            AND CAST(a.WorkDate AS DATE) =
+                                DATEADD(DAY, -1, CAST(GETDATE() AS DATE))
+
+                            -- Must have completed attendance
+                            AND a.TimeOut IS NOT NULL
+
+                        GROUP BY
+                            e.DepartmentId
+                    )
+
+                    UPDATE d
+                    SET
+                        d.Overtime   = ISNULL(o.Overtime, 0),
+                        d.Overtime_1 = ISNULL(o.Overtime_1, 0),
+                        d.Overtime_2 = ISNULL(o.Overtime_2, 0),
+                        d.Overtime_3 = ISNULL(o.Overtime_3, 0)
+
+                    FROM PMACS_TEST.dbo.AttendanceDashboard d
+
+                    LEFT JOIN OvertimeData o
+                        ON o.DepartmentId = d.DepartmentId
+
+                    WHERE
+                        CAST(d.DateToday AS DATE) =
+                            DATEADD(DAY, -1, CAST(GETDATE() AS DATE));
+                ";
+
+            try
+            {
+                await SqlDataAcess_Test.ExecuteAsync(sql);
+            }
+            catch (Exception ex)
+            {
+                // Log error if needed
+                throw new Exception(
+                    "Failed to update yesterday's Night Shift overtime.",
+                    ex);
+            }
+        }
+
+        // =====================================================================
+        // Update today's Day Shift overtime
+        // =====================================================================
+        public async Task UpdateTodayDayShiftOvertime()
+        {
+            const string sql = @"
+                ;WITH OvertimeData AS
+                (
+                    SELECT
+                        e.DepartmentId,
+
+                        -- Total employees with overtime
+                        SUM(
+                            CASE
+                                WHEN ISNULL(a.OvertimeHours, 0) = 0.00
+                                    THEN 1
+                                ELSE 0
+                            END
+                        ) AS Overtime,
+
+                        -- 1.00 hour OT
+                        SUM(
+                            CASE
+                                WHEN ISNULL(a.OvertimeHours, 0) = 1.00
+                                    THEN 1
+                                ELSE 0
+                            END
+                        ) AS Overtime_1,
+
+                        -- 1.83 hours OT
+                        SUM(
+                            CASE
+                                WHEN ISNULL(a.OvertimeHours, 0) = 1.83
+                                    THEN 1
+                                ELSE 0
+                            END
+                        ) AS Overtime_2,
+
+                        -- 2.83 hours OT
+                        SUM(
+                            CASE
+                                WHEN ISNULL(a.OvertimeHours, 0) = 2.83
+                                    THEN 1
+                                ELSE 0
+                            END
+                        ) AS Overtime_3
+
+                    FROM PMACS_TEST.dbo.P1SA_AttendanceMonitor_Temp a
+
+                    INNER JOIN PMACS_TEST.dbo.P1SA_Employees_Temp e
+                        ON e.EmployeeId = a.EmployeeId
+
+                    WHERE
+                        a.IsDeleted = 0
+                        AND e.IsDeleted = 0
+
+                        -- DAY SHIFT
+                        AND a.ShiftTypeId = 0
+
+                        -- Today's WorkDate
+                        AND CAST(a.WorkDate AS DATE) =
+                            CAST(GETDATE() AS DATE)
+
+                        -- Employee already timed out
+                        AND a.TimeOut IS NOT NULL
+
+                    GROUP BY
+                        e.DepartmentId
+                )
+
+                UPDATE d
+                SET
+                    d.Overtime   = ISNULL(o.Overtime, 0),
+                    d.Overtime_1 = ISNULL(o.Overtime_1, 0),
+                    d.Overtime_2 = ISNULL(o.Overtime_2, 0),
+                    d.Overtime_3 = ISNULL(o.Overtime_3, 0)
+                FROM AttendanceDashboard d
+
+                LEFT JOIN OvertimeData o
+                    ON o.DepartmentId = d.DepartmentId
+
+                WHERE
+                    d.DateToday =
+                        CAST(GETDATE() AS DATE);
+            ";
+
+            await SqlDataAcess_Test.ExecuteAsync(sql);
+        }
+
+
         public async Task<(AttendanceSummaryModel, string)> GetAttendanceSummary(DateTime? filterDate, int isfilter)
         {
             var getdata = await SqlDataAcess_Test.QuerySingleOrDefaultAsync<AttendanceSummaryModel>(AttendanceQuery(1, filterDate, isfilter));
@@ -1126,8 +1364,12 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             if (lastData == null || lastData.Count == 0) return;
 
             const string sql = @"
-                INSERT INTO AttendanceDashboard (DateToday, DepartmentId, DayShiftCount, NightShiftCount, Overtime, Overtime_1, Overtime_2, Overtime_3)
-                VALUES (CAST(GETDATE() AS DATE), @DepartmentId, @DayShiftCount, @NightShiftCount,  @Overtime, @Overtime_1, @Overtime_2, @Overtime_3)";
+                INSERT INTO AttendanceDashboard (
+                    DateToday, DepartmentId, DayShiftCount, 
+                    NightShiftCount, Overtime, Overtime_1, Overtime_2, Overtime_3)
+                VALUES 
+                    (CAST(GETDATE() AS DATE), @DepartmentId, @DayShiftCount, 
+                    @NightShiftCount,  @Overtime, @Overtime_1, @Overtime_2, @Overtime_3)";
 
             int rows = await SqlDataAcess_Test.ExecuteAsync(sql, lastData.Select(d => new
             {

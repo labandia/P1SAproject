@@ -684,20 +684,58 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 parameters);
         }
 
-        public async Task<bool> UpdateAssemblyStatus(int RecordID, string FAStatus, DateTime ShipmentDate, string mode, bool WithSR, string OrderRemarks)
+        public async Task<bool> UpdateAssemblyStatus(
+                int RecordID,
+                string FAStatus,
+                string ShipmentDate,
+                string mode,
+                bool WithSR,
+                string OrderRemarks)
         {
-            int rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE {maintable} 
-                    SET FAStatus =@FAStatus, ShipmentDate =@ShipmentDate, WithSR =@WithSR, 
-                    OrderRemarks =@OrderRemarks WHERE RecordID =@RecordID", new
+            try
             {
-                FAStatus,
-                ShipmentDate,
-                OrderRemarks,
-                WithSR,
-                RecordID
-            });
+                // Check all parameter values
+                System.Diagnostics.Debug.WriteLine("===== UpdateAssemblyStatus Parameters =====");
+                System.Diagnostics.Debug.WriteLine("RecordID: " + RecordID);
+                System.Diagnostics.Debug.WriteLine("FAStatus: " + (FAStatus ?? "NULL"));
+                System.Diagnostics.Debug.WriteLine("ShipmentDate: " + ShipmentDate);
+                System.Diagnostics.Debug.WriteLine("mode: " + (mode ?? "NULL"));
+                System.Diagnostics.Debug.WriteLine("WithSR: " + WithSR);
+                System.Diagnostics.Debug.WriteLine("OrderRemarks: " + (OrderRemarks ?? "NULL"));
 
-            return rows > 0;
+
+                // Execute SQL update
+                string sql = $@"
+                    UPDATE {maintable}
+                    SET
+                        FAStatus = @FAStatus,
+                        ShipmentDate = @ShipmentDate,
+                        WithSR = @WithSR,
+                        ShipmentMode = @mode,
+                        OrderRemarks = @OrderRemarks
+                    WHERE RecordID = @RecordID";
+
+                int rows = await SqlDataAcess_Test.ExecuteAsync(sql, new
+                {
+                    FAStatus = FAStatus,
+                    ShipmentDate = ShipmentDate,
+                    WithSR = WithSR,
+                    mode = mode,
+                    OrderRemarks = OrderRemarks,
+                    RecordID = RecordID
+                });
+
+                System.Diagnostics.Debug.WriteLine("Rows affected: " + rows);
+
+                return rows > 0;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    "UpdateAssemblyStatus ERROR: " + ex.ToString());
+
+                throw;
+            }
         }
 
         public async Task<int> GetNumberofNextprocess(string line)

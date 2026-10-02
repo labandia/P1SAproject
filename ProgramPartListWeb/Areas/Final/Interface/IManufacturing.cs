@@ -47,7 +47,7 @@ namespace ProgramPartListWeb.Areas.Final
 
 
         Task<int> GetNumberofNextprocess(string record);
-        Task<bool> UpdateAssemblyStatus(int recordID, string finalassy, DateTime shipdate, string mode, bool WithSR, string remarks);
+        Task<bool> UpdateAssemblyStatus(int recordID, string finalassy, string shipdate, string mode, bool WithSR, string remarks);
         Task<List<P1TraceablityModel>> TraceableShopOrderSummary(string shopOrder);
 
         // ====== PARTLY SHORT DATA SUMMARY REPORT =================

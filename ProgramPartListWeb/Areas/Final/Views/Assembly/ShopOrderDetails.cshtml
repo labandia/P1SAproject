@@ -175,6 +175,18 @@
                 <input type="date" class="field-box" id="ShipmentDate" />
             </div>
 
+            <div class="field-group">
+                <span class="field-label">Mode Shipment</span>
+                <select id="Mode" name="Mode">
+                    <option value="">-- Select Mode --</option>
+                    <option value="HAND OVER">Hand Over</option>
+                    <option value="AIR">AIR</option>
+                    <option value="FEDEX">FEDEX</option>
+                    <option value="OCEAN">OCEAN</option>
+                    <option value="UPS">UPS</option>
+                </select>
+            </div>
+
             <div class="check-group">
                 <span class="field-label">With SR : </span>
                 <input type="checkbox" id="WithSR" />
@@ -534,7 +546,7 @@
                 });
                 if (!res?.Success) return;
                 const data = res.data;
-                //console.log(data);
+                console.log(data);
                 this.strLine = data.Line;
                 this.finalShopOrder = data.FinalShopOrder;
                 document.getElementById("finalShopOrderText").textContent = data.FinalShopOrder;
@@ -550,6 +562,8 @@
                 document.getElementById('WithSR').checked = data.WithSR;
 
                 document.getElementById('noteText').textContent = data.Note
+                document.getElementById('Mode').value = data.ShipmentMode
+
 
                 // Fill up the form
                 document.getElementById("FAStatus").value = data.FAStatus;
@@ -897,7 +911,7 @@
                 RecordID: this.recordID,
                 FAStatus: document.getElementById('FAStatus').value,
                 ShipmentDate: document.getElementById('ShipmentDate').value,
-                Mode: "",
+                Mode: document.getElementById('Mode').value,
                 WithSR: document.getElementById('WithSR').checked,
                 Remarks: document.getElementById('Remarks').value
             };
@@ -1002,7 +1016,7 @@
                                 tr.classList.remove('selected');
                             });
 
-                        this.clearPartPreparationForm();    
+                        this.clearPartPreparationForm();
 
                     } else {
 
@@ -1059,14 +1073,13 @@
             const originalText = savebtn.innerHTML;
 
             try {
-                const res = await postMethod('@Url.Action("UpdateAssemblyStats", "Assembly")', formdata);
 
+                const res = await postMethod('@Url.Action("UpdateAssemblyStats", "Assembly")', formdata);
                 if (res?.Success) {
-                    alert('Assembly status updated successfully!');
-                    // Optionally reload data to reflect changes
-                    //await this.LoadDetailsinfo();
+                   alert('Assembly status updated successfully!');
+                   //await this.LoadDetailsinfo();
                 } else {
-                    alert('Error: ' + (res?.Message || 'Could not save data.'));
+                   alert('Error: ' + (res?.Message || 'Could not save data.'));
                 }
             } catch (error) {
                 console.error('Save error:', error);
@@ -1124,7 +1137,7 @@
                      alert('Add Preparation Data successfully!');
                      await this.LoadPartsPreparation(this.finalShopOrder);
 
-                     this.clearPartPreparationForm();    
+                     this.clearPartPreparationForm();
                  } else {
                      alert('Error: ' + (res?.Message || 'Could not save data.'));
                  }

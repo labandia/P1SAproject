@@ -264,8 +264,16 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
 
         [HttpPost]
         public async Task<ActionResult> UpdateAssemblyStats(
-            int RecordID, string FAStatus, DateTime ShipmentDate, string Mode, bool WithSR, string Remarks)
+            int RecordID, string FAStatus, string ShipmentDate, string Mode, bool WithSR, string Remarks)
         {
+            Debug.WriteLine("===== UpdateAssemblyStatus Parameters =====");
+            Debug.WriteLine("RecordID: " + RecordID);
+            Debug.WriteLine("FAStatus: " + (FAStatus ?? "NULL"));
+            Debug.WriteLine("ShipmentDate: " + ShipmentDate);
+            Debug.WriteLine("mode: " + (Mode ?? "NULL"));
+            Debug.WriteLine("WithSR: " + WithSR);
+            Debug.WriteLine("OrderRemarks: " + (Remarks ?? "NULL"));
+
             try
             {
                 var res = await _manu.UpdateAssemblyStatus(RecordID, FAStatus, ShipmentDate, Mode, WithSR, Remarks);

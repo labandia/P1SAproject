@@ -7,7 +7,7 @@
 
         <!-- HEADER -->
         <header>
-            <h2>📋PRODUCTION 1 ATTENDANCE DASHBOARD - <span> <strong id="shiftDay">DAYSHIFT</strong>(<span id="datetoday">-/--/----</span>)</span></h2>
+            <h2>📋PRODUCTION 1 ATTENDANCE DASHBOARD - <span> <strong id="shiftDay">DAYSHIFT</strong>(<span id="datetodayShift">-/--/----</span>)</span></h2>
             <div class="animToggleWrap" style="display: none;">
                 <button id="manualRefreshBtn" class="manualRefreshBtn" title="Refresh now" type="button">
                     <svg id="refreshIcon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
@@ -304,16 +304,60 @@
 
         initDateButtons() {
             const input = this.filterDateSelect;
-            const pad = n => (n < 10 ? '0' : '') + n;
-            const fmt = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+
+            const pad = n => String(n).padStart(2, '0');
+
+            const fmt = d =>
+                `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+
+            // Normalize a date string to yyyy-MM-dd
+            const normalizeDate = (value) => {
+                if (!value) return null;
+
+                const text = String(value).trim();
+
+                // yyyy-MM-dd or yyyy-MM-dd HH:mm:ss
+                const isoMatch = text.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+
+                if (isoMatch) {
+                    return `${isoMatch[1]}-${pad(Number(isoMatch[2]))}-${pad(Number(isoMatch[3]))}`;
+                }
+
+                // MM/dd/yyyy
+                const usMatch = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+
+                if (usMatch) {
+                    return `${usMatch[3]}-${pad(Number(usMatch[1]))}-${pad(Number(usMatch[2]))}`;
+                }
+
+                return null;
+            };
+
+            // Get today's date from the database display
+            const getDatabaseToday = () => {
+                const text = document.getElementById('datetodayShift')
+                    ?.textContent?.trim();
+
+                return normalizeDate(text) || fmt(new Date());
+            };
 
             const shift = async (days) => {
-                const parts = (input.value || fmt(new Date())).split('-');
-                const d = new Date(+parts[0], +parts[1] - 1, +parts[2]);
-                d.setDate(d.getDate() + days);
-                input.value = fmt(d);
+                const baseDate =
+                    normalizeDate(input.value) || getDatabaseToday();
 
-                this.isfilter = 1;          // lock to the chosen date so auto-refresh keeps it
+                const parts = baseDate.split('-');
+
+                const d = new Date(
+                    Number(parts[0]),
+                    Number(parts[1]) - 1,
+                    Number(parts[2])
+                );
+
+                d.setDate(d.getDate() + days);
+
+                input.value = fmt(d);
+                this.isfilter = 1;
+
                 await this.refreshAll();
             };
 
@@ -321,14 +365,19 @@
             const next = document.getElementById('dateNext');
             const today = document.getElementById('dateToday');
 
-            if (prev) prev.addEventListener('click', () => shift(-1));
-            if (next) next.addEventListener('click', () => shift(1));
+            if (prev) {
+                prev.addEventListener('click', () => shift(-1));
+            }
 
-            // null-guarded, so a missing button can't break init() again
+            if (next) {
+                next.addEventListener('click', () => shift(1));
+            }
+
             if (today) {
                 today.addEventListener('click', async () => {
-                    input.value = fmt(new Date());
-                    this.isfilter = 0;      // back to live mode
+                    input.value = getDatabaseToday();
+                    this.isfilter = 0;
+
                     await this.refreshAll();
                 });
             }
@@ -391,34 +440,36 @@
 
         async GetAttendanceSummary() {
             try {
-                let strdate = document.getElementById("filterDate").value;
+                   const filterDate = document.getElementById("filterDate");
 
-                const res = await getMethod('@Url.Action("GetAttendanceSummary", "Attendance")', {
-                    filterDate: strdate, isfilter: this.isfilter
-                });
+                    const res = await getMethod(
+                        '@Url.Action("GetAttendanceSummary", "Attendance")',
+                        {
+                            filterDate: filterDate.value,
+                            isfilter: this.isfilter
+                        }
+                    );
 
-                //console.log(res);
-                 if (!res?.Success) {
-                     console.log('No data found in Group Data ');
-                     return;
-                 }
-                this.summarydata = res.data.Listdata;
-                this.RenderAttendanceSummary(this.summarydata)
+                    if (!res?.Success) {
+                        console.log('No data found in Group Data');
+                        return;
+                    }
 
-                document.getElementById("datetoday").textContent =
-                    res.data.today.split(" ")[0];
+                    this.summarydata = res.data.Listdata;
+                    this.RenderAttendanceSummary(this.summarydata);
 
-                if (this.isfilter == 0) {
-                    const n = new Date();
-                    const pad = v => (v < 10 ? '0' : '') + v;
-                    document.getElementById("filterDate").value =
-                        n.getFullYear() + '-' + pad(n.getMonth() + 1) + '-' + pad(n.getDate());
-                }
+                    // Database date
+                    const today = res.data.today.split(" ")[0];
 
+                    document.getElementById("datetodayShift").textContent = today;
 
+                    // Initialize the date filter using the database date
+                    if (!filterDate.value || this.isfilter === 0) {
+                        filterDate.value = today;
+                    }
 
             } catch (error) {
-                console.error('Error fetching group data:', error);
+                console.error('Error fetching attendance summary:', error);
             }
         }
 
@@ -431,7 +482,7 @@
 
             const reductEl = document.getElementById("targetCount");
             const actualEl = document.getElementById("actualCount");
-            const achievEL = document.getElementById("achieveRate");
+            // const achievEL = document.getElementById("achieveRate");
 
             totalEl.innerText = "0";
             presentEl.innerText = "0";
@@ -439,7 +490,7 @@
             absentRateEl.innerText = "0";
             reductEl.innerText = "0";
             actualEl.innerText = "0";
-            achievEL.innerText = "0";
+            // achievEL.innerText = "0";
 
             // For the Summary section on the right
             const SumtotalEl = document.getElementById("totalHeadcount");
@@ -448,7 +499,7 @@
             const SumabsentRateEl = document.getElementById("totalAntendanceRate");
             const SumbsentRateEl = document.getElementById("totalAbsentRate");
 
-  
+
 
             SumtotalEl.innerText = "0";
             SumpresentEl.innerText = "0";
@@ -521,14 +572,19 @@
                              No data available.
                          </td>
                      </tr>`;
-                this.RenderTotals([]);
+                this.RenderTotals([], 0);
                 this.RenderCharts([]);
                 return;
             }
 
+            let countAchieve = 0;
+
             this.tbody.innerHTML = this.currentData.map(row => {
 
-
+                if (row.ResultStatus == 'Achieved') {
+                    console.log("GOOD");
+                    countAchieve += 1;
+                }
 
                 return `
                    <tr class='fade-in'
@@ -558,12 +614,12 @@
                      </tr>`;
             }).join('');
 
-            this.RenderTotals(this.currentData);
+            this.RenderTotals(this.currentData, countAchieve);
             this.RenderCharts(this.currentData);    // <-- add
             this.BindEditInputs();
         }
 
-        RenderTotals(data) {
+        RenderTotals(data, totalachive) {
             const totals = data.reduce((acc, row) => {
                 acc.day += Number(row.DayShiftCount) || 0;
                 acc.night += Number(row.NightShiftCount) || 0;
@@ -581,8 +637,9 @@
             }, { day: 0, night: 0, head: 0, present: 0, absent: 0, reduct: 0, over: 0, over1: 0, over2: 0, over3: 0, actual: 0, gap: 0 });
 
             const attendRate = totals.head > 0 ? ((totals.present / totals.head) * 100).toFixed(0) : 0;
-            const achieve = totals.reduct > 0 ? ((totals.actual / totals.reduct) * 100).toFixed(2) : '0.00';
+            const achieve = totals.reduct > 0 ? ((totals.actual / totals.reduct) * 100).toFixed(2) : '0';
 
+            const isTotal = ((totalachive / 7 * 100)).toFixed(2);
             const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
 
             set('TotalDay', totals.day);
@@ -598,13 +655,13 @@
             set('TotalOt3', totals.over3);
             set('TotalActual', totals.actual);
             set('TotalGap', totals.gap);
-            set('IsStatus', '');
-            set('TotalAchieve', `${achieve}%`);
-
+            set('IsStatus', isTotal);
+            set('TotalAchieve', `${isTotal}%`);
+            console.log(`Total Achieves` + isTotal);
             // KPI cards
             set('targetCount', totals.reduct);
             set('actualCount', totals.actual);
-            set('achieveRate', `${achieve}%`);
+            set('achieveRate', `${isTotal}%`);
             set('ot1Count', totals.over1);   // only if you add the OT cards
             set('ot2Count', totals.over2);
             set('ot3Count', totals.over3);
@@ -1327,7 +1384,7 @@
 
                     data: {
                         labels: [
-                            'No OT', 
+                            'No OT',
                             '1 hr OT',
                             '2 hrs OT',
                             '3 hrs OT'
@@ -1391,9 +1448,41 @@
 
             // Actual usable browser area (what your dashboard really has to fit in)
             if (viewportEl) viewportEl.textContent = `${window.innerWidth} x ${window.innerHeight}`;
-    }
+        }
 
+        // Navigate to the previous or next date
+        ChangeFilterDate(days) {
+            const filterDate = document.getElementById("filterDate");
 
+            // Use the database date displayed on the dashboard as the fallback
+            const today = document.getElementById("datetodayShift").textContent;
+
+            const selectedDate = new Date(
+                (filterDate.value || today) + "T12:00:00"
+            );
+
+            selectedDate.setDate(selectedDate.getDate() + days);
+
+            const pad = v => String(v).padStart(2, "0");
+
+            filterDate.value =
+                `${selectedDate.getFullYear()}-${pad(selectedDate.getMonth() + 1)}-${pad(selectedDate.getDate())}`;
+
+            this.isfilter = 1;
+
+            this.GetAttendanceSummary();
+        };
+
+        // Return to the database's current date
+        GoToToday() {
+            const today = document.getElementById("datetodayShift").textContent;
+
+            document.getElementById("filterDate").value = today;
+
+            this.isfilter = 0;
+
+            this.GetAttendanceSummary();
+        };
     }
 
 

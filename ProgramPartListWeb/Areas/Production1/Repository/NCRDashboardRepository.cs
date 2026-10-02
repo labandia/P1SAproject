@@ -114,37 +114,57 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 
         public Task<List<LineTopNCRModel>> GetBestLines()
         {
-            return SqlDataAcess_Test.QueryAsync<LineTopNCRModel>($@"WITH LineCounts AS (
-                    SELECT 
+            return SqlDataAcess_Test.QueryAsync<LineTopNCRModel>(@"
+                DECLARE @ThisMonth DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);
+
+                -- Same filters as LineCounts below: if the current month has no countable
+                -- rows, report the previous month instead of returning an empty list.
+                DECLARE @StartDate DATE =
+                    CASE WHEN EXISTS (
+                             SELECT 1
+                             FROM dbo.ProductionFinal_Registration
+                             WHERE NCRTypeID <> 4
+                               AND OriginID IS NOT NULL
+                               AND CreatedDate >= @ThisMonth
+                               AND CreatedDate <  DATEADD(MONTH, 1, @ThisMonth))
+                         THEN @ThisMonth
+                         ELSE DATEADD(MONTH, -1, @ThisMonth)
+                    END;
+
+                DECLARE @EndDate DATE = DATEADD(MONTH, 1, @StartDate); -- exclusive upper bound
+
+                WITH LineCounts AS (
+                    SELECT
                         r.OriginID,
                         r.NCRTypeID,
                         COUNT(*) AS [Qty]
                     FROM ProductionFinal_Registration r
                     WHERE r.NCRTypeID <> 4
                       AND r.OriginID IS NOT NULL
-                      AND YEAR(r.CreatedDate) = YEAR(GETDATE())
-                      AND MONTH(r.CreatedDate) = MONTH(GETDATE())
+                      -- Range filter instead of YEAR()/MONTH() so an index on CreatedDate can be used
+                      AND r.CreatedDate >= @StartDate
+                      AND r.CreatedDate <  @EndDate
                     GROUP BY r.OriginID, r.NCRTypeID
                 ),
                 LineTotals AS (
-                    SELECT 
+                    SELECT
                         OriginID,
                         SUM([Qty]) AS TotalQty
                     FROM LineCounts
                     GROUP BY OriginID
                 ),
                 RankedNCR AS (
-                    SELECT 
+                    SELECT
                         lc.OriginID,
                         lc.NCRTypeID,
                         lc.[Qty],
                         ROW_NUMBER() OVER (
-                            PARTITION BY lc.OriginID 
+                            PARTITION BY lc.OriginID
                             ORDER BY lc.[Qty] DESC, lc.NCRTypeID DESC
                         ) AS rn
                     FROM LineCounts lc
                 )
-                SELECT 
+                SELECT
                     rn.OriginID       AS [Line],
                     nt.NCRTypeName    AS [NCRType],
                     rn.[Qty],
@@ -156,185 +176,289 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                 ORDER BY rn.OriginID;");
         }
 
-        //   public Task<List<LineTopNCRModel>> GetBestLines()
-        //   {
-        //       return SqlDataAcess_Test.QueryAsync<LineTopNCRModel>($@"WITH NCRCounts AS (
-        //               SELECT 
-        //                   r.NCRTypeID,
-        //                   COUNT(*) AS [Qty]
-        //               FROM ProductionFinal_Registration r
-        //               WHERE r.NCRTypeID <> 4
-        //               GROUP BY r.NCRTypeID
-        //           ),
-        //           ProcessCounts AS (
-        //               SELECT 
-        //                   r.NCRTypeID,
-        //                   p.ProcessID,
-        //                   p.ProcessName,
-        //                   COUNT(*) AS [ProcessQty]
-        //               FROM ProductionFinal_Registration r
-        //               LEFT JOIN ProductionFinal_Process p ON r.ProcessID = p.ProcessID
-        //               WHERE r.NCRTypeID <> 4
-        //               GROUP BY r.NCRTypeID, p.ProcessID, p.ProcessName
-        //           ),
-        //           RankedProcess AS (
-        //               SELECT 
-        //                   NCRTypeID, ProcessID, ProcessName, ProcessQty,
-        //                   ROW_NUMBER() OVER (PARTITION BY NCRTypeID ORDER BY ProcessQty DESC) AS rn
-        //               FROM ProcessCounts
-        //           ),
-        //           TopProcess AS (
-        //               SELECT NCRTypeID, ProcessName, ProcessQty
-        //               FROM RankedProcess
-        //               WHERE rn = 1
-        //           ),
-        //           LineCounts AS (
-        //               SELECT 
-        //                   r.NCRTypeID,
-        //                   r.OriginID,
-        //                   COUNT(*) AS [LineQty]
-        //               FROM ProductionFinal_Registration r
-        //               WHERE r.NCRTypeID <> 4
-        //AND YEAR(r.CreatedDate) = YEAR(GETDATE())
-        //AND MONTH(r.CreatedDate) = MONTH(GETDATE())
-        //               GROUP BY r.NCRTypeID, r.OriginID
-        //           ),
-        //           RankedLine AS (
-        //               SELECT 
-        //                   NCRTypeID, OriginID, LineQty,
-        //                   ROW_NUMBER() OVER (PARTITION BY NCRTypeID ORDER BY LineQty DESC) AS rn
-        //               FROM LineCounts
-        //           ),
-        //           TopLine AS (
-        //               SELECT NCRTypeID, OriginID, LineQty
-        //               FROM RankedLine
-        //               WHERE rn = 1
-        //           )
-        //           SELECT 
-        //               nt.NCRTypeName AS [NCRType],
-        //               nc.[Qty],
-        //               CAST(nc.[Qty] * 100.0 / SUM(nc.[Qty]) OVER() AS DECIMAL(5,1)) AS [Percentage],
-        //               tp.ProcessName AS [TopProcess],
-        //               CAST(tp.ProcessQty * 100.0 / NULLIF(nc.[Qty],0) AS DECIMAL(5,1)) AS [TopProcess%],
-        //               tl.OriginID AS [BestLine],
-        //               CAST(tl.LineQty * 100.0 / NULLIF(nc.[Qty],0) AS DECIMAL(5,1)) AS [TopLine%],
-        //               0 AS SortOrder
-        //           FROM NCRCounts nc
-        //           JOIN ProductionFinalNCR_Type nt ON nc.NCRTypeID = nt.NCRTypeID
-        //           LEFT JOIN TopProcess tp ON tp.NCRTypeID = nc.NCRTypeID
-        //           LEFT JOIN TopLine tl    ON tl.NCRTypeID = nc.NCRTypeID
 
-        //           UNION ALL
-
-        //           SELECT 
-        //               'Total',
-        //               SUM(nc.[Qty]),
-        //               100.0,
-        //               NULL, NULL, NULL, NULL,
-        //               1 AS SortOrder
-        //           FROM NCRCounts nc
-
-        //           ORDER BY SortOrder, [NCRType];");
-        //   }
+        //public Task<List<LineTopNCRModel>> GetBestLines()
+        //{
+        //    return SqlDataAcess_Test.QueryAsync<LineTopNCRModel>($@"WITH LineCounts AS (
+        //            SELECT 
+        //                r.OriginID,
+        //                r.NCRTypeID,
+        //                COUNT(*) AS [Qty]
+        //            FROM ProductionFinal_Registration r
+        //            WHERE r.NCRTypeID <> 4
+        //              AND r.OriginID IS NOT NULL
+        //              AND YEAR(r.CreatedDate) = YEAR(GETDATE())
+        //              AND MONTH(r.CreatedDate) = MONTH(GETDATE())
+        //            GROUP BY r.OriginID, r.NCRTypeID
+        //        ),
+        //        LineTotals AS (
+        //            SELECT 
+        //                OriginID,
+        //                SUM([Qty]) AS TotalQty
+        //            FROM LineCounts
+        //            GROUP BY OriginID
+        //        ),
+        //        RankedNCR AS (
+        //            SELECT 
+        //                lc.OriginID,
+        //                lc.NCRTypeID,
+        //                lc.[Qty],
+        //                ROW_NUMBER() OVER (
+        //                    PARTITION BY lc.OriginID 
+        //                    ORDER BY lc.[Qty] DESC, lc.NCRTypeID DESC
+        //                ) AS rn
+        //            FROM LineCounts lc
+        //        )
+        //        SELECT 
+        //            rn.OriginID       AS [Line],
+        //            nt.NCRTypeName    AS [NCRType],
+        //            rn.[Qty],
+        //            CAST(rn.[Qty] * 100.0 / NULLIF(lt.TotalQty, 0) AS DECIMAL(5,1)) AS [Percentage]
+        //        FROM RankedNCR rn
+        //        JOIN LineTotals lt ON lt.OriginID = rn.OriginID
+        //        LEFT JOIN ProductionFinalNCR_Type nt ON nt.NCRTypeID = rn.NCRTypeID
+        //        WHERE rn.rn = 1
+        //        ORDER BY rn.OriginID;");
+        //}
 
         public Task<List<FourMSummaryModel>> GetFourMSummary()
         {
-            return  SqlDataAcess_Test.QueryAsync<FourMSummaryModel>($@";WITH Pivoted AS (
-                    SELECT 
-                        nt.NCRTypeName AS [NCRType],
-                        SUM(CASE WHEN fm.FourMName = 'Man'      THEN 1 ELSE 0 END) AS [Man],
-                        SUM(CASE WHEN fm.FourMName = 'Machine'  THEN 1 ELSE 0 END) AS [Machine],
-                        SUM(CASE WHEN fm.FourMName = 'Material' THEN 1 ELSE 0 END) AS [Material],
-                        SUM(CASE WHEN fm.FourMName = 'Method'   THEN 1 ELSE 0 END) AS [Method],
-                        SUM(CASE WHEN fm.FourMName IN ('Man','Machine','Material','Method') THEN 1 ELSE 0 END) AS [Qty]
-                    FROM ProductionFinal_Registration r
-                    LEFT JOIN ProductionFinalNCR_Type nt ON r.NCRTypeID = nt.NCRTypeID
-                    LEFT JOIN ProductionFinal_4M      fm ON r.FourMID   = fm.FourMID
-                    WHERE YEAR(r.CreatedDate) = YEAR(GETDATE())
-                    AND MONTH(r.CreatedDate) = MONTH(GETDATE())
-                    GROUP BY nt.NCRTypeName
-                )
-                SELECT 
-                    [NCRType], [Man], [Machine], [Material], [Method], [Qty],
-                    CAST([Qty] * 100.0 / SUM([Qty]) OVER() AS DECIMAL(5,1)) AS [Percentage],
-                    0 AS SortOrder
-                FROM Pivoted
+            return SqlDataAcess_Test.QueryAsync<FourMSummaryModel>(@"
+        DECLARE @ThisMonth DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);
 
-                UNION ALL
+        -- Use the current month if it has any registrations; otherwise fall back
+        -- to the previous month so the 4M summary isn't empty early in the month.
+        DECLARE @StartDate DATE =
+            CASE WHEN EXISTS (
+                     SELECT 1
+                     FROM dbo.ProductionFinal_Registration
+                     WHERE CreatedDate >= @ThisMonth
+                       AND CreatedDate <  DATEADD(MONTH, 1, @ThisMonth))
+                 THEN @ThisMonth
+                 ELSE DATEADD(MONTH, -1, @ThisMonth)
+            END;
 
-                SELECT 
-                    'Total',
-                    SUM([Man]), SUM([Machine]), SUM([Material]), SUM([Method]), SUM([Qty]),
-                    100.0,
-                    1 AS SortOrder
-                FROM Pivoted
+        DECLARE @EndDate DATE = DATEADD(MONTH, 1, @StartDate); -- exclusive upper bound
 
-                ORDER BY SortOrder, [NCRType];
-                ", null);
+        ;WITH Pivoted AS (
+            SELECT
+                nt.NCRTypeName AS [NCRType],
+                SUM(CASE WHEN fm.FourMName = 'Man'      THEN 1 ELSE 0 END) AS [Man],
+                SUM(CASE WHEN fm.FourMName = 'Machine'  THEN 1 ELSE 0 END) AS [Machine],
+                SUM(CASE WHEN fm.FourMName = 'Material' THEN 1 ELSE 0 END) AS [Material],
+                SUM(CASE WHEN fm.FourMName = 'Method'   THEN 1 ELSE 0 END) AS [Method],
+                SUM(CASE WHEN fm.FourMName IN ('Man','Machine','Material','Method') THEN 1 ELSE 0 END) AS [Qty]
+            FROM ProductionFinal_Registration r
+            LEFT JOIN ProductionFinalNCR_Type nt ON r.NCRTypeID = nt.NCRTypeID
+            LEFT JOIN ProductionFinal_4M      fm ON r.FourMID   = fm.FourMID
+            -- Range filter instead of YEAR()/MONTH() so an index on CreatedDate can be used
+            WHERE r.CreatedDate >= @StartDate
+              AND r.CreatedDate <  @EndDate
+            GROUP BY nt.NCRTypeName
+        )
+        SELECT
+            [NCRType], [Man], [Machine], [Material], [Method], [Qty],
+            CAST([Qty] * 100.0 / NULLIF(SUM([Qty]) OVER(), 0) AS DECIMAL(5,1)) AS [Percentage],
+            0 AS SortOrder
+        FROM Pivoted
+
+        UNION ALL
+
+        SELECT
+            'Total',
+            SUM([Man]), SUM([Machine]), SUM([Material]), SUM([Method]), SUM([Qty]),
+            100.0,
+            1 AS SortOrder
+        FROM Pivoted
+
+        ORDER BY SortOrder, [NCRType];", null);
         }
+
+        //public Task<List<FourMSummaryModel>> GetFourMSummary()
+        //{
+        //    return  SqlDataAcess_Test.QueryAsync<FourMSummaryModel>($@";WITH Pivoted AS (
+        //            SELECT 
+        //                nt.NCRTypeName AS [NCRType],
+        //                SUM(CASE WHEN fm.FourMName = 'Man'      THEN 1 ELSE 0 END) AS [Man],
+        //                SUM(CASE WHEN fm.FourMName = 'Machine'  THEN 1 ELSE 0 END) AS [Machine],
+        //                SUM(CASE WHEN fm.FourMName = 'Material' THEN 1 ELSE 0 END) AS [Material],
+        //                SUM(CASE WHEN fm.FourMName = 'Method'   THEN 1 ELSE 0 END) AS [Method],
+        //                SUM(CASE WHEN fm.FourMName IN ('Man','Machine','Material','Method') THEN 1 ELSE 0 END) AS [Qty]
+        //            FROM ProductionFinal_Registration r
+        //            LEFT JOIN ProductionFinalNCR_Type nt ON r.NCRTypeID = nt.NCRTypeID
+        //            LEFT JOIN ProductionFinal_4M      fm ON r.FourMID   = fm.FourMID
+        //            WHERE YEAR(r.CreatedDate) = YEAR(GETDATE())
+        //            AND MONTH(r.CreatedDate) = MONTH(GETDATE())
+        //            GROUP BY nt.NCRTypeName
+        //        )
+        //        SELECT 
+        //            [NCRType], [Man], [Machine], [Material], [Method], [Qty],
+        //            CAST([Qty] * 100.0 / SUM([Qty]) OVER() AS DECIMAL(5,1)) AS [Percentage],
+        //            0 AS SortOrder
+        //        FROM Pivoted
+
+        //        UNION ALL
+
+        //        SELECT 
+        //            'Total',
+        //            SUM([Man]), SUM([Machine]), SUM([Material]), SUM([Method]), SUM([Qty]),
+        //            100.0,
+        //            1 AS SortOrder
+        //        FROM Pivoted
+
+        //        ORDER BY SortOrder, [NCRType];
+        //        ", null);
+        //}
+
+
+        //public Task<List<GroupSummaryModel>> GetGroupSummary()
+        //{
+        //    return SqlDataAcess_Test.QueryAsync<GroupSummaryModel>($@";WITH Pivoted AS (
+        //                SELECT 
+        //                    nt.NCRTypeName AS [NCRType],
+        //                    SUM(CASE WHEN g.GroupName = 'Group 1'       THEN 1 ELSE 0 END) AS [Group1],
+        //                    SUM(CASE WHEN g.GroupName = 'Group 2'       THEN 1 ELSE 0 END) AS [Group2],
+        //                    SUM(CASE WHEN g.GroupName = 'Group 3'       THEN 1 ELSE 0 END) AS [Group3],
+        //                    SUM(CASE WHEN g.GroupName = 'OP'            THEN 1 ELSE 0 END) AS [OP],
+        //                    SUM(CASE WHEN g.GroupName = 'Material Prep' THEN 1 ELSE 0 END) AS [MatPrep],
+        //                    SUM(CASE WHEN g.GroupName = 'Oiloof'        THEN 1 ELSE 0 END) AS [Oiloof],
+        //                    SUM(CASE WHEN g.GroupName IN ('Group 1','Group 2','Group 3','OP','Material Prep') THEN 1 ELSE 0 END) AS [Qty]
+        //                FROM ProductionFinal_Registration r
+        //                LEFT JOIN ProductionFinalNCR_Type nt ON r.NCRTypeID = nt.NCRTypeID
+        //                LEFT JOIN ProductionFinal_Group   g  ON r.GroupID   = g.GroupID
+        //                WHERE YEAR(r.CreatedDate)  = YEAR(GETDATE())
+        //                  AND MONTH(r.CreatedDate) = MONTH(GETDATE())
+        //                GROUP BY nt.NCRTypeName
+        //            ),
+        //            Totals AS (
+        //                SELECT 
+        //                    SUM([Group1]) AS [Group1],
+        //                    SUM([Group2]) AS [Group2],
+        //                    SUM([Group3]) AS [Group3],
+        //                    SUM([OP])     AS [OP],
+        //                    SUM([MatPrep]) AS [MatPrep],
+        //                    SUM([Oiloof]) AS [Oiloof],
+        //                    SUM([Qty])    AS [Qty]
+        //                FROM Pivoted
+        //            )
+        //            SELECT 
+        //                [NCRType], [Group1], [Group2], [Group3], [OP], [MatPrep], [Oiloof], [Qty],
+        //                CAST([Qty] * 100.0 / SUM([Qty]) OVER() AS DECIMAL(5,1)) AS [Percentage],
+        //                0 AS SortOrder
+        //            FROM Pivoted
+
+        //            UNION ALL
+
+        //            SELECT 
+        //                'Total',
+        //                SUM([Group1]), SUM([Group2]), SUM([Group3]), SUM([OP]), SUM([MatPrep]), SUM([Oiloof]), SUM([Qty]),
+        //                100.0,
+        //                1 AS SortOrder
+        //            FROM Pivoted
+
+        //            UNION ALL
+
+        //            SELECT 
+        //                'FinalPercent',
+        //                CAST([Group1]  * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
+        //                CAST([Group2]  * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
+        //                CAST([Group3]  * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
+        //                CAST([OP]      * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
+        //                CAST([MatPrep] * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
+        //                CAST([Oiloof]  * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
+        //                100.0,
+        //                100.0,
+        //                2 AS SortOrder
+        //            FROM Totals
+
+        //            ORDER BY SortOrder, [NCRType];
+        //                        ", null);   
+        //}
+
+
+
         public Task<List<GroupSummaryModel>> GetGroupSummary()
         {
-            return SqlDataAcess_Test.QueryAsync<GroupSummaryModel>($@";WITH Pivoted AS (
-                        SELECT 
-                            nt.NCRTypeName AS [NCRType],
-                            SUM(CASE WHEN g.GroupName = 'Group 1'       THEN 1 ELSE 0 END) AS [Group1],
-                            SUM(CASE WHEN g.GroupName = 'Group 2'       THEN 1 ELSE 0 END) AS [Group2],
-                            SUM(CASE WHEN g.GroupName = 'Group 3'       THEN 1 ELSE 0 END) AS [Group3],
-                            SUM(CASE WHEN g.GroupName = 'OP'            THEN 1 ELSE 0 END) AS [OP],
-                            SUM(CASE WHEN g.GroupName = 'Material Prep' THEN 1 ELSE 0 END) AS [MatPrep],
-                            SUM(CASE WHEN g.GroupName = 'Oiloof'        THEN 1 ELSE 0 END) AS [Oiloof],
-                            SUM(CASE WHEN g.GroupName IN ('Group 1','Group 2','Group 3','OP','Material Prep') THEN 1 ELSE 0 END) AS [Qty]
-                        FROM ProductionFinal_Registration r
-                        LEFT JOIN ProductionFinalNCR_Type nt ON r.NCRTypeID = nt.NCRTypeID
-                        LEFT JOIN ProductionFinal_Group   g  ON r.GroupID   = g.GroupID
-                        WHERE YEAR(r.CreatedDate)  = YEAR(GETDATE())
-                          AND MONTH(r.CreatedDate) = MONTH(GETDATE())
-                        GROUP BY nt.NCRTypeName
-                    ),
-                    Totals AS (
-                        SELECT 
-                            SUM([Group1]) AS [Group1],
-                            SUM([Group2]) AS [Group2],
-                            SUM([Group3]) AS [Group3],
-                            SUM([OP])     AS [OP],
-                            SUM([MatPrep]) AS [MatPrep],
-                            SUM([Oiloof]) AS [Oiloof],
-                            SUM([Qty])    AS [Qty]
-                        FROM Pivoted
-                    )
-                    SELECT 
-                        [NCRType], [Group1], [Group2], [Group3], [OP], [MatPrep], [Oiloof], [Qty],
-                        CAST([Qty] * 100.0 / SUM([Qty]) OVER() AS DECIMAL(5,1)) AS [Percentage],
-                        0 AS SortOrder
-                    FROM Pivoted
+            return SqlDataAcess_Test.QueryAsync<GroupSummaryModel>(@"
+        DECLARE @ThisMonth DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);
 
-                    UNION ALL
+        -- Use the current month if it has any registrations; otherwise fall back
+        -- to the previous month so the NCR summary isn't empty early in the month.
+        DECLARE @StartDate DATE =
+            CASE WHEN EXISTS (
+                     SELECT 1
+                     FROM dbo.ProductionFinal_Registration
+                     WHERE CreatedDate >= @ThisMonth
+                       AND CreatedDate <  DATEADD(MONTH, 1, @ThisMonth))
+                 THEN @ThisMonth
+                 ELSE DATEADD(MONTH, -1, @ThisMonth)
+            END;
 
-                    SELECT 
-                        'Total',
-                        SUM([Group1]), SUM([Group2]), SUM([Group3]), SUM([OP]), SUM([MatPrep]), SUM([Oiloof]), SUM([Qty]),
-                        100.0,
-                        1 AS SortOrder
-                    FROM Pivoted
+        DECLARE @EndDate DATE = DATEADD(MONTH, 1, @StartDate); -- exclusive upper bound
 
-                    UNION ALL
+        ;WITH Pivoted AS (
+            SELECT
+                nt.NCRTypeName AS [NCRType],
+                SUM(CASE WHEN g.GroupName = 'Group 1'       THEN 1 ELSE 0 END) AS [Group1],
+                SUM(CASE WHEN g.GroupName = 'Group 2'       THEN 1 ELSE 0 END) AS [Group2],
+                SUM(CASE WHEN g.GroupName = 'Group 3'       THEN 1 ELSE 0 END) AS [Group3],
+                SUM(CASE WHEN g.GroupName = 'OP'            THEN 1 ELSE 0 END) AS [OP],
+                SUM(CASE WHEN g.GroupName = 'Material Prep' THEN 1 ELSE 0 END) AS [MatPrep],
+                SUM(CASE WHEN g.GroupName = 'Oiloof'        THEN 1 ELSE 0 END) AS [Oiloof],
+                SUM(CASE WHEN g.GroupName IN ('Group 1','Group 2','Group 3','OP','Material Prep') THEN 1 ELSE 0 END) AS [Qty]
+            FROM ProductionFinal_Registration r
+            LEFT JOIN ProductionFinalNCR_Type nt ON r.NCRTypeID = nt.NCRTypeID
+            LEFT JOIN ProductionFinal_Group   g  ON r.GroupID   = g.GroupID
+            -- Range filter instead of YEAR()/MONTH() so an index on CreatedDate can be used
+            WHERE r.CreatedDate >= @StartDate
+              AND r.CreatedDate <  @EndDate
+            GROUP BY nt.NCRTypeName
+        ),
+        Totals AS (
+            SELECT
+                SUM([Group1])  AS [Group1],
+                SUM([Group2])  AS [Group2],
+                SUM([Group3])  AS [Group3],
+                SUM([OP])      AS [OP],
+                SUM([MatPrep]) AS [MatPrep],
+                SUM([Oiloof])  AS [Oiloof],
+                SUM([Qty])     AS [Qty]
+            FROM Pivoted
+        )
+        SELECT
+            [NCRType], [Group1], [Group2], [Group3], [OP], [MatPrep], [Oiloof], [Qty],
+            CAST([Qty] * 100.0 / NULLIF(SUM([Qty]) OVER(), 0) AS DECIMAL(5,1)) AS [Percentage],
+            0 AS SortOrder
+        FROM Pivoted
 
-                    SELECT 
-                        'FinalPercent',
-                        CAST([Group1]  * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
-                        CAST([Group2]  * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
-                        CAST([Group3]  * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
-                        CAST([OP]      * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
-                        CAST([MatPrep] * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
-                        CAST([Oiloof]  * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
-                        100.0,
-                        100.0,
-                        2 AS SortOrder
-                    FROM Totals
+        UNION ALL
 
-                    ORDER BY SortOrder, [NCRType];
-                                ", null);   
+        SELECT
+            'Total',
+            SUM([Group1]), SUM([Group2]), SUM([Group3]), SUM([OP]), SUM([MatPrep]), SUM([Oiloof]), SUM([Qty]),
+            100.0,
+            1 AS SortOrder
+        FROM Pivoted
+
+        UNION ALL
+
+        SELECT
+            'FinalPercent',
+            CAST([Group1]  * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
+            CAST([Group2]  * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
+            CAST([Group3]  * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
+            CAST([OP]      * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
+            CAST([MatPrep] * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
+            CAST([Oiloof]  * 100.0 / NULLIF([Qty],0) AS DECIMAL(5,1)),
+            100.0,
+            100.0,
+            2 AS SortOrder
+        FROM Totals
+
+        ORDER BY SortOrder, [NCRType];", null);
         }
+
+
         public Task<Monthyear> GetMonthName()
         {
             return SqlDataAccess_Test.QuerySingleAsync<Monthyear>($@"SELECT
@@ -401,49 +525,202 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         // =================== GROUP DATA PERFORMANCE SUMMARY ===================
         // ======================================================================
         // =========== Top Summary of Group Output, Average Output, Target Output, and Efficiency ==========
+        //public async Task<TotalOutputChartModel> GetGroupDataSummary()
+        //{
+        //    var getTotalSummary = await SqlDataAcess_Test.QuerySingleAsync<TotalOutputChartModel>(@"
+        //            DECLARE @StartDate DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);
+        //                    DECLARE @EndDate   DATE = DATEADD(DAY, 1, CAST(GETDATE() AS DATE));
+
+        //                    SELECT
+        //                        SUM(
+        //                            ISNULL(Group1, 0) +
+        //                            ISNULL(Group2, 0) +
+        //                            ISNULL(Group3, 0) +
+        //                            ISNULL(OP, 0)
+        //                        ) AS TotalOutput,
+
+        //                        AVG(
+        //                            ISNULL(Group1, 0) +
+        //                            ISNULL(Group2, 0) +
+        //                            ISNULL(Group3, 0) +
+        //                            ISNULL(OP, 0)
+        //                        ) AS AverageOutput,
+
+        //                        AVG(ISNULL(TargetOutput, 0)) AS TargetOutput,
+
+        //                       ROUND(CAST(
+        //                            AVG(ISNULL(Total, 0)) * 100.0 /
+        //                            NULLIF(AVG(ISNULL(TargetOutput, 0)), 0)
+        //                            AS DECIMAL(10, 2)
+        //                        ), 0) AS AverageEfficiency
+
+        //                    FROM dbo.ProductionFinal_GroupChart
+        //                    WHERE GroupDate >= @StartDate
+        //                      AND GroupDate < @EndDate;");
+
+        //                getTotalSummary.totalGroup = (await SqlDataAcess_Test.QueryAsync<TotalGroupOutputModel>(@"
+        //          DECLARE @StartOfMonth DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);
+        //                    DECLARE @StartOfNextMonth DATE = DATEADD(MONTH, 1, @StartOfMonth);
+
+        //                    SELECT
+        //                        G.GroupName,
+
+        //                        SUM(G.Output) AS TotalOutput,
+
+        //                        -- Exclude the entire row/date if any group is 0
+        //                        AVG(
+        //                            CASE
+        //                                WHEN P.Group1 > 0
+        //                                 AND P.Group2 > 0
+        //                                 AND P.Group3 > 0
+        //                                 AND P.OP > 0
+        //                                THEN G.Output
+        //                            END
+        //                        ) AS AvgOutput,
+
+        //                        (
+        //                            SELECT TOP 1 TargetOutput
+        //                            FROM ProductionFinal_Group
+        //                            WHERE GroupName = G.GroupName
+        //                        ) AS TargetOutput,
+
+        //                        CAST(
+        //                            AVG(
+        //                                CASE
+        //                                    WHEN P.Group1 > 0
+        //                                     AND P.Group2 > 0
+        //                                     AND P.Group3 > 0
+        //                                     AND P.OP > 0
+        //                                    THEN G.Output
+        //                                END
+        //                            ) * 100.0
+        //                            /
+        //                            NULLIF(
+        //                                (
+        //                                    SELECT TOP 1 TargetOutput
+        //                                    FROM ProductionFinal_Group
+        //                                    WHERE GroupName = G.GroupName
+        //                                ),
+        //                                0
+        //                            )
+        //                            AS DECIMAL(10,2)
+        //                        ) AS Efficiency
+
+        //                    FROM ProductionFinal_GroupChart P
+
+        //                    CROSS APPLY
+        //                    (
+        //                        VALUES
+        //                            ('GROUP 1', ISNULL(P.Group1, 0)),
+        //                            ('GROUP 2', ISNULL(P.Group2, 0)),
+        //                            ('GROUP 3', ISNULL(P.Group3, 0)),
+        //                            ('OP',      ISNULL(P.OP, 0))
+        //                    ) G(GroupName, Output)
+
+        //                    WHERE P.GroupDate >= @StartOfMonth
+        //                      AND P.GroupDate < @StartOfNextMonth
+
+        //                    GROUP BY G.GroupName
+
+        //                    ORDER BY
+        //                        CASE G.GroupName
+        //                            WHEN 'GROUP 1' THEN 1
+        //                            WHEN 'GROUP 2' THEN 2
+        //                            WHEN 'GROUP 3' THEN 3
+        //                            WHEN 'OP'      THEN 4
+        //                        END;")).ToList();
+
+        //                getTotalSummary.daily = (await SqlDataAcess_Test.QueryAsync<DailyOutputModel>(@"
+        //            DECLARE @StartOfMonth DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);
+        //            DECLARE @StartOfNextMonth DATE = DATEADD(MONTH, 1, @StartOfMonth);
+
+        //            SELECT
+        //                FORMAT(GroupDate, 'd-MMM') AS [date],
+        //                Total AS [value]
+        //            FROM ProductionFinal_GroupChart
+        //            WHERE GroupDate >= @StartOfMonth
+        //              AND GroupDate < @StartOfNextMonth
+        //            ORDER BY GroupDate")).ToList();
+
+        //    return getTotalSummary;
+        //}
+        // ================== Group Output Data ==================
+
         public async Task<TotalOutputChartModel> GetGroupDataSummary()
         {
+            // Resolve the reporting month ONCE so all three queries always agree.
+            // If we resolved it inside each query, a row arriving between calls
+            // could make the summary and the daily chart show different months.
+            var thisMonthStart = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+
+            bool hasCurrentMonthData = await SqlDataAcess_Test.QuerySingleAsync<bool>(@"
+                    SELECT CASE WHEN EXISTS (
+                        SELECT 1
+                        FROM dbo.ProductionFinal_GroupChart
+                        WHERE GroupDate >= @MonthStart
+                          AND GroupDate <  DATEADD(MONTH, 1, @MonthStart)
+                    ) THEN 1 ELSE 0 END;",
+                new { MonthStart = thisMonthStart });
+
+            // No data this month (e.g. first day of the month before anything is
+            // recorded) -> fall back to the previous month instead of an empty dashboard.
+            var monthStart = hasCurrentMonthData ? thisMonthStart : thisMonthStart.AddMonths(-1);
+            var monthEnd = monthStart.AddMonths(1); // exclusive upper bound, keeps index-friendly range filter
+
+            var param = new { StartDate = monthStart, EndDate = monthEnd };
+
             var getTotalSummary = await SqlDataAcess_Test.QuerySingleAsync<TotalOutputChartModel>(@"
-                    DECLARE @StartDate DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);
-                            DECLARE @EndDate   DATE = DATEADD(DAY, 1, CAST(GETDATE() AS DATE));
+                    SELECT
+                        SUM(
+                            ISNULL(Group1, 0) +
+                            ISNULL(Group2, 0) +
+                            ISNULL(Group3, 0) +
+                            ISNULL(OP, 0)
+                        ) AS TotalOutput,
 
-                            SELECT
-                                SUM(
-                                    ISNULL(Group1, 0) +
-                                    ISNULL(Group2, 0) +
-                                    ISNULL(Group3, 0) +
-                                    ISNULL(OP, 0)
-                                ) AS TotalOutput,
+                        AVG(
+                            ISNULL(Group1, 0) +
+                            ISNULL(Group2, 0) +
+                            ISNULL(Group3, 0) +
+                            ISNULL(OP, 0)
+                        ) AS AverageOutput,
 
-                                AVG(
-                                    ISNULL(Group1, 0) +
-                                    ISNULL(Group2, 0) +
-                                    ISNULL(Group3, 0) +
-                                    ISNULL(OP, 0)
-                                ) AS AverageOutput,
+                        AVG(ISNULL(TargetOutput, 0)) AS TargetOutput,
 
-                                AVG(ISNULL(TargetOutput, 0)) AS TargetOutput,
+                        ROUND(CAST(
+                            AVG(ISNULL(Total, 0)) * 100.0 /
+                            NULLIF(AVG(ISNULL(TargetOutput, 0)), 0)
+                            AS DECIMAL(10, 2)
+                        ), 0) AS AverageEfficiency
 
-                               ROUND(CAST(
-                                    AVG(ISNULL(Total, 0)) * 100.0 /
-                                    NULLIF(AVG(ISNULL(TargetOutput, 0)), 0)
-                                    AS DECIMAL(10, 2)
-                                ), 0) AS AverageEfficiency
+                    FROM dbo.ProductionFinal_GroupChart
+                    WHERE GroupDate >= @StartDate
+                      AND GroupDate <  @EndDate;", param);
 
-                            FROM dbo.ProductionFinal_GroupChart
-                            WHERE GroupDate >= @StartDate
-                              AND GroupDate < @EndDate;");
+            getTotalSummary.totalGroup = (await SqlDataAcess_Test.QueryAsync<TotalGroupOutputModel>(@"
+                        SELECT
+                            G.GroupName,
 
-                        getTotalSummary.totalGroup = (await SqlDataAcess_Test.QueryAsync<TotalGroupOutputModel>(@"
-                  DECLARE @StartOfMonth DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);
-                            DECLARE @StartOfNextMonth DATE = DATEADD(MONTH, 1, @StartOfMonth);
+                            SUM(G.Output) AS TotalOutput,
 
-                            SELECT
-                                G.GroupName,
+                            -- Exclude the entire row/date if any group is 0
+                            AVG(
+                                CASE
+                                    WHEN P.Group1 > 0
+                                     AND P.Group2 > 0
+                                     AND P.Group3 > 0
+                                     AND P.OP > 0
+                                    THEN G.Output
+                                END
+                            ) AS AvgOutput,
 
-                                SUM(G.Output) AS TotalOutput,
+                            (
+                                SELECT TOP 1 TargetOutput
+                                FROM ProductionFinal_Group
+                                WHERE GroupName = G.GroupName
+                            ) AS TargetOutput,
 
-                                -- Exclude the entire row/date if any group is 0
+                            CAST(
                                 AVG(
                                     CASE
                                         WHEN P.Group1 > 0
@@ -452,93 +729,106 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                                          AND P.OP > 0
                                         THEN G.Output
                                     END
-                                ) AS AvgOutput,
+                                ) * 100.0
+                                /
+                                NULLIF(
+                                    (
+                                        SELECT TOP 1 TargetOutput
+                                        FROM ProductionFinal_Group
+                                        WHERE GroupName = G.GroupName
+                                    ),
+                                    0
+                                )
+                                AS DECIMAL(10,2)
+                            ) AS Efficiency
 
-                                (
-                                    SELECT TOP 1 TargetOutput
-                                    FROM ProductionFinal_Group
-                                    WHERE GroupName = G.GroupName
-                                ) AS TargetOutput,
+                        FROM ProductionFinal_GroupChart P
 
-                                CAST(
-                                    AVG(
-                                        CASE
-                                            WHEN P.Group1 > 0
-                                             AND P.Group2 > 0
-                                             AND P.Group3 > 0
-                                             AND P.OP > 0
-                                            THEN G.Output
-                                        END
-                                    ) * 100.0
-                                    /
-                                    NULLIF(
-                                        (
-                                            SELECT TOP 1 TargetOutput
-                                            FROM ProductionFinal_Group
-                                            WHERE GroupName = G.GroupName
-                                        ),
-                                        0
-                                    )
-                                    AS DECIMAL(10,2)
-                                ) AS Efficiency
+                        CROSS APPLY
+                        (
+                            VALUES
+                                ('GROUP 1', ISNULL(P.Group1, 0)),
+                                ('GROUP 2', ISNULL(P.Group2, 0)),
+                                ('GROUP 3', ISNULL(P.Group3, 0)),
+                                ('OP',      ISNULL(P.OP, 0))
+                        ) G(GroupName, Output)
 
-                            FROM ProductionFinal_GroupChart P
+                        WHERE P.GroupDate >= @StartDate
+                          AND P.GroupDate <  @EndDate
 
-                            CROSS APPLY
-                            (
-                                VALUES
-                                    ('GROUP 1', ISNULL(P.Group1, 0)),
-                                    ('GROUP 2', ISNULL(P.Group2, 0)),
-                                    ('GROUP 3', ISNULL(P.Group3, 0)),
-                                    ('OP',      ISNULL(P.OP, 0))
-                            ) G(GroupName, Output)
+                        GROUP BY G.GroupName
 
-                            WHERE P.GroupDate >= @StartOfMonth
-                              AND P.GroupDate < @StartOfNextMonth
+                        ORDER BY
+                            CASE G.GroupName
+                                WHEN 'GROUP 1' THEN 1
+                                WHEN 'GROUP 2' THEN 2
+                                WHEN 'GROUP 3' THEN 3
+                                WHEN 'OP'      THEN 4
+                            END;", param)).ToList();
 
-                            GROUP BY G.GroupName
-
-                            ORDER BY
-                                CASE G.GroupName
-                                    WHEN 'GROUP 1' THEN 1
-                                    WHEN 'GROUP 2' THEN 2
-                                    WHEN 'GROUP 3' THEN 3
-                                    WHEN 'OP'      THEN 4
-                                END;")).ToList();
-
-                        getTotalSummary.daily = (await SqlDataAcess_Test.QueryAsync<DailyOutputModel>(@"
-                    DECLARE @StartOfMonth DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);
-                    DECLARE @StartOfNextMonth DATE = DATEADD(MONTH, 1, @StartOfMonth);
-
-                    SELECT
-                        FORMAT(GroupDate, 'd-MMM') AS [date],
-                        Total AS [value]
-                    FROM ProductionFinal_GroupChart
-                    WHERE GroupDate >= @StartOfMonth
-                      AND GroupDate < @StartOfNextMonth
-                    ORDER BY GroupDate")).ToList();
+                            getTotalSummary.daily = (await SqlDataAcess_Test.QueryAsync<DailyOutputModel>(@"
+                        SELECT
+                            FORMAT(GroupDate, 'd-MMM') AS [date],
+                            Total AS [value]
+                        FROM ProductionFinal_GroupChart
+                        WHERE GroupDate >= @StartDate
+                          AND GroupDate <  @EndDate
+                        ORDER BY GroupDate;", param)).ToList();
 
             return getTotalSummary;
         }
-        // ================== Group Output Data ==================
+
+        //   public Task<List<ProductionGroupModel>> GetProcessGroupData()
+        //   {
+        //       return SqlDataAcess_Test.QueryAsync<ProductionGroupModel>($@"
+        //           DECLARE @StartOfMonth DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);
+        //               DECLARE @StartOfNextMonth DATE = DATEADD(MONTH, 1, @StartOfMonth);
+
+        //                SELECT RecordId
+        // , FORMAT(GroupDate, 'd-MMM') AS GroupDate
+        // ,Group1
+        // ,Group2
+        // ,Group3
+        // ,OP
+        // ,Total
+        //FROM ProductionFinal_GroupChart
+        //WHERE GroupDate >= @StartOfMonth
+        //AND GroupDate < @StartOfNextMonth
+        //               ORDER BY RecordId");
+        //   }
+
         public Task<List<ProductionGroupModel>> GetProcessGroupData()
         {
-            return SqlDataAcess_Test.QueryAsync<ProductionGroupModel>($@"
-                DECLARE @StartOfMonth DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);
-                    DECLARE @StartOfNextMonth DATE = DATEADD(MONTH, 1, @StartOfMonth);
+            return SqlDataAcess_Test.QueryAsync<ProductionGroupModel>(@"
+        DECLARE @ThisMonth DATE = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);
 
-                     SELECT RecordId
-					 , FORMAT(GroupDate, 'd-MMM') AS GroupDate
-					 ,Group1
-					 ,Group2
-					 ,Group3
-					 ,OP
-					 ,Total
-				 FROM ProductionFinal_GroupChart
-				 WHERE GroupDate >= @StartOfMonth
-				 AND GroupDate < @StartOfNextMonth
-                    ORDER BY RecordId");
+        -- Use the current month if it has any rows; otherwise fall back to the
+        -- previous month so the chart isn't empty at the start of a new month.
+        DECLARE @StartDate DATE =
+            CASE WHEN EXISTS (
+                     SELECT 1
+                     FROM dbo.ProductionFinal_GroupChart
+                     WHERE GroupDate >= @ThisMonth
+                       AND GroupDate <  DATEADD(MONTH, 1, @ThisMonth))
+                 THEN @ThisMonth
+                 ELSE DATEADD(MONTH, -1, @ThisMonth)
+            END;
+
+        DECLARE @EndDate DATE = DATEADD(MONTH, 1, @StartDate); -- exclusive upper bound
+
+        SELECT RecordId
+             , FORMAT(GroupDate, 'd-MMM') AS GroupDate
+             , Group1
+             , Group2
+             , Group3
+             , OP
+             , Total
+        FROM dbo.ProductionFinal_GroupChart
+        WHERE GroupDate >= @StartDate
+          AND GroupDate <  @EndDate
+        ORDER BY RecordId;");
         }
+
         // ================== For Group Manage Data ==================
         public Task<List<ProductionGroupModel>> GetGroupDataList(string months)
         {
@@ -1083,7 +1373,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                     {filterstr}
                 FROM DashboardCalc";
 
-            Debug.WriteLine(strsql);
+            //Debug.WriteLine(strsql);
 
             return strsql;
         }

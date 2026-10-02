@@ -224,15 +224,27 @@ header {
 
 /* ----- TWO-COLUMN LAYOUT ----- */
 .analysisTables {
-/*    display: grid;
-    grid-template-columns: 1fr 325px;
-    grid-template-columns: 1fr clamp(200px, 20vw, 325px);
-    gap: 18px;
-    gap: clamp(10px, 1.4vw, 18px);
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+    .analysisTables > .col:first-child {
+        flex: 1;
+        width: 100%;
+        min-width: 0;
+        min-height: 0;
+    }
+
+.tablecontainer {
     flex: 1;
     min-height: 0;
-    align-items: stretch;*/
-    /*    align-items: flex-start;*/
+}
+
+.table-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
 }
 
 .col:first-child {
@@ -1636,3 +1648,87 @@ td.gap-pos {
 
 
 
+@media (max-height: 760px) and (min-width: 1001px) {
+    body {
+        padding: 4px;
+    }
+
+    .dashboard {
+        padding: 6px 12px;
+        gap: 6px;
+    }
+
+    header {
+        padding: 4px 14px;
+    }
+
+        header h2 {
+            font-size: 1rem;
+        }
+
+    .screenSizeBadge {
+        font-size: 10px;
+        padding: 1px 8px;
+    }
+
+    .attendSummary {
+        gap: 6px;
+    }
+
+    .attendSummary_card {
+        padding: 4px 10px;
+    }
+
+    .attendSummary_content p {
+        font-size: 1.1rem;
+        margin-top: 0;
+    }
+
+    .chartsRow {
+        height: 130px;
+        gap: 6px;
+    }
+
+    .chartCard {
+        padding: 4px 8px;
+    }
+
+    .tableHeader {
+        padding: 4px 8px;
+    }
+
+    .date-filter {
+        height: 24px;
+    }
+
+    table {
+        font-size: 0.7rem;
+    }
+    /* sticky on both header rows makes them overlap; not needed when nothing scrolls */
+    th {
+        position: static;
+        padding: 2px 6px;
+    }
+
+    td {
+        padding: 1px 6px;
+        line-height: 1.2;
+    }
+
+    .edit-input {
+        max-width: 48px;
+        padding: 0;
+        line-height: 1.1;
+        font-size: 0.7rem;
+    }
+
+    .rate-badge {
+        padding: 0 8px;
+        font-size: 0.6rem;
+    }
+
+    .status-pill {
+        padding: 0 6px;
+        font-size: 0.6rem;
+    }
+}

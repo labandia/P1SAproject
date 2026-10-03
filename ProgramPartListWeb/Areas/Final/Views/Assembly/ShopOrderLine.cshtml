@@ -238,7 +238,7 @@
             const lineman = row.dataset.orderLine; // Line
             const operation = row.dataset.operational;
             const isComplete = row.dataset.checkstats === 'true';
-
+            console.log("LINENAME" + lineman)
 
             if (Number.isNaN(id) || Number.isNaN(orderStatus)) {
                 console.error('Row missing required data attributes', row.dataset);
@@ -283,8 +283,9 @@
             try {
                 // Check if the next process(1) has already been selected for this line
                 const res = await getMethod('@Url.Action("CheckIfAreadyCheckNext", "Assembly")', { lineman });
+                console.log(res);
                 if (res.data > 0) {
-                    alert("Already selected the next process.");
+                    alert("Already inprocess and the next process.");
                     return;
                 }
 
@@ -637,6 +638,7 @@
       }
 
       renderTable(data) {
+          console.log(data);
           if (!this.tbody) return;
 
           const filterValue = parseInt(this.filterStatus.value);
@@ -777,7 +779,7 @@
               }
 
               isOperational = row.Operational === 2 || row.Operational === 3 ? `<span> ${row.Operational}</span>` : "";
-
+              const shipmentDateClass = this.getShipmentDateClass(row.ShipmentDate);
 
               return `
         <tr class="bg-row-highlight fade-in"
@@ -813,9 +815,9 @@
                 </div>
             </td>
 
-            <td class='ShopOrderLayout'  style='text-align: left;'>
-                <span class='ShopOrderLayout_ShopOrder'>${row.FinalShopOrder}</span>
-                <p style="margin:.2em 0;color:#8a8f9e;">${row.ItemNo}</p>
+            <td class="ShopOrderLayout ${shipmentDateClass}" style="text-align: left;">
+                <span class="ShopOrderLayout_ShopOrder">${row.FinalShopOrder}</span>
+                <p style="margin:.2em 0;color:inherit;opacity:.85;">${row.ItemNo}</p>
                 <span style="font-weight:600;">${row.Model}</span>
             </td>
 
@@ -834,7 +836,7 @@
             <td>${row.Note || ''}</td>
             <td>${this.formatDate(row.FinalFinishedDate)}</td>
             <td>${row.FAStatus || ''}</td>
-            <td>${this.formatDate(row.ShipmentDate)}</td>
+            <td>${row.ShipmentDate ?? ''}</td>
             <td>${row.ShipmentMode || ''}</td>
             <td>${row.WithSR ? 'With SR' : ''}</td>
         </tr>`;
@@ -904,7 +906,44 @@
             console.error(err);
             return false;
         }
-    }
+      }
+
+      getShipmentDateClass(shipmentDate) {
+          if (!shipmentDate) return 'shipment-adjustment';
+
+          // Normalize the shipment date
+          const shipment = new Date(shipmentDate);
+
+          if (isNaN(shipment.getTime())) {
+              return 'shipment-adjustment';
+          }
+
+          // Normalize dates to local midnight
+          const shipmentDay = new Date(
+              shipment.getFullYear(),
+              shipment.getMonth(),
+              shipment.getDate()
+          );
+
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          const tomorrow = new Date(today);
+          tomorrow.setDate(tomorrow.getDate() + 1);
+
+          if (shipmentDay.getTime() === today.getTime()) {
+              return 'shipment-today';
+          }
+
+          if (shipmentDay.getTime() === tomorrow.getTime()) {
+              return 'shipment-tomorrow';
+          }
+
+          return 'shipment-adjustment';
+      }
+
+
+
 }
 
 document.addEventListener('DOMContentLoaded', function () {

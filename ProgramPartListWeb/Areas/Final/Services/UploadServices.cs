@@ -6,6 +6,7 @@ using ProgramPartListWeb.Utilities.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace ProgramPartListWeb.Areas.Final.Services
@@ -178,8 +179,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                     PlanQty =@PlanQty, PlanStartDate =@PlanStartDate, 
                                     P1SA_C =@P1SA_C, P1SA_M =@P1SA_M, P1SA_R =@P1SA_R, 
                                     P1SA_W =@P1SA_W, P1FA_FA =@P1FA_FA, 
-                                    P1FA_H =@P1FA_H, M1 =@M1, P1SA_P =@P1SA_P, 
-                                    LastUpdated = getdate()
+                                    P1FA_H =@P1FA_H, M1 =@M1, P1SA_P =@P1SA_P
                                     WHERE  FinalShopOrder =@FinalShopOrder", item);
                     }
 
@@ -463,7 +463,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 Note = model.Note ?? string.Empty,
                 FinalFinishedDate = DateTime.TryParse(model.IfsFinish, out var ifs) ? ifs : (DateTime?)null,
                 FAStatus = model.FaStatus,
-                ShipmentDate = DateTime.TryParse(model.Shipment, out var ship) ? ship : (DateTime?)null,
+                ShipmentDate = ParseExcelDate(model.Shipment),
                 ShipmentMode = model.Mode,
                 WithSR = model.WithSr,
                 OrderStatus = 0,
@@ -478,7 +478,32 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 model.M1
             };
 
-
+            Debug.WriteLine($@"
+                                ========== ProductionRecord  ==========
+                                Line          : {parameters.Line}
+                                ShopOrder     : {parameters.FinalShopOrder}
+                                PartNo        : {parameters.ItemNo}
+                                Model         : {parameters.Model}
+                                WC            : {parameters.WC}
+                                Qty           : {parameters.PlanQty}
+                                PlanStart     : {parameters.PlanStartDate:yyyy-MM-dd}
+                                DispatchDate  : {parameters.DispatchDate}
+                                Note          : {parameters.Note}
+                           
+                                FaStatus      : {parameters.FAStatus}
+                                Shipment      : {parameters.ShipmentDate}
+                                Mode          : {parameters.ShipmentMode}
+                                WithSr        : {parameters.WithSR}
+                                P1SA_C        : {parameters.P1SA_C}
+                                P1SA_W        : {parameters.P1SA_W}
+                                P1SA_M        : {parameters.P1SA_M}
+                                P1SA_P        : {parameters.P1SA_P}
+                                P1SA_R        : {parameters.P1SA_R}
+                                P1FA_FA       : {parameters.P1FA_FA}
+                                P1FA_H        : {parameters.P1FA_H}
+                                M1            : {parameters.M1}
+                                Operational   : {parameters.Operational}
+                                ===============================================");
 
             int rows = await SqlDataAcess_Test.ExecuteAsync($@"IF EXISTS
                     (
@@ -537,5 +562,43 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
             return rows > 0;
         }
+
+
+        private DateTime? ParseExcelDate(string value)
+        {
+            // Empty Excel cell: save NULL
+            if (string.IsNullOrWhiteSpace(value))
+                return null;
+
+            // Handle normal date strings, including 2026-09-25
+            if (DateTime.TryParse(
+                value.Trim(),
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime date))
+            {
+                return date.Date;
+            }
+
+            // Handle Excel serial date values, if the reader provides them as numbers
+            if (double.TryParse(
+                value.Trim(),
+                NumberStyles.Any,
+                CultureInfo.InvariantCulture,
+                out double serial))
+            {
+                try
+                {
+                    return DateTime.FromOADate(serial).Date;
+                }
+                catch (ArgumentException)
+                {
+                    return null;
+                }
+            }
+
+            return null;
+        }
+
     }
 }

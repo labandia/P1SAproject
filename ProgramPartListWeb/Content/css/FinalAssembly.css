@@ -132,6 +132,24 @@ menu, ol, ul {
     font-weight: 600
 }
 
+
+.shipment-today {
+    background-color: #8B5E3C !important;
+    color: #ffffff !important;
+}
+
+.shipment-tomorrow {
+    background-color: #F4B6C2 !important;
+    color: #333333 !important;
+}
+
+.shipment-adjustment {
+    background-color: #ADD8E6 !important;
+    color: #222222 !important;
+}
+
+
+
 .dot-online {
     width: 8px;
     height: 8px;

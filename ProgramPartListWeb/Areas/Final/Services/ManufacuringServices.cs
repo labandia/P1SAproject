@@ -740,11 +740,11 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
         public async Task<int> GetNumberofNextprocess(string line)
         {
-            var count = await SqlDataAcess_Test.ExecuteScalarAsync<int>($@"
+            bool count = await SqlDataAcess_Test.ExistsAsync($@"
                         SELECT COUNT(*) 
                         FROM {maintable} 
-                        WHERE OrderStatus = 1 AND Line = @Line", new { Line = line });
-            return count;
+                        WHERE OrderStatus IN (1, 2, 3) AND Line = @Line", new { Line = line });
+            return count ? 1 : 0;
         }
 
         public Task<List<string>> GetListLine()

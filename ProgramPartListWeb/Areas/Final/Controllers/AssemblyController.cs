@@ -132,9 +132,10 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             }
         }
         [HttpGet]
-        public async Task<ActionResult> CheckIfAreadyCheckNext(string line)
+        public async Task<ActionResult> CheckIfAreadyCheckNext(string lineman)
         {
-            int result = await _manu.GetNumberofNextprocess(line);
+            Debug.WriteLine("Call Line" + lineman) ;
+            int result = await _manu.GetNumberofNextprocess(lineman);
             return JsonSuccess(result);
         }
 
@@ -694,6 +695,8 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                             //    M1            : {obj.M1}
                             //    Operational   : {obj.Operational}
                             //    ===============================================");
+
+
                             // save to DB here if needed
                             bool success = await _upload.UpsertUploadData(obj);
 

@@ -16,8 +16,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
 {
     public class ManufacuringServices : IManufacturing
     {
-        //private const string maintable = "FanTraceabilityManufacturingOrder_BACKV2";
-        private const string maintable = "FanTraceabilityManufacturingOrder";
+        private const string maintable = "FanTraceabilityManufacturingOrder_BACKV2";
+        //private const string maintable = "FanTraceabilityManufacturingOrder";
 
         public enum OrderStatus
         {
@@ -52,6 +52,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                  ,FORMAT(s.DateStart, 'MM/dd/yy') as DateStart
                                  ,s.TimeStart
                                  ,s.TimeEnd
+                                 ,s.IsOven
                                  ,(SELECT m.Model FROM {maintable} m WHERE m.Line = s.Line AND m.OrderStatus = 1)  as NextItem
                                  ,(SELECT m.FinalShopOrder FROM {maintable} m WHERE m.Line = s.Line AND m.OrderStatus = 1)  as NextShop";
 
@@ -159,6 +160,10 @@ namespace ProgramPartListWeb.Areas.Final.Services
             try
             {
                 string query = $@"SELECT {SelectColumns} FROM {maintable} s WHERE OrderStatus = 2 OR OrderStatus = 3 ";
+
+                Debug.WriteLine(query);
+
+
                 var getData = await SqlDataAcess_Test.QueryAsync<FanTraceabilityManufacturingOrder>(query);
 
                 foreach (var order in getData)
@@ -187,7 +192,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
                     var departments = await SqlDataAcess_Test.QueryAsync<string>(
                         listdone,
-                        new { FinalShopOrder = order.NextShop });
+                        new { FinalShopOrder = order.NextShop});
 
                     order.CompletedSection = string.Join(",",
                         departments
@@ -206,6 +211,16 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 return new List<FanTraceabilityManufacturingOrder>();
             }
         }
+
+        public async Task<List<FanTraceabilityManufacturingOrder>> GetListOfMoreThanOneShopOrders(string Line)
+        {
+            string query = $@"SELECT {SelectColumns} FROM {maintable} s WHERE Line = @Line AND IsOven IN (1, 2, 3) ";
+            Debug.WriteLine(query);
+            return await SqlDataAcess_Test.QueryAsync<FanTraceabilityManufacturingOrder>(query, new { Line = Line });
+
+        }
+
+
         //  GET THE LIST DETAILS BY LINE 
         public async Task<List<FanTraceabilityManufacturingOrder>> GetListofShopOrdersByLine(
             string Linename, string searchText,
@@ -304,8 +319,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
                             THEN 'DD'
                         END AS Material, 
                             
-                        mo.Operational
-
+                        mo.Operational,
+                        mo.IsOven
                     FROM {maintable} mo WHERE mo.OrderStatus <> 4 ";
 
                 var parameters = new DynamicParameters();
@@ -1384,5 +1399,30 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
             return rows > 0;
         }
+
+        public async Task<bool> UpdateL2ProcessStatus(int id, int process)
+        {
+            bool IsExist = await SqlDataAcess_Test.ExistsAsync($@"
+                              SELECT COUNT(IsOven)
+                              FROM {maintable}
+                              WHERE IsOven = @IsOven AND RecordID = @RecordID ", new
+            {  IsOven = process, RecordID = id });
+            Debug.WriteLine("ISCHECK " + IsExist);
+            // if isOven is Exist
+            if (IsExist) return false;
+
+            int result = await SqlDataAcess_Test.ExecuteAsync($@"
+                UPDATE {maintable} 
+                SET IsOven = @IsOven WHERE RecordID = @RecordID", new
+            {
+                IsOven = process,
+                RecordID = id
+            });
+
+            return result > 0;
+        }
+
+
+
     }
 }

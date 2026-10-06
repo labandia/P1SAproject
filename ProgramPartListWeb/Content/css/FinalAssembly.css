@@ -134,8 +134,7 @@ menu, ol, ul {
 
 
 .shipment-today {
-    background-color: #8B5E3C !important;
-    color: #ffffff !important;
+    background-color: #e0b798 !important;
 }
 
 .shipment-tomorrow {
@@ -3621,3 +3620,70 @@ td.status-column {
         background: #fbdcdc;
         color: #b71c1c;
     }
+
+
+
+
+
+
+
+
+
+/* normal single modal keeps its old spacing */
+.modal-actions-row {
+    margin-top: 4em;
+}
+
+/* full-screen layer; the row inside is centered both ways, and
+   margin:auto keeps it scrollable instead of clipped when it overflows */
+.oven-cards-wrapper {
+    position: fixed;
+    inset: 0;
+    z-index: 1150; /* was 1001; must be above .animation-backdrop (1050) */
+    display: flex;
+    padding: 24px;
+    overflow: auto;
+}
+
+/* all cards in the row stretch to the tallest card's height */
+.oven-cards-row {
+    display: flex;
+    align-items: stretch;
+    gap: 20px;
+    margin: auto;
+    flex: 0 0 auto;
+}
+
+    .oven-cards-row > .oven-card {
+        position: relative;
+        left: auto;
+        top: auto;
+        flex: 0 0 auto;
+        width: clamp(480px, calc((100vw - 48px - (var(--oven-count, 3) - 1) * 20px) / var(--oven-count, 3)), 620px);
+        height: auto;
+        max-height: none;
+        display: flex;
+        flex-direction: column;
+        overflow-x: hidden; /* removes the bottom scrollbar */
+    }
+
+/* let columns shrink and long text wrap instead of overflowing */
+.oven-card .card-footer-col {
+    min-width: 0;
+}
+
+.oven-card .card-footer-value,
+.oven-card .card-row-value {
+    overflow-wrap: anywhere;
+}
+
+/* status select takes the free space; Cancel and Save keep their size */
+.oven-card .modal-actions-row select {
+    flex: 1;
+    min-width: 0;
+}
+
+.oven-card .modal-actions-row .btn-cancel,
+.oven-card .modal-actions-row .btn-completed {
+    white-space: nowrap;
+}

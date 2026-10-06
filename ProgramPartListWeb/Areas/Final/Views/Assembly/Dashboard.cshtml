@@ -18,6 +18,8 @@
 
 
 
+
+
 <!-- ── CARDS GRID ─────────────────────────────────── -->
 <div class="cards-section">
     <div class="cards-grid" id="assemblyCardsGrid"></div>
@@ -88,6 +90,9 @@
                 { finalShopOrder: "", Line: "OP", status: 0, onProcessModel: "", nextProcessModel: "", specialProcess: "", remarks: "", nextItem: "" },
             ];
 
+
+            this.statusByRecord = new Map();   // per-card selected status (replaces shared this.selectStatus)
+            this.activeIsOven = false;
         }
 
         async init() {
@@ -106,11 +111,12 @@
 
 
         /* ================= LOAD DATA ================= */
-         async LoadActiveShopOrders() {
+        async LoadActiveShopOrders() {
+            // console.log("Load Java" + selected);
             if (this.isAnimating) return;
 
             try {
-                const res = await getMethod('@Url.Action("GetListActiveShopOrders", "Assembly")', {});
+                const res = await getMethod('@Url.Action("GetListActiveShopOrders", "Assembly")', { });
 
                 if (!res?.Success) {
                     if (!this.isExpanded) this.RenderEmptyState();
@@ -118,7 +124,7 @@
                 }
 
                 const apiData = res.data ?? [];
-                console.log(apiData);
+                //console.log(apiData);
                 if (apiData.length === 0) {
                     this.allCardsData = [];
                     if (!this.isExpanded) this.RenderEmptyState();
@@ -142,16 +148,26 @@
                         ...(fromApi ?? {})
                     };
                 });
-                this.allCardsData = records; // store for potential reset
+                this.allCardsData = records;
+
                 if (this.isExpanded && this.currentCenteredCard && this.activeLineId) {
-                    // Update modal content with fresh data for this line
-                    const updatedRecord = records.find(r => r.Line === this.activeLineId);
-                    this.prevModelprocess = updatedRecord.NextItem;
-                    if (updatedRecord) {
-                        this.updateModalContent(updatedRecord, { animateNextModel: true });
+
+                    if (this.activeIsOven) {
+                        const ovenItems = await this.fetchOvenItems(this.activeLineId);
+                        if (ovenItems.length === 0) {
+                            await this.resetToGrid();      // all completed -> close
+                            return;
+                        }
+                        this.renderOvenCards(ovenItems, this.activeLineId);
+                        return;
                     }
+
+                    const updatedRecord = records.find(r => r.Line === this.activeLineId);
+                    if (!updatedRecord) return;
+                    this.prevModelprocess = updatedRecord.NextItem;
+                    this.updateModalContent(updatedRecord, { animateNextModel: true });
+
                 } else {
-                    // Normal full render
                     this.RenderCardList(records);
                 }
             } catch (err) {
@@ -224,10 +240,12 @@
 
 
 
-       updateModalContent(item, options = {}) {
-            const { animateNextModel = false } = options;
-            if (!this.currentCenteredCard) return;
+        updateModalContent(item, options = {}) {
 
+            console.log(item);
+            const { animateNextModel = false, showNext = true, root = this.currentCenteredCard } = options;
+            if (!root) return;
+            const curStatus = this.statusByRecord.get(item.RecordID) ?? 4;
             const sectionMap = {
                 1: ['badge-molding', 'AG'],
                 2: ['badge-press', 'AF'],
@@ -238,21 +256,21 @@
                 9: ['badge-Material', 'DD']
             };
 
-    const completedSections = (item.CompletedSection || '')
-        .split(',')
-        .map(x => x.trim())
-        .filter(x => sectionMap[x]);
-           const completionPct = Math.round((completedSections.length / 6) * 100);
-    const badges = completedSections
-        .map(x => {
-            const [css, text] = sectionMap[x];
-            return `<span class="status-badge ${css}">${text}</span>`;
-        })
-        .join('');
+            const completedSections = (item.CompletedSection || '')
+                .split(',')
+                .map(x => x.trim())
+                .filter(x => sectionMap[x]);
+            const completionPct = Math.round((completedSections.length / 6) * 100);
+            const badges = completedSections
+                .map(x => {
+                    const [css, text] = sectionMap[x];
+                    return `<span class="status-badge ${css}">${text}</span>`;
+                })
+                .join('');
 
 
-    // Modal HTML with editable input, active button, and a close button
-    this.currentCenteredCard.innerHTML = `
+            // Modal HTML with editable input, active button, and a close button
+            root.innerHTML = `
         <div class="expanded-card-content">
             <div class="expanded-card-header">
                <div class="card-header-left">
@@ -290,21 +308,22 @@
 
                 <button class="close-centered-btn" id="closeCenteredBtn">✕</button>
             </div>
-
-            <div class="card-row" style=' margin: 1em 0;'>
-                <p class="card-row-label"  style='font-size: 1.1rem;'>On Process Model</p>
-                <p class="card-row-value" style='font-size: 1.5rem;'>${item.Model || '-'}</p>
-            </div>
+                    <div class="card-row" style=' margin: 1em 0;'>
+                        <p class="card-row-label"  style='font-size: 1.1rem;'>On Process Model</p>
+                        <p class="card-row-value" style='font-size: 1.5rem;'>${item.Model || '-'}</p>
+                    </div>
+           
             <div class="card-row" style=' margin: 1em 0;'>
                 <p class="card-row-label" style="margin-bottom:8px; font-size: 1.1rem;">
                     Material Status : <span class="card-row-label" style='font-size: 1.1rem;'>${completionPct}%</span>
                 </p>
                 <div class="badge-row">${badges}</div>
             </div>
-            <div class="card-row" style=' margin: 1em 0;'>
-                        <p class="card-row-label" style="font-size: 1.1rem;">Next Process Model</p>
-                        <p class="card-row-value-normal next-model-text" style="font-size: 1.5rem; min-height: 1.8rem;"></p>
-                    </div>
+                  ${showNext ? `
+             <div class="card-row" style=' margin: 1em 0;'>
+                 <p class="card-row-label" style="font-size: 1.1rem;">Next Process Model</p>
+                 <p class="card-row-value-normal next-model-text" style="font-size: 1.5rem; min-height: 1.8rem;"></p>
+             </div>` : ''}
             <div class="card-footer">
                 <div class="card-footer-col">
                     <p class="card-footer-label" style='font-size: 1.1rem;'>Special Process</p>
@@ -323,7 +342,7 @@
             </div>
 
 
-            <div  style="display:flex;align-items:center;gap:8px; justify-content: space-between; margin-top: 4em;">
+            <div class="modal-actions-row" style="display:flex;align-items:center;gap:8px; justify-content: space-between;">
                 <select id='selectedStatus' class='selectionQuantity'>
                     <option value='0' ${this.selectStatus == 0 ? 'selected' : ''}> -- Select Status -- </option>
                     <option value='5' ${this.selectStatus == 5 ? 'selected' : ''}>🟡 FSI Completed</option>
@@ -347,153 +366,138 @@
 
 
 
-    // Close button listener
-    const closeBtn = this.currentCenteredCard.querySelector('#closeCenteredBtn');
-    if (closeBtn) closeBtn.addEventListener('click', () => this.resetToGrid());
+            // Close button listener
+            const closeBtn = root.querySelector('.close-centered-btn');
+            if (closeBtn) closeBtn.addEventListener('click', () => this.resetToGrid());
 
-    // Editable quantity input (blur event)
-    const qtyInput = this.currentCenteredCard.querySelector('#modalQtyInput');
-    if (qtyInput) {
-         const updateQty = async (value) => {
-            const newQty = parseInt(value || 0);
+            // Quantity
+            const qtyInput = root.querySelector('.completed-qty');
+            if (qtyInput) {
+                const updateQty = async (value) => {
+                    const newQty = parseInt(value || 0);
+                    if (!newQty || newQty === item.InputQty) return;
 
-            if (!newQty || newQty === item.InputQty) return;
+                    if (newQty > item.PlanQty) {
+                        qtyInput.value = item.InputQty;
+                        return;
+                    }
+                    try {
+                        await postMethod('@Url.Action("UpdateQuantityLine", "Assembly")', {
+                            recordID: item.RecordID,
+                            Qty: newQty
+                        });
+                        await this.LoadActiveShopOrders();
+                    } catch (err) {
+                        console.error(err);
+                    }
+                };
 
-            if (newQty > item.PlanQty) {
-                qtyInput.value = item.InputQty;
-                return;
-            }
-
-            try {
-                await postMethod('@Url.Action("UpdateQuantityLine", "Assembly")', {
-                    recordID: item.RecordID,
-                    Qty: newQty
+                qtyInput.addEventListener('blur', async (e) => { await updateQty(e.target.value); });
+                qtyInput.addEventListener('keydown', async (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        qtyInput.blur();
+                    }
                 });
-
-                await this.LoadActiveShopOrders();
-            } catch (err) {
-                console.error(err);
             }
-        };
 
-        // Blur
-        qtyInput.addEventListener('blur', async (e) => {
-            await updateQty(e.target.value);
-        });
+            // Status select + Complete/Save button (scoped to THIS card)
+            const selectionStatus = root.querySelector('.selectionQuantity');
+            const completeBtn = root.querySelector('.btn-completed');
 
-        // Enter key
-        qtyInput.addEventListener('keydown', async (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                qtyInput.blur(); // optional: remove focus
-                await updateQty(e.target.value);
+            const setBtnLabel = (status) => {
+                if (!completeBtn) return;
+                completeBtn.innerHTML =
+                    `<iconify-icon icon="fluent-mdl2:completed" width="15"></iconify-icon> ${status === 4 ? 'Completed' : 'Save'}`;
+            };
+
+            if (selectionStatus) {
+                selectionStatus.addEventListener('change', (e) => {
+                    e.stopPropagation();
+                    const status = parseInt(e.target.value, 10);
+                    this.statusByRecord.set(item.RecordID, status);
+                    setBtnLabel(status);
+                });
             }
-        });
-    }
 
-    const selectionStatus = this.currentCenteredCard.querySelector('#selectedStatus');
-    if (selectionStatus) {
-            selectionStatus.addEventListener('change', async (e) => {
-                e.stopPropagation();
-                this.selectStatus = e.target.value;
+            if (completeBtn) {
+                completeBtn.addEventListener('click', async (e) => {
+                    e.stopPropagation();
 
-                document.getElementById('modalCompleteBtn').innerHTML = (this.selectStatus == 4) ? `<iconify-icon icon="fluent-mdl2:completed" width="15"></iconify-icon> Completed` : `<iconify-icon icon="fluent-mdl2:completed" width="15"></iconify-icon> Save`;
-                //alert("Selected Status : " + this.selectStatus);
+                    const selectedStatus = parseInt(selectionStatus.value, 10);
+                    if (selectedStatus === 0) {
+                        alert("Please select a Status.");
+                        return;
+                    }
+
+                    // 5 / 6 : FSI / Cell Line Completed, 4 : Completed
+                    const isCompleted = (selectedStatus === 5 || selectedStatus === 6) ? 0 : 1;
+
+                    const res = await postMethod('@Url.Action("CompleteStatusLine", "Assembly")', {
+                        recordID: item.RecordID,
+                        line: item.Line,
+                        IsStatus: isCompleted,
+                        QuanStats: selectedStatus
+                    });
+                    if (!res?.Success) return;
+
+                    alert("Update Status Successfully");
+                    this.statusByRecord.delete(item.RecordID);
+
+                    if (this.activeIsOven) {
+                        await this.LoadActiveShopOrders();   // re-renders remaining cards or closes
+                        return;
+                    }
+
+                    const hasNextProcess = !!(item.NextItem && item.NextItem.trim() !== "");
+                    if (!hasNextProcess) await this.resetToGrid();
+                    else await this.LoadActiveShopOrders();
+
+                    this.prevModelprocess = "";
+                });
+            }
+
+            // Cancel  button
+            const cancelbtn = root.querySelector('.btn-cancel');
+            if (cancelbtn) {
+                cancelbtn.addEventListener('click', async (e) => {
+                    e.stopPropagation();
+
+                    const res = await postMethod('@Url.Action("cancelProcess", "Assembly")', {
+                        recordID: item.RecordID
+                    });
+                    if (!res?.Success) return;
+
+                    await this.LoadActiveShopOrders();
+
+                    if (!this.activeIsOven && this.prevModelprocess === "") {
+                        await this.resetToGrid();
+                    }
+                    this.prevModelprocess = "";
+                });
+            }
+
+            // Double click -> ShopOrderLine
+            root.addEventListener('dblclick', (e) => {
+                if (e.target.closest('input, button, select')) return;
+                localStorage.setItem("LineSet", item.Line);
+                window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
             });
-    }
 
-    // Active Completed button
-    const completeBtn = this.currentCenteredCard.querySelector('#modalCompleteBtn');
-    if (completeBtn) {
-        // Update the row Data into a Complete
-        completeBtn.addEventListener('click', async (e) => {
-            e.stopPropagation();
-
-            const selectedStatus = parseInt(
-                document.getElementById('selectedStatus').value,
-                10
-            );
-
-            // Don't allow saving without selecting a status
-            if (selectedStatus === 0) {
-                alert("Please select a Status.");
-                return;
-            }
-
-            let isCompleted = (selectedStatus === 5 || selectedStatus === 6) ? 0 : 1;
-            // 5 or 6 : for FSA and Cell Line Completed, 4 : for Completed
-
-            const res = await postMethod('@Url.Action("CompleteStatusLine", "Assembly")', {
-                recordID: item.RecordID,
-                line: item.Line, 
-                IsStatus: isCompleted,
-                QuanStats: selectedStatus
-            });
-
-            if (!res?.Success) return;
-
-            alert("Update Status Successfully");
-
-            const hasNextProcess = !!(item.NextItem && item.NextItem.trim() !== "");
-
-            if (!hasNextProcess) {
-                await this.resetToGrid();   // closes immediately, no race
-            } else {
-                await this.LoadActiveShopOrders(); // safe to refresh in place, next item already known
-            }
-
-            this.prevModelprocess = "";
-        });
-    }
-
-    // Cancel  button
-    const cancelbtn = this.currentCenteredCard.querySelector('#modalCancel');
-    if (cancelbtn) {
-        cancelbtn.addEventListener('click', async (e) => {
-            e.stopPropagation();
-
-            const res = await postMethod('@Url.Action("cancelProcess", "Assembly")', {
-                recordID: item.RecordID
-            });
-            console.log(res);
-            if (!res?.Success) return;
-
-            // 2. Loads the Latest Load Active ShopOrder (Online)
-            await this.LoadActiveShopOrders();
-
-            // 4. If there is NO next process (empty or null), close the modal
-            if (this.prevModelprocess === "") {
-                await this.resetToGrid();
-            }
-
-            this.prevModelprocess = "";
-         });
-    }
-
-
-    this.currentCenteredCard.addEventListener('dblclick', (e) => {
-        // Prevent navigation if clicking on input, button, or close button
-        if (e.target.closest('input') || e.target.closest('button')) return;
-        localStorage.setItem("LineSet", item.Line);
-        window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
-    });
-
-
-    // --- handle next model text animation ---
-    const nextModelEl = this.currentCenteredCard.querySelector('.next-model-text');
-        if (nextModelEl) {
-            if (animateNextModel) {
-                this.typeText(nextModelEl, item.NextItem || '-', 50);
-            } else {
-                nextModelEl.textContent = item.NextItem || '-';
-                nextModelEl.classList.remove('typing-cursor');
-                nextModelEl.classList.add('typing-done');
+            // Next model text
+            const nextModelEl = root.querySelector('.next-model-text');
+            if (nextModelEl) {
+                if (animateNextModel) {
+                    this.typeText(nextModelEl, item.NextItem || '-', 50);
+                } else {
+                    nextModelEl.textContent = item.NextItem || '-';
+                    nextModelEl.classList.remove('typing-cursor');
+                    nextModelEl.classList.add('typing-done');
+                }
             }
         }
 
-    }
-
-       formatTimeSpan(time) {
+     formatTimeSpan(time) {
         if (!time) return '-';
 
         const hours = String(time.Hours ?? 0).padStart(2, '0');
@@ -561,7 +565,6 @@
                             return `<span class="status-badge ${css}">${text}</span>`;
                         })
                         .join('');
-                    console.log(item.NextItem);
                     // Grid card: READONLY input and DISABLED button
                     let badgeopen = (item.NextItem != null && item.NextItem !== "")
                         ? `<div class="badge-row">${badges}</div>`
@@ -633,20 +636,29 @@
                 // Only click event to open modal (no input/button listeners)
                 card.addEventListener('click', async (e) => {
                     if (this.isExpanded || this.isAnimating) return;
-
-                    if (!isOnline) {
-
-                        const res = await getMethod('@Url.Action("GetCountRecords", "Assembly")', { line: item.Line });
-                        if (!res.Success) return;
-
-                        if (res.data != 0) {
-                            window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
+                    console.log("First Click" + item.Line);
+                    const isOvenLine = (item.Line === 'L2' || item.Line === 'L6');
+                    console.log("Checks " + isOvenLine);
+                    if (isOvenLine) {
+                        const ovenItems = await this.fetchOvenItems(item.Line);
+                            console.log("HERE");
+                            console.log(ovenItems);
+                           await this.animateCardToCenter(card, { ...item, OvenItems: ovenItems });
+                           return;
                         }
 
-                       return;
-                    }
-                    this.prevModelprocess = item.NextItem;
-                    await this.animateCardToCenter(card, item);
+                        if (!isOnline) {
+                            const res = await getMethod('@Url.Action("GetCountRecords", "Assembly")', { line: item.Line });
+                            if (!res.Success) return;
+
+                            if (res.data != 0) {
+                                window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
+                            }
+                            return;
+                        }
+
+                        this.prevModelprocess = item.NextItem;
+                        await this.animateCardToCenter(card, item);
                 });
 
                 fragment.appendChild(card);
@@ -654,6 +666,18 @@
 
             gridContainer.innerHTML = '';
             gridContainer.appendChild(fragment);
+        }
+
+        async fetchOvenItems(line) {
+            try {
+                const res = await getMethod('@Url.Action("GetIsOvenListActiveShopOrders", "Assembly")', { line });
+
+                console.log(res);
+                return res?.Success ? (res.data ?? []) : [];
+            } catch (err) {
+                console.error(err);
+                return [];
+            }
         }
 
 
@@ -756,7 +780,13 @@
             otherCards.forEach(c => c.remove());
 
             // 12. Create final centered card
-            this.createCenteredCard(itemData, targetLeft, targetTop, targetWidth, targetHeight);
+           this.activeIsOven = !!itemData.OvenItems?.length;
+
+           if (this.activeIsOven) {
+               this.renderOvenCards(itemData.OvenItems, itemData.Line, { animateNextModel: true });
+           } else {
+               this.createCenteredCard(itemData, targetLeft, targetTop, targetWidth, targetHeight);
+           }
 
             this.isAnimating = false;
             this.isExpanded = true;
@@ -793,6 +823,7 @@
             this.isExpanded = false;
             this.isAnimating = false;
             this.activeLineId = null;
+            this.activeIsOven = false;
             await this.LoadActiveShopOrders();
         }
 
@@ -867,6 +898,40 @@
                 span.innerText = `Auto-refresh every 30s · Last updated ${timeStr}`;
             }
         }
+
+        renderOvenCards(ovenItems, line, options = {}) {
+            if (this.currentCenteredCard) this.currentCenteredCard.remove();
+
+            const wrap = document.createElement('div');
+            wrap.className = 'oven-cards-wrapper';
+
+            const row = document.createElement('div');
+            row.className = 'oven-cards-row';
+            row.style.setProperty('--oven-count', ovenItems.length);
+            wrap.appendChild(row);
+
+
+            // click on the empty area around the cards closes everything
+            wrap.addEventListener('click', (e) => {
+                if (e.target === wrap || e.target === row) this.resetToGrid();
+            });
+
+            ovenItems.forEach(o => {
+                const card = document.createElement('div');
+                card.className = 'centered-standalone-card oven-card';
+                row.appendChild(card);                      // <- row, not wrap
+
+                this.updateModalContent(
+                    { PlanQty: 0, InputQty: 0, ...o, Line: o.Line ?? line },
+                    { root: card, animateNextModel: false, showNext: false }
+                );
+            });
+
+            document.body.appendChild(wrap);
+            this.currentCenteredCard = wrap;
+        }
+
+
     }
 
     document.addEventListener('DOMContentLoaded', function () {

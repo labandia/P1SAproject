@@ -40,13 +40,26 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         {
             //await _manu.AutoUpdateShopOrderLine();
 
-
             var res = await _manu.GetListofActiveShopOrders();
             if (res == null || !res.Any())
                 return JsonNotFound("No Active Lines found");
 
             return JsonSuccess(res);
         }
+
+        [HttpGet]
+        public async Task<ActionResult> GetIsOvenListActiveShopOrders(string line)
+        {
+            //await _manu.AutoUpdateShopOrderLine();
+
+            var res = await _manu.GetListOfMoreThanOneShopOrders(line);
+            if (res == null || !res.Any())
+                return JsonNotFound("No Active Lines found");
+
+            return JsonSuccess(res);
+        }
+
+
 
         [HttpGet]
         public async Task<ActionResult> GetCountRecords(string line)
@@ -262,6 +275,26 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                 throw;
             }
         }
+
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateProcessL2andL6(int recordID, int process)
+        {
+            try
+            {
+                Debug.WriteLine($@"RecordID : {recordID} - Process : {process} ");
+                var res = await _manu.UpdateL2ProcessStatus(recordID, process);
+                if (!res) return JsonError("Error Updated");
+                return JsonSuccess(res);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
+
+
 
         [HttpPost]
         public async Task<ActionResult> UpdateAssemblyStats(

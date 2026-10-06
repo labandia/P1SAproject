@@ -40,7 +40,7 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public int InputQty { get; set; }
         public int Operational { get; set; }
         public int QuanStatus { get; set; }
-
+        public int IsOven { get; set; }
         public string DateStart { get; set; }
         public TimeSpan? TimeStart { get; set; }
         public TimeSpan? TimeEnd { get; set; }

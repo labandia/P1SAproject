@@ -55,7 +55,9 @@
                     <option value="3">Filter By : On Process</option>
                 </select>
 
-
+                <div>
+                    <p>Running Process : <span id="countOven">0</span> / 3</p>
+                </div>
             </div>
 
             <div>
@@ -188,6 +190,7 @@
         this.pageSize = 0;
         this.isFirstLoad = true;
         this.isFilter = false;
+        this.runningProcess = 0;
 
         this.tbody = document.querySelector('.devices-table tbody');
         this.searchinput = document.getElementById('searchinput');
@@ -227,7 +230,7 @@
                 Blank: 0,
                 NextProcess: 1,
                 Temporary: 2,
-                InProcess: 3, 
+                InProcess: 3,
                 FSA: 5,
                 CellLine: 6
             });
@@ -388,17 +391,40 @@
                 return;
             }
 
-            const res = await postMethod('@Url.Action("UpdateLineshopOrder", "Assembly")', {
-                recordID: this.selectedID,
-                Lineman: document.getElementById('moveCellline').value,
-                process: this.Operational
-             });
+            console.log("SELECTED : " + targetLine);
 
-            if (res?.Success) {
-                alert("Change Completed");
-                await this.LoadLineShopOrderList();
+            if (targetLine === '1' || targetLine === '2' || targetLine === '3') {
+                if (this.runningProcess == 3) {
+                        alert("Already a Process please finish the others Models");
+                        return;
+                   }
+
+                   const res = await postMethod('@Url.Action("UpdateProcessL2andL6", "Assembly")', {
+                       recordID: this.selectedID,
+                       process: targetLine, 
+                       Lineman: document.getElementById('moveCellline').value,
+                   });
+
+                    if (res?.Success) {
+                        alert("Select Model Added Completed");
+                        alert("ADDTIONAL CARD DISPLAY");
+                        await this.LoadLineShopOrderList();
+                    } else {
+                        alert("Model is Already in the Process");
+                    }
+
+            } else {
+                const res = await postMethod('@Url.Action("UpdateLineshopOrder", "Assembly")', {
+                    recordID: this.selectedID,
+                    Lineman: document.getElementById('moveCellline').value,
+                    process: this.Operational
+                });
+
+                if (res?.Success) {
+                    alert("Change Completed");
+                    await this.LoadLineShopOrderList();
+                }
             }
-
             this.moveCellModal.hide();
 
         });
@@ -613,7 +639,7 @@
 
 
       NoTableRowData() {
-          
+
           this.tbody.innerHTML = `
              <tr>
                  <td colspan="19" style="padding: 0; border: none;">
@@ -685,6 +711,7 @@
           document.getElementById("newrecords").textContent = filteredData.length;
 
 
+
           if (filteredData.length === 0) {
               this.tbody.innerHTML = `
                 <tr>
@@ -694,7 +721,7 @@
                 </tr>`;
               return;
           }
-
+          let OnProcess = 0;
 
           this.tbody.innerHTML = filteredData.map(row => {
 
@@ -780,6 +807,15 @@
 
               isOperational = row.Operational === 2 || row.Operational === 3 ? `<span> ${row.Operational}</span>` : "";
               const shipmentDateClass = this.getShipmentDateClass(row.ShipmentDate);
+
+              if (row.IsOven) {
+                  OnProcess += 1;
+              }
+
+              this.runningProcess = OnProcess;
+
+              document.getElementById("countOven").innerHTML = this.runningProcess;
+
 
               return `
         <tr class="bg-row-highlight fade-in"
@@ -909,14 +945,13 @@
       }
 
       getShipmentDateClass(shipmentDate) {
-          if (!shipmentDate) return 'shipment-adjustment';
+          if (!shipmentDate) return '';
 
-          // Normalize the shipment date
+          // Parse the shipment date
           const shipment = new Date(shipmentDate);
 
-          if (isNaN(shipment.getTime())) {
-              return 'shipment-adjustment';
-          }
+          if (isNaN(shipment.getTime())) return '';
+
 
           // Normalize dates to local midnight
           const shipmentDay = new Date(
@@ -939,7 +974,13 @@
               return 'shipment-tomorrow';
           }
 
-          return 'shipment-adjustment';
+          // Light Blue: Previous dates only
+          if (shipmentDay.getTime() < today.getTime()) {
+              return 'shipment-adjustment';
+          }
+
+          // Other future dates: no background color
+          return '';
       }
 
 

@@ -1,4 +1,5 @@
-﻿using ProgramPartListWeb.Areas.Final.Model;
+﻿using Aspose.Cells.Drawing;
+using ProgramPartListWeb.Areas.Final.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,9 @@ namespace ProgramPartListWeb.Areas.Final
         Task AutoUpdateShopOrderLine();
 
         Task<List<FanTraceabilityManufacturingOrder>> GetListofActiveShopOrders();
+
+        Task<List<FanTraceabilityManufacturingOrder>> GetListOfMoreThanOneShopOrders(string  Line);
+
         Task<int> GetCountShopOrders(string line);
         Task<List<FanTraceabilityManufacturingOrder>> GetListofShopOrdersByLine(
             string Linename, string searchtext = "", int orderstatus = 0);
@@ -35,6 +39,9 @@ namespace ProgramPartListWeb.Areas.Final
         Task<bool> NextModelProcess(string newLine);
         Task<bool> ChangeQuantityStatus(int id, int status);
         Task<bool> CancelProcess(int id);
+
+  
+        Task<bool> UpdateL2ProcessStatus(int id, int process);
         // ============================================================
 
         // ======  FOR UPLOAD DATA  ====================================

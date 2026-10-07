@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.InkML;
+using DocumentFormat.OpenXml.Presentation;
 using ProgramPartListWeb.Areas.Final.Model;
 using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Utilities.DataAccess;
@@ -161,7 +162,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
             {
                 string query = $@"SELECT {SelectColumns} FROM {maintable} s WHERE OrderStatus = 2 OR OrderStatus = 3 ";
 
-                Debug.WriteLine(query);
+                //Debug.WriteLine(query);
 
 
                 var getData = await SqlDataAcess_Test.QueryAsync<FanTraceabilityManufacturingOrder>(query);
@@ -215,7 +216,6 @@ namespace ProgramPartListWeb.Areas.Final.Services
         public async Task<List<FanTraceabilityManufacturingOrder>> GetListOfMoreThanOneShopOrders(string Line)
         {
             string query = $@"SELECT {SelectColumns} FROM {maintable} s WHERE Line = @Line AND IsOven IN (1, 2, 3) ";
-            Debug.WriteLine(query);
             return await SqlDataAcess_Test.QueryAsync<FanTraceabilityManufacturingOrder>(query, new { Line = Line });
 
         }
@@ -392,9 +392,12 @@ namespace ProgramPartListWeb.Areas.Final.Services
         }
         public async Task<bool> UpdateForFSAandCellLine(int id, int status)
         {
+            
+
             int rows = await SqlDataAcess_Test.ExecuteAsync($@"
                 UPDATE {maintable}
-                SET OrderStatus = @status
+                SET 
+                    OrderStatus = @status
                 WHERE RecordID = @id ", new
             {
                 id,
@@ -456,19 +459,21 @@ namespace ProgramPartListWeb.Areas.Final.Services
             }
             return rows > 0;
         }
-        public async Task<bool> CompletionStatusShopOrder(int id, int status)
+        public async Task<bool> CompletionStatusShopOrder(int id, int status, int isOven)
         {
-            // BUG FIX: every other method in this class scopes the UPDATE by
-            // (RecordID AND line). This one only filtered by RecordID, so `line` was
-            // accepted but silently ignored — added it back for consistency/safety.
+            int isOvenValue = isOven != 2 ? 0 : 1; 
+
+
             int rows = await SqlDataAcess_Test.ExecuteAsync($@"
                 UPDATE {maintable}
                 SET OrderStatus = @status,
-                    TimeEnd = CAST(GETDATE() AS TIME(0))
+                    TimeEnd = CAST(GETDATE() AS TIME(0)),
+                    IsOven = @isOven
                 WHERE RecordID = @id ", new
             {
                 id,
-                status
+                status,
+                isOven = isOvenValue
             });
             return rows > 0;
         }
@@ -1101,9 +1106,9 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         FROM {maintable}
     
 	                    WHERE
-		                    CAST(PlanStartDate AS DATE) <= CAST(GETDATE() AS DATE)
+		              
 
-                        AND (
+                         (
                                ISNULL(P1SA_C, 0)  <> 0
                             OR ISNULL(P1SA_W, 0)  <> 0
                             OR ISNULL(P1SA_M, 0)  <> 0
@@ -1407,7 +1412,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                               FROM {maintable}
                               WHERE IsOven = @IsOven AND RecordID = @RecordID ", new
             {  IsOven = process, RecordID = id });
-            Debug.WriteLine("ISCHECK " + IsExist);
+            //Debug.WriteLine("ISCHECK " + IsExist);
             // if isOven is Exist
             if (IsExist) return false;
 
@@ -1422,7 +1427,16 @@ namespace ProgramPartListWeb.Areas.Final.Services
             return result > 0;
         }
 
+        public async Task<bool> CancelProcessOven(int id)
+        {
+            int result = await SqlDataAcess_Test.ExecuteAsync($@"
+                UPDATE {maintable} 
+                SET IsOven = 0 WHERE RecordID = @RecordID", new
+            {
+                RecordID = id
+            });
 
-
+            return result > 0;
+        }
     }
 }

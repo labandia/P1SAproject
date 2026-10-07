@@ -59,7 +59,22 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             return JsonSuccess(res);
         }
 
-
+        [HttpPost]
+        public async Task<ActionResult> CancelIsOvenProcess(int recordID)
+        {
+            try
+            {
+                Debug.WriteLine("CANCEL OVEN PROCESS RECORD ID: " + recordID);  
+                var res = await _manu.CancelProcessOven(recordID);
+                if (!res) return JsonError("Error Canceling Process");
+                return JsonSuccess(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"CONTROLLER ERROR: {ex.Message}");
+                throw;
+            }
+        }
 
         [HttpGet]
         public async Task<ActionResult> GetCountRecords(string line)
@@ -220,19 +235,20 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         }
 
 
-
+        
         [HttpPost]
         public async Task<ActionResult> CompleteStatusLine(int recordID, 
             string line, 
             int IsStatus, 
-            int QuanStats)
+            int QuanStats, 
+            int IsOven)
         {
             try
             {
 
                 var updateTask = IsStatus == 0 ? 
                         _manu.UpdateForFSAandCellLine(recordID, QuanStats) : 
-                        _manu.CompletionStatusShopOrder(recordID, QuanStats);
+                        _manu.CompletionStatusShopOrder(recordID, QuanStats, IsOven);
 
                 var nextProcessTask = _manu.NextModelProcess(line);
 

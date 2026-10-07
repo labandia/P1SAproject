@@ -27,6 +27,10 @@
 
 
 
+@Html.Partial("_ShopOrdersModal")
+
+
+
 <script type="module" asp-append-version="true">
     import {
         getMethod,
@@ -38,7 +42,10 @@
 
 
         constructor() {
+            this.ovenId = 0;
             this.prevModelprocess = "";
+            this.cancelModal = new bootstrap.Modal(document.getElementById('cancelNextmodal'));
+            this.cancelConfirm = document.getElementById('CancelID');
 
             this.refreshInterval = null;
             this.datalist = [];
@@ -107,6 +114,32 @@
             if (resetBtn) {
                 resetBtn.addEventListener('click', () => this.resetToGrid());
             }
+
+           this.cancelConfirm.addEventListener('click', async () => {
+                if (!this.ovenId) return;
+
+                this.cancelConfirm.disabled = true;
+                try {
+                    const res = await postMethod('@Url.Action("CancelIsOvenProcess", "Assembly")', {
+                        recordID: this.ovenId
+                    });
+
+                    if (!res?.Success) {
+                        alert(res?.Message || "Cancel failed.");
+                        return;
+                    }
+
+                    this.cancelModal.hide();
+                    this.statusByRecord.delete(this.ovenId);
+                    this.ovenId = 0;
+                    await this.LoadActiveShopOrders();   // closes the view if no oven items remain
+                } catch (err) {
+                    console.error(err);
+                    alert("Cancel failed. Please try again.");
+                } finally {
+                    this.cancelConfirm.disabled = false;
+                }
+            });
         }
 
 
@@ -120,55 +153,48 @@
 
                 if (!res?.Success) {
                     if (!this.isExpanded) this.RenderEmptyState();
-                    return;
+                    return;                                   // network/server error: don't close anything
                 }
 
                 const apiData = res.data ?? [];
-                //console.log(apiData);
-                if (apiData.length === 0) {
-                    this.allCardsData = [];
-                    if (!this.isExpanded) this.RenderEmptyState();
-                    return;
-                }
-
                 const lookup = new Map(apiData.map(item => [item.Line, item]));
-                const records = this.assemblyRecords.map(res => {
-                    const fromApi = lookup.get(res.Line);
-                    return {
-                        Line: res.Line,
-                        FinalShopOrder: "",
-                        Model: "",
-                        CompletedSection: "",
-                        NextItem: "",
-                        Note: "",
-                        OrderRemarks: "",
-                        RecordID: null,
-                        PlanQty: 0,
-                        InputQty: 0,
-                        ...(fromApi ?? {})
-                    };
-                });
+                const records = this.assemblyRecords.map(r => ({
+                    Line: r.Line,
+                    FinalShopOrder: "",
+                    Model: "",
+                    CompletedSection: "",
+                    NextItem: "",
+                    Note: "",
+                    OrderRemarks: "",
+                    RecordID: null,
+                    PlanQty: 0,
+                    InputQty: 0,
+                    ...(lookup.get(r.Line) ?? {})
+                }));
                 this.allCardsData = records;
 
                 if (this.isExpanded && this.currentCenteredCard && this.activeLineId) {
 
                     if (this.activeIsOven) {
                         const ovenItems = await this.fetchOvenItems(this.activeLineId);
-                        if (ovenItems.length === 0) {
-                            await this.resetToGrid();      // all completed -> close
-                            return;
-                        }
+                        if (ovenItems.length === 0) { await this.resetToGrid(); return; }
                         this.renderOvenCards(ovenItems, this.activeLineId);
                         return;
                     }
 
                     const updatedRecord = records.find(r => r.Line === this.activeLineId);
-                    if (!updatedRecord) return;
+
+                    // Line no longer has an active order (e.g. just cancelled) -> close the card
+                    if (!updatedRecord || !(updatedRecord.FinalShopOrder ?? '').trim()) {
+                        await this.resetToGrid();
+                        return;
+                    }
+
                     this.prevModelprocess = updatedRecord.NextItem;
                     this.updateModalContent(updatedRecord, { animateNextModel: true });
 
-                } else {
-                    this.RenderCardList(records);
+                } else if (!this.isExpanded) {
+                    apiData.length === 0 ? this.RenderEmptyState() : this.RenderCardList(records);
                 }
             } catch (err) {
                 console.error(err);
@@ -268,6 +294,17 @@
                 })
                 .join('');
 
+            let processSelected = "";
+
+            if (item.IsOven === 1) {
+                processSelected = "FSA";
+            } else if (item.IsOven === 2) {
+                processSelected = "Impeller to pack";
+            } else {
+                processSelected = "Loctite 603";
+            }
+
+            console.log("ASDASDD " + processSelected);
 
             // Modal HTML with editable input, active button, and a close button
             root.innerHTML = `
@@ -312,7 +349,7 @@
                         <p class="card-row-label"  style='font-size: 1.1rem;'>On Process Model</p>
                         <p class="card-row-value" style='font-size: 1.5rem;'>${item.Model || '-'}</p>
                     </div>
-           
+
             <div class="card-row" style=' margin: 1em 0;'>
                 <p class="card-row-label" style="margin-bottom:8px; font-size: 1.1rem;">
                     Material Status : <span class="card-row-label" style='font-size: 1.1rem;'>${completionPct}%</span>
@@ -323,7 +360,10 @@
              <div class="card-row" style=' margin: 1em 0;'>
                  <p class="card-row-label" style="font-size: 1.1rem;">Next Process Model</p>
                  <p class="card-row-value-normal next-model-text" style="font-size: 1.5rem; min-height: 1.8rem;"></p>
-             </div>` : ''}
+             </div>` : `<div class="card-row" style=' margin: 1em 0;'>
+                            <p class="card-row-label" style="font-size: 1.1rem;"> Process </p>
+                            <p style="font-size: 1.5rem; min-height: 1.8rem;">${processSelected}</p>
+                        </div>`}
             <div class="card-footer">
                 <div class="card-footer-col">
                     <p class="card-footer-label" style='font-size: 1.1rem;'>Special Process</p>
@@ -345,8 +385,10 @@
             <div class="modal-actions-row" style="display:flex;align-items:center;gap:8px; justify-content: space-between;">
                 <select id='selectedStatus' class='selectionQuantity'>
                     <option value='0' ${this.selectStatus == 0 ? 'selected' : ''}> -- Select Status -- </option>
-                    <option value='5' ${this.selectStatus == 5 ? 'selected' : ''}>🟡 FSI Completed</option>
-                    <option value='6' ${this.selectStatus == 6 ? 'selected' : ''}>🟣 Cell Line Completed</option>
+                    ${item.IsOven === 1 ? `
+                             <option value='5' ${this.selectStatus == 5 ? 'selected' : ''}>🟡 FSI Completed</option>
+                             <option value='6' ${this.selectStatus == 6 ? 'selected' : ''}>🟣 Cell Line Completed</option>
+                    ` : ''}
                     <option value='4' ${this.selectStatus == 4 ? 'selected' : ''}>Completed</option>
                 </select>
 
@@ -357,7 +399,11 @@
                      <button type="button" id="modalCancel" class="btn-cancel" ${item.InputQty !== 0 ? 'disabled' : ''}><iconify-icon icon="mdi-light:cancel" width="16"></iconify-icon>  Cancel</button>
 
                     <button type="button" id="modalCompleteBtn" class="btn-completed"
-                            data-line="${item.Line}" data-order="${item.FinalShopOrder}"><iconify-icon icon="fluent-mdl2:completed" width="15"></iconify-icon> ${this.selectStatus !== 6 ? 'Save' : 'Completed'} </button>
+                            data-line="${item.Line}"
+                            data-order="${item.FinalShopOrder}
+                            data-IsOven="${item.IsOven}">
+                                <iconify-icon icon="fluent-mdl2:completed" width="15"></iconify-icon> ${this.selectStatus !== 6 ? 'Save' : 'Completed'}
+                      </button>
                 </div>
 
             </div>
@@ -429,7 +475,7 @@
                         alert("Please select a Status.");
                         return;
                     }
-
+                    console.log("IS OVEN SELECTED : " + item.IsOven);
                     // 5 / 6 : FSI / Cell Line Completed, 4 : Completed
                     const isCompleted = (selectedStatus === 5 || selectedStatus === 6) ? 0 : 1;
 
@@ -437,7 +483,8 @@
                         recordID: item.RecordID,
                         line: item.Line,
                         IsStatus: isCompleted,
-                        QuanStats: selectedStatus
+                        QuanStats: selectedStatus,
+                        IsOven: item.IsOven
                     });
                     if (!res?.Success) return;
 
@@ -463,17 +510,33 @@
                 cancelbtn.addEventListener('click', async (e) => {
                     e.stopPropagation();
 
-                    const res = await postMethod('@Url.Action("cancelProcess", "Assembly")', {
-                        recordID: item.RecordID
-                    });
-                    if (!res?.Success) return;
-
-                    await this.LoadActiveShopOrders();
-
-                    if (!this.activeIsOven && this.prevModelprocess === "") {
-                        await this.resetToGrid();
+                    // Oven lines: confirmation modal performs the actual cancel
+                    if (item.Line === 'L2' || item.Line === 'L6') {
+                        this.ovenId = item.RecordID;
+                        this.cancelModal.show();
+                        return;
                     }
-                    this.prevModelprocess = "";
+
+                    cancelbtn.disabled = true;   // prevent double submit
+                    try {
+                        const res = await postMethod('@Url.Action("cancelProcess", "Assembly")', {
+                            recordID: item.RecordID
+                        });
+
+                        if (!res?.Success) {
+                            alert(res?.Message || "Cancel failed.");
+                            cancelbtn.disabled = false;
+                            return;
+                        }
+
+                        this.statusByRecord.delete(item.RecordID);
+                        // Refresh decides whether to show the next record or close the card
+                        await this.LoadActiveShopOrders();
+                    } catch (err) {
+                        console.error(err);
+                        alert("Cancel failed. Please try again.");
+                        cancelbtn.disabled = false;
+                    }
                 });
             }
 
@@ -636,26 +699,32 @@
                 // Only click event to open modal (no input/button listeners)
                 card.addEventListener('click', async (e) => {
                     if (this.isExpanded || this.isAnimating) return;
-                    console.log("First Click" + item.Line);
-                    const isOvenLine = (item.Line === 'L2' || item.Line === 'L6');
-                    console.log("Checks " + isOvenLine);
-                    if (isOvenLine) {
-                        const ovenItems = await this.fetchOvenItems(item.Line);
+                        console.log("First Click" + item.Line);
+                        const isOvenLine = (item.Line === 'L2' || item.Line === 'L6');
+                        console.log("Checks " + isOvenLine);
+                        if (isOvenLine) {
+                            const ovenItems = await this.fetchOvenItems(item.Line);
                             console.log("HERE");
                             console.log(ovenItems);
-                           await this.animateCardToCenter(card, { ...item, OvenItems: ovenItems });
-                           return;
-                        }
-
-                        if (!isOnline) {
-                            const res = await getMethod('@Url.Action("GetCountRecords", "Assembly")', { line: item.Line });
-                            if (!res.Success) return;
-
-                            if (res.data != 0) {
-                                window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
+                            if (ovenItems.length > 0) {
+                                await this.animateCardToCenter(card, { ...item, OvenItems: ovenItems });
+                            } else {
+                                 window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
                             }
                             return;
+                        } else {
+                            if (!isOnline) {
+                                const res = await getMethod('@Url.Action("GetCountRecords", "Assembly")', { line: item.Line });
+                                if (!res.Success) return;
+
+                                if (res.data != 0) {
+                                    window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
+                                }
+                                return;
+                            }
                         }
+
+
 
                         this.prevModelprocess = item.NextItem;
                         await this.animateCardToCenter(card, item);
@@ -861,9 +930,26 @@
                     // Click event for offline cards
                     card.addEventListener('click', async (e) => {
                         if (this.isExpanded || this.isAnimating) return;
-                         window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
-                        @*const res = await getMethod('@Url.Action("GetCountRecords", "Assembly")', { line: item.Line });
-                        console.log(res);*@
+
+
+                        const isOvenLine = (item.Line === 'L2' || item.Line === 'L6');
+                        console.log(isOvenLine);
+
+                        if (isOvenLine) {
+                            const ovenItems = await this.fetchOvenItems(item.Line);
+                            console.log("HERE");
+                            console.log("LENGTH DATA:", ovenItems.length);
+
+                            if (ovenItems.length > 0) {
+                                await this.animateCardToCenter(card, { ...item, OvenItems: ovenItems });
+                            } else {
+                                 window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
+                            }
+
+                        }else {
+                            window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
+                        }
+
                     });
 
                     fragment.appendChild(card);

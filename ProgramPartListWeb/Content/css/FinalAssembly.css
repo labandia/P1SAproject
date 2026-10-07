@@ -1925,6 +1925,11 @@ svg.icon-stroke {
     background-color: #9010f8;
 }
 
+.bg-status-stillInProcess {
+    background-color: #35bfff;
+}
+
+
 .selectedbadge {
     display: inline-block;
     width: 40px;
@@ -1975,11 +1980,19 @@ svg.icon-stroke {
 }
 
 
+.stillInProcess {
+    background: #35bfff;
+    border: 1px solid #35bfff;
+    color: #fff
+}
+
 .selectedFSI {
     background: #e1f340;
     border: 1px solid #e1f340;
     color: #fff
 }
+
+
 
 
 

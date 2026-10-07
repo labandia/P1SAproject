@@ -35,12 +35,14 @@ namespace ProgramPartListWeb.Areas.Final
         Task<bool> UpdateStatusShopOrder(int id, int status, string line);
         Task<bool> UpdateCompleteShopOrder(int id, int status, string line);
         Task<bool> UpdateForFSAandCellLine(int id, int status);
-        Task<bool> CompletionStatusShopOrder(int id, int status);
+        Task<bool> CompletionStatusShopOrder(int id, int status, int isOven);
         Task<bool> NextModelProcess(string newLine);
         Task<bool> ChangeQuantityStatus(int id, int status);
         Task<bool> CancelProcess(int id);
 
-  
+        Task<bool> CancelProcessOven(int id);
+
+
         Task<bool> UpdateL2ProcessStatus(int id, int process);
         // ============================================================
 

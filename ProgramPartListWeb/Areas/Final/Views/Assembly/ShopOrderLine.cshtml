@@ -56,7 +56,13 @@
                 </select>
 
                 <div>
-                    <p>Running Process : <span id="countOven">0</span> / 3</p>
+                    <div class="legends-group">
+                        <span class="rounded-full bg-status-stillInProcess flex-shrink-0"></span>
+                        <p>Running Process : <span id="countOven">0</span> / 3</p>
+                    </div>
+
+                    
+                   
                 </div>
             </div>
 
@@ -186,6 +192,8 @@
         this.selectedID = 0;
         this.operation = 0;
         this.selectedLine = "";
+        this.isCompleted = false;
+        this.IsOrderStatus = false;
         this.currentRecord = 0;
         this.pageSize = 0;
         this.isFirstLoad = true;
@@ -206,9 +214,15 @@
         this.moveModal = new bootstrap.Modal(document.getElementById('moveOrderModal'));
         this.moveCellModal = new bootstrap.Modal(document.getElementById('moveCellModal'));
         this.cancelModal = new bootstrap.Modal(document.getElementById('cancelNextmodal'));
+        this.L2processModal = new bootstrap.Modal(document.getElementById('L2AndL6Modalprocess'));
+
+
         this.moveModalBody = document.getElementById('moveOrderModalBody');
         this.moveConfirmBtn = document.getElementById('moveOrderConfirmBtn');
         this.moveCellConfirmBtn = document.getElementById('moveCellConfirmBtn');
+
+        this.L2ProcessConfirmBtn = document.getElementById('selectProcessbtn');
+
         this.cancelConfirm = document.getElementById('CancelID');
         this.pendingMoveId = null;
     }
@@ -241,7 +255,23 @@
             const lineman = row.dataset.orderLine; // Line
             const operation = row.dataset.operational;
             const isComplete = row.dataset.checkstats === 'true';
+
             console.log("LINENAME" + lineman)
+
+            // FOR Line 2 and Line 6
+            const isOvenLine = (lineman === 'L2' || lineman === 'L6');
+            if (isOvenLine) {
+                this.selectedID = id;
+                this.operation = operation;
+                this.selectedLine = lineman;
+                this.isCompleted = isComplete;
+                this.IsOrderStatus = orderStatus;
+                this.L2processModal.show();
+                return;
+            }
+
+
+
 
             if (Number.isNaN(id) || Number.isNaN(orderStatus)) {
                 console.error('Row missing required data attributes', row.dataset);
@@ -391,44 +421,134 @@
                 return;
             }
 
-            console.log("SELECTED : " + targetLine);
+            const res = await postMethod('@Url.Action("UpdateLineshopOrder", "Assembly")', {
+                recordID: this.selectedID,
+                Lineman: document.getElementById('moveCellline').value,
+                process: this.Operational
+            });
 
-            if (targetLine === '1' || targetLine === '2' || targetLine === '3') {
-                if (this.runningProcess == 3) {
-                        alert("Already a Process please finish the others Models");
-                        return;
-                   }
-
-                   const res = await postMethod('@Url.Action("UpdateProcessL2andL6", "Assembly")', {
-                       recordID: this.selectedID,
-                       process: targetLine, 
-                       Lineman: document.getElementById('moveCellline').value,
-                   });
-
-                    if (res?.Success) {
-                        alert("Select Model Added Completed");
-                        alert("ADDTIONAL CARD DISPLAY");
-                        await this.LoadLineShopOrderList();
-                    } else {
-                        alert("Model is Already in the Process");
-                    }
-
-            } else {
-                const res = await postMethod('@Url.Action("UpdateLineshopOrder", "Assembly")', {
-                    recordID: this.selectedID,
-                    Lineman: document.getElementById('moveCellline').value,
-                    process: this.Operational
-                });
-
-                if (res?.Success) {
-                    alert("Change Completed");
-                    await this.LoadLineShopOrderList();
-                }
+            if (res?.Success) {
+                alert("Change Completed");
+                await this.LoadLineShopOrderList();
             }
+
             this.moveCellModal.hide();
 
         });
 
+
+        this.L2ProcessConfirmBtn.addEventListener('click', async () => {
+            const targetLine = document.getElementById('processL2line')?.value;
+            let selectprocess = 0;
+
+            const isStatus = Object.freeze({
+                Blank: 0,
+                NextProcess: 1,
+                Temporary: 2,
+                InProcess: 3,
+                FSA: 5,
+                CellLine: 6
+            });
+
+
+
+            if (targetLine === 'NextProcess') {
+                selectprocess = 1;
+            } else if (targetLine === 'InProcess') {
+                selectprocess = 3;
+            } else if (targetLine === 'FSA') {
+                selectprocess = 1;
+            } else if (targetLine === 'Lead') {
+                selectprocess = 2;
+            } else if (targetLine === 'Loctite') {
+                selectprocess = 3;
+            }
+
+
+            if (targetLine === 'FSA' || targetLine === 'Lead' || targetLine === 'Loctite') {
+                // console.log("Select ID : " + this.selectedID);
+                // console.log("Select Line : " + this.selectedLine);
+                // console.log("Select process : " + selectprocess);
+                if (this.runningProcess == 3) {
+                    alert("Already a Process please finish the others Models");
+                    return;
+                }
+
+                const res = await postMethod('@Url.Action("UpdateProcessL2andL6", "Assembly")', {
+                    recordID: this.selectedID,
+                    process: selectprocess,
+                    Lineman: this.selectedLine,
+                });
+
+                if (res?.Success) {
+                    // alert("Select Model Added Completed");
+                    // alert("ADDTIONAL CARD DISPLAY");
+                    await this.LoadLineShopOrderList();
+
+                    this.L2processModal.hide();
+                } else {
+                    alert("Model is Already in the Process");
+                }
+            } else {
+
+                if (this.operation > 1) {
+                    alert("Model needs to complete other processes before proceeding to next process.");
+                    return;
+                }
+
+                // if isCOmplete is false(incomplete from the shops)
+                if (!this.isCompleted) {
+                    if (this.IsOrderStatus === isStatus.Temporary) {
+                        alert("Already in Next or In process.");
+                    } else {
+                        // if not updates the OrderStatus to 4 (In Process) and updates the row
+                        const success = await this.updateOrderStatus(this.selectedID, isStatus.Temporary, this.selectedLine);
+                        if (!success) return;
+
+                        row.dataset.orderStatus = String(isStatus.Temporary);
+                        badge.className = 'selectedbadge selectedProcessInProgress'; // or whatever your "in process" class is
+                        row.classList.add('bg-row-highlight');
+
+                        await this.LoadLineShopOrderList();
+                    }
+                    return;
+                }
+
+                // if the orderStatus(Next Process is set) Shows the Cancel Dialog
+                 if (this.IsOrderStatus === isStatus.NextProcess) {
+                    this.cancelModal.show();
+                    return;
+                 }
+
+                  if (this.IsOrderStatus === isStatus.InProcess || this.IsOrderStatus === isStatus.Completed) return;
+
+                  try {
+                     // Check if the next process(1) has already been selected for this line
+                      const res = await getMethod('@Url.Action("CheckIfAreadyCheckNext", "Assembly")', { lineman: this.selectedLine });
+                     if (res.data > 0) {
+                         alert("Already inprocess and the next process.");
+                         return;
+                     }
+
+                      const success = await this.ForCompleteupdateOrderStatus(this.selectedID, isStatus.NextProcess, this.selectedLine);
+                     if (!success) return;
+
+
+
+                      await this.LoadLineShopOrderList();
+
+                      this.L2processModal.hide();
+                 } catch (err) {
+                     console.error('Failed to update order status', err);
+                     alert("Something went wrong updating the status. Please try again.");
+                 }
+
+
+            }
+
+
+
+        });
 
 
         this.cancelConfirm.addEventListener('click', async () => {
@@ -810,6 +930,7 @@
 
               if (row.IsOven) {
                   OnProcess += 1;
+                  selecthighlight = 'stillInProcess';
               }
 
               this.runningProcess = OnProcess;

@@ -1,0 +1,220 @@
+﻿
+@{
+    ViewBag.Title = "PreparationList";
+    Layout = "~/Areas/Final/Views/Shared/_ManageLayout.cshtml";
+}
+
+<section style="padding: 30px 20px;">
+    <!-- MAIN PANEL -->
+    <!-- header section -->
+    <div class="headerManage  flex justify-between items-center mb-6">
+        <div class="flex items-center gap-lg-3">
+            <div>
+                <h2 class="font-semibold mb-1" style="font-size: 22px;">History of Preparation List</h2>
+                <p class="text-sm" style="color:#86868b;">Current Data of the Final Assembly </p>
+            </div>
+
+            <!-- filters bar -->
+            <div class="flex items-center gap-3 mb-4 flex-wrap">
+
+
+
+            </div>
+        </div>
+        <div class="flex gap-3">
+
+
+
+            <div class="search-input">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.34-4.34" />
+                </svg>
+                <input type="text" placeholder="Search here ..." id="searchinput" />
+            </div>
+        </div>
+    </div>
+
+    @*<span id="selectedCount">0 selected</span>
+
+        <a href="#" id="clearSelectionBtn"
+           style="color: var(--color-primary); text-decoration: none;">
+            Clear selection
+        </a>*@
+
+
+    <div class="devices-table-wrapper">
+        <div class="devices-table-wrapper">
+            <div class="table-scroll TrackTable">
+                <table class="upload-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;">Issue Cum </th>
+                            <th style="text-align: center;">Partname</th>
+                            <th style="text-align: center;">Partnumber</th>
+                            <th style="text-align: center;">Packaging</th>
+                            <th style="text-align: center;">Plan Quantity </th>
+                            <th style="text-align: center;">Location</th>
+                            <th style="text-align: center;">TIME</th>
+                            <th style="text-align: center;">OUT</th>
+                            <th style="text-align: center;">Line </th>
+                            <th style="text-align: center;">Issuer</th>
+                            <th style="text-align: center;">Preparation</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        <!-- pagination footer -->
+        <div class="flex justify-between items-center p-3 border-t" style="border-top: 1px solid #e5e5e5; background: white;">
+            <div id="resultsText" class="text-sm" style="color:#86868b;">Showing <span id="newrecords"></span> of <span id="currentrecords">1,248</span> Records</div>
+
+            @*<div class="flex gap-1">
+                    <button class="pagination-btn" id="prevBtn"><iconify-icon icon="lucide:chevron-left" style="font-size: 14px;"></iconify-icon></button>
+
+                    <button class="pagination-btn" id="nextBtn"><iconify-icon icon="lucide:chevron-right" style="font-size: 14px;"></iconify-icon></button>
+                </div>*@
+        </div>
+    </div>
+</section>
+
+
+
+
+<script type="module" asp-append-version="true">
+    import {
+        getMethod,
+        postMethod
+    } from '@Url.Content("~/Scripts/modules/index.js")';
+
+class DownTimeHistoryController {
+    constructor() {
+          this.partsPreparationData = [];
+
+         this.PartsPreparebody = document.querySelector('.upload-table tbody');
+
+          this.inputsearch = document.getElementById('searchinput');
+      }
+
+      async init() {
+         await this.LoadPartsPreparation();
+
+         this.bindEvents();
+
+      }
+
+      bindEvents() {
+          this.inputsearch.addEventListener('input', (e) => {
+              e.preventDefault();
+              this.LoadPartsPreparation();
+          });
+
+          
+      }
+
+        async LoadPartsPreparation() {
+              try {
+                const res = await getMethod('@Url.Action("GetPartlisPreparationList", "Assembly")', {
+                    finalshopOrder: '',
+                    search: this.inputsearch.value
+                });
+                if (!res?.Success) return;
+                  const data = res.data;
+
+                  this.partsPreparationData = data;
+
+                  this.renderPrepareListTable(data);
+
+
+
+              } catch (error) {
+                  console.error('Error fetching data:', error);
+              }
+         }
+
+      renderPrepareListTable(data) {
+          if (!this.PartsPreparebody) return;
+
+          if (data.length === 0) {
+              this.PartsPreparebody.innerHTML = `
+           <tr>
+               <td colspan="10" style="text-align:center; padding:32px; color:#86868b;">
+                   No data available.
+               </td>
+           </tr>`;
+              return;
+          }
+
+          this.PartsPreparebody.innerHTML = data.map(row => {
+
+              return `
+                <tr
+                        data-id="${this.escape(row.PreparedID)}"
+                        class="prepare-row"
+                        style="cursor:pointer;"
+                    >
+                  <td>${this.escape(row.IssueCum)}</td>
+                  <td>${this.escape(row.PartName)}</td>
+                  <td>${this.escape(row.PartNumber)}</td>
+                  <td>${this.escape(row.Package)}</td>
+                  <td>${this.escape(row.PlanQty)}</td>
+                  <td>${this.escape(row.Location)}</td>
+
+                  <td>${this.formatTimeSpan(row.TimeStart)}</td>
+                   <td>${this.formatTimeSpan(row.TimeEnd)}</td>
+                  <td>${this.escape(row.Lines)}</td>
+
+                  <td>${this.escape(row.Issuer)}</td>
+                  <td>${this.escape(row.Preparation)}</td>
+
+
+              </tr>`;
+          }).join('');
+      }
+
+      formatTime(time) {
+          if (!time) return '-';
+
+          // Example: "08:30:00"
+          if (typeof time === 'string') {
+              return time.substring(0, 5);
+          }
+
+          return '-';
+      }
+      formatTimeSpan(time) {
+          if (!time) return '-';
+
+          const hours = String(time.Hours ?? 0).padStart(2, '0');
+          const minutes = String(time.Minutes ?? 0).padStart(2, '0');
+
+          return `${hours}:${minutes}`;
+      }
+
+      // Day shift: 06:30 - 18:29 | Night shift: 18:30 - 06:29 (wraps past midnight)
+      getShift(time) {
+          if (!time) return '-';
+
+          const hours = time.Hours ?? 0;
+          const minutes = time.Minutes ?? 0;
+          const totalMinutes = (hours * 60) + minutes;
+
+          const dayStart = (6 * 60) + 30;   // 06:30
+          const dayEnd = (18 * 60) + 30;    // 18:30
+
+          return (totalMinutes >= dayStart && totalMinutes < dayEnd) ? 'DS' : 'NS';
+    }
+
+    escape(str) {
+        const d = document.createElement('div');
+        d.textContent = str ?? '';
+        return d.innerHTML;
+    }
+}
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const controller = new DownTimeHistoryController();
+        controller.init();
+    });
+</script>

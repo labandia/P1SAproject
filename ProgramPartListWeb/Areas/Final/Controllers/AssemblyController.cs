@@ -160,10 +160,10 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             }
         }
         [HttpGet]
-        public async Task<ActionResult> CheckIfAreadyCheckNext(string lineman)
+        public async Task<ActionResult> CheckIfAreadyCheckNext(string lineman, int orderStatus)
         {
             Debug.WriteLine("Call Line" + lineman) ;
-            int result = await _manu.GetNumberofNextprocess(lineman);
+            int result = await _manu.GetNumberofNextprocess(lineman, orderStatus);
             return JsonSuccess(result);
         }
 
@@ -1222,12 +1222,12 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         //============== PARTLIST PEPARATION  =====================
         //=====================================================
         [HttpGet]
-        public async Task<ActionResult> GetPartlisPreparationList(string finalshopOrder)
+        public async Task<ActionResult> GetPartlisPreparationList(string finalshopOrder, string search)
         {
 
             try
             {
-                var res = await _manu.GetPreparationList(finalshopOrder);
+                var res = await _manu.GetPreparationList(search, finalshopOrder);
                 if (res == null)
                     return JsonNotFound("No Manpower data found");
 
@@ -1291,7 +1291,8 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
 
         public ActionResult DailyPlanChart() => View();
 
-
+        // GET: Final/HistoryDownTime
+        public ActionResult PreparationList() => View();
 
 
         public ActionResult DisposalApproval(int id, int section)

@@ -55,7 +55,7 @@ namespace ProgramPartListWeb.Areas.Final
         Task<List<string>> GetListLine();
 
 
-        Task<int> GetNumberofNextprocess(string record);
+        Task<int> GetNumberofNextprocess(string record, int orderStats);
         Task<bool> UpdateAssemblyStatus(int recordID, string finalassy, string shipdate, string mode, bool WithSR, string remarks);
         Task<List<P1TraceablityModel>> TraceableShopOrderSummary(string shopOrder);
 
@@ -95,7 +95,7 @@ namespace ProgramPartListWeb.Areas.Final
         Task<bool> EndTimeMonitor(int DownTimeID);
 
         // ======== FOR PARTS PREPARATION ==================================
-        Task<List<FanTraceabilityPartsPreparation>> GetPreparationList(string FinalShopOrder);
+        Task<List<FanTraceabilityPartsPreparation>> GetPreparationList(string search, string FinalShopOrder);
         Task<bool> AddPreparetionList(FanTraceabilityPartsPreparation downtime);
         Task<bool> EditPreparetionList(FanTraceabilityPartsPreparation downtime);
     }

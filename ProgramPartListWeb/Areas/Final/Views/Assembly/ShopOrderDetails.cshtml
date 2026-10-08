@@ -410,7 +410,34 @@
         bindEvents() {
             this.formAssembly.addEventListener('submit', (e) => this.HandleSubmit(e));
             this.DownTimeListPanel.addEventListener('submit', (e) => this.HandleDownTimeSubmit(e));
-            this.partsListPanel.addEventListener('submit', (e) => this.HandlePartsPrepareSubmit(e));
+            this.partsListPanel.addEventListener(
+                'submit',
+                (e) => this.HandlePartsPrepareSubmit(e)
+            );
+
+            // Barcode scanner - Issue Cum
+            const issueCumInput = this.partsListPanel.querySelector('#IssueCum');
+
+            if (issueCumInput) {
+                issueCumInput.addEventListener('keydown', (e) => {
+
+                    if (e.key !== 'Enter') return;
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const issueCum = issueCumInput.value.trim();
+
+                    if (!issueCum) {
+                        return;
+                    }
+
+                    console.log('Barcode scanned:', issueCum);
+
+                    // Move to Part Name
+                    document.getElementById('PartName').focus();
+                });
+            }
 
             // SATAS  List button
             this.openFinalAssembly.addEventListener('click', (e) => {
@@ -615,7 +642,8 @@
          async LoadPartsPreparation(shoporder) {
              try {
                const res = await getMethod('@Url.Action("GetPartlisPreparationList", "Assembly")', {
-                   finalshopOrder: shoporder
+                   finalshopOrder: shoporder,
+                   search: ''
                });
                console.log(res);
                if (!res?.Success) return;

@@ -17,8 +17,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
 {
     public class ManufacuringServices : IManufacturing
     {
-        private const string maintable = "FanTraceabilityManufacturingOrder_BACKV2";
-        //private const string maintable = "FanTraceabilityManufacturingOrder";
+        //private const string maintable = "FanTraceabilityManufacturingOrder_BACKV2";
+        private const string maintable = "FanTraceabilityManufacturingOrder";
 
         public enum OrderStatus
         {
@@ -215,7 +215,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
         public async Task<List<FanTraceabilityManufacturingOrder>> GetListOfMoreThanOneShopOrders(string Line)
         {
-            string query = $@"SELECT {SelectColumns} FROM {maintable} s WHERE Line = @Line AND IsOven IN (1, 2, 3) ";
+            string query = $@"SELECT {SelectColumns} FROM {maintable} s WHERE Line = @Line AND IsOven IN (1, 2, 3)  ";
+
             return await SqlDataAcess_Test.QueryAsync<FanTraceabilityManufacturingOrder>(query, new { Line = Line });
 
         }
@@ -758,12 +759,12 @@ namespace ProgramPartListWeb.Areas.Final.Services
             }
         }
 
-        public async Task<int> GetNumberofNextprocess(string line)
+        public async Task<int> GetNumberofNextprocess(string line, int orderStatus)
         {
             bool count = await SqlDataAcess_Test.ExistsAsync($@"
                         SELECT COUNT(*) 
                         FROM {maintable} 
-                        WHERE OrderStatus IN (1, 2, 3) AND Line = @Line", new { Line = line });
+                        WHERE OrderStatus =@OrderStatus AND Line = @Line", new { Line = line, OrderStatus = orderStatus });
             return count ? 1 : 0;
         }
 
@@ -1359,10 +1360,9 @@ namespace ProgramPartListWeb.Areas.Final.Services
               INNER JOIN FanTraceabilityDownTimeType t ON t.DownTimeCode = i.DownTimeCode");
         }
 
-        public Task<List<FanTraceabilityPartsPreparation>> GetPreparationList(string FinalShopOrder)
+        public Task<List<FanTraceabilityPartsPreparation>> GetPreparationList(string search, string FinalShopOrder)
         {
-            return SqlDataAcess_Test.QueryAsync<FanTraceabilityPartsPreparation>($@"
-                   SELECT PreparedID
+            string strquery = $@"SELECT PreparedID
                       ,FinalShopOrder
                       ,IssueCum
                       ,PartName
@@ -1376,7 +1376,24 @@ namespace ProgramPartListWeb.Areas.Final.Services
                       ,Lines
                       ,Issuer
                       ,Preparation
-                  FROM FanTraceabilityPartsPreparation WHERE FinalShopOrder =@FinalShopOrder", new { FinalShopOrder });
+                  FROM FanTraceabilityPartsPreparation WHERE 1=1 ";
+
+            var parameters = new DynamicParameters();   
+
+            if(FinalShopOrder != "")
+            {
+                strquery += " AND FinalShopOrder = @FinalShopOrder";    
+                parameters.Add("@FinalShopOrder", FinalShopOrder);
+            }
+
+            if(!string.IsNullOrEmpty(search))
+            {
+                strquery += " AND IssueCum LIKE @Search ";
+                parameters.Add("@Search", $"%{search}%");
+            }
+
+            return SqlDataAcess_Test.QueryAsync<FanTraceabilityPartsPreparation>(strquery, parameters);
+
         }
 
         public async Task<bool> AddPreparetionList(FanTraceabilityPartsPreparation downtime)

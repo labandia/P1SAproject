@@ -4,18 +4,9 @@
     Layout = "~/Areas/Final/Views/Shared/_ManageLayout.cshtml";
 }
 
-@*<div class="action-buttons">
 
-        <select id="filterdata" class="filter-chip text-sm font-medium" style="height:32px;">
-            <option value="-1">Filter By : LINE </option>
-            <option value="0">Filter By : CELL LINE</option>
-        </select>
 
-        <span style="color: #8a8f9e; font-size: .9rem;"><iconify-icon icon="lets-icons:move-light" width="20"></iconify-icon> Change line </span>
-
-        <span style="color: #8a8f9e; font-size: .9rem;"><iconify-icon icon="material-symbols-light:ads-click-rounded" style="font-size: 18px;"></iconify-icon> Double Click on the rows to see the Details..</span>
-    </div>*@
-
+@Html.Partial("_ShopOrdersModal")
 
 
 
@@ -27,7 +18,6 @@
 
 
 
-@Html.Partial("_ShopOrdersModal")
 
 
 
@@ -177,8 +167,17 @@
 
                     if (this.activeIsOven) {
                         const ovenItems = await this.fetchOvenItems(this.activeLineId);
-                        if (ovenItems.length === 0) { await this.resetToGrid(); return; }
-                        this.renderOvenCards(ovenItems, this.activeLineId);
+                        const updatedRecord = records.find(r => r.Line === this.activeLineId);
+                        const hasMain = !!(updatedRecord?.FinalShopOrder ?? '').trim();
+
+                        // close only when BOTH the oven items and the normal order are gone
+                        if (ovenItems.length === 0 && !hasMain) { await this.resetToGrid(); return; }
+
+                        if (hasMain) this.prevModelprocess = updatedRecord.NextItem;
+
+                        this.renderOvenCards(ovenItems, this.activeLineId, {
+                            mainItem: hasMain ? updatedRecord : null
+                        });
                         return;
                     }
 
@@ -466,6 +465,7 @@
                 });
             }
 
+            // ============== COMPLETE BUTTON PROCESS ====================
             if (completeBtn) {
                 completeBtn.addEventListener('click', async (e) => {
                     e.stopPropagation();
@@ -504,7 +504,7 @@
                 });
             }
 
-            // Cancel  button
+            // ============== CANCEL  BUTTON PROCESS ====================
             const cancelbtn = root.querySelector('.btn-cancel');
             if (cancelbtn) {
                 cancelbtn.addEventListener('click', async (e) => {
@@ -560,7 +560,7 @@
             }
         }
 
-     formatTimeSpan(time) {
+        formatTimeSpan(time) {
         if (!time) return '-';
 
         const hours = String(time.Hours ?? 0).padStart(2, '0');
@@ -570,24 +570,24 @@
     }
 
 
-    RenderCardList(data) {
+        RenderCardList(data) {
         const gridContainer = document.getElementById('assemblyCardsGrid');
-        if (!gridContainer) return;
-        if (this.isExpanded) return;
+            if (!gridContainer) return;
+            if (this.isExpanded) return;
 
-         const sectionMap = {
-             1: ['badge-molding', 'AG'],
-             2: ['badge-press', 'AF'],
-             3: ['badge-rotor', 'BF'],
-             4: ['badge-winding', 'FA'],
-             5: ['badge-circuit', 'CE'],
-             7: ['badge-harness', 'FG'],
-             9: ['badge-Material', 'DD']
-         };
+             const sectionMap = {
+                 1: ['badge-molding', 'AG'],
+                 2: ['badge-press', 'AF'],
+                 3: ['badge-rotor', 'BF'],
+                 4: ['badge-winding', 'FA'],
+                 5: ['badge-circuit', 'CE'],
+                 7: ['badge-harness', 'FG'],
+                 9: ['badge-Material', 'DD']
+             };
 
-        const fragment = document.createDocumentFragment();
+            const fragment = document.createDocumentFragment();
 
-        data.forEach((item, index) => {
+            data.forEach((item, index) => {
                 const shopOrder = (item.FinalShopOrder ?? '').trim();
                 const isOnline = shopOrder !== '';
                 const card = document.createElement('div');
@@ -697,37 +697,25 @@
                 }
 
                 // Only click event to open modal (no input/button listeners)
-                card.addEventListener('click', async (e) => {
+              card.addEventListener('click', async (e) => {
                     if (this.isExpanded || this.isAnimating) return;
-                        console.log("First Click" + item.Line);
-                        const isOvenLine = (item.Line === 'L2' || item.Line === 'L6');
-                        console.log("Checks " + isOvenLine);
-                        if (isOvenLine) {
-                            const ovenItems = await this.fetchOvenItems(item.Line);
-                            console.log("HERE");
-                            console.log(ovenItems);
-                            if (ovenItems.length > 0) {
-                                await this.animateCardToCenter(card, { ...item, OvenItems: ovenItems });
-                            } else {
-                                 window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
-                            }
-                            return;
-                        } else {
-                            if (!isOnline) {
-                                const res = await getMethod('@Url.Action("GetCountRecords", "Assembly")', { line: item.Line });
-                                if (!res.Success) return;
 
-                                if (res.data != 0) {
-                                    window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
-                                }
-                                return;
-                            }
+                    const ovenItems = await this.fetchOvenItems(item.Line);
+                    const hasOven = ovenItems.length > 0;
+
+                    // Offline line with no oven items: go to ShopOrderLine if it has records
+                    if (!isOnline && !hasOven) {
+                        const res = await getMethod('@Url.Action("GetCountRecords", "Assembly")', { line: item.Line });
+                        if (!res?.Success) return;
+                        if (res.data != 0) {
+                            window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
                         }
+                        return;
+                    }
 
-
-
-                        this.prevModelprocess = item.NextItem;
-                        await this.animateCardToCenter(card, item);
+                    // Combined: normal item (if online) + oven items (if any)
+                    this.prevModelprocess = item.NextItem;
+                    await this.animateCardToCenter(card, { ...item, OvenItems: ovenItems });
                 });
 
                 fragment.appendChild(card);
@@ -750,7 +738,7 @@
         }
 
 
-       async animateCardToCenter(cardElement, itemData) {
+        async animateCardToCenter(cardElement, itemData) {
             if (this.isExpanded || this.isAnimating) return;
             this.isAnimating = true;
             this.activeLineId = itemData.Line;
@@ -848,14 +836,18 @@
             cardElement.remove();
             otherCards.forEach(c => c.remove());
 
-            // 12. Create final centered card
-           this.activeIsOven = !!itemData.OvenItems?.length;
+            // 12. Create final centered card(s)
+            const ovenItems = itemData.OvenItems ?? [];
+            const hasMain = (itemData.FinalShopOrder ?? '').trim() !== '';
+            this.activeIsOven = ovenItems.length > 0;
 
-           if (this.activeIsOven) {
-               this.renderOvenCards(itemData.OvenItems, itemData.Line, { animateNextModel: true });
-           } else {
-               this.createCenteredCard(itemData, targetLeft, targetTop, targetWidth, targetHeight);
-           }
+            if (this.activeIsOven) {
+                this.renderOvenCards(ovenItems, itemData.Line, {
+                    mainItem: hasMain ? itemData : null
+                });
+            } else {
+                this.createCenteredCard(itemData, targetLeft, targetTop, targetWidth, targetHeight);
+            }
 
             this.isAnimating = false;
             this.isExpanded = true;
@@ -930,23 +922,13 @@
                     // Click event for offline cards
                     card.addEventListener('click', async (e) => {
                         if (this.isExpanded || this.isAnimating) return;
+                        alert("CLICK HERE 1");
+                        const ovenItems = await this.fetchOvenItems(item.Line);
 
-
-                        const isOvenLine = (item.Line === 'L2' || item.Line === 'L6');
-                        console.log(isOvenLine);
-
-                        if (isOvenLine) {
-                            const ovenItems = await this.fetchOvenItems(item.Line);
-                            console.log("HERE");
-                            console.log("LENGTH DATA:", ovenItems.length);
-
-                            if (ovenItems.length > 0) {
-                                await this.animateCardToCenter(card, { ...item, OvenItems: ovenItems });
-                            } else {
-                                 window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
-                            }
-
-                        }else {
+                        // has a Data Display the Oven Items in the Centered Card, otherwise just display the normal centered card.
+                        if (ovenItems != null && ovenItems.length > 0) {
+                            await this.animateCardToCenter(card, { ...item, OvenItems: ovenItems });
+                        } else {
                             window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
                         }
 
@@ -986,26 +968,45 @@
         }
 
         renderOvenCards(ovenItems, line, options = {}) {
+            const { mainItem = null } = options;
+
             if (this.currentCenteredCard) this.currentCenteredCard.remove();
+
+            // avoid showing the same record twice if both endpoints return it
+            const ovens = mainItem
+                ? ovenItems.filter(o => o.RecordID !== mainItem.RecordID)
+                : ovenItems;
 
             const wrap = document.createElement('div');
             wrap.className = 'oven-cards-wrapper';
 
             const row = document.createElement('div');
             row.className = 'oven-cards-row';
-            row.style.setProperty('--oven-count', ovenItems.length);
+            row.style.setProperty('--oven-count', ovens.length + (mainItem ? 1 : 0));
             wrap.appendChild(row);
 
-
-            // click on the empty area around the cards closes everything
             wrap.addEventListener('click', (e) => {
                 if (e.target === wrap || e.target === row) this.resetToGrid();
             });
 
-            ovenItems.forEach(o => {
+            // 1) Normal line card first (with Next Process Model)
+            if (mainItem) {
+                const mainCard = document.createElement('div');
+                mainCard.className = 'centered-standalone-card oven-card';
+                row.appendChild(mainCard);
+
+                this.updateModalContent(mainItem, {
+                    root: mainCard,
+                    animateNextModel: true,
+                    showNext: true
+                });
+            }
+
+            // 2) Oven cards
+            ovens.forEach(o => {
                 const card = document.createElement('div');
                 card.className = 'centered-standalone-card oven-card';
-                row.appendChild(card);                      // <- row, not wrap
+                row.appendChild(card);
 
                 this.updateModalContent(
                     { PlanQty: 0, InputQty: 0, ...o, Line: o.Line ?? line },

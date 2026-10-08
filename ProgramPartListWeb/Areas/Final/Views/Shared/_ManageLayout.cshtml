@@ -88,8 +88,8 @@
                             </svg>  History of Downtime
                         </button>
 
-                        <!-- History of Downtime -->
-                        <button class="menu-item" id="DownTimebtn">
+                        <!-- History of Preparation List -->
+                        <button class="menu-item" id="Preparebtn">
                             <svg xmlns="http://www.w3.org/2000/svg"
                                  width="1.5em"
                                  height="1.5em"
@@ -455,20 +455,19 @@
             // PERFORMANCE SUMMARY
             // ============================
 
-            const extraBtn = document.getElementById("extraBtn");
+            const prepareBtn = document.getElementById("Preparebtn");
 
-            if (extraBtn) {
-                extraBtn.addEventListener("click", function (e) {
+            if (prepareBtn) {
+                prepareBtn.addEventListener("click", function (e) {
 
                     e.preventDefault();
                     e.stopPropagation();
 
                     closeDropdown();
 
-                    alert("📊 Performance Summary clicked");
 
-                    // window.location.href =
-                    //     "/Final/Assembly/PerformanceSummary";
+                    window.location.href =
+                         "/Final/Assembly/PreparationList";
                 });
             }
         });

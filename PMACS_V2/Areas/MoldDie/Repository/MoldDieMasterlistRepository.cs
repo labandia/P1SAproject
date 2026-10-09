@@ -75,24 +75,116 @@ namespace PMACS_V2.Areas.MoldDie.Repository
             }
         }
 
+
+
         public async Task<bool> EditMoldieMasterList(MoldieMasterModel model)
         {
             try
             {
-                await EnsureDieMasterExistsAsync(model);
+                // 1. Get the original DieSerial.
+                string oldDieSerial = await SqlDataAccess.QuerySingleOrDefaultAsync<string>(@"
+                    SELECT DieSerial
+                    FROM DieMold_MoldingMainParts
+                    WHERE PartNo = @PartNo;",
+                    new { model.PartNo });
 
-                int rows = await SqlDataAccess.ExecuteAsync($@"UPDATE DieMold_MoldingMainParts SET
-            PartDescription =@PartDescription, Dimension_Quality =@Dimension_Quality, DieSerial =@DieSerial,
-            DieNumber =@DieNumber, Cavity =@Cavity, ProcessID =@ProcessID WHERE PartNo =@PartNo", model);
+                if (string.IsNullOrWhiteSpace(oldDieSerial))
+                    return false;
 
-                return rows > 0;
+                // 2. Check whether the serial number changed.
+                bool dieSerialChanged = !string.Equals(
+                    oldDieSerial.Trim(),
+                    model.DieSerial?.Trim(),
+                    StringComparison.OrdinalIgnoreCase);
+
+                if (dieSerialChanged)
+                {
+                    // 3. Ensure the NEW serial exists in DieMaster first.
+                    bool newSerialExists = await SqlDataAccess.ExistsAsync(@"
+                SELECT 1
+                FROM [PMACS_LIVE].[dbo].[DieMold_DieMaster]
+                WHERE DieSerial = @DieSerial;",
+                        new { model.DieSerial });
+
+                    if (!newSerialExists)
+                    {
+                        await SqlDataAccess.ExecuteAsync(@"
+                    INSERT INTO [PMACS_LIVE].[dbo].[DieMold_DieMaster]
+                        (DieSerial, DieNumber, Cavity)
+                    VALUES
+                        (@DieSerial, @DieNumber, @Cavity);",
+                            model);
+                    }
+                }
+                else
+                {
+                    // Serial is unchanged; ensure the master record exists.
+                    await EnsureDieMasterExistsAsync(model);
+                }
+
+                // 4. Update the main table after the FK target exists.
+                int rows = await SqlDataAccess.ExecuteAsync(@"
+            UPDATE DieMold_MoldingMainParts
+            SET
+                PartDescription = @PartDescription,
+                Dimension_Quality = @Dimension_Quality,
+                DieSerial = @DieSerial,
+                DieNumber = @DieNumber,
+                Cavity = @Cavity,
+                ProcessID = @ProcessID
+            WHERE PartNo = @PartNo;",
+                    model);
+
+                if (rows <= 0)
+                    return false;
+
+                if (dieSerialChanged)
+                {
+                    var parameters = new
+                    {
+                        OldDieSerial = oldDieSerial,
+                        NewDieSerial = model.DieSerial,
+                        model.DieNumber,
+                        model.Cavity
+                    };
+
+                    // 5. Update daily records if they exist.
+                    await SqlDataAccess.ExecuteAsync(@"
+                UPDATE [PMACS_LIVE].[dbo].[DieMold_Daily]
+                SET DieSerial = @NewDieSerial
+                WHERE DieSerial = @OldDieSerial;",
+                        parameters);
+
+                    // 6. Update the old master only if the new serial
+                    // did not already exist before the edit.
+                    //
+                    // If the new serial already existed, keep both master
+                    // records unchanged to avoid a duplicate primary key.
+                    //
+                    // The old master is retained if it is still referenced
+                    // by other parts.
+                }
+                else
+                {
+                    // Serial unchanged; update its master details.
+                    await SqlDataAccess.ExecuteAsync(@"
+                UPDATE [PMACS_LIVE].[dbo].[DieMold_DieMaster]
+                SET
+                    DieNumber = @DieNumber,
+                    Cavity = @Cavity
+                WHERE DieSerial = @DieSerial;",
+                        model);
+                }
+
+                return true;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error" + ex);
+                Debug.WriteLine("Error: " + ex);
                 throw;
             }
         }
+
         private async Task EnsureDieMasterExistsAsync(MoldieMasterModel model)
         {
             bool isExist = await SqlDataAccess.ExistsAsync($@"SELECT COUNT(*)

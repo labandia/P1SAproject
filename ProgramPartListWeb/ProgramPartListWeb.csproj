@@ -701,9 +701,11 @@
     <Compile Include="Areas\PC\Repository\RegistrationRepository.cs" />
     <Compile Include="Areas\Production1\Controllers\AttendanceController.cs" />
     <Compile Include="Areas\Production1\Controllers\DataAnalysisController.cs" />
+    <Compile Include="Areas\Production1\Controllers\EmployeesController.cs" />
     <Compile Include="Areas\Production1\Controllers\FinalAssemblyController.cs" />
     <Compile Include="Areas\Production1\Interface\INCRDashboardRepository.cs" />
     <Compile Include="Areas\Production1\Model\FinalDashboard.cs" />
+    <Compile Include="Areas\Production1\Model\P1EmployessModels.cs" />
     <Compile Include="Areas\Production1\Production1AreaRegistration.cs" />
     <Compile Include="Areas\Production1\Repository\NCRDashboardRepository.cs" />
     <Compile Include="Areas\Rotor\Controllers\RegisterController.cs" />
@@ -782,6 +784,7 @@
     <Content Include="Content\css\AdminDesign.css" />
     <Content Include="Content\css\Animation.css" />
     <Content Include="Content\css\Attendance.css" />
+    <Content Include="Content\css\EmployeeDesign.css" />
     <Content Include="Content\css\FinalAssembly.css" />
     <Content Include="Content\css\FinalDashboard.css" />
     <Content Include="Content\css\FinalDashMangement.css" />
@@ -959,6 +962,9 @@
     <Content Include="Areas\P1SA\Views\Manpower\ManageAbsence.cshtml" />
     <Content Include="Areas\P1SA\Views\Manpower\CrossTrainee.cshtml" />
     <Content Include="Areas\Final\Views\Assembly\PreparationList.cshtml" />
+    <Content Include="Areas\Production1\Views\Employees\Index.cshtml" />
+    <Content Include="Areas\Production1\Views\Shared\_EmployeesLayout.cshtml" />
+    <Content Include="Areas\Production1\Views\Employees\EmployeesForm.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <Content Include="Content\Uploads\PCFY-81013Form1L.xlsx" />
     <Content Include="Content\Uploads\FinalUploadTemplate.xlsx" />

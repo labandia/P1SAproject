@@ -1330,48 +1330,78 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                     ) AS AbsentRate";
 
             string strsql = $@";
-                WITH AttendanceCount AS
-                (
-                    SELECT
-                        e.DepartmentId,
-                        CAST(att.WorkDate AS DATE) AS WorkDate,
-                        COUNT(DISTINCT att.EmployeeId) AS PresentCount
-                    FROM [PMACS_TEST].[dbo].[P1SA_AttendanceMonitor_Temp] att
-                    INNER JOIN [PMACS_TEST].[dbo].[P1SA_Employees_Temp] e
-                        ON e.EmployeeId = att.EmployeeId
-                    WHERE att.IsDeleted = 0
-                      AND e.IsDeleted = 0
-                    GROUP BY
-                        e.DepartmentId,
-                        CAST(att.WorkDate AS DATE)
-                ),
-                DashboardCalc AS
-                (
-                    SELECT
-                        a.DashID,
-                        a.DepartmentId,
-                        a.DayShiftCount,
-                        a.NightShiftCount,
-                        a.DayShiftCount + a.NightShiftCount AS TotalHeadCount,
+    WITH AttendanceOT AS
+    (
+        SELECT
+            e.DepartmentId,
+            CAST(att.WorkDate AS DATE) AS WorkDate,
+            att.EmployeeId,
 
-                        -- Overtime targets/values
-                        a.Overtime,
-                        a.Overtime_1,
-                        a.Overtime_2,
-                        a.Overtime_3,
+            -- Same bucket logic as BaseAttendanceQuery
+            CASE
+                WHEN att.TimeOut IS NULL THEN 0.00
 
-                        ISNULL(ac.PresentCount, 0) AS PresentCount
+                WHEN CAST(att.TimeOut AS TIME) <= e.DayShiftEndTime
+                    THEN 0.00
 
-                    FROM AttendanceDashboard a
-                    LEFT JOIN AttendanceCount ac
-                        ON ac.DepartmentId = a.DepartmentId
-                        AND ac.WorkDate = CAST(a.DateToday AS DATE)
+                WHEN CAST(att.TimeOut AS TIME) < DATEADD(HOUR, 1, e.DayShiftEndTime)
+                    THEN 1.00
 
-                    {strfilter}
-                )
-                SELECT
-                    {filterstr}
-                FROM DashboardCalc";
+                WHEN CAST(att.TimeOut AS TIME) < DATEADD(HOUR, 2, e.DayShiftEndTime)
+                    THEN 1.83
+
+                ELSE 2.83
+            END AS OvertimeHours
+        FROM [PMACS_TEST].[dbo].[P1SA_AttendanceMonitor_Temp] att
+        INNER JOIN [PMACS_TEST].[dbo].[P1SA_Employees_Temp] e
+            ON e.EmployeeId = att.EmployeeId
+        WHERE att.IsDeleted = 0
+          AND e.IsDeleted = 0
+    ),
+    AttendanceCount AS
+    (
+        SELECT
+            DepartmentId,
+            WorkDate,
+            COUNT(DISTINCT EmployeeId) AS PresentCount,
+
+            -- Headcount per overtime bucket
+            COUNT(DISTINCT CASE WHEN OvertimeHours = 0.00 THEN EmployeeId END) AS Overtime,
+            COUNT(DISTINCT CASE WHEN OvertimeHours = 1.00 THEN EmployeeId END) AS Overtime_1,
+            COUNT(DISTINCT CASE WHEN OvertimeHours = 1.83 THEN EmployeeId END) AS Overtime_2,
+            COUNT(DISTINCT CASE WHEN OvertimeHours = 2.83 THEN EmployeeId END) AS Overtime_3
+        FROM AttendanceOT
+        GROUP BY
+            DepartmentId,
+            WorkDate
+    ),
+    DashboardCalc AS
+    (
+        SELECT
+            a.DashID,
+            a.DepartmentId,
+            a.DayShiftCount,
+            a.NightShiftCount,
+            a.DayShiftCount + a.NightShiftCount AS TotalHeadCount,
+
+            -- Overtime now comes from actual attendance
+            ISNULL(ac.Overtime,   0) AS Overtime,
+            ISNULL(ac.Overtime_1, 0) AS Overtime_1,
+            ISNULL(ac.Overtime_2, 0) AS Overtime_2,
+            ISNULL(ac.Overtime_3, 0) AS Overtime_3,
+
+            ISNULL(ac.PresentCount, 0) AS PresentCount
+
+        FROM AttendanceDashboard a
+        LEFT JOIN AttendanceCount ac
+            ON ac.DepartmentId = a.DepartmentId
+            AND ac.WorkDate = CAST(a.DateToday AS DATE)
+
+        {strfilter}
+    )
+    SELECT
+        {filterstr}
+    FROM DashboardCalc";
 
             //Debug.WriteLine(strsql);
 

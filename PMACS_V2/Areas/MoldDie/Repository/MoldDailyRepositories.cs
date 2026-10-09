@@ -221,7 +221,8 @@ namespace PMACS_V2.Areas.MoldDie.Repository
 
        
 
-        public async Task<(List<DieMoldpartsModel> details, List<DieMoldDaily> getlist)> GetThePartnoList(string DieSerial, string Process)
+        public async Task<(List<DieMoldpartsModel> details, List<DieMoldDaily> getlist)> GetThePartnoList(
+            string DieSerial, string Process)
         {
             var obj = new { DieSerial, Process };
 

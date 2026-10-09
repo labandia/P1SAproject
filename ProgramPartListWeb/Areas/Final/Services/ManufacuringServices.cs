@@ -1386,9 +1386,14 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 parameters.Add("@FinalShopOrder", FinalShopOrder);
             }
 
-            if(!string.IsNullOrEmpty(search))
+            if (!string.IsNullOrWhiteSpace(search))
             {
-                strquery += " AND IssueCum LIKE @Search ";
+                strquery += @"
+                    AND (
+                        IssueCum LIKE @Search
+                        OR FinalShopOrder LIKE @Search
+                    )";
+
                 parameters.Add("@Search", $"%{search}%");
             }
 

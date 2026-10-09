@@ -49,6 +49,7 @@
                 <table class="upload-table">
                     <thead>
                         <tr>
+                            <th style="text-align: center;">Final ShopOrder </th>
                             <th style="text-align: center;">Issue Cum </th>
                             <th style="text-align: center;">Partname</th>
                             <th style="text-align: center;">Partnumber</th>
@@ -119,6 +120,7 @@ class DownTimeHistoryController {
                     finalshopOrder: '',
                     search: this.inputsearch.value
                 });
+                  console.log(res);
                 if (!res?.Success) return;
                   const data = res.data;
 
@@ -154,6 +156,7 @@ class DownTimeHistoryController {
                         class="prepare-row"
                         style="cursor:pointer;"
                     >
+                  <td>${this.escape(row.FinalShopOrder)}</td>
                   <td>${this.escape(row.IssueCum)}</td>
                   <td>${this.escape(row.PartName)}</td>
                   <td>${this.escape(row.PartNumber)}</td>

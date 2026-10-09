@@ -209,45 +209,45 @@
         <form method="post" id="EditRegistrationParts" class="panel-content" style="display: none;">
             <div class="field-group">
                 <span class="field-label">Issue Cum Lot Number</span>
-                <input type="text" class="field-box" placeholder="Enter Issue Cum" id="IssueCum" name="IssueCum" />
+                <input type="text" class="field-box" placeholder="Enter Issue Cum" id="IssueCum" name="IssueCum" required />
             </div>
             <div class="field-group">
                 <span class="field-label">Part Name :  </span>
                 @*<input type="text" class="field-box" placeholder="Enter Registration" id="PartName" name="PartName" />*@
 
-                <select id="PartName" name="PartName">
+                <select id="PartName" name="PartName" required>
                     <option value="0">-- Select Item Name --</option>
                 </select>
             </div>
 
             <div class="field-group">
                 <span class="field-label">Part Number : </span>
-                <input type="text" class="field-box" id="PartNumber" name="PartNumber" />
+                <input type="text" class="field-box" id="PartNumber" name="PartNumber" required />
             </div>
 
             <div class="field-group">
                 <span class="field-label">Packaging : </span>
-                <input type="text" class="field-box" id="Package" name="Package" />
+                <input type="text" class="field-box" id="Package" name="Package" required />
             </div>
 
             <div class="field-group">
                 <span class="field-label">Plan Quantity : </span>
-                <input type="text" class="field-box" id="PlanQty" name="PlanQty" />
+                <input type="text" class="field-box" id="PlanQty" name="PlanQty" required />
             </div>
 
             <div class="field-group">
                 <span class="field-label">Location : </span>
-                <input type="text" class="field-box" id="Location" name="Location" />
+                <input type="text" class="field-box" id="Location" name="Location" required />
             </div>
 
             <div class="field-group">
                 <span class="field-label">TIME : </span>
-                <input type="time" class="field-box" id="TimeStart" name="TimeStart" />
+                <input type="time" class="field-box" id="TimeStart" name="TimeStart" required />
             </div>
 
             <div class="field-group">
                 <span class="field-label">OUT : </span>
-                <input type="time" class="field-box" id="TimeEnd" name="TimeEnd" />
+                <input type="time" class="field-box" id="TimeEnd" name="TimeEnd"  />
             </div>
 
             <div class="field-group">
@@ -257,7 +257,7 @@
 
             <div class="field-group">
                 <span class="field-label">Issuer : </span>
-                <input type="text" class="field-box" id="Issuer" name="Issuer" />
+                <input type="text" class="field-box" id="Issuer" name="Issuer"  />
             </div>
 
             <div class="field-group">
@@ -591,6 +591,7 @@
                 document.getElementById('noteText').textContent = data.Note
                 document.getElementById('Mode').value = data.ShipmentMode
 
+                console.log("SHIP DATE: " + data.ShipmentDate);
 
                 // Fill up the form
                 document.getElementById("FAStatus").value = data.FAStatus;
@@ -685,7 +686,7 @@
 
             document.getElementById('IssueCum').value =
                 row.IssueCum ?? '';
-            document.getElementById('IssueCum').readOnly = true;
+            // document.getElementById('IssueCum').readOnly = true;
 
             document.getElementById('PartName').value =
                 row.IssueCum ?? '';
@@ -693,23 +694,23 @@
 
             document.getElementById('Package').value =
                 row.Package ?? '';
-            document.getElementById('Package').disabled = true;
+            // document.getElementById('Package').disabled = true;
 
             document.getElementById('PartNumber').value =
                 row.PartNumber ?? '';
-            document.getElementById('PartNumber').readOnly = true;
+            // document.getElementById('PartNumber').readOnly = true;
 
             document.getElementById('PlanQty').value =
                 row.PlanQty ?? '';
-            document.getElementById('PlanQty').readOnly = true;
+            // document.getElementById('PlanQty').readOnly = true;
 
             document.getElementById('Location').value =
                 row.Location ?? '';
-            document.getElementById('Location').readOnly = true;
+            //document.getElementById('Location').readOnly = true;
 
             document.getElementById('TimeStart').value =
                 this.formatTimeSpan(row.TimeStart);
-            document.getElementById('TimeStart').readOnly = true;
+            //document.getElementById('TimeStart').readOnly = true;
 
             document.getElementById('TimeEnd').value =
                 this.formatTimeSpan(row.TimeEnd);
@@ -1001,6 +1002,7 @@
 
             await this.AddPartPreparationData(formdata);
         }
+
         clearPartPreparationForm() {
             const form = document.getElementById('EditRegistrationParts');
             form.reset();
@@ -1191,14 +1193,18 @@
             return date.toLocaleDateString('en-US');
         }
 
-        SetFormDate(aspNetDate) {
-            if (!aspNetDate) return '';
+        SetFormDate(dateValue) {
+            if (!dateValue) return "";
 
-            const match = aspNetDate.match(/\d+/);
-            if (!match) return '';
+            const date = new Date(dateValue);
 
-            const date = new Date(parseInt(match[0]));
-            return date.toISOString().split('T')[0];
+            if (isNaN(date.getTime())) return "";
+
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+
+            return `${year}-${month}-${day}`;
         }
 
 

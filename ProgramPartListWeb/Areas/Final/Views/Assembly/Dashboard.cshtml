@@ -384,10 +384,8 @@
             <div class="modal-actions-row" style="display:flex;align-items:center;gap:8px; justify-content: space-between;">
                 <select id='selectedStatus' class='selectionQuantity'>
                     <option value='0' ${this.selectStatus == 0 ? 'selected' : ''}> -- Select Status -- </option>
-                    ${item.IsOven === 1 ? `
-                             <option value='5' ${this.selectStatus == 5 ? 'selected' : ''}>🟡 FSI Completed</option>
-                             <option value='6' ${this.selectStatus == 6 ? 'selected' : ''}>🟣 Cell Line Completed</option>
-                    ` : ''}
+                    <option value='5' ${this.selectStatus == 5 ? 'selected' : ''}>🟡 FSI Completed</option>
+                    <option value='6' ${this.selectStatus == 6 ? 'selected' : ''}>🟣 Cell Line Completed</option>
                     <option value='4' ${this.selectStatus == 4 ? 'selected' : ''}>Completed</option>
                 </select>
 
@@ -510,14 +508,6 @@
                 cancelbtn.addEventListener('click', async (e) => {
                     e.stopPropagation();
 
-                    // Oven lines: confirmation modal performs the actual cancel
-                    if (item.Line === 'L2' || item.Line === 'L6') {
-                        this.ovenId = item.RecordID;
-                        this.cancelModal.show();
-                        return;
-                    }
-
-                    cancelbtn.disabled = true;   // prevent double submit
                     try {
                         const res = await postMethod('@Url.Action("cancelProcess", "Assembly")', {
                             recordID: item.RecordID

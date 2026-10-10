@@ -16,10 +16,14 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public int EmployeeId { get; set; }
         public string EmployeeCode { get; set; }
         public string FullName { get; set; }
+        public string FirstName { get; set; }
+        public string MiddleName { get; set; }
+        public string LastName { get; set; }
         public string Process { get; set; }
+        public int AgencyId { get; set;}
         public string AgencyName { get; set; }
         public int? DepartmentId { get; set; }
-        public int? StatusId { get; set; }
+        public int? StatusId { get; set; } = 1;
 
         // From the new tables
         public EmployeeInformation Information { get; set; }

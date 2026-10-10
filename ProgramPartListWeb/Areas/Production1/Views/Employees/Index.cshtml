@@ -10,11 +10,174 @@
     <meta name="viewport" content="width=device-width" />
     <title>Index</title>
 
-
+    <link href="~/Content/css/EmployeeDesign.css" rel="stylesheet" />
 
 </head>
 <body>
-    <div> 
+
+    <div class="dashboard-container">
+
+        <!-- TOP HEADER -->
+        <header>
+            <div class="logo-section">
+                <div class="logo">SANYO <span>DENKI</span></div>
+                <div class="tagline">Sanyo Denki Philippines Inc.</div>
+            </div>
+            <div class="system-info">
+                <div>Quality • People • A Better Tomorrow</div>
+            </div>
+        </header>
+
+        <!-- PAGE TITLE -->
+        <div class="title-area">
+            <h2>Employee Information System</h2>
+            <h1>Dashboard</h1>
+        </div>
+
+        <!-- MAIN MENU GRID -->
+        <main class="grid-menu">
+            <a href="http://localhost:55112/Production1/Employees/EmployeesForm"
+               style="text-decoration: none; color: inherit; display: block;">
+                <!-- Card 1 -->
+                <div class="card" onclick="handleCardClick('Employee Encoder Form')">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-file-signature"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">Employee Encoder Form</div>
+                        <div class="card-subtitle">Open the main data entry form.</div>
+                    </div>
+                    <div class="card-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </div>
+            </a>
+                <!-- Card 2 -->
+                <div class="card" onclick="handleCardClick('Company Summary Report')">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-chart-bar"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">Company Summary Report</div>
+                        <div class="card-subtitle">View Boys/Girls per company.</div>
+                    </div>
+                    <div class="card-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="card" onclick="handleCardClick('Address Summary Report')">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">Address Summary Report</div>
+                        <div class="card-subtitle">View report for Bataan, Olongapo, Zambales.</div>
+                    </div>
+                    <div class="card-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="card" onclick="handleCardClick('Employee List (All)')">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-users-viewfinder"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">Employee List (All)</div>
+                        <div class="card-subtitle">Open employee datasheet or continuous form.</div>
+                    </div>
+                    <div class="card-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="card" onclick="handleCardClick('Work Experience Subform')">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">Work Experience Subform</div>
+                        <div class="card-subtitle">Open the linked work experience table/form.</div>
+                    </div>
+                    <div class="card-arrow">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </div>
+
+        </main>
+
+        <!-- FOOTER & EXIT -->
+        <footer>
+            <div class="footer-info">
+                <i class="fa-solid fa-server"></i>
+                <span>Employee Information System | Sanyo Denki Phils, Inc.</span>
+            </div>
+
+            <button class="exit-btn" onclick="exitSystem()">
+                <i class="fa-solid fa-power-off"></i>
+                Exit System
+            </button>
+        </footer>
+
     </div>
+
+    <!-- JAVASCRIPT FOR INTERACTIVITY -->
+    <script>
+        // Update time dynamically
+        function updateTime() {
+            const now = new Date();
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            const dateString = now.toLocaleDateString('en-US', options).toUpperCase();
+            const timeString = now.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute:'2-digit' });
+
+            document.querySelector('.system-info').innerHTML =
+                `<div>Quality • People • A Better Tomorrow</div>
+                 <div style="margin-top: 5px; color: #00E5FF;">${dateString} | ${timeString}</div>`;
+        }
+
+        // Initial call and set interval to update every minute
+        updateTime();
+        setInterval(updateTime, 60000);
+
+        // Handle Card Clicks (Simulating opening forms)
+        function handleCardClick(formName) {
+            // In a real application, this would route to the specific form URL
+            console.log(`Navigating to: ${formName}`);
+
+            // Simple visual feedback
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+                background: rgba(0, 229, 255, 0.9); color: #0B1120; padding: 10px 20px;
+                border-radius: 8px; font-weight: 600; font-size: 14px; z-index: 1000;
+                box-shadow: 0 5px 15px rgba(0,229,255,0.4); transition: opacity 0.3s ease;
+            `;
+            toast.innerText = `Opening ${formName}...`;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
+        // Handle Exit Button
+        function exitSystem() {
+            if(confirm("Are you sure you want to exit the Employee Information System?")) {
+                // In a real app running in MS Access or a web portal, this would close the window
+                window.close();
+                // Fallback if window.close() is blocked by browser
+                document.body.innerHTML = `
+                    <div style="display:flex; justify-content:center; align-items:center; height:100vh; color:#94A3B8; font-family:'Inter', sans-serif;">
+                        <h2>System Closed. You may now close this tab.</h2>
+                    </div>
+                `;
+            }
+        }
+    </script>
 </body>
 </html>

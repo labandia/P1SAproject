@@ -704,10 +704,12 @@
     <Compile Include="Areas\Production1\Controllers\EmployeesController.cs" />
     <Compile Include="Areas\Production1\Controllers\FinalAssemblyController.cs" />
     <Compile Include="Areas\Production1\Interface\INCRDashboardRepository.cs" />
+    <Compile Include="Areas\Production1\Interface\IP1EmployeesService.cs" />
     <Compile Include="Areas\Production1\Model\FinalDashboard.cs" />
     <Compile Include="Areas\Production1\Model\P1EmployessModels.cs" />
     <Compile Include="Areas\Production1\Production1AreaRegistration.cs" />
     <Compile Include="Areas\Production1\Repository\NCRDashboardRepository.cs" />
+    <Compile Include="Areas\Production1\Repository\P1EmployeesService.cs" />
     <Compile Include="Areas\Rotor\Controllers\RegisterController.cs" />
     <Compile Include="Areas\Rotor\Data\CategoryServices.cs" />
     <Compile Include="Areas\Rotor\Data\RegistrationServices.cs" />

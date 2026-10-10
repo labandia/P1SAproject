@@ -1339,7 +1339,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 
             -- Same bucket logic as BaseAttendanceQuery
             CASE
-                WHEN att.TimeOut IS NULL THEN 0.00
+                WHEN att.TimeOut = 0.00 THEN 0.00
 
                 WHEN CAST(att.TimeOut AS TIME) <= e.DayShiftEndTime
                     THEN 0.00
@@ -1403,7 +1403,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         {filterstr}
     FROM DashboardCalc";
 
-            //Debug.WriteLine(strsql);
+            Debug.WriteLine(strsql);
 
             return strsql;
         }

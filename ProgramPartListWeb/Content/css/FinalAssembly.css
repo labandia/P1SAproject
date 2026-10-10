@@ -1,33 +1,18 @@
-﻿.app-wrapper, .content, .contentV2, .overflow-hidden {
-    overflow: hidden
-}
-
-.TrackTable, .tab {
-    user-select: none
-}
-
-.data-table, .file-table, .tableUpload, table {
-    border-collapse: collapse
-}
-
-.model-text, .tab .tab-label, .truncate {
-    text-overflow: ellipsis
-}
-
-.data-table td, .data-table th, .dot-indicator, .file-table td, .model-text, iconify-icon {
-    vertical-align: middle
-}
+﻿/* ============================================================
+   FONTS & ROOT VARIABLES
+   ============================================================ */
 
 @font-face {
     font-family: Inter;
     src: url('/Content/fonts/Inter.ttf') format('truetype');
     font-weight: 400;
-    font-style: normal
+    font-style: normal;
 }
 
 :root {
-    --font-body: 'Inter',ui-sans-serif,system-ui,sans-serif;
-    --font-headings: 'Inter',ui-sans-serif,system-ui,sans-serif;
+    --font-body: Inter, ui-sans-serif, system-ui, sans-serif;
+    --font-headings: Inter, ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'SF Mono', Monaco, 'Cascadia Code', monospace;
     --color-background: #f4f6fb;
     --color-foreground: #111827;
     --color-border: #e2e8f0;
@@ -55,7 +40,9 @@
     --text-sm: 13px;
     --text-base: 15px;
     --text-xl: 20px;
-    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05),0 1px 3px rgba(0,0,0,0.05);
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+    --shadow-lg: 0 20px 40px -12px rgba(0,0,0,0.15);
     --col-ce: rgba(169,208,142);
     --col-fa: rgba(255, 192, 0);
     --col-af: #3b82f6;
@@ -63,8 +50,35 @@
     --col-bf: rgba(148, 169, 219);
     --col-fd: #06b6d4;
     --col-fg: rgba(153, 102, 255);
-    --col-dd: rgb(214, 129, 16)
+    --col-dd: rgb(214, 129, 16);
+    --border: #e8e8e8;
+    --primary: #277eff;
+    --primary-foreground: #ffffff;
 }
+
+
+
+
+.app-wrapper, .content, .contentV2, .overflow-hidden {
+    overflow: hidden
+}
+
+.TrackTable, .tab {
+    user-select: none
+}
+
+.data-table, .file-table, .tableUpload, table {
+    border-collapse: collapse
+}
+
+.model-text, .tab .tab-label, .truncate {
+    text-overflow: ellipsis
+}
+
+.data-table td, .data-table th, .dot-indicator, .file-table td, .model-text, iconify-icon {
+    vertical-align: middle
+}
+
 
 .badge-muted, body, html {
     color: var(--color-foreground)
@@ -79,7 +93,7 @@
 body, html {
     width: 100%;
     height: 100%;
-    font-family: var(--font-body);
+    font-family: var(--font-body) !important;
     font-size: var(--text-base);
     line-height: 1.5;
     background-color: var(--color-background);

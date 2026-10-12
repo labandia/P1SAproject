@@ -41,9 +41,9 @@
             <nav class="nav" id="nav">
 
                 @*<div class="nav-item" data-module="dashboard">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="4" y="13" width="4" height="7" rx="0.8" stroke="currentColor" stroke-width="1.6" /><rect x="10" y="8" width="4" height="12" rx="0.8" stroke="currentColor" stroke-width="1.6" /><rect x="16" y="4" width="4" height="16" rx="0.8" stroke="currentColor" stroke-width="1.6" /></svg>
-                    <span>Dashboard Overall</span>
-                </div>*@
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="4" y="13" width="4" height="7" rx="0.8" stroke="currentColor" stroke-width="1.6" /><rect x="10" y="8" width="4" height="12" rx="0.8" stroke="currentColor" stroke-width="1.6" /><rect x="16" y="4" width="4" height="16" rx="0.8" stroke="currentColor" stroke-width="1.6" /></svg>
+            <span>Dashboard Overall</span>
+        </div>*@
 
                 <div class="nav-item" data-module="employees">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.6" /><path d="M5 20c1.2-3.8 4-5.6 7-5.6s5.8 1.8 7 5.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
@@ -57,13 +57,13 @@
 
                 <div class="nav-item" data-module="absence">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.4" stroke="currentColor" stroke-width="1.6" /><path d="M8.5 12h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
-                    <span>Absence</span>
+                    <span>Attendance Dashboard</span>
                 </div>
-
+                @*
                 <div class="nav-item" data-module="crosstrainee">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 7l6 4-6 4V7z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" /><path d="M20 7l-6 4 6 4V7z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" /></svg>
                     <span>Cross Trainee</span>
-                </div>
+                </div>*@
 
             </nav>
 
@@ -92,7 +92,7 @@
         var navRoutes = {
             employees: '@Url.Action("ManageEmployee", "Manpower", new { area = "P1SA" })',
             attendance: '@Url.Action("AttendanceSummary", "Manpower", new { area = "P1SA" })',
-            absence: '@Url.Action("ManageAbsence", "Manpower", new { area = "P1SA" })',
+            absence: '@Url.Action("Dashboard", "Attendance", new { area = "Production1" })',
             crosstrainee: '@Url.Action("CrossTrainee", "Manpower", new { area = "P1SA" })'
         };
 

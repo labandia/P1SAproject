@@ -99,16 +99,15 @@
 
         <!-- TAB 2: ADDRESS -->
         <div id="tab-address" class="tab-content">
-            <div class="section-title"><i class="fa-solid fa-map-location-dot"></i> B. Address Information</div>
-            <div class="form-grid-3" style="margin-bottom: 20px;">
-                <div class="form-group"><label>House No.</label><input type="text" class="form-control" data-path="Addresses.0.HouseNo"></div>
-                <div class="form-group"><label>Street</label><input type="text" class="form-control" data-path="Addresses.0.Street"></div>
-                <div class="form-group"><label>Barangay</label><input type="text" class="form-control" data-path="Addresses.0.Barangay"></div>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label>Permanent Address</label>
+                <input type="text" class="form-control" data-path="Addresses.0.FullAddress" maxlength="250"
+                       placeholder="House No., Street, Barangay, City / Municipality, Province, Zip Code">
             </div>
-            <div class="form-grid-3">
-                <div class="form-group"><label>City / Municipality</label><input type="text" class="form-control" data-path="Addresses.0.City"></div>
-                <div class="form-group"><label>Province</label><input type="text" class="form-control" data-path="Addresses.0.Province"></div>
-                <div class="form-group"><label>Zip Code</label><input type="text" class="form-control" data-path="Addresses.0.ZipCode" maxlength="10"></div>
+            <div class="form-group">
+                <label>Temporary Address</label>
+                <input type="text" class="form-control" data-path="Addresses.1.FullAddress" maxlength="250"
+                       placeholder="House No., Street, Barangay, City / Municipality, Province, Zip Code">
             </div>
         </div>
 
@@ -117,7 +116,7 @@
             <div class="section-title"><i class="fa-solid fa-address-book"></i> C. Contact & Social</div>
             <div class="form-grid-3">
                 <div class="form-group"><label>Facebook Account</label><input type="text" class="form-control" data-path="Information.SocialMedia"></div>
-                <div class="form-group"><label>Contact Number</label><input type="text" class="form-control" data-path="Information.ContactNumber"></div>
+                <div class="form-group"><label>Contact Number</label><input type="number" class="form-control" data-path="Information.ContactNumber"></div>
                 <div class="form-group">
                     <label>Pick-up Point</label>
                     <select class="form-control" data-path="Information.PickUpPoint">
@@ -313,7 +312,10 @@
                 },
 
                 // List<EmployeeAddress>
-                Addresses: [{ HouseNo: '', Street: '', Barangay: '', City: '', Province: '', ZipCode: '', IsPermanent: true }],
+                Addresses: [
+                    { FullAddress: '', IsPermanent: true },
+                    { FullAddress: '', IsPermanent: false }
+                ],
 
                 // List<EmployeeEducation>
                 Education: [],
@@ -332,8 +334,19 @@
             return { College: find(SCHOOL_LEVEL.College), HighSchool: find(SCHOOL_LEVEL.HighSchool) };
         }
 
+        addressView() {
+            const list = this.model.Addresses || [];
+            return [
+                list.find(a => a.IsPermanent) || {},
+                list.find(a => !a.IsPermanent) || {}
+            ];
+        }
+
         bindModel() {
-            const view = Object.assign({}, this.model, { Education: this.educationView() });
+            const view = Object.assign({}, this.model, {
+                Education: this.educationView(),
+                Addresses: this.addressView()
+            });
 
             document.querySelectorAll('[data-path]').forEach(el => {
                 const v = this.getPath(view, el.dataset.path);
@@ -370,7 +383,13 @@
             addr.IsPermanent = true;
             const hasAddress = ['HouseNo', 'Street', 'Barangay', 'City', 'Province', 'ZipCode']
                 .some(k => addr[k]);
-            m.Addresses = hasAddress ? [addr] : [];
+            m.Addresses = [true, false].map((isPermanent, i) => {
+                const existing = (this.model.Addresses || []).find(a => a.IsPermanent === isPermanent) || {};
+                const addr = Object.assign({}, existing, { FullAddress: (Addresses[i] || {}).FullAddress || '' });
+                addr.EmployeeId = m.EmployeeId;
+                addr.IsPermanent = isPermanent;
+                return addr;
+            }).filter(a => a.FullAddress);
 
             // EmployeeEducation (keyed view -> list with SchoolLevel)
             m.Education = Object.entries(Education).map(([key, v]) => {
@@ -506,8 +525,8 @@
                 // }
                 // this.showToast(res.Message || (payload.EmployeeId ? 'Record updated.' : 'Record added.'), true);
 
-                await this.GetEmployeeList();
-                await this.goTo(Math.max(0, this.ids.indexOf(res.id)));
+                //await this.GetEmployeeList();
+                //await this.goTo(Math.max(0, this.ids.indexOf(res.id)));
             } catch (error) {
                 console.error('Error saving record:', error);
                 this.showToast('Save failed.', false);

@@ -1,10 +1,13 @@
-﻿using ProgramPartListWeb.Areas.Production1.Interface;
+﻿using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using ProgramPartListWeb.Areas.Production1.Interface;
 using ProgramPartListWeb.Areas.Production1.Model;
 using ProgramPartListWeb.Utilities.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -15,7 +18,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
     {
         public async Task<bool> IsEmployeeExist(string employeeCode)
         {
-            return await SqlDataAcess_Test.ExistsAsync($@"SELECT COUNT(1) FROM P1SA_Employees_Temp
+            return await SqlDataAcess_Test.ExistsAsync($@"SELECT COUNT(1) FROM P1SA_Employees_TempV2
                               WHERE EmployeeCode = @EmployeeCode ", new
             {  EmployeeCode = employeeCode });
         }
@@ -32,10 +35,10 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                         conn, tx,
                         @"INSERT INTO P1SA_Employees_TempV2
                         (EmployeeCode, FullName, FirstName, MiddleName, LastName,
-                         Process, AgencyId, DepartmentId, StatusId)
+                         Process, AgencyId, DepartmentId, StatusId, WIthVech)
                       VALUES
                         (@EmployeeCode, @FullName, @FirstName, @MiddleName, @LastName,
-                         @Process, @AgencyId, @DepartmentId, @StatusId);
+                         @Process, @AgencyId, @DepartmentId, @StatusId, @WIthVech);
                       SELECT CAST(SCOPE_IDENTITY() AS INT);",
                         new
                         {
@@ -47,12 +50,15 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                             profile.Process,
                             profile.AgencyId,
                             profile.DepartmentId,
-                            profile.StatusId
+                            profile.StatusId, 
+                            profile.WIthVech
                         });
 
-                    await SaveInformationAsync(conn, tx, profile.EmployeeId, profile.Information);
-                    await SaveAddressAsync(conn, tx, profile.EmployeeId, profile.Addresses);
-                    await SaveEducationAsync(conn, tx, profile.EmployeeId, profile.Education);
+                        Debug.WriteLine($"Employee saved with ID: {profile.EmployeeId}");   
+
+                    await SaveInformationAsync(profile.EmployeeId, profile.Information);
+                    await SaveAddressAsync(profile.EmployeeId, profile.Addresses);
+                    await SaveEducationAsync(profile.EmployeeId, profile.Education);
                 });
 
                 return profile.EmployeeId;
@@ -66,72 +72,161 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 
         // ---------- Public standalone versions (own transaction) ----------
 
-        public Task SaveInformationAsync(EmployeeInformation information)
-        {
-            if (information == null) return Task.CompletedTask;
+        public async Task SaveInformationAsync(int EmployeeId, EmployeeInformation information)
+        {       
+            try
+            {
+                if (information == null)
+                {
+                    Debug.WriteLine("EmployeeInformation is NULL.");
+                    return;
+                }
 
-            return SqlDataAcess_Test.ExecuteInTransactionAsync((conn, tx) =>
-                SaveInformationAsync(conn, tx, information.EmployeeId, information));
+                Debug.WriteLine("========== EMPLOYEE INFORMATION ==========");
+
+                Debug.WriteLine($"EmployeeId: {information.EmployeeId}");
+
+                // Gender and Category
+                Debug.WriteLine($"Gender: {information.Gender}");
+                Debug.WriteLine($"GenderText: {information.GenderText}");
+
+                Debug.WriteLine($"Category: {information.Category}");
+                Debug.WriteLine($"CategoryText: {information.CategoryText}");
+
+                // Personal Information
+                Debug.WriteLine($"DateOfBirth: {information.DateOfBirth}");
+                Debug.WriteLine($"DateHired: {information.DateHired}");
+                Debug.WriteLine($"DateResigned: {information.DateResigned}");
+                Debug.WriteLine($"IsResigned: {information.IsResigned}");
+
+                // Contact Information
+                Debug.WriteLine($"ContactNumber: {information.ContactNumber}");
+                Debug.WriteLine($"SocialMedia: {information.SocialMedia}");
+                Debug.WriteLine($"PickUpPoint: {information.PickUpPoint}");
+                Debug.WriteLine($"DirectedBy: {information.DirectedBy}");
+
+                // Employment Information
+                Debug.WriteLine($"JobTitleId: {information.JobTitleId}");
+                Debug.WriteLine($"Remarks: {information.Remarks}");
+
+                // Audit Information
+                Debug.WriteLine($"CreatedAt: {information.CreatedAt}");
+                Debug.WriteLine($"UpdatedAt: {information.UpdatedAt}");
+
+                Debug.WriteLine("==========================================");
+
+                // Your INSERT query can go here.
+                int resultcheck = await SqlDataAcess_Test.ExecuteAsync(
+                    @"INSERT INTO P1SA_EmployeesInformation (EmployeeId, Gender, DateOfBirth, DateHired, ContactNumber, SocialMedia, PickUpPoint)
+                       VALUES (@EmployeeId, @Gender, @DateOfBirth, @DateHired, @ContactNumber, @SocialMedia, @PickUpPoint)",
+                    new {
+                        EmployeeId = EmployeeId,
+                        Gender = information.Gender,
+                        DateOfBirth = information.DateOfBirth,
+                        DateHired = information.DateHired,
+                        ContactNumber = information.ContactNumber,
+                        SocialMedia = information.SocialMedia,
+                        PickUpPoint = information.PickUpPoint
+                    });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error saving employee information: {ex}");
+                throw;
+            }
+
         }
 
-        public Task SaveAddressAsync(List<EmployeeAddress> addressList)
+        public async Task SaveAddressAsync(int EmployeeId, List<EmployeeAddress> addressList)
         {
-            if (addressList == null || addressList.Count == 0) return Task.CompletedTask;
+            try
+            {
+                if (addressList == null)
+                {
+                    Debug.WriteLine("EmployeeInformation is NULL.");
+                    return;
+                }
 
-            return SqlDataAcess_Test.ExecuteInTransactionAsync((conn, tx) =>
-                SaveAddressAsync(conn, tx, addressList[0].EmployeeId, addressList));
+                Debug.WriteLine("========== ADDRESS INFORMATION ==========");
+
+                foreach (var address in addressList)
+                {
+                    Debug.WriteLine($"EmployeeId: {EmployeeId}");
+                    Debug.WriteLine($"Address: {address.FullAddress}");
+                    Debug.WriteLine($"IsPermanent: {address.IsPermanent}");
+
+                    int resultcheck =  await SqlDataAcess_Test.ExecuteAsync(
+                        @"INSERT INTO P1SA_EmployeesAddress
+                        (EmployeeId, FullAddress, IsPermanent)
+                        VALUES
+                        (@EmployeeId, @FullAddress, @IsPermanent)",
+                        new
+                        {
+                            EmployeeId = EmployeeId,
+                            FullAddress = address.FullAddress,
+                            IsPermanent = address.IsPermanent
+                        });
+
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error saving employee information: {ex}");
+                throw;
+            }
+
+
         }
 
-        public Task SaveEducationAsync(List<EmployeeEducation> educationList)
+        public async Task SaveEducationAsync(int EmployeeId, List<EmployeeEducation> educationList)
         {
-            if (educationList == null || educationList.Count == 0) return Task.CompletedTask;
+            try
+            {
+                if (educationList == null)
+                {
+                    Debug.WriteLine("EmployeeInformation is NULL.");
+                    return;
+                }
 
-            return SqlDataAcess_Test.ExecuteInTransactionAsync((conn, tx) =>
-                SaveEducationAsync(conn, tx, educationList[0].EmployeeId, educationList));
+                Debug.WriteLine("========== EDUCATION INFORMATION ==========");
+
+                foreach (var education in educationList)
+                {
+                    Debug.WriteLine($"EmployeeId: {EmployeeId}");
+                    Debug.WriteLine($"SchoolLevel: {education.SchoolLevel}");
+                    Debug.WriteLine($"SchoolName: {education.SchoolName}");
+                    Debug.WriteLine($"Course: {education.Course}");
+                    Debug.WriteLine($"YearGraduated: {education.YearGraduated}");
+
+                    await SqlDataAcess_Test.ExecuteAsync(
+                        @"INSERT INTO P1SA_EmployeesEducation
+                          (EmployeeId, SchoolLevel, SchoolName, Course, YearGraduated)
+                        VALUES
+                         (@EmployeeId, @SchoolLevel, @SchoolName,  @Course, @YearGraduated)",
+                    new
+                       {
+                           EmployeeId = EmployeeId,
+                           SchoolLevel = education.SchoolLevel,
+                           SchoolName = education.SchoolName,
+                           Course = education.Course,
+                           YearGraduated = education.YearGraduated
+                       });
+                }
+                //Debug.WriteLine($"EmployeeId: {information.EmployeeId}");
+
+                //// Gender and Category
+                //Debug.WriteLine($"Gender: {information.Gender}");
+                //Debug.WriteLine($"GenderText: {information.GenderText}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error saving employee information: {ex}");
+                throw;
+            }
         }
 
-        // ---------- Private transactional versions ----------
-
-        private static async Task SaveInformationAsync(
-            IDbConnection conn, IDbTransaction tx, int employeeId, EmployeeInformation info)
-        {
-            if (info == null) return;
-            info.EmployeeId = employeeId;
-
-            await SqlDataAcess_Test.ExecuteAsync(conn, tx,
-                @"INSERT INTO P1SA_EmployeesInformation
-                (EmployeeId)
-              VALUES
-                (@EmployeeId)",
-                info);
-        }
-
-        private static async Task SaveAddressAsync(
-            IDbConnection conn, IDbTransaction tx, int employeeId, List<EmployeeAddress> list)
-        {
-            if (list == null || list.Count == 0) return;
-            foreach (var a in list) a.EmployeeId = employeeId;
-
-            await SqlDataAcess_Test.ExecuteAsync(conn, tx,
-                @"INSERT INTO P1SA_EmployeesAddress
-                (EmployeeId, HouseNo, Street, Barangay, City, Province, ZipCode, IsPermanent)
-              VALUES
-                (@EmployeeId, @HouseNo, @Street, @Barangay, @City, @Province, @ZipCode, @IsPermanent)",
-                list);
-        }
-
-        private static async Task SaveEducationAsync(
-            IDbConnection conn, IDbTransaction tx, int employeeId, List<EmployeeEducation> list)
-        {
-            if (list == null || list.Count == 0) return;
-            foreach (var e in list) e.EmployeeId = employeeId;
-
-            await SqlDataAcess_Test.ExecuteAsync(conn, tx,
-                @"INSERT INTO P1SA_EmployeesEducation
-                (EmployeeId, SchoolLevel, SchoolName, Course, YearGraduated)
-              VALUES
-                (@EmployeeId, @SchoolLevel, @SchoolName, @Course, @YearGraduated)",
-                list);
-        }
+       
     }
 }

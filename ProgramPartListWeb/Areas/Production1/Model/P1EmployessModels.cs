@@ -24,7 +24,7 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public string AgencyName { get; set; }
         public int? DepartmentId { get; set; }
         public int? StatusId { get; set; } = 1;
-
+        public int? WIthVech { get; set; } = 0; 
         // From the new tables
         public EmployeeInformation Information { get; set; }
         public List<EmployeeEducation> Education { get; set; } = new List<EmployeeEducation>();
@@ -89,14 +89,13 @@ namespace ProgramPartListWeb.Areas.Production1.Model
 
         // SchoolLevel is TINYINT in SQL, and Dapper maps TINYINT to byte, which
         // converts to this byte-backed enum without a custom type handler.
-        public SchoolLevel SchoolLevel { get; set; }
+        public int SchoolLevel { get; set; }
 
         public string SchoolName { get; set; }
         public string Course { get; set; }
         public int? YearGraduated { get; set; }
 
         public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
     }
 
     /// <summary>
@@ -108,26 +107,9 @@ namespace ProgramPartListWeb.Areas.Production1.Model
     {
         public int AddressId { get; set; }
         public int EmployeeId { get; set; }
+        public string FullAddress { get; set; }
 
-        public string HouseNo { get; set; }
-        public string Street { get; set; }
-        public string Barangay { get; set; }
-        public string City { get; set; }
-        public string Province { get; set; }
-        public string ZipCode { get; set; }
         public bool IsPermanent { get; set; }
 
-        public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
-
-        // Display helper: skips empty parts so the result has no stray commas.
-        public string FullAddress
-        {
-            get
-            {
-                var parts = new[] { HouseNo, Street, Barangay, City, Province, ZipCode };
-                return string.Join(", ", Array.FindAll(parts, p => !string.IsNullOrWhiteSpace(p)));
-            }
-        }
     }
 }

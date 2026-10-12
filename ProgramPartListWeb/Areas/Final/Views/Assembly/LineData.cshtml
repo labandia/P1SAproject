@@ -296,11 +296,15 @@
                 return;
             }
 
-          this.tbody.innerHTML = data.map(row => {
+        this.tbody.innerHTML = data.map(row => {
+
+            const shipmentDateClass = this.getShipmentDateClass(row.ShipmentDate);
+
+
                 return `
               <tr  class='fade-in'  data-order-line="${row.Line}"   >
                         <td>${row.Line}</td>
-                        <td  class='ShopOrderLayout' style='text-align: left;'>
+                       <td class="ShopOrderLayout ${shipmentDateClass}" style="text-align: left;">
                             <span class='ShopOrderLayout_ShopOrder'>${row.FinalShopOrder}</span>
                             <p style="margin:.2em 0;color:#8a8f9e;">${row.ItemNo}</p>
                              <span
@@ -354,7 +358,47 @@
             const date = new Date(timestamp);
 
             return date.toLocaleDateString('en-US');
-        }
+     }
+
+
+      getShipmentDateClass(shipmentDate) {
+          if (!shipmentDate) return '';
+
+          // Parse the shipment date
+          const shipment = new Date(shipmentDate);
+
+          if (isNaN(shipment.getTime())) return '';
+
+
+          // Normalize dates to local midnight
+          const shipmentDay = new Date(
+              shipment.getFullYear(),
+              shipment.getMonth(),
+              shipment.getDate()
+          );
+
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          const tomorrow = new Date(today);
+          tomorrow.setDate(tomorrow.getDate() + 1);
+
+          if (shipmentDay.getTime() === today.getTime()) {
+              return 'shipment-today';
+          }
+
+          if (shipmentDay.getTime() === tomorrow.getTime()) {
+              return 'shipment-tomorrow';
+          }
+
+          // Light Blue: Previous dates only
+          if (shipmentDay.getTime() < today.getTime()) {
+              return 'shipment-adjustment';
+          }
+
+          // Other future dates: no background color
+          return '';
+      }
 
 
 }

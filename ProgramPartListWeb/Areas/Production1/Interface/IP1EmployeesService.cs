@@ -13,9 +13,9 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
     {
         Task<bool> IsEmployeeExist(string employeeCode);
         Task<int> SaveEmployeeManage(EmployeeProfile profile);
-        Task SaveInformationAsync(EmployeeInformation information);
-        Task SaveEducationAsync(List<EmployeeEducation> educationList);
-        Task SaveAddressAsync(List<EmployeeAddress> addressList);
+        Task SaveInformationAsync(int EmployeeId, EmployeeInformation information);
+        Task SaveEducationAsync(int EmployeeId, List<EmployeeEducation> educationList);
+        Task SaveAddressAsync(int EmployeeId, List<EmployeeAddress> addressList);
 
     }
 }

@@ -533,8 +533,16 @@
             // Double click -> ShopOrderLine
             root.addEventListener('dblclick', (e) => {
                 if (e.target.closest('input, button, select')) return;
+
                 localStorage.setItem("LineSet", item.Line);
-                window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
+
+                const Line = item.Line;
+                const mode = 0;
+
+                window.location.href =
+                    '@Url.Action("ShopOrderLine", "Assembly", new { area = "Final" })'
+                    + '?line=' + encodeURIComponent(Line)
+                    + '&mode=' + encodeURIComponent(mode);
             });
 
             // Next model text
@@ -692,13 +700,18 @@
 
                     const ovenItems = await this.fetchOvenItems(item.Line);
                     const hasOven = ovenItems.length > 0;
+                    const Line = item.Line;
+                    const mode = 0;
 
                     // Offline line with no oven items: go to ShopOrderLine if it has records
                     if (!isOnline && !hasOven) {
                         const res = await getMethod('@Url.Action("GetCountRecords", "Assembly")', { line: item.Line });
                         if (!res?.Success) return;
                         if (res.data != 0) {
-                            window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
+                            window.location.href =
+                                '@Url.Action("ShopOrderLine", "Assembly", new { area = "Final" })'
+                                + '?line=' + encodeURIComponent(Line)
+                                + '&mode=' + encodeURIComponent(mode);
                         }
                         return;
                     }
@@ -914,12 +927,17 @@
                         if (this.isExpanded || this.isAnimating) return;
                         alert("CLICK HERE 1");
                         const ovenItems = await this.fetchOvenItems(item.Line);
+                        const Line = item.Line;
+                        const mode = 0;
 
                         // has a Data Display the Oven Items in the Centered Card, otherwise just display the normal centered card.
                         if (ovenItems != null && ovenItems.length > 0) {
                             await this.animateCardToCenter(card, { ...item, OvenItems: ovenItems });
                         } else {
-                            window.location.href = '@Url.Action("ShopOrderLine", "Assembly")?Line=' + encodeURIComponent(item.Line);
+                             window.location.href =
+                                '@Url.Action("ShopOrderLine", "Assembly", new { area = "Final" })'
+                                + '?line=' + encodeURIComponent(Line)
+                                + '&mode=' + encodeURIComponent(mode);
                         }
 
                     });

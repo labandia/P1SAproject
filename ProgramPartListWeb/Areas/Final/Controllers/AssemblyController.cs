@@ -1285,7 +1285,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         // GET: Final/UploaData
         public ActionResult UploaData() => View();
         // GET: Final/ShopOrderLine/{line}
-        public ActionResult ShopOrderLine(string line) => View();
+        public ActionResult ShopOrderLine(string line, int mode) => View();
         // GET: Final/ShopOrderDetails/{id}
         public ActionResult ShopOrderDetails(int id) => View();
 

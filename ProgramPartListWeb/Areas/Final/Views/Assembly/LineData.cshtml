@@ -153,7 +153,29 @@
             debounceTimer = setTimeout(() => this.LoadLineShopOrderList(), 300);
         };
         this.searchinput.addEventListener('input', debounced);
-        this.filterStatus.addEventListener('change', debounced);
+          this.filterStatus.addEventListener('change', debounced);
+
+          // Double-click table row -> ShopOrderLine
+            this.tbody.addEventListener('dblclick', (e) => {
+
+                // Ignore clicks on interactive elements
+                if (e.target.closest('input, button, select, a')) return;
+
+                const row = e.target.closest('tr[data-order-line]');
+
+                if (!row) return;
+
+                const line = row.dataset.orderLine;
+                const mode = 0;
+
+                localStorage.setItem("LineSet", line);
+
+                window.location.href =
+                    '@Url.Action("ShopOrderLine", "Assembly", new { area = "Final" })'
+                    + '?line=' + encodeURIComponent(line)
+                    + '&mode=' + encodeURIComponent(mode);
+            });
+
       }
 
       async LoadTotalPartsSummary() {

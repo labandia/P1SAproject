@@ -121,17 +121,18 @@
                     <label>Pick-up Point</label>
                     <select class="form-control" data-path="Information.PickUpPoint">
                         <option value="">-- Select --</option>
-                        <option>BATAAN</option>
-                        <option>OLONGAPO</option>
-                        <option>ZAMBALES</option>
+                        <option value="1">MORONG</option>
+                        <option value="2">BATAAN</option>
+                        <option value="3">ZAMBALES</option>
+                        <option value="4">OLONGAPO</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label>With Vehicle</label>
                     <div class="radio-group">
-                        <label><input type="radio" name="vehicleMode" value="1" data-path="VehicleMode"> Yes</label>
-                        <label><input type="radio" name="vehicleMode" value="0" data-path="VehicleMode"> No</label>
+                        <label><input type="radio" name="vehicleMode" value="1" data-path="Information.WIthVech"> Yes</label>
+                        <label><input type="radio" name="vehicleMode" value="0" data-path="Information.WIthVech"> No</label>
                     </div>
                 </div>
 
@@ -308,7 +309,8 @@
                     Gender: false,            // false = Male, true = Female
                     Category: false,          // false = Direct Hired, true = Indirect Hired
                     DateOfBirth: '', DateHired: '',
-                    ContactNumber: '', SocialMedia: '', PickUpPoint: ''
+                    ContactNumber: '', SocialMedia: '', PickUpPoint: '',
+                    WIthVech: false
                 },
 
                 // List<EmployeeAddress>
@@ -373,6 +375,7 @@
             // EmployeeInformation
             const info = Object.assign({}, this.model.Information, Information);
             if ('Gender' in Information) info.Gender = Information.Gender === 'true';
+            if ('WIthVech' in Information) info.WIthVech = Information.WIthVech === 'true';
             info.DateOfBirth = info.DateOfBirth || null;
             info.DateHired = info.DateHired || null;
             m.Information = info;
@@ -480,9 +483,27 @@
         // ───────────────────────── CREATE / UPDATE ─────────────────────────
         newRecord() {
             if (!this.confirmDiscard()) return;
+
+            // Reset the form for a new employee
             this.model = this.emptyEmployee();
+
+            // Set Date Hired to today's date (local date)
+            const today = new Date();
+            const localDate = [
+                today.getFullYear(),
+                String(today.getMonth() + 1).padStart(2, '0'),
+                String(today.getDate()).padStart(2, '0')
+            ].join('-');
+
+            this.model.Information.DateHired = localDate;
+
+            // Display the model values in the form
             this.bindModel();
+
+            // Enable editing
             this.setMode('new');
+
+            // Focus Employee Code
             document.querySelector('[data-path="EmployeeCode"]').focus();
         }
 

@@ -303,7 +303,6 @@
                 processSelected = "Loctite 603";
             }
 
-            console.log("ASDASDD " + processSelected);
 
             // Modal HTML with editable input, active button, and a close button
             root.innerHTML = `
@@ -391,17 +390,15 @@
 
 
                 <div style="display:flex; align-items:center; gap: 10px;">
-
-
-                     <button type="button" id="modalCancel" class="btn-cancel" ${item.InputQty !== 0 ? 'disabled' : ''}><iconify-icon icon="mdi-light:cancel" width="16"></iconify-icon>  Cancel</button>
-
-                    <button type="button" id="modalCompleteBtn" class="btn-completed"
+                      <button type="button" id="modalCancel" class="btn-cancel" ${item.InputQty !== 0 ? 'disabled' : ''}><iconify-icon icon="mdi-light:cancel" width="16"></iconify-icon>  Cancel</button>
+                      <button type="button" id="modalCompleteBtn" class="btn-completed"
                             data-line="${item.Line}"
                             data-order="${item.FinalShopOrder}
                             data-IsOven="${item.IsOven}">
                                 <iconify-icon icon="fluent-mdl2:completed" width="15"></iconify-icon> ${this.selectStatus !== 6 ? 'Save' : 'Completed'}
                       </button>
                 </div>
+
 
             </div>
         </div>
@@ -542,7 +539,9 @@
                 window.location.href =
                     '@Url.Action("ShopOrderLine", "Assembly", new { area = "Final" })'
                     + '?line=' + encodeURIComponent(Line)
-                    + '&mode=' + encodeURIComponent(mode);
+                    + '&mode=' + encodeURIComponent(mode)
+                    + '&shopOrder=' + encodeURIComponent("")
+                    + '&id=' + encodeURIComponent(0);
             });
 
             // Next model text
@@ -711,7 +710,9 @@
                             window.location.href =
                                 '@Url.Action("ShopOrderLine", "Assembly", new { area = "Final" })'
                                 + '?line=' + encodeURIComponent(Line)
-                                + '&mode=' + encodeURIComponent(mode);
+                                + '&mode=' + encodeURIComponent(mode)
+                                + '&shopOrder=' + encodeURIComponent("")
+                                + '&id=' + encodeURIComponent(0);
                         }
                         return;
                     }
@@ -925,7 +926,6 @@
                     // Click event for offline cards
                     card.addEventListener('click', async (e) => {
                         if (this.isExpanded || this.isAnimating) return;
-                        alert("CLICK HERE 1");
                         const ovenItems = await this.fetchOvenItems(item.Line);
                         const Line = item.Line;
                         const mode = 0;
@@ -937,7 +937,9 @@
                              window.location.href =
                                 '@Url.Action("ShopOrderLine", "Assembly", new { area = "Final" })'
                                 + '?line=' + encodeURIComponent(Line)
-                                + '&mode=' + encodeURIComponent(mode);
+                                + '&mode=' + encodeURIComponent(mode)
+                                + '&shopOrder=' + encodeURIComponent("")
+                                + '&id=' + encodeURIComponent(0);
                         }
 
                     });

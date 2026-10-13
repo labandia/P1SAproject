@@ -166,14 +166,21 @@
                 if (!row) return;
 
                 const line = row.dataset.orderLine;
-                const mode = 0;
+                const shopOrder = row.dataset.shopOrder;
+                const id = parseInt(row.dataset.id);
 
+                const mode = 1;
+
+                // Optional: save values for the next page
+                localStorage.setItem("ShopOrder", shopOrder);
                 localStorage.setItem("LineSet", line);
 
                 window.location.href =
                     '@Url.Action("ShopOrderLine", "Assembly", new { area = "Final" })'
                     + '?line=' + encodeURIComponent(line)
-                    + '&mode=' + encodeURIComponent(mode);
+                    + '&mode=' + encodeURIComponent(mode)
+                    + '&shopOrder=' + encodeURIComponent(shopOrder)
+                    + '&id=' + encodeURIComponent(id);
             });
 
       }
@@ -324,7 +331,10 @@
 
 
                 return `
-              <tr  class='fade-in'  data-order-line="${row.Line}"   >
+              <tr  class='fade-in'
+                   data-order-line="${row.Line}"  
+                     data-shop-order="${row.FinalShopOrder}"
+                     data-id="${row.RecordID}">
                         <td>${row.Line}</td>
                        <td class="ShopOrderLayout ${shipmentDateClass}" style="text-align: left;">
                             <span class='ShopOrderLayout_ShopOrder'>${row.FinalShopOrder}</span>

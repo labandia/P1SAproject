@@ -51,7 +51,7 @@ namespace ProgramPartListWeb.Areas.Production1.Model
 
         public string ContactNumber { get; set; }
         public string SocialMedia { get; set; }
-        public string PickUpPoint { get; set; }        // BATAAN, OLONGAPO, ZAMBALES
+        public int PickUpPoint { get; set; }       // 1 - MORONG,  2 - BATAAN,  3 - ZAMBALES, 4 - OLONGAPO
         public string DirectedBy { get; set; }
         public int? JobTitleId { get; set; }
         public string Remarks { get; set; }
@@ -112,4 +112,6 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public bool IsPermanent { get; set; }
 
     }
+
+    
 }

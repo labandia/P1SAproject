@@ -787,6 +787,7 @@
     <Content Include="Content\css\Animation.css" />
     <Content Include="Content\css\Attendance.css" />
     <Content Include="Content\css\EmployeeDesign.css" />
+    <Content Include="Content\css\EmployeeMain.css" />
     <Content Include="Content\css\FinalAssembly.css" />
     <Content Include="Content\css\FinalDashboard.css" />
     <Content Include="Content\css\FinalDashMangement.css" />

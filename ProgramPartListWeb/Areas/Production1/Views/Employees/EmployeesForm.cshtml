@@ -4,230 +4,411 @@
 }
 
 
-<div class="app-window" id="employeeApp">
+<div class="app-shell">
 
-    <!-- TOP HEADER -->
-    <header class="form-header">
-        <div class="header-title">
-            <i class="fa-solid fa-id-card"></i>
-            <h1>Employee Encoder</h1>
+    <!-- TOP BAR -->
+    <header class="top-bar">
+        <div class="brand">
+            <div class="brand-logo"><i class="fa-solid fa-bolt"></i></div>
+            <div class="brand-text">
+                <strong>Sanyo Denki</strong>
+                <span>HR Portal</span>
+            </div>
         </div>
-        <div class="header-meta">
-            <span>Date Hired:</span>
-            <input type="date" data-path="Information.DateHired">
+
+        <div class="page-title">
+            <h1>Employee Encoder</h1>
+
+        </div>
+
+        <div class="top-bar-actions">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" placeholder="Search employee...">
+            </div>
+
+            <!-- THEME TOGGLE -->
+            <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">
+                <i class="fa-solid fa-sun t-icon sun"></i>
+                <i class="fa-solid fa-moon t-icon moon"></i>
+                <span class="thumb">
+                    <i class="fa-solid fa-moon icon-moon"></i>
+                    <i class="fa-solid fa-sun icon-sun"></i>
+                </span>
+            </button>
+
+
         </div>
     </header>
 
-    <!-- TOP SECTION -->
-    <section class="top-section">
-        <div class="profile-area">
+    <!-- CONTENT -->
+    <div class="content-scroll">
+        <div class="content-grid">
 
-            <button type="button" class="btn-upload" disabled>
-                <i class="fa-solid fa-camera"></i> Change Picture
-            </button>
-        </div>
-
-        <div class="main-info">
-            <div class="id-single">
-                <label>Employees Code : </label>
-                <input type="text" class="form-control" data-path="EmployeeCode" maxlength="20">
-            </div>
-            <div class="form-group">
-                <label>Employee Name:</label>
-                <input type="text" class="form-control" id="employeeName" data-path="FullName" readonly
-                       style="font-size: 18px; font-weight: 600;">
-            </div>
-        </div>
-    </section>
-
-    <!-- TABS NAVIGATION -->
-    <nav class="tabs-nav" id="tabsNav">
-        <button type="button" class="tab-btn active" data-tab="tab-personal"><i class="fa-solid fa-user"></i> Personal Info</button>
-        <button type="button" class="tab-btn" data-tab="tab-address"><i class="fa-solid fa-location-dot"></i> Address</button>
-        <button type="button" class="tab-btn" data-tab="tab-contact"><i class="fa-solid fa-address-book"></i> Contact</button>
-        <button type="button" class="tab-btn" data-tab="tab-education"><i class="fa-solid fa-graduation-cap"></i> Education</button>
-        <button type="button" class="tab-btn" data-tab="tab-skills"><i class="fa-solid fa-star"></i> Skills</button>
-        <button type="button" class="tab-btn" data-tab="tab-work"><i class="fa-solid fa-briefcase"></i> Work Experience</button>
-    </nav>
-
-    <div class="tab-content-container" style="min-height: 400px;">
-
-        <!-- TAB 1: PERSONAL -->
-        <div id="tab-personal" class="tab-content active">
-            <div class="section-title"><i class="fa-solid fa-circle-info"></i> A. Personal Information</div>
-            <div class="form-grid-3" style="margin-bottom: 20px;">
-                <div class="form-group"><label>Last Name</label><input type="text" class="form-control" data-path="LastName"></div>
-                <div class="form-group"><label>First Name</label><input type="text" class="form-control" data-path="FirstName"></div>
-                <div class="form-group"><label>Middle Name</label><input type="text" class="form-control" data-path="MiddleName"></div>
-            </div>
-            <div class="form-grid-3">
-                <div class="form-group"><label>Date of Birth</label><input type="date" class="form-control" data-path="Information.DateOfBirth"></div>
-                <div class="form-group">
-                    <label>Gender</label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="gender" value="false" data-path="Information.Gender"> Male</label>
-                        <label><input type="radio" name="gender" value="true" data-path="Information.Gender"> Female</label>
+            <!-- PROFILE PANEL -->
+            <aside class="profile-panel">
+                <div class="profile-header">
+                    <div class="avatar-container" id="avatarContainer" title="Click to change photo">
+                        <i class="fa-solid fa-user placeholder-icon" id="avatarPlaceholder"></i>
+                        <img id="avatarPreview" style="display:none;" alt="Profile">
+                        <div class="avatar-overlay">
+                            <i class="fa-solid fa-camera"></i>
+                            <span>CHANGE</span>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label>Civil Status</label>
-                    <select class="form-control" data-path="CivilStatus">
-                        <option>Single</option>
-                        <option>Married</option>
-                        <option>Widowed</option>
-                        <option>Separated</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-grid-2" style="margin-top: 20px;">
-                <div class="form-group"><label>Religion</label><input type="text" class="form-control" data-path="Religion"></div>
-                <div class="form-group">
-                    <label>Blood Type</label>
-                    <select class="form-control" data-path="BloodType">
-                        <option>A+</option>
-                        <option>A-</option>
-                        <option>B+</option>
-                        <option>B-</option>
-                        <option>AB+</option>
-                        <option>AB-</option>
-                        <option>O+</option>
-                        <option>O-</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 2: ADDRESS -->
-        <div id="tab-address" class="tab-content">
-            <div class="form-group" style="margin-bottom: 20px;">
-                <label>Permanent Address</label>
-                <input type="text" class="form-control" data-path="Addresses.0.FullAddress" maxlength="250"
-                       placeholder="House No., Street, Barangay, City / Municipality, Province, Zip Code">
-            </div>
-            <div class="form-group">
-                <label>Temporary Address</label>
-                <input type="text" class="form-control" data-path="Addresses.1.FullAddress" maxlength="250"
-                       placeholder="House No., Street, Barangay, City / Municipality, Province, Zip Code">
-            </div>
-        </div>
-
-        <!-- TAB 3: CONTACT -->
-        <div id="tab-contact" class="tab-content">
-            <div class="section-title"><i class="fa-solid fa-address-book"></i> C. Contact & Social</div>
-            <div class="form-grid-3">
-                <div class="form-group"><label>Facebook Account</label><input type="text" class="form-control" data-path="Information.SocialMedia"></div>
-                <div class="form-group"><label>Contact Number</label><input type="number" class="form-control" data-path="Information.ContactNumber"></div>
-                <div class="form-group">
-                    <label>Pick-up Point</label>
-                    <select class="form-control" data-path="Information.PickUpPoint">
-                        <option value="">-- Select --</option>
-                        <option value="1">MORONG</option>
-                        <option value="2">BATAAN</option>
-                        <option value="3">ZAMBALES</option>
-                        <option value="4">OLONGAPO</option>
-                    </select>
+                    <input type="file" id="avatarInput" accept="image/*" style="display:none;">
+                    <button class="btn-upload" id="btnUpload">
+                        <i class="fa-solid fa-upload"></i> Upload Photo
+                    </button>
                 </div>
 
-                <div class="form-group">
-                    <label>With Vehicle</label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="vehicleMode" value="1" data-path="Information.WIthVech"> Yes</label>
-                        <label><input type="radio" name="vehicleMode" value="0" data-path="Information.WIthVech"> No</label>
+                <div class="profile-fields">
+                    <div class="form-group">
+                        <label>PISA ID <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="pisaId" placeholder="PISA-00000" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Employee Name <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="employeeName" placeholder="Full name" disabled style="font-weight:600;">
                     </div>
                 </div>
 
-            </div>
-        </div>
-
-        <!-- TAB 4: EDUCATION -->
-        <div id="tab-education" class="tab-content">
-            <div class="section-title"><i class="fa-solid fa-graduation-cap"></i> D. Educational Attainment</div>
-
-            <div style="margin-bottom: 25px;">
-                <h4 style="font-size: 14px; margin-bottom: 15px; color: var(--accent-cyan);">College</h4>
-                <div class="form-grid-3">
-                    <div class="form-group"><label>School</label><input type="text" class="form-control" data-path="Education.College.SchoolName"></div>
-                    <div class="form-group"><label>Course</label><input type="text" class="form-control" data-path="Education.College.Course"></div>
-                    <div class="form-group"><label>Year Graduated</label><input type="number" class="form-control" data-path="Education.College.YearGraduated" maxlength="4"></div>
+                <div class="profile-fields">
+                    @*<div class="profile-stat">
+                            <i class="fa-solid fa-briefcase"></i>
+                            <div>
+                                <strong id="statJob">—</strong>
+                                <span>Job Title</span>
+                            </div>
+                        </div>*@
+                    <div class="profile-stat">
+                        <i class="fa-solid fa-building"></i>
+                        <div>
+                            <strong id="statDept">—</strong>
+                            <span>Department</span>
+                        </div>
+                    </div>
+                    <div class="profile-stat">
+                        <i class="fa-solid fa-layer-group"></i>
+                        <div>
+                            <strong id="statWork">0</strong>
+                            <span>Work Entries</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </aside>
 
-            <div>
-                <h4 style="font-size: 14px; margin-bottom: 15px; color: var(--accent-cyan);">High School</h4>
-                <div class="form-grid-3">
-                    <div class="form-group"><label>School</label><input type="text" class="form-control" data-path="Education.HighSchool.SchoolName"></div>
-                    <div class="form-group"><label>Course</label><input type="text" class="form-control" data-path="Education.HighSchool.Course"></div>
-                    <div class="form-group"><label>Year Graduated</label><input type="number" class="form-control" data-path="Education.HighSchool.YearGraduated" maxlength="4"></div>
+            <!-- FORM PANEL -->
+            <section class="form-panel">
+                <nav class="tabs-nav">
+                    <button class="tab-btn active" data-tab="tab-personal"><i class="fa-solid fa-user"></i> Personal</button>
+                    <button class="tab-btn" data-tab="tab-address"><i class="fa-solid fa-location-dot"></i> Address</button>
+                    <button class="tab-btn" data-tab="tab-contact"><i class="fa-solid fa-address-book"></i> Contact</button>
+                    <button class="tab-btn" data-tab="tab-education"><i class="fa-solid fa-graduation-cap"></i> Education</button>
+                    <button class="tab-btn" data-tab="tab-skills"><i class="fa-solid fa-star"></i> Skills</button>
+                    <button class="tab-btn" data-tab="tab-work"><i class="fa-solid fa-briefcase"></i> Work</button>
+                </nav>
+
+                <div id="tab-personal" class="tab-content active">
+                    <div class="section-title"><i class="fa-solid fa-circle-info"></i> Personal Information</div>
+                    <div class="form-grid-3" style="margin-bottom: 18px;">
+                        <div class="form-group"><label>Last Name</label><input type="text" class="form-control" id="lastName" disabled></div>
+                        <div class="form-group"><label>Given Name</label><input type="text" class="form-control" id="givenName" disabled></div>
+                        <div class="form-group"><label>Middle Name</label><input type="text" class="form-control" id="middleName" disabled></div>
+                    </div>
+                    <div class="form-grid-3">
+                        <div class="form-group"><label>Date of Birth</label><input type="date" class="form-control" id="dob" disabled></div>
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="gender" value="Male" checked disabled> Male</label>
+                                <label><input type="radio" name="gender" value="Female" disabled> Female</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Civil Status</label>
+                            <select class="form-control" id="civilStatus" disabled>
+                                <option>Single</option>
+                                <option>Married</option>
+                                <option>Widowed</option>
+                                <option>Separated</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-grid-2" style="margin-top: 18px;">
+                        <div class="form-group"><label>Religion</label><input type="text" class="form-control" id="religion" disabled></div>
+                        <div class="form-group">
+                            <label>Blood Type</label>
+                            <select class="form-control" id="bloodType" disabled>
+                                <option>A+</option>
+                                <option>A-</option>
+                                <option>B+</option>
+                                <option>B-</option>
+                                <option>AB+</option>
+                                <option>AB-</option>
+                                <option>O+</option>
+                                <option>O-</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+
+                    <!-- EMPLOYMENT INFORMATION -->
+                    <div class="section-title">
+                        <i class="fa-solid fa-briefcase"></i> Employment Information
+                    </div>
+
+                    <div class="form-grid-3">
+                        <div class="form-group">
+                            <label>Date Hired</label>
+                            <input type="date" class="form-control" id="dateHired">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Process</label>
+                            <input type="text" class="form-control" id="process">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Agency ID</label>
+                            <select class="form-control" id="agencyId">
+                                <option value="1">SDP</option>
+                                <option value="2">TMS</option>
+                                <option value="3">One Source</option>
+                                <option value="4">SyneryOne</option>
+                                <option value="5">Golden Hands</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Department ID</label>
+                            <select class="form-control" id="departmentId">
+                                <option value="1">Molding</option>
+                                <option value="2">Press</option>
+                                <option value="3">Rotor</option>
+                                <option value="4">Winding</option>
+                                <option value="5">Circuit</option>
+                                <option value="6">Process Control</option>
+                                <option value="7">Final Assembly</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Remarks</label>
+                            <input type="text" class="form-control" id="remarks">
+                        </div>
+                    </div>
+
                 </div>
-            </div>
-        </div>
 
-        <!-- TAB 5: SKILLS -->
-        <div id="tab-skills" class="tab-content">
-            <div class="section-title"><i class="fa-solid fa-star"></i> E. Personal Skills</div>
-            <div style="margin-bottom: 15px;">
-                <button type="button" class="btn btn-primary" id="btnAddPersonalSkill" style="padding: 6px 12px; font-size: 11px;">
-                    <i class="fa-solid fa-plus"></i> Add Skill
-                </button>
-            </div>
-            <div class="skills-list" id="personalSkillsList"></div>
+                <div id="tab-address" class="tab-content">
+                    <div class="section-title"><i class="fa-solid fa-map-location-dot"></i> Address Information</div>
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label>Permanent Address</label>
+                        <input type="text" class="form-control" data-path="Addresses.0.FullAddress" maxlength="250"
+                               placeholder="House No., Street, Barangay, City / Municipality, Province, Zip Code">
+                    </div>
+                    <div class="form-group">
+                        <label>Temporary Address</label>
+                        <input type="text" class="form-control" data-path="Addresses.1.FullAddress" maxlength="250"
+                               placeholder="House No., Street, Barangay, City / Municipality, Province, Zip Code">
+                    </div>
+                </div>
 
-            <div class="section-title" style="margin-top: 25px;"><i class="fa-solid fa-star"></i> F. Production Skills</div>
-            <div style="margin-bottom: 15px;">
-                <button type="button" class="btn btn-primary" id="btnAddProductionSkill" style="padding: 6px 12px; font-size: 11px;">
-                    <i class="fa-solid fa-plus"></i> Add Skill
-                </button>
-            </div>
-            <div class="skills-list" id="productionSkillsList"></div>
-        </div>
+                <div id="tab-contact" class="tab-content">
+                    <div class="section-title"><i class="fa-solid fa-address-book"></i> C. Contact & Social</div>
+                    <div class="form-grid-3">
+                        <div class="form-group"><label>Facebook Account</label><input type="text" class="form-control" data-path="Information.SocialMedia"></div>
+                        <div class="form-group"><label>Contact Number</label><input type="number" class="form-control" data-path="Information.ContactNumber"></div>
+                        <div class="form-group">
+                            <label>Pick-up Point</label>
+                            <select class="form-control" data-path="Information.PickUpPoint">
+                                <option value="">-- Select --</option>
+                                <option value="1">MORONG</option>
+                                <option value="2">BATAAN</option>
+                                <option value="3">ZAMBALES</option>
+                                <option value="4">OLONGAPO</option>
+                            </select>
+                        </div>
 
-        <!-- TAB 6: WORK EXPERIENCE -->
-        <div id="tab-work" class="tab-content">
-            <div class="section-title"><i class="fa-solid fa-briefcase"></i> F. Work Experience</div>
-            <div style="margin-bottom: 15px;">
-                <button type="button" class="btn btn-primary" id="btnAddWork" style="padding: 6px 12px; font-size: 11px;">
-                    <i class="fa-solid fa-plus"></i> Add New
-                </button>
-                <small style="margin-left:10px;color:var(--text-muted);">Leave End Date empty for "Present".</small>
-            </div>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Company Name</th>
-                        <th>Position Held</th>
-                        <th>Department Assigned</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="workBody"></tbody>
-            </table>
+                        <div class="form-group">
+                            <label>With Vehicle</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="vehicleMode" value="1" data-path="WIthVech"> Yes</label>
+                                <label><input type="radio" name="vehicleMode" value="0" data-path="WIthVech" checked> No</label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="tab-education" class="tab-content">
+                    <div class="section-title"><i class="fa-solid fa-graduation-cap"></i> Educational Attainment</div>
+                    <div style="margin-bottom: 25px;">
+                        <h4 style="font-size: 11px; margin-bottom: 14px; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; font-weight:700;">College</h4>
+                        <div class="form-grid-3">
+                            <div class="form-group"><label>School</label><input type="text" class="form-control" data-path="Education.College.SchoolName"></div>
+                            <div class="form-group"><label>Course</label><input type="text" class="form-control" data-path="Education.College.Course"></div>
+                            <div class="form-group"><label>Year Graduated</label><input type="number" class="form-control" data-path="Education.College.YearGraduated" min="1900" max="2100"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 style="font-size: 11px; margin-bottom: 14px; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; font-weight:700;">High School</h4>
+                        <div class="form-grid-3">
+                            <div class="form-group"><label>School</label><input type="text" class="form-control" data-path="Education.HighSchool.SchoolName"></div>
+                            <div class="form-group"><label>Course</label><input type="text" class="form-control" data-path="Education.HighSchool.Course"></div>
+                            <div class="form-group"><label>Year Graduated</label><input type="number" class="form-control" data-path="Education.HighSchool.YearGraduated" min="1900" max="2100"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-skills" class="tab-content">
+                    <div class="section-title"><i class="fa-solid fa-star"></i> E. Personal Skills</div>
+                    <div style="margin-bottom: 15px;">
+                        <button type="button" class="btn btn-primary" id="btnAddPersonalSkill" style="padding: 6px 12px; font-size: 11px;">
+                            <i class="fa-solid fa-plus"></i> Add Skill
+                        </button>
+                    </div>
+                    <div class="skills-list" id="personalSkillsList"></div>
+
+                    <div class="section-title" style="margin-top: 25px;"><i class="fa-solid fa-star"></i> F. Production Skills</div>
+                    <div style="margin-bottom: 15px;">
+                        <button type="button" class="btn btn-primary" id="btnAddProductionSkill" style="padding: 6px 12px; font-size: 11px;">
+                            <i class="fa-solid fa-plus"></i> Add Skill
+                        </button>
+                    </div>
+                    <div class="skills-list" id="productionSkillsList"></div>
+                </div>
+
+                <div id="tab-work" class="tab-content">
+                    <div class="section-title"><i class="fa-solid fa-briefcase"></i> Work Experience</div>
+                    <div style="margin-bottom: 15px;">
+                        <button class="btn btn-primary" style="padding: 8px 14px; font-size: 12px;" id="btnAddWork" disabled>
+                            <i class="fa-solid fa-plus"></i> Add New
+                        </button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Company Name</th>
+                                    <th>Position Held</th>
+                                    <th>Department</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="workTableBody">
+                                <tr class="empty-row"><td colspan="6">No work experience recorded</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
 
-    <!-- BOTTOM ACTION BAR -->
+    <!-- ACTION BAR -->
     <footer class="action-bar">
         <div class="record-nav">
-            <span>Record: <span id="recPos" style="color: var(--text-main);">0</span> of <span id="recTotal" style="color: var(--text-main);">0</span></span>
-            <div style="display: flex; gap: 5px;">
-                <button type="button" id="btnPrev"><i class="fa-solid fa-chevron-left"></i></button>
-                <button type="button" id="btnNext"><i class="fa-solid fa-chevron-right"></i></button>
+            <span>Record <strong id="recordCurrent">0</strong> / <strong id="recordTotal">0</strong></span>
+            <div class="nav-btns">
+                <button id="btnPrev" title="Previous"><i class="fa-solid fa-chevron-left"></i></button>
+                <button id="btnNext" title="Next"><i class="fa-solid fa-chevron-right"></i></button>
             </div>
         </div>
         <div class="main-actions">
-            <button type="button" class="btn btn-primary" id="btnSave"><i class="fa-solid fa-floppy-disk"></i> Save</button>
-            <button type="button" class="btn btn-secondary" id="btnNew"><i class="fa-solid fa-plus"></i> New</button>
-            <button type="button" class="btn btn-secondary" id="btnEdit"><i class="fa-solid fa-pen"></i> Edit</button>
-            <button type="button" class="btn btn-secondary" id="btnCancel"><i class="fa-solid fa-xmark"></i> Cancel</button>
-            <button type="button" class="btn btn-danger" id="btnDelete"><i class="fa-solid fa-trash"></i> Delete</button>
+            <button class="btn btn-success" id="btnSave" disabled><i class="fa-solid fa-floppy-disk"></i> <span class="btn-label">Save</span></button>
+            <button class="btn btn-secondary" id="btnNew"><i class="fa-solid fa-plus"></i> <span class="btn-label">New</span></button>
+            <button class="btn btn-secondary" id="btnEdit" disabled><i class="fa-solid fa-pen"></i> <span class="btn-label">Edit</span></button>
+            <button class="btn btn-danger" id="btnDelete" disabled><i class="fa-solid fa-trash"></i> <span class="btn-label">Delete</span></button>
         </div>
     </footer>
+</div>
+
+<!-- TOASTS -->
+<div class="toast-container" id="toastContainer"></div>
+
+
+
+
+<!-- WORK MODAL -->
+<div class="modal fade" id="workModal" tabindex="-1" aria-labelledby="workModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-briefcase"></i> <span id="workModalTitle">Add Work Experience</span></h3>
+                <button type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-grid-2" style="margin-bottom: 16px;">
+                    <div class="form-group"><label>Start Date</label><input type="date" class="form-control" id="workStart"></div>
+                    <div class="form-group"><label>End Date</label><input type="date" class="form-control" id="workEnd"></div>
+                </div>
+                <div class="form-group" style="margin-bottom: 16px;"><label>Company Name</label><input type="text" class="form-control" id="workCompany"></div>
+                <div class="form-grid-2">
+                    <div class="form-group"><label>Position Held</label><input type="text" class="form-control" id="workPosition"></div>
+                    <div class="form-group"><label>Department</label><input type="text" class="form-control" id="workDepartment"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="workModalSave"><i class="fa-solid fa-check"></i> Save</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 
 
 
+
+
+
+
+
+
+
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="confirmModal">
+    <div class="modal" style="max-width: 420px;">
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-triangle-exclamation" style="color: var(--red);"></i> Confirm Delete</h3>
+            <button class="modal-close" id="confirmClose"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body">
+            <p style="font-size: 14px; color: var(--text-2); line-height: 1.6;">
+                Are you sure you want to delete this employee record? This action cannot be undone.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="confirmCancel">Cancel</button>
+            <button class="btn btn-danger" id="confirmDelete"><i class="fa-solid fa-trash"></i> Delete</button>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- THEME TOGGLE: classic script, so it works even if the module import below fails -->
+<script>
+    (function () {
+        var theme = 'dark';
+        try { theme = localStorage.getItem('hr-theme') || 'dark'; } catch (e) { }
+        document.documentElement.setAttribute('data-theme', theme);
+
+        var btn = document.getElementById('themeToggle');
+        if (!btn) return;
+        btn.addEventListener('click', function () {
+            theme = theme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+            try { localStorage.setItem('hr-theme', theme); } catch (e) { }
+        });
+    })();
+</script>
 
 
 
@@ -237,403 +418,643 @@
         postMethod
     } from '@Url.Content("~/Scripts/modules/index.js")';
 
-    // Must match enum SchoolLevel in the model / CHECK constraint in P1SA_EmployeesEducation
-    const SCHOOL_LEVEL = { College: 3, HighSchool: 2 };
+    // ============================================================
+    // data-path helpers: "Information.SocialMedia", "Addresses.0.FullAddress"
+    // ============================================================
+    const getPath = (obj, path) =>
+        path.split('.').reduce((o, k) => (o == null ? undefined : o[k]), obj);
+
+    const setPath = (obj, path, value) => {
+        const keys = path.split('.');
+        let o = obj;
+        for (let i = 0; i < keys.length - 1; i++) {
+            const k = keys[i];
+            if (o[k] == null) o[k] = /^\d+$/.test(keys[i + 1]) ? [] : {};
+            o = o[k];
+        }
+        o[keys[keys.length - 1]] = value;
+    };
+
+    const escHtml = s => String(s == null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+    // data-path fields that must be sent as integers (everything else is sent as text,
+    // so a contact number like 0917... keeps its leading zero)
+    const NUMERIC_PATHS = new Set([
+        'Information.PickUpPoint',
+        'Education.College.YearGraduated',
+        'Education.HighSchool.YearGraduated'
+    ]);
 
     class EmployeeFormController {
         constructor() {
-            this.tabsNav = document.getElementById('tabsNav');
+            this.base = '@Url.Content("~/Production1/Employees/")';
+            this.ids = [];          // ordered employee id, drives Prev/Next
+            this.index = -1;        // position inside ids
+            this.mode = 'view';     // 'view' | 'new' | 'edit'
+            this.current = null;    // last loaded EmployeeProfile
+            this.busy = false;      // blocks double-submit on Save/Delete
 
-            this.btnAddPersonalSkill = document.getElementById('btnAddPersonalSkill');
-            this.btnAddProductionSkill = document.getElementById('btnAddProductionSkill');
-            this.btnAddWork = document.getElementById('btnAddWork');
-            this.personalSkillsList = document.getElementById('personalSkillsList');
-            this.productionSkillsList = document.getElementById('productionSkillsList');
-            this.workBody = document.getElementById('workBody');
+            this.workEntries = [];      // work experience rows for the current employee
+            this.workEditIndex = -1;    // -1 = adding, >= 0 = editing that row
+            this.skills = [];   // EmployeeSkilled rows (IsPersonal = 1 or 0)
+            this.$ = id => document.getElementById(id);
+        }
 
-            this.btnSave = document.getElementById('btnSave');
-            this.btnNew = document.getElementById('btnNew');
-            this.btnEdit = document.getElementById('btnEdit');
-            this.btnCancel = document.getElementById('btnCancel');
-            this.btnDelete = document.getElementById('btnDelete');
-            this.btnPrev = document.getElementById('btnPrev');
-            this.btnNext = document.getElementById('btnNext');
-            this.recPos = document.getElementById('recPos');
-            this.recTotal = document.getElementById('recTotal');
+        // ============================================================
+        // API: the ONE place that talks to getMethod / postMethod.
+        // If their signatures differ from the assumptions below,
+        // only this method needs to change.
+        // Controller contract: { success, message, data }
+        // ============================================================
+        async api(action, { method = 'GET', query = null, body = null } = {}) {
+            const url = this.base + action;
 
-            this.ids = [];
-            this.index = -1;
-            this.mode = 'view';
-            this.model = this.emptyEmployee();
+            const res = method === 'POST'
+                ? await postMethod(url, body)
+                : await getMethod(url, query);
+
+            if (res && res.success === false) throw new Error(res.message || 'Request failed.');
+            return res && res.data !== undefined ? res.data : res;
         }
 
         async init() {
+            // Theme is handled by the classic script above (do NOT bind it again here,
+            // two click handlers would toggle twice and cancel each other out).
             this.bindEvents();
-            this.bindModel();
+            // try {
+            //     await this.loadList();
+            // } catch (e) {
+            //     this.toast(e.message, 'error');
+            // }
             this.setMode('view');
         }
-
+        // ============================================================
+        // EVENTS
+        // ============================================================
         bindEvents() {
-            this.tabsNav.addEventListener('click', e => this.onTabClick(e));
+            // Work experience modal (Bootstrap)
+            this.workModalEl = this.$('workModal');
+            this.workModal = bootstrap.Modal.getOrCreateInstance(this.workModalEl);
 
-            this.btnNew.addEventListener('click', () => this.newRecord());
-            this.btnEdit.addEventListener('click', () => this.editRecord());
-            this.btnCancel.addEventListener('click', () => this.cancelEdit());
-            this.btnSave.addEventListener('click', () => this.onSubmitRecord());
 
-            this.btnAddPersonalSkill.addEventListener('click', () =>
-                this.addSkillRow(this.personalSkillsList, 'skill-personal').focus());
-            this.btnAddProductionSkill.addEventListener('click', () =>
-                this.addSkillRow(this.productionSkillsList, 'skill-production').focus());
-            this.btnAddWork.addEventListener('click', () => {
-                const row = this.addWorkRow();
-                row.querySelector('[data-col="StartDate"]').focus();
+            // CRUD buttons
+            this.$('btnNew').addEventListener('click', () => this.startNew());
+            this.$('btnSave').addEventListener('click', () => this.save());
+
+            // Work experience modal
+            this.$('btnAddWork').addEventListener('click', () => this.openWorkModal());
+            // this.$('workModalCancel').addEventListener('click', () => this.closeWorkModal());
+            this.$('workModalSave').addEventListener('click', () => this.saveWork());
+
+            // focus only works once the modal is fully visible
+            this.workModalEl.addEventListener('shown.bs.modal', () => this.$('workCompany').focus());
+            this.workModalEl.addEventListener('hidden.bs.modal', () => { this.workEditIndex = -1; });
+
+            this.$('workTableBody').addEventListener('click', e => {
+                const btn = e.target.closest('button[data-action]');
+                if (!btn) return;
+                const i = parseInt(btn.dataset.index, 10);
+                if (btn.dataset.action === 'edit') this.openWorkModal(i);
+                if (btn.dataset.action === 'delete') this.deleteWork(i);
             });
 
-            ['LastName', 'FirstName', 'MiddleName'].forEach(p => {
-                document.querySelector(`[data-path="${p}"]`)
-                    .addEventListener('input', () => this.updateEmployeeName());
+
+            this.$('btnAddPersonalSkill').addEventListener('click', () => this.addSkill('personal'));
+            this.$('btnAddProductionSkill').addEventListener('click', () => this.addSkill('production'));
+
+            ['personalSkillsList', 'productionSkillsList'].forEach(id => {
+                const list = this.$(id);
+                // update the array as the user types (no re-render, so focus is kept)
+                list.addEventListener('input', e => this.onSkillInput(e));
+                list.addEventListener('change', e => this.onSkillInput(e));
+                list.addEventListener('click', e => {
+                    const btn = e.target.closest('button[data-skill-remove]');
+                    if (btn) this.removeSkill(parseInt(btn.dataset.skillRemove, 10));
+                });
             });
+
+            // Tabs
+            document.querySelectorAll('.tab-btn').forEach(btn =>
+                btn.addEventListener('click', () => this.showTab(btn.dataset.tab)));
         }
 
-        // ───────────────────────── Model <-> DOM ─────────────────────────
-        emptyEmployee() {
+        // All inputs bound with data-path="..."
+        pathFields() {
+            return Array.from(document.querySelectorAll('[data-path]'));
+        }
+
+        // ============================================================
+        // READ
+        // ============================================================
+        async loadList(search) {
+            const list = await this.api('GetEmployees', { query: { search: search || '' } });
+            this.ids = (list || []).map(x => x.EmployeeId);
+            this.$('recordTotal').textContent = this.ids.length;
+        }
+        async loadRecord(i) {
+            if (i < 0 || i >= this.ids.length) return;
+            try {
+                this.current = await this.api('GetEmployee', { query: { id: this.ids[i] } });
+                this.index = i;
+                this.fill(this.current);
+                this.$('recordCurrent').textContent = i + 1;
+                this.refreshButtons();
+            } catch (e) {
+                this.toast(e.message, 'error');
+            }
+        }
+
+        fill(p) {
+            const info = p.Information || {};
+            const edu = lvl => (p.Education || []).find(e => e.SchoolLevel === lvl) || {};
+            const addr = p.Addresses || [];
+            // Index 0 = permanent (fall back to the first one), index 1 = temporary
+            const perm = addr.find(a => a.IsPermanent) || addr[0] || {};
+            const temp = addr.find(a => !a.IsPermanent && a !== perm) || {};
+            const set = (id, v) => { this.$(id).value = v == null ? '' : v; };
+            const day = d => d ? String(d).substring(0, 10) : '';   // ISO -> yyyy-MM-dd for <input type=date>
+
+            // ---- fields bound by id ----
+            set('pisaId', p.EmployeeCode);
+            set('employeeName', p.FullName);
+            set('lastName', p.LastName);
+            set('givenName', p.FirstName);
+            set('middleName', p.MiddleName);
+            set('dob', day(info.DateOfBirth));
+            set('dateHired', day(info.DateHired));
+            set('remarks', info.Remarks);
+            set('process', p.Process);
+            set('agencyId', p.AgencyId);
+            set('departmentId', p.DepartmentId);
+
+            // Gender is a BIT: false = Male, true = Female
+            document.querySelector('input[name="gender"][value="' + (info.Gender ? 'Female' : 'Male') + '"]').checked = true;
+
+            // ---- fields bound by data-path ----
+            // SchoolLevel: 3 = College, 2 = High School (matches the SchoolLevel enum)
+            const vm = {
+                Information: info,
+                Addresses: [perm, temp],
+                Education: { College: edu(3), HighSchool: edu(2) }
+            };
+
+            this.pathFields().forEach(el => {
+                const val = getPath(vm, el.dataset.path);
+                if (el.type === 'radio') {
+                    // bit / bool / 0 / 1  ->  0 or 1
+                    const n = val === true ? 1 : (val === false || val == null ? 0 : Number(val));
+                    el.checked = n === parseInt(el.value, 10);
+                } else {
+                    el.value = val == null ? '' : val;
+                }
+            });
+
+            this.workEntries = (p.WorkExperience || []).map(w => ({
+                WorkExperienceId: w.WorkExperienceId,
+                StartDate: day(w.StartDate),
+                EndDate: day(w.EndDate),
+                CompanyName: w.CompanyName,
+                PositionHeld: w.PositionHeld,
+                Department: w.Department
+            }));
+            this.renderWork();
+
+
+            this.skills = (p.Skills || []).map(s => ({
+                SkillsCardId: s.SkillsCardId,
+                EmployeeId: s.EmployeeId,
+                ProcessId: s.ProcessId || 0,
+                DepartmentId: s.DepartmentId == null ? '' : String(s.DepartmentId),
+                TaskName: s.TaskName || '',
+                IsPersonal: s.IsPersonal ? 1 : 0,   // 0 = Personal, 1 = Production
+                IsCrossed: 0
+            }));
+            this.renderSkills();
+        }
+
+        clearForm() {
+            this.current = null;
+            this.workEntries = [];
+            this.skills = [];
+            this.renderSkills();
+            this.renderWork();
+
+            this.formInputs().forEach(el => {
+                if (el.type === 'radio') return;
+                if (el.tagName === 'SELECT') { el.selectedIndex = 0; return; }
+                el.value = '';
+            });
+            document.querySelector('input[name="gender"][value="Male"]').checked = true;
+            document.querySelector('input[name="vehicleMode"][value="0"]').checked = true;
+            this.$('recordCurrent').textContent = 0;
+            this.$('employeeName').value = '';
+        }
+
+
+        // ============================================================
+        // CREATE / UPDATE  (one endpoint: EmployeeId 0 = insert)
+        // ============================================================
+        collect() {
+            const v = id => {
+                const el = this.$(id);
+
+                if (!el) {
+                    console.error(`Element with ID "${id}" was not found.`);
+                    return '';
+                }
+
+                return (el.value ?? '').trim();
+            };
+
+            const num = id => v(id) === '' ? null : parseInt(v(id), 10);
+            const date = id => v(id) === '' ? null : v(id);
+            const old = this.current || {};
+
+            // ---- read every data-path field into a nested object ----
+            const out = {};
+            this.pathFields().forEach(el => {
+                const path = el.dataset.path;
+                if (el.type === 'radio') {
+                    if (el.checked) setPath(out, path, parseInt(el.value, 10));
+                    return;
+                }
+                const raw = (el.value ?? '').trim();
+                setPath(out, path, NUMERIC_PATHS.has(path)
+                    ? (raw === '' ? null : parseInt(raw, 10))
+                    : raw);
+            });
+
+            // Addresses.0 = permanent, Addresses.1 = temporary; skip empty ones
+            const addresses = (out.Addresses || [])
+                .map((a, i) => (a && a.FullAddress) ? { FullAddress: a.FullAddress, IsPermanent: i === 0 } : null)
+                .filter(Boolean);
+
+            // Education.College / Education.HighSchool  ->  [{ SchoolLevel, ... }]
+            const edu = out.Education || {};
+            const education = [];
+            if (edu.College && edu.College.SchoolName) {
+                education.push({ SchoolLevel: 3, SchoolName: edu.College.SchoolName, Course: edu.College.Course, YearGraduated: edu.College.YearGraduated });
+            }
+            if (edu.HighSchool && edu.HighSchool.SchoolName) {
+                education.push({ SchoolLevel: 2, SchoolName: edu.HighSchool.SchoolName, Course: edu.HighSchool.Course, YearGraduated: edu.HighSchool.YearGraduated });
+            }
+
             return {
-                // EmployeeProfile
-                EmployeeId: 0,
-                EmployeeCode: '', FullName: '',
-                FirstName: '', MiddleName: '', LastName: '',
-
-                // EmployeeInformation
-                Information: {
-                    Gender: false,            // false = Male, true = Female
-                    Category: false,          // false = Direct Hired, true = Indirect Hired
-                    DateOfBirth: '', DateHired: '',
-                    ContactNumber: '', SocialMedia: '', PickUpPoint: '',
-                    WIthVech: false
-                },
-
-                // List<EmployeeAddress>
-                Addresses: [
-                    { FullAddress: '', IsPermanent: true },
-                    { FullAddress: '', IsPermanent: false }
-                ],
-
-                // List<EmployeeEducation>
-                Education: [],
-
-                // No model property yet
-                CivilStatus: 'Single', Religion: '', BloodType: 'A+', VehicleMode: '',
-                PersonalSkills: [],
-                ProductionSkills: [],
-                WorkExperience: []
+                EmployeeId: old.EmployeeId || 0,
+                EmployeeCode: v('pisaId'),
+                LastName: v('lastName'),
+                FirstName: v('givenName'),
+                MiddleName: v('middleName'),
+                Process: v('process'),
+                AgencyId: num('agencyId') || 0,            // AgencyId is non-nullable on the model
+                DepartmentId: num('departmentId'),
+                StatusId: old.StatusId == null ? 1 : old.StatusId,   // not edited here; keep what the DB has
+                Information: Object.assign({
+                    Gender: document.querySelector('input[name="gender"]:checked').value === 'Female',
+                    DateOfBirth: date('dob'),
+                    DateHired: date('dateHired'),
+                    Remarks: v('remarks'),
+                    WIthVech: 0
+                }, out.Information),   // SocialMedia, ContactNumber, PickUpPoint, WIthVech
+                Education: education,
+                Addresses: addresses
             };
         }
 
-        // List<EmployeeEducation> -> keyed view the form inputs can bind to
-        educationView() {
-            const find = lvl => (this.model.Education || []).find(e => e.SchoolLevel === lvl) || {};
-            return { College: find(SCHOOL_LEVEL.College), HighSchool: find(SCHOOL_LEVEL.HighSchool) };
+        // Client-side check: just for instant feedback. The controller re-validates.
+        validate(m) {
+            if (!m.EmployeeCode) return this.fail('pisaId', 'PISA ID is required.');
+            if (!m.LastName) return this.fail('lastName', 'Last name is required.');
+            if (!m.FirstName) return this.fail('givenName', 'Given name is required.');
+            return true;
         }
 
-        addressView() {
-            const list = this.model.Addresses || [];
-            return [
-                list.find(a => a.IsPermanent) || {},
-                list.find(a => !a.IsPermanent) || {}
-            ];
+        // Jump to the tab that holds the bad field so the user actually sees it
+        fail(fieldId, message) {
+            const el = this.$(fieldId);
+            const pane = el.closest('.tab-content');
+            if (pane) this.showTab(pane.id);
+            el.focus();
+            this.toast(message, 'error');
+            return false;
         }
 
-        bindModel() {
-            const view = Object.assign({}, this.model, {
-                Education: this.educationView(),
-                Addresses: this.addressView()
-            });
+        async save() {
+            if (this.busy) return;
+            const model = this.collect();
 
-            document.querySelectorAll('[data-path]').forEach(el => {
-                const v = this.getPath(view, el.dataset.path);
-                if (el.type === 'radio') el.checked = String(v ?? '') === el.value;
-                else el.value = v ?? '';
-            });
-            this.renderSkills(this.personalSkillsList, 'skill-personal', this.model.PersonalSkills);
-            this.renderSkills(this.productionSkillsList, 'skill-production', this.model.ProductionSkills);
-            this.renderWork(this.model.WorkExperience);
-            this.updateEmployeeName();
-        }
+            console.log(model);
+            if (!this.validate(model)) return;
 
-        collectModel() {
-            const draft = { Information: {}, Addresses: [], Education: { College: {}, HighSchool: {} } };
-
-            document.querySelectorAll('[data-path]').forEach(el => {
-                if (el.type === 'radio' && !el.checked) return;
-                this.setPath(draft, el.dataset.path, el.value.trim());
-            });
-
-            const { Information, Addresses, Education, ...top } = draft;
-            const m = Object.assign({}, this.model, top);
-
-            // EmployeeInformation
-            const info = Object.assign({}, this.model.Information, Information);
-            if ('Gender' in Information) info.Gender = Information.Gender === 'true';
-            if ('WIthVech' in Information) info.WIthVech = Information.WIthVech === 'true';
-            info.DateOfBirth = info.DateOfBirth || null;
-            info.DateHired = info.DateHired || null;
-            m.Information = info;
-
-            // EmployeeAddress (single permanent address for now)
-            const addr = Object.assign({}, (this.model.Addresses || [])[0], Addresses[0]);
-            addr.EmployeeId = m.EmployeeId;
-            addr.IsPermanent = true;
-            const hasAddress = ['HouseNo', 'Street', 'Barangay', 'City', 'Province', 'ZipCode']
-                .some(k => addr[k]);
-            m.Addresses = [true, false].map((isPermanent, i) => {
-                const existing = (this.model.Addresses || []).find(a => a.IsPermanent === isPermanent) || {};
-                const addr = Object.assign({}, existing, { FullAddress: (Addresses[i] || {}).FullAddress || '' });
-                addr.EmployeeId = m.EmployeeId;
-                addr.IsPermanent = isPermanent;
-                return addr;
-            }).filter(a => a.FullAddress);
-
-            // EmployeeEducation (keyed view -> list with SchoolLevel)
-            m.Education = Object.entries(Education).map(([key, v]) => {
-                const level = SCHOOL_LEVEL[key];
-                const existing = (this.model.Education || []).find(e => e.SchoolLevel === level) || {};
-                return {
-                    EducationId: existing.EducationId || 0,
-                    EmployeeId: m.EmployeeId,
-                    SchoolLevel: level,
-                    SchoolName: v.SchoolName || '',
-                    Course: v.Course || '',
-                    YearGraduated: v.YearGraduated ? Number(v.YearGraduated) : null
-                };
-            }).filter(e => e.SchoolName || e.Course);
-
-            // No model class yet
-            m.PersonalSkills = [...document.querySelectorAll('.skill-personal')]
-                .map(i => i.value.trim()).filter(Boolean);
-            m.ProductionSkills = [...document.querySelectorAll('.skill-production')]
-                .map(i => i.value.trim()).filter(Boolean);
-
-            m.WorkExperience = [...this.workBody.querySelectorAll('tr')].map(tr => {
-                const row = {};
-                tr.querySelectorAll('[data-col]').forEach(i => { row[i.dataset.col] = i.value.trim(); });
-                return row;
-            }).filter(w => w.CompanyName || w.Position);
-
-            return m;
-        }
-
-        // ───────────────────────── Skills rows ─────────────────────────
-        renderSkills(list, cls, items) {
-            list.innerHTML = '';
-            (items || []).forEach(v => this.addSkillRow(list, cls, v));
-        }
-
-        addSkillRow(list, cls, value = '') {
-            const row = document.createElement('div');
-            row.style.cssText = 'display:flex; gap:8px; margin-bottom:8px;';
-
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.className = `form-control js-dyn ${cls}`;
-            input.value = value;
-            input.disabled = this.mode === 'view';
-
-            const del = document.createElement('button');
-            del.type = 'button';
-            del.className = 'btn btn-danger js-dyn';
-            del.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-            del.disabled = this.mode === 'view';
-            del.addEventListener('click', () => row.remove());
-
-            row.append(input, del);
-            list.appendChild(row);
-            return input;
-        }
-
-        // ───────────────────────── Work Experience rows ─────────────────────────
-        renderWork(items) {
-            this.workBody.innerHTML = '';
-            (items || []).forEach(w => this.addWorkRow(w));
-        }
-
-        addWorkRow(w = {}) {
-            const tr = document.createElement('tr');
-            const disabled = this.mode === 'view' ? 'disabled' : '';
-            const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;')
-                                            .replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-            tr.innerHTML = `
-                <td><input type="date" class="form-control js-dyn" data-col="StartDate" value="${esc(w.StartDate)}" ${disabled}></td>
-                <td><input type="date" class="form-control js-dyn" data-col="EndDate" value="${esc(w.EndDate)}" ${disabled}></td>
-                <td><input type="text" class="form-control js-dyn" data-col="CompanyName" value="${esc(w.CompanyName)}" ${disabled}></td>
-                <td><input type="text" class="form-control js-dyn" data-col="Position" value="${esc(w.Position)}" ${disabled}></td>
-                <td><input type="text" class="form-control js-dyn" data-col="Department" value="${esc(w.Department)}" ${disabled}></td>
-                <td>
-                    <button type="button" class="btn btn-danger js-dyn" data-action="remove" ${disabled}>
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                </td>`;
-
-            tr.querySelector('[data-action="remove"]').addEventListener('click', () => tr.remove());
-            this.workBody.appendChild(tr);
-            return tr;
-        }
-
-        // ───────────────────────── CREATE / UPDATE ─────────────────────────
-        newRecord() {
-            if (!this.confirmDiscard()) return;
-
-            // Reset the form for a new employee
-            this.model = this.emptyEmployee();
-
-            // Set Date Hired to today's date (local date)
-            const today = new Date();
-            const localDate = [
-                today.getFullYear(),
-                String(today.getMonth() + 1).padStart(2, '0'),
-                String(today.getDate()).padStart(2, '0')
-            ].join('-');
-
-            this.model.Information.DateHired = localDate;
-
-            // Display the model values in the form
-            this.bindModel();
-
-            // Enable editing
-            this.setMode('new');
-
-            // Focus Employee Code
-            document.querySelector('[data-path="EmployeeCode"]').focus();
-        }
-
-        editRecord() {
-            if (this.model.EmployeeId <= 0) return;
-            this.setMode('edit');
-        }
-
-        cancelEdit() {
-            if (!this.confirmDiscard()) return;
-            // TODO: once loading exists, reload the current record instead of resetting
-            this.model = this.emptyEmployee();
-            this.bindModel();
-            this.setMode('view');
-        }
-
-        async onSubmitRecord() {
-            const payload = this.collectModel();      // EmployeeId 0 = new record, backend inserts
-
-            const missing = ['EmployeeCode', 'LastName', 'FirstName'].filter(f => !payload[f]);
-            if (missing.length) {
-                this.showToast(`Required: ${missing.join(', ')}`, false);
-                return;
-            }
-
-            const badWork = payload.WorkExperience
-                .find(w => w.StartDate && w.EndDate && w.EndDate < w.StartDate);
-            if (badWork) {
-                this.showToast(`End date is earlier than start date for "${badWork.CompanyName}".`, false);
-                return;
-            }
-            console.log(payload);
+            this.busy = true;
+            this.$('btnSave').disabled = true;
             try {
-                const res = await postMethod('@Url.Action("SaveEmployee", "Employees")', payload);
-                console.log(res);
+                // const wasNew = this.mode === 'new';
+                // const res = await this.api('SaveEmployee', { method: 'POST', body: model });
+                // this.toast(wasNew ? 'Employee created.' : 'Employee updated.', 'success');
+                // console.log(res);
 
-                // if (!res?.Success) {
-                //     this.showToast(res?.Message || 'Save failed.', false);
-                //     return;
-                // }
-                // this.showToast(res.Message || (payload.EmployeeId ? 'Record updated.' : 'Record added.'), true);
-
-                //await this.GetEmployeeList();
-                //await this.goTo(Math.max(0, this.ids.indexOf(res.id)));
-            } catch (error) {
-                console.error('Error saving record:', error);
-                this.showToast('Save failed.', false);
+                // await this.loadList(this.$('searchInput').value.trim());
+                // let i = res && res.EmployeeId ? this.ids.indexOf(res.EmployeeId) : -1;
+                // if (i < 0 && !wasNew) i = this.index;
+                // await this.loadRecord(i >= 0 ? i : 0);
+                // this.setMode('view');
+            } catch (e) {
+                this.toast(e.message, 'error');
+                this.$('btnSave').disabled = false;
+            } finally {
+                this.busy = false;
             }
         }
 
-        // ───────────────────────── TAB / Mode / UI state ─────────────────────────
-        onTabClick(e) {
-            const btn = e.target.closest('.tab-btn');
-            if (!btn) return;
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(btn.dataset.tab).classList.add('active');
-            btn.classList.add('active');
+        // ============================================================
+        // DELETE
+        // ============================================================
+        async remove() {
+            if (this.busy || !this.current) return;
+            this.busy = true;
+            try {
+                await this.api('DeleteEmployee', { method: 'POST', body: { id: this.current.EmployeeId } });
+                this.closeConfirm();
+                this.toast('Employee deleted.', 'success');
+
+                const keep = this.index;
+                await this.loadList(this.$('searchInput').value.trim());
+                if (this.ids.length) {
+                    await this.loadRecord(Math.min(keep, this.ids.length - 1));
+                } else {
+                    this.clearForm();
+                    this.index = -1;
+                }
+                this.setMode('view');
+            } catch (e) {
+                this.closeConfirm();
+                this.toast(e.message, 'error');
+            } finally {
+                this.busy = false;
+            }
+        }
+
+        // ============================================================
+        // MODE / UI STATE
+        // ============================================================
+        formInputs() {
+            // Profile panel + all tab fields. The work modal is outside these containers.
+            return Array.from(document.querySelectorAll(
+                '.profile-panel .form-control, .form-panel .form-control, .form-panel input[type="radio"]'));
         }
 
         setMode(mode) {
             this.mode = mode;
-            const readOnly = mode === 'view';
-            const hasRecord = this.model.EmployeeId > 0;
+            const editing = mode !== 'view';
+            this.formInputs().forEach(el => { el.disabled = !editing; });
+            this.$('employeeName').disabled = true;
+            this.$('btnAddWork').disabled = !editing;   // <-- new
+            this.renderWork();                          // <-- re-render so row actions follow the mode
 
-            document.querySelectorAll('[data-path]').forEach(el => {
-                if (el.id === 'employeeName') return;      // always read-only
-                el.disabled = readOnly;
-            });
-            this.applyReadOnly();
-            this.btnAddPersonalSkill.disabled = readOnly;
-            this.btnAddProductionSkill.disabled = readOnly;
-            this.btnAddWork.disabled = readOnly;
-
-            this.btnSave.disabled = readOnly;
-            this.btnCancel.disabled = readOnly;
-            this.btnNew.disabled = !readOnly;
-            this.btnEdit.disabled = !readOnly || !hasRecord;
-            this.btnDelete.disabled = !readOnly || !hasRecord;
-            this.updateNav();
+            this.$('btnAddPersonalSkill').disabled = !editing;
+            this.$('btnAddProductionSkill').disabled = !editing;
+            this.renderSkills();
+            this.refreshButtons();
         }
 
-        applyReadOnly() {
-            const readOnly = this.mode === 'view';
-            document.querySelectorAll('.js-dyn').forEach(el => { el.disabled = readOnly; });
-        }
-
-        updateNav() {
+        refreshButtons() {
             const editing = this.mode !== 'view';
-            this.recPos.textContent = this.mode === 'new' ? 'New' : (this.index + 1);
-            this.recTotal.textContent = this.ids.length;
-            this.btnPrev.disabled = editing || this.index <= 0;
-            this.btnNext.disabled = editing || this.index >= this.ids.length - 1;
+            const hasRecord = this.current != null;
+
+            this.$('btnSave').disabled = !editing;
+            this.$('btnNew').disabled = editing;
+            //this.$('btnEdit').disabled = editing || !hasRecord;
+            //this.$('btnDelete').disabled = editing || !hasRecord;
+            //this.$('btnPrev').disabled = editing || this.index <= 0;
+            //this.$('btnNext').disabled = editing || this.index >= this.ids.length - 1;
+            //this.$('btnCancel').style.display = editing ? '' : 'none';
         }
 
-        confirmDiscard() {
-            return this.mode === 'view' || window.confirm('Discard unsaved changes?');
+        startNew() {
+            this.clearForm();
+            this.showTab('tab-personal');
+            this.setMode('new');
+            // Default Date Hired to today (local date, yyyy-MM-dd)
+            this.$('dateHired').value = this.todayLocal();
+
+            this.$('pisaId').focus();
         }
 
-        updateEmployeeName() {
-            const val = p => document.querySelector(`[data-path="${p}"]`).value.trim();
-            const last = val('LastName');
-            const rest = [val('FirstName'), val('MiddleName')].filter(Boolean).join(' ');
-            const name = [last, rest].filter(Boolean).join(', ');   // "Dela Cruz, Juan Santos"
-
-            document.getElementById('employeeName').value = name;
-            this.model.FullName = name;
+        startEdit() {
+            if (!this.current) return;
+            this.setMode('edit');
+            this.$('pisaId').focus();
         }
 
-        // Placeholder: swap for your layout's toast if you have one
-        showToast(message, ok = true) {
-            (ok ? console.log : console.warn)(message);
-            alert(message);
+        async cancelEdit() {
+            if (this.index >= 0) await this.loadRecord(this.index);
+            else this.clearForm();
+            this.setMode('view');
         }
 
-        // ───────────────────────── Helpers ─────────────────────────
-        getPath(obj, path) {
-            return path.split('.').reduce((o, k) => o?.[k], obj);
+        showTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === tabId));
         }
 
-        // Creates an array when the next key is a number (Addresses.0.HouseNo)
-        setPath(obj, path, value) {
-            const keys = path.split('.');
-            const last = keys.pop();
-            const target = keys.reduce((o, k, i) => {
-                const next = keys[i + 1] ?? last;
-                return (o[k] ??= /^\d+$/.test(next) ? [] : {});
-            }, obj);
-            target[last] = value;
+        // 'show' and 'active' are both toggled because I can't see which one your modal CSS uses
+        openConfirm() {
+            const m = this.$('confirmModal');
+            m.classList.add('show', 'active');
         }
+        closeConfirm() {
+            const m = this.$('confirmModal');
+            m.classList.remove('show', 'active');
+        }
+
+        todayLocal() {
+            const d = new Date();
+            return [
+                d.getFullYear(),
+                String(d.getMonth() + 1).padStart(2, '0'),
+                String(d.getDate()).padStart(2, '0')
+            ].join('-');
+        }
+
+        toast(msg, type) {
+            const t = document.createElement('div');
+            t.className = 'toast ' + (type || '');
+            t.textContent = msg;
+            this.$('toastContainer').appendChild(t);
+            setTimeout(() => t.remove(), 3500);
+        }
+
+
+
+        // ============================================================
+        // WORK EXPERIENCE
+        // ============================================================
+        openWorkModal(index = -1) {
+            this.workEditIndex = index;
+            const w = index >= 0 ? this.workEntries[index] : {};
+
+            this.$('workModalTitle').textContent = index >= 0 ? 'Edit Work Experience' : 'Add Work Experience';
+            this.$('workStart').value = w.StartDate || '';
+            this.$('workEnd').value = w.EndDate || '';
+            this.$('workCompany').value = w.CompanyName || '';
+            this.$('workPosition').value = w.PositionHeld || '';
+            this.$('workDepartment').value = w.Department || '';
+
+            this.workModal.show();
+        }
+
+        closeWorkModal() {
+            this.workModal.hide();
+        }
+
+
+        saveWork() {
+            const entry = {
+                StartDate: this.$('workStart').value || null,
+                EndDate: this.$('workEnd').value || null,
+                CompanyName: this.$('workCompany').value.trim(),
+                PositionHeld: this.$('workPosition').value.trim(),
+                Department: this.$('workDepartment').value.trim()
+            };
+            console.log(entry);
+            if (!entry.CompanyName) {
+                this.$('workCompany').focus();
+                return this.toast('Company name is required.', 'error');
+            }
+            if (entry.StartDate && entry.EndDate && entry.EndDate < entry.StartDate) {
+                this.$('workEnd').focus();
+                return this.toast('End date cannot be earlier than start date.', 'error');
+            }
+
+            if (this.workEditIndex >= 0) {
+                // keep the id of an existing DB row so the server can update instead of insert
+                entry.WorkExperienceId = this.workEntries[this.workEditIndex].WorkExperienceId || 0;
+                this.workEntries[this.workEditIndex] = entry;
+            } else {
+                this.workEntries.push(entry);
+            }
+
+            this.closeWorkModal();
+            this.renderWork();
+        }
+
+        deleteWork(index) {
+            this.workEntries.splice(index, 1);
+            this.renderWork();
+        }
+
+        renderWork() {
+            const body = this.$('workTableBody');
+            const editing = this.mode !== 'view';
+            const esc = s => String(s == null ? '' : s)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+            this.$('statWork').textContent = this.workEntries.length;
+
+            if (!this.workEntries.length) {
+                body.innerHTML = '<tr class="empty-row"><td colspan="6">No work experience recorded</td></tr>';
+                return;
+            }
+
+            body.innerHTML = this.workEntries.map((w, i) => `
+                <tr>
+                    <td>${esc(w.StartDate)}</td>
+                    <td>${esc(w.EndDate)}</td>
+                    <td>${esc(w.CompanyName)}</td>
+                    <td>${esc(w.PositionHeld)}</td>
+                    <td>${esc(w.Department)}</td>
+                    <td>
+                        <button class="btn btn-secondary" style="padding:4px 8px;font-size:11px;"
+                                data-action="edit" data-index="${i}" ${editing ? '' : 'disabled'}>
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button class="btn btn-danger" style="padding:4px 8px;font-size:11px;"
+                                data-action="delete" data-index="${i}" ${editing ? '' : 'disabled'}>
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>`).join('');
+        }
+
+
+        addSkill(kind) {
+            const isProduction = kind === 'production';
+            this.skills.push({
+                SkillsCardId: 0,
+                EmployeeId: (this.current && this.current.EmployeeId) || 0,
+                ProcessId: 0,
+                DepartmentId: '',
+                TaskName: '',
+                IsPersonal: isProduction ? 1 : 0,   // Personal = 0, Production = 1
+                IsCrossed: 0
+            });
+            this.renderSkills();
+
+            const list = this.$(isProduction ? 'productionSkillsList' : 'personalSkillsList');
+            const inputs = list.querySelectorAll('input[type="text"]');
+            if (inputs.length) inputs[inputs.length - 1].focus();
+        }
+
+        onSkillInput(e) {
+            const el = e.target.closest('[data-field]');
+            if (!el) return;
+            const s = this.skills[parseInt(el.dataset.i, 10)];
+            if (!s) return;
+
+            const field = el.dataset.field;
+            s[field] = field === 'ProcessId' ? (parseInt(el.value, 10) || 0) : el.value;
+        }
+
+        renderSkills() {
+            const dis = this.mode !== 'view' ? '' : 'disabled';
+
+            const deptOptions = sel => ['<option value="">-- Department --</option>']
+                .concat([['1', 'Molding'], ['2', 'Press'], ['3', 'Rotor'], ['4', 'Winding'],
+                ['5', 'Circuit'], ['6', 'Process Control'], ['7', 'Final Assembly']]
+                    .map(([v, t]) => `<option value="${v}" ${String(sel) === v ? 'selected' : ''}>${t}</option>`))
+                .join('');
+
+            const removeBtn = i => `
+        <button type="button" class="btn btn-danger" style="padding:6px 10px;font-size:11px;"
+                data-skill-remove="${i}" ${dis}><i class="fa-solid fa-trash"></i></button>`;
+
+            const personal = [], production = [];
+
+            this.skills.forEach((s, i) => {
+                if (s.IsPersonal === 0) {
+                    personal.push(`
+                <div class="skill-grid skill-grid-personal">
+                    <input type="text" class="form-control" placeholder="Task name" maxlength="100"
+                           data-i="${i}" data-field="TaskName" value="${escHtml(s.TaskName)}" ${dis}>
+                    ${removeBtn(i)}
+                </div>`);
+                } else {
+                    production.push(`
+                <div class="skill-grid skill-grid-production">
+                    <select class="form-control" data-i="${i}" data-field="DepartmentId" ${dis}>${deptOptions(s.DepartmentId)}</select>
+                    <input type="number" class="form-control" placeholder="Process ID" min="0"
+                           data-i="${i}" data-field="ProcessId" value="${s.ProcessId || ''}" ${dis}>
+                    <input type="text" class="form-control" placeholder="Task name" maxlength="100"
+                           data-i="${i}" data-field="TaskName" value="${escHtml(s.TaskName)}" ${dis}>
+                    ${removeBtn(i)}
+                </div>`);
+                }
+            });
+
+            this.$('personalSkillsList').innerHTML = personal.join('');
+            this.$('productionSkillsList').innerHTML = production.join('');
+        }
+
+        removeSkill(index) {
+            this.skills.splice(index, 1);
+            this.renderSkills();
+        }
+
+        
     }
 
     document.addEventListener('DOMContentLoaded', function () {

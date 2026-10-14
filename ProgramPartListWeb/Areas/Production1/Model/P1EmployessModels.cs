@@ -29,6 +29,7 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public EmployeeInformation Information { get; set; }
         public List<EmployeeEducation> Education { get; set; } = new List<EmployeeEducation>();
         public List<EmployeeAddress> Addresses { get; set; } = new List<EmployeeAddress>();
+        public List<EmployeeSkilled> Skilled { get; set; } = new List<EmployeeSkilled>();
     }
 
     /// <summary>
@@ -113,5 +114,16 @@ namespace ProgramPartListWeb.Areas.Production1.Model
 
     }
 
-    
+    public class EmployeeSkilled
+    {
+        public int SkillsCardId { get; set; }
+        public int EmployeeId { get; set; }
+        public int ProcessId { get; set; }
+        public string TaskName { get; set; }
+        public string SkilledName { get; set; }
+        public string DepartmentId { get; set; }    
+
+        public int IsPersonal { get; set; }
+        public int IsCrossed { get; set; }
+    }
 }

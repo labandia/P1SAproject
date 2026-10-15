@@ -348,6 +348,15 @@
                         <p class="card-row-value" style='font-size: 1.5rem;'>${item.Model || '-'}</p>
                     </div>
 
+                    <div class="card-row" style="margin: 1em 0;">
+                        <p class="card-row-label" style="font-size: 1.1rem;">
+                            Incharge Name
+                        </p>
+                        <p class="card-row-value" style="font-size: 1.3rem;">
+                            ${item.LeaderName || '-'}
+                        </p>
+                    </div>
+
             <div class="card-row" style=' margin: 1em 0;'>
                 <p class="card-row-label" style="margin-bottom:8px; font-size: 1.1rem;">
                     Material Status : <span class="card-row-label" style='font-size: 1.1rem;'>${completionPct}%</span>
@@ -452,6 +461,17 @@
             };
 
             if (selectionStatus) {
+                if (item.IsOven == 1) {
+                    selectionStatus.selectedIndex = 1;
+                } else if (item.IsOven === 2) {
+                    selectionStatus.selectedIndex = 3;
+                } else if (item.IsOven === 3) {
+                    selectionStatus.selectedIndex = 2;
+                }
+                   
+                // Make the dropdown read-only
+                selectionStatus.disabled = true;
+
                 selectionStatus.addEventListener('change', (e) => {
                     e.stopPropagation();
                     const status = parseInt(e.target.value, 10);
@@ -464,6 +484,16 @@
             if (completeBtn) {
                 completeBtn.addEventListener('click', async (e) => {
                     e.stopPropagation();
+
+                    // Validate selected status
+                    const selectionStatus = root.querySelector('.selectionQuantity');
+
+                    if (!selectionStatus || selectionStatus.selectedIndex === 0 ||
+                        selectionStatus.value === "0") {
+                        alert("Please select a Status.");
+                        selectionStatus?.focus();
+                        return; // Stop execution
+                    }
 
                     const selectedStatus = parseInt(selectionStatus.value, 10);
                     if (selectedStatus === 0) {
@@ -568,6 +598,7 @@
 
 
         RenderCardList(data) {
+            console.log(data);
         const gridContainer = document.getElementById('assemblyCardsGrid');
             if (!gridContainer) return;
             if (this.isExpanded) return;
@@ -660,6 +691,16 @@
 
                             </div>
                         </div>
+
+                        <div class="card-row" style="margin: 1em 0;">
+                            <p class="card-row-label" style="font-size: 1.1rem;">
+                                Incharge Name
+                            </p>
+                            <p class="card-row-value" style="font-size: 1.3rem;">
+                                ${item.LeaderName || '-'}
+                            </p>
+                        </div>
+
 
                         <div class="card-row" style=' margin: .5em 0;'>
                             <p class="card-row-label">On Process Model</p>
@@ -802,7 +843,7 @@
 
             // 7. Target center dimensions
             const targetWidth = Math.min(640, window.innerWidth * 0.85);
-            const targetHeight = 550;
+            const targetHeight = 630;
             const targetLeft = (window.innerWidth - targetWidth) / 2;
             const targetTop = (window.innerHeight - targetHeight) / 2;
 

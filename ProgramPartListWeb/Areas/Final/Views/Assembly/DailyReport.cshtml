@@ -88,6 +88,7 @@
                             <th>Line</th>
                             <th style="">Final Shop Order/ Partno / Model</th>
                             <th>Plan Qty</th>
+                            <th>Incharge Name</th>
                             <th>
                                 <div>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 256 256">
@@ -282,6 +283,7 @@
                     data-cycle-time="${row.CycleTime || ''}">
                           <td>${row.DateStart}</td>
                           <td>${row.Line}</td>
+                         
                           <td class='ShopOrderLayout' style='text-align: left;'>
                               <span class='ShopOrderLayout_ShopOrder'>${row.FinalShopOrder}</span>
                               <p style="margin:.2em 0;color:#8a8f9e;">${row.ItemNo}</p>
@@ -293,6 +295,7 @@
                           </td>
 
                           <td>${row.PlanQty}</td>
+                          <td>${row.LeaderName || 'N/A'}</td>
                           <td>${this.formatTimeSpan(row.TimeStart)} - ${this.formatTimeSpan(row.TimeEnd)}</td>
                           <td>${row.Downtime || '0'}</td>
                           <td>${row.TotalDowntime || '0'}</td>

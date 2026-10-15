@@ -2016,6 +2016,12 @@ svg.icon-stroke {
     color: #fff
 }
 
+.selectedPendingLine {
+    background-color: rgb(247, 41, 41) !important;
+    border: 1px solid rgb(247, 41, 41);
+    color: #fff
+}
+
 .selectedNext {
     background: #ff9f0a;
     border: 1px solid #ff9f0a;

@@ -83,6 +83,16 @@
                             <th>QTY</th>
                             <th>Plan Start</th>
                             <th>Dispatch</th>
+
+                            <th>PCB</th>
+                            <th>IMP</th>
+                            <th>LW</th>
+                            <th>MF</th>
+                            <th>FP</th>
+                            <th>STR</th>
+                            <th>MP</th>
+                            <th>WC</th>
+
                             <th>Note</th>
                             <th>IFS Finish Date</th>
                             <th>FA Status</th>
@@ -313,7 +323,9 @@
         this.newRecords.textContent = filteredCount.toLocaleString();
         this.currentRecords.textContent = totalCount.toLocaleString();
     }
-    renderTable(data) {
+      renderTable(data) {
+          console.log(data);
+
         if (!this.tbody) return;
             if (data.length === 0) {
                 this.tbody.innerHTML = `
@@ -326,6 +338,35 @@
             }
 
         this.tbody.innerHTML = data.map(row => {
+            let molding = row.Molding
+                ? '<span class="sectionbadge badge-molding">AF</span>'
+                : '-';
+
+            let press = row.Press
+                ? '<span class="sectionbadge badge-press">AG</span>'
+                : '-';
+
+            let rotor = row.Rotor
+                ? '<span class="sectionbadge badge-rotor">BF</span>'
+                : '-';
+
+            let winding = row.Winding
+                ? '<span class="sectionbadge badge-winding">FA</span>'
+                : '-';
+
+            let circuit = row.Circuit
+                ? '<span class="sectionbadge badge-circuit">CE</span>'
+                : '-';
+
+            let harness = row.Harness
+                ? '<span class="sectionbadge badge-harness">FG</span>'
+                : '-';
+
+            let Material = row.Material
+                ? '<span class="sectionbadge badge-Material">DD</span>'
+                : '-';
+
+
 
             const shipmentDateClass = this.getShipmentDateClass(row.ShipmentDate);
 
@@ -349,6 +390,16 @@
                         <td>${row.PlanQty}</td>
                         <td>${this.formatDate(row.PlanStartDate)}</td>
                         <td>${row.DispatchDate}</td>
+
+                        <td>${circuit}</td>
+                        <td>${rotor}</td>
+                        <td>${harness}</td>
+                        <td>${molding}</td>
+                        <td>${press}</td>
+                        <td>${winding}</td>
+                        <td>${Material}</td>
+
+
                         <td>${row.Note || ''}</td>
                         <td>${this.formatDate(row.FinalFinishedDate)}</td>
                         <td class="status-column">${row.FAStatus || ''}</td>

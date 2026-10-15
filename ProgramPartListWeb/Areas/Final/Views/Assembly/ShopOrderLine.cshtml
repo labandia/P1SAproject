@@ -26,7 +26,6 @@
 
 <!-- TAB CONTENT PANELS -->
 <div class="tab-content-area">
-
     <!-- Main panel -->
     <div class="tab-panel active" id="panel-manage">
 
@@ -113,6 +112,29 @@
             </div>
 
         </div>
+
+        @*<div class="">
+            <div class="flex items-center gap-4 flex-wrap">
+                <div><strong>Dispatch Date Status: </strong></div>
+
+                <div class="legends-group">
+                    <span class="rounded-full bg-status-realyellow flex-shrink-0"></span>
+                    <span class="text-label">FSA Completed</span>
+                </div>
+
+                <div class="legends-group">
+                    <span class="rounded-full bg-status-violet flex-shrink-0"></span>
+                    <span class="text-label">Cell Line Completed</span>
+                </div>
+
+
+                <div class="legends-group">
+                    <span class="rounded-full bg-status-red flex-shrink-0"></span>
+                    <span class="text-label">Pending Model </span>
+                </div>
+            </div>
+        </div>*@
+
 
         <div class="devices-table-wrapper">
 
@@ -232,6 +254,7 @@
         this.moveCellConfirmBtn = document.getElementById('moveCellConfirmBtn');
 
         this.L2ProcessConfirmBtn = document.getElementById('selectProcessbtn');
+        this.selectedLeader = document.getElementById('selectionLeader');
 
         this.cancelConfirm = document.getElementById('CancelID');
         this.pendingMoveId = null;
@@ -324,7 +347,7 @@
             const id = row.dataset.id;
             const label = row.querySelector('td:nth-child(2) .ShopOrderLayout_ShopOrder')?.textContent?.trim() || `Order ${id}`;
 
-            alert("ID Selected : " + id + " - Label: " + label);
+            // alert("ID Selected : " + id + " - Label: " + label);
 
             this.openDetailTab(id, label);
         });
@@ -335,6 +358,18 @@
             if (!tab || e.target.closest('.tab-close')) return;
             const targetId = tab.dataset.tab;
             this.switchTab(targetId);
+        });
+
+        this.selectedLeader.addEventListener('change', (e) => {
+              const leaderName = document.getElementById('LeaderName');
+
+              if (e.target.value !== "") {
+                  leaderName.disabled = false;
+                  leaderName.focus();
+              } else {
+                  leaderName.disabled = true;
+                  leaderName.value = "";
+              }
         });
 
         // Manage Data tab explicit click
@@ -393,6 +428,8 @@
 
 
         this.L2ProcessConfirmBtn.addEventListener('click', async () => {
+            const leadername = document.getElementById('LeaderName')?.value;
+            const leaderID = document.getElementById('selectionLeader')?.value;
             const targetLine = document.getElementById('processL2line')?.value;
             let selectprocess = 0;
 
@@ -419,6 +456,11 @@
                 selectprocess = 3;
             }
 
+            if (leadername === "") {
+                alert("Leader input Required ....");
+                return;
+            }
+
 
             if (targetLine === 'FSA' || targetLine === 'Lead' || targetLine === 'Loctite') {
                 // console.log("Select ID : " + this.selectedID);
@@ -428,11 +470,13 @@
                     alert("Already a Process please finish the others Models");
                     return;
                 }
-
+                console.log("HERE 1 ");
                 const res = await postMethod('@Url.Action("UpdateProcessL2andL6", "Assembly")', {
                     recordID: this.selectedID,
                     process: selectprocess,
                     Lineman: this.selectedLine,
+                    leaderName: leadername,
+                    LeaderID: parseInt(leaderID),
                 });
 
                 if (res?.Success) {
@@ -475,17 +519,19 @@
                  }
 
                   if (this.IsOrderStatus === isStatus.InProcess || this.IsOrderStatus === isStatus.Completed) return;
-
+                console.log("HERE 2");
                 try {
                      // Check if the next process(1) has already been selected for this line
-                      const res = await getMethod('@Url.Action("CheckIfAreadyCheckNext", "Assembly")', { lineman: this.selectedLine, orderStatus: selectprocess });
+                    const res = await getMethod('@Url.Action("CheckIfAreadyCheckNext", "Assembly")', { lineman: this.selectedLine, orderStatus: selectprocess });
+                    console.log("DATA" + res.data);
                      if (res.data > 0) {
                          alert("Already inprocess and the next process.");
                          return;
                      }
 
-                    const success = await this.ForCompleteupdateOrderStatus(this.selectedID, selectprocess, this.selectedLine);
-                     if (!success) return;
+                      const success = await this.ForCompleteupdateOrderStatus(this.selectedID,
+                       selectprocess, this.selectedLine, leadername, leaderID);
+                      if (!success) return;
 
 
 
@@ -881,8 +927,10 @@
                       selecthighlight = 'selectedFSI';
                   } else if (orderStatus === 6) {
                       selecthighlight = 'selectedCellLine';
-                  }
+                  } 
               }
+
+            
 
               isOperational = row.Operational === 2 || row.Operational === 3 ? `<span> ${row.Operational}</span>` : "";
               const shipmentDateClass = this.getShipmentDateClass(row.ShipmentDate);
@@ -895,7 +943,9 @@
               this.runningProcess = OnProcess;
 
               document.getElementById("countOven").innerHTML = this.runningProcess;
-
+              if (row.InputQty > 0 && row.InputQty < row.PlanQty) {
+                  selecthighlight = 'selectedPendingLine';
+              }
 
               return `
         <tr class="bg-row-highlight fade-in"
@@ -1007,16 +1057,19 @@
              }
      }
 
-     async ForCompleteupdateOrderStatus(id, orderstatus, lineman) {
-        try {
+      async ForCompleteupdateOrderStatus(id, orderstatus, lineman, leadername, leaderID) {
 
-            const res = await postMethod('@Url.Action("ForCompleteUpdateStatusLine", "Assembly")', {
-                recordID : id,
+         try {
+             console.log("COMPLETE HERE");
+            const success = await postMethod('@Url.Action("ForCompleteUpdateStatusLineV2", "Assembly")', {
+                recordID: id,
                 orderstats: orderstatus,
-                line: lineman
+                line: lineman,
+                leaderName: leadername,
+                leaderID: parseInt(leaderID)
             });
 
-            return res;
+             return success;
 
         } catch (err) {
             console.error(err);

@@ -33,7 +33,7 @@ namespace ProgramPartListWeb.Areas.Final
 
         // ======  UPDATING STATUS OF SHOP ORDER DATA =================
         Task<bool> UpdateStatusShopOrder(int id, int status, string line);
-        Task<bool> UpdateCompleteShopOrder(int id, int status, string line);
+        Task<bool> UpdateCompleteShopOrder(int id, int status, string line, string leaderName, int leaderID);
         Task<bool> UpdateForFSAandCellLine(int id, int status);
         Task<bool> CompletionStatusShopOrder(int id, int status, int isOven);
         Task<bool> NextModelProcess(string newLine);
@@ -43,7 +43,7 @@ namespace ProgramPartListWeb.Areas.Final
         Task<bool> CancelProcessOven(int id);
 
 
-        Task<bool> UpdateL2ProcessStatus(int id, int process);
+        Task<bool> UpdateL2ProcessStatus(int id, int process, string leaderName, int leaderID);
         // ============================================================
 
         // ======  FOR UPLOAD DATA  ====================================

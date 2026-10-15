@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security;
 using System.Web;
 
 namespace ProgramPartListWeb.Areas.Final.Model
@@ -44,6 +45,7 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public string DateStart { get; set; }
         public TimeSpan? TimeStart { get; set; }
         public TimeSpan? TimeEnd { get; set; }
+        public string LeaderName { get; set; }
     }
 
 

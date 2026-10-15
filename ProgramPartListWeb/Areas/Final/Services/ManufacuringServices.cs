@@ -53,7 +53,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                  ,FORMAT(s.DateStart, 'MM/dd/yy') as DateStart
                                  ,s.TimeStart
                                  ,s.TimeEnd
-                                 ,s.IsOven
+                                 ,s.IsOven, s.LeaderID, s.LeaderName
                                  ,(SELECT m.Model FROM {maintable} m WHERE m.Line = s.Line AND m.OrderStatus = 1)  as NextItem
                                  ,(SELECT m.FinalShopOrder FROM {maintable} m WHERE m.Line = s.Line AND m.OrderStatus = 1)  as NextShop";
 
@@ -248,6 +248,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         mo.OrderRemarks,
                         mo.OrderStatus,
                         mo.QuanStatus,
+                        mo.InputQty,
                            -- DepartmentID 1 OR 2  Show both AG and AF
                         CASE
                             WHEN EXISTS (
@@ -398,7 +399,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
             int rows = await SqlDataAcess_Test.ExecuteAsync($@"
                 UPDATE {maintable}
                 SET 
-                    OrderStatus = @status
+                    OrderStatus = @status, 
+                    IsOven = 0
                 WHERE RecordID = @id ", new
             {
                 id,
@@ -427,7 +429,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 new { id, status, line });
             return rows > 0;
         }
-        public async Task<bool> UpdateCompleteShopOrder(int id, int status, string line)
+        public async Task<bool> UpdateCompleteShopOrder(int id, int status, string line, string leaderName, int leaderID)
         {
             // NOTE: original code accepted a `status` param but never used it in either
             // branch — it always forced NextProcess (1) or InProcess (2). Keeping that
@@ -435,7 +437,20 @@ namespace ProgramPartListWeb.Areas.Final.Services
             // have one active order), but dropping the dead parameter usage to avoid
             // confusion. If callers actually need to pass a target status, flag it and
             // we can wire it back in properly.
+
+            Debug.WriteLine("========== SHOPODER STATUS INFORMATION ==========");
+
+            Debug.WriteLine($"RecordId: {id}");
+
+            // Gender and Category
+            Debug.WriteLine($"Status: {status}");
+            Debug.WriteLine($"Line: {line}");
+            Debug.WriteLine($"leaderName: {leaderName}");
+            Debug.WriteLine($"leaderID: {leaderID}");
+
             bool lineBusy = await LineHasOtherActiveOrderAsync(line, id);
+
+
 
             int rows;
             if (lineBusy)
@@ -444,9 +459,9 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 // back to NextProcess instead of starting it.
                 rows = await SqlDataAcess_Test.ExecuteAsync($@"
                     UPDATE {maintable}
-                    SET OrderStatus = @nextProcess
+                    SET OrderStatus = @nextProcess, LeaderName =@LeaderName, LeaderID = @LeaderID
                     WHERE RecordID = @id AND line = @line",
-                    new { id, line, nextProcess = (int)OrderStatus.NextProcess });
+                    new { id, line, nextProcess = (int)OrderStatus.NextProcess, LeaderName = leaderName, LeaderID = leaderID });
             }
             else
             {
@@ -454,9 +469,11 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     UPDATE {maintable}
                     SET OrderStatus = @inProcess,
                         DateStart = CAST(GETDATE() AS DATE),
-                        TimeStart = CAST(GETDATE() AS TIME(0))
+                        TimeStart = CAST(GETDATE() AS TIME(0)),
+                        LeaderName = @LeaderName,
+                        LeaderID = @LeaderID
                     WHERE RecordID = @id AND line = @line",
-                    new { id, line, inProcess = (int)OrderStatus.InProcess });
+                    new { id, line, inProcess = (int)OrderStatus.InProcess, LeaderName = leaderName, LeaderID = leaderID });
             }
             return rows > 0;
         }
@@ -469,7 +486,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 UPDATE {maintable}
                 SET OrderStatus = @status,
                     TimeEnd = CAST(GETDATE() AS TIME(0)),
-                    IsOven = @isOven
+                    IsOven = 0
                 WHERE RecordID = @id ", new
             {
                 id,
@@ -765,6 +782,8 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         SELECT COUNT(*) 
                         FROM {maintable} 
                         WHERE OrderStatus =@OrderStatus AND Line = @Line", new { Line = line, OrderStatus = orderStatus });
+
+            Debug.WriteLine("COUNT RESULT : " + count);
             return count ? 1 : 0;
         }
 
@@ -1336,6 +1355,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
 				 m.PlanQty,
 	             i.TimeStart,
 	             i.TimeEnd,
+                 m.LeaderName,
 	             (
                     SELECT SUM(d.Downtime)
                     FROM FanTraceabilityDownTimeInput d
@@ -1427,7 +1447,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
             return rows > 0;
         }
 
-        public async Task<bool> UpdateL2ProcessStatus(int id, int process)
+        public async Task<bool> UpdateL2ProcessStatus(int id, int process, string leaderName, int leaderID)
         {
             bool IsExist = await SqlDataAcess_Test.ExistsAsync($@"
                               SELECT COUNT(IsOven)
@@ -1440,10 +1460,12 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
             int result = await SqlDataAcess_Test.ExecuteAsync($@"
                 UPDATE {maintable} 
-                SET IsOven = @IsOven WHERE RecordID = @RecordID", new
+                SET IsOven = @IsOven, LeaderName = @LeaderName, LeaderID = @LeaderID WHERE RecordID = @RecordID", new
             {
                 IsOven = process,
-                RecordID = id
+                RecordID = id,
+                LeaderName = leaderName,
+                LeaderID = leaderID 
             });
 
             return result > 0;

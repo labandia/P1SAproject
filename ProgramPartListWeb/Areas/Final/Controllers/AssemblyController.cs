@@ -1,22 +1,25 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using OfficeOpenXml;
 using ProgramPartListWeb.Areas.Final.Interface;
 using ProgramPartListWeb.Areas.Final.Model;
+using ProgramPartListWeb.Areas.Production1.Model;
 using ProgramPartListWeb.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.DirectoryServices.AccountManagement;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
-using System.DirectoryServices.AccountManagement;
-using System.Security.Claims;
-using ProgramPartListWeb.Areas.Production1.Model;
-using DocumentFormat.OpenXml.Office2010.Excel;
+using static ProgramPartListWeb.Areas.Final.Services.ManufacuringServices;
 
 namespace ProgramPartListWeb.Areas.Final.Controllers
 {
@@ -163,6 +166,13 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         public async Task<ActionResult> CheckIfAreadyCheckNext(string lineman, int orderStatus)
         {
             Debug.WriteLine("Call Line" + lineman) ;
+
+            Debug.WriteLine("========== CHECKS LINE  STATUS INFORMATION ==========");
+
+     
+            Debug.WriteLine($"Status: {lineman}");
+            Debug.WriteLine($"Line: {orderStatus}");
+
             int result = await _manu.GetNumberofNextprocess(lineman, orderStatus);
             return JsonSuccess(result);
         }
@@ -219,11 +229,19 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> ForCompleteUpdateStatusLine(int recordID, int orderstats, string line)
+        public async Task<ActionResult> ForCompleteUpdateStatusLineV2(
+            int recordID, int orderstats, string line, string leaderName, int leaderID)
         {
+            Debug.WriteLine("========== Complete Method LINE  STATUS INFORMATION ==========");
+
+            Debug.WriteLine($"leaderName: {leaderName}");
+            Debug.WriteLine($"leaderID: {leaderID}");
+            Debug.WriteLine($"Status: {orderstats}");
+            Debug.WriteLine($"Line: {line}");
+
             try
             {
-                var res = await _manu.UpdateCompleteShopOrder(recordID, orderstats, line);
+                var res = await _manu.UpdateCompleteShopOrder(recordID, orderstats, line, leaderName, leaderID);
                 if (!res) return JsonError("Error Updated");
                 return JsonSuccess(true);
             }
@@ -294,12 +312,12 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> UpdateProcessL2andL6(int recordID, int process)
+        public async Task<ActionResult> UpdateProcessL2andL6(int recordID, int process, string leaderName, int leaderID)
         {
             try
             {
                 Debug.WriteLine($@"RecordID : {recordID} - Process : {process} ");
-                var res = await _manu.UpdateL2ProcessStatus(recordID, process);
+                var res = await _manu.UpdateL2ProcessStatus(recordID, process, leaderName, leaderID);
                 if (!res) return JsonError("Error Updated");
                 return JsonSuccess(res);
             }

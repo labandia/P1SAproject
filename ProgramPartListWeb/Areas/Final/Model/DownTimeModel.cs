@@ -59,6 +59,7 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public string ItemNo { get; set; }
         public string Model { get; set; }
         public int? PlanQty { get; set; }
+        public string LeaderName { get; set; }
         public TimeSpan? TimeStart { get; set; }
         public TimeSpan? TimeEnd { get; set; }
 

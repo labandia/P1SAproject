@@ -259,17 +259,19 @@
         this.searchinput = document.getElementById('searchinput');
         this.filterStatus = document.getElementById('filterdata');
         this.refreshbutton = document.getElementById('refreshbtn');
-        this.strLine = document.getElementById('strLine').value;
-        this.strmode = document.getElementById('strmode').value;
-        this.strShop = document.getElementById('strShop').value;
-        this.strId = document.getElementById('strId').value;
+      
 
         this.tabBar = document.getElementById('tabBar');
         this.contentArea = document.querySelector('.tab-content-area');
         this.openTabs = new Map(); // id -> { tab, panel }
 
+        // Page inputs
+        this.strLine = document.getElementById('strLine').value;
+        this.strmode = document.getElementById('strmode').value;
+        this.strShop = document.getElementById('strShop').value;
+        this.strId = document.getElementById('strId').value;
 
-        // For Bootstrap Modal
+        // Modals
         this.moveModal = new bootstrap.Modal(document.getElementById('moveOrderModal'));
         this.moveCellModal = new bootstrap.Modal(document.getElementById('moveCellModal'));
         this.cancelModal = new bootstrap.Modal(document.getElementById('cancelNextmodal'));
@@ -284,7 +286,6 @@
         this.selectedLeader = document.getElementById('selectionLeader');
 
         this.cancelConfirm = document.getElementById('CancelID');
-        this.pendingMoveId = null;
     }
 
     async init() {

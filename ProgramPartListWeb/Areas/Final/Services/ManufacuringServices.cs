@@ -1,16 +1,11 @@
 ﻿using Dapper;
-using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.InkML;
-using DocumentFormat.OpenXml.Presentation;
 using ProgramPartListWeb.Areas.Final.Model;
-using ProgramPartListWeb.Helper;
 using ProgramPartListWeb.Utilities.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using static ProgramPartListWeb.Areas.Final.Model.DisposalModels;
 
 namespace ProgramPartListWeb.Areas.Final.Services

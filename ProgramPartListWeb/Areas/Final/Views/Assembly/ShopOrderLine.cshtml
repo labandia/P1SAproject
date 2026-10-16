@@ -66,8 +66,8 @@
                         <p>Running Process : <span id="countOven">0</span> / 3</p>
                     </div>
 
-                    
-                   
+
+
                 </div>
             </div>
 
@@ -135,42 +135,65 @@
             </div>
         </div>*@
 
+        <div class="manage-layout">
+            <div class="devices-table-wrapper">
 
-        <div class="devices-table-wrapper">
+                <div class="table-scroll TrackTable">
+                    <table class="devices-table">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Final Shop Order/ Partno / Model</th>
+                                <th>PCB</th>
+                                <th>IMP</th>
+                                <th>LW</th>
+                                <th>MF</th>
+                                <th>FP</th>
+                                <th>STR</th>
+                                <th>MP</th>
+                                <th>WC</th>
+                                <th>QTY</th>
+                                <th>Plan Start</th>
+                                <th>Dispatch</th>
+                                <th>Note</th>
+                                <th>IFS Finish Date</th>
+                                <th>FA Status</th>
+                                <th>Shipment</th>
+                                <th>Mode</th>
+                                <th>WITH SR</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
 
-            <div class="table-scroll TrackTable">
-                <table class="devices-table">
-                    <thead>
-                        <tr>
-                            <th>Status</th>
-                            <th>Final Shop Order/ Partno / Model</th>
-                            <th>PCB</th>
-                            <th>IMP</th>
-                            <th>LW</th>
-                            <th>MF</th>
-                            <th>FP</th>
-                            <th>STR</th>
-                            <th>MP</th>
-                            <th>WC</th>
-                            <th>QTY</th>
-                            <th>Plan Start</th>
-                            <th>Dispatch</th>
-                            <th>Note</th>
-                            <th>IFS Finish Date</th>
-                            <th>FA Status</th>
-                            <th>Shipment</th>
-                            <th>Mode</th>
-                            <th>WITH SR</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
             </div>
 
+
+            <!-- NEW: Active Status grid -->
+            <aside class="active-panel">
+                <div class="active-panel-header">
+                    <span class="active-panel-title">Pending And Active Status</span>
+                    <span class="active-panel-count" id="activeCount">0</span>
+                </div>
+                <div class="active-panel-body" id="activeList">
+                    <div class="active-empty">No active process</div>
+                </div>
+            </aside>
+
+
         </div>
+
+
+          
+
+
+
+
+
+        </div>
+        <!-- Dynamic detail panels injected here by JS -->
     </div>
-    <!-- Dynamic detail panels injected here by JS -->
-</div>
 
 
 
@@ -227,6 +250,10 @@
         this.isFirstLoad = true;
         this.isFilter = false;
         this.runningProcess = 0;
+
+        this.activeFilterId = null;  // RecordID of the selected card
+        this.lastData = [];          // last payload, so filtering needs no refetch
+
 
         this.tbody = document.querySelector('.devices-table tbody');
         this.searchinput = document.getElementById('searchinput');
@@ -581,6 +608,30 @@
         };
         this.searchinput.addEventListener('input', debounced);
         this.filterStatus.addEventListener('change', debounced);
+
+
+
+          document.getElementById('activeList').addEventListener('click', (e) => {
+              const card = e.target.closest('.active-card');
+              if (!card) return;
+
+              const finalShopOrder = card.dataset.shoporder;   // the FinalShopOrder
+              console.log(finalShopOrder);
+
+              this.searchinput.value = finalShopOrder;        
+              this.isFilter = true;
+              this.LoadLineShopOrderList();                
+          });
+
+          //document.getElementById('activeList').addEventListener('dblclick', (e) => {
+          //    const card = e.target.closest('.active-card');
+          //    if (!card) return;
+          //    this.openDetailTab(card.dataset.id, card.dataset.label);
+          //});
+
+          
+
+
       }
 
 
@@ -789,8 +840,20 @@
       }
 
       renderTable(data) {
-          console.log(data);
+          const unfiltered = this.searchinput.value.trim() === '' && this.filterStatus.value === '-1';
+          if (unfiltered || this.activeSource.length === 0) this.activeSource = data;
+
+          this.renderActivePanel(this.activeSource);
+
+          this.runningProcess = this.activeSource.filter(r => r.IsOven).length;
+          document.getElementById("countOven").innerHTML = this.runningProcess;
+
+
           if (!this.tbody) return;
+
+          // Running count from the FULL data
+          this.runningProcess = data.filter(r => r.IsOven).length;
+          document.getElementById("countOven").innerHTML = this.runningProcess;
 
           const filterValue = parseInt(this.filterStatus.value);
 
@@ -1170,7 +1233,52 @@
         }
 
 
+      renderActivePanel(data) {
+          const list = document.getElementById('activeList');
+          const count = document.getElementById('activeCount');
+          if (!list) return;
 
+          const active = (data || []).filter(r => {
+              const oven = (typeof r.IsOven === 'boolean') ? (r.IsOven ? 1 : 0) : (parseInt(r.IsOven) || 0);
+              const st = parseInt(r.OrderStatus) || 0;
+              return oven > 0 || st === 2 || st === 3;
+          });
+
+          count.textContent = active.length;
+
+          list.innerHTML = active.length === 0
+              ? `<div class="active-empty">No active process</div>`
+              : active.map(r => `
+            <div class="active-card" data-shoporder="${r.FinalShopOrder}">
+                <div class="active-card-so">${r.FinalShopOrder}</div>
+                <div class="active-card-model">${r.Model ?? ''}</div>
+                <div class="active-card-item">${r.ItemNo ?? ''}</div>
+            </div>`).join('');
+      }
+
+
+      setActiveFilter(id) {
+          // clicking the same card again clears the filter
+          this.activeFilterId = (this.activeFilterId === String(id)) ? null : String(id);
+          this.renderTable(this.lastData);
+      }
+
+      clearActiveFilter() {
+          if (this.activeFilterId === null) return;
+          this.activeFilterId = null;
+          this.renderTable(this.lastData);
+      }
+
+      async selectActiveCard(id, shopOrder) {
+          const same = this.activeFilterId === String(id);   // click again = clear
+
+          this.activeFilterId = same ? null : String(id);
+          this.searchinput.value = same ? '' : shopOrder;
+          this.filterStatus.value = '-1';                    // so the dropdown can't hide the row
+          this.isFilter = true;
+
+          await this.LoadLineShopOrderList();
+      }
 }
 
 document.addEventListener('DOMContentLoaded', function () {

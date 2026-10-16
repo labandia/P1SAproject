@@ -455,7 +455,7 @@
 
 
         this.L2ProcessConfirmBtn.addEventListener('click', async () => {
-            const leadername = document.getElementById('LeaderName')?.value;
+            const leadername = document.getElementById('LeaderName')?.value.trim() ?? "";
             const leaderID = document.getElementById('selectionLeader')?.value;
             const targetLine = document.getElementById('processL2line')?.value;
             let selectprocess = 0;
@@ -483,8 +483,10 @@
                 selectprocess = 3;
             }
 
+            // Validate Leader Name
             if (leadername === "") {
                 alert("Leader input Required ....");
+                document.getElementById('LeaderName')?.focus();
                 return;
             }
 

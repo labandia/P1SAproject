@@ -30,7 +30,7 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public int OperationRate { get; set; }
         public int TotalDowntime { get; set; }
         public int FourM { get; set; }
-
+        public string LeaderName { get; set; }
         public string FourName
         {
             get

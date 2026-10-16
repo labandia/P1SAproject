@@ -65,7 +65,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     m.PlanQty,
                     m.TimeStart,
                     m.TimeEnd,
-
+                    m.LeaderName,
                     -- Positive duration in minutes
                     CASE
                         WHEN m.TimeEnd >= m.TimeStart

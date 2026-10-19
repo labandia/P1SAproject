@@ -162,6 +162,7 @@
                     ...(lookup.get(r.Line) ?? {})
                 }));
                 this.allCardsData = records;
+        
 
                 if (this.isExpanded && this.currentCenteredCard && this.activeLineId) {
 
@@ -193,10 +194,19 @@
                     this.updateModalContent(updatedRecord, { animateNextModel: true });
 
                 } else if (!this.isExpanded) {
-                    apiData.length === 0 ? this.RenderEmptyState() : this.RenderCardList(records);
+                    console.log("HERE OVEN");
+                    const ovenMap = await this.loadOvenMap(records);
+
+                    ovenMap.forEach((index, data) => {
+                        console.log(data);
+                    });
+
+                    records.forEach(r => { r.OvenItems = ovenMap.get(r.Line) ?? []; });
+                    const hasAnyActive = apiData.length > 0 || ovenMap.size > 0;
+                    hasAnyActive ? this.RenderCardList(records) : this.RenderEmptyState();
                 }
             } catch (err) {
-                console.error(err);
+                // console.error(err);
             }
         }
 
@@ -390,7 +400,7 @@
             <div class="modal-actions-row" style="display:flex;align-items:center;gap:8px; justify-content: space-between;">
                 <select id='selectedStatus' class='selectionQuantity'>
                     <option value='0' ${this.selectStatus == 0 ? 'selected' : ''}> -- Select Status -- </option>
-                    <option value='5' ${this.selectStatus == 5 ? 'selected' : ''}>🟡 FSI Completed</option>
+                    <option value='5' ${this.selectStatus == 5 ? 'selected' : ''}>🟡 FSA Completed</option>
                     <option value='6' ${this.selectStatus == 6 ? 'selected' : ''}>🟣 Cell Line Completed</option>
                     <option value='4' ${this.selectStatus == 4 ? 'selected' : ''}>Completed</option>
                 </select>
@@ -596,8 +606,7 @@
 
 
         RenderCardList(data) {
-            console.log(data);
-        const gridContainer = document.getElementById('assemblyCardsGrid');
+            const gridContainer = document.getElementById('assemblyCardsGrid');
             if (!gridContainer) return;
             if (this.isExpanded) return;
 
@@ -616,16 +625,17 @@
             data.forEach((item, index) => {
                 const shopOrder = (item.FinalShopOrder ?? '').trim();
                 const isOnline = shopOrder !== '';
+                const ovenItems = item.OvenItems ?? [];
+                const hasOven = !isOnline && ovenItems.length > 0;
                 const card = document.createElement('div');
-                card.className = 'line-card' + (isOnline ? ' line-card-online' : ' line-card-offline');
-                card.dataset.Line = item.Line;
+                card.className = 'line-card' + ((isOnline || hasOven) ? ' line-card-online' : ' line-card-offline');
 
                  // set custom property for stagger delay
                 card.style.setProperty('--order', index);
                 // add stagger-in class to trigger animation
                 card.classList.add('stagger-in');
 
-                if (!isOnline) {
+                if (!isOnline && !hasOven) {
                     card.innerHTML = `
                         <div class="card-header">
                             <div class="line-badge">
@@ -641,6 +651,30 @@
                             <div class="idle-sub">No  Next process Model found. Please Update the Data Inside </div>
                           </div>
 
+                    `;
+                } else if (hasOven) {
+                    const ovenRows = ovenItems.map(o => `
+                        <div class="card-row" style="margin:.5em 0;">
+                            <p class="card-row-label">
+                                <span class="oven-badge ${this.getOvenClass(o.IsOven)}">${this.getOvenLabel(o.IsOven)}</span>
+                            </p>
+                            <p class="card-row-value">${o.Model || '-'}</p>
+                            <div style="display:flex; gap:16px; align-items:center;">
+                                  <p class="card-footer-value" style="margin:0;"><strong>Time Start :</strong>   ${this.formatTimeSpan(o.TimeStart)}</p>
+                                  <p class="card-footer-value" style="margin:0;"><strong>Quantity :</strong>  ${o.InputQty ?? 0} / ${o.PlanQty ?? 0}</p>
+                            </div>
+                        </div>`).join('');
+
+                                    card.innerHTML = `
+                        <div class="card-header">
+                            <div class="card-header-left">
+                                <div class="line-id line-id-online">${item.Line}</div>
+                                <span class="status-tag status-tag-online">
+                                    <div class="dot-indicator"></div> Online
+                                </span>
+                            </div>
+                        </div>
+                        ${ovenRows}
                     `;
                 } else {
                     const completedSections = (item.CompletedSection || '')
@@ -678,12 +712,12 @@
 
                                     <div>
                                         <span class="card-time-label">Start</span>
-                                        <span class="card-time-value">${formatTimeSpan(item.TimeStart) || '-'}</span>
+                                        <span class="card-time-value">${this.formatTimeSpan(item.TimeStart) || '-'}</span>
                                     </div>
 
                                     <div>
                                         <span class="card-time-label">End</span>
-                                        <span class="card-time-value">${formatTimeSpan(item.TimeEnd) || '-'}</span>
+                                        <span class="card-time-value">${this.formatTimeSpan(item.TimeEnd) || '-'}</span>
                                     </div>
                                 </div>
 
@@ -754,6 +788,29 @@
                                 + '&id=' + encodeURIComponent(0);
                         }
                         return;
+                    } else if (hasOven) {
+                        const ovenRows = ovenItems.map(o => `
+                            <div class="card-row" style="margin:.5em 0;">
+                                <p class="card-row-label">
+                                    <span class="oven-badge ${this.getOvenClass(o.IsOven)}">${this.getOvenLabel(o.IsOven)}</span>
+                                </p>
+                                <p class="card-row-value">${o.Model || '-'}</p>
+                                <p class="card-footer-value">${o.InputQty ?? 0} / ${o.PlanQty ?? 0}</p>
+                            </div>`).join('');
+
+                                            card.innerHTML = `
+                            <div class="card-header">
+                                <div class="card-header-left">
+                                    <div class="line-id line-id-online">${item.Line}</div>
+                                    <span class="status-tag status-tag-online">
+                                        <div class="dot-indicator"></div> Online
+                                    </span>
+                                </div>
+                            </div>
+                            ${ovenRows}
+                        `;
+                    } else {
+                        // ...existing online card HTML...
                     }
 
                     // Combined: normal item (if online) + oven items (if any)
@@ -1065,6 +1122,33 @@
 
             document.body.appendChild(wrap);
             this.currentCenteredCard = wrap;
+        }
+
+        getOvenLabel(isOven) {
+            switch (Number(isOven)) {
+                case 1: return "FSA";
+                case 2: return "LeadWire to pack";
+                case 3: return "Loctite 603";
+                default: return "UNKNOWN process";
+            }
+        }
+
+        getOvenClass(isOven) {
+            switch (Number(isOven)) {
+                case 1: return "oven-fsa";       // yellow
+                case 2: return "oven-loctite";  // violet
+                case 3: return "oven-leadwire";   // dark green
+                default: return "";
+            }
+        }
+
+        // Fetch oven items only for lines that have no normal active order
+        async loadOvenMap(records) {
+            const offline = records.filter(r => !(r.FinalShopOrder ?? '').trim());
+            const results = await Promise.all(
+                offline.map(async r => [r.Line, await this.fetchOvenItems(r.Line)])
+            );
+            return new Map(results.filter(([, items]) => items.length > 0));
         }
 
 

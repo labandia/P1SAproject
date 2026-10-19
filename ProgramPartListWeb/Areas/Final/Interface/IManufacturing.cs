@@ -19,7 +19,9 @@ namespace ProgramPartListWeb.Areas.Final
 
         Task<int> GetCountShopOrders(string line);
         Task<List<FanTraceabilityManufacturingOrder>> GetListofShopOrdersByLine(
-            string Linename, string searchtext = "", int orderstatus = 0);
+            string Linename, string searchtext = "", int orderstatus = 0,
+            DateTime? dateFrom = null,
+            DateTime? dateTo = null);
 
         Task<int> GetActualCountOfShopOrders(string Linename);
 

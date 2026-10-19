@@ -73,6 +73,7 @@
       class GroupDashboardController {
         constructor() {
             this._animFrames = new Map(); // track in-flight animations per element
+            this._Target = 0;
         }
 
         async init() {
@@ -98,6 +99,8 @@
                 this.fetchTotalGroupData();
                 this.fetchGroupListData();
             }, 10000);
+
+            console.clear();
         }
 
         async fetchTotalGroupData() {
@@ -107,8 +110,12 @@
                     console.log('No data found in 4M ');
                     return;
                 }
-                console.log(res);
                 this._lastData = res.data; // Store for resize
+
+                // Target comes from the API; fall back to the sum of group targets
+                this._target = Number(res.data.TargetOutput)
+                    || (res.data.totalGroup ?? []).reduce((s, g) => s + (Number(g.TargetOutput) || 0), 0);
+
                 this.renderdata(res.data);
                 this.displayGroups(res.data);
                 //this.buildChart(res.data);
@@ -124,7 +131,6 @@
                      console.log('No data found in 4M ');
                      return;
                  }
-                 console.log(res);
                  this.buildChart(res.data);
              } catch (error) {
                  console.error('Error fetching 4M data:', error);
@@ -145,7 +151,7 @@
 
             this.animateNumber(totalEl, data.TotalOutput, 1200);
             this.animateNumber(avgEl, data.AverageOutput, 1200);
-            this.animateNumber(targetEl, 85000, 1200);   // static target, not tied to API data
+            this.animateNumber(targetEl, this._target, 1200);   // static target, not tied to API data
             this.animateGauge(gaugeEl, data.AverageEfficiency, 180, 1200);
         }
 
@@ -283,38 +289,57 @@
 
 
           /* ---------- Bar chart ---------- */
-          buildChart(daily) {
-              console.log(daily);
-              const host = document.getElementById('chartHost');
-              this._lastData = daily; // store for resize
+          buildChart(allDaily) {
+              if (!Array.isArray(allDaily) || allDaily.length === 0) return;
 
-              // Known non-group fields — everything else on each row is treated as a group column
+              const host = document.getElementById('chartHost');
+              this._chartData = allDaily; // keep the unfiltered data for resize
+
+              // Days with a total at or below this value are not displayed
+              const MIN_DISPLAY_VALUE = 20000;
+
+              // Known non-group fields: everything else on each row is treated as a group column
               const KNOWN_KEYS = ['GroupDate', 'date', 'Total', 'value'];
 
               const getDate = d => d.GroupDate ?? d.date;
               const getTotal = d => {
                   if (typeof d.Total === 'number') return d.Total;
                   if (typeof d.value === 'number') return d.value;
-                  // No total sent — sum the group columns
+                  // No total sent, so sum the group columns
                   return Object.keys(d)
                       .filter(k => !KNOWN_KEYS.includes(k))
                       .reduce((sum, k) => sum + (Number(d[k]) || 0), 0);
               };
 
-              // Check if we're in the small screen mode
+              // Drop days at or below the minimum; everything below uses the filtered list
+              const daily = allDaily.filter(d => getTotal(d) > MIN_DISPLAY_VALUE);
+
+              if (daily.length === 0) {
+                  host.innerHTML = '';
+                  document.getElementById('legendHigh').textContent = '0';
+                  document.getElementById('legendLow').textContent = '0';
+                  document.getElementById('legendDays').textContent = '0';
+                  const thead0 = document.getElementById('groupListHead');
+                  const tbody0 = document.getElementById('groupListBody');
+                  if (thead0) thead0.innerHTML = '';
+                  if (tbody0) tbody0.innerHTML = '';
+                  return;
+              }
+
+              // Small screen mode
               const isSmall = window.innerWidth <= 962 && window.innerHeight <= 542;
 
-              // Get container width
+              // Container width
               const containerWidth = host.parentElement ? host.parentElement.clientWidth : host.clientWidth;
               const w = containerWidth || 1240;
 
-              // Adjust padding and sizes for small screens
+              // Padding and sizes
               const padL = isSmall ? 15 : 60;
               const padR = isSmall ? 5 : 20;
               const padT = isSmall ? 3 : 10;
               const padB = isSmall ? 12 : 30;
 
-              // Adjust height for small screens
+              // Height
               const h = isSmall ? 100 : 230;
 
               const plotW = w - padL - padR;
@@ -326,17 +351,18 @@
               const highest = maxVal;
               const lowest = minVal;
 
-              const avgOutput = values.reduce((a, b) => a + b, 0) / values.length;
-              const targetLine = avgOutput > maxVal ? maxVal * 0.9 : avgOutput;
+              // Target comes from the API (set in fetchTotalGroupData)
+              const targetLine = this._target || 0;
 
-              const yMax = Math.ceil(maxVal / 10000) * 10000 + 10000;
+              // Axis always has room for both the tallest bar and the target line
+              const yMax = Math.ceil(Math.max(maxVal, targetLine) / 10000) * 10000 + 10000;
               const scaleY = v => plotH - (v / yMax) * plotH;
 
               const n = daily.length;
               const bandW = plotW / n;
               const barW = isSmall ? bandW * 0.4 : bandW * 0.55;
 
-              // Gridlines - skip on small screens for cleaner look
+              // Gridlines (skipped on small screens)
               let gridSvg = '';
               if (!isSmall) {
                   const steps = 5;
@@ -360,31 +386,34 @@
                   const x = padL + i * bandW + (bandW - barW) / 2;
                   const barH = plotH - scaleY(total);
                   const y = padT + scaleY(total);
+
                   let color, colorEnd;
                   if (total === highest) { color = '#f5820a'; colorEnd = '#e2431e'; }
                   else if (total === lowest) { color = '#a9e34b'; colorEnd = '#6fae1f'; }
                   else if (total > yMax * 0.55) { color = '#e8c33e'; colorEnd = '#8bd53a'; }
                   else { color = '#8bd53a'; colorEnd = '#3ea34a'; }
+
                   const gradId = `barGrad${i}`;
                   const delay = Math.min(i * 45, 450);
 
                   const fontSize = isSmall ? 6 : 11;
                   const dateLabel = isSmall && dateLabelFull.length > 5 ? dateLabelFull.substring(0, 3) : dateLabelFull;
 
-                  // NEW: label showing the actual output value above the bar
+                  // Value label above the bar
                   const valueFontSize = isSmall ? 6 : 11;
-                  const valueLabelY = y - (isSmall ? 3 : 6); // sits just above the bar top
+                  const valueLabelY = y - (isSmall ? 3 : 6);
 
                   barsSvg += `
-    <defs><linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="${color}"/><stop offset="100%" stop-color="${colorEnd}"/>
-    </linearGradient></defs>
-    <rect class="bar-rect" x="${x}" y="${y}" width="${barW}" height="${barH}" rx="${isSmall ? 1 : 2}" fill="url(#${gradId})"
-        style="transform-box:fill-box; transform-origin:bottom; transform:scaleY(0); transition:transform .65s cubic-bezier(.22,1,.36,1) ${delay}ms;"/>
-    <text class="bar-value" x="${x + barW / 2}" y="${valueLabelY}" text-anchor="middle" font-size="${valueFontSize}" font-weight="600" fill="#e8edf3"
-        style="opacity:0; transition:opacity .5s ease ${delay + 300}ms;">${this.changeformatnumber(total)}</text>
-    <text x="${x + barW / 2}" y="${padT + plotH + (isSmall ? 12 : 18)}" text-anchor="middle" font-size="${fontSize}" fill="#9fb0c3">${dateLabel}</text>
-`;
+            <defs><linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="${color}"/><stop offset="100%" stop-color="${colorEnd}"/>
+            </linearGradient></defs>
+            <rect class="bar-rect" x="${x}" y="${y}" width="${barW}" height="${barH}" rx="${isSmall ? 1 : 2}" fill="url(#${gradId})"
+                style="transform-box:fill-box; transform-origin:bottom; transform:scaleY(0); transition:transform .65s cubic-bezier(.22,1,.36,1) ${delay}ms;"/>
+            <text class="bar-value" x="${x + barW / 2}" y="${valueLabelY}" text-anchor="middle" font-size="${valueFontSize}" font-weight="600" fill="#e8edf3"
+                style="opacity:0; transition:opacity .5s ease ${delay + 300}ms;">${this.changeformatnumber(total)}</text>
+            <text x="${x + barW / 2}" y="${padT + plotH + (isSmall ? 12 : 18)}" text-anchor="middle" font-size="${fontSize}" fill="#9fb0c3">${dateLabel}</text>
+        `;
+
                   // Everything besides GroupDate/date/Total/value is treated as a group column
                   if (!groupColumns) {
                       groupColumns = Object.keys(d).filter(k => !KNOWN_KEYS.includes(k));
@@ -397,17 +426,25 @@
               const targetY = padT + scaleY(targetLine);
               const plotWpx = w - padL - padR;
 
+              // Only draw the target line when a target exists
+              const targetSvg = targetLine > 0 ? `
+        <line class="target-line" x1="${padL}" y1="${targetY}" x2="${w - padR}" y2="${targetY}"
+              stroke="#e2431e" stroke-width="${isSmall ? 1 : 2}"
+              stroke-dasharray="${plotWpx}" stroke-dashoffset="${plotWpx}"
+              style="transition:stroke-dashoffset .8s ease .5s;"/>
+        ${!isSmall ? `<text class="grid-line" x="${w - padR}" y="${targetY - 5}" text-anchor="end"
+              font-size="11" font-weight="600" fill="#e2431e"
+              style="opacity:0; transition:opacity .5s ease .8s;">Target ${this.changeformatnumber(targetLine)}</text>` : ''}
+    ` : '';
+
               const svg = `
-<svg viewBox="0 0 ${w} ${h}"
-     style="width:100%;height:${isSmall ? '100%' : '100%'};display:block;"
-     preserveAspectRatio="xMidYMid meet">
-    ${gridSvg}
-    ${barsSvg}
-    <line class="target-line" x1="${padL}" y1="${targetY}" x2="${w - padR}" y2="${targetY}"
-          stroke="#e2431e" stroke-width="${isSmall ? 1 : 2}"
-          stroke-dasharray="${plotWpx}" stroke-dashoffset="${plotWpx}"
-          style="transition:stroke-dashoffset .8s ease .5s;"/>
-</svg>`;
+        <svg viewBox="0 0 ${w} ${h}"
+             style="width:100%;height:100%;display:block;"
+             preserveAspectRatio="xMidYMid meet">
+            ${gridSvg}
+            ${barsSvg}
+            ${targetSvg}
+        </svg>`;
               host.innerHTML = svg;
 
               // Trigger animations

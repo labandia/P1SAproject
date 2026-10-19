@@ -220,7 +220,9 @@ namespace ProgramPartListWeb.Areas.Final.Services
         //  GET THE LIST DETAILS BY LINE 
         public async Task<List<FanTraceabilityManufacturingOrder>> GetListofShopOrdersByLine(
             string Linename, string searchText,
-            int status)
+            int status, 
+            DateTime? dateFrom = null,
+            DateTime? dateTo = null)
         {
             try
             {
@@ -323,11 +325,21 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 var parameters = new DynamicParameters();
 
 
-                // Line filter
+                // Line filter (supports multiple lines: "L1,L5,CL1")
                 if (!string.IsNullOrWhiteSpace(Linename))
                 {
-                    query += " AND mo.Line = @Line";
-                    parameters.Add("@Line", Linename);
+                    var lines = Linename
+                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(l => l.Trim())
+                        .Where(l => l.Length > 0)
+                        .Distinct(StringComparer.OrdinalIgnoreCase)
+                        .ToArray();
+
+                    if (lines.Length > 0)
+                    {
+                        query += " AND mo.Line IN @Lines";
+                        parameters.Add("@Lines", lines);   // Dapper expands this to (@Lines1,@Lines2,...)
+                    }
                 }
 
                 if (!string.IsNullOrWhiteSpace(searchText))
@@ -344,7 +356,35 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     parameters.Add("@OrderStatus", status);
                 }
 
-                query += $@" ORDER BY mo.RecordID ASC";
+                // Date range filter on Plan Start (either side is optional)
+                if (dateFrom.HasValue && dateTo.HasValue && dateFrom.Value > dateTo.Value)
+                {
+                    (dateFrom, dateTo) = (dateTo, dateFrom);   // swap if reversed
+                }
+
+                if (dateFrom.HasValue)
+                {
+                    query += " AND mo.PlanStartDate >= @DateFrom";
+                    parameters.Add("@DateFrom", dateFrom.Value.Date);
+                }
+
+                if (dateTo.HasValue)
+                {
+                    // < next day so the whole end date is included, even with a time part
+                    query += " AND mo.PlanStartDate < @DateToExclusive";
+                    parameters.Add("@DateToExclusive", dateTo.Value.Date.AddDays(1));
+                }
+
+                query += @"
+                    ORDER BY
+                        CASE
+                            WHEN mo.Line LIKE 'L[0-9]%'  THEN 0   -- L1, L2, ... L20
+                            WHEN mo.Line LIKE 'CL[0-9]%' THEN 1   -- CL1, CL5, CL8
+                            ELSE 2                                -- OP and anything else
+                        END,
+                        TRY_CAST(SUBSTRING(mo.Line, PATINDEX('%[0-9]%', mo.Line), 10) AS INT) ASC,
+                        mo.Line ASC,
+                        mo.RecordID ASC";
 
 
                 return await SqlDataAcess_Test.QueryAsync<FanTraceabilityManufacturingOrder>(query, parameters);
@@ -394,7 +434,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
             int rows = await SqlDataAcess_Test.ExecuteAsync($@"
                 UPDATE {maintable}
                 SET 
-                    OrderStatus = @status, 
+                    OrderStatus = 0, 
                     IsOven = 0
                 WHERE RecordID = @id ", new
             {
@@ -1455,7 +1495,11 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
             int result = await SqlDataAcess_Test.ExecuteAsync($@"
                 UPDATE {maintable} 
-                SET IsOven = @IsOven, LeaderName = @LeaderName, LeaderID = @LeaderID WHERE RecordID = @RecordID", new
+                SET IsOven = @IsOven, 
+                    LeaderName = @LeaderName, 
+                    LeaderID = @LeaderID, 
+                    TimeStart = ISNULL(TimeStart, CAST(GETDATE() AS TIME(0)))
+                WHERE RecordID = @RecordID", new
             {
                 IsOven = process,
                 RecordID = id,

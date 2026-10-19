@@ -1561,3 +1561,28 @@ body {
     font-size: 13px;
     color: #86868b;
 }
+
+
+
+.oven-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+.oven-fsa {
+    background: #facc15 !important;
+    color: #1f2937 !important;
+}
+/* yellow */
+.oven-leadwire {
+    background: #7c3aed !important;
+    color: #ffffff !important;
+}
+/* violet */
+.oven-loctite {
+    background: #14532d !important;
+    color: #ffffff !important;
+}
+/* dark green */

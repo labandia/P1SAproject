@@ -107,15 +107,12 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         //=====================================================
         [HttpGet]
         public async Task<ActionResult> LineShopOrderData(
-            string Linename,
-            string searchtext,
-            int orderstatus)
+         string Linename,
+         string searchtext,
+         int orderstatus)
         {
-            var res = await _manu.GetListofShopOrdersByLine(Linename,
-                searchtext, orderstatus);
-
-            if (res == null || !res.Any())
-                return JsonNotFound("No Manpower data found");
+            var res = await _manu.GetListofShopOrdersByLine(Linename, searchtext, orderstatus)
+                      ?? new List<FanTraceabilityManufacturingOrder>();
 
             var finalData = new
             {
@@ -123,10 +120,9 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
                 Total = res.Count
             };
 
-
-
             return JsonSuccess(finalData, "Retrieved data successfully");
         }
+
         [HttpGet]
         public async Task<ActionResult> SelectedShopOrderData(int RecordID)
         {

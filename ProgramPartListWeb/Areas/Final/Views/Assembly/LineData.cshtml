@@ -12,8 +12,12 @@
             <div>
                 <h2 class="font-semibold mb-1" style="font-size: 24px;">Final Assembly Data</h2>
                 <p class="text-sm" style="color:#86868b;">Current Data of the Final Assembly </p>
-            </div>
 
+            </div>
+            <div class="subheader-item" style="padding-left: 10px;">
+                <iconify-icon icon="lucide:clock" style="font-size: 14px; color: #6c47ff"></iconify-icon>
+                <span>Last Upload Date: <strong id="lastUpdateText">-- : -- : -- </strong></span>
+            </div>
             <!-- filters bar -->
             <div class="flex items-center gap-3 mb-4 flex-wrap">
 
@@ -22,37 +26,34 @@
             </div>
         </div>
         <div class="flex gap-3">
-            <div class="subheader-item">
-                <iconify-icon icon="lucide:clock" style="font-size: 14px; color: #6c47ff"></iconify-icon>
-                <span>Last Upload Date: <strong id="lastUpdateText">-- : -- : -- </strong></span>
+
+            <!-- Line multi-select with checkboxes -->
+            <div class="ms-wrapper" id="lineMultiSelect">
+                <button type="button" class="filter-chip text-sm font-medium ms-toggle" id="lineMsToggle">
+                    <span id="lineMsLabel">Line : ALL</span>
+                    <iconify-icon icon="lucide:chevron-down" style="font-size:14px;"></iconify-icon>
+                </button>
+
+                <div class="ms-menu" id="lineMsMenu">
+                    <label class="ms-item ms-all">
+                        <input type="checkbox" id="lineMsAll" checked />
+                        <span>ALL</span>
+                    </label>
+                    <div class="ms-list" id="lineMsList"></div>
+                </div>
+
+                <!-- holds the comma-separated selection (e.g. "L1,L5,CL1"); empty = ALL -->
+                <input type="hidden" id="filterdata" value="" />
             </div>
-            <select id="filterdata" class=" filter-chip text-sm font-medium">
-                <option value="">Line : ALL</option>
-                <option value="L1">L1</option>
-                <option value="L2">L2</option>
-                <option value="L3">L3</option>
-                <option value="L4">L4</option>
-                <option value="L5">L5</option>
-                <option value="L6">L6</option>
-                <option value="L7">L7</option>
-                <option value="L8">L8</option>
-                <option value="L9">L9</option>
-                <option value="L10">L10</option>
-                <option value="L11">L11</option>
-                <option value="L12">L12</option>
-                <option value="L13">L13</option>
-                <option value="L14">L14</option>
-                <option value="L15">L15</option>
-                <option value="L16">L16</option>
-                <option value="L17">L17</option>
-                <option value="L18">L18</option>
-                <option value="L19">L19</option>
-                <option value="L20">L20</option>
-                <option value="CL1">CL1</option>
-                <option value="CL5">Cl5</option>
-                <option value="CL8">Cl8</option>
-                <option value="OP">OP</option>
-            </select>
+
+            <div class="date-range">
+                <input type="date" id="dateFrom" class="filter-chip text-sm" title="Plan Start: from" />
+                <span class="date-range-sep">to</span>
+                <input type="date" id="dateTo" class="filter-chip text-sm" title="Plan Start: to" />
+                <button type="button" id="dateClearBtn" class="filter-chip text-sm" title="Clear dates">
+                    <iconify-icon icon="lucide:x" style="font-size:14px;"></iconify-icon>
+                </button>
+            </div>
 
             <div class="search-input">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -72,7 +73,7 @@
         </a>*@
 
 
-<div class="devices-table-wrapper">
+    <div class="devices-table-wrapper">
         <div class="devices-table-wrapper">
             <div class="table-scroll TrackTable">
                 <table class="upload-table">
@@ -83,6 +84,7 @@
                             <th>QTY</th>
                             <th>Plan Start</th>
                             <th>Dispatch</th>
+                            <th>Shipment Date</th>
 
                             <th>PCB</th>
                             <th>IMP</th>
@@ -96,7 +98,6 @@
                             <th>Note</th>
                             <th>IFS Finish Date</th>
                             <th>FA Status</th>
-                            <th>Shipment</th>
                             <th>Mode</th>
                             <th>WITH SR</th>
                         </tr>
@@ -105,20 +106,18 @@
                 </table>
             </div>
         </div>
-    <!-- pagination footer -->
+        <!-- pagination footer -->
         <div class="flex justify-between items-center p-3 border-t" style="border-top: 1px solid #e5e5e5; background: white;">
             <div id="resultsText" class="text-sm" style="color:#86868b;">Showing <span id="newrecords"></span> of <span id="currentrecords">1,248</span> Records</div>
-    
+
             @*<div class="flex gap-1">
-                <button class="pagination-btn" id="prevBtn"><iconify-icon icon="lucide:chevron-left" style="font-size: 14px;"></iconify-icon></button>
+                    <button class="pagination-btn" id="prevBtn"><iconify-icon icon="lucide:chevron-left" style="font-size: 14px;"></iconify-icon></button>
 
-                <button class="pagination-btn" id="nextBtn"><iconify-icon icon="lucide:chevron-right" style="font-size: 14px;"></iconify-icon></button>
-            </div>*@
+                    <button class="pagination-btn" id="nextBtn"><iconify-icon icon="lucide:chevron-right" style="font-size: 14px;"></iconify-icon></button>
+                </div>*@
         </div>
-</div>
+    </div>
 </section>
-
-
 
 
 
@@ -130,8 +129,130 @@
         postMethod
     } from '@Url.Content("~/Scripts/modules/index.js")';
 
+
+    /* ==========================================================
+      LineMultiSelect
+      - checkbox dropdown for the Line filter
+      - writes the selection to the hidden #filterdata ("" = ALL)
+      - persists the selection in localStorage and restores it on refresh
+      ========================================================== */
+    class LineMultiSelect {
+        constructor() {
+            this.toggle = document.getElementById('lineMsToggle');
+            this.menu = document.getElementById('lineMsMenu');
+            this.list = document.getElementById('lineMsList');
+            this.allCb = document.getElementById('lineMsAll');
+            this.label = document.getElementById('lineMsLabel');
+            this.hidden = document.getElementById('filterdata');
+
+            this.storageKey = 'FinalAssembly_SelectedLines';
+
+            this.lines = [
+                ...Array.from({ length: 20 }, (_, i) => `L${i + 1}`),
+                'CL1', 'CL5', 'CL8', 'OP'
+            ];
+        }
+
+        init() {
+            this.list.innerHTML = this.lines.map(l => `
+                <label class="ms-item">
+                    <input type="checkbox" value="${l}" />
+                    <span>${l}</span>
+                </label>`).join('');
+
+            // restore the saved selection BEFORE the first data load
+            this.restore();
+
+            this.toggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.menu.classList.toggle('open');
+            });
+
+            // keep the menu open when clicking inside it
+            this.menu.addEventListener('click', (e) => e.stopPropagation());
+
+            // close when clicking anywhere else
+            document.addEventListener('click', () => this.menu.classList.remove('open'));
+
+            // "ALL" checkbox
+            this.allCb.addEventListener('change', () => {
+                if (this.allCb.checked) {
+                    this.itemCheckboxes().forEach(cb => cb.checked = false);
+                } else if (this.selected().length === 0) {
+                    this.allCb.checked = true; // never leave nothing selected
+                }
+                this.sync();
+            });
+
+            // individual line checkboxes
+            this.list.addEventListener('change', () => {
+                this.allCb.checked = this.selected().length === 0;
+                this.sync();
+            });
+        }
+
+        itemCheckboxes() {
+            return [...this.list.querySelectorAll('input[type="checkbox"]')];
+        }
+
+        selected() {
+            return this.itemCheckboxes().filter(cb => cb.checked).map(cb => cb.value);
+        }
+
+        updateUI() {
+            const sel = this.selected();
+
+            this.hidden.value = sel.join(',');   // "" means ALL
+
+            this.label.textContent =
+                sel.length === 0 ? 'Line : ALL' :
+                    sel.length <= 3 ? `Line : ${sel.join(', ')}` :
+                        `Line : ${sel.length} selected`;
+        }
+
+        save() {
+            try {
+                localStorage.setItem(this.storageKey, JSON.stringify(this.selected()));
+            } catch (e) {
+                console.warn('Unable to save line filter:', e);
+            }
+        }
+
+        restore() {
+            try {
+                const saved = JSON.parse(localStorage.getItem(this.storageKey) || '[]');
+
+                // only keep values that still exist in the list
+                const valid = Array.isArray(saved)
+                    ? saved.filter(v => this.lines.includes(v))
+                    : [];
+
+                this.itemCheckboxes().forEach(cb => cb.checked = valid.includes(cb.value));
+                this.allCb.checked = valid.length === 0;
+            } catch (e) {
+                console.warn('Unable to restore line filter:', e);
+            }
+
+            // update label + hidden value, but don't fire "change"
+            this.updateUI();
+        }
+
+        sync() {
+            this.updateUI();
+            this.save();
+
+            // triggers the debounced LoadLineShopOrderList() in the controller
+            this.hidden.dispatchEvent(new Event('change'));
+        }
+    }
+
+
+
+
+
   class FinaAssemblyController {
-    constructor() {
+      constructor() {
+        this.requestId = 0;
         this.selectedID = 0;
         this.selectedLine = "";
         this.currentPage = 1;
@@ -144,11 +265,18 @@
 
 
         this.newRecords = document.getElementById("newrecords");
-        this.currentRecords = document.getElementById("currentrecords");
+          this.currentRecords = document.getElementById("currentrecords");
+
+          this.dateFrom = document.getElementById('dateFrom');
+          this.dateTo = document.getElementById('dateTo');
+          this.dateClearBtn = document.getElementById('dateClearBtn');
+          this.dateStorageKey = 'FinalAssembly_DateRange';
     }
 
-    async init() {
-        this.bindEvents();
+      async init() {
+        new LineMultiSelect().init();   // restores saved lines before the first load
+          this.setDefaultDateRange();      
+          this.bindEvents();
         //this.enableHorizontalDragScroll();
         await this.LoadLineShopOrderList();
         await this.LoadTotalPartsSummary();
@@ -164,6 +292,27 @@
         };
         this.searchinput.addEventListener('input', debounced);
           this.filterStatus.addEventListener('change', debounced);
+
+
+          const onDateChange = (changed) => {
+              // keep the range valid: start can't be after end
+              if (this.dateFrom.value && this.dateTo.value && this.dateFrom.value > this.dateTo.value) {
+                  if (changed === 'from') this.dateTo.value = this.dateFrom.value;
+                  else this.dateFrom.value = this.dateTo.value;
+              }
+              this.saveDateRange();
+              debounced();
+          };
+
+          this.dateFrom.addEventListener('change', () => onDateChange('from'));
+          this.dateTo.addEventListener('change', () => onDateChange('to'));
+
+          this.dateClearBtn.addEventListener('click', () => {
+              this.dateFrom.value = '';
+              this.dateTo.value = '';
+              this.saveDateRange();
+              debounced();
+          });
 
           // Double-click table row -> ShopOrderLine
             this.tbody.addEventListener('dblclick', (e) => {
@@ -268,6 +417,12 @@
 
       async LoadLineShopOrderList() {
 
+        // each call gets an id; only the latest call is allowed to render
+          const requestId = ++this.requestId;
+
+          console.log("Start : " + this.dateFrom.value);
+          console.log("End  : " + this.dateTo.value);
+
         try {
                 if (this.isFirstLoad) {
                     this.showTableSkeleton();
@@ -275,37 +430,32 @@
                     this.isFirstLoad = false;
                 }
 
-                const res = await getMethod('@Url.Action("LineShopOrderData", "Assembly")', {
-                    Linename: document.getElementById('filterdata').value,
+                // "L1,L5,CL1" or "" (= ALL), kept in sync by LineMultiSelect
+                const selectedLines = document.getElementById('filterdata').value;
+
+               const res = await getMethod('@Url.Action("LineShopOrderData", "Assembly")', {
+                    Linename: selectedLines,
                     searchtext: document.getElementById('searchinput').value,
                     orderstatus: 0
-                });
+               });
 
-                console.log(res);
-            if (!res?.Success) {
-                this.tbody.innerHTML = `
-                 <tr>
-                     <td colspan="12" style="text-align:center;color:red;">
-                         Failed to load data.
-                     </td>
-                 </tr>`;
-                return;
-            };
+              
+                    // a newer request was started while this one was in flight -> drop this result
+                    if (requestId !== this.requestId) return;
 
-                const total = res.data.Total;
-                this.updateRecordCount(total, total);
+                    if (!res?.Success) {
+                        this.showMessage('Failed to load data.', 'red');
+                        return;
+                    }
 
-                if (total != 0) {
-                    this.renderTable(res.data.payload);
-                    //this.renderPagination(total ?? res.data.payload.length);
-                } else {
-                    this.tbody.innerHTML = `
-                         <tr>
-                             <td colspan="12" style="text-align:center;color:red;">
-                                 Failed to load data.
-                             </td>
-                         </tr>`;
-                }
+                    const total = res.data.Total;
+                    this.updateRecordCount(total, total);
+
+                    if (total > 0) {
+                        this.renderTable(res.data.payload);
+                    } else {
+                        this.showMessage('No data found for the selected line(s).', '#86868b');
+                    }
 
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -324,7 +474,6 @@
         this.currentRecords.textContent = totalCount.toLocaleString();
     }
       renderTable(data) {
-          console.log(data);
 
         if (!this.tbody) return;
             if (data.length === 0) {
@@ -373,7 +522,7 @@
 
                 return `
               <tr  class='fade-in'
-                   data-order-line="${row.Line}"  
+                   data-order-line="${row.Line}"
                      data-shop-order="${row.FinalShopOrder}"
                      data-id="${row.RecordID}">
                         <td>${row.Line}</td>
@@ -390,6 +539,7 @@
                         <td>${row.PlanQty}</td>
                         <td>${this.formatDate(row.PlanStartDate)}</td>
                         <td>${row.DispatchDate}</td>
+                        <td>${row.ShipmentDate || '-'}</td>
 
                         <td>${circuit}</td>
                         <td>${rotor}</td>
@@ -398,12 +548,11 @@
                         <td>${press}</td>
                         <td>${winding}</td>
                         <td>${Material}</td>
-
+                        <td>${row.WC}</td>
 
                         <td>${row.Note || ''}</td>
                         <td>${this.formatDate(row.FinalFinishedDate)}</td>
                         <td class="status-column">${row.FAStatus || ''}</td>
-                        <td>${row.ShipmentDate || '-'}</td>
                         <td>${row.ShipmentMode || ''}</td>
                         <td>${row.WithSR ? 'With SR': ''}</td>
                 </tr>`
@@ -432,6 +581,15 @@
       hideLoader() {
           document.getElementById('loadingOverlay')
               ?.classList.remove('show');
+      }
+
+      showMessage(text, color) {
+          this.tbody.innerHTML = `
+        <tr>
+            <td colspan="19" style="text-align:center; padding:32px; color:${color};">
+                ${text}
+            </td>
+        </tr>`;
       }
 
      formatDate(dateString) {
@@ -481,6 +639,54 @@
 
           // Other future dates: no background color
           return '';
+      }
+
+
+      saveDateRange() {
+          try {
+              localStorage.setItem(this.dateStorageKey, JSON.stringify({
+                  from: this.dateFrom.value,
+                  to: this.dateTo.value
+              }));
+          } catch (e) {
+              console.warn('Unable to save date range:', e);
+          }
+      }
+      setDefaultDateRange() {
+          // local date as yyyy-MM-dd (toISOString() would use UTC and can be off by a day)
+          const d = new Date();
+          const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+          this.dateFrom.value = today;
+          this.dateTo.value = today;
+      }
+      todayString() {
+          // local date as yyyy-MM-dd (toISOString() would use UTC and can be off by a day)
+          const d = new Date();
+          const mm = String(d.getMonth() + 1).padStart(2, '0');
+          const dd = String(d.getDate()).padStart(2, '0');
+          return `${d.getFullYear()}-${mm}-${dd}`;
+      }
+
+      restoreDateRange() {
+          try {
+              const raw = localStorage.getItem(this.dateStorageKey);
+
+              if (raw === null) {
+                  // first visit (nothing saved yet): default both dates to today
+                  const today = this.todayString();
+                  this.dateFrom.value = today;
+                  this.dateTo.value = today;
+                  this.saveDateRange();
+                  return;
+              }
+
+              const saved = JSON.parse(raw);
+              this.dateFrom.value = saved.from || '';
+              this.dateTo.value = saved.to || '';
+          } catch (e) {
+              console.warn('Unable to restore date range:', e);
+          }
       }
 
 

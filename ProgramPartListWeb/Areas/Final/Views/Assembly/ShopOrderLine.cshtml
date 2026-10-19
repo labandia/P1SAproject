@@ -1255,7 +1255,7 @@
             <div class="active-card" data-shoporder="${r.FinalShopOrder}">
                 <div class="active-card-so">${r.FinalShopOrder}</div>
                 <div class="active-card-model">${r.Model ?? ''}</div>
-                <div class="active-card-item">${r.ItemNo ?? ''}</div>
+                <div class="active-card-item">${r.ItemNo ?? ''}   <span style='font-size: .6rem; padding: .3em 1em; margin-left: 10px;' class="oven-badge ${this.getOvenClass(r.IsOven)}">${this.getOvenLabel(r.IsOven)}</span></div>
             </div>`).join('');
       }
 
@@ -1282,6 +1282,27 @@
 
           await this.LoadLineShopOrderList();
       }
+
+
+      getOvenLabel(isOven) {
+          switch (Number(isOven)) {
+              case 1: return "FSA";
+              case 2: return "LeadWire to pack";
+              case 3: return "Loctite 603";
+              default: return "UNKNOWN process";
+          }
+      }
+
+      getOvenClass(isOven) {
+          switch (Number(isOven)) {
+              case 1: return "oven-fsa";       // yellow
+              case 2: return "oven-loctite";  // violet
+              case 3: return "oven-leadwire";   // dark green
+              default: return "";
+          }
+      }
+
+
 }
 
 document.addEventListener('DOMContentLoaded', function () {

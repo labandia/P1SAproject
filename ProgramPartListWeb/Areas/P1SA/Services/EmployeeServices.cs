@@ -15,7 +15,6 @@ namespace ProgramPartListWeb.Areas.P1SA.Services
 {
     public class EmployeeServices : IP1SAEmployeeRepository
     {
-        private string testTable = "P1SA_Employees_Backup";
 
         // ── SELECT COLUMNS(view model) ───────────────────────
         // Reused in every SELECT to keep projections consistent.

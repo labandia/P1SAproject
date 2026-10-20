@@ -4,7 +4,7 @@
     Layout = "~/Areas/Final/Views/Shared/_ManageLayout.cshtml";
 }
 
-<section style="padding: 30px 20px;">
+<section style="padding: 30px 20px">
     <!-- MAIN PANEL -->
     <!-- header section -->
     <div class="headerManage  flex justify-between items-center mb-6">
@@ -12,7 +12,6 @@
             <div>
                 <h2 class="font-semibold mb-1" style="font-size: 24px;">Final Assembly Data</h2>
                 <p class="text-sm" style="color:#86868b;">Current Data of the Final Assembly </p>
-
             </div>
             <div class="subheader-item" style="padding-left: 10px;">
                 <iconify-icon icon="lucide:clock" style="font-size: 14px; color: #6c47ff"></iconify-icon>
@@ -20,20 +19,14 @@
             </div>
             <!-- filters bar -->
             <div class="flex items-center gap-3 mb-4 flex-wrap">
-
-
-
             </div>
         </div>
         <div class="flex gap-3">
-
-            <!-- Line multi-select with checkboxes -->
             <div class="ms-wrapper" id="lineMultiSelect">
                 <button type="button" class="filter-chip text-sm font-medium ms-toggle" id="lineMsToggle">
                     <span id="lineMsLabel">Line : ALL</span>
                     <iconify-icon icon="lucide:chevron-down" style="font-size:14px;"></iconify-icon>
                 </button>
-
                 <div class="ms-menu" id="lineMsMenu">
                     <label class="ms-item ms-all">
                         <input type="checkbox" id="lineMsAll" checked />
@@ -41,11 +34,9 @@
                     </label>
                     <div class="ms-list" id="lineMsList"></div>
                 </div>
-
                 <!-- holds the comma-separated selection (e.g. "L1,L5,CL1"); empty = ALL -->
                 <input type="hidden" id="filterdata" value="" />
             </div>
-
             <div class="date-range">
                 <input type="date" id="dateFrom" class="filter-chip text-sm" title="Plan Start: from" />
                 <span class="date-range-sep">to</span>
@@ -54,7 +45,6 @@
                     <iconify-icon icon="lucide:x" style="font-size:14px;"></iconify-icon>
                 </button>
             </div>
-
             <div class="search-input">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <circle cx="11" cy="11" r="8" />
@@ -64,15 +54,6 @@
             </div>
         </div>
     </div>
-
-    @*<span id="selectedCount">0 selected</span>
-
-        <a href="#" id="clearSelectionBtn"
-           style="color: var(--color-primary); text-decoration: none;">
-            Clear selection
-        </a>*@
-
-
     <div class="devices-table-wrapper">
         <div class="devices-table-wrapper">
             <div class="table-scroll TrackTable">
@@ -85,7 +66,6 @@
                             <th>Plan Start</th>
                             <th>Dispatch</th>
                             <th>Shipment Date</th>
-
                             <th>PCB</th>
                             <th>IMP</th>
                             <th>LW</th>
@@ -94,7 +74,6 @@
                             <th>STR</th>
                             <th>MP</th>
                             <th>WC</th>
-
                             <th>Note</th>
                             <th>IFS Finish Date</th>
                             <th>FA Status</th>
@@ -109,20 +88,9 @@
         <!-- pagination footer -->
         <div class="flex justify-between items-center p-3 border-t" style="border-top: 1px solid #e5e5e5; background: white;">
             <div id="resultsText" class="text-sm" style="color:#86868b;">Showing <span id="newrecords"></span> of <span id="currentrecords">1,248</span> Records</div>
-
-            @*<div class="flex gap-1">
-                    <button class="pagination-btn" id="prevBtn"><iconify-icon icon="lucide:chevron-left" style="font-size: 14px;"></iconify-icon></button>
-
-                    <button class="pagination-btn" id="nextBtn"><iconify-icon icon="lucide:chevron-right" style="font-size: 14px;"></iconify-icon></button>
-                </div>*@
         </div>
     </div>
 </section>
-
-
-
-
-
 <script type="module" asp-append-version="true">
     import {
         getMethod,
@@ -420,8 +388,7 @@
         // each call gets an id; only the latest call is allowed to render
           const requestId = ++this.requestId;
 
-          console.log("Start : " + this.dateFrom.value);
-          console.log("End  : " + this.dateTo.value);
+    
 
         try {
                 if (this.isFirstLoad) {
@@ -436,7 +403,9 @@
                const res = await getMethod('@Url.Action("LineShopOrderData", "Assembly")', {
                     Linename: selectedLines,
                     searchtext: document.getElementById('searchinput').value,
-                    orderstatus: 0
+                    orderstatus: 0, 
+                    dateFrom: this.dateFrom.value,   // "yyyy-MM-dd" or ""
+                    dateTo: this.dateTo.value
                });
 
               

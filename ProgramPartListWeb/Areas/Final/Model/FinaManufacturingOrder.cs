@@ -305,7 +305,7 @@ namespace ProgramPartListWeb.Areas.Final.Model
         public string Package { get; set;  }
         public int? PlanQty { get; set; }
         public string Location { get; set; }
-        public DateTime? DateStart { get; set; }
+        public string DateStart { get; set; }
         public TimeSpan? TimeStart { get; set; }
         public TimeSpan? TimeEnd { get; set; }
         public string Lines { get; set; }

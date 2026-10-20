@@ -157,22 +157,35 @@ namespace ProgramPartListWeb.Areas.Final.Services
                 {
                     int isCount = await SqlDataAcess_Test.ExecuteScalarAsync<int>(
                               @"SELECT COUNT(1) FROM FanTraceabilityManufacturingOrder 
-                            WHERE FinalShopOrder = @FinalShopOrder", new { item.FinalShopOrder });
+                            WHERE FinalShopOrder = @FinalShopOrder AND Line =@Line", new { item.FinalShopOrder, item.Line});
 
                     if (isCount == 0)
                     {
-                        //Debug.WriteLine($@"INSERT HERE : ");
-                        await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO FanTraceabilityManufacturingOrder (Line, FinalShopOrder, ItemNo, Model, WC, PlanQty, PlanStartDate, DispatchDate, Note, FinalFinishedDate,
-                                    FAStatus, ShipmentDate, ShipmentMode, WithSR, OrderRemarks, OrderStatus, Operational, P1SA_C, P1SA_M, P1SA_R, P1SA_W, P1FA_FA, P1FA_H, M1, P1SA_P)
+                        try
+                        {
+                            //Debug.WriteLine($@"INSERT HERE : ");
+                            await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO FanTraceabilityManufacturingOrder (Line, FinalShopOrder, 
+                                    ItemNo, Model, WC, PlanQty, PlanStartDate, DispatchDate, Note, FinalFinishedDate,
+                                    FAStatus, ShipmentDate, ShipmentMode, WithSR, OrderRemarks, OrderStatus, Operational, P1SA_C, 
+                                    P1SA_M, P1SA_R, P1SA_W, P1FA_FA, P1FA_H, M1, P1SA_P)
                                     VALUES
                                     (@Line, @FinalShopOrder, @ItemNo, @Model, @WC, @PlanQty, @PlanStartDate, @DispatchDate,
                                      @Note, @FinalFinishedDate, @FAStatus, @ShipmentDate, @ShipmentMode, @WithSR,
                                      @OrderRemarks, @OrderStatus, @Operational,  @P1SA_C, @P1SA_M, @P1SA_R, @P1SA_W, @P1FA_FA, @P1FA_H, @M1, @P1SA_P)", item);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine("DUPLIDCATE SKIP _---" + ex.Message);
+                            continue;
+                        }
                     }
                     else
                     {
-                        //Debug.WriteLine($@"UPDATE HERE : ");
-                        await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingOrder SET Line =@Line, WC =@WC, 
+                        try
+                        {
+                            //Debug.WriteLine($@"UPDATE HERE : ");
+                            await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingOrder SET 
+                                    Line =@Line, WC =@WC, 
                                     DispatchDate =@DispatchDate, Note =@Note, FinalFinishedDate =@FinalFinishedDate, 
                                     FAStatus =@FAStatus, 
                                     WithSR =@WithSR,
@@ -181,6 +194,12 @@ namespace ProgramPartListWeb.Areas.Final.Services
                                     P1SA_W =@P1SA_W, P1FA_FA =@P1FA_FA, 
                                     P1FA_H =@P1FA_H, M1 =@M1, P1SA_P =@P1SA_P
                                     WHERE  FinalShopOrder =@FinalShopOrder", item);
+                        }
+                        catch(Exception ex)
+                        {
+                            Debug.WriteLine("DUPLIDCATE SKIP _---" + ex.Message);
+                            continue;
+                        }
                     }
 
                     count++;

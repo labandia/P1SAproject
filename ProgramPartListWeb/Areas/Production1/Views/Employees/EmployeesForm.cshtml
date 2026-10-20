@@ -416,7 +416,7 @@
 
                         <div class="form-row cols-3">
                             <div class="form-group">
-                                <label class="form-label" for="mobile">Mobile Number <span class="req">*</span></label>
+                                <label class="form-label" for="mobile">Contact Number <span class="req">*</span></label>
                                 <input id="mobile" name="mobile" class="form-input" type="tel" inputmode="tel" autocomplete="tel" maxlength="16"
                                        data-required="true" data-validate="phone"
                                        data-invalid-msg="Enter a valid PH mobile number (e.g. 0917 123 4567)."
@@ -983,7 +983,7 @@
 
             console.log(this.buildPayload());
 
-            try {
+            @*try {
 
                 const res = await postMethod('@Url.Action("SaveEmployee", "Employees")', this.buildPayload());
                 // const data = await res.json().catch(() => null);
@@ -1001,7 +1001,7 @@
                 this.showToast('Network error. The record was not saved.', false);
             } finally {
                 if (!saved) btn.disabled = false;   // stays disabled after success so it cannot be enrolled twice
-            }
+            }*@
         }
 
         setActiveTab(stepIndex) {

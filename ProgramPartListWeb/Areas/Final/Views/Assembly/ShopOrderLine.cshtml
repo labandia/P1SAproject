@@ -327,7 +327,7 @@
             const operation = row.dataset.operational;
             const isComplete = row.dataset.checkstats === 'true';
 
-            console.log("LINENAME" + lineman);
+            // console.log("LINENAME" + lineman);
 
             // Pass all
             this.selectedID = id;
@@ -500,7 +500,7 @@
                     alert("Already a Process please finish the others Models");
                     return;
                 }
-                console.log("HERE 1 ");
+                // console.log("HERE 1 ");
                 const res = await postMethod('@Url.Action("UpdateProcessL2andL6", "Assembly")', {
                     recordID: this.selectedID,
                     process: selectprocess,
@@ -792,7 +792,7 @@
               if (this.currentRecord != 0) {
                    document.getElementById("currentrecords").textContent = this.currentRecord;
                   this.renderTable(res.data.payload ?? []);
-                  console.log(res.data.payload);
+                  // console.log(res.data.payload);
 
                     //this.renderPagination(total ?? res.data.payload.length);
                 } else {
@@ -1126,7 +1126,7 @@
       async ForCompleteupdateOrderStatus(id, orderstatus, lineman, leadername, leaderID) {
 
          try {
-             console.log("COMPLETE HERE");
+             // console.log("COMPLETE HERE");
             const success = await postMethod('@Url.Action("ForCompleteUpdateStatusLineV2", "Assembly")', {
                 recordID: id,
                 orderstats: orderstatus,

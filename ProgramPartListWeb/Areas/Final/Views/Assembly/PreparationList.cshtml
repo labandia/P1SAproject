@@ -16,9 +16,6 @@
 
             <!-- filters bar -->
             <div class="flex items-center gap-3 mb-4 flex-wrap">
-
-
-
             </div>
         </div>
         <div class="flex gap-3">
@@ -51,16 +48,27 @@
                         <tr>
                             <th style="text-align: center;">Final ShopOrder </th>
                             <th style="text-align: center;">Issue Cum </th>
-                            <th style="text-align: center;">Partname</th>
+                            <th style="text-align: center;">Date Prepared </th>
                             <th style="text-align: center;">Partnumber</th>
-                            <th style="text-align: center;">Packaging</th>
+                            <th style="text-align: center;">Partname</th>
                             <th style="text-align: center;">Plan Quantity </th>
                             <th style="text-align: center;">Location</th>
-                            <th style="text-align: center;">TIME</th>
-                            <th style="text-align: center;">OUT</th>
+                            <th>
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 256 256">
+                                        <path d="M0 0h256v256H0z" fill="none" />
+                                        <path fill="currentColor" d="M206 128a77.92 77.92 0 0 0-32.53-63.31L167.1 29.5A14 14 0 0 0 153.32 18h-50.64A14 14 0 0 0 88.9 29.5l-6.37 35.19a77.87 77.87 0 0 0 0 126.62l6.37 35.19a14 14 0 0 0 13.78 11.5h50.64a14 14 0 0 0 13.78-11.5l6.37-35.19A77.92 77.92 0 0 0 206 128M100.71 31.64a2 2 0 0 1 2-1.64h50.64a2 2 0 0 1 2 1.64l4.56 25.19a77.68 77.68 0 0 0-63.7 0Zm54.58 192.72a2 2 0 0 1-2 1.64h-50.61a2 2 0 0 1-2-1.64l-4.56-25.19a77.68 77.68 0 0 0 63.7 0ZM128 194a66 66 0 1 1 66-66a66.08 66.08 0 0 1-66 66m46-66a6 6 0 0 1-6 6h-40a6 6 0 0 1-6-6V88a6 6 0 0 1 12 0v34h34a6 6 0 0 1 6 6" />
+                                    </svg>
+                                    <span>Start -  end</span>
+                                </div>
+                            </th>
+
+
                             <th style="text-align: center;">Line </th>
                             <th style="text-align: center;">Issuer</th>
                             <th style="text-align: center;">Preparation</th>
+                            <th style="text-align: center;">Packaging</th>
+
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -120,7 +128,6 @@ class DownTimeHistoryController {
                     finalshopOrder: '',
                     search: this.inputsearch.value
                 });
-                  console.log(res);
                 if (!res?.Success) return;
                   const data = res.data;
 
@@ -148,6 +155,11 @@ class DownTimeHistoryController {
               return;
           }
 
+         
+
+
+
+
           this.PartsPreparebody.innerHTML = data.map(row => {
 
               return `
@@ -156,20 +168,22 @@ class DownTimeHistoryController {
                         class="prepare-row"
                         style="cursor:pointer;"
                     >
-                  <td>${this.escape(row.FinalShopOrder)}</td>
+                  <td>
+                    <strong style='color: #7c3aed;
+                                  font-weight: 600;'>${this.escape(row.FinalShopOrder)}</strong>
+                  </td>
                   <td>${this.escape(row.IssueCum)}</td>
+                  <td>${this.escape(row.DateStart)}</td>
+                  <td>${this.escape(row.PartNumber) || '-'}</td>
                   <td>${this.escape(row.PartName)}</td>
-                  <td>${this.escape(row.PartNumber)}</td>
-                  <td>${this.escape(row.Package)}</td>
                   <td>${this.escape(row.PlanQty)}</td>
                   <td>${this.escape(row.Location)}</td>
-
-                  <td>${this.formatTimeSpan(row.TimeStart)}</td>
-                   <td>${this.formatTimeSpan(row.TimeEnd)}</td>
+                  <td>${this.formatTimeSpan(row.TimeStart)} - ${this.formatTimeSpan(row.TimeEnd)}</td>
                   <td>${this.escape(row.Lines)}</td>
 
                   <td>${this.escape(row.Issuer)}</td>
                   <td>${this.escape(row.Preparation)}</td>
+                  <td>${this.escape(row.Package)}</td>
 
 
               </tr>`;
@@ -211,7 +225,7 @@ class DownTimeHistoryController {
 
     escape(str) {
         const d = document.createElement('div');
-        d.textContent = str ?? '';
+        d.textContent = str ?? '-';
         return d.innerHTML;
     }
 }

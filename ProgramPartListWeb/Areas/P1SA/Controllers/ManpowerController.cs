@@ -187,7 +187,7 @@ namespace ProgramPartListWeb.Areas.P1SA.Controllers
             catch (Exception ex)
             {
                 // TODO: swap for your logging call — kept explicit rather than swallowed silently
-                return Json(new { Success = false, Message = "Failed to save employee." });
+                return Json(new { Success = false, Message = ex.Message });
             }
 
             //bool result = await _emp.AddAsync(model);
@@ -267,7 +267,7 @@ namespace ProgramPartListWeb.Areas.P1SA.Controllers
             {
                 // Log the real exception server-side; keep the client message generic
                 // _logger.LogError(ex, "UpdateEmployee failed for EmployeeId {Id}", model.EmployeeId);
-                return Json(new { Success = false, Message = "An error occurred while saving. Please try again." });
+                return Json(new { Success = false, Message = ex.Message });
             }
         }
 

@@ -109,9 +109,11 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         public async Task<ActionResult> LineShopOrderData(
          string Linename,
          string searchtext,
-         int orderstatus)
+         int orderstatus,
+         DateTime? dateFrom = null,
+         DateTime? dateTo = null)
         {
-            var res = await _manu.GetListofShopOrdersByLine(Linename, searchtext, orderstatus)
+            var res = await _manu.GetListofShopOrdersByLine(Linename, searchtext, orderstatus, dateFrom, dateTo)
                       ?? new List<FanTraceabilityManufacturingOrder>();
 
             var finalData = new

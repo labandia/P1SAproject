@@ -356,22 +356,33 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     parameters.Add("@OrderStatus", status);
                 }
 
-                // Date range filter on Plan Start (either side is optional)
-                if (dateFrom.HasValue && dateTo.HasValue && dateFrom.Value > dateTo.Value)
+                // Date range filter on ShipmentDate
+                // Include records where ShipmentDate is NULL or has no value.
+                if (dateFrom.HasValue && dateTo.HasValue &&
+                    dateFrom.Value > dateTo.Value)
                 {
-                    (dateFrom, dateTo) = (dateTo, dateFrom);   // swap if reversed
+                    (dateFrom, dateTo) = (dateTo, dateFrom);
                 }
 
                 if (dateFrom.HasValue)
                 {
-                    query += " AND mo.PlanStartDate >= @DateFrom";
-                    parameters.Add("@DateFrom", dateFrom.Value.Date);
-                }
+                    query += @"
+                        AND (
+                            mo.ShipmentDate >= @DateFrom
+                            OR mo.ShipmentDate IS NULL
+                        )";
 
-                if (dateTo.HasValue)
-                {
-                    // < next day so the whole end date is included, even with a time part
-                    query += " AND mo.PlanStartDate < @DateToExclusive";
+                            parameters.Add("@DateFrom", dateFrom.Value.Date);
+                        }
+
+                        if (dateTo.HasValue)
+                        {
+                            query += @"
+                            AND (
+                                mo.ShipmentDate < @DateToExclusive
+                                OR mo.ShipmentDate IS NULL
+                            )";
+
                     parameters.Add("@DateToExclusive", dateTo.Value.Date.AddDays(1));
                 }
 
@@ -1425,7 +1436,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                       ,Package
                       ,PlanQty
                       ,Location
-                      ,DateStart
+                      ,FORMAT(DateStart, 'MM/dd/yy') AS DateStart
                       ,TimeStart
                       ,TimeEnd
                       ,Lines

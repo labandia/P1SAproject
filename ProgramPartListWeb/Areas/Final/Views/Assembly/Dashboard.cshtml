@@ -26,11 +26,7 @@
         getMethod,
         postMethod
     } from '@Url.Content("~/Scripts/modules/index.js")';
-
-
     class FinalAssemblyController {
-
-
         constructor() {
             this.ovenId = 0;
             this.prevModelprocess = "";
@@ -194,13 +190,10 @@
                     this.updateModalContent(updatedRecord, { animateNextModel: true });
 
                 } else if (!this.isExpanded) {
-                    console.log("HERE OVEN");
+                    // console.log("HERE OVEN");
                     const ovenMap = await this.loadOvenMap(records);
 
-                    ovenMap.forEach((index, data) => {
-                        console.log(data);
-                    });
-
+                 
                     records.forEach(r => { r.OvenItems = ovenMap.get(r.Line) ?? []; });
                     const hasAnyActive = apiData.length > 0 || ovenMap.size > 0;
                     hasAnyActive ? this.RenderCardList(records) : this.RenderEmptyState();
@@ -277,7 +270,7 @@
 
         updateModalContent(item, options = {}) {
 
-            console.log(item);
+            // console.log(item);
             const { animateNextModel = false, showNext = true, root = this.currentCenteredCard } = options;
             if (!root) return;
             const curStatus = this.statusByRecord.get(item.RecordID) ?? 4;
@@ -508,7 +501,7 @@
                         alert("Please select a Status.");
                         return;
                     }
-                    console.log("IS OVEN SELECTED : " + item.IsOven);
+                    // console.log("IS OVEN SELECTED : " + item.IsOven);
                     // 5 / 6 : FSI / Cell Line Completed, 4 : Completed
                     const isCompleted = (selectedStatus === 5 || selectedStatus === 6) ? 0 : 1;
 
@@ -829,7 +822,7 @@
             try {
                 const res = await getMethod('@Url.Action("GetIsOvenListActiveShopOrders", "Assembly")', { line });
 
-                console.log(res);
+                //console.log(res);
                 return res?.Success ? (res.data ?? []) : [];
             } catch (err) {
                 console.error(err);

@@ -551,7 +551,7 @@
                     console.log('No data found in Group Data ');
                     return;
                 }
-                console.log(res);
+                //console.log(res);
                 this.renderTable(res.data);
                 //console.log(res.data);
                 //console.log(res.data);
@@ -583,7 +583,7 @@
             this.tbody.innerHTML = this.currentData.map(row => {
 
                 if (row.ResultStatus == 'Achieved') {
-                    console.log("GOOD");
+                    // console.log("GOOD");
                     countAchieve += 1;
                 }
 
@@ -658,7 +658,7 @@
             set('TotalGap', totals.gap);
             set('IsStatus', isTotal);
             set('TotalAchieve', `${isTotal}%`);
-            console.log(`Total Achieves` + isTotal);
+            // console.log(`Total Achieves` + isTotal);
             // KPI cards
             set('targetCount', totals.reduct);
             set('actualCount', totals.actual);
@@ -677,7 +677,7 @@
 
                         const rowData = this.currentData.find(r => r.DashID == dashId);
                         if (rowData) rowData[field] = value;
-                        console.log(`ID :${dashId} - Column : ${field} - value : ${value}`)
+                        // console.log(`ID :${dashId} - Column : ${field} - value : ${value}`)
                         // keep tfoot in sync with the edited value immediately
                         // this.RenderTotals(this.currentData);
                         await this.UpdateAttendanceBreakDown(dashId, field, value, e.target);
@@ -695,7 +695,7 @@
 
 
                     if (!res?.Success) {
-                        console.log('Update failed for DashID ' + dashId);
+                        // console.log('Update failed for DashID ' + dashId);
                         inputEl.classList.add('input-error');
                         return;
                     }

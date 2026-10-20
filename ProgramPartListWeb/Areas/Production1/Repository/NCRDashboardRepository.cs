@@ -832,7 +832,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         // ================== For Group Manage Data ==================
         public Task<List<ProductionGroupModel>> GetGroupDataList(string months)
         {
-            Debug.WriteLine($@"Months: {months}");
+            //Debug.WriteLine($@"Months: {months}");
 
             string strsql = @"
                     SELECT 
@@ -887,7 +887,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         // ================== Edit Group Performance Data ==================
         public async Task<bool> EditGroupPermanceList(ProductionGroupModel prod)
         {
-            Debug.WriteLine($@"DateGroup :{prod.GroupDate} - Group :{prod.Group1} - ID : {prod.RecordId}");
+            //Debug.WriteLine($@"DateGroup :{prod.GroupDate} - Group :{prod.Group1} - ID : {prod.RecordId}");
 
              int result = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE 
                 ProductionFinal_GroupChart SET 
@@ -919,7 +919,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 
         public async Task<bool> SaveAuditInfo(AuditInfoModel model)
         {
-            Debug.WriteLine($@"Customer : {model.Customer} - AuditName : {model.AuditTime}");
+            //Debug.WriteLine($@"Customer : {model.Customer} - AuditName : {model.AuditTime}");
 
             int rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FinalAssembly_AuditInfo SET 
                     Customer =@Customer, AuditDate =@AuditDate, AuditTime =@AuditTime, CoverageArea =@CoverageArea", model);
@@ -1337,20 +1337,31 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             CAST(att.WorkDate AS DATE) AS WorkDate,
             att.EmployeeId,
 
-            -- Same bucket logic as BaseAttendanceQuery
-            CASE
-                WHEN att.TimeOut = 0.00 THEN 0.00
+            -- 1 = has a TimeOut, 0 = not clocked out yet
+            CASE WHEN att.TimeOut IS NULL OR att.TimeOut = 0.00 THEN 0 ELSE 1 END AS TimeOutSet,
 
-                WHEN CAST(att.TimeOut AS TIME) <= e.DayShiftEndTime
+            CASE
+                -- TimeOut not set yet = 0.00
+                WHEN att.TimeOut IS NULL OR att.TimeOut = 0.00 THEN 0.00
+
+                -- 15:30 to 16:29 = 0.00
+                WHEN CAST(att.TimeOut AS TIME) < DATEADD(HOUR, 1, e.DayShiftEndTime)
                     THEN 0.00
 
-                WHEN CAST(att.TimeOut AS TIME) < DATEADD(HOUR, 1, e.DayShiftEndTime)
+                -- 16:30 to 17:29 = 1.00
+                WHEN CAST(att.TimeOut AS TIME) < DATEADD(HOUR, 2, e.DayShiftEndTime)
                     THEN 1.00
 
-                WHEN CAST(att.TimeOut AS TIME) < DATEADD(HOUR, 2, e.DayShiftEndTime)
+                -- 17:30 to 18:29 = 1.83
+                WHEN CAST(att.TimeOut AS TIME) < DATEADD(HOUR, 3, e.DayShiftEndTime)
                     THEN 1.83
 
-                ELSE 2.83
+                -- 18:30 to 19:29 = 2.83
+                WHEN CAST(att.TimeOut AS TIME) < DATEADD(HOUR, 4, e.DayShiftEndTime)
+                    THEN 2.83
+
+                -- 19:30 and later = 0.00
+                ELSE 0.00
             END AS OvertimeHours
         FROM [PMACS_TEST].[dbo].[P1SA_AttendanceMonitor_Temp] att
         INNER JOIN [PMACS_TEST].[dbo].[P1SA_Employees_Temp] e
@@ -1366,10 +1377,17 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             COUNT(DISTINCT EmployeeId) AS PresentCount,
 
             -- Headcount per overtime bucket
-            COUNT(DISTINCT CASE WHEN OvertimeHours = 0.00 THEN EmployeeId END) AS Overtime,
+            -- 0.00 bucket only counts people who actually clocked out
+            COUNT(DISTINCT CASE WHEN OvertimeHours = 0.00 AND TimeOutSet = 1 THEN EmployeeId END) AS Overtime,
             COUNT(DISTINCT CASE WHEN OvertimeHours = 1.00 THEN EmployeeId END) AS Overtime_1,
             COUNT(DISTINCT CASE WHEN OvertimeHours = 1.83 THEN EmployeeId END) AS Overtime_2,
-            COUNT(DISTINCT CASE WHEN OvertimeHours = 2.83 THEN EmployeeId END) AS Overtime_3
+            COUNT(DISTINCT CASE WHEN OvertimeHours = 2.83 THEN EmployeeId END) AS Overtime_3,
+
+            -- Not clocked out yet
+            COUNT(DISTINCT CASE WHEN TimeOutSet = 0 THEN EmployeeId END) AS NotClockedOut,
+
+            -- Total overtime hours for the department that day
+            SUM(OvertimeHours) AS TotalOvertimeHours
         FROM AttendanceOT
         GROUP BY
             DepartmentId,
@@ -1403,7 +1421,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         {filterstr}
     FROM DashboardCalc";
 
-            Debug.WriteLine(strsql);
+            //Debug.WriteLine(strsql);
 
             return strsql;
         }

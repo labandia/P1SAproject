@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using static ProgramPartListWeb.Areas.Production1.Model.AttendanceModel;
 
 namespace ProgramPartListWeb.Areas.Production1.Controllers
 {
@@ -14,34 +15,67 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
     {
         private readonly IP1EmployeesService _emp;
 
-        public EmployeesController(IP1EmployeesService emp) => _emp = emp;  
+        public EmployeesController(IP1EmployeesService emp) => _emp = emp;
 
         // ─────────────────────────────────────────────────────────────────
         // POST: /Production1/Employees/SaveEmployee
         // Saves The Employees Details 
         // ─────────────────────────────────────────────────────────────────
         [HttpPost]
-        public async Task<JsonResult> SaveEmployee(EmployeeProfile profile)
+        public async Task<ActionResult> SaveEmployee(EmployeeProfile profile)
         {
             if (profile == null)
-                 JsonNotFound("No data received.");
+                JsonNotFound("No data received.");
 
             profile.EmployeeCode = (profile.EmployeeCode ?? "").Trim();
             profile.LastName = (profile.LastName ?? "").Trim();
             profile.FirstName = (profile.FirstName ?? "").Trim();
             profile.MiddleName = (profile.MiddleName ?? "").Trim();
 
-           
+
             string rest = string.Join(" ", new[] { profile.FirstName, profile.MiddleName }
                                        .Where(s => s.Length > 0));
             profile.FullName = profile.LastName + ", " + rest;
 
             int result = await _emp.SaveEmployeeManage(profile);
 
-            if(result == 0) return JsonError("Failed to save employee details.");
+            if (result == 0) return JsonError("Failed to save employee details.");
 
             return JsonSuccess("Employee details saved successfully.");
         }
+
+
+
+        // ─────────────────────────────────────────────────────────────────
+        // GET: /Production1/Employees/AddProcessEmployee
+        // Gets the Process Data by Department
+        // ─────────────────────────────────────────────────────────────────
+        [HttpGet]
+        public async Task<ActionResult> GetProcessDepartment(int Department)
+        {
+            var res = await _emp.LoadProcessData(Department);
+            if (res == null || !res.Any())
+                return JsonNotFound("No Active Lines found");
+            return JsonSuccess(res);
+        }
+        // ─────────────────────────────────────────────────────────────────
+        // POST: /Production1/Employees/AddProcessEmployee
+        // Add New Process Task Job Based on Department 
+        // ─────────────────────────────────────────────────────────────────
+
+        [HttpPost]
+        public async Task<ActionResult> AddProcessEmployee(ProcessEmployee model)
+        {
+            int added = await _emp.AddProcessData(model);
+            if (added == 0)
+                return JsonPostError("Failed to Add a New Process");
+
+            return JsonSuccess(added);
+        }
+
+
+
+
 
         // GET: Production1/Employees
         public ActionResult EmployeesForm()

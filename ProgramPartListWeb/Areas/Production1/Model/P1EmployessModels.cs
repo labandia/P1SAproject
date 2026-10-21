@@ -20,11 +20,11 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public string MiddleName { get; set; }
         public string LastName { get; set; }
         public string Process { get; set; }
-        public int AgencyId { get; set;}
+        public int AgencyId { get; set; }
         public string AgencyName { get; set; }
         public int? DepartmentId { get; set; }
         public int? StatusId { get; set; } = 1;
-        public int? WIthVech { get; set; } = 0; 
+        public int? WIthVech { get; set; } = 0;
         // From the new tables
         public EmployeeInformation Information { get; set; }
         public List<EmployeeEducation> Education { get; set; } = new List<EmployeeEducation>();
@@ -121,9 +121,17 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public int ProcessId { get; set; }
         public string TaskName { get; set; }
         public string SkilledName { get; set; }
-        public string DepartmentId { get; set; }    
+        public string DepartmentId { get; set; }
 
         public int IsPersonal { get; set; }
         public int IsCrossed { get; set; }
+    }
+
+
+    public class ProcessEmployee
+    {
+        public int ProcessId { get; set; }
+        public string ProcessName { get; set; }
+        public int DepartmentId { get; set; }
     }
 }

@@ -1580,35 +1580,24 @@ body {
     gap: 12px;
 }
 
-.btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 14px;
-    font-size: 12px;
-    font-weight: 600;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.15s;
-    font-family: inherit;
-    border: 1px solid transparent;
-    white-space: nowrap;
+
+.custbtn svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    color: #0f172a;
 }
 
-    .btn svg {
-        width: 16px;
-        height: 16px;
-        flex-shrink: 0;
-    }
-
-    .btn:disabled {
-        opacity: 0.4;
-        cursor: not-allowed;
-    }
+.custbtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
 
 .btn-ghost {
-    background: var(--slate-100);
-    color: var(--slate-600);
+    display: flex;
+    align-items: center;
+    background: #f1f5f9 !important;
+/*    color: var(--slate-600);*/
 }
 
     .btn-ghost:hover {
@@ -1616,13 +1605,15 @@ body {
     }
 
     .btn-ghost svg {
-        color: var(--slate-500);
+        color: #0f172a;
+        font-size: .8rem;
     }
 
 .btn-link-danger {
     background: transparent;
     color: var(--slate-500);
     padding: 8px 12px;
+    border: 1px solid rgba(37, 99, 235, 0.2);
 }
 
     .btn-link-danger:hover {
@@ -1635,6 +1626,7 @@ body {
     color: var(--slate-700);
     border-color: var(--slate-300);
     box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    border: 1px solid rgba(37, 99, 235, 0.2);
 }
 
     .btn-outline:hover {
@@ -1652,6 +1644,10 @@ body {
     border-color: transparent;
     box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
+
+    .btn-primary svg{
+        background: #f1f5f9 !important;
+    }
 
     .btn-primary:hover {
         background: var(--blue-700);
@@ -1679,6 +1675,19 @@ body {
         outline: none;
         box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
     }
+/* Prevent text from wrapping in action bar buttons */
+.action-bar .btn-outline,
+.action-bar .btn-primary,
+.action-bar .btn-ghost,
+.action-bar .btn-link-danger {
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: .8em 1.5em;
+    gap: 8px; /* Space between icon and text */
+    border-radius: .5em;
+}
 
 /* ============================================================
    TOAST
@@ -1767,12 +1776,12 @@ body {
         gap: 6px;
     }
 
-    .btn {
+    .custbtn {
         padding: 8px 10px;
         font-size: 11px;
     }
 
-        .btn span.btn-label {
+        .custbtn span.btn-label {
             display: none;
         }
 

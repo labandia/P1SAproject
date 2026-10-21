@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.EMMA;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.EMMA;
 using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using ProgramPartListWeb.Areas.Production1.Interface;
 using ProgramPartListWeb.Areas.Production1.Model;
@@ -59,6 +60,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                     await SaveInformationAsync(profile.EmployeeId, profile.Information);
                     await SaveAddressAsync(profile.EmployeeId, profile.Addresses);
                     await SaveEducationAsync(profile.EmployeeId, profile.Education);
+                    await SaveSkillSetAsync(profile.EmployeeId, profile.Skilled);
                 });
 
                 return profile.EmployeeId;
@@ -227,6 +229,98 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             }
         }
 
-       
+        public async Task SaveSkillSetAsync(int EmployeeId, List<EmployeeSkilled> processlist)
+        {
+            try
+            {
+                if (processlist == null)
+                {
+                    Debug.WriteLine("SkillList  is NULL.");
+                    return;
+                }
+
+                Debug.WriteLine("========== SKILLS INFORMATION ==========");
+
+                foreach (var emp in processlist)
+                {
+                    Debug.WriteLine($"EmployeeId: {EmployeeId}");
+                    Debug.WriteLine($"ProcessId: {emp.ProcessId}");
+                    Debug.WriteLine($"DepartmentId: {emp.DepartmentId}");
+
+                    int resultcheck = await SqlDataAcess_Test.ExecuteAsync(
+                        @"INSERT INTO P1SA_SkillsCard
+                        (EmployeeId, ProcessId, DepartmentId)
+                        VALUES
+                        (@EmployeeId, @ProcessId, @DepartmentId)",
+                        new
+                        {
+                            EmployeeId = EmployeeId,
+                            ProcessId = emp.ProcessId,
+                            DepartmentId = emp.DepartmentId
+                        });
+
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error saving employee information: {ex}");
+                throw;
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public async Task<List<ProcessEmployee>> LoadProcessData(int DepartmentId)
+        {
+            return await SqlDataAcess_Test.QueryAsync<ProcessEmployee>($@"SELECT ProcessId
+                          ,ProcessName
+                          ,DepartmentId
+                      FROM P1SA_EmployeeProcess WHERE DepartmentId =@DepartmentId ", new
+            {
+                DepartmentId
+            });
+        }
+
+        public async Task<int> AddProcessData(ProcessEmployee emp)
+        {
+            return await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO P1SA_EmployeeProcess(ProcessName,DepartmentId)
+                VALUES (@ProcessName, @DepartmentId)", new
+            {
+                ProcessName =  emp.ProcessName,
+                DepartmentId = emp.DepartmentId
+            });
+        }
+
+        public Task<int> EditProcessPerEmployee(int Employeeid, int processID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> DeleteSkillEmployee(int EmployeeId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SaveSkillSetAsync(int EmployeeId, List<ProcessEmployee> processlist)
+        {
+            throw new NotImplementedException();
+        }
+
+        
     }
 }

@@ -25,7 +25,7 @@
             </div>
             <div class="header-divider"></div>
             <nav class="breadcrumb" aria-label="Breadcrumb">
-               
+
                 <span class="crumb-current">Create New Record</span>
             </nav>
         </div>
@@ -51,46 +51,6 @@
      MAIN CONTENT
      ============================================================ -->
 <main class="main-content">
-
-    <!-- Progress / Stepper -->
-    <div class="progress-card">
-        <div class="progress-top">
-            <div class="progress-top-left">
-                <div class="progress-badge" id="progressPercentBadge">0%</div>
-                <div>
-                    <h2 class="progress-title" id="progressTitle">New Hire Encoding Progress: 0% Complete</h2>
-                    <p class="progress-sub" id="progressSubtitle">12 mandatory fields remaining to finalize profile</p>
-                </div>
-            </div>
-            <span class="autosave-badge" id="autosaveBadge">Draft auto-save: Idle</span>
-        </div>
-        <div class="stepper-grid" id="stepperChips">
-            <button type="button" class="step-chip current" data-step="0">
-                <span class="step-circle">1</span>
-                <span class="step-label">Personal Info</span>
-            </button>
-            <button type="button" class="step-chip" data-step="1">
-                <span class="step-circle">2</span>
-                <span class="step-label">Addresses</span>
-            </button>
-            <button type="button" class="step-chip" data-step="2">
-                <span class="step-circle">3</span>
-                <span class="step-label">Contacts</span>
-            </button>
-            <button type="button" class="step-chip" data-step="3">
-                <span class="step-circle">4</span>
-                <span class="step-label">Education</span>
-            </button>
-            <button type="button" class="step-chip" data-step="4">
-                <span class="step-circle">5</span>
-                <span class="step-label">Skills &amp; IDs</span>
-            </button>
-            <button type="button" class="step-chip" data-step="5">
-                <span class="step-circle">6</span>
-                <span class="step-label">Review &amp; Enroll</span>
-            </button>
-        </div>
-    </div>
 
     <!-- Content grid -->
     <div class="content-grid">
@@ -151,7 +111,7 @@
                     </div>
                     <div class="spec-item">
                         <span class="spec-label">Plant</span>
-                        <span class="spec-value" id="sidebarPlant" style="overflow:hidden;text-overflow:ellipsis;display:block;">Unassigned</span>
+                        <span class="spec-value" id="sidebarPlant">Unassigned</span>
                     </div>
                     <div class="spec-item">
                         <span class="spec-label">Work Entries</span>
@@ -173,6 +133,10 @@
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" /></svg>
                             Personal Details
                             <span class="tab-dot"></span>
+                        </button>
+                        <button type="button" class="tab-link" data-tab="employment">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" /></svg>
+                            Employment
                         </button>
                         <button type="button" class="tab-link" data-tab="address">
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" /><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" /></svg>
@@ -197,7 +161,7 @@
                     </nav>
                     <div class="tabs-mode-info">
                         <span class="mode-badge">New Hire Mode</span>
-                        <span class="sections-label" id="sectionsCompletedLabel">0 of 6 Sections Completed</span>
+                        <span class="sections-label" id="sectionsCompletedLabel">0 of 7 Sections Completed</span>
                     </div>
                 </div>
 
@@ -224,7 +188,7 @@
                             <span class="req-badge">* Required fields</span>
                         </div>
 
-                       
+
                         <div class="form-row cols-4">
                             <div class="form-group">
                                 <label class="form-label" for="employeeCode">Employee Code <span class="req">*</span></label>
@@ -287,18 +251,16 @@
                                 </select>
                                 <span class="error-text">Civil status is required.</span>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label" for="hireDate">Hire / Onboarding Date <span class="req">*</span></label>
-                                <input id="hireDate" name="hireDate" class="form-input" type="date" data-required="true" />
-                                <span class="error-text">Hire date is required.</span>
-                            </div>
-                        </div>
 
-                        <div class="form-row cols-3">
                             <div class="form-group">
                                 <label class="form-label" for="religion">Religion / Affiliation</label>
                                 <input id="religion" name="religion" class="form-input" type="text" maxlength="60" placeholder="Select or type religion..." />
                             </div>
+
+                        </div>
+
+                        <div class="form-row cols-4">
+
                             <div class="form-group">
                                 <label class="form-label" for="bloodType">Blood Type <span class="req">*</span></label>
                                 <select id="bloodType" name="bloodType" class="form-select" data-required="true">
@@ -320,53 +282,9 @@
                                 <input id="citizenship" name="citizenship" class="form-input" type="text" maxlength="40" placeholder="e.g. Filipino" value="Filipino" data-required="true" />
                                 <span class="error-text">Citizenship is required.</span>
                             </div>
-                        </div>
 
-                        <!-- Employment Information -->
-                        <div class="subsection-divider">
-                            <div class="subsection-head">
-                                <h4>Employment Information</h4>
-                                <span class="optional-badge">Optional at Draft Stage</span>
-                            </div>
-                            <div class="form-row cols-3">
-                                <div class="form-group">
-                                    <label class="form-label" for="dateHired">Date Hired</label>
-                                    <input id="dateHired" name="dateHired" class="form-input" type="date" />
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="process">Process</label>
-                                    <input id="process" name="process" class="form-input" type="text" maxlength="60" placeholder="e.g. Assembly" />
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="agencyId">Agency <span class="req">*</span></label>
-                                    <select id="agencyId" name="agencyId" class="form-select" data-required="true">
-                                        <option value="" selected>-- Select --</option>
-                                        <option value="1">SDP</option>
-                                        <option value="2">TMS</option>
-                                        <option value="3">One Source</option>
-                                        <option value="4">SyneryOne</option>
-                                        <option value="5">Golden Hands</option>
-                                    </select>
-                                    <span class="error-text">Agency is required.</span>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="departmentId">Department ID</label>
-                                    <select id="departmentId" name="departmentId" class="form-select">
-                                        <option value="" selected>-- Select --</option>
-                                        <option value="1">Molding</option>
-                                        <option value="2">Press</option>
-                                        <option value="3">Rotor</option>
-                                        <option value="4">Winding</option>
-                                        <option value="5">Circuit</option>
-                                        <option value="6">Process Control</option>
-                                        <option value="7">Final Assembly</option>
-                                    </select>
-                                </div>
-                                <div class="form-group" style="grid-column: span 2;">
-                                    <label class="form-label" for="remarks">Remarks</label>
-                                    <input id="remarks" name="remarks" class="form-input" type="text" maxlength="200" placeholder="e.g. Onboarding notes" />
-                                </div>
-                            </div>
+                            <div class="form-group"></div>
+                            <div class="form-group"></div>
                         </div>
 
                         <div class="form-group" style="margin-top: 16px;">
@@ -375,8 +293,62 @@
                         </div>
                     </div>
 
-                    <!-- ============ STEP 2: ADDRESSES ============ -->
+                    <!-- ============ STEP 2: EMPLOYMENT ============ -->
                     <div class="step-panel" data-step-panel="1">
+                        <div class="section-header">
+                            <div class="section-header-left">
+                                <h3>
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" /></svg>
+                                    Employment Information
+                                </h3>
+                                <p>Record agency, department, and process assignment details.</p>
+                            </div>
+                            <span class="req-badge">* Required fields</span>
+                        </div>
+
+                        <div class="form-row cols-2">
+                            <div class="form-group">
+                                <label class="form-label" for="dateHired">Date Hired</label>
+                                <input id="dateHired" name="dateHired" class="form-input" type="date" />
+                            </div>
+                            <div class="form-group" style="display: none;">
+                                <label class="form-label" for="process">Process</label>
+                                <input id="process" name="process" class="form-input" type="text" maxlength="60" placeholder="e.g. Assembly" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="agencyId">Agency <span class="req">*</span></label>
+                                <select id="agencyId" name="agencyId" class="form-select" data-required="true">
+                                    <option value="" selected>-- Select --</option>
+                                    <option value="1">SDP</option>
+                                    <option value="2">TMS</option>
+                                    <option value="3">One Source</option>
+                                    <option value="4">SyneryOne</option>
+                                    <option value="5">Golden Hands</option>
+                                </select>
+                                <span class="error-text">Agency is required.</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="departmentId">Department ID</label>
+                                <select id="departmentId" name="departmentId" class="form-select">
+                                    <option value="" selected>-- Select --</option>
+                                    <option value="1">Molding</option>
+                                    <option value="2">Press</option>
+                                    <option value="3">Rotor</option>
+                                    <option value="4">Winding</option>
+                                    <option value="5">Circuit</option>
+                                    <option value="6">Process Control</option>
+                                    <option value="7">Final Assembly</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="grid-column: span 2;">
+                                <label class="form-label" for="remarks">Remarks</label>
+                                <input id="remarks" name="remarks" class="form-input" type="text" maxlength="200" placeholder="e.g. Onboarding notes" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ============ STEP 3: ADDRESSES ============ -->
+                    <div class="step-panel" data-step-panel="2">
                         <div class="section-header">
                             <div class="section-header-left">
                                 <h3>
@@ -401,8 +373,8 @@
                         </div>
                     </div>
 
-                    <!-- ============ STEP 3: CONTACTS ============ -->
-                    <div class="step-panel" data-step-panel="2">
+                    <!-- ============ STEP 4: CONTACTS ============ -->
+                    <div class="step-panel" data-step-panel="3">
                         <div class="section-header">
                             <div class="section-header-left">
                                 <h3>
@@ -468,8 +440,8 @@
                         </div>
                     </div>
 
-                    <!-- ============ STEP 4: EDUCATION ============ -->
-                    <div class="step-panel" data-step-panel="3">
+                    <!-- ============ STEP 5: EDUCATION ============ -->
+                    <div class="step-panel" data-step-panel="4">
                         <div class="section-header">
                             <div class="section-header-left">
                                 <h3>
@@ -528,8 +500,8 @@
                         </div>
                     </div>
 
-                    <!-- ============ STEP 5: SKILLS & STATUTORY IDS ============ -->
-                    <div class="step-panel" data-step-panel="4">
+                    <!-- ============ STEP 6: SKILLS & STATUTORY IDS ============ -->
+                    <div class="step-panel" data-step-panel="5">
                         <div class="section-header">
                             <div class="section-header-left">
                                 <h3>
@@ -540,57 +512,53 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="form-label" for="skills">Professional Skills / Competencies</label>
-                            <textarea id="skills" name="skills" class="form-textarea" rows="3" maxlength="500" placeholder="e.g. AutoCAD, PLC Programming, Lean Manufacturing, Project Management..."></textarea>
-                            <p style="font-size:11px;color:var(--slate-400);margin-top:4px;">Separate skills with commas.</p>
-                        </div>
 
-                        <div class="form-group">
-                            <label class="form-label" for="certifications">Certifications / Licenses</label>
-                            <textarea id="certifications" name="certifications" class="form-textarea" rows="3" maxlength="500" placeholder="e.g. Licensed Mechanical Engineer (PRC), TESDA NC II, Six Sigma Green Belt..."></textarea>
+
+                        <div class="skill-add-grid">
+                            <div class="form-group">
+                                <label class="form-label" for="skilldepartmentId">Department</label>
+                                <select id="skilldepartmentId" class="form-select">
+                                    <option value="">-- Select --</option>
+                                    <option value="1">Molding</option>
+                                    <option value="2">Press</option>
+                                    <option value="3">Rotor</option>
+                                    <option value="4">Winding</option>
+                                    <option value="5">Circuit</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="ProcessId">Process</label>
+                                <select id="ProcessId" class="form-select"></select>
+                                <div class="skill-new-process">
+                                    <input type="text" id="NewProcessName" class="form-input" maxlength="60" placeholder="New process name" />
+                                    <button type="button" id="AddProcessBtn" class="btn-secondary">+ Add</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">&nbsp;</label>
+                                <button type="button" id="SkillSavebtn" class="btn-primary">Save Skill</button>
+                            </div>
                         </div>
 
                         <div class="subsection-divider">
-                            <div class="subsection-head">
-                                <h4>Government &amp; Statutory IDs</h4>
-                                <span class="optional-badge">Optional at Draft Stage</span>
-                            </div>
-                            <div class="form-row cols-4">
-                                <div class="form-group">
-                                    <label class="form-label" for="tin2">TIN Number</label>
-                                    <input id="tin2" name="tin2" class="form-input mono" type="text" inputmode="numeric" maxlength="15"
-                                           data-mask="000-000-000-000" data-min-digits="9" data-validate="mask"
-                                           data-invalid-msg="TIN needs 9 or 12 digits." placeholder="000-000-000-000" />
-                                    <span class="error-text"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="sss2">SSS Number</label>
-                                    <input id="sss2" name="sss2" class="form-input mono" type="text" inputmode="numeric" maxlength="12"
-                                           data-mask="00-0000000-0" data-validate="mask"
-                                           data-invalid-msg="SSS needs 10 digits." placeholder="00-0000000-0" />
-                                    <span class="error-text"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="philhealth2">PhilHealth Number</label>
-                                    <input id="philhealth2" name="philhealth2" class="form-input mono" type="text" inputmode="numeric" maxlength="14"
-                                           data-mask="00-000000000-0" data-validate="mask"
-                                           data-invalid-msg="PhilHealth needs 12 digits." placeholder="00-000000000-0" />
-                                    <span class="error-text"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="pagibig2">Pag-IBIG / HDMF</label>
-                                    <input id="pagibig2" name="pagibig2" class="form-input mono" type="text" inputmode="numeric" maxlength="14"
-                                           data-mask="0000-0000-0000" data-validate="mask"
-                                           data-invalid-msg="Pag-IBIG needs 12 digits." placeholder="0000-0000-0000" />
-                                    <span class="error-text"></span>
-                                </div>
+                            <div class="table-scroll">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Department</th>
+                                            <th>Skill Acquired</th>
+                                            <th>Edit</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="SkillsTable"></tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
 
-                    <!-- ============ STEP 6: WORK + REVIEW ============ -->
-                    <div class="step-panel" data-step-panel="5">
+                    <!-- ============ STEP 7: WORK + REVIEW ============ -->
+                    <div class="step-panel" data-step-panel="6">
                         <div class="section-header">
                             <div class="section-header-left">
                                 <h3>
@@ -604,39 +572,31 @@
                         <div class="subsection-head">
                             <h4>Additional Work Experience</h4>
                         </div>
-                        <div class="form-row cols-2">
-                            <div class="form-group">
-                                <label class="form-label" for="work2Company">Company Name</label>
-                                <input id="work2Company" name="work2Company" class="form-input" type="text" maxlength="120" placeholder="e.g. XYZ Electronics" />
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="work2Position">Position</label>
-                                <input id="work2Position" name="work2Position" class="form-input" type="text" maxlength="80" placeholder="e.g. QA Inspector" />
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="work2Dates">Inclusive Dates</label>
-                                <input id="work2Dates" name="work2Dates" class="form-input" type="text" maxlength="60" placeholder="e.g. Mar 2018 – Dec 2019" />
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="work2Reason">Reason for Leaving</label>
-                                <input id="work2Reason" name="work2Reason" class="form-input" type="text" maxlength="120" placeholder="e.g. Relocation" />
-                            </div>
+                        <div class="section-title"><i class="fa-solid fa-briefcase"></i> Work Experience</div>
+                        <div style="margin-bottom: 15px;">
+                            <button class="btn btn-primary" style="padding: 8px 14px; font-size: 12px;" id="btnAddWork" disabled>
+                                <i class="fa-solid fa-plus"></i> Add New
+                            </button>
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Company Name</th>
+                                        <th>Position Held</th>
+                                        <th>Department</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="workTableBody">
+                                    <tr class="empty-row"><td colspan="6">No work experience recorded</td></tr>
+                                </tbody>
+                            </table>
                         </div>
 
-                        <div class="subsection-divider">
-                            <div class="subsection-head">
-                                <h4>Review Summary</h4>
-                                <span class="optional-badge">Auto-generated</span>
-                            </div>
-                            <div class="review-grid" id="reviewSummary"></div>
-                        </div>
 
-                        <div class="review-banner" style="margin-top: 24px;">
-                            <svg fill="currentColor" viewBox="0 0 20 20"><path clip-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" fill-rule="evenodd" /></svg>
-                            <div class="review-banner-text">
-                                <span class="strong">Ready to enroll?</span> Please review all sections. Enrolling will generate a permanent PISA reference ID and notify the HR onboarding team.
-                            </div>
-                        </div>
                     </div>
 
                 </form>
@@ -651,25 +611,25 @@
 <footer class="action-bar">
     <div class="action-bar-inner">
         <div class="action-left">
-            <button id="cancelBtn" type="button" class="btn btn-ghost">
+            <button id="cancelBtn" type="button" class="custbtn btn-ghost">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" /></svg>
                 Cancel &amp; Exit
             </button>
-            <button id="clearBtn" type="button" class="btn btn-link-danger">
+            <button id="clearBtn" type="button" class="custbtn btn-link-danger">
                 Clear All Fields
             </button>
         </div>
         <div class="action-right">
-            <button id="prevBtn" type="button" class="btn btn-outline" disabled>
+            <button id="prevBtn" type="button" class="custbtn btn-outline" disabled>
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" /></svg>
                 <span class="btn-label">Previous</span>
             </button>
-            <button id="draftBtn" type="button" class="btn btn-outline">
+            <button id="draftBtn" type="button" class="custbtn btn-outline">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" /></svg>
                 <span class="btn-label">Save as Draft</span>
             </button>
-            <button id="nextBtn" type="button" class="btn btn-primary">
-                <span>Save &amp; Proceed to Addresses</span>
+            <button id="nextBtn" type="button" class="custbtn btn-primary">
+                <span>Save &amp; Proceed to Employment</span>
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" /></svg>
             </button>
         </div>
@@ -683,6 +643,36 @@
 </div>
 
 
+
+<!-- WORK MODAL -->
+<div class="modal fade" id="workModal" tabindex="-1" aria-labelledby="workModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-briefcase"></i> <span id="workModalTitle">Add Work Experience</span></h3>
+                <button type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-grid-2" style="margin-bottom: 16px;">
+                    <div class="form-group"><label>Start Date</label><input type="date" class="form-control" id="workStart"></div>
+                    <div class="form-group"><label>End Date</label><input type="date" class="form-control" id="workEnd"></div>
+                </div>
+                <div class="form-group" style="margin-bottom: 16px;"><label>Company Name</label><input type="text" class="form-control" id="workCompany"></div>
+                <div class="form-grid-2">
+                    <div class="form-group"><label>Position Held</label><input type="text" class="form-control" id="workPosition"></div>
+                    <div class="form-group"><label>Department</label><input type="text" class="form-control" id="workDepartment"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="workModalSave"><i class="fa-solid fa-check"></i> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <script src="~/Scripts/chart.js"></script>
 <script type="module">
     import {
@@ -694,9 +684,9 @@
     //  EMPLOYEE ENCODER – ES6 Module
     // ============================================================
 
-    const TOTAL_STEPS = 6;
-    const STEP_LABELS = ['Personal Info', 'Addresses', 'Contacts', 'Education', 'Skills & IDs', 'Review & Enroll'];
-    const STEP_TAB = ['personal', 'address', 'contact', 'education', 'skills', 'work'];
+    const TOTAL_STEPS = 7;
+    const STEP_LABELS = ['Personal Info', 'Employment', 'Addresses', 'Contacts', 'Education', 'Skills & IDs', 'Review & Enroll'];
+    const STEP_TAB = ['personal', 'employment', 'address', 'contact', 'education', 'skills', 'work'];
     const TAB_STEP = Object.fromEntries(STEP_TAB.map((t, i) => [t, i]));
 
     // Create action of Areas/Production1/Controllers/EmployeesController
@@ -747,20 +737,17 @@
         constructor() {
             this.currentStep = 0;
             this.toastTimer = null;
+            this.skills = [];   // pending skills, sent as Skilled[]
 
             this.dom = {
                 form: document.getElementById('employeeForm'),
                 panels: [...document.querySelectorAll('[data-step-panel]')],
-                chips: [...document.querySelectorAll('.step-chip')],
                 tabLinks: [...document.querySelectorAll('.tab-link')],
                 prevBtn: document.getElementById('prevBtn'),
                 nextBtn: document.getElementById('nextBtn'),
                 draftBtn: document.getElementById('draftBtn'),
                 clearBtn: document.getElementById('clearBtn'),
                 cancelBtn: document.getElementById('cancelBtn'),
-                progressPercentBadge: document.getElementById('progressPercentBadge'),
-                progressTitle: document.getElementById('progressTitle'),
-                progressSubtitle: document.getElementById('progressSubtitle'),
                 readinessPercent: document.getElementById('readinessPercent'),
                 readinessBar: document.getElementById('readinessBar'),
                 readinessHint: document.getElementById('readinessHint'),
@@ -769,8 +756,14 @@
                 sidebarPlant: document.getElementById('sidebarPlant'),
                 toast: document.getElementById('toast'),
                 toastMsg: document.getElementById('toastMsg'),
-                reviewSummary: document.getElementById('reviewSummary')
+                skillDept: document.getElementById('skilldepartmentId'),
+                skillProcess: document.getElementById('ProcessId'),
+                skillSaveBtn: document.getElementById('SkillSavebtn'),
+                skillsTable: document.getElementById('SkillsTable'),
+                newProcessName: document.getElementById('NewProcessName'),
+                addProcessBtn: document.getElementById('AddProcessBtn')
             };
+            // reviewSummary: document.getElementById('reviewSummary'),
 
             this.init();
         }
@@ -801,8 +794,6 @@
                     if (target !== undefined) this.goToStep(target);
                 }));
 
-            this.dom.chips.forEach((chip, i) => chip.addEventListener('click', () => this.goToStep(i)));
-
             this.dom.prevBtn.addEventListener('click', () => this.goToStep(this.currentStep - 1, { skipValidation: true }));
             this.dom.nextBtn.addEventListener('click', () => this.handleNext());
 
@@ -830,6 +821,31 @@
             this.dom.form.addEventListener('focusout', e => this.handleBlur(e));
             // Select / radio / date picks
             this.dom.form.addEventListener('change', e => this.handleChange(e));
+
+            // ---- Skills ----
+            this.dom.skillSaveBtn.addEventListener('click', () => this.addSkill());
+
+            // edit/delete via delegation (rows are re-rendered)
+            this.dom.skillsTable.addEventListener('click', e => {
+                const btn = e.target.closest('button[data-action]');
+                if (!btn) return;
+                const idx = +btn.dataset.index;
+                if (btn.dataset.action === 'delete') {
+                    this.skills.splice(idx, 1);
+                    this.renderSkills();
+                } else if (btn.dataset.action === 'edit') {
+                    const s = this.skills[idx];
+                    this.dom.skillDept.value = s.DepartmentId;
+                    this.dom.skillDept.dispatchEvent(new Event('change', { bubbles: true })); // reload processes if you have a handler
+                    this.dom.skillProcess.value = s.ProcessId;
+                    this.skills.splice(idx, 1);   // re-added on Save Skills
+                    this.renderSkills();
+                }
+            });
+
+
+            this.dom.skillDept.addEventListener('change', () => this.loadProcesses());
+            this.dom.addProcessBtn.addEventListener('click', () => this.addProcess());
         }
 
         handleInput(e) {
@@ -879,7 +895,7 @@
             let target = index;
             let blocked = false;
 
-            // moving forward (button, tab OR chip): every step we pass over must be valid
+            // moving forward (button or tab): every step we pass over must be valid
             if (index > this.currentStep && !skipValidation) {
                 const bad = this.firstInvalidStep(this.currentStep, index);
                 if (bad !== -1) { target = bad; blocked = true; }
@@ -897,7 +913,6 @@
             this.currentStep = index;
             this.dom.panels.forEach(p => p.classList.toggle('active', Number(p.dataset.stepPanel) === index));
             this.setActiveTab(index);
-            this.updateStepperUI();
             this.dom.prevBtn.disabled = index === 0;
 
             const isLast = index === TOTAL_STEPS - 1;
@@ -963,7 +978,7 @@
                     Gender: checked('gender') === 'Female',   // false = Male, true = Female
                     Category: false,                            // no form field yet: Direct Hired
                     DateOfBirth: orNull('dob'),
-                    DateHired: v('dateHired') || v('hireDate') || null,
+                    DateHired: v('dateHired')  || null,
                     ContactNumber: orNull('mobile'),
                     SocialMedia: orNull('facebook'),
                     PickUpPoint: num('pickUpPoint') || 0,
@@ -971,7 +986,10 @@
                 },
                 Education: education,
                 Addresses: addresses,
-                Skilled: []
+                Skilled: this.skills.map(s => ({
+                    ProcessId: s.ProcessId,
+                    DepartmentId: s.DepartmentId
+                })),
             };
         }
 
@@ -983,7 +1001,7 @@
 
             console.log(this.buildPayload());
 
-            @*try {
+            try {
 
                 const res = await postMethod('@Url.Action("SaveEmployee", "Employees")', this.buildPayload());
                 // const data = await res.json().catch(() => null);
@@ -1001,22 +1019,20 @@
                 this.showToast('Network error. The record was not saved.', false);
             } finally {
                 if (!saved) btn.disabled = false;   // stays disabled after success so it cannot be enrolled twice
-            }*@
+            }
         }
 
         setActiveTab(stepIndex) {
             const key = STEP_TAB[stepIndex];
-            this.dom.tabLinks.forEach(a => a.classList.toggle('active', a.dataset.tab === key));
-        }
-
-        // ---------------- STEPPER / SIDEBAR UI ----------------
-        updateStepperUI() {
-            this.dom.chips.forEach((chip, i) => {
-                chip.classList.toggle('current', i === this.currentStep);
-                chip.setAttribute('aria-current', i === this.currentStep ? 'step' : 'false');
+            this.dom.tabLinks.forEach(a => {
+                const on = a.dataset.tab === key;
+                a.classList.toggle('active', on);
+                a.setAttribute('aria-selected', on ? 'true' : 'false');
+                a.toggleAttribute('aria-current', on);
             });
         }
 
+        // ---------------- SIDEBAR UI ----------------
         updateSidebarName() {
             const last = document.getElementById('lastName').value.trim();
             const given = document.getElementById('givenName').value.trim();
@@ -1074,12 +1090,11 @@
         validateRadioGroup(name, show = true) {
             const radios = [...this.dom.form.querySelectorAll(`input[type="radio"][name="${name}"]`)];
             if (!radios.length || radios[0].dataset.required !== 'true') return true;
-
             const valid = radios.some(r => r.checked);
             const group = radios[0].closest('.radio-group');
             const err = this.dom.form.querySelector(`[data-error-for="${name}"]`);
             if (err) err.classList.toggle('show', !valid && show);
-            if (group) group.style.boxShadow = (!valid && show) ? '0 0 0 2px rgba(244,63,94,0.4)' : '';
+            if (group) group.classList.toggle('is-invalid', !valid && show);
             return valid;
         }
 
@@ -1113,7 +1128,7 @@
         clearAllErrors() {
             this.dom.form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
             this.dom.form.querySelectorAll('.error-text.show').forEach(el => el.classList.remove('show'));
-            this.dom.form.querySelectorAll('.radio-group').forEach(g => g.style.boxShadow = '');
+            this.dom.form.querySelectorAll('.radio-group').forEach(g => g.classList.remove('is-invalid'));
             this.updateSidebarName();
         }
 
@@ -1152,13 +1167,6 @@
             }
 
             const pct = totalRequired === 0 ? 0 : Math.round((totalFilled / totalRequired) * 100);
-            const remaining = totalRequired - totalFilled;
-
-            this.dom.progressPercentBadge.textContent = pct + '%';
-            this.dom.progressTitle.textContent = `New Hire Encoding Progress: ${pct}% Complete`;
-            this.dom.progressSubtitle.textContent = remaining > 0
-                ? `${remaining} mandatory field${remaining !== 1 ? 's' : ''} remaining to finalize profile`
-                : 'All mandatory fields completed. Ready to enroll!';
 
             this.dom.readinessPercent.textContent = pct + '% Complete';
             this.dom.readinessBar.style.width = Math.max(pct, 2) + '%';
@@ -1170,10 +1178,6 @@
             }
 
             this.dom.sectionsCompletedLabel.textContent = `${completedSections} of ${TOTAL_STEPS} Sections Completed`;
-
-            this.dom.chips.forEach((chip, i) => {
-                chip.classList.toggle('completed', i !== this.currentStep && this.computeStepCompletion(i).complete);
-            });
 
             const plant = document.getElementById('plantSelect');
             this.dom.sidebarPlant.textContent = plant?.value ? plant.options[plant.selectedIndex].text : 'Unassigned';
@@ -1214,7 +1218,7 @@
             add('College', join(val('collegeSchool'), val('collegeCourse')));
             add('High School', join(val('hsSchool'), val('hsCourse')));
 
-            this.dom.reviewSummary.innerHTML = rows.join('');
+            //this.dom.reviewSummary.innerHTML = rows.join('');
         }
 
         // ---------------- UTILITIES ----------------
@@ -1230,6 +1234,105 @@
             clearTimeout(this.toastTimer);
             this.toastTimer = setTimeout(() => this.dom.toast.classList.remove('show'), 2400);
         }
+
+        // ---------------- SKILLS ----------------
+        addSkill() {
+            const { skillDept, skillProcess } = this.dom;
+            const processId = parseInt(skillProcess.value, 10);
+
+            if (!skillDept.value || isNaN(processId)) {
+                this.showToast('Select a department and process first.', false);
+                return;
+            }
+            if (this.skills.some(s => s.ProcessId === processId)) {
+                this.showToast('That skill is already added.', false);
+                return;
+            }
+
+            this.skills.push({
+                ProcessId: processId,
+                DepartmentId: skillDept.value,                              // string in the C# model
+                DepartmentName: skillDept.options[skillDept.selectedIndex].text,  // UI only
+                SkilledName: skillProcess.options[skillProcess.selectedIndex].text,
+                TaskName: null,
+                IsPersonal: 0,
+                IsCrossed: 0
+            });
+
+            this.renderSkills();
+            this.showToast('Skill added.', true);
+        }
+
+        renderSkills() {
+            this.dom.skillsTable.innerHTML = this.skills.length
+                ? this.skills.map((s, i) => `
+            <tr>
+                <td>${this.escHtml(s.DepartmentName)}</td>
+                <td>${this.escHtml(s.SkilledName)}</td>
+                <td><button type="button" class="btn-table primary" data-action="edit" data-index="${i}">Edit</button></td>
+                <td><button type="button" class="btn-table danger" data-action="delete" data-index="${i}">Delete</button></td>
+            </tr>`).join('')
+                : '<tr class="empty-row"><td colspan="4">No skills added yet</td></tr>';
+        }
+
+        // ---------------- PROCESSES ----------------
+            async loadProcesses() {
+                const deptId = this.dom.skillDept.value;
+                const sel = this.dom.skillProcess;
+                sel.innerHTML = '';
+                if (!deptId) return;
+
+                try {
+                    const res = await getMethod('@Url.Action("GetProcessDepartment", "Employees")', { Department: deptId });
+                    //const list = (res && typeof res.json === 'function') ? await res.json() : res;
+                    if (!res?.Success) {
+                        console.log('No data found in 4M ');
+                        return;
+                    }
+
+                    const list = res.data;
+
+                    sel.innerHTML = (list && list.length)
+                        ? list.map(p => `<option value="${p.ProcessId}">${this.escHtml(p.ProcessName)}</option>`).join('')
+                        : '<option value="">No process for this department</option>';
+
+                } catch (err) {
+                    console.error(err);
+                    this.showToast('Failed to load processes.', false);
+                }
+            }
+
+            async addProcess() {
+                const deptId = parseInt(this.dom.skillDept.value, 10);
+                const name = this.dom.newProcessName.value.trim();
+
+                if (isNaN(deptId)) { this.showToast('Select a department first.', false); return; }
+                if (!name) { this.showToast('Enter a process name.', false); return; }
+
+
+                this.dom.addProcessBtn.disabled = true;
+                try {
+                    const res = await postMethod('@Url.Action("AddProcessEmployee", "Employees", new { area = "Production1" })',
+                        { DepartmentId: deptId, ProcessName: name });
+
+                    console.log(res);
+
+                    if (!res.Success) {
+                        this.showToast((res && res.message) || 'Could not add process.', false);
+                       return;
+                    }
+
+                    //this.dom.newProcessName.value = '';
+                    await this.loadProcesses();
+                    this.showToast('Process added.', true);
+                } catch (err) {
+                    console.error(err);
+                    this.showToast('Network error. Process not saved.', false);
+                } finally {
+                    this.dom.addProcessBtn.disabled = false;
+                }
+            }
+
     }
 
     const start = () => { window.employeeEncoder = new EmployeeEncoder(); };

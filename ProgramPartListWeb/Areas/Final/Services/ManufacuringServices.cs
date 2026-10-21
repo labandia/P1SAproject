@@ -1428,7 +1428,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
         public Task<List<FanTraceabilityPartsPreparation>> GetPreparationList(string search, string FinalShopOrder)
         {
-            string strquery = $@"SELECT PreparedID
+            string strquery = $@"SELECT TOP 1000 PreparedID
                       ,FinalShopOrder
                       ,IssueCum
                       ,PartName

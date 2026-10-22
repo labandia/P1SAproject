@@ -17,6 +17,196 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 {
     public class P1EmployeesService : IP1EmployeesService
     {
+        public async Task<List<EmployeeProfile>> GetEmployeeDetails(
+            string search, 
+            string code, 
+            int DepartmentId, 
+            int status)
+        {
+            try
+            {
+                string filter = @"
+                    WHERE
+                        (@Search IS NULL OR @Search = ''
+                            OR e.FullName LIKE '%' + @Search + '%'
+                            OR e.EmployeeCode LIKE '%' + @Search + '%')
+                        AND (@Code IS NULL OR @Code = ''
+                            OR e.EmployeeCode LIKE '%' + @Code + '%') ";
+
+                var parameters = new
+                {
+                    Search = search,
+                    Code = code,
+                    DepartmentId = DepartmentId,
+                    Status = status
+                };
+
+                // 1. Main employee details
+                string employeeQuery = @"
+                        SELECT
+                            e.EmployeeId,
+                            e.EmployeeCode,
+                            e.FirstName,
+                            e.MiddleName,
+                            e.LastName,
+                            e.FullName,
+                            e.Process,
+                            e.AgencyId,
+                            e.DepartmentId,
+                            e.StatusId,
+                            e.WIthVech
+                        FROM P1SA_Employees_TempV2 e
+                        " + filter + @"
+                        ORDER BY e.FullName;";
+
+                var employees = await SqlDataAcess_Test
+                      .QueryAsync<EmployeeProfile>(
+                          employeeQuery, parameters);
+
+                if (employees.Count == 0)
+                    return employees;
+
+                // Build the employee ID list for related queries
+                var employeeIds = employees
+                    .Select(e => e.EmployeeId)
+                    .ToList();
+
+                // 2. Employee information (1:1)
+                string informationQuery = @"
+                       SELECT  i.RecordID
+                              ,i.EmployeeId
+                              ,i.Gender
+                              ,i.DateOfBirth
+                              ,i.DateHired
+                              ,i.DateResigned
+                              ,i.ContactNumber
+                              ,i.SocialMedia
+                              ,i.PickUpPoint
+                              ,i.DirectedBy
+                              ,i.Category
+                        FROM P1SA_EmployeesInformation i
+                        WHERE i.EmployeeId IN @EmployeeIds;";
+
+                var information = await SqlDataAcess_Test
+                         .QueryAsync<EmployeeInformation>(
+                             informationQuery,
+                             new { EmployeeIds = employeeIds });
+
+
+                // 3. Education (1:many)
+                string educationQuery = @"
+                     SELECT
+                           ed.EducationId
+                          ,ed.EmployeeId
+                          ,ed.SchoolLevel
+                          ,ed.SchoolName
+                          ,ed.Course
+                          ,ed.YearGraduated
+                    FROM P1SA_EmployeesEducation ed
+                    WHERE EmployeeId IN @EmployeeIds;";
+
+                var education = await SqlDataAcess_Test
+                    .QueryAsync<EmployeeEducation>(
+                        educationQuery,
+                        new { EmployeeIds = employeeIds });
+
+                // 4. Addresses (1:many)
+                string addressQuery = @"
+                    SELECT a.AddressId
+                          ,a.EmployeeId
+                          ,a.FullAddress
+                          ,a.IsPermanent
+                      FROM P1SA_EmployeesAddress a
+                    WHERE a.EmployeeId IN @EmployeeIds;";
+
+                var addresses = await SqlDataAcess_Test
+                    .QueryAsync<EmployeeAddress>(
+                        addressQuery,
+                        new { EmployeeIds = employeeIds });
+
+                // 5. Skills (1:many)
+            //    string skilledQuery = @"
+            //SELECT
+            //    SkillsCardId,
+            //    EmployeeId,
+            //    ProcessId,
+            //    TaskName,
+            //    SkilledName,
+            //    DepartmentId,
+            //    IsPersonal,
+            //    IsCrossed
+            //FROM P1SA_EmployeesSkilled
+            //WHERE EmployeeId IN @EmployeeIds;";
+
+            //    var skilled = await SqlDataAcess_Test
+            //        .QueryAsync<EmployeeSkilled>(
+            //            skilledQuery,
+            //            new { EmployeeIds = employeeIds });
+
+                // Map information by EmployeeId
+                var informationLookup = information
+                    .GroupBy(x => x.EmployeeId)
+                    .ToDictionary(g => g.Key, g => g.First());
+
+                var educationLookup = education
+                    .GroupBy(x => x.EmployeeId)
+                    .ToDictionary(g => g.Key, g => g.ToList());
+
+                var addressLookup = addresses
+                    .GroupBy(x => x.EmployeeId)
+                    .ToDictionary(g => g.Key, g => g.ToList());
+
+                //var skilledLookup = skilled
+                //    .GroupBy(x => x.EmployeeId)
+                //    .ToDictionary(g => g.Key, g => g.ToList());
+
+                // Attach related data to each employee
+                foreach (var employee in employees)
+                {
+                    EmployeeInformation info;
+                    if (informationLookup.TryGetValue(
+                        employee.EmployeeId, out info))
+                    {
+                        employee.Information = info;
+                    }
+
+                    List<EmployeeEducation> educationList;
+                    if (educationLookup.TryGetValue(
+                        employee.EmployeeId, out educationList))
+                    {
+                        employee.Education = educationList;
+                    }
+
+                    List<EmployeeAddress> addressList;
+                    if (addressLookup.TryGetValue(
+                        employee.EmployeeId, out addressList))
+                    {
+                        employee.Addresses = addressList;
+                    }
+
+                    //    List<EmployeeSkilled> skilledList;
+                    //    if (skilledLookup.TryGetValue(
+                    //        employee.EmployeeId, out skilledList))
+                    //    {
+                    //        employee.Skilled = skilledList;
+                    //    }
+                }
+
+
+                return employees;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    "GetEmployeeDetails Error: " + ex);
+
+                throw;
+            }
+
+        }
+
+
+
         public async Task<bool> IsEmployeeExist(string employeeCode)
         {
             return await SqlDataAcess_Test.ExistsAsync($@"SELECT COUNT(1) FROM P1SA_Employees_TempV2

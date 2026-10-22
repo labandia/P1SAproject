@@ -1,0 +1,219 @@
+﻿
+@{
+    Layout = "~/Areas/Production1/Views/Shared/_EmployListLayout.cshtml";
+}
+
+
+
+<div class="app-container">
+
+    <!-- HEADER (back button + title + actions aligned right) -->
+    <header class="header">
+        <div class="header-left">
+            <button class="back-btn" id="backBtn" aria-label="Back"><i class="fas fa-arrow-left"></i></button>
+            <div class="logo-area">
+                <i class="fas fa-users"></i> Employee Information System
+            </div>
+        </div>
+        <div class="header-actions">
+            <button class="btn"><i class="fas fa-download"></i> Export CSV</button>
+            <button class="btn"><i class="fas fa-sync-alt"></i> Batch Sync</button>
+            <button class="btn btn-primary"><i class="fas fa-user-plus"></i> Register Employee</button>
+        </div>
+    </header>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+        <div class="search-main">
+            <i class="fas fa-search"></i>
+            <input type="text" id="mainSearch" placeholder="Search by Employee Code, Name, Process, Agency...">
+            <span class="kbd">⌘K</span>
+        </div>
+        <div class="filter-group">
+            <div class="filter-select"><i class="fas fa-building"></i> Agency: All Partners <i class="fas fa-chevron-down" style="font-size: 0.6rem;"></i></div>
+            <div class="filter-select"><i class="fas fa-sitemap"></i> Department: All Depts <i class="fas fa-chevron-down" style="font-size: 0.6rem;"></i></div>
+            <div class="filter-select"><i class="fas fa-clock"></i> Shift: Day / Night <i class="fas fa-chevron-down" style="font-size: 0.6rem;"></i></div>
+        </div>
+        <div class="view-toggle">
+            <button class="active"><i class="fas fa-list"></i> ROSTER</button>
+            <button><i class="fas fa-route"></i> LOGISTICS</button>
+        </div>
+    </div>
+
+    <!-- MAIN LAYOUT -->
+    <div class="main-layout">
+        <!-- ROSTER PANEL (LEFT) -->
+        <div class="roster-panel" id="rosterPanel">
+            <div class="roster-header">
+                <div>EMPLOYEE & CODE</div>
+                <div>AGENCY & DEPT</div>
+                <div>SHIFT SCHEDULE</div>
+                <div>LOGISTICS / PIC</div>
+            </div>
+            <div class="roster-list" id="rosterList">
+                <!-- dynamically populated -->
+            </div>
+            <div class="roster-footer">
+                <div>SHOWING <span id="showingStart">1</span>–<span id="showingEnd">5</span> OF <span id="totalRecords">1,428</span> RECORDS</div>
+                <div class="pagination">
+                    <button><i class="fas fa-chevron-left"></i></button>
+                    <button class="active">1</button>
+                    <button>2</button>
+                    <button>3</button>
+                    <button>…</button>
+                    <button>286</button>
+                    <button><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SIDEBAR MODAL (RIGHT) -->
+        <div class="sidebar-modal" id="sidebarModal">
+            <div class="sidebar-header">
+                <div class="label"><i class="fas fa-id-card"></i> EMPLOYEE MASTER DOSSIER <span style="color: var(--slate-400); margin-left: 0.5rem;" id="dossierId">#EMP-8819</span></div>
+                <div class="actions">
+                    <button><i class="fas fa-print"></i></button>
+                    <button id="closeSidebar"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+
+            <div class="sidebar-profile" id="sidebarProfile">
+                <!-- dynamically populated -->
+            </div>
+
+            <div class="sidebar-tabs">
+                <button class="active"><i class="fas fa-briefcase"></i> Operational</button>
+                <button><i class="fas fa-user"></i> Personal</button>
+                <button><i class="fas fa-map-pin"></i> Addresses</button>
+                <button><i class="fas fa-graduation-cap"></i> Education</button>
+            </div>
+
+            <div class="sidebar-content" id="sidebarContent">
+                <!-- dynamically populated -->
+            </div>
+
+            <div class="sidebar-footer">
+                <button class="btn"><i class="fas fa-edit"></i> Edit Master Record</button>
+                <button class="btn btn-authorize"><i class="fas fa-check-circle"></i> Authorize Rotation</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM STATUS BAR -->
+    <div class="status-bar">
+        <div class="left">
+            <span><i class="fas fa-circle dot-green"></i> REPLICATION ENGINE: ACTIVE (4 TABLES SYNCED)</span>
+            <span>LATENCY: 1.4ms</span>
+            <span>SCHEMA: P1SA_SCHEMA_V2</span>
+        </div>
+        <div class="right">
+            <span class="logo-footer">Employee Information System</span>
+            <span>QUANTUM TALENT ARCHITECTURE V4.2</span>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<script src="~/Scripts/chart.js"></script>
+<script type="module" asp-append-version="true">
+    import {
+        getMethod,
+        postMethod
+    } from '@Url.Content("~/Scripts/modules/index.js")';
+
+
+    class EmployeeDetailsController {
+        constructor() {
+            this.rosterList = document.getElementById('rosterList');
+        }
+
+        async init() {
+            await this.LoadEmployeesList();
+        }
+
+        async LoadEmployeesList() {
+           try {
+
+                const res = await getMethod('@Url.Action("GetEmployeeList", "Employees")',
+                        {
+                            search: '',
+                            code: '', 
+                            DepartmentId: 0,
+                            status: 0
+                        });
+
+               console.log(res);
+
+                if (!res?.Success) {
+                    console.log('No data found in Group Data');
+                    return;
+                }
+
+                this.RenderEmployeeDetail(res.data);
+
+           } catch (error) {
+                console.error('Error fetching attendance summary:', error);
+           }
+        }
+
+
+        RenderEmployeeDetail(employees) {
+            // Check if theres is A Record
+            if (!employees.length) {
+                this.rosterList.innerHTML = `<div style="padding: 3rem; text-align: center; color: var(--slate-400); font-size: 0.9rem;">
+                      <i class="fas fa-user-slash fa-2x" style="margin-bottom: 1rem; color: var(--slate-300);"></i><br>No matching records found.
+                    </div>`;
+                return;
+            }
+
+
+            rosterList.innerHTML = employees.map(emp => {
+                const initials = (emp.FirstName?.[0] || '') + (emp.LastName?.[0] || '');
+                const isNight = emp.Process?.toLowerCase().includes('night') || emp.EmployeeCode === 'EMP-7740';
+                const shiftClass = isNight ? 'night' : '';
+                const shiftLabel = isNight ? 'NIGHT SHIFT' : 'DAY SHIFT';
+                const shiftTime = isNight ? '20:00 – 05:00' : '08:00 – 17:00';
+                const vehActive = emp.WIthVech ? 'active' : '';
+                const vehLabel = emp.WIthVech ? 'Vehicle Active' : 'No Vehicle';
+                const terminal = emp.Info?.PickUpPoint || 'Terminal A4 North Bay';
+
+                return `
+                  <div class="roster-row" data-employee-id="${emp.EmployeeId}">
+                    <div class="employee-cell">
+                      <div class="avatar">${initials}</div>
+                      <div class="emp-info">
+                        <div class="name">${emp.FullName || emp.FirstName + ' ' + emp.LastName} <i class="fas fa-circle-check" style="color: var(--blue-600); font-size: 0.6rem;"></i></div>
+                        <div class="id"><span>#${emp.EmployeeCode || '—'}</span> · ${emp.Process || '—'}</div>
+                      </div>
+                    </div>
+                    <div class="agency-dept">
+                      <div class="agency">${emp.AgencyName || '—'}</div>
+                      <div class="dept"><i class="fas fa-sitemap" style="font-size: 0.6rem;"></i> ${emp.DepartmentId || '—'}</div>
+                    </div>
+                    <div class="shift-schedule">
+                      <span class="shift-badge "><i class="fas fa-circle" style="font-size: 0.4rem;"></i> ${emp.EmployeeCode}</span>
+                      <span class="shift-time">${emp.EmployeeCode}</span>
+                    </div>
+                    <div class="logistics">
+                      // <span class="veh ${vehActive}"><i class="fas fa-${emp.WIthVech ? 'truck' : 'ban'}"></i> ${vehLabel}</span>
+                      // <span class="terminal">${terminal}</span>
+                    </div>
+                  </div>
+                `;
+            }).join('');
+        }
+
+
+
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const controller = new EmployeeDetailsController();
+        controller.init();
+    });
+</script>
+

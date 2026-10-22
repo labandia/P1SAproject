@@ -3,6 +3,7 @@ using ProgramPartListWeb.Areas.Production1.Model;
 using ProgramPartListWeb.Controllers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -45,6 +46,23 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
         }
 
 
+        // ─────────────────────────────────────────────────────────────────
+        // GET: /Production1/Employees/GetEmployeeList
+        // Gets the List of Employee Details
+        // ─────────────────────────────────────────────────────────────────
+        [HttpGet]
+        public async Task<ActionResult> GetEmployeeList(
+            string search, string code, int DepartmentId, int status)
+        {
+            Debug.WriteLine($@"SearchText {search} - Code : {code} - Department ID : {DepartmentId} - Status :{status}");
+
+            var res = await _emp.GetEmployeeDetails(search, code, DepartmentId, status);
+            if (res == null || !res.Any())
+                return JsonNotFound("No Active Lines found");
+            return JsonSuccess(res);
+        }
+
+
 
         // ─────────────────────────────────────────────────────────────────
         // GET: /Production1/Employees/AddProcessEmployee
@@ -74,7 +92,11 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
         }
 
 
-
+        // GET: Production1/Employees
+        public ActionResult EmployeeList()
+        {
+            return View();
+        }
 
 
         // GET: Production1/Employees

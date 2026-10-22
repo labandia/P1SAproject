@@ -7,7 +7,15 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
     public interface IP1EmployeesService
     {
         //====================================
-        //===  EMPLOYEES INFORMATION  ========
+        //===GET EMPLOYEES INFORMATION ====
+        //====================================
+        Task<List<EmployeeProfile>> GetEmployeeDetails(string search,
+           string code,
+           int DepartmentId,
+           int status);
+
+        //====================================
+        //===SAVING EMPLOYEES INFORMATION ====
         //====================================
         Task<bool> IsEmployeeExist(string employeeCode);
         Task<int> SaveEmployeeManage(EmployeeProfile profile);

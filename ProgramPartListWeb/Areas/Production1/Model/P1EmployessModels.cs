@@ -109,7 +109,6 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public int AddressId { get; set; }
         public int EmployeeId { get; set; }
         public string FullAddress { get; set; }
-
         public bool IsPermanent { get; set; }
 
     }

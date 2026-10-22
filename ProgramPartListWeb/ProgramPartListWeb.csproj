@@ -788,6 +788,7 @@
     <Content Include="Content\css\Attendance.css" />
     <Content Include="Content\css\EmployeeDesign.css" />
     <Content Include="Content\css\EmployeeMain.css" />
+    <Content Include="Content\css\EmployeesListDesign.css" />
     <Content Include="Content\css\FinalAssembly.css" />
     <Content Include="Content\css\FinalDashboard.css" />
     <Content Include="Content\css\FinalDashMangement.css" />
@@ -969,6 +970,8 @@
     <Content Include="Areas\Production1\Views\Shared\_EmployeesLayout.cshtml" />
     <Content Include="Areas\Production1\Views\Employees\EmployeesForm.cshtml" />
     <Content Include="Content\fonts\Inter-VariableFont_opsz,wght.ttf" />
+    <Content Include="Areas\Production1\Views\Employees\EmployeeList.cshtml" />
+    <Content Include="Areas\Production1\Views\Shared\_EmployListLayout.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <Content Include="Content\Uploads\PCFY-81013Form1L.xlsx" />
     <Content Include="Content\Uploads\FinalUploadTemplate.xlsx" />

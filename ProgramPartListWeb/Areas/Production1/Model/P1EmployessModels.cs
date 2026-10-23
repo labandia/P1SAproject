@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aspose.Cells;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -24,7 +25,18 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public string AgencyName { get; set; }
         public int? DepartmentId { get; set; }
         public int? StatusId { get; set; } = 1;
-        public int? WIthVech { get; set; } = 0;
+
+        public string StatusName
+        {
+            get
+            {
+                return StatusId == 1 ? "Active" :
+                       StatusId == 2 ? "AWOL" :
+                       StatusId == 3 ? "Resigned" : "";
+            }
+        }
+
+
         // From the new tables
         public EmployeeInformation Information { get; set; }
         public List<EmployeeEducation> Education { get; set; } = new List<EmployeeEducation>();
@@ -59,12 +71,28 @@ namespace ProgramPartListWeb.Areas.Production1.Model
 
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public int? WIthVech { get; set; } = 0;
 
         // Read-only helpers for UI binding. [NotMapped]-style: Dapper ignores
         // properties with no matching column, so these never touch the database.
         public string GenderText => Gender ? "Female" : "Male";
         public string CategoryText => Category ? "Indirect Hired" : "Direct Hired";
         public bool IsResigned => DateResigned.HasValue;
+
+        public string pickupText
+        {
+            get
+            {
+                return PickUpPoint == 1 ? "MORONG" :
+                       PickUpPoint == 2 ? "BATAAN" :
+                       PickUpPoint == 3 ? "ZAMBALES":
+                       PickUpPoint == 4 ? "OLONGAPO":
+                       "";
+            }
+        }
+
+
+
     }
 
     /// <summary>

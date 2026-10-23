@@ -56,8 +56,20 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
         {
             Debug.WriteLine($@"SearchText {search} - Code : {code} - Department ID : {DepartmentId} - Status :{status}");
 
-            var res = await _emp.GetEmployeeDetails(search, code, DepartmentId, status);
+            var res = await _emp.GetEmployeeList(search, code, DepartmentId, status);
             if (res == null || !res.Any())
+                return JsonNotFound("No Active Lines found");
+            return JsonSuccess(res);
+        }
+        // ─────────────────────────────────────────────────────────────────
+        // GET: /Production1/Employees/GetEmployeeDetails
+        // Gets the List of Employee Details
+        // ─────────────────────────────────────────────────────────────────
+        [HttpGet]
+        public async Task<ActionResult> GetEmployeeDetails(int employee)
+        {
+            var res = await _emp.GetEmployeeDetails(employee);
+            if (res == null)
                 return JsonNotFound("No Active Lines found");
             return JsonSuccess(res);
         }
@@ -94,6 +106,11 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
 
         // GET: Production1/Employees
         public ActionResult EmployeeList()
+        {
+            return View();
+        }
+
+        public ActionResult EmployeeDetails(int employeeID)
         {
             return View();
         }

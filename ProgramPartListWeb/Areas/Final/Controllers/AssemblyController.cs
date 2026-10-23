@@ -109,11 +109,13 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
         public async Task<ActionResult> LineShopOrderData(
          string Linename,
          string searchtext,
-         int orderstatus,
          DateTime? dateFrom = null,
          DateTime? dateTo = null)
         {
-            var res = await _manu.GetListofShopOrdersByLine(Linename, searchtext, orderstatus, dateFrom, dateTo)
+
+            Debug.WriteLine("Search Text : " + searchtext);
+
+            var res = await _manu.GetListofShopOrdersByLine(Linename, searchtext, dateFrom, dateTo)
                       ?? new List<FanTraceabilityManufacturingOrder>();
 
             var finalData = new
@@ -1104,7 +1106,7 @@ namespace ProgramPartListWeb.Areas.Final.Controllers
             int page = 1,
             int pageSize = 10)
         {
-            var res = await _manu.GetListofShopOrdersByLine(Linename, searchtext, 0);
+            var res = await _manu.GetListofShopOrdersByLine(Linename, searchtext, null, null);
 
             int totalCount = await _manu.GetActualCountOfShopOrders(Linename);
 

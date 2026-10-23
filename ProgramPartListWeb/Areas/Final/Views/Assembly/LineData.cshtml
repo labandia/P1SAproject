@@ -403,7 +403,6 @@
                const res = await getMethod('@Url.Action("LineShopOrderData", "Assembly")', {
                     Linename: selectedLines,
                     searchtext: document.getElementById('searchinput').value,
-                    orderstatus: 0, 
                     dateFrom: this.dateFrom.value,   // "yyyy-MM-dd" or ""
                     dateTo: this.dateTo.value
                });

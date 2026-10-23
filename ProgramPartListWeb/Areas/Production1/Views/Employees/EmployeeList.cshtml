@@ -10,34 +10,38 @@
     <!-- HEADER (back button + title + actions aligned right) -->
     <header class="header">
         <div class="header-left">
-            <button class="back-btn" id="backBtn" aria-label="Back"><i class="fas fa-arrow-left"></i></button>
+            <a href="/Production1/Employees/index" class="back-btn" id="backBtn" aria-label="Back">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 512">
+                    <path d="M0 0h512v512H0z" fill="none" />
+                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M244 400L100 256l144-144M120 256h292" />
+                </svg>
+            </a>
             <div class="logo-area">
                 <i class="fas fa-users"></i> Employee Information System
             </div>
         </div>
         <div class="header-actions">
-            <button class="btn"><i class="fas fa-download"></i> Export CSV</button>
-            <button class="btn"><i class="fas fa-sync-alt"></i> Batch Sync</button>
-            <button class="btn btn-primary"><i class="fas fa-user-plus"></i> Register Employee</button>
+            <button class="btn btn-primary"><i class="fas fa-download"></i> Export CSV</button>
         </div>
     </header>
 
     <!-- FILTER BAR -->
     <div class="filter-bar">
         <div class="search-main">
-            <i class="fas fa-search"></i>
-            <input type="text" id="mainSearch" placeholder="Search by Employee Code, Name, Process, Agency...">
+            <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24">
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path fill="currentColor" d="M10 18a7.95 7.95 0 0 0 4.897-1.688l4.396 4.396l1.414-1.414l-4.396-4.396A7.95 7.95 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8s3.589 8 8 8m0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6s-6-2.691-6-6s2.691-6 6-6" />
+                <path fill="currentColor" d="M11.412 8.586c.379.38.588.882.588 1.414h2a3.98 3.98 0 0 0-1.174-2.828c-1.514-1.512-4.139-1.512-5.652 0l1.412 1.416c.76-.758 2.07-.756 2.826-.002" />
+            </svg>
+
+            <input type="text" id="mainSearch" placeholder="Search by Employee ID, Full Name, Process, Agency...">
             <span class="kbd">⌘K</span>
         </div>
         <div class="filter-group">
-            <div class="filter-select"><i class="fas fa-building"></i> Agency: All Partners <i class="fas fa-chevron-down" style="font-size: 0.6rem;"></i></div>
-            <div class="filter-select"><i class="fas fa-sitemap"></i> Department: All Depts <i class="fas fa-chevron-down" style="font-size: 0.6rem;"></i></div>
-            <div class="filter-select"><i class="fas fa-clock"></i> Shift: Day / Night <i class="fas fa-chevron-down" style="font-size: 0.6rem;"></i></div>
+            <div class="filter-select"><i class="fas fa-building"></i> Agency: All Agency <i class="fas fa-chevron-down" style="font-size: 0.6rem;"></i></div>
+            <div class="filter-select"><i class="fas fa-sitemap"></i> Department: All Departme <i class="fas fa-chevron-down" style="font-size: 0.6rem;"></i></div>
         </div>
-        <div class="view-toggle">
-            <button class="active"><i class="fas fa-list"></i> ROSTER</button>
-            <button><i class="fas fa-route"></i> LOGISTICS</button>
-        </div>
+     
     </div>
 
     <!-- MAIN LAYOUT -->
@@ -47,7 +51,7 @@
             <div class="roster-header">
                 <div>EMPLOYEE & CODE</div>
                 <div>AGENCY & DEPT</div>
-                <div>SHIFT SCHEDULE</div>
+                <div>EMPLOYEMENT STATUS</div>
                 <div>LOGISTICS / PIC</div>
             </div>
             <div class="roster-list" id="rosterList">
@@ -56,13 +60,27 @@
             <div class="roster-footer">
                 <div>SHOWING <span id="showingStart">1</span>–<span id="showingEnd">5</span> OF <span id="totalRecords">1,428</span> RECORDS</div>
                 <div class="pagination">
-                    <button><i class="fas fa-chevron-left"></i></button>
+                    <button>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                            <path d="M0 0h24v24H0z" fill="none" />
+                            <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+                                <path d="M6 7v10" />
+                                <path fill="currentColor" d="M17.028 5.267a.6.6 0 0 1 .972.471v12.524a.6.6 0 0 1-.972.47l-7.931-6.261a.6.6 0 0 1 0-.942z" />
+                            </g>
+                        </svg>
+
+                    </button>
                     <button class="active">1</button>
                     <button>2</button>
                     <button>3</button>
                     <button>…</button>
                     <button>286</button>
-                    <button><i class="fas fa-chevron-right"></i></button>
+                    <button>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                            <path d="M0 0h24v24H0z" fill="none" />
+                            <path fill="currentColor" d="M18.75 7a.75.75 0 0 0-1.5 0v10a.75.75 0 0 0 1.5 0zm-4.296 3.945c.69.534.69 1.576 0 2.11a25.5 25.5 0 0 1-7.073 3.863l-.466.166c-.87.308-1.79-.28-1.907-1.178a30.3 30.3 0 0 1 0-7.812c.118-.898 1.037-1.486 1.907-1.177l.466.165a25.5 25.5 0 0 1 7.073 3.863" />
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
@@ -121,17 +139,36 @@
 <script type="module" asp-append-version="true">
     import {
         getMethod,
-        postMethod
+        postMethod,
+        getDepartmentName,
+        formatDate
     } from '@Url.Content("~/Scripts/modules/index.js")';
 
 
-    class EmployeeDetailsController {
+    class EmployeeController {
         constructor() {
+            this.sidebarModal = document.getElementById('sidebarModal');
             this.rosterList = document.getElementById('rosterList');
+            this.dossierId = document.getElementById('dossierId');
+            this.sidebarProfile = document.getElementById('sidebarProfile');
+
+
+            this.searchText = document.getElementById('mainSearch');
         }
 
         async init() {
             await this.LoadEmployeesList();
+
+
+            this.BindEvents();
+        }
+
+        BindEvents() {
+
+
+            this.searchText.addEventListener('input', async () => {
+                await this.LoadEmployeesList();
+            });
         }
 
         async LoadEmployeesList() {
@@ -139,8 +176,8 @@
 
                 const res = await getMethod('@Url.Action("GetEmployeeList", "Employees")',
                         {
-                            search: '',
-                            code: '', 
+                            search: this.searchText.value,
+                            code: '',
                             DepartmentId: 0,
                             status: 0
                         });
@@ -178,7 +215,6 @@
                 const shiftTime = isNight ? '20:00 – 05:00' : '08:00 – 17:00';
                 const vehActive = emp.WIthVech ? 'active' : '';
                 const vehLabel = emp.WIthVech ? 'Vehicle Active' : 'No Vehicle';
-                const terminal = emp.Info?.PickUpPoint || 'Terminal A4 North Bay';
 
                 return `
                   <div class="roster-row" data-employee-id="${emp.EmployeeId}">
@@ -191,28 +227,199 @@
                     </div>
                     <div class="agency-dept">
                       <div class="agency">${emp.AgencyName || '—'}</div>
-                      <div class="dept"><i class="fas fa-sitemap" style="font-size: 0.6rem;"></i> ${emp.DepartmentId || '—'}</div>
+                      <div class="dept"> ${getDepartmentName(emp.DepartmentId)}</div>
                     </div>
                     <div class="shift-schedule">
-                      <span class="shift-badge "><i class="fas fa-circle" style="font-size: 0.4rem;"></i> ${emp.EmployeeCode}</span>
-                      <span class="shift-time">${emp.EmployeeCode}</span>
+                      <span class="shift-time">Date Hired: ${formatDate(emp.Information.DateHired)}</span>
+                      <span class="shift-badge ">Status : <i class="fas fa-circle" style="font-size: 0.4rem;"></i> ${emp.StatusName}</span>
+
                     </div>
                     <div class="logistics">
-                      // <span class="veh ${vehActive}"><i class="fas fa-${emp.WIthVech ? 'truck' : 'ban'}"></i> ${vehLabel}</span>
-                      // <span class="terminal">${terminal}</span>
+                      <span class="veh ${vehActive}"><i class="fas fa-${emp.Information.WIthVech ? 'truck' : 'ban'}"></i> ${vehLabel}</span>
+                       <span class="terminal">${emp.Information.pickupText}</span>
                     </div>
                   </div>
                 `;
             }).join('');
+
+            // attach click events
+            document.querySelectorAll('.roster-row').forEach(row => {
+                row.addEventListener('click', async () => {
+                    const empId = Number(row.dataset.employeeId);
+
+                    window.location.href = '@Url.Action("EmployeeDetails", "Employees")' + '?employeeID=' + empId;
+                    @*const result = await getMethod('@Url.Action("GetEmployeeDetails", "Employees")', {  employee: empId });
+                    if (!result?.Success) {
+                        console.log('No data found in Group Data');
+                        return;
+                    }
+
+                    //console.log(result);
+                    this.openSidebar(result.data);*@
+                });
+            });
+
+
+
         }
 
 
+        // ------------------------------------------------------------
+        // OPEN SIDEBAR
+        openSidebar(employee) {
+            const initials = (employee.FirstName?.[0] || '') + (employee.LastName?.[0] || '');
+            const info = employee.Information || {};
+            const addresses = employee.Addresses || [];
+            const educations = employee.Education || [];
+
+            this.dossierId.textContent = `#${employee.EmployeeCode || 'EMP-0000'}`;
+
+            this.sidebarProfile.innerHTML = `
+            <div class="avatar-lg">${initials}</div>
+            <div class="profile-info">
+              <h3>${employee.FullName || employee.FirstName + ' ' + employee.LastName} <span class="tier">ID : ${employee.EmployeeCode || 'V'}</span></h3>
+              <div class="role">${employee.Process || '—'}</div>
+              <div class="profile-tags">
+                <span class="tag tag-green"><i class="fas fa-circle" style="font-size: 0.35rem;"></i> ${employee.StatusName}</span>
+                <span class="tag tag-blue"><i class="fas fa-truck"></i> Vehicle ${employee.WIthVech ? 'Approved' : 'Pending'}</span>
+              </div>
+            </div>
+          `;
+
+            this.renderSidebarContent('operational', employee, info, addresses, educations);
+
+            sidebarModal.classList.add('open');
+        }
+
+
+         // ------------------------------------------------------------
+         // RENDER SIDEBAR CONTENT (tabs)
+        renderSidebarContent(tab, employee, info, addresses, educations) {
+            document.querySelectorAll('.sidebar-tabs button').forEach(btn => btn.classList.remove('active'));
+            const tabIndex = { operational: 0, personal: 1, addresses: 2, education: 3 }[tab];
+            if (document.querySelectorAll('.sidebar-tabs button')[tabIndex]) {
+                document.querySelectorAll('.sidebar-tabs button')[tabIndex].classList.add('active');
+            }
+
+            let html = '';
+
+            if (tab === 'operational') {
+                html = `
+              <div class="data-section">
+                <div class="section-title"><i class="fas fa-database"></i> EMPLOYEES DETAILS</div>
+                <div class="data-grid">
+                  <div class="data-item"><span class="label">Agency Name</span><span class="value">${employee.AgencyName || '—'}</span></div>
+                  <div class="data-item"><span class="label">Department</span><span class="value">${this.getDepartmentName(employee.DepartmentId)}</span></div>
+                  <div class="data-item"><span class="label">Process / Designation</span><span class="value">${employee.Process || '—'}</span></div>
+                  <div class="data-item"><span class="label">Shift Type</span><span class="value">Day Shift (Rot-A)</span></div>
+                  <div class="data-item"><span class="label">Vehicle Authorization</span><span class="value"><span class="green"><i class="fas fa-check-circle"></i> With Vehicle (TRUE)</span></span></div>
+                  <div class="data-item"><span class="label">Pick-up Point</span><span class="value">${info.pickupText || '—'}</span></div>
+                </div>
+              </div>
+
+              <div class="data-section">
+                <div class="section-title"><i class="fas fa-user"></i> PERSONAL INFORMATION <span style="margin-left: auto; color: var(--slate-400); font-weight: 400;">Category: ${info.Category || 'Ex-1'}</span></div>
+                <div class="data-grid">
+                  <div class="data-item"><span class="label">Gender / Classification</span><span class="value">${info.Gender ? 'Male' : 'Female'}</span></div>
+                  <div class="data-item"><span class="label">Date of Birth</span><span class="value">${formatDate(info.DateOfBirth)}</span></div>
+                  <div class="data-item"><span class="label">Date Hired</span><span class="value">${formatDate(info.DateHired)}</span></div>
+                  <div class="data-item"><span class="label">Date Resigned</span><span class="value">${info.DateResigned || 'Active / In-Service'}</span></div>
+                  <div class="data-item"><span class="label">Comms / Social</span><span class="value">${info.SocialMedia || '—'}</span></div>
+                  <div class="data-item"><span class="label">Contact Telemetry</span><span class="value">${info.ContactNumber || '—'}</span></div>
+                  <div class="data-item full-width"><span class="label">Remarks Log</span><span class="value remarks">${info.Remarks || '—'}</span></div>
+                </div>
+              </div>
+
+              <div class="data-section">
+                <div class="section-title"><i class="fas fa-map-pin"></i> ADDRESS DETAILS <span style="margin-left: auto; color: var(--slate-400); font-weight: 400;">2 Records</span></div>
+                ${addresses.map(addr => `
+                  <div class="address-card">
+                    <div class="tag-row">
+                      <span class="type"><i class="fas fa-${addr.IsPermanent ? 'building' : 'map-marker-alt'}"></i> ${addr.IsPermanent ? 'PERMANENT ADDRESS' : 'CURRENT / TRANSIT'}</span>
+                      <span class="perm-tag">IsPermanent: ${addr.IsPermanent}</span>
+                    </div>
+                    <p>${addr.FullAddress || '—'}</p>
+                  </div>
+                `).join('')}
+              </div>
+
+              <div class="data-section">
+                <div class="section-title"><i class="fas fa-graduation-cap"></i> EDUCATIONAL DETAILS <span style="margin-left: auto; color: var(--slate-400); font-weight: 400;">Post-Grad Verified</span></div>
+                ${educations.map(edu => `
+                  <div class="edu-card">
+                    <div class="tag-row">
+                      <span class="type"><i class="fas fa-university"></i> ${edu.SchoolName || '—'}</span>
+                      <span class="perm-tag">${edu.YearGraduated || '—'}</span>
+                    </div>
+                    <p><strong>${edu.Course || '—'}</strong></p>
+                  </div>
+                `).join('')}
+              </div>
+            `;
+            } else if (tab === 'personal') {
+                html = `
+              <div class="data-section">
+                <div class="section-title"><i class="fas fa-user-circle"></i> PERSONAL TELEMETRY</div>
+                <div class="data-grid">
+                  <div class="data-item"><span class="label">Full Name</span><span class="value">${employee.FullName || '—'}</span></div>
+                  <div class="data-item"><span class="label">Gender</span><span class="value">${info.Gender ? 'Male' : 'Female'}</span></div>
+                  <div class="data-item"><span class="label">Date of Birth</span><span class="value">${info.DateOfBirth || '—'}</span></div>
+                  <div class="data-item"><span class="label">Contact Number</span><span class="value">${info.ContactNumber || '—'}</span></div>
+                  <div class="data-item full-width"><span class="label">Social Media</span><span class="value">${info.SocialMedia || '—'}</span></div>
+                  <div class="data-item full-width"><span class="label">Remarks</span><span class="value remarks">${info.Remarks || '—'}</span></div>
+                </div>
+              </div>
+            `;
+            } else if (tab === 'addresses') {
+                html = `
+              <div class="data-section">
+                <div class="section-title"><i class="fas fa-map-pin"></i> P1SA_EMPLOYEESADDRESS <span style="margin-left: auto; color: var(--slate-400); font-weight: 400;">${addresses.length} Records</span></div>
+                ${addresses.map(addr => `
+                  <div class="address-card">
+                    <div class="tag-row">
+                      <span class="type"><i class="fas fa-${addr.IsPermanent ? 'building' : 'map-marker-alt'}"></i> ${addr.IsPermanent ? 'PERMANENT ADDRESS' : 'CURRENT / TRANSIT'}</span>
+                      <span class="perm-tag">IsPermanent: ${addr.IsPermanent}</span>
+                    </div>
+                    <p>${addr.FullAddress || '—'}</p>
+                  </div>
+                `).join('')}
+              </div>
+            `;
+            } else if (tab === 'education') {
+                html = `
+              <div class="data-section">
+                <div class="section-title"><i class="fas fa-graduation-cap"></i> P1SA_EMPLOYEESEDUCATION <span style="margin-left: auto; color: var(--slate-400); font-weight: 400;">${educations.length} Records</span></div>
+                ${educations.map(edu => `
+                  <div class="edu-card">
+                    <div class="tag-row">
+                      <span class="type"><i class="fas fa-university"></i> ${edu.SchoolName || '—'}</span>
+                      <span class="perm-tag">${edu.YearGraduated || '—'}</span>
+                    </div>
+                    <p><strong>${edu.Course || '—'}</strong> — ${edu.SchoolLevel || '—'}</p>
+                  </div>
+                `).join('')}
+              </div>
+            `;
+            }
+
+            sidebarContent.innerHTML = html;
+
+            document.querySelectorAll('.sidebar-tabs button').forEach((btn, idx) => {
+                btn.onclick = () => {
+                    const tabs = ['operational', 'personal', 'addresses', 'education'];
+                    renderSidebarContent(tabs[idx], employee, info, addresses, educations);
+                };
+            });
+        }
+
+
+       
 
     }
 
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const controller = new EmployeeDetailsController();
+document.addEventListener('DOMContentLoaded', function() {
+        const controller = new EmployeeController();
         controller.init();
     });
 </script>

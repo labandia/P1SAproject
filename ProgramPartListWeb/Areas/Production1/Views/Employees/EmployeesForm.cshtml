@@ -970,7 +970,6 @@
                 AgencyId: num('agencyId') || 0,
                 DepartmentId: num('departmentId'),
                 StatusId: 1,
-                WIthVech: Number(checked('vehicleMode') || 0),
                 Information: {
                     Gender: checked('gender') === 'Female',   // false = Male, true = Female
                     Category: false,                            // no form field yet: Direct Hired
@@ -979,7 +978,8 @@
                     ContactNumber: orNull('mobile'),
                     SocialMedia: orNull('facebook'),
                     PickUpPoint: num('pickUpPoint') || 0,
-                    Remarks: orNull('remarks')
+                    Remarks: orNull('remarks'),
+                    WIthVech: Number(checked('vehicleMode') || 0)
                 },
                 Education: education,
                 Addresses: addresses,

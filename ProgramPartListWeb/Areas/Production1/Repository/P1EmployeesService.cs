@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.EMMA;
 using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using ProgramPartListWeb.Areas.PC.Models;
 using ProgramPartListWeb.Areas.Production1.Interface;
 using ProgramPartListWeb.Areas.Production1.Model;
 using ProgramPartListWeb.Utilities.DataAccess;
@@ -17,7 +18,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 {
     public class P1EmployeesService : IP1EmployeesService
     {
-        public async Task<List<EmployeeProfile>> GetEmployeeDetails(
+        public async Task<List<EmployeeProfile>> GetEmployeeList(
             string search, 
             string code, 
             int DepartmentId, 
@@ -54,8 +55,9 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                             e.AgencyId,
                             e.DepartmentId,
                             e.StatusId,
-                            e.WIthVech
+                            a.Name as AgencyName
                         FROM P1SA_Employees_TempV2 e
+                        INNER JOIN P1SA_Agencies a ON a.AgencyId = e.AgencyId
                         " + filter + @"
                         ORDER BY e.FullName;";
 
@@ -84,6 +86,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                               ,i.PickUpPoint
                               ,i.DirectedBy
                               ,i.Category
+                              ,i.WIthVech
                         FROM P1SA_EmployeesInformation i
                         WHERE i.EmployeeId IN @EmployeeIds;";
 
@@ -205,7 +208,111 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 
         }
 
+        public async Task<EmployeeProfile> GetEmployeeDetails(int employeeId)
+        {
+            try
+            {
+                // 1. Get the main employee record
+                string employeeQuery = @"
+            SELECT TOP 1
+                e.EmployeeId,
+                e.EmployeeCode,
+                e.FirstName,
+                e.MiddleName,
+                e.LastName,
+                e.FullName,
+                e.Process,
+                e.AgencyId,
+                e.DepartmentId,
+                e.StatusId,
+                a.Name AS AgencyName
+            FROM P1SA_Employees_TempV2 e
+            INNER JOIN P1SA_Agencies a
+                ON a.AgencyId = e.AgencyId
+            WHERE e.EmployeeId = @EmployeeId;";
 
+                var employees = await SqlDataAcess_Test
+                    .QueryAsync<EmployeeProfile>(
+                        employeeQuery,
+                        new { EmployeeId = employeeId });
+
+                EmployeeProfile employee = employees.FirstOrDefault();
+
+                // Return null if the employee does not exist
+                if (employee == null)
+                    return null;
+
+                // 2. Get employee information (1:1)
+                string informationQuery = @"
+                    SELECT
+                        i.RecordID,
+                        i.EmployeeId,
+                        i.Gender,
+                        i.DateOfBirth,
+                        i.DateHired,
+                        i.DateResigned,
+                        i.ContactNumber,
+                        i.SocialMedia,
+                        i.PickUpPoint,
+                        i.DirectedBy,
+                        i.Category,
+                        i.WIthVech
+                    FROM P1SA_EmployeesInformation i
+                    WHERE i.EmployeeId = @EmployeeId;";
+
+                var information = await SqlDataAcess_Test
+                    .QueryAsync<EmployeeInformation>(
+                        informationQuery,
+                        new { EmployeeId = employeeId });
+
+                employee.Information = information.FirstOrDefault();
+
+                // 3. Get employee education (1:many)
+                string educationQuery = @"
+                    SELECT
+                        ed.EducationId,
+                        ed.EmployeeId,
+                        ed.SchoolLevel,
+                        ed.SchoolName,
+                        ed.Course,
+                        ed.YearGraduated
+                    FROM P1SA_EmployeesEducation ed
+                    WHERE ed.EmployeeId = @EmployeeId;";
+
+                var education = await SqlDataAcess_Test
+                    .QueryAsync<EmployeeEducation>(
+                        educationQuery,
+                        new { EmployeeId = employeeId });
+
+                employee.Education = education.ToList();
+
+                // 4. Get employee addresses (1:many)
+                string addressQuery = @"
+                        SELECT
+                            a.AddressId,
+                            a.EmployeeId,
+                            a.FullAddress,
+                            a.IsPermanent
+                        FROM P1SA_EmployeesAddress a
+                        WHERE a.EmployeeId = @EmployeeId;";
+
+                var addresses = await SqlDataAcess_Test
+                    .QueryAsync<EmployeeAddress>(
+                        addressQuery,
+                        new { EmployeeId = employeeId });
+
+                employee.Addresses = addresses.ToList();
+
+                return employee;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    "GetEmployeeDetails Error: " + ex);
+
+                throw;
+            }
+        }
 
         public async Task<bool> IsEmployeeExist(string employeeCode)
         {
@@ -226,10 +333,10 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                         conn, tx,
                         @"INSERT INTO P1SA_Employees_TempV2
                         (EmployeeCode, FullName, FirstName, MiddleName, LastName,
-                         Process, AgencyId, DepartmentId, StatusId, WIthVech)
+                         Process, AgencyId, DepartmentId, StatusId)
                       VALUES
                         (@EmployeeCode, @FullName, @FirstName, @MiddleName, @LastName,
-                         @Process, @AgencyId, @DepartmentId, @StatusId, @WIthVech);
+                         @Process, @AgencyId, @DepartmentId, @StatusId);
                       SELECT CAST(SCOPE_IDENTITY() AS INT);",
                         new
                         {
@@ -241,8 +348,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                             profile.Process,
                             profile.AgencyId,
                             profile.DepartmentId,
-                            profile.StatusId, 
-                            profile.WIthVech
+                            profile.StatusId
                         });
 
                         Debug.WriteLine($"Employee saved with ID: {profile.EmployeeId}");   
@@ -309,8 +415,8 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 
                 // Your INSERT query can go here.
                 int resultcheck = await SqlDataAcess_Test.ExecuteAsync(
-                    @"INSERT INTO P1SA_EmployeesInformation (EmployeeId, Gender, DateOfBirth, DateHired, ContactNumber, SocialMedia, PickUpPoint)
-                       VALUES (@EmployeeId, @Gender, @DateOfBirth, @DateHired, @ContactNumber, @SocialMedia, @PickUpPoint)",
+                    @"INSERT INTO P1SA_EmployeesInformation (EmployeeId, Gender, DateOfBirth, DateHired, ContactNumber, SocialMedia, PickUpPoint, WIthVech)
+                       VALUES (@EmployeeId, @Gender, @DateOfBirth, @DateHired, @ContactNumber, @SocialMedia, @PickUpPoint, @WIthVech)",
                     new {
                         EmployeeId = EmployeeId,
                         Gender = information.Gender,
@@ -318,7 +424,8 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                         DateHired = information.DateHired,
                         ContactNumber = information.ContactNumber,
                         SocialMedia = information.SocialMedia,
-                        PickUpPoint = information.PickUpPoint
+                        PickUpPoint = information.PickUpPoint,
+                        WIthVech = information.WIthVech
                     });
             }
             catch (Exception ex)
@@ -511,6 +618,6 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             throw new NotImplementedException();
         }
 
-        
+      
     }
 }

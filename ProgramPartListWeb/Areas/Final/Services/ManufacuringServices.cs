@@ -220,7 +220,6 @@ namespace ProgramPartListWeb.Areas.Final.Services
         //  GET THE LIST DETAILS BY LINE 
         public async Task<List<FanTraceabilityManufacturingOrder>> GetListofShopOrdersByLine(
             string Linename, string searchText,
-            int status, 
             DateTime? dateFrom = null,
             DateTime? dateTo = null)
         {
@@ -350,41 +349,35 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     parameters.Add("@SearchPrefix", $"{searchText}%");
                 }
 
-                if (status >= 0)
-                {
-                    query += " AND mo.OrderStatus = @OrderStatus";
-                    parameters.Add("@OrderStatus", status);
-                }
+                //// Date range filter on ShipmentDate
+                //// Include records where ShipmentDate is NULL or has no value.
+                //if (dateFrom.HasValue && dateTo.HasValue &&
+                //    dateFrom.Value > dateTo.Value)
+                //{
+                //    (dateFrom, dateTo) = (dateTo, dateFrom);
+                //}
 
-                // Date range filter on ShipmentDate
-                // Include records where ShipmentDate is NULL or has no value.
-                if (dateFrom.HasValue && dateTo.HasValue &&
-                    dateFrom.Value > dateTo.Value)
-                {
-                    (dateFrom, dateTo) = (dateTo, dateFrom);
-                }
+                //if (dateFrom.HasValue)
+                //{
+                //    query += @"
+                //        AND (
+                //            mo.ShipmentDate >= @DateFrom
+                //            OR mo.ShipmentDate IS NULL
+                //        )";
 
-                if (dateFrom.HasValue)
-                {
-                    query += @"
-                        AND (
-                            mo.ShipmentDate >= @DateFrom
-                            OR mo.ShipmentDate IS NULL
-                        )";
+                //            parameters.Add("@DateFrom", dateFrom.Value.Date);
+                //        }
 
-                            parameters.Add("@DateFrom", dateFrom.Value.Date);
-                        }
+                //        if (dateTo.HasValue)
+                //        {
+                //            query += @"
+                //            AND (
+                //                mo.ShipmentDate < @DateToExclusive
+                //                OR mo.ShipmentDate IS NULL
+                //            )";
 
-                        if (dateTo.HasValue)
-                        {
-                            query += @"
-                            AND (
-                                mo.ShipmentDate < @DateToExclusive
-                                OR mo.ShipmentDate IS NULL
-                            )";
-
-                    parameters.Add("@DateToExclusive", dateTo.Value.Date.AddDays(1));
-                }
+                //    parameters.Add("@DateToExclusive", dateTo.Value.Date.AddDays(1));
+                //}
 
                 query += @"
                     ORDER BY
@@ -396,6 +389,9 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         TRY_CAST(SUBSTRING(mo.Line, PATINDEX('%[0-9]%', mo.Line), 10) AS INT) ASC,
                         mo.Line ASC,
                         mo.RecordID ASC";
+
+
+                Debug.WriteLine(query);
 
 
                 return await SqlDataAcess_Test.QueryAsync<FanTraceabilityManufacturingOrder>(query, parameters);

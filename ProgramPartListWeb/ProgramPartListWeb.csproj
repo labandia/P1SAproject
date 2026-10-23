@@ -972,6 +972,7 @@
     <Content Include="Content\fonts\Inter-VariableFont_opsz,wght.ttf" />
     <Content Include="Areas\Production1\Views\Employees\EmployeeList.cshtml" />
     <Content Include="Areas\Production1\Views\Shared\_EmployListLayout.cshtml" />
+    <Content Include="Areas\Production1\Views\Employees\EmployeeDetails.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <Content Include="Content\Uploads\PCFY-81013Form1L.xlsx" />
     <Content Include="Content\Uploads\FinalUploadTemplate.xlsx" />

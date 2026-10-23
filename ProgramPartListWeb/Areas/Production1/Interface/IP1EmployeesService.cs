@@ -9,10 +9,12 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
         //====================================
         //===GET EMPLOYEES INFORMATION ====
         //====================================
-        Task<List<EmployeeProfile>> GetEmployeeDetails(string search,
+        Task<List<EmployeeProfile>> GetEmployeeList(string search,
            string code,
            int DepartmentId,
            int status);
+
+        Task<EmployeeProfile> GetEmployeeDetails(int empid);
 
         //====================================
         //===SAVING EMPLOYEES INFORMATION ====

@@ -35,5 +35,11 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
         Task<int> DeleteSkillEmployee(int EmployeeId);
 
 
+
+
+        //===============================================
+        //=========== EMPLOYEE SUMMARY REPORT ===========
+        //===============================================
+        Task<OverAllManpower> GetEmployeeSummaryReport();
     }
 }

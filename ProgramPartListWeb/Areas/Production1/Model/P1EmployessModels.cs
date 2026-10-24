@@ -161,4 +161,40 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public string ProcessName { get; set; }
         public int DepartmentId { get; set; }
     }
+
+
+
+
+
+    public class OverAllManpower
+    {
+        public List<CompanyManpower> company { get; set; }
+       = new List<CompanyManpower>();
+
+        public List<AddressManpower> address { get; set; }
+            = new List<AddressManpower>();
+    }
+
+
+
+
+    public class CompanyManpower
+    {
+        public string company { get; set; }
+        public int Boys { get; set; }
+        public int Girls { get; set; }
+        public int Total { get; set; }
+    }
+
+    public class AddressManpower
+    {
+        public string AddressLocation { get; set; }
+        public int Boys { get; set; }
+        public int Girls { get; set; }
+        public int Total { get; set; }
+    }
+
+
+
+
 }

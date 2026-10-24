@@ -618,6 +618,52 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             throw new NotImplementedException();
         }
 
-      
+        public async Task<OverAllManpower> GetEmployeeSummaryReport()
+        {
+            try
+            {
+                // Get manpower totals grouped by company / agency
+                var getAgencySummary =
+                    await SqlDataAcess_Test.QueryAsync<CompanyManpower>(@"
+                SELECT
+                    e.AgencyId AS company,
+                    SUM(CASE WHEN i.Gender = 0 THEN 1 ELSE 0 END) AS Boys,
+                    SUM(CASE WHEN i.Gender = 1 THEN 1 ELSE 0 END) AS Girls,
+                    COUNT(*) AS Totals
+                FROM P1SA_Employees_TempV2 e
+                INNER JOIN P1SA_EmployeesInformation i
+                    ON i.EmployeeId = e.EmployeeId
+                GROUP BY e.AgencyId
+                ORDER BY e.AgencyId;
+            ");
+
+                // Get manpower totals grouped by pickup point / address
+                var getAddressSummary =
+                    await SqlDataAcess_Test.QueryAsync<AddressManpower>(@"
+                SELECT
+                    i.PickUpPoint AS AddressLocation,
+                    SUM(CASE WHEN i.Gender = 0 THEN 1 ELSE 0 END) AS Boys,
+                    SUM(CASE WHEN i.Gender = 1 THEN 1 ELSE 0 END) AS Girls,
+                    COUNT(*) AS Total
+                FROM P1SA_Employees_TempV2 e
+                INNER JOIN P1SA_EmployeesInformation i
+                    ON i.EmployeeId = e.EmployeeId
+                GROUP BY i.PickUpPoint
+                ORDER BY i.PickUpPoint;
+            ");
+
+                // Return both datasets
+                return new OverAllManpower
+                {
+                    company = getAgencySummary,
+                    address = getAddressSummary
+                };
+            }
+            catch (Exception ex)
+            {
+                // Log the exception if logging is available
+                throw;
+            }
+        }
     }
 }

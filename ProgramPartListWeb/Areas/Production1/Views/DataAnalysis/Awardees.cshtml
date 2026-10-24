@@ -204,32 +204,24 @@
     </style>
 </head>
 <body>
-
-
     <div class="award-container">
-        <div class="award-content">
+        <div class="award-content" id="awardContent">
             <div class="award-title">
-                <img class="NoImages lazy"
-                     src='@Url.Action("DisplaytheImage", "DataAnalysis", new { area = "Production1", filename = "Winnder2.png" })'
-                     onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
+                <img id="slot1" class="NoImages lazy" alt="Awardee 1" />
             </div>
-            <div class="awardheader">
-                <img class="NoImages lazy"
-                     src='@Url.Action("DisplaytheImage", "DataAnalysis", new { area = "Production1", filename = "awardee.png" })'
-                     onerror="this.src='@Url.Content("~/Content/Images/no-image.png")'" />
+            <div class="awardheader" id="slot2Wrap">
+                <img id="slot2" class="NoImages lazy" alt="Awardee 2" />
             </div>
         </div>
     </div>
     <h2 class="award-heading">Congratulations</h2>
 
     <script>
-        // Confetti — reusable so it can fire on first load AND again every
-        // time the image pop-in animation replays. Each call bursts
-        // repeatedly for 1 minute, then stops until called again.
+        /* ---------- Confetti (unchanged) ---------- */
         var runConfettiSequence = (function () {
             var colors = ['#09c9ba', '#1283dd', '#ffd166', '#ef476f', '#ffffff'];
             var burstCount = 60;
-            var loopDurationMs = 60000; // 1 minute
+            var loopDurationMs = 60000;
             var intervalMs = 1200;
             var intervalId = null;
 
@@ -243,16 +235,11 @@
                     piece.style.animationDelay = (Math.random() * 0.4) + 's';
                     piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
                     document.body.appendChild(piece);
-
-                    piece.addEventListener('animationend', function () {
-                        this.remove();
-                    });
+                    piece.addEventListener('animationend', function () { this.remove(); });
                 }
             }
 
-            return function runConfettiSequence() {
-                // If a sequence is already running, let it keep going
-                // rather than stacking a second interval on top of it.
+            return function () {
                 if (intervalId !== null) return;
                 launchConfettiBurst();
                 intervalId = setInterval(launchConfettiBurst, intervalMs);
@@ -263,63 +250,131 @@
             };
         })();
 
-        window.addEventListener('load', function () {
-            setTimeout(runConfettiSequence, 200);
-        });
+        /* ---------- Awardee rotator: 2 images, switch every 30s ---------- */
+        document.addEventListener('DOMContentLoaded', function () {
 
-        // Once the pop-in animation finishes, wait, then play it again —
-        // repeating indefinitely instead of reloading the whole page.
-        // Change REPLAY_DELAY_MS below to switch between the 1-minute and
-        // 1.5-minute (1 min 30 sec) pacing.
-        (function () {
-            var images = document.querySelectorAll('.award-title img, .awardheader img');
-            var REPLAY_DELAY_MS = 60000; // 60000 = 1 minute, 90000 = 1.5 minutes
-            var pending = images.length;
-            var scheduled = false;
+            var listUrl  = '@Url.Action("GetAwardeeImages", "DataAnalysis", new { area = "Production1" })';
+            var imageUrl = '@Url.Action("DisplaytheImage", "DataAnalysis", new { area = "Production1" })';
+            var noImage  = '@Url.Content("~/Content/Images/no-image.png")';
 
+            var PER_PAGE = 2;
+            var ROTATE_MS = 30000; // 30 seconds
+
+            var content   = document.getElementById('awardContent');
+            var slots     = [document.getElementById('slot1'), document.getElementById('slot2')];
+            var slot2Wrap = document.getElementById('slot2Wrap');
+
+            var files = [];
+            var index = 0;
+            var timer = null;
+
+            function buildSrc(filename) {
+                return imageUrl + '?filename=' + encodeURIComponent(filename);
+            }
+
+            // Restart the popIn CSS animation on an <img>
             function replayAnimation(img) {
-                // Removing and re-adding the animation, with a forced
-                // reflow in between, restarts a CSS animation that has
-                // already finished (just toggling the class won't).
                 img.style.animation = 'none';
-                // eslint-disable-next-line no-unused-expressions
-                img.offsetHeight; // force reflow
+                void img.offsetHeight; // force reflow
                 img.style.animation = '';
             }
 
-            function scheduleReplay() {
-                if (scheduled) return;
-                scheduled = true;
-                setTimeout(function () {
-                    scheduled = false;
-                    pending = images.length;
-                    images.forEach(function (img) {
-                        replayAnimation(img);
-                        img.addEventListener('animationend', onOneAnimationDone, { once: true });
-                    });
-                    runConfettiSequence();
-                }, REPLAY_DELAY_MS);
+            function setSlot(img, filename) {
+                img.onerror = function () {
+                    this.onerror = null;
+                    this.src = noImage;
+                };
+                img.alt = filename;
+                img.src = buildSrc(filename);
+                replayAnimation(img);
             }
 
-            function onOneAnimationDone(e) {
-                // Only react to the popIn animation, not the confetti-fall
-                // animation which also fires animationend events elsewhere.
-                if (e.animationName && e.animationName !== 'popIn') return;
-                pending--;
-                if (pending <= 0) {
-                    scheduleReplay();
+            function showCurrentPair() {
+                if (files.length === 0) {
+                    return;
+                }
+
+                // Take up to 2 files, wrapping around the end of the list
+                var pair = [];
+                var count = Math.min(PER_PAGE, files.length);
+                for (var i = 0; i < count; i++) {
+                    pair.push(files[(index + i) % files.length]);
+                }
+
+                setSlot(slots[0], pair[0]);
+
+                if (pair.length > 1) {
+                    slot2Wrap.style.display = '';
+                    content.classList.remove('single');
+                    setSlot(slots[1], pair[1]);
+                } else {
+                    // Only one image available — center it
+                    slot2Wrap.style.display = 'none';
+                    content.classList.add('single');
+                }
+
+                runConfettiSequence();
+            }
+
+            function loadList() {
+                return fetch(listUrl, { cache: 'no-store' })
+                    .then(function (response) {
+                        if (!response.ok) throw new Error('Failed to retrieve awardee images.');
+                        return response.json();
+                    })
+                    .then(function (result) {
+                        if (!result || !result.success) {
+                            console.warn(result && result.message);
+                            files = [];
+                            return files;
+                        }
+
+                        // data is [{ FileName, FullPath }, ...]; keep only the file names
+                        files = (result.data || [])
+                            .map(function (item) {
+                                return typeof item === 'string' ? item : item.FileName;
+                            })
+                            .filter(Boolean);
+
+                        return files;
+                    });
+            }
+
+            function advance() {
+                if (files.length <= PER_PAGE) {
+                    // Nothing new to rotate to; just refresh the list in case it changed
+                    loadList().then(function () { index = 0; showCurrentPair(); });
+                    return;
+                }
+
+                index += PER_PAGE;
+
+                if (index >= files.length) {
+                    // Finished a full cycle: wrap around and re-fetch for new awardees
+                    index = 0;
+                    loadList()
+                        .catch(function (e) { console.error(e); })
+                        .then(showCurrentPair);
+                } else {
+                    showCurrentPair();
                 }
             }
 
-            if (images.length === 0) {
-                // No images found — nothing to animate.
-                return;
-            }
-
-            images.forEach(function (img) {
-                img.addEventListener('animationend', onOneAnimationDone, { once: true });
-            });
-        })();
+            loadList()
+                .then(function () {
+                    if (files.length === 0) {
+                        content.innerHTML =
+                            '<p style="color:white;text-align:center;">No awardee images found.</p>';
+                        return;
+                    }
+                    index = 0;
+                    showCurrentPair();
+                    timer = setInterval(advance, ROTATE_MS);
+                })
+                .catch(function (error) {
+                    console.error('Error loading awardee images:', error);
+                });
+        });
     </script>
 </body>
 </html>

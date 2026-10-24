@@ -96,7 +96,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
                     -- Total Downtime from DownTimeInput
                     ISNULL(dt.TotalDowntime, 0) AS TotalDowntime
 
-                FROM FanTraceabilityManufacturingOrder m
+                FROM FanTraceabilityManufacturingOrder_Complete m
 
                 OUTER APPLY
                 (

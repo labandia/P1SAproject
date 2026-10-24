@@ -26,17 +26,18 @@
     box-sizing: border-box;
 }
 
-body {
-    font-family: var(--font-main);
-    background-color: var(--bg-body);
+
+.EmployeeMainBody {
+    font-family: var(--font-main) !important;
+    background-color: var(--bg-body) !important;
     color: var(--text-main);
-    min-height: 100vh;
-    display: flex;
+    min-height: 100vh !important;
+    display: flex ;
     justify-content: center;
     align-items: center;
     overflow-x: hidden;
-    /* Very subtle dot pattern for tech feel on white */
-    background-image: radial-gradient(rgba(0, 85, 184, 0.08) 1px, transparent 1px);
+         Very subtle dot pattern for tech feel on white 
+        background-image: radial-gradient(rgba(0, 85, 184, 0.08) 1px, transparent 1px);
     background-size: 32px 32px;
 }
 

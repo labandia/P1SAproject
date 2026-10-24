@@ -105,27 +105,18 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
 
 
         // GET: Production1/Employees
-        public ActionResult EmployeeList()
-        {
-            return View();
-        }
+        public ActionResult EmployeeList() => View();
 
-        public ActionResult EmployeeDetails(int employeeID)
-        {
-            return View();
-        }
+        public ActionResult EmployeeDetails(int employeeID) => View();
 
 
         // GET: Production1/Employees
-        public ActionResult EmployeesForm()
-        {
-            return View();
-        }
+        public ActionResult EmployeesForm() => View();
 
         // GET: Production1/Employees
-        public ActionResult Index()
-        {
-            return View();
-        }
+        public ActionResult Index() => View();
+
+        // GET: Production1/ManpowerOverall
+        public ActionResult ManpowerOverall() => View();
     }
 }

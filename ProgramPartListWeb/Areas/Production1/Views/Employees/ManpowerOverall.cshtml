@@ -1,0 +1,71 @@
+﻿
+@{
+    ViewBag.Title = "ManpowerOverall";
+    Layout = "~/Areas/Production1/Views/Shared/_EmployListLayout.cshtml";
+}
+
+<div class="report-container">
+
+    <!-- HEADER -->
+    <header class="report-header">
+        <div class="logo-block">
+            <h1>SANYO DENKI<sup>&reg;</sup></h1>
+            <p>SANYO DENKI PHILIPPINES INC.</p>
+        </div>
+    </header>
+
+    <!-- TITLE -->
+    <h2 class="report-title">EMPLOYEE SUMMARY REPORT</h2>
+
+    <!-- COMPANY SECTION -->
+    <section class="section-block">
+        <h3 class="section-heading">COMPANY</h3>
+        <table class="data-table" id="companyTable">
+            <thead>
+                <tr>
+                    <th>COMPANY</th>
+                    <th>BOYS</th>
+                    <th>GIRLS</th>
+                    <th>TOTAL</th>
+                </tr>
+            </thead>
+            <tbody id="companyTableBody">
+                <!-- Rows injected by JS -->
+            </tbody>
+        </table>
+    </section>
+
+    <!-- ADDRESS LOCATION SECTION -->
+    <section class="section-block">
+        <h3 class="section-heading">ADDRESS LOCATION</h3>
+        <table class="data-table" id="addressTable">
+            <thead>
+                <tr>
+                    <th>ADDRESS LOCATION</th>
+                    <th>BOYS</th>
+                    <th>GIRLS</th>
+                    <th>TOTAL</th>
+                </tr>
+            </thead>
+            <tbody id="addressTableBody">
+                <!-- Rows injected by JS -->
+            </tbody>
+        </table>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="report-footer">
+        <div class="footer-item">
+            <span>Prepared by: <strong id="preparedBy">—</strong></span>
+        </div>
+        <div class="footer-divider">|</div>
+        <div class="footer-item">
+            <span>Department: <strong id="department">—</strong></span>
+        </div>
+        <div class="footer-divider">|</div>
+        <div class="footer-item">
+            <span>Date Printed: <strong id="datePrinted">—</strong></span>
+        </div>
+    </footer>
+
+</div>

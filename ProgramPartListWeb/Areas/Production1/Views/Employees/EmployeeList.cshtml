@@ -86,7 +86,7 @@
         </div>
 
         <!-- SIDEBAR MODAL (RIGHT) -->
-        <div class="sidebar-modal" id="sidebarModal">
+        <!--<div class="sidebar-modal" id="sidebarModal">
             <div class="sidebar-header">
                 <div class="label"><i class="fas fa-id-card"></i> EMPLOYEE MASTER DOSSIER <span style="color: var(--slate-400); margin-left: 0.5rem;" id="dossierId">#EMP-8819</span></div>
                 <div class="actions">
@@ -95,9 +95,9 @@
                 </div>
             </div>
 
-            <div class="sidebar-profile" id="sidebarProfile">
+            <div class="sidebar-profile" id="sidebarProfile">-->
                 <!-- dynamically populated -->
-            </div>
+            <!--</div>
 
             <div class="sidebar-tabs">
                 <button class="active"><i class="fas fa-briefcase"></i> Operational</button>
@@ -106,15 +106,15 @@
                 <button><i class="fas fa-graduation-cap"></i> Education</button>
             </div>
 
-            <div class="sidebar-content" id="sidebarContent">
+            <div class="sidebar-content" id="sidebarContent">-->
                 <!-- dynamically populated -->
-            </div>
+            <!--</div>
 
             <div class="sidebar-footer">
                 <button class="btn"><i class="fas fa-edit"></i> Edit Master Record</button>
                 <button class="btn btn-authorize"><i class="fas fa-check-circle"></i> Authorize Rotation</button>
             </div>
-        </div>
+        </div>-->
     </div>
 
     <!-- BOTTOM STATUS BAR -->
@@ -158,14 +158,10 @@
 
         async init() {
             await this.LoadEmployeesList();
-
-
             this.BindEvents();
         }
 
         BindEvents() {
-
-
             this.searchText.addEventListener('input', async () => {
                 await this.LoadEmployeesList();
             });
@@ -173,7 +169,6 @@
 
         async LoadEmployeesList() {
            try {
-
                 const res = await getMethod('@Url.Action("GetEmployeeList", "Employees")',
                         {
                             search: this.searchText.value,
@@ -181,8 +176,6 @@
                             DepartmentId: 0,
                             status: 0
                         });
-
-               console.log(res);
 
                 if (!res?.Success) {
                     console.log('No data found in Group Data');
@@ -205,7 +198,6 @@
                     </div>`;
                 return;
             }
-
 
             rosterList.innerHTML = employees.map(emp => {
                 const initials = (emp.FirstName?.[0] || '') + (emp.LastName?.[0] || '');
@@ -247,15 +239,7 @@
                 row.addEventListener('click', async () => {
                     const empId = Number(row.dataset.employeeId);
 
-                    window.location.href = '@Url.Action("EmployeeDetails", "Employees")' + '?employeeID=' + empId;
-                    @*const result = await getMethod('@Url.Action("GetEmployeeDetails", "Employees")', {  employee: empId });
-                    if (!result?.Success) {
-                        console.log('No data found in Group Data');
-                        return;
-                    }
-
-                    //console.log(result);
-                    this.openSidebar(result.data);*@
+                    window.location.href = '@Url.Action("EmployeeDetails", "Employees")' + '?employeeID=' + empId;          
                 });
             });
 
@@ -411,14 +395,10 @@
                 };
             });
         }
-
-
-       
-
     }
 
 
-document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
         const controller = new EmployeeController();
         controller.init();
     });

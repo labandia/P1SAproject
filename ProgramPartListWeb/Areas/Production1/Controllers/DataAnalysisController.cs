@@ -11,6 +11,57 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
 {
     public class DataAnalysisController : ExtendController
     {
+        private readonly string certificatePath =
+       @"\\172.29.1.5\sdpsyn01\Process Control\SystemImages\Certificate";
+
+        public ActionResult GetAwardeeImages()
+        {
+            try
+            {
+                if (!Directory.Exists(certificatePath))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Network folder does not exist or is inaccessible.",
+                        data = new string[0]
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
+                string[] allowedExtensions =
+                {
+                ".jpg", ".jpeg", ".png",
+                ".gif", ".bmp", ".webp"
+            };
+
+                var images = Directory
+                     .GetFiles(certificatePath, "Awardee*.*", SearchOption.TopDirectoryOnly)
+                     .Where(file => allowedExtensions.Contains(
+                         Path.GetExtension(file), StringComparer.OrdinalIgnoreCase))
+                     .Select(file => Path.GetFileName(file))
+                     .OrderBy(name => name, StringComparer.OrdinalIgnoreCase)
+                     .ToList();
+
+                return Json(new
+                {
+                    success = true,
+                    count = images.Count,
+                    data = images
+                }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = ex.Message,
+                    data = new string[0]
+                }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+
         public ActionResult DisplaytheImage(string filename)
         {
             if (string.IsNullOrWhiteSpace(filename))

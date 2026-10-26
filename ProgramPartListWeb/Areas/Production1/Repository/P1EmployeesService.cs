@@ -625,23 +625,23 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                 // Get manpower totals grouped by company / agency
                 var getAgencySummary =
                     await SqlDataAcess_Test.QueryAsync<CompanyManpower>(@"
-                SELECT
-                    e.AgencyId AS company,
-                    SUM(CASE WHEN i.Gender = 0 THEN 1 ELSE 0 END) AS Boys,
-                    SUM(CASE WHEN i.Gender = 1 THEN 1 ELSE 0 END) AS Girls,
-                    COUNT(*) AS Totals
-                FROM P1SA_Employees_TempV2 e
-                INNER JOIN P1SA_EmployeesInformation i
-                    ON i.EmployeeId = e.EmployeeId
-                GROUP BY e.AgencyId
-                ORDER BY e.AgencyId;
-            ");
+                    SELECT
+                        a.Name AS company,
+                        SUM(CASE WHEN i.Gender = 0 THEN 1 ELSE 0 END) AS Boys,
+                        SUM(CASE WHEN i.Gender = 1 THEN 1 ELSE 0 END) AS Girls,
+                        COUNT(*) AS Totals
+                    FROM P1SA_Employees_TempV2 e
+                    INNER JOIN P1SA_EmployeesInformation i ON i.EmployeeId = e.EmployeeId
+                    INNER JOIN P1SA_Agencies a ON a.AgencyId = e.AgencyId
+                    GROUP BY e.AgencyId, a.Name
+                    ORDER BY e.AgencyId;
+                ");
 
                 // Get manpower totals grouped by pickup point / address
                 var getAddressSummary =
                     await SqlDataAcess_Test.QueryAsync<AddressManpower>(@"
                 SELECT
-                    i.PickUpPoint AS AddressLocation,
+                    i.PickUpPoint,
                     SUM(CASE WHEN i.Gender = 0 THEN 1 ELSE 0 END) AS Boys,
                     SUM(CASE WHEN i.Gender = 1 THEN 1 ELSE 0 END) AS Girls,
                     COUNT(*) AS Total

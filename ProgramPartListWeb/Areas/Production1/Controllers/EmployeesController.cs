@@ -104,6 +104,24 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
         }
 
 
+
+        // ─────────────────────────────────────────────────────────────────
+        // GET: /Production1/Employees/GetEmployeeList
+        // Gets the List of Employee Details
+        // ─────────────────────────────────────────────────────────────────
+        [HttpGet]
+        public async Task<ActionResult> GetOverallManpower()
+        {
+            var res = await _emp.GetEmployeeSummaryReport();
+            if (res == null)
+                return JsonNotFound("No Active Lines found");
+            return JsonSuccess(res);
+        }
+
+
+
+
+
         // GET: Production1/Employees
         public ActionResult EmployeeList() => View();
 

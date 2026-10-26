@@ -188,10 +188,23 @@ namespace ProgramPartListWeb.Areas.Production1.Model
 
     public class AddressManpower
     {
-        public string AddressLocation { get; set; }
+        public int PickUpPoint { get; set; }
         public int Boys { get; set; }
         public int Girls { get; set; }
         public int Total { get; set; }
+
+        public string PlacesName
+        {
+            get
+            {
+                return PickUpPoint == 1 ? "MORONG" :
+                       PickUpPoint == 2 ? "BATAAN" :
+                       PickUpPoint == 3 ? "ZAMBALES" :
+                       PickUpPoint == 4 ? "OLONGAPO" :
+                       "";
+            }
+        }
+
     }
 
 

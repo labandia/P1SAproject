@@ -8,7 +8,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using static ProgramPartListWeb.Areas.Production1.Model.AttendanceModel;
 
 namespace ProgramPartListWeb.Areas.Production1.Controllers
 {

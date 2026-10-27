@@ -1,0 +1,353 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Encoder</title>
+    <title>Employee Information System</title>
+    <link href="~/Content/css/EfficiencyDesign.css" rel="stylesheet" />
+</head>
+<body>
+    <header>
+        <div class="brand">Production Control · Digital Encoder</div>
+        <h1>Efficiency Daily Monitor</h1>
+        <div class="subtitle">Saved to PMACS_TEST · target and efficiency calculated from cycle time</div>
+    </header>
+    <main>
+        <div class="toolbar">
+            <button class="primary" onclick="newRecord()">＋ New Record</button>
+            <button onclick="exportCSV()">Export CSV</button>
+            <button onclick="window.print()">Print Report</button>
+            <span class="small" id="status" style="margin-left:auto"></span>
+        </div>
+
+        <nav class="tabs">
+            <button class="tab active" data-tab="records" onclick="showTab('records')">Records</button>
+            <button class="tab" data-tab="encoder" onclick="showTab('encoder')">Data Encoder</button>
+        </nav>
+
+        <!-- RECORDS (Read / Delete / Edit entry point) -->
+        <section class="panel active" id="records">
+            <div class="kpis">
+                <div class="kpi"><div class="label">Records</div><div class="value" id="kRecords">0</div></div>
+                <div class="kpi"><div class="label">Total Output</div><div class="value" id="kOutput">0</div></div>
+                <div class="kpi"><div class="label">Total Target</div><div class="value" id="kTarget">0</div></div>
+                <div class="kpi"><div class="label">Overall Efficiency</div><div class="value" id="kEff">0%</div></div>
+            </div>
+            <div class="card">
+                <div class="card-head"><h2>Daily Records</h2><span class="small" id="recordCount">0 records</span></div>
+                <div class="card-body">
+                    <div class="filters no-print">
+                        <input id="fFrom" type="date" title="From"> <input id="fTo" type="date" title="To">
+                        <button onclick="loadList()">Load</button>
+                        <input id="search" placeholder="Search machine, code, shop order, part…" oninput="render()">
+                        <select id="fShift" onchange="render()"><option value="">All shifts</option><option value="D">Day (D)</option><option value="N">Night (N)</option></select>
+                    </div>
+                    <div class="table-wrap">
+                        <table id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Shift</th>
+                                    <th>MC.#</th>
+                                    <th>Shop Order</th>
+                                    <th>Partnumber</th>
+                                    <th>Model</th>
+                                    <th>Process</th>
+                                    <th>Effy Code</th>
+                                    <th>Emp. Code</th>
+                                    <th>Output</th>
+                                    <th>DT (min)</th>
+                                    <th>Start</th>
+                                    <th>End</th>
+                                    <th>Work Hrs</th>
+                                    <th>Target</th>
+                                    <th>Target (Eased)</th>
+                                    <th>Eff.</th>
+                                    <th class="no-print">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dataRows"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ENCODER (Create / Update) -->
+        <section class="panel" id="encoder">
+            <div class="card">
+                <div class="card-head"><h2 id="formTitle">New Record</h2><span class="small">Fields with <span style="color:#b22222;font-weight:700;">*</span> are required</span></div>
+                <div class="card-body">
+                    <form id="entryForm">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="efficiencyId" value="0">
+
+                        <div class="form-grid">
+                            <div class="field">
+                                <label>Process <span class="req">*</span></label>
+                                <select id="processId" required>
+                                   <option value="1">adad</option>
+                                </select>
+                            </div>
+                            <div class="field"><label>Date <span class="req">*</span></label><input id="workDate" type="date" required></div>
+                            <div class="field">
+                                <label>Shift <span class="req">*</span></label>
+                                <select id="shift" required>
+                                    <!-- "true"/"false" (not 0/1) so the MVC bool model binder accepts it -->
+                                    <option value="false">D — Day</option>
+                                    <option value="true">N — Night</option>
+                                </select>
+                            </div>
+                            <div class="field"><label>Machine No. <span class="req">*</span></label><input id="machineNo" placeholder="e.g. D-122" required></div>
+                            <div class="field"><label>Shop Order <span class="req">*</span></label><input id="shopOrder" placeholder="e.g. 606273663600" required></div>
+                            <div class="field"><label>Partnumber</label><input id="partnumber" placeholder="optional · e.g. 00847759-01"></div>
+                            <div class="field"><label>Model</label><input id="model" readonly placeholder="from cycle time table"></div>
+                            <div class="field"><label>Effy Code <span class="req">*</span></label><input id="effyCode" placeholder="e.g. S2CR1040" required></div>
+                            <div class="field"><label>Employee Code</label><input id="employeeCode" readonly placeholder="from Effy code"></div>
+                            <div class="field"><label>Output <span class="req">*</span></label><input id="output" type="number" min="0" step="1" required placeholder="0"></div>
+                            <div class="field"><label>Downtime (min)</label><input id="downtimeMin" type="number" min="0" step="1" value="0"></div>
+                            <div class="field"><label>Start <span class="req">*</span></label><input id="startOpe" type="time" required></div>
+                            <div class="field"><label>End <span class="req">*</span></label><input id="endOpe" type="time" required></div>
+                        </div>
+
+                        <div class="auto-group">
+                            <div class="auto-group-head"><h3>Auto‑Calculated</h3></div>
+                            <div class="auto-grid">
+                                <div class="field"><label>Span (min)</label><input id="aSpan" readonly></div>
+                                <div class="field"><label>Work Hours</label><input id="aHours" readonly></div>
+                                <div class="field"><label>Cycle Time (cur / eased)</label><input id="aCycle" readonly></div>
+                                <div class="field"><label>Target (current)</label><input id="aTarget" readonly></div>
+                                <div class="field"><label>Target (eased)</label><input id="aTargetEased" readonly></div>
+                                <div class="field"><label>Efficiency (%)</label><input id="aEff" readonly placeholder="Output ÷ Target × 100"></div>
+                            </div>
+                        </div>
+
+                        <div id="formMsg" class="small" style="min-height:18px;margin:8px 0;"></div>
+                        <div class="form-actions">
+                            <button type="submit" class="primary" id="btnSave">Save Record</button>
+                            <button type="button" onclick="newRecord()">Clear Form</button>
+                            <button type="button" onclick="showTab('records')">View Records</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>Rotor Production Output Encoder System • Standalone HTML • Data stored locally in this browser</footer>
+
+
+    <script>
+        const urls = {
+            list: '@Url.Action("List")', get: '@Url.Action("Get")', save: '@Url.Action("Save")',
+            del: '@Url.Action("Delete")', part: '@Url.Action("LookupPart")', effy: '@Url.Action("LookupEffy")'
+        };
+        const $ = id => document.getElementById(id);
+        const n = v => Number(v) || 0;
+        const fmt = v => n(v).toLocaleString("en-US", { maximumFractionDigits: 2 });
+        const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+        const today = () => { const d = new Date(); return new Date(d - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10); };
+
+        let rows = [];
+        let cycle = null;          // cycle-time info for the part currently typed in the form
+
+        function token() { return document.querySelector('#entryForm [name=__RequestVerificationToken]').value; }
+        async function getJson(url, params) {
+            const res = await fetch(url + (params ? "?" + new URLSearchParams(params) : ""), { credentials: "same-origin" });
+            if (!res.ok) throw new Error("Request failed (" + res.status + ")");
+            return res.json();
+        }
+        async function postForm(url, data) {
+            // Form-encoded (not JSON) so [ValidateAntiForgeryToken] and the default model binder work unchanged.
+            const body = new URLSearchParams(data); body.append("__RequestVerificationToken", token());
+            const res = await fetch(url, { method: "POST", body: body, credentials: "same-origin" });
+            if (!res.ok) throw new Error("Request failed (" + res.status + ")");
+            return res.json();
+        }
+
+        function showTab(id) {
+            document.querySelectorAll(".panel").forEach(x => x.classList.toggle("active", x.id === id));
+            document.querySelectorAll(".tab").forEach(x => x.classList.toggle("active", x.dataset.tab === id));
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        // ---------- READ ----------
+        async function loadList() {
+            try {
+                rows = await getJson(urls.list, { from: $("fFrom").value, to: $("fTo").value });
+                render();
+            } catch (e) { $("status").textContent = e.message; }
+        }
+
+        const effClass = v => v >= 100 ? "eff-good" : v >= 80 ? "eff-mid" : "eff-low";
+        const effPill = v => v == null ? "—" : `<span class="pill ${effClass(v)}">${n(v).toFixed(2)}%</span>`;
+
+        function filtered() {
+            const q = $("search").value.toLowerCase(), sh = $("fShift").value;
+            return rows.filter(r => (!sh || r.shift === sh) &&
+                (!q || [r.machineNo, r.effyCode, r.employeeCode, r.shopOrder, r.partnumber, r.model, r.processName]
+                    .some(v => String(v || "").toLowerCase().includes(q))));
+        }
+
+        function render() {
+            const list = filtered();
+            const out = list.reduce((a, r) => a + n(r.output), 0);
+            // Only rows that have a target count toward overall efficiency (no cycle time = no target).
+            const withT = list.filter(r => r.target > 0);
+            const tgt = withT.reduce((a, r) => a + n(r.target), 0);
+            const outT = withT.reduce((a, r) => a + n(r.output), 0);
+
+            $("kRecords").textContent = list.length; $("kOutput").textContent = fmt(out); $("kTarget").textContent = fmt(tgt);
+            $("kEff").textContent = tgt ? (outT / tgt * 100).toFixed(2) + "%" : "—";
+            $("recordCount").textContent = `${list.length} of ${rows.length} records`;
+
+            $("dataRows").innerHTML = list.map(r => `<tr>
+                <td>${esc(r.workDate)}</td><td>${r.shift}</td><td>${esc(r.machineNo)}</td><td>${esc(r.shopOrder)}</td>
+                <td>${esc(r.partnumber)}</td><td>${esc(r.model)}</td><td>${esc(r.processName)}</td>
+                <td>${esc(r.effyCode)}</td><td>${esc(r.employeeCode)}</td>
+                <td class="num">${fmt(r.output)}</td><td class="num">${r.downtimeMin}</td>
+                <td>${r.startOpe}</td><td>${r.endOpe}</td><td class="num">${fmt(r.workHours)}</td>
+                <td class="num">${r.target == null ? "—" : fmt(r.target)}</td>
+                <td class="num">${r.targetEased == null ? "—" : fmt(r.targetEased)}</td>
+                <td>${effPill(r.efficiency)}</td>
+                <td class="no-print">
+                    <button onclick="editRecord(${r.id})" style="padding:4px 10px;font-size:11px;">Edit</button>
+                    <button onclick="deleteRecord(${r.id})" style="padding:4px 10px;font-size:11px;">Delete</button>
+                </td></tr>`).join("") || '<tr><td colspan="18" class="empty">No records for this range.</td></tr>';
+        }
+
+        // ---------- LIVE PREVIEW (same formula as the server; the server value is what gets displayed in the log) ----------
+        const toMin = v => { if (!v) return null; const p = v.split(":"); return n(p[0]) * 60 + n(p[1]); };
+
+        function calcForm() {
+            const s = toMin($("startOpe").value), e = toMin($("endOpe").value);
+            const span = (s == null || e == null) ? null : (e >= s ? e - s : e - s + 1440);   // overnight-safe
+            $("aSpan").value = span == null ? "" : span;
+            $("aHours").value = span == null ? "" : (span / 60).toFixed(2);
+
+            const out = n($("output").value), dt = n($("downtimeMin").value);
+            const tgt = sec => (span == null || !sec) ? null : Math.max(0, Math.floor((span - dt) * 60 / sec));
+            const t1 = cycle && tgt(cycle.cycleTimeSec), t2 = cycle && tgt(cycle.easedCycleTimeSec);
+
+            $("aCycle").value = cycle ? `${cycle.cycleTimeSec} / ${cycle.easedCycleTimeSec == null ? "—" : cycle.easedCycleTimeSec}` : "";
+            $("aTarget").value = t1 == null ? "" : t1;
+            $("aTargetEased").value = t2 == null ? "" : t2;
+            $("aEff").value = t1 ? (out / t1 * 100).toFixed(2) : "";
+        }
+        ["startOpe", "endOpe", "output", "downtimeMin"].forEach(id => $(id).addEventListener("input", calcForm));
+
+        async function lookupPart() {
+            const pn = $("partnumber").value.trim();
+            if (!pn) { cycle = null; $("model").value = ""; return calcForm(); }
+            try {
+                const r = await getJson(urls.part, { processId: $("processId").value, partnumber: pn });
+                cycle = r.found ? r : null;
+                $("model").value = r.found ? (r.model || "") : "";
+                $("formMsg").textContent = r.found ? "" : "No cycle time for this process + partnumber, so no target will be calculated.";
+            } catch (e) { cycle = null; }
+            calcForm();
+        }
+        async function lookupEffy() {
+            const c = $("effyCode").value.trim();
+            if (!c) { $("employeeCode").value = ""; return; }
+            try {
+                const r = await getJson(urls.effy, { effyCode: c });
+                $("employeeCode").value = r.found ? r.employeeCode : "";
+                $("formMsg").textContent = r.found ? "" : "Employee code is not registered.";
+            } catch (e) { }
+        }
+        $("partnumber").addEventListener("change", lookupPart);
+        $("processId").addEventListener("change", lookupPart);
+        $("effyCode").addEventListener("change", lookupEffy);
+
+        // ---------- CREATE / UPDATE ----------
+        function newRecord() {
+            $("entryForm").reset();
+            $("efficiencyId").value = 0; cycle = null;
+            $("workDate").value = today();
+            $("formTitle").textContent = "New Record"; $("btnSave").textContent = "Save Record";
+            $("formMsg").textContent = "";
+            calcForm(); showTab("encoder");
+        }
+
+        async function editRecord(id) {
+            try {
+                const r = await getJson(urls.get, { id: id });
+                $("efficiencyId").value = r.id;
+                $("processId").value = r.processId; $("workDate").value = r.workDate;
+                $("shift").value = String(r.shiftRaw);
+                $("machineNo").value = r.machineNo; $("shopOrder").value = r.shopOrder;
+                $("partnumber").value = r.partnumber || ""; $("effyCode").value = r.effyCode;
+                $("output").value = r.output; $("downtimeMin").value = r.downtimeMin;
+                $("startOpe").value = r.startOpe; $("endOpe").value = r.endOpe;
+                $("formTitle").textContent = "Edit Record #" + r.id; $("btnSave").textContent = "Update Record";
+                $("formMsg").textContent = "";
+                await Promise.all([lookupPart(), lookupEffy()]);
+                showTab("encoder");
+            } catch (e) { $("status").textContent = e.message; }
+        }
+
+        $("entryForm").addEventListener("submit", async e => {
+            e.preventDefault();
+            $("btnSave").disabled = true;
+            try {
+                let obj = {
+                    EfficiencyID: $("efficiencyId").value, WorkDate: $("workDate").value, Shift: $("shift").value,
+                    MachineNo: $("machineNo").value, ShopOrder: $("shopOrder").value, Partnumber: $("partnumber").value,
+                    ProcessId: $("processId").value, EffyCode: $("effyCode").value, Output: $("output").value,
+                    DowntimeMin: $("downtimeMin").value || 0, StartOpe: $("startOpe").value, EndOpe: $("endOpe").value
+                };
+
+                console.log(obj);
+
+                // const res = await postForm(urls.save, {
+                //     EfficiencyID: $("efficiencyId").value, WorkDate: $("workDate").value, Shift: $("shift").value,
+                //     MachineNo: $("machineNo").value, ShopOrder: $("shopOrder").value, Partnumber: $("partnumber").value,
+                //     ProcessId: $("processId").value, EffyCode: $("effyCode").value, Output: $("output").value,
+                //     DowntimeMin: $("downtimeMin").value || 0, StartOpe: $("startOpe").value, EndOpe: $("endOpe").value
+                // });
+                // $("formMsg").textContent = res.message;
+                // if (res.success) {
+                //     $("fFrom").value = $("fTo").value = $("workDate").value;   show the day that was just saved
+                //     await loadList(); newRecord(); showTab("records");
+                //     $("status").textContent = res.message;
+                // }
+            } catch (err) { $("formMsg").textContent = err.message; }
+            finally { $("btnSave").disabled = false; }
+        });
+
+        // ---------- DELETE ----------
+        async function deleteRecord(id) {
+            if (!confirm("Delete this record?")) return;
+            try {
+                const res = await postForm(urls.del, { id: id });
+                $("status").textContent = res.message;
+                if (res.success) await loadList();
+            } catch (e) { $("status").textContent = e.message; }
+        }
+
+        // ---------- EXPORT (currently loaded rows) ----------
+        function exportCSV() {
+            const head = ["DATE", "SHIFT", "MC.#", "SHOP ORDER", "PARTNUMBER", "MODEL", "PROCESS", "EFFY CODE", "EMP. CODE", "OUTPUT", "DOWNTIME", "START", "END", "WORK HOURS", "TARGET", "TARGET (EASED)", "EFFICIENCY"];
+            const keys = ["workDate", "shift", "machineNo", "shopOrder", "partnumber", "model", "processName", "effyCode", "employeeCode", "output", "downtimeMin", "startOpe", "endOpe", "workHours", "target", "targetEased", "efficiency"];
+            const csv = [head, ...filtered().map(r => keys.map(k => r[k] == null ? "" : r[k]))]
+                .map(row => row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\r\n");
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8;" }));
+            a.download = "Efficiency_Daily_Monitor.csv"; a.click(); URL.revokeObjectURL(a.href);
+        }
+
+        // init
+        $("fFrom").value = $("fTo").value = today();
+        $("workDate").value = today();
+        loadList();
+    </script>
+
+
+</body>
+</html>

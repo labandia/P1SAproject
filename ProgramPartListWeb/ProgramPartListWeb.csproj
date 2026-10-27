@@ -703,8 +703,10 @@
     <Compile Include="Areas\Production1\Controllers\DataAnalysisController.cs" />
     <Compile Include="Areas\Production1\Controllers\EmployeesController.cs" />
     <Compile Include="Areas\Production1\Controllers\FinalAssemblyController.cs" />
+    <Compile Include="Areas\Production1\Controllers\RotorController.cs" />
     <Compile Include="Areas\Production1\Interface\INCRDashboardRepository.cs" />
     <Compile Include="Areas\Production1\Interface\IP1EmployeesService.cs" />
+    <Compile Include="Areas\Production1\Model\EfficiencyModel.cs" />
     <Compile Include="Areas\Production1\Model\FinalDashboard.cs" />
     <Compile Include="Areas\Production1\Model\P1EmployessModels.cs" />
     <Compile Include="Areas\Production1\Production1AreaRegistration.cs" />
@@ -786,6 +788,7 @@
     <Content Include="Content\css\AdminDesign.css" />
     <Content Include="Content\css\Animation.css" />
     <Content Include="Content\css\Attendance.css" />
+    <Content Include="Content\css\EfficiencyDesign.css" />
     <Content Include="Content\css\EmployeeDesign.css" />
     <Content Include="Content\css\EmployeeMain.css" />
     <Content Include="Content\css\EmployeesListDesign.css" />
@@ -974,6 +977,7 @@
     <Content Include="Areas\Production1\Views\Shared\_EmployListLayout.cshtml" />
     <Content Include="Areas\Production1\Views\Employees\EmployeeDetails.cshtml" />
     <Content Include="Areas\Production1\Views\Employees\ManpowerOverall.cshtml" />
+    <Content Include="Areas\Production1\Views\Rotor\Encoder.cshtml" />
     <None Include="Content\Images\.editorconfig" />
     <Content Include="Content\Uploads\PCFY-81013Form1L.xlsx" />
     <Content Include="Content\Uploads\FinalUploadTemplate.xlsx" />

@@ -13,136 +13,548 @@
     <title>Group Performance Management</title>
     <link href="~/Content/css/FinalDashMangement.css" rel="stylesheet" />
 </head>
+
 <body>
-    <header>
-        <div class="brand">Production Control · Digital Encoder</div>
-        <h1>Efficiency Daily Monitor</h1>
-        <div class="subtitle">Saved to PMACS_TEST · target and efficiency calculated from cycle time</div>
-    </header>
-    <main>
-        <div class="toolbar">
-            <button class="primary" id="newBtn">＋ New Record</button>
-            <button id="exportBtn">Export CSV</button>
-            <button id="printBtn">Print Report</button>
+
+    <div class="dashboard">
+        <!-- ─── Two-Column Grid ─── -->
+        <div class="dashboard-grid">
+            <!-- ═══ LEFT: FORMS ═══ -->
+
+            <section class="forms-column">
+
+                <div class="backcontainer">
+
+                    <button id="backbtn">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 512 512">
+
+                            <path d="M0 0h512v512H0z" fill="none" />
+
+                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M249.38 336L170 256l79.38-80m-68.35 80H342" />
+
+                            <path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32" d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192s192-86 192-192Z" />
+
+                        </svg>
+
+                    </button>
+
+                    <h4>Back to the Dashboard</h4>
+
+                </div>
+
+                <!-- Add / Edit Form -->
+
+                <div class="form-card tab-panel active" id="formCard">
+
+                    <div class="card-title">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 32 32">
+
+                            <path d="M0 0h32v32H0z" fill="none" />
+
+                            <path fill="currentColor" d="M19 21h-6a3 3 0 0 0-3 3v2h2v-2a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2h2v-2a3 3 0 0 0-3-3m-3-1a4 4 0 1 0-4-4a4 4 0 0 0 4 4m0-6a2 2 0 1 1-2 2a2 2 0 0 1 2-2" />
+
+                            <path fill="currentColor" d="M25 5h-3V4a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v1H7a2 2 0 0 0-2 2v21a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2M12 4h8v4h-8Zm13 24H7V7h3v3h12V7h3Z" />
+
+                        </svg>
+
+                        <span id="formTitle">Add Group Performance Record</span>
+
+                    </div>
+
+
+
+                    <form id="dataForm" autocomplete="off">
+
+                        <input type="hidden" id="editIndex" value="-1" />
+
+
+
+                        <div class="form-group">
+
+                            <label>Group Date <span class="required">*</span></label>
+
+                            <input type="date" id="groupDate" required />
+
+                        </div>
+
+
+
+                        <div class="form-row">
+
+                            <div class="form-group">
+
+                                <label>Group 1 <span class="required">*</span></label>
+
+                                <input type="number" id="group1" step="0.01" placeholder="e.g. 95.5" required />
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label>Group 2 <span class="required">*</span></label>
+
+                                <input type="number" id="group2" step="0.01" placeholder="e.g. 87.3" required />
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="form-row">
+
+                            <div class="form-group">
+
+                                <label>Group 3 <span class="required">*</span></label>
+
+                                <input type="number" id="group3" step="0.01" placeholder="e.g. 92.1" required />
+
+                            </div>
+
+                            <div class="form-group">
+
+                                <label>OP <span class="required">*</span></label>
+
+                                <input type="number" id="opGroup" step="0.01" placeholder="e.g. 88.7" required />
+
+                            </div>
+
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+                        <hr style="margin: 1.2em 0;" />
+
+
+
+                        <div class="btn-group">
+
+                            <button type="submit" class="btn btn-primary btn-block" id="submitBtn">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24">
+
+                                    <path d="M0 0h24v24H0z" fill="none" />
+
+                                    <path fill="currentColor" d="M20 7.423v10.962q0 .69-.462 1.153T18.384 20H5.616q-.691 0-1.153-.462T4 18.384V5.616q0-.691.463-1.153T5.616 4h10.961zm-1 .427L16.15 5H5.616q-.27 0-.443.173T5 5.616v12.769q0 .269.173.442t.443.173h12.769q.269 0 .442-.173t.173-.443zm-5.587 8.102q.587-.586.587-1.414t-.587-1.413T12 12.539t-1.413.586T10 14.538t.587 1.414t1.413.586t1.414-.586M6.768 9.769h7.423v-3H6.77zM5 7.85V19V5z" />
+
+                                </svg>
+
+                                Add Record
+
+                            </button>
+
+                            <button type="button" class="btn btn-outline btn-block" id="cancelBtn" style="display:none;">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
+
+                                    <path d="M0 0h48v48H0z" fill="none" />
+
+                                    <defs>
+
+                                        <mask id="SVGt9zVddCE">
+
+                                            <path fill="#555" fill-rule="evenodd" stroke="#fff" stroke-linejoin="round" stroke-width="4" d="M44 40.836q-7.34-8.96-13.036-10.168t-10.846-.365V41L4 23.545L20.118 7v10.167q9.523.075 16.192 6.833q6.668 6.758 7.69 16.836Z" clip-rule="evenodd" />
+
+                                        </mask>
+
+                                    </defs>
+
+                                    <path fill="currentColor" d="M0 0h48v48H0z" mask="url(#SVGt9zVddCE)" />
+
+                                </svg>
+
+                                Cancel
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+
+
+                <!-- Monthly Summary Form (replacing Best Employee) -->
+
+                <form id="uploadCard" class="form-card tab-panel">
+
+                    <input type="hidden" id="editSummaryIndex" value="-1" />
+
+
+
+                    <div class="card-title">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 32 32">
+
+                            <path d="M0 0h24v24H0z" fill="none" />
+
+                            <g fill="none" fill-rule="evenodd">
+
+                                <path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z" />
+
+                                <path fill="currentColor" d="m8.076 7.26l.095.083l8.486 8.485a1 1 0 0 1-.246 1.595l-.116.05L5.91 21.3c-1.952.72-3.853-1.115-3.26-3.064l.05-.146L6.526 7.705a1 1 0 0 1 1.447-.516zm-.214 2.602l-3.285 8.92a.5.5 0 0 0 .562.664l.08-.023l8.918-3.286zm9.245 1.742c.911.048 2.16.24 3.246.892a1 1 0 0 1-.925 1.77l-.104-.055c-.682-.41-1.554-.57-2.322-.61a8 8 0 0 0-.95.004l-.316.031a1 1 0 0 1-.281-1.98a8.6 8.6 0 0 1 1.652-.053m2.025-2.786a1 1 0 0 1 .116 1.993l-.116.007h-.708a1 1 0 0 1-.116-1.993l.116-.007zM15.95 8.05a1 1 0 0 1 .083 1.32l-.083.094l-1.06 1.061a1 1 0 0 1-1.498-1.32l.083-.094l1.06-1.06a1 1 0 0 1 1.415 0m-2.587-5.266c.448 1.346.208 2.82-.072 3.85a10 10 0 0 1-.69 1.863a1 1 0 0 1-1.79-.893a8 8 0 0 0 .55-1.496c.227-.832.341-1.735.166-2.475l-.061-.216a1 1 0 1 1 1.897-.633m5.415 2.438a1 1 0 0 1 0 1.414l-.707.707a1 1 0 1 1-1.414-1.414l.707-.707a1 1 0 0 1 1.414 0" />
+
+                            </g>
+
+                        </svg>
+
+                        <span id="uploadFormTitle">Monthly Summary</span>
+
+                    </div>
+
+
+
+                    <p id="monthlyRecordCount" style="margin:-4px 0 14px;font-size:13px;color:#64748b;"></p>
+
+
+
+                    <div class="form-group">
+
+                        <label>Month/Year <span class="required">*</span></label>
+
+                        <input type="month" id="summaryMonth" required />
+
+                    </div>
+
+
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label>Group 1 Avg <span class="required">*</span></label>
+
+                            <input type="number" id="summaryGroup1" step="0.01" placeholder="e.g. 92.5" required />
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>Group 2 Avg <span class="required">*</span></label>
+
+                            <input type="number" id="summaryGroup2" step="0.01" placeholder="e.g. 88.3" required />
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label>Group 3 Avg <span class="required">*</span></label>
+
+                            <input type="number" id="summaryGroup3" step="0.01" placeholder="e.g. 90.7" required />
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>OP Avg <span class="required">*</span></label>
+
+                            <input type="number" id="summaryOP" step="0.01" placeholder="e.g. 85.2" required />
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label>Target Output <span class="required">*</span></label>
+
+                            <input type="number" id="summaryTarget" step="1" placeholder="e.g. 1000" required />
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>Total Output <span class="required">*</span></label>
+
+                            <input type="number" id="summaryTotal" step="1" placeholder="e.g. 960" required />
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label>Overall Average <span class="required">*</span></label>
+
+                        <input type="number" id="summaryAverage" step="0.01" placeholder="e.g. 89.2" required />
+
+                    </div>
+
+
+
+                    <div class="btn-group">
+
+                        <button type="submit" class="btn btn-primary" id="updateDataBtn">
+
+                            Save Summary
+
+                        </button>
+
+
+
+                        <button type="button" class="btn btn-outline btn-block" id="uploadCancelBtn" style="display:none;">
+
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 48 48">
+
+                                <path d="M0 0h48v48H0z" fill="none" />
+
+                                <defs>
+
+                                    <mask id="SVGt9zVddCE2">
+
+                                        <path fill="#555" fill-rule="evenodd" stroke="#fff" stroke-linejoin="round" stroke-width="4" d="M44 40.836q-7.34-8.96-13.036-10.168t-10.846-.365V41L4 23.545L20.118 7v10.167q9.523.075 16.192 6.833q6.668 6.758 7.69 16.836Z" clip-rule="evenodd" />
+
+                                    </mask>
+
+                                </defs>
+
+                                <path fill="currentColor" d="M0 0h48v48H0z" mask="url(#SVGt9zVddCE2)" />
+
+                            </svg>
+
+                            Cancel
+
+                        </button>
+
+                    </div>
+
+
+
+                    <p style="margin-top:14px;font-size:13px;color:#64748b;">
+
+                        Monthly summary aggregates daily group performance data.
+
+                    </p>
+
+                </form>
+
+
+
+            </section>
+
+            <!-- ═══ RIGHT: TABLES ═══ -->
+            <section class="table-column">
+
+                <!-- ================= GROUP RECORDS TABLE ================= -->
+
+                <div id="recordTable" class="table-wrapper table-panel active">
+
+                    <div class="table-toolbar">
+
+                        <div class="left">
+
+                            <h2><svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="3" y1="15" x2="21" y2="15" /><line x1="9" y1="21" x2="9" y2="9" /></svg> Group Performance</h2>
+
+                            <span class="record-count" id="recordCount">0 entries</span>
+
+                        </div>
+
+                        <div class="search-box">
+
+                            <input type="month" id="searchMonth" />
+
+                            <button id="searchBtn">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1.1em" height="1.1em" viewBox="0 0 48 48">
+
+                                    <path d="M0 0h48v48H0z" fill="none" />
+
+                                    <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="4">
+
+                                        <path d="M21 38c9.389 0 17-7.611 17-17S30.389 4 21 4S4 11.611 4 21s7.611 17 17 17Z" />
+
+                                        <path stroke-linecap="round" d="M26.657 14.343A7.98 7.98 0 0 0 21 12a7.98 7.98 0 0 0-5.657 2.343m17.879 18.879l8.485 8.485" />
+
+                                    </g>
+
+                                </svg>
+
+                                Filter
+
+                            </button>
+
+                            <button id="clearSearchBtn" style="background:#94a3b8;">Clear</button>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="table-scroll maintable">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Date</th>
+
+                                    <th>Group 1</th>
+
+                                    <th>Group 2</th>
+
+                                    <th>Group 3</th>
+
+                                    <th>OP</th>
+
+                                    <th>Target</th>
+
+                                    <th>Total</th>
+
+                                    <th>Average</th>
+
+                                    <th style="text-align:center;">Actions</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="tableBody">
+
+                                <!-- rows injected by JS -->
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ================= MONTHLY SUMMARY TABLE ================= -->
+
+                <div id="uploadTable" class="table-wrapper table-panel">
+
+
+
+                    <div class="table-toolbar">
+
+                        <div class="left">
+
+                            <h2>Monthly Summaries</h2>
+
+                            <span class="record-count" id="summaryRecordCount">0 entries</span>
+
+                        </div>
+
+
+
+                        <div class="search-box">
+
+                            <input type="month" id="summarySearchMonth" />
+
+                            <button id="summarySearchBtn">Search</button>
+
+                            <button id="summaryClearBtn" style="background:#94a3b8;">Clear</button>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="table-scroll uploadTables">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Month</th>
+
+                                    <th>Group 1 Avg</th>
+
+                                    <th>Group 2 Avg</th>
+
+                                    <th>Group 3 Avg</th>
+
+                                    <th>OP Avg</th>
+
+                                    <th>Target</th>
+
+                                    <th>Total</th>
+
+                                    <th>Overall Avg</th>
+
+                                    <th>Actions</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="summaryTableBody"></tbody>
+
+                        </table>
+
+                    </div>
+
+
+
+                </div>
+
+
+
+            </section>
+        </div>
+    </div>
+
+    <!-- ─── Toast ─── -->
+
+    <div class="toast" id="toast">
+
+        <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+
+        <span id="toastMessage">Done!</span>
+
+    </div>
+
+    <!-- ─── Delete Confirm Modal ─── -->
+
+    <div class="modal-overlay" id="deleteModal" style="display:none;">
+
+        <div class="modal-box">
+
+            <p id="deleteModalText">Delete this record? This cannot be undone.</p>
+
+            <div class="btn-group">
+
+                <button class="btn btn-danger" id="confirmDeleteBtn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg> Delete</button>
+
+                <button class="btn btn-outline" id="cancelDeleteBtn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg> Cancel</button>
+
+            </div>
+
         </div>
 
-        <nav class="tabs">
-            <button class="tab active" data-tab="records">Records</button>
-            <button class="tab" data-tab="encoder">Data Encoder</button>
-        </nav>
-
-        <!-- RECORDS -->
-        <section class="panel active" id="records">
-            <div class="kpis">
-                <div class="kpi"><div class="label">Records</div><div class="value" id="kRecords">0</div></div>
-                <div class="kpi"><div class="label">Total Output</div><div class="value" id="kOutput">0</div></div>
-                <div class="kpi"><div class="label">Total Target</div><div class="value" id="kTarget">0</div></div>
-                <div class="kpi"><div class="label">Overall Efficiency</div><div class="value" id="kEff">0%</div></div>
-            </div>
-            <div class="card">
-                <div class="card-head"><h2>Daily Records</h2><span class="small" id="recordCount">0 entries</span></div>
-                <div class="card-body">
-                    <div class="filters no-print">
-                        <input id="searchFrom" type="date" title="From">
-                        <input id="searchTo" type="date" title="To">
-                        <button id="searchBtn">Load</button>
-                        <input id="searchText" placeholder="Search machine, code, shop order, part…">
-                        <select id="filterShift"><option value="">All shifts</option><option value="D">Day (D)</option><option value="N">Night (N)</option></select>
-                    </div>
-                    <div class="table-wrap">
-                        <table id="dataTable">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Shift</th>
-                                    <th>MC.#</th>
-                                    <th>Shop Order</th>
-                                    <th>Partnumber</th>
-                                    <th>Model</th>
-                                    <th>Process</th>
-                                    <th>Effy Code</th>
-                                    <th>Emp. Code</th>
-                                    <th>Output</th>
-                                    <th>DT (min)</th>
-                                    <th>Start</th>
-                                    <th>End</th>
-                                    <th>Work Hrs</th>
-                                    <th>Target</th>
-                                    <th>Target (Eased)</th>
-                                    <th>Eff.</th>
-                                    <th class="no-print">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ENCODER (create / update) -->
-        <section class="panel" id="encoder">
-            <div class="card">
-                <div class="card-head"><h2 id="formTitle">Add Efficiency Record</h2><span class="small">Fields with <span style="color:#b22222;font-weight:700;">*</span> are required</span></div>
-                <div class="card-body">
-                    <form id="dataForm">
-                        <input type="hidden" id="editIndex" value="0">
-
-                        <div class="form-grid">
-                            <div class="field">
-                                <label>Process <span class="req">*</span></label>
-                                <select id="processId" required>
-                                    @foreach (var p in processes)
-                                    {
-                                        <option value="@p.ProcessId">@p.ProcessName</option>
-                                    }
-                                </select>
-                            </div>
-                            <div class="field"><label>Date <span class="req">*</span></label><input id="workDate" type="date" required></div>
-                            <div class="field">
-                                <label>Shift <span class="req">*</span></label>
-                                <select id="shift" required>
-                                    <option value="false">D — Day</option>
-                                    <option value="true">N — Night</option>
-                                </select>
-                            </div>
-                            <div class="field"><label>Machine No. <span class="req">*</span></label><input id="machineNo" placeholder="e.g. D-122" required></div>
-                            <div class="field"><label>Shop Order <span class="req">*</span></label><input id="shopOrder" placeholder="e.g. 606273663600" required></div>
-                            <div class="field"><label>Partnumber</label><input id="partnumber" placeholder="optional · e.g. 00847759-01"></div>
-                            <div class="field"><label>Model</label><input id="model" readonly placeholder="from cycle time table"></div>
-                            <div class="field"><label>Effy Code <span class="req">*</span></label><input id="effyCode" placeholder="e.g. S2CR1040" required></div>
-                            <div class="field"><label>Employee Code</label><input id="employeeCode" readonly placeholder="from Effy code"></div>
-                            <div class="field"><label>Output <span class="req">*</span></label><input id="output" type="number" min="0" step="1" required placeholder="0"></div>
-                            <div class="field"><label>Downtime (min)</label><input id="downtimeMin" type="number" min="0" step="1" value="0"></div>
-                            <div class="field"><label>Start <span class="req">*</span></label><input id="startOpe" type="time" required></div>
-                            <div class="field"><label>End <span class="req">*</span></label><input id="endOpe" type="time" required></div>
-                        </div>
-
-                        <div class="auto-group">
-                            <div class="auto-group-head"><h3>Auto‑Calculated</h3></div>
-                            <div class="auto-grid">
-                                <div class="field"><label>Span (min)</label><input id="aSpan" readonly></div>
-                                <div class="field"><label>Work Hours</label><input id="aHours" readonly></div>
-                                <div class="field"><label>Cycle Time (cur / eased)</label><input id="aCycle" readonly></div>
-                                <div class="field"><label>Target (current)</label><input id="aTarget" readonly></div>
-                                <div class="field"><label>Target (eased)</label><input id="aTargetEased" readonly></div>
-                                <div class="field"><label>Efficiency (%)</label><input id="aEff" readonly placeholder="Output ÷ Target × 100"></div>
-                            </div>
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="submit" class="primary" id="submitBtn">Add Record</button>
-                            <button type="button" id="cancelBtn">Clear Form</button>
-                            <button type="button" id="viewRecordsBtn">View Records</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </section>
-    </main>
-    <footer>Efficiency Daily Monitor • PMACS_TEST</footer>
-
-    <div id="toast"><span id="toastMessage"></span></div>
+    </div>
 
     <script type="module" asp-append-version="true">
         import {
@@ -150,178 +562,109 @@
             postMethod
         } from '@Url.Content("~/Scripts/modules/index.js")';
 
-        const byId = id => document.getElementById(id);
+        class GroupDataManageController {
+               constructor() {
+                   this.tbody = document.getElementById('tableBody');
 
-        class EfficiencyManageController {
-            constructor() {
-                this.tbody = byId('tableBody');
+                   this.form = document.getElementById('dataForm');
+                   this.editIndexInput = document.getElementById('editIndex');
+                   this.cancelBtn = document.getElementById('cancelBtn');
+                   this.submitBtn = document.getElementById('submitBtn');
 
-                this.form = byId('dataForm');
-                this.editIndexInput = byId('editIndex');
-                this.cancelBtn = byId('cancelBtn');
-                this.submitBtn = byId('submitBtn');
+                   this.searchMonth = document.getElementById('searchMonth');
+                   this.searchBtn = document.getElementById('searchBtn');
+                   
 
-                this.searchFrom = byId('searchFrom');
-                this.searchTo = byId('searchTo');
-                this.searchBtn = byId('searchBtn');
-                this.searchText = byId('searchText');
-                this.filterShift = byId('filterShift');
+                   const today = new Date();
+                   this.currentMonthValue = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+               }
 
-                this.rows = [];      // last loaded list; the edit form is filled from here, not parsed from the table
-                this.cycle = null;   // cycle-time info for the part currently typed in the form
+               async init() {
+                  this.searchMonth.value = this.currentMonthValue;
 
-                const d = new Date();
-                this.todayValue = new Date(d - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
-            }
-
-            async init() {
-                this.searchFrom.value = this.searchTo.value = this.todayValue;
-                byId('workDate').value = this.todayValue;
-
-                this.bindEvents();
-                await this.GetEfficiencyList();
-            }
+                   this.bindEvents();
+                   await this.GetGroupDataList(this.currentMonthValue);
+              }
 
             bindEvents() {
                 this.form.addEventListener('submit', e => this.onSubmitRecord(e));
-                this.cancelBtn.addEventListener('click', () => this.resetRecordForm());
+                // this.cancelBtn.addEventListener('click', () => this.resetRecordForm());
 
-                this.searchBtn.addEventListener('click', () => this.GetEfficiencyList());
-                this.searchText.addEventListener('input', () => this.renderTable());
-                this.filterShift.addEventListener('change', () => this.renderTable());
+                // this.summaryForm.addEventListener('submit', e => this.onSubmitSummary(e));
+                // this.uploadCancelBtn.addEventListener('click', () => this.resetSummaryForm());
 
-                byId('newBtn').addEventListener('click', () => { this.resetRecordForm(); this.showTab('encoder'); });
-                byId('viewRecordsBtn').addEventListener('click', () => this.showTab('records'));
-                byId('exportBtn').addEventListener('click', () => this.exportCSV());
-                byId('printBtn').addEventListener('click', () => window.print());
-                document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => this.showTab(t.dataset.tab)));
+                this.searchBtn.addEventListener('click', () => this.GetGroupDataList(this.searchMonth.value));
+           
 
-                // Live preview + lookups
-                ['startOpe', 'endOpe', 'output', 'downtimeMin'].forEach(id => byId(id).addEventListener('input', () => this.calcForm()));
-                byId('partnumber').addEventListener('change', () => this.lookupPart());
-                byId('processId').addEventListener('change', () => this.lookupPart());
-                byId('effyCode').addEventListener('change', () => this.lookupEffy());
+                // this.summarySearchBtn.addEventListener('click', () => this.GetSummaryData(this.summarySearchMonth.value));
+                // this.summaryClearBtn.addEventListener('click', () => {
+                //     this.summarySearchMonth.value = this.currentMonthValue;
+                //     this.GetSummaryData(this.currentMonthValue);
+                // });
 
-                // Row buttons are rebuilt on every render, so delegate from the tbody.
+                // Row-level buttons are added dynamically, so delegate from the tbody instead
+                // of binding one listener per row (rows get rebuilt on every render).
                 this.tbody.addEventListener('click', e => this.onRecordTableClick(e));
+                // this.summaryTbody.addEventListener('click', e => this.onSummaryTableClick(e));
+
+                // this.confirmDeleteBtn.addEventListener('click', () => this.onConfirmDelete());
+                // this.cancelDeleteBtn.addEventListener('click', () => this.closeDeleteModal());
             }
 
-            // ───────────────────────── READ ─────────────────────────
-            async GetEfficiencyList() {
-                try {
-                    const res = await getMethod('@Url.Action("GetEfficiencyList", "Efficiency")', {
-                        from: this.searchFrom.value,
-                        to: this.searchTo.value
-                    });
-                    if (!res?.Success) {
-                        this.showToast(res?.Message || 'Failed to load records.', false);
-                        return;
-                    }
-                    this.rows = res.data || [];
-                    this.renderTable();
-                } catch (error) {
-                    console.error('Error fetching efficiency records:', error);
-                    this.showToast('Failed to load records.', false);
-                }
+
+               async GetGroupDataList(month) {
+                   try {
+                       const res = await getMethod('@Url.Action("GetManageGroupDataList", "FinalAssembly")', { month });
+                       if (!res?.Success) {
+                           console.log('No data Registration Found ');
+                           return;
+                       }
+                       this.renderTable(res.data);
+                   } catch (error) {
+                       console.error('Error fetching 4M data:', error);
+                   }
+               }
+
+            renderTable(data) {
+                document.getElementById('recordCount').textContent = `${data.length} entries`;
+                this.tbody.innerHTML = data.map(r => `
+                        <tr data-id="${r.RecordId}">
+                            <td>${this.formatDate(r.GroupDate)}</td>
+                            <td>${r.Group1}</td>
+                            <td>${r.Group2}</td>
+                            <td>${r.Group3}</td>
+                            <td>${r.OP}</td>
+                            <td>${r.Target ?? ''}</td>
+                            <td>${r.Total ?? ''}</td>
+                            <td>${r.Average ?? ''}</td>
+                            <td style="text-align:center;">
+                                <button class="btn-icon edit-record" data-id="${r.RecordId}" title="Edit">✏️</button>
+                            </td>
+                        </tr>
+                    `).join('');
             }
-
-            filteredRows() {
-                const q = this.searchText.value.toLowerCase();
-                const sh = this.filterShift.value;
-                return this.rows.filter(r =>
-                    (!sh || r.Shift === sh) &&
-                    (!q || [r.MachineNo, r.EffyCode, r.EmployeeCode, r.ShopOrder, r.Partnumber, r.Model, r.ProcessName]
-                        .some(v => String(v ?? '').toLowerCase().includes(q))));
-            }
-
-            renderTable() {
-                const list = this.filteredRows();
-
-                // Only rows with a target count toward overall efficiency (no cycle time = no target).
-                const withTarget = list.filter(r => r.Target > 0);
-                const totalOut = list.reduce((a, r) => a + this.num(r.Output), 0);
-                const totalTarget = withTarget.reduce((a, r) => a + this.num(r.Target), 0);
-                const outForTarget = withTarget.reduce((a, r) => a + this.num(r.Output), 0);
-
-                byId('recordCount').textContent = `${list.length} entries`;
-                byId('kRecords').textContent = list.length;
-                byId('kOutput').textContent = this.fmt(totalOut);
-                byId('kTarget').textContent = this.fmt(totalTarget);
-                byId('kEff').textContent = totalTarget ? `${(outForTarget / totalTarget * 100).toFixed(2)}%` : '—';
-
-                this.tbody.innerHTML = list.map(r => `
-                    <tr data-id="${r.EfficiencyID}">
-                        <td>${this.esc(r.WorkDate)}</td>
-                        <td>${r.Shift}</td>
-                        <td>${this.esc(r.MachineNo)}</td>
-                        <td>${this.esc(r.ShopOrder)}</td>
-                        <td>${this.esc(r.Partnumber)}</td>
-                        <td>${this.esc(r.Model)}</td>
-                        <td>${this.esc(r.ProcessName)}</td>
-                        <td>${this.esc(r.EffyCode)}</td>
-                        <td>${this.esc(r.EmployeeCode)}</td>
-                        <td class="num">${this.fmt(r.Output)}</td>
-                        <td class="num">${r.DowntimeMin}</td>
-                        <td>${r.StartOpe}</td>
-                        <td>${r.EndOpe}</td>
-                        <td class="num">${this.fmt(r.WorkHours)}</td>
-                        <td class="num">${r.Target ?? '—'}</td>
-                        <td class="num">${r.TargetEased ?? '—'}</td>
-                        <td>${this.effPill(r.Efficiency)}</td>
-                        <td class="no-print" style="text-align:center;">
-                            <button class="btn-icon edit-record" data-id="${r.EfficiencyID}" title="Edit">✏️</button>
-                            <button class="btn-icon delete-record" data-id="${r.EfficiencyID}" title="Delete">🗑️</button>
-                        </td>
-                    </tr>
-                `).join('') || '<tr><td colspan="18" class="empty">No records for this range.</td></tr>';
-            }
-
-            // ───────────────────────── EDIT / DELETE (row buttons) ─────────────────────────
+            // ───────────────────────── EDIT (populate form) ─────────────────────────
             onRecordTableClick(e) {
                 const editBtn = e.target.closest('.edit-record');
-                const delBtn = e.target.closest('.delete-record');
-                if (editBtn) this.loadRecordIntoForm(parseInt(editBtn.dataset.id, 10));
-                if (delBtn) this.onDeleteRecord(parseInt(delBtn.dataset.id, 10));
+                if (editBtn) this.loadRecordIntoForm(editBtn.dataset.id);
+                // if (delBtn) this.openDeleteModal('record', delBtn.dataset.id);
             }
-
-            async loadRecordIntoForm(id) {
-                const r = this.rows.find(x => x.EfficiencyID === id);
-                if (!r) return;
+            loadRecordIntoForm(id) {
+                const row = this.tbody.querySelector(`tr[data-id="${id}"]`);
+                if (!row) return;
+                const cells = row.children;
 
                 this.editIndexInput.value = id;
-                byId('processId').value = r.ProcessId;
-                byId('workDate').value = r.WorkDate;
-                byId('shift').value = String(r.ShiftRaw);
-                byId('machineNo').value = r.MachineNo;
-                byId('shopOrder').value = r.ShopOrder;
-                byId('partnumber').value = r.Partnumber ?? '';
-                byId('effyCode').value = r.EffyCode;
-                byId('output').value = r.Output;
-                byId('downtimeMin').value = r.DowntimeMin;
-                byId('startOpe').value = r.StartOpe;
-                byId('endOpe').value = r.EndOpe;
+                document.getElementById('groupDate').value = this.toDateInputValue(cells[0].textContent);
+                document.getElementById('group1').value = cells[1].textContent;
+                document.getElementById('group2').value = cells[2].textContent;
+                document.getElementById('group3').value = cells[3].textContent;
+                document.getElementById('opGroup').value = cells[4].textContent;
 
-                byId('formTitle').textContent = `Edit Efficiency Record #${id}`;
-                this.submitBtn.textContent = 'Update Record';
-
-                await Promise.all([this.lookupPart(), this.lookupEffy()]);
-                this.showTab('encoder');
-            }
-
-            async onDeleteRecord(id) {
-                if (!confirm('Delete this record?')) return;
-                try {
-                    const res = await postMethod('@Url.Action("DeleteEfficiencyRecord", "Efficiency")', { id });
-                    if (!res?.Success) {
-                        this.showToast(res?.Message || 'Delete failed.', false);
-                        return;
-                    }
-                    this.showToast('Record deleted.', true);
-                    await this.GetEfficiencyList();
-                } catch (error) {
-                    console.error('Error deleting record:', error);
-                    this.showToast('Delete failed.', false);
-                }
+                document.getElementById('formTitle').textContent = 'Edit Group Performance Record';
+                this.submitBtn.lastChild.textContent = ' Update Record';
+                this.cancelBtn.style.display = 'inline-flex';
+                this.form.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
 
             // ───────────────────────── CREATE / UPDATE ─────────────────────────
@@ -329,156 +672,70 @@
                 e.preventDefault();
 
                 const payload = {
-                    EfficiencyID: parseInt(this.editIndexInput.value, 10) || 0, // 0 = new record, backend inserts
-                    WorkDate: byId('workDate').value,
-                    Shift: byId('shift').value === 'true',
-                    MachineNo: byId('machineNo').value,
-                    ShopOrder: byId('shopOrder').value,
-                    Partnumber: byId('partnumber').value,
-                    ProcessId: parseInt(byId('processId').value, 10),
-                    EffyCode: byId('effyCode').value,
-                    Output: parseInt(byId('output').value, 10) || 0,
-                    DowntimeMin: parseInt(byId('downtimeMin').value, 10) || 0,
-                    StartOpe: byId('startOpe').value,
-                    EndOpe: byId('endOpe').value
+                    RecordId: parseInt(this.editIndexInput.value, 10) || 0, // 0 = new record, backend inserts
+                    GroupDate: document.getElementById('groupDate').value,
+                    Group1: parseFloat(document.getElementById('group1').value),
+                    Group2: parseFloat(document.getElementById('group2').value),
+                    Group3: parseFloat(document.getElementById('group3').value),
+                    OP: parseFloat(document.getElementById('opGroup').value)
                 };
-
-                this.submitBtn.disabled = true;
+                console.log(payload);
                 try {
-                    const res = await postMethod('@Url.Action("AddEfficiencyRecord", "Efficiency")', payload);
+                    const res = await postMethod('@Url.Action("AddGroupDataPerformance", "FinalAssembly")', payload);
                     if (!res?.Success) {
                         this.showToast(res?.Message || 'Save failed.', false);
                         return;
                     }
-                    this.showToast(payload.EfficiencyID ? 'Record updated.' : 'Record added.', true);
-
-                    // Show the day that was just saved so the new row is visible.
-                    this.searchFrom.value = this.searchTo.value = payload.WorkDate;
+                    this.showToast(payload.RecordId ? 'Record updated.' : 'Record added.', true);
                     this.resetRecordForm();
-                    await this.GetEfficiencyList();
-                    this.showTab('records');
+                    await this.GetGroupDataList(this.searchMonth.value);
                 } catch (error) {
                     console.error('Error saving record:', error);
                     this.showToast('Save failed.', false);
-                } finally {
-                    this.submitBtn.disabled = false;
                 }
             }
 
             resetRecordForm() {
                 this.form.reset();
-                this.editIndexInput.value = 0;
-                this.cycle = null;
-                byId('workDate').value = this.todayValue;
-                byId('formTitle').textContent = 'Add Efficiency Record';
-                this.submitBtn.textContent = 'Add Record';
-                this.calcForm();
-            }
-
-            // ───────────────────────── LOOKUPS + LIVE PREVIEW ─────────────────────────
-            async lookupPart() {
-                const partnumber = byId('partnumber').value.trim();
-                if (!partnumber) {
-                    this.cycle = null;
-                    byId('model').value = '';
-                    return this.calcForm();
-                }
-                try {
-                    const res = await getMethod('@Url.Action("LookupPart", "Efficiency")', {
-                        processId: byId('processId').value,
-                        partnumber
-                    });
-                    const d = res?.Success ? res.data : null;
-                    this.cycle = d?.Found ? d : null;
-                    byId('model').value = d?.Found ? (d.Model ?? '') : '';
-                    if (!d?.Found) this.showToast('No cycle time for this process + partnumber, so no target is calculated.', false);
-                } catch (error) {
-                    this.cycle = null;
-                }
-                this.calcForm();
-            }
-
-            async lookupEffy() {
-                const effyCode = byId('effyCode').value.trim();
-                if (!effyCode) { byId('employeeCode').value = ''; return; }
-                try {
-                    const res = await getMethod('@Url.Action("LookupEffy", "Efficiency")', { effyCode });
-                    const d = res?.Success ? res.data : null;
-                    byId('employeeCode').value = d?.Found ? d.EmployeeCode : '';
-                    if (!d?.Found) this.showToast('Employee code is not registered.', false);
-                } catch (error) {
-                    console.error('Error looking up Effy code:', error);
-                }
-            }
-
-            // Same formula as the server (CalcTarget); the saved/listed value always comes from the server.
-            calcForm() {
-                const toMin = v => { if (!v) return null; const p = v.split(':'); return this.num(p[0]) * 60 + this.num(p[1]); };
-                const s = toMin(byId('startOpe').value);
-                const e = toMin(byId('endOpe').value);
-                const span = (s === null || e === null) ? null : (e >= s ? e - s : e - s + 1440); // overnight-safe
-
-                const output = this.num(byId('output').value);
-                const downtime = this.num(byId('downtimeMin').value);
-                const target = sec => (span === null || !sec) ? null : Math.max(0, Math.floor((span - downtime) * 60 / sec));
-                const t1 = this.cycle ? target(this.cycle.CycleTimeSec) : null;
-                const t2 = this.cycle ? target(this.cycle.EasedCycleTimeSec) : null;
-
-                byId('aSpan').value = span ?? '';
-                byId('aHours').value = span === null ? '' : (span / 60).toFixed(2);
-                byId('aCycle').value = this.cycle ? `${this.cycle.CycleTimeSec} / ${this.cycle.EasedCycleTimeSec ?? '—'}` : '';
-                byId('aTarget').value = t1 ?? '';
-                byId('aTargetEased').value = t2 ?? '';
-                byId('aEff').value = t1 ? (output / t1 * 100).toFixed(2) : '';
-            }
-
-            // ───────────────────────── EXPORT ─────────────────────────
-            exportCSV() {
-                const head = ['DATE', 'SHIFT', 'MC.#', 'SHOP ORDER', 'PARTNUMBER', 'MODEL', 'PROCESS', 'EFFY CODE', 'EMP. CODE', 'OUTPUT', 'DOWNTIME', 'START', 'END', 'WORK HOURS', 'TARGET', 'TARGET (EASED)', 'EFFICIENCY'];
-                const keys = ['WorkDate', 'Shift', 'MachineNo', 'ShopOrder', 'Partnumber', 'Model', 'ProcessName', 'EffyCode', 'EmployeeCode', 'Output', 'DowntimeMin', 'StartOpe', 'EndOpe', 'WorkHours', 'Target', 'TargetEased', 'Efficiency'];
-                const csv = [head, ...this.filteredRows().map(r => keys.map(k => r[k] ?? ''))]
-                    .map(row => row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\r\n');
-
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' }));
-                a.download = 'Efficiency_Daily_Monitor.csv';
-                a.click();
-                URL.revokeObjectURL(a.href);
+                this.editIndexInput.value = -1;
+                document.getElementById('formTitle').textContent = 'Add Group Performance Record';
+                this.submitBtn.lastChild.textContent = ' Add Record';
+                // this.cancelBtn.style.display = 'none';
             }
 
             // ───────────────────────── Helpers ─────────────────────────
-            showTab(id) {
-                document.querySelectorAll('.panel').forEach(x => x.classList.toggle('active', x.id === id));
-                document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x.dataset.tab === id));
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            formatDate(value) {
+                if (!value) return '';
+
+                // Example:
+                // 22/09/2026 12:00:00 am
+                const match = String(value).match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+
+                if (match) {
+                    return `${match[2]}/${match[1]}/${match[3]}`;
+                }
+
+                return String(value);
             }
 
-            num(v) { return Number(v) || 0; }
-            fmt(v) { return this.num(v).toLocaleString('en-US', { maximumFractionDigits: 2 }); }
-
-            // Values come from the database, so escape them before putting them in innerHTML.
-            esc(s) {
-                return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-            }
-
-            effPill(v) {
-                if (v === null || v === undefined) return '—';
-                const cls = v >= 100 ? 'eff-good' : v >= 80 ? 'eff-mid' : 'eff-low';
-                return `<span class="pill ${cls}">${Number(v).toFixed(2)}%</span>`;
+            toDateInputValue(displayDate) {
+                return new Date(displayDate).toISOString().slice(0, 10);
             }
 
             showToast(message, success = true) {
-                const toast = byId('toast');
-                byId('toastMessage').textContent = message;
+                const toast = document.getElementById('toast');
+                document.getElementById('toastMessage').textContent = message;
                 toast.classList.toggle('toast-error', !success);
                 toast.classList.add('show');
                 setTimeout(() => toast.classList.remove('show'), 2500);
             }
         }
 
+
         document.addEventListener('DOMContentLoaded', function () {
-            const controller = new EfficiencyManageController();
-            controller.init();
+            const controller = new GroupDataManageController();
+               controller.init();
         });
     </script>
 </body>

@@ -89,6 +89,11 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             return SqlDataAcess_Test.QueryAsync<EfficiencyDailyMonitor>(sql, new { start, end });
         }
 
+        public Task<List<EfficiencyShopOrderStaging>> GetEfficiencyShopOrder()
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<List<EfficiencyShopOrderStaging>> GetEfficientShopOrders(string ShopOrder)
         {
             return SqlDataAcess_Test.QueryAsync<EfficiencyShopOrderStaging>(@"
@@ -109,6 +114,16 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         }
 
         public Task<bool> UpdateEfficiencyRecord(EfficiencyDailyMonitor row)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> UploadOrAddCycleTime(EfficiencyCycleTime shop)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> UploadShopOrderCSV(EfficiencyShopOrderStaging shop)
         {
             throw new NotImplementedException();
         }

@@ -28,6 +28,8 @@
         <nav class="tabs">
             <button class="tab active" data-tab="records">Records</button>
             <button class="tab" data-tab="encoder">Data Encoder</button>
+            <button class="tab" data-tab="csvupload">CSV Upload</button>
+            <button class="tab" data-tab="cycletime">Cycle Time</button>
         </nav>
 
         <!-- RECORDS -->
@@ -118,8 +120,8 @@
                                 </div>
                             </div>
                             @*<div class="field"><label>Partnumber</label><input id="partnumber" placeholder="optional · e.g. 00847759-01"></div>*@
-                            
-                       
+
+
                             <div class="field">
                                 <label>Model</label>
                                 <div class="combo">
@@ -165,6 +167,118 @@
                 </div>
             </div>
         </section>
+
+        <!-- ================= CSV UPLOAD ================= -->
+        <section class="panel" id="csvupload">
+            <div class="card">
+                <div class="card-head">
+                    <h2>Upload Efficiency CSV</h2>
+                    <span class="small">Accepted columns: Date, Shift, MC.#, Shop Order, Model, Process, Effy Code, Output, DT, Start, End</span>
+                </div>
+                <div class="card-body">
+                    <div class="filters no-print" style="margin-bottom:12px;">
+                        <input type="file" id="csvFile" accept=".csv" />
+                        <button id="csvParseBtn">Preview</button>
+                        <button id="csvUploadBtn" class="primary" disabled>Upload</button>
+                        <button id="csvClearBtn">Clear</button>
+                    </div>
+
+                    <div class="table-wrap" style="max-height:420px;overflow:auto;">
+                        <table id="csvPreviewTable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date</th>
+                                    <th>Shift</th>
+                                    <th>MC.#</th>
+                                    <th>Shop Order</th>
+                                    <th>Model</th>
+                                    <th>Process</th>
+                                    <th>Effy Code</th>
+                                    <th>Output</th>
+                                    <th>DT (min)</th>
+                                    <th>Start</th>
+                                    <th>End</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="csvPreviewBody">
+                                <tr><td colspan="13" class="empty">Choose a CSV file and click Preview.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="small" id="csvSummary" style="margin-top:8px;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= CYCLE TIME CRUD ================= -->
+        <section class="panel" id="cycletime">
+            <div class="card">
+                <div class="card-head">
+                    <h2>Cycle Time Master</h2>
+                    <span class="small">Cycle time per process + model. Targets are derived from this table.</span>
+                </div>
+                <div class="card-body">
+                    <div class="filters no-print">
+                        <input id="ctSearch" placeholder="Search model, partnumber…">
+                        <select id="ctProcessFilter">
+                            <option value="">All processes</option>
+                            <option value="1">COVER DRILLING</option>
+                            <option value="2">IMPELLER</option>
+                            <option value="3">EPIFORM</option>
+                        </select>
+                        <button id="ctNewBtn" class="primary">＋ New Cycle Time</button>
+                        <button id="ctRefreshBtn">Refresh</button>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table id="ctTable">
+                            <thead>
+                                <tr>
+                                    <th>Process</th>
+                                    <th>Model</th>
+                                    <th>Partnumber</th>
+                                    <th>Cycle Time (s)</th>
+                                    <th>Eased Cycle (s)</th>
+                                    <th class="no-print">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ctBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= CYCLE TIME MODAL ================= -->
+        <div id="ctModal" class="modal-overlay" style="display:none;">
+            <div class="modal-box" style="max-width:520px;background:#fff;padding:20px;border-radius:8px;margin:80px auto;">
+                <h2 id="ctModalTitle" style="margin-top:0;">New Cycle Time</h2>
+                <form id="ctForm">
+                    <input type="hidden" id="ctId" value="0">
+                    <div class="form-grid" style="grid-template-columns:1fr;">
+                        <div class="field">
+                            <label>Process <span class="req">*</span></label>
+                            <select id="ctProcessId" required>
+                                <option value="1">COVER DRILLING</option>
+                                <option value="2">IMPELLER</option>
+                                <option value="3">EPIFORM</option>
+                            </select>
+                        </div>
+                        <div class="field"><label>Model <span class="req">*</span></label><input id="ctModel" required></div>
+                        <div class="field"><label>Partnumber</label><input id="ctPartnumber"></div>
+                        <div class="field"><label>Cycle Time (seconds) <span class="req">*</span></label><input id="ctCycleSec" type="number" min="1" step="0.01" required></div>
+                        <div class="field"><label>Eased Cycle (seconds)</label><input id="ctEasedSec" type="number" min="0" step="0.01"></div>
+                    </div>
+                    <div class="form-actions" style="margin-top:16px;">
+                        <button type="submit" class="primary">Save</button>
+                        <button type="button" id="ctCancelBtn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </main>
     <footer>Efficiency Daily Monitor • PMACS_TEST</footer>
 
@@ -204,6 +318,8 @@
                 this.machines = Array.from({ length: 200 }, (_, i) => `D-${i + 1}`);
                 this.models = [];     // [{ Model, Partnumber, CycleTimeSec, EasedCycleTimeSec }]
                 this.employees = [];  // [{ EmployeeCode, Name }]
+                this.csvRows = [];          // parsed CSV preview rows
+                this.cycleRows = [];        // cycle time master rows
             }
 
             async init() {
@@ -243,6 +359,21 @@
                 // Row buttons are rebuilt on every render, so delegate from the tbody.
                 this.tbody.addEventListener('click', e => this.onRecordTableClick(e));
                 this.setupCombos();
+
+
+                // CSV Upload
+                byId('csvParseBtn').addEventListener('click', () => this.parseCSV());
+                byId('csvUploadBtn').addEventListener('click', () => this.uploadCSV());
+                byId('csvClearBtn').addEventListener('click', () => this.clearCSV());
+
+                // Cycle Time
+                byId('ctNewBtn').addEventListener('click', () => this.openCycleModal());
+                byId('ctRefreshBtn').addEventListener('click', () => this.loadCycleTimes());
+                byId('ctSearch').addEventListener('input', () => this.renderCycleTable());
+                byId('ctProcessFilter').addEventListener('change', () => this.renderCycleTable());
+                byId('ctForm').addEventListener('submit', e => this.saveCycleTime(e));
+                byId('ctCancelBtn').addEventListener('click', () => this.closeCycleModal());
+                byId('ctBody').addEventListener('click', e => this.onCycleTableClick(e));
             }
 
             // ───────────────────────── READ ─────────────────────────
@@ -589,7 +720,7 @@
                         invalidMsg: 'Select a machine from D-1 to D-200.'
                     });
 
-                 
+
 
                     // Model → fills Cycle Time (and the partnumber, so the server can calculate the same target)
                     this.createCombo('model', {
@@ -718,7 +849,288 @@
                 });
             }
 
+            // ───────────────────────── CSV UPLOAD ─────────────────────────
+            parseCSV() {
+                const file = byId('csvFile').files[0];
+                if (!file) { this.showToast('Choose a CSV file first.', false); return; }
 
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    const text = ev.target.result.replace(/^\uFEFF/, ''); // strip BOM
+                    const lines = text.split(/\r?\n/).filter(l => l.trim());
+                    if (lines.length < 2) { this.showToast('CSV is empty.', false); return; }
+
+                    const headers = this.splitCSVLine(lines[0]).map(h => h.trim().toLowerCase());
+                    const idx = (name) => headers.findIndex(h => h.includes(name));
+
+                    const map = {
+                        date: idx('date'),
+                        shift: idx('shift'),
+                        mc: idx('mc') >= 0 ? idx('mc') : idx('machine'),
+                        shop: idx('shop'),
+                        model: idx('model'),
+                        process: idx('process'),
+                        effy: idx('effy'),
+                        output: idx('output'),
+                        dt: idx('dt') >= 0 ? idx('dt') : idx('downtime'),
+                        start: idx('start'),
+                        end: idx('end')
+                    };
+
+                    const processMap = { 'COVER DRILLING': 1, 'IMPELLER': 2, 'EPIFORM': 3 };
+
+                    this.csvRows = lines.slice(1).map((line, i) => {
+                        const c = this.splitCSVLine(line);
+                        const procName = String(c[map.process] ?? '').trim().toUpperCase();
+                        const procId = processMap[procName] || parseInt(procName, 10) || 0;
+                        const shiftRaw = String(c[map.shift] ?? '').trim().toUpperCase();
+                        const shiftBool = shiftRaw.startsWith('N');
+
+                        const row = {
+                            __row: i + 2,
+                            __error: null,
+                            Shift: shiftBool,
+                            MachineNo: String(c[map.mc] ?? '').trim(),
+                            ShopOrder: String(c[map.shop] ?? '').trim(),
+                            ProcessId: procId,
+                            EffyCode: String(c[map.effy] ?? '').trim(),
+                            getModel: String(c[map.model] ?? '').trim(),
+                            Output: parseInt(c[map.output], 10) || 0,
+                            DowntimeMin: parseInt(c[map.dt], 10) || 0,
+                            StartOpe: String(c[map.start] ?? '').trim(),
+                            EndOpe: String(c[map.end] ?? '').trim(),
+                            WorkDate: this.normalizeDate(String(c[map.date] ?? '').trim())
+                        };
+
+                        // basic validation
+                        const errs = [];
+                        if (!row.MachineNo) errs.push('MC.#');
+                        if (!row.ProcessId) errs.push('Process');
+                        if (!row.EffyCode) errs.push('Effy Code');
+                        if (!row.WorkDate) errs.push('Date');
+                        if (!row.StartOpe) errs.push('Start');
+                        if (!row.EndOpe) errs.push('End');
+                        if (errs.length) row.__error = 'Missing: ' + errs.join(', ');
+
+                        return row;
+                    });
+
+                    this.renderCSVPreview();
+                    byId('csvUploadBtn').disabled = this.csvRows.filter(r => !r.__error).length === 0;
+                    this.showToast(`Parsed ${this.csvRows.length} row(s).`, true);
+                };
+                reader.readAsText(file);
+            }
+
+            // Handles quoted CSV fields ("a,b","c")
+            splitCSVLine(line) {
+                const out = []; let cur = ''; let q = false;
+                for (let i = 0; i < line.length; i++) {
+                    const ch = line[i];
+                    if (q) {
+                        if (ch === '"' && line[i + 1] === '"') { cur += '"'; i++; }
+                        else if (ch === '"') { q = false; }
+                        else cur += ch;
+                    } else {
+                        if (ch === '"') q = true;
+                        else if (ch === ',') { out.push(cur); cur = ''; }
+                        else cur += ch;
+                    }
+                }
+                out.push(cur);
+                return out;
+            }
+
+            normalizeDate(s) {
+                if (!s) return '';
+                // already ISO?
+                if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0, 10);
+                // MM/DD/YYYY
+                let m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+                if (m) return `${m[3]}-${m[1].padStart(2, '0')}-${m[2].padStart(2, '0')}`;
+                // DD-MM-YYYY
+                m = s.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+                if (m) return `${m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`;
+                // Date parse fallback
+                const d = new Date(s);
+                if (!isNaN(d)) return d.toISOString().slice(0, 10);
+                return '';
+            }
+
+            renderCSVPreview() {
+                const body = byId('csvPreviewBody');
+                if (!this.csvRows.length) {
+                    body.innerHTML = '<tr><td colspan="13" class="empty">No rows parsed.</td></tr>';
+                    byId('csvSummary').textContent = '';
+                    return;
+                }
+                const procName = id => ({ 1: 'COVER DRILLING', 2: 'IMPELLER', 3: 'EPIFORM' }[id] || '—');
+
+                body.innerHTML = this.csvRows.map(r => `
+                    <tr style="${r.__error ? 'background:#fde8e8;' : ''}">
+                        <td>${r.__row}</td>
+                        <td>${this.esc(r.WorkDate)}</td>
+                        <td>${r.Shift ? 'N' : 'D'}</td>
+                        <td>${this.esc(r.MachineNo)}</td>
+                        <td>${this.esc(r.ShopOrder)}</td>
+                        <td>${this.esc(r.getModel)}</td>
+                        <td>${this.esc(procName(r.ProcessId))}</td>
+                        <td>${this.esc(r.EffyCode)}</td>
+                        <td class="num">${r.Output}</td>
+                        <td class="num">${r.DowntimeMin}</td>
+                        <td>${this.esc(r.StartOpe)}</td>
+                        <td>${this.esc(r.EndOpe)}</td>
+                        <td>${r.__error
+                            ? `<span class="pill eff-low">${this.esc(r.__error)}</span>`
+                            : `<span class="pill eff-good">OK</span>`}
+                        </td>
+                    </tr>
+                `).join('');
+
+                const good = this.csvRows.filter(r => !r.__error).length;
+                byId('csvSummary').textContent = `${good} valid / ${this.csvRows.length} total rows.`;
+            }
+
+            clearCSV() {
+                this.csvRows = [];
+                byId('csvFile').value = '';
+                byId('csvUploadBtn').disabled = true;
+                byId('csvPreviewBody').innerHTML = '<tr><td colspan="13" class="empty">Choose a CSV file and click Preview.</td></tr>';
+                byId('csvSummary').textContent = '';
+            }
+
+            async uploadCSV() {
+                const rows = this.csvRows.filter(r => !r.__error);
+                if (!rows.length) { this.showToast('No valid rows to upload.', false); return; }
+
+                const btn = byId('csvUploadBtn');
+                btn.disabled = true;
+                try {
+                    // Payload: send the array; server should accept List<EfficiencyCsvRow>
+                    const res = await postMethod('@Url.Action("UploadEfficiencyCsv", "Rotor")', { rows });
+                    if (!res?.Success) {
+                        this.showToast(res?.Message || 'Upload failed.', false);
+                        return;
+                    }
+                    this.showToast(`Uploaded ${res.Inserted ?? rows.length} row(s).`, true);
+                    this.clearCSV();
+                    await this.GetEfficiencyList();
+                    this.showTab('records');
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    this.showToast('Upload failed.', false);
+                } finally {
+                    btn.disabled = false;
+                }
+            }
+
+            // ───────────────────────── CYCLE TIME CRUD ─────────────────────────
+            async loadCycleTimes() {
+                try {
+                    const res = await getMethod('@Url.Action("GetCycleTimeList", "Rotor")');
+                    this.cycleRows = res?.Success ? (res.data || []) : [];
+                    this.renderCycleTable();
+                    // also refresh the combobox cache so encoder picks up edits
+                    await this.loadModels();
+                } catch (error) {
+                    console.error('Error loading cycle times:', error);
+                    this.cycleRows = [];
+                    this.renderCycleTable();
+                }
+            }
+
+            renderCycleTable() {
+                const q = (byId('ctSearch').value || '').toLowerCase();
+                const pf = byId('ctProcessFilter').value;
+                const procName = id => ({ 1: 'COVER DRILLING', 2: 'IMPELLER', 3: 'EPIFORM' }[id] || `#${id}`);
+
+                const list = this.cycleRows.filter(r =>
+                    (!pf || String(r.ProcessId) === pf) &&
+                    (!q || [r.Model, r.Partnumber].some(v => String(v ?? '').toLowerCase().includes(q)))
+                );
+
+                byId('ctBody').innerHTML = list.map(r => `
+                    <tr>
+                        <td>${this.esc(procName(r.ProcessId))}</td>
+                        <td>${this.esc(r.Model)}</td>
+                        <td>${this.esc(r.Partnumber)}</td>
+                        <td class="num">${this.esc(r.CycleTimeSec)}</td>
+                        <td class="num">${r.EasedCycleTimeSec ?? '—'}</td>
+                        <td class="no-print" style="text-align:center;">
+                            <button class="btn-icon ct-edit" data-id="${r.CycleTimeId}" title="Edit">✏️</button>
+                            <button class="btn-icon ct-delete" data-id="${r.CycleTimeId}" title="Delete">🗑️</button>
+                        </td>
+                    </tr>
+                `).join('') || '<tr><td colspan="6" class="empty">No cycle time records.</td></tr>';
+            }
+
+            onCycleTableClick(e) {
+                const edit = e.target.closest('.ct-edit');
+                const del = e.target.closest('.ct-delete');
+                if (edit) this.openCycleModal(parseInt(edit.dataset.id, 10));
+                if (del) this.deleteCycleTime(parseInt(del.dataset.id, 10));
+            }
+
+            openCycleModal(id = 0) {
+                const r = id ? this.cycleRows.find(x => x.CycleTimeId === id) : null;
+                byId('ctId').value = id || 0;
+                byId('ctProcessId').value = r?.ProcessId ?? 1;
+                byId('ctModel').value = r?.Model ?? '';
+                byId('ctPartnumber').value = r?.Partnumber ?? '';
+                byId('ctCycleSec').value = r?.CycleTimeSec ?? '';
+                byId('ctEasedSec').value = r?.EasedCycleTimeSec ?? '';
+                byId('ctModalTitle').textContent = id ? `Edit Cycle Time #${id}` : 'New Cycle Time';
+                byId('ctModal').style.display = 'block';
+            }
+
+            closeCycleModal() {
+                byId('ctModal').style.display = 'none';
+                byId('ctForm').reset();
+                byId('ctId').value = 0;
+            }
+
+            async saveCycleTime(e) {
+                e.preventDefault();
+                const id = parseInt(byId('ctId').value, 10) || 0;
+
+                const payload = {
+                    CycleTimeId: id,
+                    ProcessId: parseInt(byId('ctProcessId').value, 10),
+                    Model: byId('ctModel').value.trim(),
+                    Partnumber: byId('ctPartnumber').value.trim(),
+                    CycleTimeSec: parseFloat(byId('ctCycleSec').value),
+                    EasedCycleTimeSec: byId('ctEasedSec').value
+                        ? parseFloat(byId('ctEasedSec').value) : null
+                };
+
+                try {
+                    const action = id
+                        ? '@Url.Action("UpdateCycleTime", "Rotor")'
+                        : '@Url.Action("AddCycleTime", "Rotor")';
+                    const res = await postMethod(action, payload);
+                    if (!res?.Success) { this.showToast(res?.Message || 'Save failed.', false); return; }
+
+                    this.showToast(id ? 'Cycle time updated.' : 'Cycle time added.', true);
+                    this.closeCycleModal();
+                    await this.loadCycleTimes();
+                } catch (error) {
+                    console.error('Save cycle time error:', error);
+                    this.showToast('Save failed.', false);
+                }
+            }
+
+            async deleteCycleTime(id) {
+                if (!confirm('Delete this cycle time entry?')) return;
+                try {
+                    const res = await postMethod('@Url.Action("DeleteCycleTime", "Rotor")', { id });
+                    if (!res?.Success) { this.showToast(res?.Message || 'Delete failed.', false); return; }
+                    this.showToast('Cycle time deleted.', true);
+                    await this.loadCycleTimes();
+                } catch (error) {
+                    console.error('Delete cycle time error:', error);
+                    this.showToast('Delete failed.', false);
+                }
+            }
 
         }
 

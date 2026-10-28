@@ -139,6 +139,7 @@ namespace ProgramPartListWeb
             container.RegisterType<INCRDashboardRepository, NCRDashboardRepository>(new ContainerControlledLifetimeManager());
             container.RegisterType<IDownTime, DownTimeServices>(new ContainerControlledLifetimeManager());
             container.RegisterType<IP1EmployeesService, P1EmployeesService>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IEfficiencyProcessRepository, EfficiencyRepository>(new ContainerControlledLifetimeManager());
 
             // Services (Usually stateless → Singleton)
             container.RegisterType<ICategory, CategoryServices>(new ContainerControlledLifetimeManager());

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace ProgramPartListWeb.Areas.Production1.Model
@@ -24,11 +25,18 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public string Partnumber { get; set; } = string.Empty;    // NVARCHAR(50)
         public string Model { get; set; }                   // NVARCHAR(100) NULL
         public decimal CycleTimeSec { get; set; }           // DECIMAL(9,2), > 0 (current)
-        public decimal? EasedCycleTimeSec { get; set; }     // DECIMAL(9,2) NULL, > 0 (eased-up)
-        public decimal TargetDivisor { get; set; } = 1m;    // DECIMAL(4,2), default 1
 
         // Optional join column (not in table)
-        public string ProcessName { get; set; }
+
+        public string ProcessName
+        {
+            get
+            {
+                return ProcessId == 1 ? "COVER DRILLING " :
+                       ProcessId == 2 ? "IMPELLER" :
+                       ProcessId == 3 ? "EPIFORM" : "";
+            }
+        }
     }
 
     /// <summary>
@@ -38,6 +46,7 @@ namespace ProgramPartListWeb.Areas.Production1.Model
     {
         public string EffyCode { get; set; } = string.Empty;      // NVARCHAR(20), PK (e.g. S2CR1040)
         public string EmployeeCode { get; set; } = string.Empty;  // NVARCHAR(20), FK -> P1SA_Employees_Temp
+        public string FullName { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -51,8 +60,9 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public string MachineNo { get; set; } = string.Empty;     // NVARCHAR(20), e.g. D-122
         public string ShopOrder { get; set; } = string.Empty;     // NVARCHAR(20)
         public string Partnumber { get; set; }              // NVARCHAR(50) NULL
-        public byte ProcessId { get; set; }                 // FK -> EfficiencyProcess
+        public int  ProcessId { get; set; }                 // FK -> EfficiencyProcess
         public string EffyCode { get; set; } = string.Empty;      // FK -> EfficiencyEmployeeCode
+        public string getModel { get; set; }
         public int Output { get; set; }                     // >= 0
         public int DowntimeMin { get; set; }                // >= 0
         public TimeSpan StartOpe { get; set; }              // TIME(0)
@@ -66,10 +76,45 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public string CreatedBy { get; set; }               // NVARCHAR(100) NULL
 
         // Optional join columns (not in table)
-        public string ProcessName { get; set; }
         public string EmployeeCode { get; set; }
-
+        public int Target { get; set; }
+        public decimal Efficiency { get; set; }
         // Helpers (not mapped)
         public string ShiftCode => Shift ? "N" : "D";
+        public decimal CycleTimeSec { get; private set; }
+        public decimal CurrentTarget { get; private set; }
+        public string FullName { get; set; }
+        public decimal? EasedCycleTimeSec { get; set; }
+        public int? TargetEased { get; set; }
+        public string ProcessName
+        {
+            get
+            {
+                return ProcessId == 1 ? "COVER DRILLING " :
+                       ProcessId == 2 ? "IMPELLER" :
+                       ProcessId == 3 ? "EPIFORM" : "";
+            }
+        }
+
+        public string WorkDateText => WorkDate.ToString("yyyy-MM-dd");
+        public string StartOpeText => StartOpe.ToString(@"hh\:mm");
+        public string EndOpeText => EndOpe.ToString(@"hh\:mm");
     }
+
+
+    public class EfficiencyShopOrderStaging
+    {
+        public int StagingId { get; set; }
+        public string ShopOrder { get; set; } = string.Empty;     // NVARCHAR(20)
+        public string Partnumber { get; set; }
+        public string Model { get; set; }
+    }
+
+
+
+
+
+
+
+
 }

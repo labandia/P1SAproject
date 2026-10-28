@@ -679,3 +679,26 @@ footer {
         border: 1px solid #ccc;
     }
 }
+
+
+
+
+
+.combo { position: relative; }
+.combo-list {
+    display: none;
+    position: absolute; left: 0; right: 0; top: 100%;
+    z-index: 50;
+    max-height: 220px; overflow-y: auto;
+    margin: 2px 0 0; padding: 4px 0; list-style: none;
+    background: #fff; border: 1px solid #ccc; border-radius: 6px;
+    box-shadow: 0 6px 16px rgba(0,0,0,.15);
+}
+.combo.open .combo-list { display: block; }
+.combo-list li { padding: 6px 10px; cursor: pointer; }
+.combo-list li.active,
+.combo-list li:hover { background: #e8f0fe; }
+.combo-list li.empty { color: #888; cursor: default; }
+
+
+.combo-list li small { color: #888; margin-left: 6px; }

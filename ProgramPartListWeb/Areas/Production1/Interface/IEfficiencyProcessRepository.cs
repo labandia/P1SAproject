@@ -45,7 +45,11 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
         ///     EmployeeCode 
         /// </summary>
 
-        Task<List<EfficiencyEmployeeCode>> GetEmployeeName();
+        Task<List<EfficiencyEmployeeCode>> GetEmployeeName(string search);
+
+
+
+        Task<List<string>> GetProcessFilter();
 
     }
 

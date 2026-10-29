@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    @Html.Partial("_SystemConfig")
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/x-icon" href="~/Content/Images/inventory-management.ico">
+    <meta name="description" content="Learn how to improve your website with caching, accessibility, and SEO best practices.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Production Control · Efficiency Monitor</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="~/Content/css/EfficiencyDesign.css" rel="stylesheet" />
+
+
+    @Styles.Render("~/Content/shared-css")
+
+    @Scripts.Render("~/bundles/shared-js")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <!-- ========== HEADER ========== -->
+    <header class="app-header">
+        <div class="header-left">
+            <div class="header-icon">
+                <i class="fa-regular fa-file-lines"></i>
+            </div>
+            <div>
+                <div class="header-title">
+                    <h1>Efficiency Daily Monitor</h1>
+                </div>
+                <p class="header-subtitle">Digital Encoder · Rotor  Section</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="nav-group">
+
+                <a href="/Production1/Rotor/Dashboard"  class="nav-btn"
+                   style="text-decoration: none; color: inherit; display: block;">
+                    <i class="fa-regular fa-keyboard"></i><span class="nav-text">Dashboard</span>
+                </a>
+                    <a class="nav-btn" href="/Production1/Rotor/Encoder">
+                        <i class="fa-regular fa-keyboard"></i><span class="nav-text">Encoder</span>
+                    </a>
+                    <button class="nav-btn" id="dataMenuBtn" type="button"
+                            aria-haspopup="dialog"
+                            aria-controls="dataMenuModal">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span class="nav-text">Data</span>
+                    </button>
+
+            </div>
+            <div class="live-clock" id="liveClock">--:--:--</div>
+            <div class="db-status" title="Database Connected: PMACS_TEST">
+                <i class="fa-solid fa-database"></i>
+                <span class="dot"></span>
+            </div>
+          
+        </div>
+    </header>
+
+
+    @RenderBody()
+
+
+
+
+</body>
+</html>
+

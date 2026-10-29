@@ -47,6 +47,7 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public string EffyCode { get; set; } = string.Empty;      // NVARCHAR(20), PK (e.g. S2CR1040)
         public string EmployeeCode { get; set; } = string.Empty;  // NVARCHAR(20), FK -> P1SA_Employees_Temp
         public string FullName { get; set; } = string.Empty;
+        public string Process { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -61,6 +62,7 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public string ShopOrder { get; set; } = string.Empty;     // NVARCHAR(20)
         public string Partnumber { get; set; }              // NVARCHAR(50) NULL
         public int  ProcessId { get; set; }                 // FK -> EfficiencyProcess
+        public string ProcessName { get; set; } = string.Empty;
         public string EffyCode { get; set; } = string.Empty;      // FK -> EfficiencyEmployeeCode
         public string getModel { get; set; }
         public int Output { get; set; }                     // >= 0
@@ -80,21 +82,21 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public int Target { get; set; }
         public decimal Efficiency { get; set; }
         // Helpers (not mapped)
-        public string ShiftCode => Shift ? "N" : "D";
+        public string ShiftCode => Shift ? "NS" : "DS";
         public decimal CycleTimeSec { get; private set; }
         public decimal CurrentTarget { get; private set; }
         public string FullName { get; set; }
         public decimal? EasedCycleTimeSec { get; set; }
         public int? TargetEased { get; set; }
-        public string ProcessName
-        {
-            get
-            {
-                return ProcessId == 1 ? "COVER DRILLING " :
-                       ProcessId == 2 ? "IMPELLER" :
-                       ProcessId == 3 ? "EPIFORM" : "";
-            }
-        }
+        //public string ProcessName
+        //{
+        //    get
+        //    {
+        //        return ProcessId == 1 ? "COVER DRILLING " :
+        //               ProcessId == 2 ? "IMPELLER" :
+        //               ProcessId == 3 ? "EPIFORM" : "";
+        //    }
+        //}
 
         public string WorkDateText => WorkDate.ToString("yyyy-MM-dd");
         public string StartOpeText => StartOpe.ToString(@"hh\:mm");
@@ -116,5 +118,6 @@ namespace ProgramPartListWeb.Areas.Production1.Model
 
 
 
+ 
 
 }

@@ -2,6 +2,7 @@
 using ProgramPartListWeb.Areas.Production1.Interface;
 using ProgramPartListWeb.Areas.Production1.Model;
 using ProgramPartListWeb.Controllers;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,13 +21,24 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
         // Gets the List of Employee Details
         // ─────────────────────────────────────────────────────────────────
         [HttpGet]
-        public async Task<ActionResult> GetEfficiencyList()
+        public async Task<ActionResult> GetProcessList()
         {
 
-            var res = await _emp.GetEfficiencyDailyMonitors(null, null);
+            var res = await _emp.GetProcessFilter();
             if (res == null || !res.Any())
                 return JsonNotFound("No Active Lines found");
             return JsonSuccess(res);
+        }
+
+        // ─────────────────────────────────────────────────────────────────
+        // GET: /Production1/Rotor/GetEfficiencyList?from=2026-10-29&to=2026-10-29
+        // Gets the efficiency daily monitor records for a date range
+        // ─────────────────────────────────────────────────────────────────
+        [HttpGet]
+        public async Task<ActionResult> GetEfficiencyList(DateTime? from, DateTime? to)
+        {
+            var res = await _emp.GetEfficiencyDailyMonitors(from, to);
+            return JsonSuccess(res ?? Enumerable.Empty<object>());   // empty range is not an error
         }
 
 
@@ -60,18 +72,7 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
             if (model == null)
                 return JsonPostError("Request body could not be bound.");
 
-            Debug.WriteLine($"ModelState valid: {ModelState.IsValid}");
-
-            foreach (var key in ModelState.Keys)
-            {
-                var state = ModelState[key];
-
-                Debug.WriteLine(
-                    $"ModelState: {key}, " +
-                    $"Value: {state.Value?.AttemptedValue}, " +
-                    $"Errors: {string.Join("; ", state.Errors.Select(x => x.ErrorMessage))}"
-                );
-            }
+           
 
             //Debug.WriteLine($"WorkDate: {model.WorkDate:yyyy-MM-dd}");
 
@@ -115,6 +116,11 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
 
         // GET: Production1/Rotor
         public ActionResult Encoder()
+        {
+            return View();
+        }
+
+        public ActionResult Dashboard()
         {
             return View();
         }

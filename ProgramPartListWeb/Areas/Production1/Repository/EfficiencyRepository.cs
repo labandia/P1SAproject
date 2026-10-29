@@ -16,8 +16,8 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         public async Task<int> AddEfficiencyRecord(EfficiencyDailyMonitor row)
         {
             return await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO EfficiencyDailyMonitor
-                (ProcessId, Shift, MachineNo,  ShopOrder, Model, EffyCode, Output, DowntimeMin, StartOpe, EndOpe) 
-                VALUES(@ProcessId, @Shift, @MachineNo, @ShopOrder, @Model, @EffyCode, @Output, @DowntimeMin, @StartOpe, @EndOpe)", new
+                (ProcessId, Shift, MachineNo,  ShopOrder, Model, EffyCode, Output, DowntimeMin, StartOpe, EndOpe, Partnumber, ProcessName) 
+                VALUES(@ProcessId, @Shift, @MachineNo, @ShopOrder, @Model, @EffyCode, @Output, @DowntimeMin, @StartOpe, @EndOpe, @Partnumber, @ProcessName)", new
             {
                 row.Shift,
                 row.ProcessId,
@@ -28,7 +28,9 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                 row.DowntimeMin,
                 row.StartOpe, 
                 row.EndOpe,
-                Model = row.getModel
+                Model = row.getModel, 
+                row.Partnumber, 
+                row.ProcessName
             });
         }
 
@@ -43,6 +45,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                    .QueryAsync<EfficiencyCycleTime>($@"
                  SELECT CycleID
                       ,ProcessId
+                      ,Partnumber
                       ,Model
                       ,CycleTimeSec
                       ,TargetDivisor
@@ -59,7 +62,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                         m.ShopOrder,
                         m.Partnumber,
                         m.Model AS getModel,
-                        m.ProcessId,
+                        m.ProcessName,
                         m.EffyCode,
                         e.EmployeeCode,
                         t.FullName,
@@ -77,7 +80,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                 FROM EfficiencyDailyMonitor m
                 LEFT JOIN EfficiencyEmployeeCode e ON e.EffyCode = m.EffyCode
                 LEFT JOIN P1SA_Employees_Temp   t ON t.EmployeeCode = e.EmployeeCode
-                LEFT JOIN EfficiencyCycleTime   c ON c.Model = m.Model AND c.ProcessId = m.ProcessId
+                LEFT JOIN EfficiencyCycleTime   c ON c.Partnumber = m.Partnumber
                 CROSS APPLY (SELECT
                     CAST(FLOOR(m.WorkHours * 3600.0 / NULLIF(c.CycleTimeSec, 0)      * 0.51) AS int) AS Target,
                     CAST(FLOOR(m.WorkHours * 3600.0 / NULLIF(c.EasedCycleTimeSec, 0) * 0.51) AS int) AS TargetEased
@@ -104,13 +107,22 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                new { ShopOrder });
         }
 
-        public Task<List<EfficiencyEmployeeCode>> GetEmployeeName()
+        public Task<List<EfficiencyEmployeeCode>> GetEmployeeName(string search)
         {
             return  SqlDataAcess_Test
                     .QueryAsync<EfficiencyEmployeeCode>($@"
-                  SELECT f.EffyCode, e.EmployeeCode, e.FullName
+                  SELECT f.EffyCode, e.EmployeeCode, e.FullName, e.Process
                     FROM EfficiencyEmployeeCode f
                     INNER JOIN P1SA_Employees_Temp e ON e.EmployeeCode = f.EmployeeCode");
+        }
+
+        public Task<List<string>> GetProcessFilter()
+        {
+            return SqlDataAcess_Test.StringListAsync($@"SELECT ProcessName
+                FROM EfficiencyDailyMonitor
+                WHERE ProcessName IS NOT NULL
+                GROUP BY ProcessName
+                ");
         }
 
         public Task<bool> UpdateEfficiencyRecord(EfficiencyDailyMonitor row)

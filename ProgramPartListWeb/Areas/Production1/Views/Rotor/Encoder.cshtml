@@ -1,1144 +1,1585 @@
-﻿
-@{
-    Layout = null;
+﻿@{
+    Layout = "~/Areas/Production1/Views/Shared/_EfficiencyLayout.cshtml";
 }
 
-<!DOCTYPE html>
+<!-- ========== MAIN LAYOUT ========== -->
+<main class="main-layout">
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Encoder</title>
-    <title>Employee Information System</title>
-    <link href="~/Content/css/EfficiencyDesign.css" rel="stylesheet" />
-</head>
-<body>
-    <header>
-        <div class="brand">Production Control · Digital Encoder</div>
-        <h1>Efficiency Daily Monitor</h1>
-        <div class="subtitle">Saved to PMACS_TEST · target and efficiency calculated from cycle time</div>
-    </header>
-    <main>
-        <div class="toolbar">
-            <button class="primary" id="newBtn">＋ New Record</button>
-            <button id="exportBtn">Export CSV</button>
-            <button id="printBtn">Print Report</button>
+    <!-- ========== FORM PANEL (LEFT) ========== -->
+    <aside class="form-panel" data-purpose="efficiency-entry-sidebar">
+        <div class="form-header">
+            <div class="form-header-top">
+                <div class="form-header-badge">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+                <div>
+                    <h2 id="formTitle">Efficency Data  Entry</h2>
+                </div>
+            </div>
         </div>
 
-        <nav class="tabs">
-            <button class="tab active" data-tab="records">Records</button>
-            <button class="tab" data-tab="encoder">Data Encoder</button>
-            <button class="tab" data-tab="csvupload">CSV Upload</button>
-            <button class="tab" data-tab="cycletime">Cycle Time</button>
-        </nav>
+        <form class="form-body" id="dataForm" autocomplete="off">
+            <input type="hidden" id="editIndex" value="0">
+            <div class="form-fields">
 
-        <!-- RECORDS -->
-        <section class="panel active" id="records">
-            <div class="kpis">
-                <div class="kpi"><div class="label">Records</div><div class="value" id="kRecords">0</div></div>
-                <div class="kpi"><div class="label">Total Output</div><div class="value" id="kOutput">0</div></div>
-                <div class="kpi"><div class="label">Total Target</div><div class="value" id="kTarget">0</div></div>
-                <div class="kpi"><div class="label">Overall Efficiency</div><div class="value" id="kEff">0%</div></div>
-            </div>
-            <div class="card">
-                <div class="card-head"><h2>Daily Records</h2><span class="small" id="recordCount">0 entries</span></div>
-                <div class="card-body">
-                    <div class="filters no-print">
-                        <input id="searchFrom" type="date" title="From">
-                        <input id="searchTo" type="date" title="To">
-                        <button id="searchBtn">Load</button>
-                        <input id="searchText" placeholder="Search machine, code, shop order, part…">
-                        <select id="filterShift"><option value="">All shifts</option><option value="D">Day (D)</option><option value="N">Night (N)</option></select>
-                    </div>
-                    <div class="table-wrap">
-                        <table id="dataTable">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Shift</th>
-                                    <th>MC.#</th>
-                                    <th>Shop Order</th>
-                                    <th>Model</th>
-                                    <th>Process</th>
-                                    <th>Effy Code</th>
-                                    <th>Output</th>
-                                    <th>DT (min)</th>
-                                    <th>Start</th>
-                                    <th>End</th>
-                                    <th>Work Hrs</th>
-                                    <th>Target</th>
-                                    <th>Target (Eased)</th>
-                                    <th>Eff.</th>
-                                    <th class="no-print">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </section>
+                <!-- Date | Machine -->
+                <div class="field-row-3">
+                    <div class="field"><label>Date <span class="req">*</span></label><input id="workDate" type="date" required></div>
 
-        <!-- ENCODER (create / update) -->
-        <section class="panel" id="encoder">
-            <div class="card">
-                <div class="card-head"><h2 id="formTitle">Add Efficiency Record</h2><span class="small">Fields with <span style="color:#b22222;font-weight:700;">*</span> are required</span></div>
-                <div class="card-body">
-                    <form id="dataForm">
-                        <input type="hidden" id="editIndex" value="0">
-
-                        <div class="form-grid">
-                            <div class="field">
-                                <label>Process <span class="req">*</span></label>
-                                <select id="processId" required>
-                                    <option value="1">COVER DRILLING</option>
-                                    <option value="2">IMPELLER</option>
-                                    <option value="3">EPIFORM</option>
-                                </select>
-                            </div>
-                            <div class="field"><label>Date <span class="req">*</span></label><input id="workDate" type="date" required></div>
-                            <div class="field">
-                                <label>Shift <span class="req">*</span></label>
-                                <select id="shift" required>
-                                    <option value="false">D — Day</option>
-                                    <option value="true">N — Night</option>
-                                </select>
-                            </div>
-                            <div class="field">
-                                <label>Machine No. <span class="req">*</span></label>
-                                <div class="combo" id="machineCombo">
-                                    <input id="machineNo" placeholder="Search D-1 … D-200" autocomplete="off" required>
-                                    <ul class="combo-list" id="machineList" role="listbox"></ul>
-                                </div>
-                            </div>
-
-                            <div class="field">
-                                <label>Shop Order <span class="req">*</span></label>
-                                <div class="combo">
-                                    <input id="shopOrder" placeholder="Search shop order…" autocomplete="off" required>
-                                    <ul class="combo-list" role="listbox"></ul>
-                                </div>
-                            </div>
-                            @*<div class="field"><label>Partnumber</label><input id="partnumber" placeholder="optional · e.g. 00847759-01"></div>*@
-
-
-                            <div class="field">
-                                <label>Model</label>
-                                <div class="combo">
-                                    <input id="model" placeholder="Search model…" autocomplete="off">
-                                    <ul class="combo-list" role="listbox"></ul>
-                                </div>
-                            </div>
-                            <div class="field">
-                                <label>Employee Code <span class="req">*</span></label>
-                                <div class="combo">
-                                    <input id="employeeCode" placeholder="Search code or name…" autocomplete="off" required>
-                                    <ul class="combo-list" role="listbox"></ul>
-                                </div>
-                            </div>
-                            <div class="field">
-                                <label>Employee Name</label>
-                                <input id="employeeName" readonly placeholder="from employee code">
-                            </div>
-                            <div class="field"><label>Output <span class="req">*</span></label><input id="output" type="number" min="0" step="1" required placeholder="0"></div>
-                            <div class="field"><label>Downtime (min)</label><input id="downtimeMin" type="number" min="0" step="1" value="0"></div>
-                            <div class="field"><label>Start <span class="req">*</span></label><input id="startOpe" type="time" required></div>
-                            <div class="field"><label>End <span class="req">*</span></label><input id="endOpe" type="time" required></div>
-                        </div>
-
-                        <div class="auto-group">
-                            <div class="auto-group-head"><h3>Auto‑Calculated</h3></div>
-                            <div class="auto-grid">
-                                <div class="field"><label>Span (min)</label><input id="aSpan" readonly></div>
-                                <div class="field"><label>Work Hours</label><input id="aHours" readonly></div>
-                                <div class="field"><label>Cycle Time (cur / eased)</label><input id="aCycle" readonly></div>
-                                <div class="field"><label>Target (current)</label><input id="aTarget" readonly></div>
-                                <div class="field"><label>Target (eased)</label><input id="aTargetEased" readonly></div>
-                                <div class="field"><label>Efficiency (%)</label><input id="aEff" readonly placeholder="Output ÷ Target × 100"></div>
-                            </div>
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="submit" class="primary" id="submitBtn">Add Record</button>
-                            <button type="button" id="cancelBtn">Clear Form</button>
-                            <button type="button" id="viewRecordsBtn">View Records</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= CSV UPLOAD ================= -->
-        <section class="panel" id="csvupload">
-            <div class="card">
-                <div class="card-head">
-                    <h2>Upload Efficiency CSV</h2>
-                    <span class="small">Accepted columns: Date, Shift, MC.#, Shop Order, Model, Process, Effy Code, Output, DT, Start, End</span>
-                </div>
-                <div class="card-body">
-                    <div class="filters no-print" style="margin-bottom:12px;">
-                        <input type="file" id="csvFile" accept=".csv" />
-                        <button id="csvParseBtn">Preview</button>
-                        <button id="csvUploadBtn" class="primary" disabled>Upload</button>
-                        <button id="csvClearBtn">Clear</button>
-                    </div>
-
-                    <div class="table-wrap" style="max-height:420px;overflow:auto;">
-                        <table id="csvPreviewTable">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Date</th>
-                                    <th>Shift</th>
-                                    <th>MC.#</th>
-                                    <th>Shop Order</th>
-                                    <th>Model</th>
-                                    <th>Process</th>
-                                    <th>Effy Code</th>
-                                    <th>Output</th>
-                                    <th>DT (min)</th>
-                                    <th>Start</th>
-                                    <th>End</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="csvPreviewBody">
-                                <tr><td colspan="13" class="empty">Choose a CSV file and click Preview.</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="small" id="csvSummary" style="margin-top:8px;"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= CYCLE TIME CRUD ================= -->
-        <section class="panel" id="cycletime">
-            <div class="card">
-                <div class="card-head">
-                    <h2>Cycle Time Master</h2>
-                    <span class="small">Cycle time per process + model. Targets are derived from this table.</span>
-                </div>
-                <div class="card-body">
-                    <div class="filters no-print">
-                        <input id="ctSearch" placeholder="Search model, partnumber…">
-                        <select id="ctProcessFilter">
-                            <option value="">All processes</option>
-                            <option value="1">COVER DRILLING</option>
-                            <option value="2">IMPELLER</option>
-                            <option value="3">EPIFORM</option>
+                    <div class="field">
+                        <label>Shift</label>
+                        <select id="shift">
+                            <option value="false">DS</option>
+                            <option value="true">NS</option>
                         </select>
-                        <button id="ctNewBtn" class="primary">＋ New Cycle Time</button>
-                        <button id="ctRefreshBtn">Refresh</button>
+                    </div>
+                    <div class="field">
+                        <label>Machine No. <span class="req">*</span></label>
+                        <div class="combo" id="machineCombo">
+                            <input id="machineNo" placeholder="D-1 … D-200" autocomplete="off" required>
+                            <ul class="combo-list" id="machineList" role="listbox"></ul>
+                        </div>
                     </div>
 
-                    <div class="table-wrap">
-                        <table id="ctTable">
-                            <thead>
-                                <tr>
-                                    <th>Process</th>
-                                    <th>Model</th>
-                                    <th>Partnumber</th>
-                                    <th>Cycle Time (s)</th>
-                                    <th>Eased Cycle (s)</th>
-                                    <th class="no-print">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="ctBody"></tbody>
-                        </table>
+                </div>
+
+                <!-- Shop Order -->
+                <div class="field-row">
+                    <div class="field">
+                        <label>Shop Order <span class="req">*</span></label>
+                        <input id="shopOrder" placeholder="Enter shop order" autocomplete="off" required>
+                    </div>
+                    <div class="field">
+                        <label>Partnumber <span class="req">*</span></label>
+                        <div class="combo">
+                            <input id="Partnumber" placeholder="Search part number…" autocomplete="off" required>
+                            <ul class="combo-list" role="listbox"></ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Model | Process -->
+                <div class="field-row">
+                    <div class="field">
+                        <label>Model</label>
+                        <input id="model" readonly placeholder="from part number">
+                    </div>
+                    <div class="field">
+                        <label>Process <span class="req">*</span></label>
+                        <input id="ProcessName" placeholder="Enter shop order" autocomplete="off" required>
+                    </div>
+                </div>
+
+                <!-- Employee code | name -->
+                <div class="field-row-5">
+                    <div class="field">
+                        <label>Employee Code <span class="req">*</span></label>
+                        <div class="combo">
+                            <input id="employeeCode" placeholder="Effy code / name" autocomplete="off" required>
+                            <ul class="combo-list" role="listbox"></ul>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Employee Name</label>
+                        <input id="employeeName" readonly placeholder="from employee code">
+                    </div>
+                </div>
+
+                <!-- Shift | Start | End -->
+                <div class="field-row">
+                    <div class="field">
+                        <label>Start <span class="req">*</span></label>
+                        <input id="startOpe" type="text" inputmode="numeric" maxlength="5"
+                               placeholder="HH:mm" pattern="([01][0-9]|2[0-3]):[0-5][0-9]"
+                               title="24-hour time, e.g. 07:30 or 19:45" autocomplete="off" required>
+                    </div>
+                    <div class="field">
+                        <label>End <span class="req">*</span></label>
+                        <input id="endOpe" type="text" inputmode="numeric" maxlength="5"
+                               placeholder="HH:mm" pattern="([01][0-9]|2[0-3]):[0-5][0-9]"
+                               title="24-hour time, e.g. 07:30 or 19:45" autocomplete="off" required>
+                    </div>
+                </div>
+
+                <!-- Output | Downtime -->
+                <div class="field-row">
+                    <div class="field"><label>Output <span class="req">*</span></label><input id="output" type="number" min="0" step="1" required placeholder="0"></div>
+                    <div class="field"><label>Downtime (min)</label><input id="downtimeMin" type="number" min="0" step="1" value="0"></div>
+                </div>
+
+                <!-- AUTO CALC SUMMARY -->
+                <div class="calc-box">
+                    <div class="calc-box-header">
+                        <span>Auto-Calculated Summary</span>
+                        <i class="fa-solid fa-calculator"></i>
+                    </div>
+                    <div class="calc-grid-3">
+                        <div class="calc-item"><span class="calc-label">Span (min)</span><span class="calc-value" id="aSpan">—</span></div>
+                        <div class="calc-item"><span class="calc-label">Work Hours</span><span class="calc-value" id="aHours">—</span></div>
+                        <div class="calc-item"><span class="calc-label">Cycle Time</span><span class="calc-value blue" id="aCycle">—</span></div>
+                    </div>
+                    <div class="calc-grid-2">
+                        <div class="calc-item"><span class="calc-label">Target</span><span class="calc-value" id="aTarget">—</span></div>
+                        <div class="calc-item"><span class="calc-label">Target (Eased)</span><span class="calc-value" id="aTargetEased">—</span></div>
+                        <div class="calc-item text-right"><span class="calc-label">Efficiency</span><span class="calc-value emerald" id="aEff">—</span></div>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- ================= CYCLE TIME MODAL ================= -->
-        <div id="ctModal" class="modal-overlay" style="display:none;">
-            <div class="modal-box" style="max-width:520px;background:#fff;padding:20px;border-radius:8px;margin:80px auto;">
-                <h2 id="ctModalTitle" style="margin-top:0;">New Cycle Time</h2>
-                <form id="ctForm">
-                    <input type="hidden" id="ctId" value="0">
-                    <div class="form-grid" style="grid-template-columns:1fr;">
-                        <div class="field">
-                            <label>Process <span class="req">*</span></label>
-                            <select id="ctProcessId" required>
-                                <option value="1">COVER DRILLING</option>
-                                <option value="2">IMPELLER</option>
-                                <option value="3">EPIFORM</option>
-                            </select>
-                        </div>
-                        <div class="field"><label>Model <span class="req">*</span></label><input id="ctModel" required></div>
-                        <div class="field"><label>Partnumber</label><input id="ctPartnumber"></div>
-                        <div class="field"><label>Cycle Time (seconds) <span class="req">*</span></label><input id="ctCycleSec" type="number" min="1" step="0.01" required></div>
-                        <div class="field"><label>Eased Cycle (seconds)</label><input id="ctEasedSec" type="number" min="0" step="0.01"></div>
-                    </div>
-                    <div class="form-actions" style="margin-top:16px;">
-                        <button type="submit" class="primary">Save</button>
-                        <button type="button" id="ctCancelBtn">Cancel</button>
-                    </div>
-                </form>
+            <!-- ACTIONS -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="submitBtn">Add Record</button>
+                <button type="button" class="btn btn-outline-emerald" id="cancelBtn">Clear Form</button>
+            </div>
+        </form>
+    </aside>
+
+    <!-- ========== TABLE PANEL (RIGHT) ========== -->
+    <section class="table-panel" data-purpose="records-view-panel">
+
+        <!-- TOOLBAR -->
+        <div class="table-toolbar">
+            <div class="toolbar-item"><label>From</label><input id="searchFrom" type="date" class="mono"></div>
+            <div class="toolbar-item"><label>To</label><input id="searchTo" type="date" class="mono"></div>
+            <button id="searchBtn" class="toolbar-btn emerald" type="button"><i class="fa-solid fa-rotate"></i> Load</button>
+            <div class="toolbar-item"><input id="searchText" placeholder="Search machine, code, shop order, model…"></div>
+            <div class="toolbar-item">
+                <select id="filterShift">
+                    <option value="">All shifts</option>
+                    <option value="D">Day (D)</option>
+                    <option value="N">Night (N)</option>
+                </select>
+            </div>
+
+            <div class="toolbar-item">
+                <select id="filterProcess">
+                    <option value="">All processes</option>
+                </select>
             </div>
         </div>
 
-    </main>
-    <footer>Efficiency Daily Monitor • PMACS_TEST</footer>
-
-    <div id="toast"><span id="toastMessage"></span></div>
-
-    <script type="module" asp-append-version="true">
-        import {
-            getMethod,
-            postMethod,
-            formatDate
-        } from '@Url.Content("~/Scripts/modules/index.js")';
-
-        const byId = id => document.getElementById(id);
-
-        class EfficiencyManageController {
-            constructor() {
-                this.tbody = byId('tableBody');
-
-                this.form = byId('dataForm');
-                this.editIndexInput = byId('editIndex');
-                this.cancelBtn = byId('cancelBtn');
-                this.submitBtn = byId('submitBtn');
-
-                this.searchFrom = byId('searchFrom');
-                this.searchTo = byId('searchTo');
-                this.searchBtn = byId('searchBtn');
-                this.searchText = byId('searchText');
-                this.filterShift = byId('filterShift');
-
-                this.rows = [];      // last loaded list; the edit form is filled from here, not parsed from the table
-                this.cycle = null;   // cycle-time info for the part currently typed in the form
-
-                const d = new Date();
-                this.todayValue = new Date(d - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
-
-
-                this.machines = Array.from({ length: 200 }, (_, i) => `D-${i + 1}`);
-                this.models = [];     // [{ Model, Partnumber, CycleTimeSec, EasedCycleTimeSec }]
-                this.employees = [];  // [{ EmployeeCode, Name }]
-                this.csvRows = [];          // parsed CSV preview rows
-                this.cycleRows = [];        // cycle time master rows
-            }
-
-            async init() {
-                this.searchFrom.value = this.searchTo.value = this.todayValue;
-                byId('workDate').value = this.todayValue;
-
-                this.bindEvents();
-                await Promise.all([this.loadModels(), this.loadEmployees()]);
-                await this.GetEfficiencyList();
-            }
-
-            bindEvents() {
-                this.form.addEventListener('submit', e => this.onSubmitRecord(e));
-                this.cancelBtn.addEventListener('click', () => this.resetRecordForm());
-
-                this.searchBtn.addEventListener('click', () => this.GetEfficiencyList());
-                this.searchText.addEventListener('input', () => this.renderTable());
-                this.filterShift.addEventListener('change', () => this.renderTable());
-
-                byId('newBtn').addEventListener('click', () => { this.resetRecordForm(); this.showTab('encoder'); });
-                byId('viewRecordsBtn').addEventListener('click', () => this.showTab('records'));
-                byId('exportBtn').addEventListener('click', () => this.exportCSV());
-                byId('printBtn').addEventListener('click', () => window.print());
-                document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => this.showTab(t.dataset.tab)));
-
-                // Live preview + lookups
-                ['startOpe', 'endOpe', 'output', 'downtimeMin'].forEach(id => byId(id).addEventListener('input', () => this.calcForm()));
-                //byId('partnumber').addEventListener('change', () => this.lookupPart());
-                byId('processId').addEventListener('change', async () => {
-                    await this.loadModels();   // models depend on the process
-                    // await this.lookupPart();
-
-                    byId('model').value = '';
-                    this.cycle = null;
-                    this.calcForm();
-                });
-                // Row buttons are rebuilt on every render, so delegate from the tbody.
-                this.tbody.addEventListener('click', e => this.onRecordTableClick(e));
-                this.setupCombos();
-
-
-                // CSV Upload
-                byId('csvParseBtn').addEventListener('click', () => this.parseCSV());
-                byId('csvUploadBtn').addEventListener('click', () => this.uploadCSV());
-                byId('csvClearBtn').addEventListener('click', () => this.clearCSV());
-
-                // Cycle Time
-                byId('ctNewBtn').addEventListener('click', () => this.openCycleModal());
-                byId('ctRefreshBtn').addEventListener('click', () => this.loadCycleTimes());
-                byId('ctSearch').addEventListener('input', () => this.renderCycleTable());
-                byId('ctProcessFilter').addEventListener('change', () => this.renderCycleTable());
-                byId('ctForm').addEventListener('submit', e => this.saveCycleTime(e));
-                byId('ctCancelBtn').addEventListener('click', () => this.closeCycleModal());
-                byId('ctBody').addEventListener('click', e => this.onCycleTableClick(e));
-            }
-
-            // ───────────────────────── READ ─────────────────────────
-            async GetEfficiencyList() {
-                try {
-                    const res = await getMethod('@Url.Action("GetEfficiencyList", "Rotor")', {
-                        from: this.searchFrom.value,
-                        to: this.searchTo.value
-                    });
-
-                    console.log(res);
-                    if (!res?.Success) {
-                        this.showToast(res?.Message || 'Failed to load records.', false);
-                        return;
-                    }
-                    this.rows = res.data || [];
-                    this.renderTable();
-                } catch (error) {
-                    console.error('Error fetching efficiency records:', error);
-                    this.showToast('Failed to load records.', false);
-                }
-            }
-
-            filteredRows() {
-                const q = this.searchText.value.toLowerCase();
-                const sh = this.filterShift.value;
-                return this.rows.filter(r =>
-                    (!sh || r.Shift === sh) &&
-                    (!q || [r.MachineNo, r.EffyCode, r.EmployeeCode, r.ShopOrder, r.Partnumber, r.Model, r.ProcessName]
-                        .some(v => String(v ?? '').toLowerCase().includes(q))));
-            }
-
-            renderTable() {
-                const list = this.filteredRows();
-
-                // Only rows with a target count toward overall efficiency (no cycle time = no target).
-                const withTarget = list.filter(r => r.Target > 0);
-                const totalOut = list.reduce((a, r) => a + this.num(r.Output), 0);
-                const totalTarget = withTarget.reduce((a, r) => a + this.num(r.Target), 0);
-                const outForTarget = withTarget.reduce((a, r) => a + this.num(r.Output), 0);
-
-                byId('recordCount').textContent = `${list.length} entries`;
-                byId('kRecords').textContent = list.length;
-                byId('kOutput').textContent = this.fmt(totalOut);
-                byId('kTarget').textContent = this.fmt(totalTarget);
-                byId('kEff').textContent = totalTarget ? `${(outForTarget / totalTarget * 100).toFixed(2)}%` : '—';
-
-                this.tbody.innerHTML = list.map(r => `
-                    <tr data-id="${r.EfficiencyID}">
-                        <td>${this.esc(r.WorkDateText)}</td>
-                        <td>${this.esc(r.ShiftCode)}</td>
-                        <td>${this.esc(r.MachineNo)}</td>
-                        <td>${this.esc(r.ShopOrder)}</td>
-                        <td>${this.esc(r.getModel)}</td>
-                        <td>${this.esc(r.ProcessName)}</td>
-                        <td>${this.esc(r.EffyCode)}</td>
-                        <td class="num">${this.fmt(r.Output)}</td>
-                        <td class="num">${r.DowntimeMin}</td>
-                        <td>${this.esc(r.StartOpeText)}</td>
-                        <td>${this.esc(r.EndOpeText)}</td>
-                        <td class="num">${this.fmt(r.WorkHours)}</td>
-                        <td class="num">${r.Target ?? '—'}</td>
-                        <td class="num">${r.TargetEased ?? '—'}</td>
-                        <td>${this.effPill(r.Efficiency)}</td>
-                        <td class="no-print" style="text-align:center;">
-                            <button class="btn-icon edit-record" data-id="${r.EfficiencyID}" title="Edit">✏️</button>
-                            <button class="btn-icon delete-record" data-id="${r.EfficiencyID}" title="Delete">🗑️</button>
-                        </td>
+        <!-- TABLE -->
+        <div class="table-scroll">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Shift</th>
+                        <th>MC.#</th>
+                        <th>Shop Order</th>
+                        <th>Model</th>
+                        <th>Partnumber</th>
+                        <th>Process</th>
+                        <th>Effy Code</th>
+                        <th>Full Name</th>
+                        <th>Output</th>
+                        <th>DT (min)</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Work Hrs</th>
+                        <th>Target</th>
+                        <th>Target (Eased)</th>
+                        <th>Eff.</th>
                     </tr>
-                `).join('') || '<tr><td colspan="16" class="empty">No records for this range.</td></tr>';
-            }
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
 
-            // ───────────────────────── EDIT / DELETE (row buttons) ─────────────────────────
-            onRecordTableClick(e) {
-                const editBtn = e.target.closest('.edit-record');
-                const delBtn = e.target.closest('.delete-record');
-                if (editBtn) this.loadRecordIntoForm(parseInt(editBtn.dataset.id, 10));
-                if (delBtn) this.onDeleteRecord(parseInt(delBtn.dataset.id, 10));
-            }
+        <!-- FOOTER SUMMARY -->
+        <div class="pagination">
+            <div class="page-info"><strong id="recordCount">0 entries</strong></div>
+            <div class="kpis">
+                <span>Output<strong id="kOutput">0</strong></span>
+                <span>Target<strong id="kTarget">0</strong></span>
+                <span>Efficiency<strong id="kEff">—</strong></span>
+            </div>
+        </div>
 
-            async loadRecordIntoForm(id) {
-                const r = this.rows.find(x => x.EfficiencyID === id);
-                if (!r) return;
+    </section>
+</main>
 
-                this.editIndexInput.value = id;
-                byId('processId').value = r.ProcessId;
-                byId('workDate').value = r.WorkDate;
-                byId('shift').value = String(r.ShiftRaw);
-                byId('machineNo').value = r.MachineNo;
-                byId('shopOrder').value = r.ShopOrder;
-                byId('output').value = r.Output;
-                byId('downtimeMin').value = r.DowntimeMin;
-                byId('startOpe').value = r.StartOpe;
-                byId('endOpe').value = r.EndOpe;
+<div id="toast" class="toast"><span id="toastMessage"></span></div>
 
-                byId('formTitle').textContent = `Edit Efficiency Record #${id}`;
-                this.submitBtn.textContent = 'Update Record';
 
-                this.cycle = this.models.find(x => x.ProcessId === r.ProcessId && x.Model === r.Model) ?? null;
-                byId('model').value = this.cycle?.Model ?? r.Model ?? '';
-                byId('employeeCode').value = r.EmployeeCode ?? '';
-                byId('employeeName').value = this.employees.find(e => e.EmployeeCode === r.EmployeeCode)?.FullName ?? '';
-                this.calcForm();
-                this.showTab('encoder');
-            }
 
-            async onDeleteRecord(id) {
-                if (!confirm('Delete this record?')) return;
-                try {
-                    const res = await postMethod('@Url.Action("DeleteEfficiencyRecord", "Efficiency")', { id });
-                    if (!res?.Success) {
-                        this.showToast(res?.Message || 'Delete failed.', false);
-                        return;
-                    }
-                    this.showToast('Record deleted.', true);
-                    await this.GetEfficiencyList();
-                } catch (error) {
-                    console.error('Error deleting record:', error);
-                    this.showToast('Delete failed.', false);
-                }
-            }
 
-            // ───────────────────────── CREATE / UPDATE ─────────────────────────
-            async onSubmitRecord(e) {
+
+
+
+<!-- DATA & OPERATIONS WORKSPACE -->
+<div class="data-workspace-overlay"
+     id="dataMenuModal"
+     aria-hidden="true">
+
+    <section class="data-workspace"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="dataWorkspaceTitle">
+
+        <!-- HEADER -->
+        <header class="dw-header">
+            <div class="dw-brand">
+                <div class="dw-brand-icon">
+                    <i class="fa-solid fa-table-cells-large"></i>
+                </div>
+
+                <div class="dw-heading">
+                    <div class="dw-title-row">
+                        <h2 id="dataWorkspaceTitle">
+                            Data &amp; Operations Workspace
+                        </h2>
+
+                        <span class="dw-status">
+                            <span class="dw-status-dot"></span>
+                            SYNC ONLINE
+                        </span>
+                    </div>
+
+                    <p>
+                        Manage data synchronization, cycle times,
+                        and production efficiency records.
+                    </p>
+                </div>
+            </div>
+
+            <div class="dw-window-actions">
+                <button type="button"
+                        class="dw-icon-btn"
+                        id="closeDataModal"
+                        aria-label="Close workspace">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- WORKSPACE BODY -->
+        <div class="dw-body">
+
+            <!-- SIDEBAR -->
+            <aside class="dw-sidebar">
+                <div class="dw-sidebar-label">
+                    WORKSPACE MODULES
+                </div>
+
+                <button type="button"
+                        class="dw-module active"
+                        data-workspace="csv">
+                    <i class="fa-regular fa-file-lines"></i>
+
+                    <span class="dw-module-text">
+                        Import CSV files
+                    </span>
+
+                    <span class="dw-module-badge">Ready</span>
+                </button>
+
+                <button type="button"
+                        class="dw-module"
+                        data-workspace="cycle">
+                    <i class="fa-solid fa-stopwatch"></i>
+
+                    <span class="dw-module-text">
+                        Cycle Time Master
+                    </span>
+                </button>
+
+                <button type="button"
+                        class="dw-module"
+                        data-workspace="records">
+                    <i class="fa-solid fa-database"></i>
+
+                    <span class="dw-module-text">
+                        Employees Codes
+                    </span>
+                </button>
+
+                <div class="dw-sidebar-bottom">
+                    <div class="dw-capacity">
+                        <span>DATA OPERATIONS</span>
+                        <strong>READY</strong>
+                    </div>
+
+                    <div class="dw-capacity-bar">
+                        <span></span>
+                    </div>
+
+                    <div class="dw-help">
+                        <i class="fa-regular fa-circle-question"></i>
+                        <span>Workspace documentation</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT -->
+            <div class="dw-content">
+
+                <!-- CSV PANEL -->
+                <section class="dw-panel active"
+                         id="dwPanelCsv">
+
+                    <div class="dw-panel-heading">
+                        <div>
+                            <h3>CSV Import &amp; Export</h3>
+                            <p>
+                                Import production data or export
+                                your efficiency records.
+                            </p>
+                        </div>
+
+                        <span class="dw-ready-badge">
+                            <i class="fa-solid fa-circle-check"></i>
+                            Available
+                        </span>
+                    </div>
+
+                    <div class="dw-action-grid">
+
+                        <button type="button"
+                                class="dw-action-card"
+                                id="openCsvUpload">
+                            <div class="dw-action-icon">
+                                <i class="fa-solid fa-file-arrow-up"></i>
+                            </div>
+
+                            <div class="dw-action-copy">
+                                <strong>Import CSV</strong>
+                                <span>
+                                    Upload and validate a CSV file
+                                    before importing records.
+                                </span>
+                            </div>
+
+                            <i class="fa-solid fa-chevron-right dw-chevron"></i>
+                        </button>
+
+                        <button type="button"
+                                class="dw-action-card"
+                                id="exportEfficiencyCsv">
+                            <div class="dw-action-icon">
+                                <i class="fa-solid fa-file-arrow-down"></i>
+                            </div>
+
+                            <div class="dw-action-copy">
+                                <strong>Export Efficiency Data</strong>
+                                <span>
+                                    Download efficiency records
+                                    in CSV format.
+                                </span>
+                            </div>
+
+                            <i class="fa-solid fa-chevron-right dw-chevron"></i>
+                        </button>
+
+                    </div>
+
+                    <div class="dw-info">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span>
+                            Review imported data before submitting
+                            it to the server.
+                        </span>
+                    </div>
+                </section>
+
+                <!-- CYCLE TIME PANEL -->
+                <section class="dw-panel" id="dwPanelCycle">
+
+                    <div class="dw-panel-heading">
+                        <div>
+                            <h3>Cycle Time Master</h3>
+                            <p>
+                                Maintain process cycle times used
+                                in efficiency calculations.
+                            </p>
+                        </div>
+
+
+
+                    </div>
+                    <!-- TABLE -->
+                    <div class="table-scroll" style="margin-top: 1em;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Partnumber</th>
+                                    <th>Model</th>
+                                    <th>CycleTimeSec</th>
+
+                                </tr>
+                            </thead>
+                            <tbody id="EmployeeBody"></tbody>
+                        </table>
+                    </div>
+
+                </section>
+
+                <!-- EFFICIENCY RECORDS PANEL -->
+                <section class="dw-panel" id="dwPanelRecords">
+
+                    <div class="dw-panel-heading">
+                        <div>
+                            <h3>Employees  Management Code</h3>
+
+
+
+                        </div>
+                    </div>
+                    <!-- TABLE -->
+                    <div class="table-scroll" style="margin-top: 1em;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Employee Code</th>
+                                    <th>Employee ID</th>
+                                    <th>Full Name </th>
+                                    <th>Process</th>
+                                    <th>Affiliation</th>
+
+                                </tr>
+                            </thead>
+                            <tbody id="EmployeeBody"></tbody>
+                        </table>
+                    </div>
+
+                </section>
+
+            </div>
+        </div>
+
+
+    </section>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="module">
+       import {
+           getMethod,
+           postMethod,
+           formatDate
+       } from '@Url.Content("~/Scripts/modules/index.js")';
+
+       const byId = id => document.getElementById(id);
+
+       class EfficiencyManageController {
+           constructor() {
+               this.tbody = byId('tableBody');
+
+               this.form = byId('dataForm');
+               this.editIndexInput = byId('editIndex');
+               this.cancelBtn = byId('cancelBtn');
+               this.submitBtn = byId('submitBtn');
+
+               this.searchFrom = byId('searchFrom');
+               this.searchTo = byId('searchTo');
+               this.searchBtn = byId('searchBtn');
+               this.searchText = byId('searchText');
+               this.filterShift = byId('filterShift');
+
+               this.rows = [];      // last loaded list
+               this.cycle = null;   // cycle-time info for the model currently selected
+
+               const d = new Date();
+               this.todayValue = new Date(d - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+
+               this.machines = Array.from({ length: 200 }, (_, i) => `D-${i + 1}`);
+               this.models = [];     // [{ ProcessId, Model, Partnumber, CycleTimeSec, EasedCycleTimeSec }]
+               this.employees = [];  // [{ EmployeeCode, FullName, EffyCode }]
+               this.csvRows = [];    // parsed CSV preview rows (CSV panel not on page yet)
+               this.cycleRows = [];  // cycle time master rows (Cycle panel not on page yet)
+               this.processes = [];   // [{ ProcessId, ProcessName }]
+
+               this.isSubmitting = false;
+           }
+
+           async init() {
+               this.searchFrom.value = this.searchTo.value = this.todayValue;
+               byId('workDate').value = this.todayValue;
+               this.startClock();
+
+               this.bindEvents();
+               this.calcForm();
+               await Promise.all([this.loadModels(), this.loadEmployees(), this.loadProcessList()]);
+               await this.GetEfficiencyList();
+           }
+
+           startClock() {
+               const el = byId('liveClock');
+               if (!el) return;
+               const tick = () => { el.textContent = new Date().toLocaleTimeString('en-GB'); };
+               tick();
+               setInterval(tick, 1000);
+           }
+
+           // Night shift if the start time is 18:00–05:59 (change the hours to match your shifts)
+           autoShift() {
+               const v = byId('startOpe').value;
+               if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(v)) return;
+               const h = parseInt(v.slice(0, 2), 10);
+               byId('shift').value = (h >= 18 || h < 6) ? 'true' : 'false';
+           }
+
+           bindEvents() {
+               // null-safe binder for panels that aren't on the page yet
+               const on = (id, evt, fn) => byId(id)?.addEventListener(evt, fn);
+
+               // Enter = next field; on the last field it submits.
+               // Combo inputs handle their own Enter (see createCombo).
+               this.form.addEventListener('keydown', e => {
+                   if (e.key !== 'Enter') return;
+                   const el = e.target;
+                   if (!['INPUT', 'SELECT'].includes(el.tagName)) return;   // buttons behave normally
+                   if (el.closest('.combo')) return;                        // handled inside createCombo
+
+                   e.preventDefault();
+                   if (!this.focusNext(el)) this.submitBtn.click();         // last input → trigger Add Record
+               });
+
+               this.form.addEventListener('submit', e => this.onSubmitRecord(e));
+               this.cancelBtn.addEventListener('click', () => this.resetRecordForm());
+
+               this.searchBtn.addEventListener('click', () => this.GetEfficiencyList());
+               this.searchText.addEventListener('input', () => this.renderTable());
+               this.filterShift.addEventListener('change', () => this.renderTable());
+
+               // Military time inputs: auto-insert ":" while typing, normalize on blur
+               ['startOpe', 'endOpe'].forEach(id => {
+                   const el = byId(id);
+
+                   el.addEventListener('input', () => {
+                       const d = el.value.replace(/\D/g, '').slice(0, 4);
+                       el.value = d.length > 2 ? `${d.slice(0, 2)}:${d.slice(2)}` : d;
+                       if (id === 'startOpe') this.autoShift();
+                   });
+
+                   el.addEventListener('blur', () => {
+                       const t = this.normalizeTime(el.value);
+                       if (t === null) {
+                           this.showToast('Enter a valid 24-hour time (00:00 – 23:59).', false);
+                           el.value = '';
+                       } else {
+                           el.value = t;
+                       }
+                       this.calcForm();
+                       if (id === 'startOpe') this.autoShift();
+                   });
+               });
+
+
+
+
+               ['startOpe', 'endOpe', 'output', 'downtimeMin'].forEach(id =>
+                   byId(id).addEventListener('input', () => this.calcForm()));
+
+               // Models are already filtered by process inside the combo, so no refetch is needed
+               //byId('processId').addEventListener('change', () => {
+               //    byId('model').value = '';
+               //    byId('Partnumber').value = '';
+               //    ById('ProcessName').value = '';
+               //    this.cycle = null;
+               //    this.calcForm();
+               //});
+
+               // Row buttons (edit/delete) are not rendered yet; enable together with the buttons in renderTable
+               // this.tbody.addEventListener('click', e => this.onRecordTableClick(e));
+
+               this.setupCombos();
+
+               // CSV Upload (skipped while the panel isn't on the page)
+               on('csvParseBtn', 'click', () => this.parseCSV());
+               on('csvUploadBtn', 'click', () => this.uploadCSV());
+               on('csvClearBtn', 'click', () => this.clearCSV());
+
+               // Cycle Time (skipped while the panel isn't on the page)
+               on('ctNewBtn', 'click', () => this.openCycleModal());
+               on('ctRefreshBtn', 'click', () => this.loadCycleTimes());
+               on('ctSearch', 'input', () => this.renderCycleTable());
+               on('ctProcessFilter', 'change', () => this.renderCycleTable());
+               on('ctForm', 'submit', e => this.saveCycleTime(e));
+               on('ctCancelBtn', 'click', () => this.closeCycleModal());
+               on('ctBody', 'click', e => this.onCycleTableClick(e));
+               this.filterProcess = byId('filterProcess');
+               this.filterProcess.addEventListener('change', () => this.renderTable());
+
+
+               this.bindDataMenu();
+           }
+
+           // ───────────────────────── READ ─────────────────────────
+           async GetEfficiencyList() {
+               try {
+                   const res = await getMethod('@Url.Action("GetEfficiencyList", "Rotor")', {
+                       from: this.searchFrom.value,
+                       to: this.searchTo.value
+                   });
+
+                   if (!res?.Success) {
+                       this.showToast(res?.Message || 'Failed to load records.', false);
+                       return;
+                   }
+                   this.rows = res.data || [];
+                   this.renderTable();
+               } catch (error) {
+                   console.error('Error fetching efficiency records:', error);
+                   this.showToast('Failed to load records.', false);
+               }
+           }
+
+           filteredRows() {
+               const q = this.searchText.value.toLowerCase();
+               const sh = this.filterShift.value;
+               const pr = this.filterProcess.value.trim().toLowerCase();
+               return this.rows.filter(r =>
+                   (!sh || String(r.ShiftCode ?? '').toUpperCase().startsWith(sh)) &&
+                   (!pr || String(r.ProcessName ?? '').trim().toLowerCase() === pr) &&
+                   (!q || [r.MachineNo, r.EffyCode, r.EmployeeCode, r.ShopOrder, r.Partnumber, r.getModel, r.Model, r.ProcessName]
+                       .some(v => String(v ?? '').toLowerCase().includes(q))));
+           }
+
+           renderTable() {
+               const list = this.filteredRows();
+
+               // Only rows with a target count toward overall efficiency (no cycle time = no target).
+               const withTarget = list.filter(r => r.Target > 0);
+               const totalOut = list.reduce((a, r) => a + this.num(r.Output), 0);
+               const totalTarget = withTarget.reduce((a, r) => a + this.num(r.Target), 0);
+               const outForTarget = withTarget.reduce((a, r) => a + this.num(r.Output), 0);
+
+               byId('recordCount').textContent = `${list.length} entries`;
+               byId('kOutput').textContent = this.fmt(totalOut);
+               byId('kTarget').textContent = this.fmt(totalTarget);
+               byId('kEff').textContent = totalTarget ? `${(outForTarget / totalTarget * 100).toFixed(2)}%` : '—';
+
+               this.tbody.innerHTML = list.map(r => `
+                   <tr data-id="${r.EfficiencyID}">
+                       <td>${this.esc(r.WorkDateText)}</td>
+                       <td>${this.esc(r.ShiftCode)}</td>
+                       <td>${this.esc(r.MachineNo)}</td>
+                       <td>${this.esc(r.Partnumber)}</td>
+                       <td>${this.esc(r.getModel ?? r.Model)}</td>
+                       <td>${this.esc(r.ShopOrder)}</td>
+                       <td>${this.esc(r.ProcessName)}</td>
+                       <td>${this.esc(r.EffyCode)}</td>
+                       <td>${this.esc(r.FullName)}</td>
+                       <td class="num">${this.fmt(r.Output)}</td>
+                       <td class="num">${r.DowntimeMin}</td>
+                       <td>${this.esc(r.StartOpeText)}</td>
+                       <td>${this.esc(r.EndOpeText)}</td>
+                       <td class="num">${this.fmt(r.WorkHours)}</td>
+                       <td class="num">${r.Target ?? '—'}</td>
+                       <td class="num">${r.TargetEased ?? '—'}</td>
+                       <td>${this.effPill(r.Efficiency)}</td>
+                   </tr>
+               `).join('') || '<tr><td colspan="15" class="empty">No records for this range.</td></tr>';
+           }
+
+           // ───────────────────────── EDIT / DELETE (row buttons, not enabled yet) ─────────────────────────
+           onRecordTableClick(e) {
+               const editBtn = e.target.closest('.edit-record');
+               const delBtn = e.target.closest('.delete-record');
+               if (editBtn) this.loadRecordIntoForm(parseInt(editBtn.dataset.id, 10));
+               if (delBtn) this.onDeleteRecord(parseInt(delBtn.dataset.id, 10));
+           }
+
+           async loadRecordIntoForm(id) {
+               const r = this.rows.find(x => x.EfficiencyID === id);
+               if (!r) return;
+
+               this.editIndexInput.value = id;
+               // byId('processId').value = r.ProcessId;
+               byId('workDate').value = r.WorkDate;
+               byId('shift').value = String(r.ShiftRaw);
+               byId('machineNo').value = r.MachineNo;
+               byId('shopOrder').value = r.ShopOrder;
+               byId('output').value = r.Output;
+               byId('downtimeMin').value = r.DowntimeMin;
+               byId('startOpe').value = String(r.StartOpe ?? '').slice(0, 5);
+               byId('endOpe').value = String(r.EndOpe ?? '').slice(0, 5);
+
+               byId('formTitle').textContent = `Edit Efficiency Record #${id}`;
+               this.submitBtn.textContent = 'Update Record';
+
+               this.cycle = this.models.find(x => x.ProcessId === r.ProcessId && x.Partnumber === r.Partnumber)
+                   ?? this.models.find(x => x.ProcessId === r.ProcessId && x.Model === r.Model)
+                   ?? null;
+               byId('Partnumber').value = this.cycle?.Partnumber ?? r.Partnumber ?? '';
+               byId('model').value = this.cycle?.Model ?? r.Model ?? '';
+               byId('employeeCode').value = r.EffyCode ?? '';
+               byId('employeeName').value = this.employees.find(e => String(e.EffyCode) === String(r.EffyCode))?.FullName ?? '';
+               this.calcForm();
+           }
+
+           async onDeleteRecord(id) {
+               if (!confirm('Delete this record?')) return;
+               try {
+                   // NOTE: other calls use the "Rotor" controller; confirm this one is correct
+                   const res = await postMethod('@Url.Action("DeleteEfficiencyRecord", "Efficiency")', { id });
+                   if (!res?.Success) {
+                       this.showToast(res?.Message || 'Delete failed.', false);
+                       return;
+                   }
+                   this.showToast('Record deleted.', true);
+                   await this.GetEfficiencyList();
+               } catch (error) {
+                   console.error('Error deleting record:', error);
+                   this.showToast('Delete failed.', false);
+               }
+           }
+
+           // ───────────────────────── CREATE ─────────────────────────
+          async onSubmitRecord(e) {
                 e.preventDefault();
 
-                const employeeCode = byId('employeeCode').value.trim();
-                const emp = this.employees.find(
-                    x => x.EmployeeCode === employeeCode
-                );
-
-                if (!emp) {
-                    this.showToast('Select a valid employee.', false);
-                    byId('employeeCode').focus();
-                    return;
-                }
-                if (!emp.EffyCode) {
-                    this.showToast('This employee has no Effy Code registered.', false);
-                    byId('employeeCode').focus();
-                    return;
-                }
-
-                // Partnumber: byId('partnumber').value,
-
-                // WorkDate: byId('workDate').value,
-                const payload = {
-                    Shift: byId('shift').value === 'true',
-                    MachineNo: byId('machineNo').value,
-                    ShopOrder: byId('shopOrder').value,
-                    ProcessId: parseInt(byId('processId').value, 10),
-                    EffyCode: emp.EffyCode,
-                    Model: byId('model').value.trim(),
-                    Output: parseInt(byId('output').value, 10) || 0,
-                    DowntimeMin: parseInt(byId('downtimeMin').value, 10) || 0,
-                    StartOpe: byId('startOpe').value,
-                    EndOpe: byId('endOpe').value
-                };
-                console.log(payload);
+                if (this.isSubmitting) return;
+                this.isSubmitting = true;
                 this.submitBtn.disabled = true;
+
                 try {
-                    const res = await postMethod('@Url.Action("AddRecordForMonitoring", "Rotor")', {
+                    const effyCode = byId('employeeCode').value.trim();
+                    const emp = this.employees.find(x => String(x.EffyCode) === effyCode);
+
+                    if (!emp) {
+                        this.showToast('Select a valid Effy Code.', false);
+                        byId('employeeCode').focus();
+                        return;
+                    }
+                    if (!emp.EffyCode) {
+                        this.showToast('This employee has no Effy Code registered.', false);
+                        byId('employeeCode').focus();
+                        return;
+                    }
+
+                    if (!byId('ProcessName').value) {
+                        this.showToast('Select a part number to set the process.', false);
+                        byId('Partnumber').focus();
+                        return;
+                    }
+
+                    const payload = {
+                        WorkDate: byId('workDate').value,
                         Shift: byId('shift').value === 'true',
                         MachineNo: byId('machineNo').value,
-                        ShopOrder: byId('shopOrder').value,
+                        ShopOrder: byId('shopOrder').value.trim(),
                         EffyCode: emp.EffyCode,
                         getModel: byId('model').value.trim(),
-                        ProcessId: parseInt(byId('processId').value, 10),
+                        Partnumber: byId('Partnumber').value.trim(),
+                        ProcessName : byId('ProcessName').value.trim(),
                         Output: parseInt(byId('output').value, 10) || 0,
                         DowntimeMin: parseInt(byId('downtimeMin').value, 10) || 0,
                         StartOpe: byId('startOpe').value,
                         EndOpe: byId('endOpe').value
-                    });
-                    console.log(res);
+                    };
+
+                    const res = await postMethod('@Url.Action("AddRecordForMonitoring", "Rotor")', payload);
                     if (!res?.Success) {
-                       this.showToast(res?.Message || 'Save failed.', false);
-                       return;
+                        this.showToast(res?.Message || 'Save failed.', false);
+                        return;
                     }
-                    this.showToast(payload.EfficiencyID ? 'Record updated.' : 'Record added.', true);
+                    this.showToast('Record added.', true);
 
                     this.searchFrom.value = this.searchTo.value = payload.WorkDate;
-                    this.resetRecordForm();
+                    this.resetRecordForm({ keepHeader: true });
                     await this.GetEfficiencyList();
-                    this.showTab('records');
+                    byId('shopOrder').focus();   // was machineNo
                 } catch (error) {
                     console.error('Error saving record:', error);
                     this.showToast('Save failed.', false);
                 } finally {
+                    this.isSubmitting = false;
                     this.submitBtn.disabled = false;
                 }
             }
 
-            resetRecordForm() {
-                this.form.reset();
-                this.editIndexInput.value = 0;
-                this.cycle = null;
-                byId('workDate').value = this.todayValue;
-                byId('formTitle').textContent = 'Add Efficiency Record';
-                this.submitBtn.textContent = 'Add Record';
-                this.calcForm();
+           resetRecordForm({ keepHeader = false } = {}) {
+               // remember the values before form.reset() wipes them
+               const keep = keepHeader
+                   ? {
+                       workDate: byId('workDate').value,
+                       shift: byId('shift').value,
+                       machineNo: byId('machineNo').value
+                   }
+                   : null;
+
+               this.form.reset();
+               this.editIndexInput.value = 0;
+               this.cycle = null;
+               byId('workDate').value = this.todayValue;
+               byId('employeeName').value = '';
+               byId('model').value = '';
+               byId('ProcessName').value = '';
+
+               // restore Date | Shift | Machine No.
+               if (keep) {
+                   byId('workDate').value = keep.workDate;
+                   byId('shift').value = keep.shift;
+                   byId('machineNo').value = keep.machineNo;
+               }
+
+               const title = byId('formTitle');
+               if (title) title.textContent = 'Production Order Entry';
+               this.submitBtn.textContent = 'Add Record';
+               this.calcForm();
+           }
+
+           // ───────────────────────── LIVE PREVIEW ─────────────────────────
+           // Same formula as the server (CalcTarget); the saved/listed value always comes from the server.
+           calcForm() {
+               const toMin = v => {
+                   if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(v)) return null;
+                   const p = v.split(':');
+                   return this.num(p[0]) * 60 + this.num(p[1]);
+               };
+               const s = toMin(byId('startOpe').value);
+               const e = toMin(byId('endOpe').value);
+               const span = (s === null || e === null) ? null : (e >= s ? e - s : e - s + 1440); // overnight-safe
+
+               const output = this.num(byId('output').value);
+               const downtime = this.num(byId('downtimeMin').value);
+               const FACTOR = 0.51;
+
+               // Target = working hours * 3600 / cycle time (sec) * 0.51
+               const workHours = span === null ? null : Math.max(0, (span - downtime) / 60);
+               const target = sec => (workHours === null || !sec)
+                   ? null
+                   : Math.floor(workHours * 3600 / sec * FACTOR);
+
+               const t1 = this.cycle ? target(this.cycle.CycleTimeSec) : null;
+               const t2 = this.cycle ? target(this.cycle.EasedCycleTimeSec) : null;
+
+               const set = (id, v, unit = '') => {
+                   byId(id).textContent = (v === null || v === undefined || v === '') ? '—' : `${v}${unit}`;
+               };
+               set('aSpan', span);
+               set('aHours', workHours === null ? null : workHours.toFixed(2), ' h');
+               set('aCycle', this.cycle ? this.cycle.CycleTimeSec : null, ' s');
+               set('aTarget', t1, ' pcs');
+               set('aTargetEased', t2, ' pcs');
+               set('aEff', t1 ? (output / t1 * 100).toFixed(2) : null, ' %');
+           }
+
+           // ───────────────────────── EXPORT ─────────────────────────
+           exportCSV() {
+               const head = ['DATE', 'SHIFT', 'MC.#', 'SHOP ORDER', 'PARTNUMBER', 'MODEL', 'PROCESS', 'EFFY CODE', 'EMP. CODE', 'OUTPUT', 'DOWNTIME', 'START', 'END', 'WORK HOURS', 'TARGET', 'TARGET (EASED)', 'EFFICIENCY'];
+               const keys = ['WorkDate', 'ShiftCode', 'MachineNo', 'ShopOrder', 'Partnumber', 'getModel', 'ProcessName', 'EffyCode', 'EmployeeCode', 'Output', 'DowntimeMin', 'StartOpe', 'EndOpe', 'WorkHours', 'Target', 'TargetEased', 'Efficiency'];
+               const csv = [head, ...this.filteredRows().map(r => keys.map(k => r[k] ?? ''))]
+                   .map(row => row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\r\n');
+
+               const a = document.createElement('a');
+               a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' }));
+               a.download = 'Efficiency_Daily_Monitor.csv';
+               a.click();
+               URL.revokeObjectURL(a.href);
+           }
+
+           // ───────────────────────── Helpers ─────────────────────────
+           num(v) { return Number(v) || 0; }
+           fmt(v) { return this.num(v).toLocaleString('en-US', { maximumFractionDigits: 2 }); }
+
+           // Values come from the database, so escape them before putting them in innerHTML.
+           esc(s) {
+               return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+           }
+
+           effPill(v) {
+               if (v === null || v === undefined) return '—';
+               const cls = v >= 100 ? 'eff-good' : v >= 80 ? 'eff-mid' : 'eff-low';
+               return `<span class="pill ${cls}">${Number(v).toFixed(2)}%</span>`;
+           }
+
+           showToast(message, success = true) {
+               const toast = byId('toast');
+               byId('toastMessage').textContent = message;
+               toast.classList.toggle('toast-error', !success);
+               toast.classList.add('show');
+               setTimeout(() => toast.classList.remove('show'), 2500);
+           }
+
+           // ───────────────────────── LISTS ─────────────────────────
+           async loadModels() {
+               try {
+                   const res = await getMethod('@Url.Action("GetModelList", "Rotor")');
+                   this.models = res?.Success ? (res.data || []) : [];
+               } catch (error) {
+                   console.error('Error loading models:', error);
+                   this.models = [];
+               }
+           }
+
+           async loadEmployees() {
+               try {
+                   const res = await getMethod('@Url.Action("GetEmployeeList", "Rotor")');
+                   this.employees = res?.Success ? (res.data || []) : [];
+               } catch (error) {
+                   console.error('Error loading employees:', error);
+                   this.employees = [];
+               }
+           }
+
+            // Reads the name/id whatever the server calls them
+            procName(p) {
+                if (typeof p === 'string') return p;
+                return p.ProcessName ?? p.Process ?? p.processName ?? p.process ?? p.Name ?? p.name ?? '';
+            }
+            procId(p) {
+                return p.ProcessId ?? p.processId ?? p.Id ?? p.id ?? null;
             }
 
-            // ───────────────────────── LOOKUPS + LIVE PREVIEW ─────────────────────────
-            async lookupPart() {
-                @*const partnumber = byId('partnumber').value.trim();
-                if (!partnumber) {
-                    this.cycle = null;
-                    byId('model').value = '';
-                    return this.calcForm();
-                }
+            async loadProcessList() {
+                const sel = byId('filterProcess');
                 try {
-                    const res = await getMethod('@Url.Action("LookupPart", "Efficiency")', {
-                        processId: byId('processId').value,
-                        partnumber
-                    });
-                    const d = res?.Success ? res.data : null;
-                    this.cycle = d?.Found ? d : null;
-                    byId('model').value = d?.Found ? (d.Model ?? '') : '';
-                    if (!d?.Found) this.showToast('No cycle time for this process + partnumber, so no target is calculated.', false);
+                    const res = await getMethod('@Url.Action("GetProcessList", "Rotor")');
+                    const list = res?.data ?? res?.Data ?? (Array.isArray(res) ? res : []);
+                    this.processes = (res?.Success === false) ? [] : list;
                 } catch (error) {
-                    this.cycle = null;
-                }
-                this.calcForm();*@
-            }
-
-           async lookupEffy() {
-                const effyCode = byId('effyCode').value.trim();
-                if (!effyCode) { byId('employeeCode').value = ''; byId('employeeName').value = ''; return; }
-                try {
-                    const res = await getMethod('@Url.Action("LookupEffy", "Efficiency")', { effyCode });
-                    const d = res?.Success ? res.data : null;
-                    byId('employeeCode').value = d?.Found ? d.EmployeeCode : '';
-                    byId('employeeName').value = d?.Found
-                        ? (this.employees.find(e => e.EmployeeCode === d.EmployeeCode)?.FullName ?? '')
-                        : '';
-                    if (!d?.Found) this.showToast('Employee code is not registered.', false);
-                } catch (error) {
-                    console.error('Error looking up Effy code:', error);
-                }
-            }
-
-            // Same formula as the server (CalcTarget); the saved/listed value always comes from the server.
-            calcForm() {
-                const toMin = v => { if (!v) return null; const p = v.split(':'); return this.num(p[0]) * 60 + this.num(p[1]); };
-                const s = toMin(byId('startOpe').value);
-                const e = toMin(byId('endOpe').value);
-                const span = (s === null || e === null) ? null : (e >= s ? e - s : e - s + 1440); // overnight-safe
-
-                const output = this.num(byId('output').value);
-                const downtime = this.num(byId('downtimeMin').value);
-                const FACTOR = 0.51;
-
-                // Target = working hours * 3600 / cycle time (sec) * 0.51
-                const workHours = span === null ? null : Math.max(0, (span - downtime) / 60);
-                const target = sec => (workHours === null || !sec)
-                    ? null
-                    : Math.floor(workHours * 3600 / sec * FACTOR);
-
-                const t1 = this.cycle ? target(this.cycle.CycleTimeSec) : null;
-                const t2 = this.cycle ? target(this.cycle.EasedCycleTimeSec) : null;
-
-                byId('aSpan').value = span ?? '';
-                byId('aHours').value = workHours === null ? '' : workHours.toFixed(2);
-                byId('aCycle').value = this.cycle ? `${this.cycle.CycleTimeSec}` : '';
-                byId('aTarget').value = t1 ?? '';
-                byId('aTargetEased').value = t2 ?? '';
-                byId('aEff').value = t1 ? (output / t1 * 100).toFixed(2) : '';
-            }
-
-            // ───────────────────────── EXPORT ─────────────────────────
-            exportCSV() {
-                const head = ['DATE', 'SHIFT', 'MC.#', 'SHOP ORDER', 'PARTNUMBER', 'MODEL', 'PROCESS', 'EFFY CODE', 'EMP. CODE', 'OUTPUT', 'DOWNTIME', 'START', 'END', 'WORK HOURS', 'TARGET', 'TARGET (EASED)', 'EFFICIENCY'];
-                const keys = ['WorkDate', 'Shift', 'MachineNo', 'ShopOrder', 'Partnumber', 'Model', 'ProcessName', 'EffyCode', 'EmployeeCode', 'Output', 'DowntimeMin', 'StartOpe', 'EndOpe', 'WorkHours', 'Target', 'TargetEased', 'Efficiency'];
-                const csv = [head, ...this.filteredRows().map(r => keys.map(k => r[k] ?? ''))]
-                    .map(row => row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\r\n');
-
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' }));
-                a.download = 'Efficiency_Daily_Monitor.csv';
-                a.click();
-                URL.revokeObjectURL(a.href);
-            }
-
-            // ───────────────────────── Helpers ─────────────────────────
-            showTab(id) {
-                document.querySelectorAll('.panel').forEach(x => x.classList.toggle('active', x.id === id));
-                document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x.dataset.tab === id));
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-
-            num(v) { return Number(v) || 0; }
-            fmt(v) { return this.num(v).toLocaleString('en-US', { maximumFractionDigits: 2 }); }
-
-            // Values come from the database, so escape them before putting them in innerHTML.
-            esc(s) {
-                return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-            }
-
-            effPill(v) {
-                if (v === null || v === undefined) return '—';
-                const cls = v >= 100 ? 'eff-good' : v >= 80 ? 'eff-mid' : 'eff-low';
-                return `<span class="pill ${cls}">${Number(v).toFixed(2)}%</span>`;
-            }
-
-            showToast(message, success = true) {
-                const toast = byId('toast');
-                byId('toastMessage').textContent = message;
-                toast.classList.toggle('toast-error', !success);
-                toast.classList.add('show');
-                setTimeout(() => toast.classList.remove('show'), 2500);
-            }
-
-            // ───────────────────────── LISTS ─────────────────────────
-                async loadModels() {
-                    try {
-                        const res = await getMethod('@Url.Action("GetModelList", "Rotor")');
-                        this.models = res?.Success ? (res.data || []) : [];
-                        console.log(res);
-                        //console.log(this.models);
-                    } catch (error) {
-                        console.error('Error loading models:', error);
-                        this.models = [];
-                    }
+                    console.error('Error loading processes:', error);
+                    this.processes = [];
                 }
 
-                async loadEmployees() {
-                    try {
-                        const res = await getMethod('@Url.Action("GetEmployeeList", "Rotor")');
-                        this.employees = res?.Success ? (res.data || []) : [];
-
-                        console.log(res);
-                    } catch (error) {
-                        console.error('Error loading employees:', error);
-                        this.employees = [];
-                    }
-                }
-
-                // ───────────────────────── COMBOBOXES ─────────────────────────
-                setupCombos() {
-                    // Machine No.
-                    this.createCombo('machineNo', {
-                        getItems: () => this.machines.map(m => ({ value: m, text: m })),
-                        normalize: raw => { const r = raw.trim().toUpperCase().replace(/^D-?/, ''); return r ? `D-${r}` : ''; },
-                        emptyText: 'No matching machine',
-                        invalidMsg: 'Select a machine from D-1 to D-200.'
-                    });
-
-
-
-                    // Model → fills Cycle Time (and the partnumber, so the server can calculate the same target)
-                    this.createCombo('model', {
-                        getItems: () => this.models
-                            .filter(m => m.ProcessId === parseInt(byId('processId').value, 10))
-                            .map(m => ({ value: m.Model, text: m.Model, sub: `${m.CycleTimeSec}s`, data: m })),
-                        emptyText: 'No model for this process',
-                        invalidMsg: 'Select a model from the list.',
-                        onSelect: item => { this.cycle = item.data; this.calcForm(); },
-                        onClear: () => { this.cycle = null; this.calcForm(); }
-                    });
-
-                    // Employee Code → fills Employee Name
-                    this.createCombo('employeeCode', {
-                        getItems: () => this.employees.map(e => ({ value: e.EmployeeCode, text: e.EmployeeCode, sub: e.FullName, data: e })),
-                        emptyText: 'No matching employee',
-                        invalidMsg: 'Select an employee from the list.',
-                        onSelect: item => { byId('employeeName').value = item.data.FullName ?? ''; },
-                        onClear: () => { byId('employeeName').value = ''; }
-                    });
-
-                    // Shop Order → searched on the server, fills Model + Cycle Time
-                    this.createCombo('shopOrder', {
-                        remote: async q => {
-                            if (q.length < 3) return [];
-                            try {
-                                const res = await getMethod('@Url.Action("SearchByShopOrderFromCSV", "Rotor")', { ShopOrders: q });
-                                return res?.Success
-                                    ? (res.data || []).map(s => ({ value: s.ShopOrder, text: s.ShopOrder, sub: s.Model, data: s }))
-                                    : [];
-                            } catch (error) {
-                                console.error('Error searching shop orders:', error);
-                                return [];
-                            }
-                        },
-                        emptyText: 'Type at least 3 characters',
-                        invalidMsg: 'Select a shop order from the list.',
-                        onSelect: item => {
-                            const pid = parseInt(byId('processId').value, 10);
-                            this.cycle = this.models.find(m => m.ProcessId === pid && m.Model === item.data.Model) ?? null;
-                            byId('model').value = this.cycle?.Model ?? '';
-                            if (!this.cycle) this.showToast('No cycle time for this model in the selected process.', false);
-                            this.calcForm();
-                        },
-                        onClear: () => { }
-                     });
-                }
-
-                // Reusable searchable select. Items: { value, text, sub?, data? }. The search matches text and sub.
-            createCombo(inputId, { getItems, remote, onSelect, onClear, normalize, emptyText = 'No match', invalidMsg = 'Select a value from the list.' }) {
-                const input = byId(inputId);
-                const combo = input.closest('.combo');
-                const list = combo.querySelector('.combo-list');
-                const MAX = 100;
-                let shown = [], active = -1, selected = null, cache = [], timer;
-
-                const render = () => {
-                    const q = input.value.trim().toLowerCase();
-                    const items = remote
-                        ? cache
-                        : getItems().filter(i => `${i.text} ${i.sub ?? ''}`.toLowerCase().includes(q));
-                    shown = items.slice(0, MAX);
-                    list.innerHTML = shown.length
-                        ? shown.map((i, n) => `<li role="option" data-n="${n}">${this.esc(i.text)}${i.sub ? `<small>${this.esc(i.sub)}</small>` : ''}</li>`).join('')
-                        : `<li class="empty">${this.esc(emptyText)}</li>`;
-                    active = -1;
-                };
-                const open = () => { render(); combo.classList.add('open'); };
-                const close = () => combo.classList.remove('open');
-                const choose = item => { selected = item; input.value = item.value; close(); onSelect?.(item, true); };
-                const highlight = () => {
-                    const els = [...list.querySelectorAll('li[data-n]')];
-                    els.forEach((el, i) => el.classList.toggle('active', i === active));
-                    els[active]?.scrollIntoView({ block: 'nearest' });
-                };
-
-                input.addEventListener('focus', open);
-                input.addEventListener('input', () => {
-                    selected = null;
-                    combo.classList.add('open');
-                    if (!remote) return render();
-                    clearTimeout(timer);
-                    timer = setTimeout(async () => {
-                        const q = input.value.trim();
-                        const items = await remote(q);
-                        if (q !== input.value.trim()) return;   // a newer keystroke superseded this result
-                        cache = items;
-                        render();
-                    }, 250);
-                });
-
-                input.addEventListener('blur', async () => {
-                    close();
-                    if (selected && selected.value === input.value) return;
-
-                    const v = normalize ? normalize(input.value) : input.value.trim();
-                    const pool = (remote && v) ? await remote(v) : (getItems ? getItems() : []);
-                    const hit = pool.find(i => i.value === v);
-                    if (hit) { selected = hit; input.value = hit.value; onSelect?.(hit, false); return; }
-
-                    if (input.value.trim()) this.showToast(invalidMsg, false);
-                    input.value = '';
-                    selected = null;
-                    onClear?.();
-                });
-
-                input.addEventListener('keydown', e => {
-                    if (e.key === 'ArrowDown') {
-                        e.preventDefault();
-                        if (!combo.classList.contains('open')) open();
-                        active = Math.min(active + 1, shown.length - 1); highlight();
-                    } else if (e.key === 'ArrowUp') {
-                        e.preventDefault();
-                        active = Math.max(active - 1, 0); highlight();
-                    } else if (e.key === 'Enter' && combo.classList.contains('open') && shown.length) {
-                        e.preventDefault();
-                        choose(shown[active >= 0 ? active : 0]);
-                    } else if (e.key === 'Escape') {
-                        close();
-                    }
-                });
-
-                list.addEventListener('mousedown', e => {
-                    const li = e.target.closest('li[data-n]');
-                    if (li) { e.preventDefault(); choose(shown[+li.dataset.n]); }
-                });
+                const current = sel.value;
+                sel.innerHTML = '<option value="">All processes</option>' +
+                    this.processes
+                        .map(p => this.procName(p))
+                        .filter(Boolean)
+                        .map(n => `<option value="${this.esc(n)}">${this.esc(n)}</option>`)
+                        .join('');
+                sel.value = current;
             }
 
-            // ───────────────────────── CSV UPLOAD ─────────────────────────
-            parseCSV() {
-                const file = byId('csvFile').files[0];
-                if (!file) { this.showToast('Choose a CSV file first.', false); return; }
+           bindDataMenu() {
+               const modal = byId('dataMenuModal');
+               const openBtn = byId('dataMenuBtn');
 
-                const reader = new FileReader();
-                reader.onload = ev => {
-                    const text = ev.target.result.replace(/^\uFEFF/, ''); // strip BOM
-                    const lines = text.split(/\r?\n/).filter(l => l.trim());
-                    if (lines.length < 2) { this.showToast('CSV is empty.', false); return; }
+               if (!modal || !openBtn) return;
 
-                    const headers = this.splitCSVLine(lines[0]).map(h => h.trim().toLowerCase());
-                    const idx = (name) => headers.findIndex(h => h.includes(name));
+               const closeBtn = byId('closeDataModal');
+               const previousFocus = () => openBtn.focus();
 
-                    const map = {
-                        date: idx('date'),
-                        shift: idx('shift'),
-                        mc: idx('mc') >= 0 ? idx('mc') : idx('machine'),
-                        shop: idx('shop'),
-                        model: idx('model'),
-                        process: idx('process'),
-                        effy: idx('effy'),
-                        output: idx('output'),
-                        dt: idx('dt') >= 0 ? idx('dt') : idx('downtime'),
-                        start: idx('start'),
-                        end: idx('end')
-                    };
+               const openModal = () => {
+                   modal.classList.add('show');
+                   modal.setAttribute('aria-hidden', 'false');
 
-                    const processMap = { 'COVER DRILLING': 1, 'IMPELLER': 2, 'EPIFORM': 3 };
+                   document.body.style.overflow = 'hidden';
 
-                    this.csvRows = lines.slice(1).map((line, i) => {
-                        const c = this.splitCSVLine(line);
-                        const procName = String(c[map.process] ?? '').trim().toUpperCase();
-                        const procId = processMap[procName] || parseInt(procName, 10) || 0;
-                        const shiftRaw = String(c[map.shift] ?? '').trim().toUpperCase();
-                        const shiftBool = shiftRaw.startsWith('N');
+                   if (closeBtn) closeBtn.focus();
+               };
 
-                        const row = {
-                            __row: i + 2,
-                            __error: null,
-                            Shift: shiftBool,
-                            MachineNo: String(c[map.mc] ?? '').trim(),
-                            ShopOrder: String(c[map.shop] ?? '').trim(),
-                            ProcessId: procId,
-                            EffyCode: String(c[map.effy] ?? '').trim(),
-                            getModel: String(c[map.model] ?? '').trim(),
-                            Output: parseInt(c[map.output], 10) || 0,
-                            DowntimeMin: parseInt(c[map.dt], 10) || 0,
-                            StartOpe: String(c[map.start] ?? '').trim(),
-                            EndOpe: String(c[map.end] ?? '').trim(),
-                            WorkDate: this.normalizeDate(String(c[map.date] ?? '').trim())
-                        };
+               const closeModal = () => {
+                   modal.classList.remove('show');
+                   modal.setAttribute('aria-hidden', 'true');
 
-                        // basic validation
-                        const errs = [];
-                        if (!row.MachineNo) errs.push('MC.#');
-                        if (!row.ProcessId) errs.push('Process');
-                        if (!row.EffyCode) errs.push('Effy Code');
-                        if (!row.WorkDate) errs.push('Date');
-                        if (!row.StartOpe) errs.push('Start');
-                        if (!row.EndOpe) errs.push('End');
-                        if (errs.length) row.__error = 'Missing: ' + errs.join(', ');
+                   document.body.style.overflow = '';
 
-                        return row;
-                    });
+                   previousFocus();
+               };
 
-                    this.renderCSVPreview();
-                    byId('csvUploadBtn').disabled = this.csvRows.filter(r => !r.__error).length === 0;
-                    this.showToast(`Parsed ${this.csvRows.length} row(s).`, true);
-                };
-                reader.readAsText(file);
-            }
+               openBtn.addEventListener('click', openModal);
 
-            // Handles quoted CSV fields ("a,b","c")
-            splitCSVLine(line) {
-                const out = []; let cur = ''; let q = false;
-                for (let i = 0; i < line.length; i++) {
-                    const ch = line[i];
-                    if (q) {
-                        if (ch === '"' && line[i + 1] === '"') { cur += '"'; i++; }
-                        else if (ch === '"') { q = false; }
-                        else cur += ch;
-                    } else {
-                        if (ch === '"') q = true;
-                        else if (ch === ',') { out.push(cur); cur = ''; }
-                        else cur += ch;
-                    }
-                }
-                out.push(cur);
-                return out;
-            }
+               if (closeBtn) {
+                   closeBtn.addEventListener('click', closeModal);
+               }
 
-            normalizeDate(s) {
-                if (!s) return '';
-                // already ISO?
-                if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0, 10);
-                // MM/DD/YYYY
-                let m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-                if (m) return `${m[3]}-${m[1].padStart(2, '0')}-${m[2].padStart(2, '0')}`;
-                // DD-MM-YYYY
-                m = s.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
-                if (m) return `${m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`;
-                // Date parse fallback
-                const d = new Date(s);
-                if (!isNaN(d)) return d.toISOString().slice(0, 10);
-                return '';
-            }
+              
 
-            renderCSVPreview() {
-                const body = byId('csvPreviewBody');
-                if (!this.csvRows.length) {
-                    body.innerHTML = '<tr><td colspan="13" class="empty">No rows parsed.</td></tr>';
-                    byId('csvSummary').textContent = '';
-                    return;
-                }
-                const procName = id => ({ 1: 'COVER DRILLING', 2: 'IMPELLER', 3: 'EPIFORM' }[id] || '—');
+               // Close when clicking outside the workspace.
+               modal.addEventListener('click', e => {
+                   if (e.target === modal) {
+                       closeModal();
+                   }
+               });
 
-                body.innerHTML = this.csvRows.map(r => `
-                    <tr style="${r.__error ? 'background:#fde8e8;' : ''}">
-                        <td>${r.__row}</td>
-                        <td>${this.esc(r.WorkDate)}</td>
-                        <td>${r.Shift ? 'N' : 'D'}</td>
-                        <td>${this.esc(r.MachineNo)}</td>
-                        <td>${this.esc(r.ShopOrder)}</td>
-                        <td>${this.esc(r.getModel)}</td>
-                        <td>${this.esc(procName(r.ProcessId))}</td>
-                        <td>${this.esc(r.EffyCode)}</td>
-                        <td class="num">${r.Output}</td>
-                        <td class="num">${r.DowntimeMin}</td>
-                        <td>${this.esc(r.StartOpe)}</td>
-                        <td>${this.esc(r.EndOpe)}</td>
-                        <td>${r.__error
-                            ? `<span class="pill eff-low">${this.esc(r.__error)}</span>`
-                            : `<span class="pill eff-good">OK</span>`}
-                        </td>
-                    </tr>
-                `).join('');
+               // Close using Escape.
+               document.addEventListener('keydown', e => {
+                   if (
+                       e.key === 'Escape' &&
+                       modal.classList.contains('show')
+                   ) {
+                       closeModal();
+                   }
+               });
 
-                const good = this.csvRows.filter(r => !r.__error).length;
-                byId('csvSummary').textContent = `${good} valid / ${this.csvRows.length} total rows.`;
-            }
+               // Sidebar navigation.
+               const modules = modal.querySelectorAll('.dw-module');
 
-            clearCSV() {
-                this.csvRows = [];
-                byId('csvFile').value = '';
-                byId('csvUploadBtn').disabled = true;
-                byId('csvPreviewBody').innerHTML = '<tr><td colspan="13" class="empty">Choose a CSV file and click Preview.</td></tr>';
-                byId('csvSummary').textContent = '';
-            }
+               const panels = {
+                   csv: byId('dwPanelCsv'),
+                   cycle: byId('dwPanelCycle'),
+                   records: byId('dwPanelRecords')
+               };
 
-            async uploadCSV() {
-                const rows = this.csvRows.filter(r => !r.__error);
-                if (!rows.length) { this.showToast('No valid rows to upload.', false); return; }
+               modules.forEach(button => {
+                   button.addEventListener('click', () => {
+                       const selected = button.dataset.workspace;
 
-                const btn = byId('csvUploadBtn');
-                btn.disabled = true;
-                try {
-                    // Payload: send the array; server should accept List<EfficiencyCsvRow>
-                    const res = await postMethod('@Url.Action("UploadEfficiencyCsv", "Rotor")', { rows });
-                    if (!res?.Success) {
-                        this.showToast(res?.Message || 'Upload failed.', false);
-                        return;
-                    }
-                    this.showToast(`Uploaded ${res.Inserted ?? rows.length} row(s).`, true);
-                    this.clearCSV();
-                    await this.GetEfficiencyList();
-                    this.showTab('records');
-                } catch (error) {
-                    console.error('Upload error:', error);
-                    this.showToast('Upload failed.', false);
-                } finally {
-                    btn.disabled = false;
-                }
-            }
+                       modules.forEach(item => {
+                           item.classList.toggle('active', item === button);
+                       });
 
-            // ───────────────────────── CYCLE TIME CRUD ─────────────────────────
-            async loadCycleTimes() {
-                try {
-                    const res = await getMethod('@Url.Action("GetCycleTimeList", "Rotor")');
-                    this.cycleRows = res?.Success ? (res.data || []) : [];
-                    this.renderCycleTable();
-                    // also refresh the combobox cache so encoder picks up edits
-                    await this.loadModels();
-                } catch (error) {
-                    console.error('Error loading cycle times:', error);
-                    this.cycleRows = [];
-                    this.renderCycleTable();
-                }
-            }
+                       Object.keys(panels).forEach(key => {
+                           if (panels[key]) {
+                               panels[key].classList.toggle(
+                                   'active',
+                                   key === selected
+                               );
+                           }
+                       });
+                   });
+               });
 
-            renderCycleTable() {
-                const q = (byId('ctSearch').value || '').toLowerCase();
-                const pf = byId('ctProcessFilter').value;
-                const procName = id => ({ 1: 'COVER DRILLING', 2: 'IMPELLER', 3: 'EPIFORM' }[id] || `#${id}`);
+               // Export using the existing controller method.
+               const exportBtn = byId('exportEfficiencyCsv');
 
-                const list = this.cycleRows.filter(r =>
-                    (!pf || String(r.ProcessId) === pf) &&
-                    (!q || [r.Model, r.Partnumber].some(v => String(v ?? '').toLowerCase().includes(q)))
-                );
+               if (exportBtn) {
+                   exportBtn.addEventListener('click', () => {
+                       this.exportCSV();
+                   });
+               }
 
-                byId('ctBody').innerHTML = list.map(r => `
-                    <tr>
-                        <td>${this.esc(procName(r.ProcessId))}</td>
-                        <td>${this.esc(r.Model)}</td>
-                        <td>${this.esc(r.Partnumber)}</td>
-                        <td class="num">${this.esc(r.CycleTimeSec)}</td>
-                        <td class="num">${r.EasedCycleTimeSec ?? '—'}</td>
-                        <td class="no-print" style="text-align:center;">
-                            <button class="btn-icon ct-edit" data-id="${r.CycleTimeId}" title="Edit">✏️</button>
-                            <button class="btn-icon ct-delete" data-id="${r.CycleTimeId}" title="Delete">🗑️</button>
-                        </td>
-                    </tr>
-                `).join('') || '<tr><td colspan="6" class="empty">No cycle time records.</td></tr>';
-            }
+               // CSV import: connect to the existing CSV controls.
+               const importBtn = byId('openCsvUpload');
 
-            onCycleTableClick(e) {
-                const edit = e.target.closest('.ct-edit');
-                const del = e.target.closest('.ct-delete');
-                if (edit) this.openCycleModal(parseInt(edit.dataset.id, 10));
-                if (del) this.deleteCycleTime(parseInt(del.dataset.id, 10));
-            }
+               if (importBtn) {
+                   importBtn.addEventListener('click', () => {
+                       closeModal();
 
-            openCycleModal(id = 0) {
-                const r = id ? this.cycleRows.find(x => x.CycleTimeId === id) : null;
-                byId('ctId').value = id || 0;
-                byId('ctProcessId').value = r?.ProcessId ?? 1;
-                byId('ctModel').value = r?.Model ?? '';
-                byId('ctPartnumber').value = r?.Partnumber ?? '';
-                byId('ctCycleSec').value = r?.CycleTimeSec ?? '';
-                byId('ctEasedSec').value = r?.EasedCycleTimeSec ?? '';
-                byId('ctModalTitle').textContent = id ? `Edit Cycle Time #${id}` : 'New Cycle Time';
-                byId('ctModal').style.display = 'block';
-            }
+                       const csvFile = byId('csvFile');
 
-            closeCycleModal() {
-                byId('ctModal').style.display = 'none';
-                byId('ctForm').reset();
-                byId('ctId').value = 0;
-            }
+                       if (csvFile) {
+                           csvFile.click();
+                       } else if (byId('csvParseBtn')) {
+                           byId('csvParseBtn').click();
+                       } else {
+                           this.showToast(
+                               'Add the CSV upload controls to enable importing.',
+                               false
+                           );
+                       }
+                   });
+               }
 
-            async saveCycleTime(e) {
-                e.preventDefault();
-                const id = parseInt(byId('ctId').value, 10) || 0;
+               // Open the existing Cycle Time Master modal.
+               const openCycleTime = () => {
+                   closeModal();
 
-                const payload = {
-                    CycleTimeId: id,
-                    ProcessId: parseInt(byId('ctProcessId').value, 10),
-                    Model: byId('ctModel').value.trim(),
-                    Partnumber: byId('ctPartnumber').value.trim(),
-                    CycleTimeSec: parseFloat(byId('ctCycleSec').value),
-                    EasedCycleTimeSec: byId('ctEasedSec').value
-                        ? parseFloat(byId('ctEasedSec').value) : null
-                };
+                   if (typeof this.openCycleModal === 'function') {
+                       this.openCycleModal();
+                   } else {
+                       this.showToast(
+                           'Cycle Time Master is not available.',
+                           false
+                       );
+                   }
+               };
 
-                try {
-                    const action = id
-                        ? '@Url.Action("UpdateCycleTime", "Rotor")'
-                        : '@Url.Action("AddCycleTime", "Rotor")';
-                    const res = await postMethod(action, payload);
-                    if (!res?.Success) { this.showToast(res?.Message || 'Save failed.', false); return; }
+               const cycleBtn = byId('dwOpenCycleTime');
+               const manageCycleBtn = byId('dwManageCycleTime');
 
-                    this.showToast(id ? 'Cycle time updated.' : 'Cycle time added.', true);
-                    this.closeCycleModal();
-                    await this.loadCycleTimes();
-                } catch (error) {
-                    console.error('Save cycle time error:', error);
-                    this.showToast('Save failed.', false);
-                }
-            }
+               if (cycleBtn) {
+                   cycleBtn.addEventListener('click', openCycleTime);
+               }
 
-            async deleteCycleTime(id) {
-                if (!confirm('Delete this cycle time entry?')) return;
-                try {
-                    const res = await postMethod('@Url.Action("DeleteCycleTime", "Rotor")', { id });
-                    if (!res?.Success) { this.showToast(res?.Message || 'Delete failed.', false); return; }
-                    this.showToast('Cycle time deleted.', true);
-                    await this.loadCycleTimes();
-                } catch (error) {
-                    console.error('Delete cycle time error:', error);
-                    this.showToast('Delete failed.', false);
-                }
-            }
+               if (manageCycleBtn) {
+                   manageCycleBtn.addEventListener('click', openCycleTime);
+               }
 
-        }
+               
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const controller = new EfficiencyManageController();
-            controller.init();
-        });
-    </script>
+            
+           }
 
-</body>
-</html>
+
+           // ───────────────────────── COMBOBOXES ─────────────────────────
+           setupCombos() {
+               // Machine No.
+               this.createCombo('machineNo', {
+                   getItems: () => this.machines.map(m => ({ value: m, text: m })),
+                   normalize: raw => { const r = raw.trim().toUpperCase().replace(/^D-?/, ''); return r ? `D-${r}` : ''; },
+                   emptyText: 'No matching machine',
+                   invalidMsg: 'Select a machine from D-1 to D-200.'
+               });
+
+               // Partnumber → fills Model, Cycle Time and sets the Process
+               this.createCombo('Partnumber', {
+                   getItems: () => this.models.map(m => ({
+                       value: m.Partnumber,
+                       text: m.Partnumber,
+                       sub: `${m.Model} · ${this.processName(m.ProcessId)}`,
+                       data: m
+                   })),
+                   emptyText: 'No matching part number',
+                   invalidMsg: 'Select a part number from the list.',
+                   onSelect: item => this.applyModel(item.data),
+                   onClear: () => this.applyModel(null)
+               });
+
+               // Employee Code → fills Employee Name
+               this.createCombo('employeeCode', {
+                   getItems: () => this.employees
+                       .filter(e => e.EffyCode)                       // only employees that have an Effy Code
+                       .map(e => ({
+                           value: String(e.EffyCode),
+                           text: String(e.EffyCode),
+                           sub: `${e.FullName ?? ''} · ${e.EmployeeCode ?? ''}`,   // typing a name or employee code still finds them
+                           data: e
+                       })),
+                   emptyText: 'No matching Effy Code',
+                   invalidMsg: 'Select an Effy Code from the list.',
+                   onSelect: item => { byId('employeeName').value = item.data.FullName ?? ''; },
+                   onClear: () => { byId('employeeName').value = ''; }
+               });
+
+               // Shop Order → searched on the server, fills Model + Cycle Time
+               @*this.createCombo('shopOrder', {
+                   remote: async q => {
+                       if (q.length < 3) return [];
+                       try {
+                           const res = await getMethod('@Url.Action("SearchByShopOrderFromCSV", "Rotor")', { ShopOrders: q });
+                           return res?.Success
+                               ? (res.data || []).map(s => ({ value: s.ShopOrder, text: s.ShopOrder, sub: s.Model, data: s }))
+                               : [];
+                       } catch (error) {
+                           console.error('Error searching shop orders:', error);
+                           return [];
+                       }
+                   },
+                   emptyText: 'Type at least 3 characters',
+                   invalidMsg: 'Select a shop order from the list.',
+                   onSelect: item => {
+                       const pid = parseInt(byId('processId').value, 10);
+                       const matches = this.models.filter(m => m.Model === item.data.Model);
+                       // if the same model exists in several processes, prefer the one already selected
+                       const m = matches.find(x => x.ProcessId === pid) ?? matches[0] ?? null;
+
+                       if (!m) {
+                           this.applyModel(null);
+                           this.showToast('No cycle time found for this model.', false);
+                           return;
+                       }
+                       this.applyModel(m);
+                   },
+                   onClear: () => { }
+               });*@
+           }
+
+           // Reusable searchable select. Items: { value, text, sub?, data? }. The search matches text and sub.
+           // Reusable searchable select. Items: { value, text, sub?, data? }. The search matches text and sub.
+           createCombo(inputId, { getItems, remote, onSelect, onClear, normalize, emptyText = 'No match', invalidMsg = 'Select a value from the list.' }) {
+               const input = byId(inputId);
+               const combo = input.closest('.combo');
+               const list = combo.querySelector('.combo-list');
+               const MAX = 100;
+               let shown = [], active = -1, selected = null, cache = [], timer;
+
+               const highlight = () => {
+                   const els = [...list.querySelectorAll('li[data-n]')];
+                   els.forEach((el, i) => el.classList.toggle('active', i === active));
+                   els[active]?.scrollIntoView({ block: 'nearest' });
+               };
+
+               const render = () => {
+                   const q = input.value.trim().toLowerCase();
+                   const items = remote
+                       ? cache
+                       : getItems().filter(i => `${i.text} ${i.sub ?? ''}`.toLowerCase().includes(q));
+                   shown = items.slice(0, MAX);
+                   list.innerHTML = shown.length
+                       ? shown.map((i, n) => `<li role="option" data-n="${n}">${this.esc(i.text)}${i.sub ? `<small>${this.esc(i.sub)}</small>` : ''}</li>`).join('')
+                       : `<li class="empty">${this.esc(emptyText)}</li>`;
+
+                   // Highlight the first result so the user can see what Enter will pick
+                   active = shown.length ? 0 : -1;
+                   highlight();
+               };
+
+               const open = () => { render(); combo.classList.add('open'); };
+               const close = () => combo.classList.remove('open');
+               const choose = item => { selected = item; input.value = item.value; close(); onSelect?.(item, true); };
+
+               input.addEventListener('focus', open);
+
+               input.addEventListener('input', () => {
+                   selected = null;
+                   combo.classList.add('open');
+                   if (!remote) return render();
+                   clearTimeout(timer);
+                   timer = setTimeout(async () => {
+                       const q = input.value.trim();
+                       const items = await remote(q);
+                       if (q !== input.value.trim()) return;   // a newer keystroke superseded this result
+                       cache = items;
+                       render();
+                   }, 250);
+               });
+
+               input.addEventListener('blur', async () => {
+                   close();
+                   if (selected && selected.value === input.value) return;
+
+                   const v = normalize ? normalize(input.value) : input.value.trim();
+                   const pool = (remote && v) ? await remote(v) : (getItems ? getItems() : []);
+                   const hit = pool.find(i => i.value === v);
+                   if (hit) { selected = hit; input.value = hit.value; onSelect?.(hit, false); return; }
+
+                   if (input.value.trim()) this.showToast(invalidMsg, false);
+                   input.value = '';
+                   selected = null;
+                   onClear?.();
+               });
+
+               input.addEventListener('keydown', e => {
+                   if (e.key === 'ArrowDown') {
+                       e.preventDefault();
+                       if (!combo.classList.contains('open')) open();
+                       active = Math.min(active + 1, shown.length - 1); highlight();
+                   } else if (e.key === 'ArrowUp') {
+                       e.preventDefault();
+                       active = Math.max(active - 1, 0); highlight();
+                   } else if (e.key === 'Enter') {
+                       e.preventDefault();                                   // a combo never submits the form itself
+                       if (!input.value.trim()) return;                      // empty: stay here
+
+                       const isChosen = selected && selected.value === input.value;
+                       if (isChosen) { this.focusNext(input); return; }      // already confirmed → go to next field
+
+                       if (!combo.classList.contains('open')) open();        // re-run the search if the list was closed
+                       if (shown.length) {
+                           choose(shown[active >= 0 ? active : 0]);          // pick the first / highlighted result
+                           this.focusNext(input);
+                       }
+                   } else if (e.key === 'Escape') {
+                       close();
+                   }
+               });
+
+               list.addEventListener('mousedown', e => {
+                   const li = e.target.closest('li[data-n]');
+                   if (li) { e.preventDefault(); choose(shown[+li.dataset.n]); }
+               });
+           }
+
+           // ───────────────────────── CSV UPLOAD (panel not on page yet) ─────────────────────────
+           parseCSV() {
+               const file = byId('csvFile').files[0];
+               if (!file) { this.showToast('Choose a CSV file first.', false); return; }
+
+               const reader = new FileReader();
+               reader.onload = ev => {
+                   const text = ev.target.result.replace(/^\uFEFF/, ''); // strip BOM
+                   const lines = text.split(/\r?\n/).filter(l => l.trim());
+                   if (lines.length < 2) { this.showToast('CSV is empty.', false); return; }
+
+                   const headers = this.splitCSVLine(lines[0]).map(h => h.trim().toLowerCase());
+                   const idx = (name) => headers.findIndex(h => h.includes(name));
+
+                   const map = {
+                       date: idx('date'),
+                       shift: idx('shift'),
+                       mc: idx('mc') >= 0 ? idx('mc') : idx('machine'),
+                       shop: idx('shop'),
+                       model: idx('model'),
+                       process: idx('process'),
+                       effy: idx('effy'),
+                       output: idx('output'),
+                       dt: idx('dt') >= 0 ? idx('dt') : idx('downtime'),
+                       start: idx('start'),
+                       end: idx('end')
+                   };
+
+                   const processMap = { 'COVER DRILLING': 1, 'IMPELLER': 2, 'EPIFORM': 3 };
+
+                   this.csvRows = lines.slice(1).map((line, i) => {
+                       const c = this.splitCSVLine(line);
+                       const procName = String(c[map.process] ?? '').trim().toUpperCase();
+                       const procId = processMap[procName] || parseInt(procName, 10) || 0;
+                       const shiftRaw = String(c[map.shift] ?? '').trim().toUpperCase();
+
+                       const row = {
+                           __row: i + 2,
+                           __error: null,
+                           Shift: shiftRaw.startsWith('N'),
+                           MachineNo: String(c[map.mc] ?? '').trim(),
+                           ShopOrder: String(c[map.shop] ?? '').trim(),
+                           EffyCode: String(c[map.effy] ?? '').trim(),
+                           getModel: String(c[map.model] ?? '').trim(),
+                           Output: parseInt(c[map.output], 10) || 0,
+                           DowntimeMin: parseInt(c[map.dt], 10) || 0,
+                           StartOpe: String(c[map.start] ?? '').trim(),
+                           EndOpe: String(c[map.end] ?? '').trim(),
+                           WorkDate: this.normalizeDate(String(c[map.date] ?? '').trim())
+                       };
+
+                       const errs = [];
+                       if (!row.MachineNo) errs.push('MC.#');
+                       if (!row.EffyCode) errs.push('Effy Code');
+                       if (!row.WorkDate) errs.push('Date');
+                       if (!row.StartOpe) errs.push('Start');
+                       if (!row.EndOpe) errs.push('End');
+                       if (errs.length) row.__error = 'Missing: ' + errs.join(', ');
+
+                       return row;
+                   });
+
+                   this.renderCSVPreview();
+                   byId('csvUploadBtn').disabled = this.csvRows.filter(r => !r.__error).length === 0;
+                   this.showToast(`Parsed ${this.csvRows.length} row(s).`, true);
+               };
+               reader.readAsText(file);
+           }
+
+           // Handles quoted CSV fields ("a,b","c")
+           splitCSVLine(line) {
+               const out = []; let cur = ''; let q = false;
+               for (let i = 0; i < line.length; i++) {
+                   const ch = line[i];
+                   if (q) {
+                       if (ch === '"' && line[i + 1] === '"') { cur += '"'; i++; }
+                       else if (ch === '"') { q = false; }
+                       else cur += ch;
+                   } else {
+                       if (ch === '"') q = true;
+                       else if (ch === ',') { out.push(cur); cur = ''; }
+                       else cur += ch;
+                   }
+               }
+               out.push(cur);
+               return out;
+           }
+
+           normalizeDate(s) {
+               if (!s) return '';
+               if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0, 10);                  // ISO
+               let m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);                        // MM/DD/YYYY
+               if (m) return `${m[3]}-${m[1].padStart(2, '0')}-${m[2].padStart(2, '0')}`;
+               m = s.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);                              // DD-MM-YYYY
+               if (m) return `${m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`;
+               const d = new Date(s);
+               if (!isNaN(d)) return d.toISOString().slice(0, 10);
+               return '';
+           }
+
+           renderCSVPreview() {
+               const body = byId('csvPreviewBody');
+               if (!this.csvRows.length) {
+                   body.innerHTML = '<tr><td colspan="13" class="empty">No rows parsed.</td></tr>';
+                   byId('csvSummary').textContent = '';
+                   return;
+               }
+               const procName = id => ({ 1: 'COVER DRILLING', 2: 'IMPELLER', 3: 'EPIFORM' }[id] || '—');
+
+               body.innerHTML = this.csvRows.map(r => `
+                   <tr style="${r.__error ? 'background:#fde8e8;' : ''}">
+                       <td>${r.__row}</td>
+                       <td>${this.esc(r.WorkDate)}</td>
+                       <td>${r.Shift ? 'NS' : 'DS'}</td>
+                       <td>${this.esc(r.MachineNo)}</td>
+                       <td>${this.esc(r.ShopOrder)}</td>
+                       <td>${this.esc(r.getModel)}</td>
+                       <td>${this.esc(r.EffyCode)}</td>
+                       <td class="num">${r.Output}</td>
+                       <td class="num">${r.DowntimeMin}</td>
+                       <td>${this.esc(r.StartOpe)}</td>
+                       <td>${this.esc(r.EndOpe)}</td>
+                       <td>${r.__error
+                           ? `<span class="pill eff-low">${this.esc(r.__error)}</span>`
+                           : `<span class="pill eff-good">OK</span>`}
+                       </td>
+                   </tr>
+               `).join('');
+
+               const good = this.csvRows.filter(r => !r.__error).length;
+               byId('csvSummary').textContent = `${good} valid / ${this.csvRows.length} total rows.`;
+           }
+
+           clearCSV() {
+               this.csvRows = [];
+               byId('csvFile').value = '';
+               byId('csvUploadBtn').disabled = true;
+               byId('csvPreviewBody').innerHTML = '<tr><td colspan="13" class="empty">Choose a CSV file and click Preview.</td></tr>';
+               byId('csvSummary').textContent = '';
+           }
+
+           async uploadCSV() {
+               const rows = this.csvRows.filter(r => !r.__error);
+               if (!rows.length) { this.showToast('No valid rows to upload.', false); return; }
+
+               const btn = byId('csvUploadBtn');
+               btn.disabled = true;
+               try {
+                   const res = await postMethod('@Url.Action("UploadEfficiencyCsv", "Rotor")', { rows });
+                   if (!res?.Success) {
+                       this.showToast(res?.Message || 'Upload failed.', false);
+                       return;
+                   }
+                   this.showToast(`Uploaded ${res.Inserted ?? rows.length} row(s).`, true);
+                   this.clearCSV();
+                   await this.GetEfficiencyList();
+               } catch (error) {
+                   console.error('Upload error:', error);
+                   this.showToast('Upload failed.', false);
+               } finally {
+                   btn.disabled = false;
+               }
+           }
+
+           // ───────────────────────── CYCLE TIME CRUD (panel not on page yet) ─────────────────────────
+           async loadCycleTimes() {
+               try {
+                   const res = await getMethod('@Url.Action("GetCycleTimeList", "Rotor")');
+                   this.cycleRows = res?.Success ? (res.data || []) : [];
+                   this.renderCycleTable();
+                   await this.loadModels();   // refresh the combobox cache so the encoder picks up edits
+               } catch (error) {
+                   console.error('Error loading cycle times:', error);
+                   this.cycleRows = [];
+                   this.renderCycleTable();
+               }
+           }
+
+           renderCycleTable() {
+               const q = (byId('ctSearch').value || '').toLowerCase();
+               const pf = byId('ctProcessFilter').value;
+               const procName = id => ({ 1: 'COVER DRILLING', 2: 'IMPELLER', 3: 'EPIFORM' }[id] || `#${id}`);
+
+               const list = this.cycleRows.filter(r =>
+                   (!pf || String(r.ProcessId) === pf) &&
+                   (!q || [r.Model, r.Partnumber].some(v => String(v ?? '').toLowerCase().includes(q)))
+               );
+
+               byId('ctBody').innerHTML = list.map(r => `
+                   <tr>
+                       <td>${this.esc(procName(r.ProcessId))}</td>
+                       <td>${this.esc(r.Model)}</td>
+                       <td>${this.esc(r.Partnumber)}</td>
+                       <td class="num">${this.esc(r.CycleTimeSec)}</td>
+                       <td class="num">${r.EasedCycleTimeSec ?? '—'}</td>
+                       <td style="text-align:center;">
+                           <button class="btn-icon ct-edit" data-id="${r.CycleTimeId}" title="Edit">✏️</button>
+                           <button class="btn-icon ct-delete" data-id="${r.CycleTimeId}" title="Delete">🗑️</button>
+                       </td>
+                   </tr>
+               `).join('') || '<tr><td colspan="6" class="empty">No cycle time records.</td></tr>';
+           }
+
+           onCycleTableClick(e) {
+               const edit = e.target.closest('.ct-edit');
+               const del = e.target.closest('.ct-delete');
+               if (edit) this.openCycleModal(parseInt(edit.dataset.id, 10));
+               if (del) this.deleteCycleTime(parseInt(del.dataset.id, 10));
+           }
+
+           openCycleModal(id = 0) {
+               const r = id ? this.cycleRows.find(x => x.CycleTimeId === id) : null;
+               byId('ctId').value = id || 0;
+               byId('ctProcessId').value = r?.ProcessId ?? 1;
+               byId('ctModel').value = r?.Model ?? '';
+               byId('ctPartnumber').value = r?.Partnumber ?? '';
+               byId('ctCycleSec').value = r?.CycleTimeSec ?? '';
+               byId('ctEasedSec').value = r?.EasedCycleTimeSec ?? '';
+               byId('ctModalTitle').textContent = id ? `Edit Cycle Time #${id}` : 'New Cycle Time';
+               byId('ctModal').style.display = 'block';
+           }
+
+           closeCycleModal() {
+               byId('ctModal').style.display = 'none';
+               byId('ctForm').reset();
+               byId('ctId').value = 0;
+           }
+
+           async saveCycleTime(e) {
+               e.preventDefault();
+               const id = parseInt(byId('ctId').value, 10) || 0;
+
+               const payload = {
+                   CycleTimeId: id,
+                   ProcessId: parseInt(byId('ctProcessId').value, 10),
+                   Model: byId('ctModel').value.trim(),
+                   Partnumber: byId('ctPartnumber').value.trim(),
+                   CycleTimeSec: parseFloat(byId('ctCycleSec').value),
+                   EasedCycleTimeSec: byId('ctEasedSec').value ? parseFloat(byId('ctEasedSec').value) : null
+               };
+
+               try {
+                   const action = id
+                       ? '@Url.Action("UpdateCycleTime", "Rotor")'
+                       : '@Url.Action("AddCycleTime", "Rotor")';
+                   const res = await postMethod(action, payload);
+                   if (!res?.Success) { this.showToast(res?.Message || 'Save failed.', false); return; }
+
+                   this.showToast(id ? 'Cycle time updated.' : 'Cycle time added.', true);
+                   this.closeCycleModal();
+                   await this.loadCycleTimes();
+               } catch (error) {
+                   console.error('Save cycle time error:', error);
+                   this.showToast('Save failed.', false);
+               }
+           }
+
+           async deleteCycleTime(id) {
+               if (!confirm('Delete this cycle time entry?')) return;
+               try {
+                   const res = await postMethod('@Url.Action("DeleteCycleTime", "Rotor")', { id });
+                   if (!res?.Success) { this.showToast(res?.Message || 'Delete failed.', false); return; }
+                   this.showToast('Cycle time deleted.', true);
+                   await this.loadCycleTimes();
+               } catch (error) {
+                   console.error('Delete cycle time error:', error);
+                   this.showToast('Delete failed.', false);
+               }
+           }
+
+           // Reads the label straight from the Process <select>, so it stays in sync with the HTML
+           processName(id) {
+               const p = this.processes.find(x => String(this.procId(x)) === String(id));
+               return p ? this.procName(p) : '';
+           }
+
+           // Single place that applies a chosen model record to the form
+           applyModel(m) {
+               this.cycle = m ?? null;
+               byId('model').value = m?.Model ?? '';
+               byId('Partnumber').value = m?.Partnumber ?? '';
+               byId('ProcessName').value = m ? (m.ProcessName ?? this.processName(m.ProcessId)) : '';
+               this.calcForm();
+           }
+           // Moves focus to the next editable field. Returns false when there is none (last field).
+           focusNext(current) {
+               const fields = [...this.form.querySelectorAll('input, select')]
+                   .filter(el => el.type !== 'hidden' && !el.readOnly && !el.disabled && el.offsetParent !== null);
+
+               const next = fields[fields.indexOf(current) + 1];
+               if (!next) return false;
+
+               next.focus();
+               if (next.tagName === 'INPUT' && next.select) {
+                   try { next.select(); } catch { /* date/time inputs don't support select() */ }
+               }
+               return true;
+           }
+
+           // "930" -> "09:30", "9" -> "09:00", "1945" -> "19:45". Returns null if invalid, '' if empty.
+           normalizeTime(raw) {
+               const d = String(raw ?? '').replace(/\D/g, '').slice(0, 4);
+               if (!d) return '';
+               let h, m;
+               if (d.length <= 2) { h = d; m = '00'; }
+               else if (d.length === 3) { h = '0' + d[0]; m = d.slice(1); }
+               else { h = d.slice(0, 2); m = d.slice(2); }
+               if (+h > 23 || +m > 59) return null;
+               return `${h.padStart(2, '0')}:${m}`;
+           }
+       }
+
+       document.addEventListener('DOMContentLoaded', function () {
+           const controller = new EfficiencyManageController();
+           controller.init();
+       });
+</script>

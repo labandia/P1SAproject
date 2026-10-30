@@ -48,6 +48,7 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public string EmployeeCode { get; set; } = string.Empty;  // NVARCHAR(20), FK -> P1SA_Employees_Temp
         public string FullName { get; set; } = string.Empty;
         public string Process { get; set; } = string.Empty;
+        public string AgencyName { get; set; } = string.Empty;
     }
 
     /// <summary>

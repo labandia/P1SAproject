@@ -47,7 +47,10 @@
                 <div class="field-row">
                     <div class="field">
                         <label>Shop Order <span class="req">*</span></label>
-                        <input id="shopOrder" placeholder="Enter shop order" autocomplete="off" required>
+                        <div class="combo">
+                            <input id="shopOrder" placeholder="Enter shop order" autocomplete="off" required>
+                            <ul class="combo-list" role="listbox"></ul>
+                        </div>
                     </div>
                     <div class="field">
                         <label>Partnumber <span class="req">*</span></label>
@@ -178,7 +181,6 @@
                         <th>End</th>
                         <th>Work Hrs</th>
                         <th>Target</th>
-                        <th>Target (Eased)</th>
                         <th>Eff.</th>
                     </tr>
                 </thead>
@@ -204,252 +206,6 @@
 
 
 
-
-
-
-<!-- DATA & OPERATIONS WORKSPACE -->
-<div class="data-workspace-overlay"
-     id="dataMenuModal"
-     aria-hidden="true">
-
-    <section class="data-workspace"
-             role="dialog"
-             aria-modal="true"
-             aria-labelledby="dataWorkspaceTitle">
-
-        <!-- HEADER -->
-        <header class="dw-header">
-            <div class="dw-brand">
-                <div class="dw-brand-icon">
-                    <i class="fa-solid fa-table-cells-large"></i>
-                </div>
-
-                <div class="dw-heading">
-                    <div class="dw-title-row">
-                        <h2 id="dataWorkspaceTitle">
-                            Data &amp; Operations Workspace
-                        </h2>
-
-                        <span class="dw-status">
-                            <span class="dw-status-dot"></span>
-                            SYNC ONLINE
-                        </span>
-                    </div>
-
-                    <p>
-                        Manage data synchronization, cycle times,
-                        and production efficiency records.
-                    </p>
-                </div>
-            </div>
-
-            <div class="dw-window-actions">
-                <button type="button"
-                        class="dw-icon-btn"
-                        id="closeDataModal"
-                        aria-label="Close workspace">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-        </header>
-
-        <!-- WORKSPACE BODY -->
-        <div class="dw-body">
-
-            <!-- SIDEBAR -->
-            <aside class="dw-sidebar">
-                <div class="dw-sidebar-label">
-                    WORKSPACE MODULES
-                </div>
-
-                <button type="button"
-                        class="dw-module active"
-                        data-workspace="csv">
-                    <i class="fa-regular fa-file-lines"></i>
-
-                    <span class="dw-module-text">
-                        Import CSV files
-                    </span>
-
-                    <span class="dw-module-badge">Ready</span>
-                </button>
-
-                <button type="button"
-                        class="dw-module"
-                        data-workspace="cycle">
-                    <i class="fa-solid fa-stopwatch"></i>
-
-                    <span class="dw-module-text">
-                        Cycle Time Master
-                    </span>
-                </button>
-
-                <button type="button"
-                        class="dw-module"
-                        data-workspace="records">
-                    <i class="fa-solid fa-database"></i>
-
-                    <span class="dw-module-text">
-                        Employees Codes
-                    </span>
-                </button>
-
-                <div class="dw-sidebar-bottom">
-                    <div class="dw-capacity">
-                        <span>DATA OPERATIONS</span>
-                        <strong>READY</strong>
-                    </div>
-
-                    <div class="dw-capacity-bar">
-                        <span></span>
-                    </div>
-
-                    <div class="dw-help">
-                        <i class="fa-regular fa-circle-question"></i>
-                        <span>Workspace documentation</span>
-                    </div>
-                </div>
-            </aside>
-
-            <!-- MAIN CONTENT -->
-            <div class="dw-content">
-
-                <!-- CSV PANEL -->
-                <section class="dw-panel active"
-                         id="dwPanelCsv">
-
-                    <div class="dw-panel-heading">
-                        <div>
-                            <h3>CSV Import &amp; Export</h3>
-                            <p>
-                                Import production data or export
-                                your efficiency records.
-                            </p>
-                        </div>
-
-                        <span class="dw-ready-badge">
-                            <i class="fa-solid fa-circle-check"></i>
-                            Available
-                        </span>
-                    </div>
-
-                    <div class="dw-action-grid">
-
-                        <button type="button"
-                                class="dw-action-card"
-                                id="openCsvUpload">
-                            <div class="dw-action-icon">
-                                <i class="fa-solid fa-file-arrow-up"></i>
-                            </div>
-
-                            <div class="dw-action-copy">
-                                <strong>Import CSV</strong>
-                                <span>
-                                    Upload and validate a CSV file
-                                    before importing records.
-                                </span>
-                            </div>
-
-                            <i class="fa-solid fa-chevron-right dw-chevron"></i>
-                        </button>
-
-                        <button type="button"
-                                class="dw-action-card"
-                                id="exportEfficiencyCsv">
-                            <div class="dw-action-icon">
-                                <i class="fa-solid fa-file-arrow-down"></i>
-                            </div>
-
-                            <div class="dw-action-copy">
-                                <strong>Export Efficiency Data</strong>
-                                <span>
-                                    Download efficiency records
-                                    in CSV format.
-                                </span>
-                            </div>
-
-                            <i class="fa-solid fa-chevron-right dw-chevron"></i>
-                        </button>
-
-                    </div>
-
-                    <div class="dw-info">
-                        <i class="fa-solid fa-circle-info"></i>
-                        <span>
-                            Review imported data before submitting
-                            it to the server.
-                        </span>
-                    </div>
-                </section>
-
-                <!-- CYCLE TIME PANEL -->
-                <section class="dw-panel" id="dwPanelCycle">
-
-                    <div class="dw-panel-heading">
-                        <div>
-                            <h3>Cycle Time Master</h3>
-                            <p>
-                                Maintain process cycle times used
-                                in efficiency calculations.
-                            </p>
-                        </div>
-
-
-
-                    </div>
-                    <!-- TABLE -->
-                    <div class="table-scroll" style="margin-top: 1em;">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Partnumber</th>
-                                    <th>Model</th>
-                                    <th>CycleTimeSec</th>
-
-                                </tr>
-                            </thead>
-                            <tbody id="EmployeeBody"></tbody>
-                        </table>
-                    </div>
-
-                </section>
-
-                <!-- EFFICIENCY RECORDS PANEL -->
-                <section class="dw-panel" id="dwPanelRecords">
-
-                    <div class="dw-panel-heading">
-                        <div>
-                            <h3>Employees  Management Code</h3>
-
-
-
-                        </div>
-                    </div>
-                    <!-- TABLE -->
-                    <div class="table-scroll" style="margin-top: 1em;">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Employee Code</th>
-                                    <th>Employee ID</th>
-                                    <th>Full Name </th>
-                                    <th>Process</th>
-                                    <th>Affiliation</th>
-
-                                </tr>
-                            </thead>
-                            <tbody id="EmployeeBody"></tbody>
-                        </table>
-                    </div>
-
-                </section>
-
-            </div>
-        </div>
-
-
-    </section>
-</div>
 
 
 
@@ -742,7 +498,9 @@
 
                 if (this.isSubmitting) return;
                 this.isSubmitting = true;
-                this.submitBtn.disabled = true;
+              this.submitBtn.disabled = true;
+
+              let saved = false;   // <-- new
 
                 try {
                     const effyCode = byId('employeeCode').value.trim();
@@ -790,6 +548,7 @@
                     this.searchFrom.value = this.searchTo.value = payload.WorkDate;
                     this.resetRecordForm({ keepHeader: true });
                     await this.GetEfficiencyList();
+                    saved = true;   // <-- new (remove the old byId('shopOrder').focus() here)
                     byId('shopOrder').focus();   // was machineNo
                 } catch (error) {
                     console.error('Error saving record:', error);
@@ -797,6 +556,15 @@
                 } finally {
                     this.isSubmitting = false;
                     this.submitBtn.disabled = false;
+
+                    if (saved) {
+                        // run after the browser finishes re-enabling the button / updating the DOM
+                        setTimeout(() => {
+                            const so = byId('shopOrder');
+                            so.focus();
+                            so.select();
+                        }, 0);
+                    }
                 }
             }
 
@@ -823,6 +591,7 @@
                    byId('workDate').value = keep.workDate;
                    byId('shift').value = keep.shift;
                    byId('machineNo').value = keep.machineNo;
+                   byId('machineNo').value = keep.machineNo;
                }
 
                const title = byId('formTitle');
@@ -833,39 +602,84 @@
 
            // ───────────────────────── LIVE PREVIEW ─────────────────────────
            // Same formula as the server (CalcTarget); the saved/listed value always comes from the server.
+
            calcForm() {
-               const toMin = v => {
-                   if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(v)) return null;
-                   const p = v.split(':');
-                   return this.num(p[0]) * 60 + this.num(p[1]);
+               const toMin = (value) => {
+                   if (!value) return 0;
+
+                   const [hours, minutes] = value.split(':').map(Number);
+                   return (hours * 60) + minutes;
                };
-               const s = toMin(byId('startOpe').value);
-               const e = toMin(byId('endOpe').value);
-               const span = (s === null || e === null) ? null : (e >= s ? e - s : e - s + 1440); // overnight-safe
 
-               const output = this.num(byId('output').value);
-               const downtime = this.num(byId('downtimeMin').value);
-               const FACTOR = 0.51;
+               // Get start and end time
+               const start = toMin(byId('startOpe')?.value);
+               const end = toMin(byId('endOpe')?.value);
 
-               // Target = working hours * 3600 / cycle time (sec) * 0.51
-               const workHours = span === null ? null : Math.max(0, (span - downtime) / 60);
-               const target = sec => (workHours === null || !sec)
-                   ? null
-                   : Math.floor(workHours * 3600 / sec * FACTOR);
+               const output = Number(byId('output')?.value) || 0;
+               const downtime = Number(byId('downtimeMin')?.value) || 0;
 
-               const t1 = this.cycle ? target(this.cycle.CycleTimeSec) : null;
-               const t2 = this.cycle ? target(this.cycle.EasedCycleTimeSec) : null;
+               // Get Cycle Time from selected Partnumber / Model
+               const cycleTimeSec = Number(this.cycle?.CycleTimeSec) || 0;
+               const easedCycleTimeSec = Number(this.cycle?.EasedCycleTimeSec) || 0;
 
-               const set = (id, v, unit = '') => {
-                   byId(id).textContent = (v === null || v === undefined || v === '') ? '—' : `${v}${unit}`;
-               };
-               set('aSpan', span);
-               set('aHours', workHours === null ? null : workHours.toFixed(2), ' h');
-               set('aCycle', this.cycle ? this.cycle.CycleTimeSec : null, ' s');
-               set('aTarget', t1, ' pcs');
-               set('aTargetEased', t2, ' pcs');
-               set('aEff', t1 ? (output / t1 * 100).toFixed(2) : null, ' %');
+               // Calculate time span (supports overnight)
+               let span = end - start;
+
+               if (span < 0) {
+                   span += 1440;
+               }
+
+               // Calculate working hours
+               const workMinutes = Math.max(0, span);
+               const workHours = workMinutes / 60 ;
+
+               // Calculate Target
+               const target = cycleTimeSec > 0
+                   ? Math.round((workHours * 3600) / cycleTimeSec)
+                   : 0;
+
+               const finalTarget = Math.round(target);
+
+               // Calculate Eased Target
+               const targetEased = easedCycleTimeSec > 0
+                   ? Math.floor((workHours.toFixed(2) * 3600) / easedCycleTimeSec)
+                   : 0;
+
+               // Calculate Efficiency
+               const efficiency = target > 0
+                   ? (output / target) * 100
+                   : 0;
+
+               const dtpics = Math.round((downtime * 60) / cycleTimeSec);
+
+               // Target Less DP
+               const targetless = target - dtpics.toFixed(1);
+
+               const targetEfficient = targetless > 0
+                   ? (output / targetless) * 100
+                   : 0;
+
+
+               console.log("Target : " + target);
+               console.log("Cycle Time : " + cycleTimeSec.toFixed(2));
+               console.log("D.T. IN PCS: " + dtpics);
+               console.log("Target less DP: " + targetless);
+               console.log(`Final Efficiency : ${output}  / ${targetless} : ${targetEfficient}`);
+
+               // Display Summary
+               byId('aSpan').textContent =
+                   `${Math.floor(span / 60)}h ${span % 60}m`;
+
+               byId('aHours').textContent = workHours.toFixed(2);
+               byId('aCycle').textContent = cycleTimeSec > 0
+                   ? cycleTimeSec.toFixed(2)
+                   : '—';
+
+               byId('aTarget').textContent = target.toLocaleString();
+               byId('aTargetEased').textContent = targetEased.toLocaleString();
+               byId('aEff').textContent = `${targetEfficient.toFixed(2)}%`;
            }
+
 
            // ───────────────────────── EXPORT ─────────────────────────
            exportCSV() {
@@ -988,7 +802,7 @@
                    closeBtn.addEventListener('click', closeModal);
                }
 
-              
+
 
                // Close when clicking outside the workspace.
                modal.addEventListener('click', e => {
@@ -1013,7 +827,8 @@
                const panels = {
                    csv: byId('dwPanelCsv'),
                    cycle: byId('dwPanelCycle'),
-                   records: byId('dwPanelRecords')
+                   records: byId('dwPanelRecords'),
+                   shoporder: byId('dwPanelShoporder')
                };
 
                modules.forEach(button => {
@@ -1091,9 +906,9 @@
                    manageCycleBtn.addEventListener('click', openCycleTime);
                }
 
-               
 
-            
+
+
            }
 
 
@@ -1138,36 +953,65 @@
                });
 
                // Shop Order → searched on the server, fills Model + Cycle Time
-               @*this.createCombo('shopOrder', {
+               this.createCombo('shopOrder', {
                    remote: async q => {
-                       if (q.length < 3) return [];
-                       try {
-                           const res = await getMethod('@Url.Action("SearchByShopOrderFromCSV", "Rotor")', { ShopOrders: q });
-                           return res?.Success
-                               ? (res.data || []).map(s => ({ value: s.ShopOrder, text: s.ShopOrder, sub: s.Model, data: s }))
-                               : [];
-                       } catch (error) {
-                           console.error('Error searching shop orders:', error);
-                           return [];
-                       }
-                   },
+                        if (q.length < 3) return [];
+                        try {
+                            const res = await getMethod('@Url.Action("SearchByShopOrderFromCSV", "Rotor")', { ShopOrders: q });
+                            return res?.Success
+                                ? (res.data || []).map(s => ({
+                                    value: s.ShopOrder,
+                                    text: s.ShopOrder,
+                                    sub: [s.Partnumber, s.Model].filter(Boolean).join(' · '),   // shows part number + model in the dropdown
+                                    data: s
+                                }))
+                                : [];
+                        } catch (error) {
+                            console.error('Error searching shop orders:', error);
+                            return [];
+                        }
+                    },
                    emptyText: 'Type at least 3 characters',
                    invalidMsg: 'Select a shop order from the list.',
                    onSelect: item => {
-                       const pid = parseInt(byId('processId').value, 10);
-                       const matches = this.models.filter(m => m.Model === item.data.Model);
-                       // if the same model exists in several processes, prefer the one already selected
-                       const m = matches.find(x => x.ProcessId === pid) ?? matches[0] ?? null;
+                       const s = item.data;
+                       const part = String(s.Partnumber ?? s.PartNumber ?? '').trim();
+                       const currentProc = byId('ProcessName').value.trim().toLowerCase();
+                       const procOf = x => String(x.ProcessName ?? this.processName(x.ProcessId)).toLowerCase();
 
-                       if (!m) {
-                           this.applyModel(null);
-                           this.showToast('No cycle time found for this model.', false);
-                           return;
+                       let m = null;
+
+                       if (part) {
+                           // 1) The shop order has a part number → use it to find the cycle-time record
+                           const byPart = this.models.filter(x =>
+                               String(x.Partnumber ?? '').trim().toLowerCase() === part.toLowerCase());
+                           m = byPart.find(x => procOf(x) === currentProc) ?? byPart[0] ?? null;
+
+                           if (!m) {
+                               // Part number is not in the cycle-time master: still fill what we know
+                               this.applyModel(null);
+                               byId('Partnumber').value = part;
+                               byId('model').value = s.Model ?? '';
+                               this.showToast('No cycle time found for this part number.', false);
+                               return;
+                           }
+                       } else {
+                           // 2) No part number on the shop order → fall back to matching by model
+                           const matches = this.models.filter(x => x.Model === s.Model);
+                           m = matches.find(x => procOf(x) === currentProc) ?? matches[0] ?? null;
+
+                           if (!m) {
+                               this.applyModel(null);
+                               byId('model').value = s.Model ?? '';
+                               this.showToast('No cycle time found for this model.', false);
+                               return;
+                           }
                        }
-                       this.applyModel(m);
+
+                       this.applyModel(m);   // sets Partnumber, Model, Process and the cycle time
                    },
                    onClear: () => { }
-               });*@
+               });
            }
 
            // Reusable searchable select. Items: { value, text, sub?, data? }. The search matches text and sub.
@@ -1547,7 +1391,7 @@
                this.cycle = m ?? null;
                byId('model').value = m?.Model ?? '';
                byId('Partnumber').value = m?.Partnumber ?? '';
-               byId('ProcessName').value = m ? (m.ProcessName ?? this.processName(m.ProcessId)) : '';
+               // byId('ProcessName').value = m ? (m.ProcessName ?? this.processName(m.ProcessId)) : '';
                this.calcForm();
            }
            // Moves focus to the next editable field. Returns false when there is none (last field).

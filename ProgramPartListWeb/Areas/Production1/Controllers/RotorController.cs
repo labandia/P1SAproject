@@ -93,7 +93,7 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
         public async Task<ActionResult> GetEmployeeList()
         {
 
-            var res = await _emp.GetEmployeeName();
+            var res = await _emp.GetEmployeeName("");
             if (res == null)
                 return JsonNotFound("No Active Lines found");
             return JsonSuccess(res);

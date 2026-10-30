@@ -35,19 +35,19 @@
         <div class="header-right">
             <div class="nav-group">
 
-                <a href="/Production1/Rotor/Dashboard"  class="nav-btn"
+                <a href="/Production1/Rotor/Dashboard" class="nav-btn"
                    style="text-decoration: none; color: inherit; display: block;">
                     <i class="fa-regular fa-keyboard"></i><span class="nav-text">Dashboard</span>
                 </a>
-                    <a class="nav-btn" href="/Production1/Rotor/Encoder">
-                        <i class="fa-regular fa-keyboard"></i><span class="nav-text">Encoder</span>
-                    </a>
-                    <button class="nav-btn" id="dataMenuBtn" type="button"
-                            aria-haspopup="dialog"
-                            aria-controls="dataMenuModal">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                        <span class="nav-text">Data</span>
-                    </button>
+                <a class="nav-btn" href="/Production1/Rotor/Encoder">
+                    <i class="fa-regular fa-keyboard"></i><span class="nav-text">Encoder</span>
+                </a>
+                <button class="nav-btn" id="dataMenuBtn" type="button"
+                        aria-haspopup="dialog"
+                        aria-controls="dataMenuModal">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <span class="nav-text">Data</span>
+                </button>
 
             </div>
             <div class="live-clock" id="liveClock">--:--:--</div>
@@ -55,7 +55,7 @@
                 <i class="fa-solid fa-database"></i>
                 <span class="dot"></span>
             </div>
-          
+
         </div>
     </header>
 
@@ -65,6 +65,551 @@
 
 
 
+
+    <!-- DATA & OPERATIONS WORKSPACE -->
+    <div class="data-workspace-overlay"
+         id="dataMenuModal"
+         aria-hidden="true">
+
+        <section class="data-workspace"
+                 role="dialog"
+                 aria-modal="true"
+                 aria-labelledby="dataWorkspaceTitle">
+
+            <!-- HEADER -->
+            <header class="dw-header">
+                <div class="dw-brand">
+                    <div class="dw-brand-icon">
+                        <i class="fa-solid fa-table-cells-large"></i>
+                    </div>
+
+                    <div class="dw-heading">
+                        <div class="dw-title-row">
+                            <h2 id="dataWorkspaceTitle">
+                                Data &amp; Operations Workspace
+                            </h2>
+
+                            <span class="dw-status">
+                                <span class="dw-status-dot"></span>
+                                SYNC ONLINE
+                            </span>
+                        </div>
+
+                        <p>
+                            Manage data synchronization, cycle times,
+                            and production efficiency records.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="dw-window-actions">
+                    <button type="button"
+                            class="dw-icon-btn"
+                            id="closeDataModal"
+                            aria-label="Close workspace">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- WORKSPACE BODY -->
+            <div class="dw-body">
+
+                <!-- SIDEBAR -->
+                <aside class="dw-sidebar">
+                    <div class="dw-sidebar-label">
+                        WORKSPACE MODULES
+                    </div>
+
+                    <button type="button"
+                            class="dw-module active"
+                            data-workspace="csv">
+                        <i class="fa-regular fa-file-lines"></i>
+
+                        <span class="dw-module-text">
+                            Import CSV files
+                        </span>
+
+                        <span class="dw-module-badge">Ready</span>
+                    </button>
+
+                    <button type="button"
+                            class="dw-module"
+                            data-workspace="cycle">
+                        <i class="fa-solid fa-stopwatch"></i>
+
+                        <span class="dw-module-text">
+                            Cycle Time Master
+                        </span>
+                    </button>
+
+                    <button type="button"
+                            class="dw-module"
+                            data-workspace="records">
+                        <i class="fa-solid fa-database"></i>
+
+                        <span class="dw-module-text">
+                            Employees Codes
+                        </span>
+                    </button>
+
+                    <button type="button"
+                            class="dw-module"
+                            data-workspace="shoporder">
+                        <i class="fa-solid fa-database"></i>
+
+                        <span class="dw-module-text">
+                            Shop Orders 
+                        </span>
+                    </button>
+
+
+
+                    <div class="dw-sidebar-bottom">
+                        <div class="dw-capacity">
+                            <span>DATA OPERATIONS</span>
+                            <strong>READY</strong>
+                        </div>
+
+                        <div class="dw-capacity-bar">
+                            <span></span>
+                        </div>
+
+                        <div class="dw-help">
+                            <i class="fa-regular fa-circle-question"></i>
+                            <span>Workspace documentation</span>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- MAIN CONTENT -->
+                <div class="dw-content">
+
+                    <!-- CSV PANEL -->
+                    <section class="dw-panel active"
+                             id="dwPanelCsv">
+
+                        <div class="dw-panel-heading">
+                            <div>
+                                <h3>CSV Import &amp; Export</h3>
+                                <p>
+                                    Import production data or export
+                                    your efficiency records.
+                                </p>
+                            </div>
+
+                            <span class="dw-ready-badge">
+                                <i class="fa-solid fa-circle-check"></i>
+                                Available
+                            </span>
+                        </div>
+
+                        <div class="dw-action-grid">
+
+                            <button type="button"
+                                    class="dw-action-card"
+                                    id="openCsvUpload">
+                                <div class="dw-action-icon">
+                                    <i class="fa-solid fa-file-arrow-up"></i>
+                                </div>
+
+                                <div class="dw-action-copy">
+                                    <strong>Import CSV</strong>
+                                    <span>
+                                        Upload and validate a CSV file
+                                        before importing records.
+                                    </span>
+                                </div>
+
+                                <i class="fa-solid fa-chevron-right dw-chevron"></i>
+                            </button>
+
+                            <button type="button"
+                                    class="dw-action-card"
+                                    id="exportEfficiencyCsv">
+                                <div class="dw-action-icon">
+                                    <i class="fa-solid fa-file-arrow-down"></i>
+                                </div>
+
+                                <div class="dw-action-copy">
+                                    <strong>Export Efficiency Data</strong>
+                                    <span>
+                                        Download efficiency records
+                                        in CSV format.
+                                    </span>
+                                </div>
+
+                                <i class="fa-solid fa-chevron-right dw-chevron"></i>
+                            </button>
+
+                        </div>
+
+                        <div class="dw-info">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span>
+                                Review imported data before submitting
+                                it to the server.
+                            </span>
+                        </div>
+                    </section>
+
+                    <!-- CYCLE TIME PANEL -->
+                    <section class="dw-panel" id="dwPanelCycle">
+
+                        <div class="dw-panel-heading">
+                            <div>
+                                <h3>Cycle Time Master</h3>
+                                <p>
+                                    Maintain process cycle times used
+                                    in efficiency calculations.
+                                </p>
+                            </div>
+
+
+                            <button type="button" class="dw-add-btn" data-add="cycle">
+                                <i class="fa-solid fa-plus"></i> Add
+                            </button>
+                        </div>
+                        <!-- TABLE -->
+                        <div class="table-scroll" style="margin-top: 1em;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Part number</th>
+                                        <th>Model</th>
+                                        <th>ProcessName</th>
+                                        <th>CycleTimeSec</th>
+                                        <th class="col-actions">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="CycleTimeBody"></tbody>
+                            </table>
+                        </div>
+
+                    </section>
+
+                    <!-- EFFICIENCY RECORDS PANEL -->
+                    <section class="dw-panel" id="dwPanelRecords">
+
+                        <div class="dw-panel-heading">
+                            <div>
+                                <h3>Employees  Management Code</h3>
+
+
+
+                            </div>
+
+                            <button type="button" class="dw-add-btn" data-add="employee">
+                                <i class="fa-solid fa-plus"></i> Add
+                            </button>
+                        </div>
+                        <!-- TABLE -->
+                        <div class="table-scroll" style="margin-top: 1em;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Employee Code</th>
+                                        <th>Employee ID</th>
+                                        <th>Full Name </th>
+                                        <th>Process</th>
+                                        <th>Affiliation</th>
+                                        <th class="col-actions">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="EmployeeBody"></tbody>
+                            </table>
+                        </div>
+
+                    </section>
+
+                    <!-- SHOPORDER PANEL -->
+                    <section class="dw-panel" id="dwPanelShoporder">
+
+                        <div class="dw-panel-heading">
+                            <div>
+                                <h3>SHOP ORDER   Management </h3>
+
+
+
+                            </div>
+
+                            <button type="button" class="dw-add-btn" id="addShopOrderBtn">
+                                <i class="fa-solid fa-plus"></i> Add
+                            </button>
+                        </div>
+                       
+
+                    </section>
+
+                </div>
+            </div>
+
+
+        </section>
+    </div>
+
+
+
+    <!-- ========== CYCLE TIME FORM ========== -->
+    <div class="form-overlay" id="cycleFormOverlay" aria-hidden="true">
+        <form id="cycleForm" novalidate>
+            <h3 id="cycleFormTitle"></h3>
+
+            <input type="hidden" name="Id" value="0">
+
+            <label for="cyPartnumber">Part number</label>
+            <input type="text" id="cyPartnumber" name="Partnumber" required>
+
+            <label for="cyModel">Model</label>
+            <input type="text" id="cyModel" name="Model" required>
+
+            <label for="cyProcessName">Process name</label>
+            <input type="text" id="cyProcessName" name="ProcessName" required>
+
+            <label for="cyCycleTimeSec">Cycle time (sec)</label>
+            <input type="number" id="cyCycleTimeSec" name="CycleTimeSec" step="0.01" min="0" required>
+
+            <div id="cycleFormError" role="alert"></div>
+
+            <button type="button" data-close-form>Cancel</button>
+            <button type="submit">Save</button>
+        </form>
+    </div>
+
+    <!-- ========== EMPLOYEE CODE FORM ========== -->
+    <div class="form-overlay" id="employeeFormOverlay" aria-hidden="true">
+        <form id="employeeForm" novalidate>
+            <h3 id="employeeFormTitle"></h3>
+
+            <input type="hidden" name="Id" value="0">
+
+            <label for="emEffyCode">Employee Code (Effy)</label>
+            <input type="text" id="emEffyCode" name="EffyCode" required>
+
+            <label for="emEmployeeCode">Employee ID</label>
+            <input type="text" id="emEmployeeCode" name="EmployeeCode" required>
+
+            <div id="employeeFormError" role="alert"></div>
+
+            <button type="button" data-close-form>Cancel</button>
+            <button type="submit">Save</button>
+        </form>
+    </div>
+
+
+    <script type="module">
+    import { getMethod, postMethod, formatDate } from '@Url.Content("~/Scripts/modules/index.js")';
+
+    const byId = id => document.getElementById(id);
+
+    // Maps each table to its static form. Field names must match the inputs' name attributes.
+    const ENTITIES = {
+        cycle: {
+            label: 'Cycle Time',
+            overlayId: 'cycleFormOverlay',
+            formId:    'cycleForm',
+            titleId:   'cycleFormTitle',
+            errorId:   'cycleFormError',
+            fields:    ['Partnumber', 'Model', 'ProcessName', 'CycleTimeSec'],
+            saveUrl:   '@Url.Action("SaveCycleTime", "Rotor")',
+            deleteUrl: '@Url.Action("DeleteCycleTime", "Rotor")',
+            describe:  r => `${r.Partnumber} / ${r.ProcessName}`
+        },
+        employee: {
+            label: 'Employee Code',
+            overlayId: 'employeeFormOverlay',
+            formId:    'employeeForm',
+            titleId:   'employeeFormTitle',
+            errorId:   'employeeFormError',
+            fields:    ['EffyCode', 'EmployeeCode'],
+            saveUrl:   '@Url.Action("SaveEmployeeCode", "Rotor")',
+            deleteUrl: '@Url.Action("DeleteEmployeeCode", "Rotor")',
+            describe:  r => `${r.EffyCode} (${r.FullName})`
+        }
+    };
+
+    class DataManagementController {
+        constructor() {
+            this.employBody = byId('EmployeeBody');
+            this.CycleBody  = byId('CycleTimeBody');
+            this.rows = { cycle: [], employee: [] };   // cached so Edit can prefill without another request
+            this.bindEvents();
+        }
+
+        async init() {
+            await this.loadEmployees();
+            await this.loadCycleTime();
+        }
+
+        // ---------- events ----------
+        bindEvents() {
+            // Table buttons are delegated because rows are re-rendered after every save/delete.
+            document.addEventListener('click', e => {
+                const add = e.target.closest('[data-add]');
+                if (add) return this.openForm(add.dataset.add, null);
+
+                const btn = e.target.closest('.row-btn');
+                if (!btn) return;
+                const { entity, id } = btn.dataset;
+                const row = this.rows[entity].find(r => String(r.Id) === id);
+                if (!row) return;
+
+                if (btn.classList.contains('edit'))   this.openForm(entity, row);
+                if (btn.classList.contains('delete')) this.deleteRow(entity, row);
+            });
+
+            // The forms are static, so wire each one once here.
+            Object.keys(ENTITIES).forEach(key => {
+                const cfg = ENTITIES[key];
+                byId(cfg.formId).addEventListener('submit', e => {
+                    e.preventDefault();
+                    this.submitForm(key);
+                });
+                byId(cfg.overlayId).querySelectorAll('[data-close-form]')
+                    .forEach(b => b.addEventListener('click', () => this.closeForm(key)));
+            });
+        }
+
+        // ---------- add / edit form ----------
+        openForm(key, row) {
+            const cfg  = ENTITIES[key];
+            const form = byId(cfg.formId);
+
+            form.reset();
+            form.elements['Id'].value = row ? row.Id : 0;     // 0 tells the server it's an insert
+            // Setting .value is safe: no HTML is parsed, so no escaping needed here.
+            cfg.fields.forEach(name => {
+                form.elements[name].value = row ? (row[name] ?? '') : '';
+            });
+
+            byId(cfg.titleId).textContent = (row ? 'Edit ' : 'Add ') + cfg.label;
+            byId(cfg.errorId).textContent = '';
+
+            const overlay = byId(cfg.overlayId);
+            overlay.classList.add('open');
+            overlay.setAttribute('aria-hidden', 'false');
+            form.elements[cfg.fields[0]].focus();
+        }
+
+        closeForm(key) {
+            const overlay = byId(ENTITIES[key].overlayId);
+            overlay.classList.remove('open');
+            overlay.setAttribute('aria-hidden', 'true');
+        }
+
+        async submitForm(key) {
+            const cfg  = ENTITIES[key];
+            const form = byId(cfg.formId);
+            const err  = byId(cfg.errorId);
+
+            // Uses your inputs' own required/min/step attributes, so the rules live in your markup.
+            if (!form.reportValidity()) return;
+
+            const payload = { Id: Number(form.elements['Id'].value) || 0 };
+            cfg.fields.forEach(name => { payload[name] = form.elements[name].value.trim(); });
+
+            const saveBtn = form.querySelector('[type="submit"]');
+            saveBtn.disabled = true;           // block double-submit
+            try {
+                const res = await postMethod(cfg.saveUrl, payload);
+                if (!res?.Success) { err.textContent = res?.Message || 'Save failed.'; return; }
+                this.closeForm(key);
+                await this.reload(key);
+            } catch (ex) {
+                console.error('Save failed:', ex);
+                err.textContent = 'Unexpected error while saving.';
+            } finally {
+                saveBtn.disabled = false;
+            }
+        }
+
+        async deleteRow(key, row) {
+            const cfg = ENTITIES[key];
+            if (!confirm(`Delete ${cfg.describe(row)}? This cannot be undone.`)) return;
+            try {
+                const res = await postMethod(cfg.deleteUrl, { id: row.Id });
+                if (!res?.Success) { alert(res?.Message || 'Delete failed.'); return; }
+                await this.reload(key);
+            } catch (ex) {
+                console.error('Delete failed:', ex);
+                alert('Unexpected error while deleting.');
+            }
+        }
+
+        reload(key) {
+            return key === 'cycle' ? this.loadCycleTime() : this.loadEmployees();
+        }
+
+        // ---------- loading ----------
+        async loadCycleTime() {
+            try {
+                const res = await getMethod('@Url.Action("GetModelList", "Rotor")');
+                this.rows.cycle = res?.Success ? (res.data || []) : [];
+            } catch (error) {
+                console.error('Error loading cycle times:', error);
+                this.rows.cycle = [];
+            }
+            this.renderCycletTime(this.rows.cycle);
+        }
+
+        async loadEmployees() {
+            try {
+                const res = await getMethod('@Url.Action("GetEmployeeList", "Rotor")');
+                this.rows.employee = res?.Success ? (res.data || []) : [];
+            } catch (error) {
+                console.error('Error loading employees:', error);
+                this.rows.employee = [];
+            }
+            this.renderEmployeeTable(this.rows.employee);
+        }
+
+        // ---------- rendering ----------
+        actionCell(entity, r) {
+            const id = this.esc(r.Id);
+            return `
+                <td class="col-actions">
+                    <div class="row-actions">
+                        <button type="button" class="row-btn edit" title="Edit"
+                                data-entity="${entity}" data-id="${id}"><i class="fa-solid fa-pen"></i></button>
+                        <button type="button" class="row-btn delete" title="Delete"
+                                data-entity="${entity}" data-id="${id}"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </td>`;
+        }
+
+        renderCycletTime(list) {
+            this.CycleBody.innerHTML = list.map(r => `
+                <tr>
+                    <td>${this.esc(r.Partnumber)}</td>
+                    <td>${this.esc(r.Model)}</td>
+                    <td>${this.esc(r.ProcessName)}</td>
+                    <td>${this.esc(r.CycleTimeSec)}</td>
+                    ${this.actionCell('cycle', r)}
+                </tr>`).join('') || '<tr><td colspan="5" class="empty">No records found.</td></tr>';
+        }
+
+        renderEmployeeTable(list) {
+            this.employBody.innerHTML = list.map(r => `
+                <tr>
+                    <td>${this.esc(r.EffyCode)}</td>
+                    <td>${this.esc(r.EmployeeCode)}</td>
+                    <td>${this.esc(r.FullName)}</td>
+                    <td>${this.esc(r.Process)}</td>
+                    <td>${this.esc(r.AgencyName)}</td>
+                    ${this.actionCell('employee', r)}
+                </tr>`).join('') || '<tr><td colspan="6" class="empty">No records found.</td></tr>';
+        }
+
+        // Values come from the database, so escape them before putting them in innerHTML.
+        esc(s) {
+            return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        new DataManagementController().init();
+    });
+    </script>
 </body>
 </html>
 

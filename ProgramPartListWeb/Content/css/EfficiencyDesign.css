@@ -313,6 +313,7 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
+    padding: 5px 10px;
 }
 
 .form-header-badge {
@@ -860,7 +861,7 @@ select.input-base {
 
     .data-table td {
         border-bottom: 1px solid var(--border-200);
-        padding: 9px 12px;
+        padding: 10px 15px;
         font-size: 11px;
         white-space: nowrap;
         font-family: var(--font-mono);
@@ -1058,7 +1059,7 @@ select.input-base {
     }
 
     .form-panel {
-        width: 34%;
+        width: 20%;
         max-width: 430px;
         border-right: 1px solid var(--border-200);
         border-bottom: none;
@@ -1436,7 +1437,7 @@ body {
     }
 
     .form-panel {
-        width: 28%;
+        width: 20%;
         min-width: 330px;
         max-width: 390px;
         overflow-y: auto;

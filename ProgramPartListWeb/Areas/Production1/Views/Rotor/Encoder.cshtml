@@ -9,9 +9,7 @@
     <aside class="form-panel" data-purpose="efficiency-entry-sidebar">
         <div class="form-header">
             <div class="form-header-top">
-                <div class="form-header-badge">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                </div>
+               
                 <div>
                     <h2 id="formTitle">Efficency Data  Entry</h2>
                 </div>
@@ -74,7 +72,7 @@
                 </div>
 
                 <!-- Employee code | name -->
-                <div class="field-row-5">
+                <div class="field-row">
                     <div class="field">
                         <label>Employee Code <span class="req">*</span></label>
                         <div class="combo">
@@ -121,10 +119,11 @@
                         <div class="calc-item"><span class="calc-label">Work Hours</span><span class="calc-value" id="aHours">—</span></div>
                         <div class="calc-item"><span class="calc-label">Cycle Time</span><span class="calc-value blue" id="aCycle">—</span></div>
                     </div>
-                    <div class="calc-grid-2">
+                    <br />
+                    <div class="calc-grid-3">
                         <div class="calc-item"><span class="calc-label">Target</span><span class="calc-value" id="aTarget">—</span></div>
                         <div class="calc-item"><span class="calc-label">Target (Eased)</span><span class="calc-value" id="aTargetEased">—</span></div>
-                        <div class="calc-item text-right"><span class="calc-label">Efficiency</span><span class="calc-value emerald" id="aEff">—</span></div>
+                        <div class="calc-item"><span class="calc-label">Efficiency</span><span class="calc-value emerald" id="aEff">—</span></div>
                     </div>
                 </div>
             </div>
@@ -170,15 +169,12 @@
                         <th>Shift</th>
                         <th>MC.#</th>
                         <th>Shop Order</th>
-                        <th>Model</th>
-                        <th>Partnumber</th>
+                        <th>Partnumber/ Model</th>
                         <th>Process</th>
-                        <th>Effy Code</th>
-                        <th>Full Name</th>
+                        <th>Code / Full Name</th>
                         <th>Output</th>
                         <th>DT (min)</th>
-                        <th>Start</th>
-                        <th>End</th>
+                        <th>Start - End</th>
                         <th>Work Hrs</th>
                         <th>Target</th>
                         <th>Eff.</th>
@@ -421,19 +417,24 @@
                        <td>${this.esc(r.WorkDateText)}</td>
                        <td>${this.esc(r.ShiftCode)}</td>
                        <td>${this.esc(r.MachineNo)}</td>
-                       <td>${this.esc(r.Partnumber)}</td>
-                       <td>${this.esc(r.getModel ?? r.Model)}</td>
                        <td>${this.esc(r.ShopOrder)}</td>
+
+                       <td class="ShopOrderLayout " style="text-align: left;">
+                          <span class='ShopOrderLayout_ShopOrder' style='font-size: .8rem;'>${this.esc(r.Partnumber) }</span>
+                          <p style="margin:.2em 0;color:#8a8f9e; font-size: .7rem;">${this.esc(r.getModel ?? r.Model) }</p>
+                       </td>
+
                        <td>${this.esc(r.ProcessName)}</td>
-                       <td>${this.esc(r.EffyCode)}</td>
-                       <td>${this.esc(r.FullName)}</td>
+
+                       <td class="ShopOrderLayout " style="text-align: left;">
+                            <span class='ShopOrderLayout_ShopOrder' style='font-size: .8rem;'>${this.esc(r.EffyCode)}</span>
+                            <p style="margin:.2em 0;color:#8a8f9e; font-size: .7rem;">${this.esc(r.FullName ) }</p>     
+                       </td>
                        <td class="num">${this.fmt(r.Output)}</td>
                        <td class="num">${r.DowntimeMin}</td>
-                       <td>${this.esc(r.StartOpeText)}</td>
-                       <td>${this.esc(r.EndOpeText)}</td>
+                       <td>${this.esc(r.StartOpeText)} - ${this.esc(r.EndOpeText)}</td>
                        <td class="num">${this.fmt(r.WorkHours)}</td>
                        <td class="num">${r.Target ?? '—'}</td>
-                       <td class="num">${r.TargetEased ?? '—'}</td>
                        <td>${this.effPill(r.Efficiency)}</td>
                    </tr>
                `).join('') || '<tr><td colspan="15" class="empty">No records for this range.</td></tr>';

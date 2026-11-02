@@ -52,7 +52,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                       ,Model
                       ,CycleTimeSec
                       ,TargetDivisor
-                  FROM EfficiencyCycleTime");
+                  FROM EfficiencyCycleTime ORDER BY Model ASC");
         }
 
         public Task<List<EfficiencyDailyMonitor>> GetEfficiencyDailyMonitors(DateTime? start, DateTime? end)

@@ -157,29 +157,29 @@ namespace ProgramPartListWeb
 
         private void ConfigureLogging()
         {
-            string homeMachineName = "DESKTOP-JT9FE5D";
-            string homePath = @"C:\Users\backe\Desktop\Logs";
-            string officePath = @"\\sdp01034s\SYSTEM EXECUTABLE\P1SA-PC_System\WebLogs";
+            //string homeMachineName = "DESKTOP-JT9FE5D";
+            //string homePath = @"C:\Users\backe\Desktop\Logs";
+            //string officePath = @"\\sdp01034s\SYSTEM EXECUTABLE\P1SA-PC_System\WebLogs";
 
-            string selectedPath =
-                string.Equals(Environment.MachineName, homeMachineName, StringComparison.OrdinalIgnoreCase)
-                    ? homePath
-                    : officePath;
+            //string selectedPath =
+            //    string.Equals(Environment.MachineName, homeMachineName, StringComparison.OrdinalIgnoreCase)
+            //        ? homePath
+            //        : officePath;
 
-            // Ensure directory exists
-            if (!System.IO.Directory.Exists(selectedPath))
-            {
-                System.IO.Directory.CreateDirectory(selectedPath);
-            }
+            //// Ensure directory exists
+            //if (!System.IO.Directory.Exists(selectedPath))
+            //{
+            //    System.IO.Directory.CreateDirectory(selectedPath);
+            //}
 
-            // Apply to NLog variable
-            var config = LogManager.Configuration;
+            //// Apply to NLog variable
+            //var config = LogManager.Configuration;
 
-            if (config != null)
-            {
-                config.Variables["logDirectory"] = selectedPath;
-                LogManager.ReconfigExistingLoggers();
-            }
+            //if (config != null)
+            //{
+            //    config.Variables["logDirectory"] = selectedPath;
+            //    LogManager.ReconfigExistingLoggers();
+            //}
         }
 
         private void PreloadRoutes()

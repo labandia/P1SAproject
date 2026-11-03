@@ -15,6 +15,18 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 {
     public class EfficiencyRepository : IEfficiencyProcessRepository
     {
+        public Task<List<string>> GetProcessFilter()
+        {
+            return SqlDataAcess_Test.StringListAsync($@"SELECT ProcessName
+                FROM EfficiencyDailyMonitor
+                WHERE ProcessName IS NOT NULL
+                GROUP BY ProcessName
+                ");
+        }
+
+        // ============================================================
+        // ===================== EFFICIENCY RECORDS ==========================
+        //=============================================================
         public async Task<int> AddEfficiencyRecord(EfficiencyDailyMonitor row)
         {
             return await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO EfficiencyDailyMonitor
@@ -36,12 +48,6 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                 row.ProcessName
             });
         }
-
-        public Task<EfficiencyDailyMonitor> GetByIdAsync(int efficiencyId)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<List<EfficiencyCycleTime>> GetEfficiencyCycleTime()
         {
             return SqlDataAcess_Test
@@ -54,7 +60,6 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                       ,TargetDivisor
                   FROM EfficiencyCycleTime ORDER BY Model ASC");
         }
-
         public Task<List<EfficiencyDailyMonitor>> GetEfficiencyDailyMonitors(DateTime? start, DateTime? end)
         {
             const string sql = @"
@@ -170,6 +175,9 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             return SqlDataAcess_Test.QueryAsync<EfficiencyDailyMonitor>(sql, new { start, end });
         }
 
+        // ============================================================
+        // ===================== SHOP ORDERS DATA ==========================
+        //=============================================================
         public Task<List<EfficiencyShopOrderStaging>> GetEfficiencyShopOrder()
         {
             throw new NotImplementedException();
@@ -184,7 +192,18 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                 ORDER BY ShopOrder",
                new { ShopOrder });
         }
+        public Task<bool> UpdateEfficiencyRecord(EfficiencyDailyMonitor row)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<bool> UploadShopOrderCSV(EfficiencyShopOrderStaging shop)
+        {
+            throw new NotImplementedException();
+        }
 
+        // ============================================================
+        // ===================== EMPLOYEE CODE ==========================
+        //=============================================================
         public Task<List<EfficiencyEmployeeCode>> GetEmployeeName(string searchText)
         {
             string query = $@"
@@ -205,30 +224,55 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             }
 
 
-            return  SqlDataAcess_Test
+            return SqlDataAcess_Test
                     .QueryAsync<EfficiencyEmployeeCode>(query);
         }
-
-        public Task<List<string>> GetProcessFilter()
+        public async Task<bool> AdditionalEmployeeCode(EfficiencyEmployeeCode employeeCode)
         {
-            return SqlDataAcess_Test.StringListAsync($@"SELECT ProcessName
-                FROM EfficiencyDailyMonitor
-                WHERE ProcessName IS NOT NULL
-                GROUP BY ProcessName
-                ");
+            // 1. Check if the EffyCode already exists in the database
+            bool IsExist = await SqlDataAcess_Test.ExistsAsync(
+                "SELECT COUNT(1) FROM EfficiencyEmployeeCode WHERE EffyCode = @EffyCode",
+                new { employeeCode.EffyCode });
+
+            // 2. If it exists, return false or throw an exception
+            if (IsExist) return false;
+
+            // 3. If it doesn't exist, insert the new record into the database
+            return await SqlDataAcess_Test.ExecuteAsync(
+                @"INSERT INTO EfficiencyEmployeeCode (EffyCode, EmployeeCode)
+                  VALUES (@EffyCode, @EmployeeCode)",
+                new
+                {
+                    employeeCode.EffyCode,
+                    employeeCode.EmployeeCode
+                }) > 0;
+        }
+        public async Task<bool> EditEmployeeCode(EfficiencyEmployeeCode employeeCode)
+        {
+            // 3. If it doesn't exist, insert the new record into the database
+            return await SqlDataAcess_Test.ExecuteAsync(
+                @"UPDATE EfficiencyEmployeeCode SET EffyCode = @EffyCode 
+                  WHERE EmployeeCode = @EmployeeCode",
+                new
+                {
+                    employeeCode.EffyCode,
+                    employeeCode.EmployeeCode
+                }) > 0;
+        }
+        // ============================================================
+        // ===================== CYCLE TIME ==========================
+        //=============================================================
+        public Task<bool> AddCycleTime(EfficiencyCycleTime cycleTime)
+        {
+            throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateEfficiencyRecord(EfficiencyDailyMonitor row)
+        public Task<bool> UpdateCycleTime(EfficiencyCycleTime cycleTime)
         {
             throw new NotImplementedException();
         }
 
         public Task<bool> UploadOrAddCycleTime(EfficiencyCycleTime shop)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> UploadShopOrderCSV(EfficiencyShopOrderStaging shop)
         {
             throw new NotImplementedException();
         }

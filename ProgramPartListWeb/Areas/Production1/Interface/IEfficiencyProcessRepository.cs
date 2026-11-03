@@ -20,7 +20,6 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
         /// <summary>
         ///     EFFICIENCY PROCESS
         /// </summary>
-        Task<EfficiencyDailyMonitor> GetByIdAsync(int efficiencyId);
 
         Task<bool> UpdateEfficiencyRecord(EfficiencyDailyMonitor row);
 
@@ -40,16 +39,18 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
         /// <returns></returns>
         Task<List<EfficiencyCycleTime>> GetEfficiencyCycleTime();
         Task<bool> UploadOrAddCycleTime(EfficiencyCycleTime shop);
-
+        Task<bool> AddCycleTime(EfficiencyCycleTime cycleTime);
+        Task<bool> UpdateCycleTime(EfficiencyCycleTime cycleTime);
         /// <summary>
         ///     EmployeeCode 
         /// </summary>
 
         Task<List<EfficiencyEmployeeCode>> GetEmployeeName(string search);
+        Task<bool> AdditionalEmployeeCode(EfficiencyEmployeeCode employeeCode);
+        Task<bool> EditEmployeeCode(EfficiencyEmployeeCode employeeCode);
 
 
-
-        Task<List<string>> GetProcessFilter();
+        Task <List<string>> GetProcessFilter();
 
     }
 

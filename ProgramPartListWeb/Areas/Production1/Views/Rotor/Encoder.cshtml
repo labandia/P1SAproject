@@ -8,11 +8,10 @@
     <!-- ========== FORM PANEL (LEFT) ========== -->
     <aside class="form-panel" data-purpose="efficiency-entry-sidebar">
         <div class="form-header">
-            <div class="form-header-top">
-               
-                <div>
-                    <h2 id="formTitle">Efficency Data  Entry</h2>
-                </div>
+            <div class="form-header-top" style="display: flex; justify-content: space-between;">
+                <h2 id="formTitle">Efficency Data  Entry</h2>
+
+                <div class="calc-item" style="display: flex; justify-content: space-between;"><span class="calc-value" id="aShift">—</span></div>
             </div>
         </div>
 
@@ -21,16 +20,10 @@
             <div class="form-fields">
 
                 <!-- Date | Machine -->
-                <div class="field-row-3">
+                <div class="field-row">
                     <div class="field"><label>Date <span class="req">*</span></label><input id="workDate" type="date" required></div>
 
-                    <div class="field">
-                        <label>Shift</label>
-                        <select id="shift">
-                            <option value="false">DS</option>
-                            <option value="true">NS</option>
-                        </select>
-                    </div>
+                    
                     <div class="field">
                         <label>Machine No. <span class="req">*</span></label>
                         <div class="combo" id="machineCombo">
@@ -41,15 +34,18 @@
 
                 </div>
 
+                <div class="field">
+                    <label>Shop Order <span class="req">*</span></label>
+                    <div class="combo">
+                        <input id="shopOrder" placeholder="Enter shop order" autocomplete="off" required>
+                        <ul class="combo-list" role="listbox"></ul>
+                    </div>
+                </div>
+
+
+
                 <!-- Shop Order -->
                 <div class="field-row">
-                    <div class="field">
-                        <label>Shop Order <span class="req">*</span></label>
-                        <div class="combo">
-                            <input id="shopOrder" placeholder="Enter shop order" autocomplete="off" required>
-                            <ul class="combo-list" role="listbox"></ul>
-                        </div>
-                    </div>
                     <div class="field">
                         <label>Partnumber <span class="req">*</span></label>
                         <div class="combo">
@@ -57,17 +53,26 @@
                             <ul class="combo-list" role="listbox"></ul>
                         </div>
                     </div>
-                </div>
 
-                <!-- Model | Process -->
-                <div class="field-row">
                     <div class="field">
                         <label>Model</label>
                         <input id="model" readonly placeholder="from part number">
                     </div>
-                    <div class="field">
-                        <label>Process <span class="req">*</span></label>
-                        <input id="ProcessName" placeholder="Enter shop order" autocomplete="off" required>
+                </div>
+
+                <!-- Model | Process -->
+                <div class="field">
+                    <label>Process <span class="req">*</span></label>
+
+                    <div class="combo">
+                        <input id="ProcessName"
+                               placeholder="Search process..."
+                               autocomplete="off"
+                               required>
+
+                        <input type="hidden" id="ProcessId" />
+
+                        <ul class="combo-list" role="listbox"></ul>
                     </div>
                 </div>
 
@@ -223,9 +228,42 @@
 
        const byId = id => document.getElementById(id);
 
+        const PROCESS_LIST = [
+            { ProcessId: 1, ProcessName: '3mm Cover Drilling' },
+            { ProcessId: 2, ProcessName: '3mm Impeller Drilling' },
+            { ProcessId: 3, ProcessName: '3mm Compound Application' },
+            { ProcessId: 4, ProcessName: '5mm Compound Application' },
+            { ProcessId: 5, ProcessName: '6mm Compound Application' },
+            { ProcessId: 6, ProcessName: '8mm Compound Application' }
+         ];
+
+         const ICON_SUN = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+	            <path d="M0 0h24v24H0z" fill="none" />
+	            <g fill="none">
+		            <circle cx="11.97" cy="11.99" r="4.73" fill="currentColor" opacity=".2" transform="rotate(90 11.97 11.99)" />
+		            <circle cx="11.97" cy="11.99" r="4.73" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" transform="rotate(90 11.97 11.99)" />
+		            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M1.56 11.99H4.3m15.45.01h2.7m-10.5 10.34v-2.62m0-15.38V1.66M18 5.87l2.02-2.02M4 19.87l1.75-1.75m.07-12.34L3.9 3.85m16.11 16.12l-1.86-1.86" />
+	            </g>
+            </svg>
+            `;
+
+                // Simple moon in the same style (fill + outline)
+                const ICON_MOON = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+	            <path d="M0 0h24v24H0z" fill="none" />
+	            <g fill="none">
+		            <path fill="currentColor" d="M11.71 22.3a9.96 9.96 0 0 1-9.95-9.95c0-5.5 3.57-8.3 6.12-8.92c0 0-1.56 5.28 2.42 10.2c4.8 4.79 10.48.75 10.7 1.68c.23.93-3.79 7-9.29 7" opacity=".2" />
+		            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M1.76 12.35a9.96 9.96 0 0 0 18.96 4.25c.4-.84.6-1.25.37-1.5s-.71-.08-1.71.25c-2.33.77-6.18 1.34-9.15-1.63a8.2 8.2 0 0 1-2.13-8.6c.35-1.17.53-1.76.26-1.97c-.26-.2-.72.05-1.62.58a10 10 0 0 0-4.98 8.62M15.6 6.13h-1.24c-.94 0-1.42 0-1.55-.29c-.13-.3.18-.65.8-1.36l.96-1.11c.61-.71.92-1.07.79-1.36s-.6-.3-1.55-.3h-1.3m9.78 7.27h-1.93c-.94 0-1.4 0-1.54-.3c-.13-.29.17-.64.78-1.35l1.75-2.05c.61-.72.92-1.07.78-1.36c-.13-.3-.6-.3-1.54-.3h-2" />
+		            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16.14 12.3h-1.28c-.6 0-.9 0-.97-.18c-.08-.19.12-.4.53-.84l1.08-1.14c.4-.43.61-.65.53-.83s-.37-.18-.97-.18h-1.3" />
+	            </g>
+            </svg>
+            `;
+
+
        class EfficiencyManageController {
            constructor() {
                this.tbody = byId('tableBody');
+               this.isNight = false;   // false = DS, true = NS (set automatically from Start)
+
 
                this.form = byId('dataForm');
                this.editIndexInput = byId('editIndex');
@@ -273,12 +311,20 @@
                setInterval(tick, 1000);
            }
 
+           static DAY_START = 6 * 60 + 30;    // 06:30 → 390
+           static NIGHT_START = 18 * 60 + 30; // 18:30 → 1110
            // Night shift if the start time is 18:00–05:59 (change the hours to match your shifts)
            autoShift() {
-               const v = byId('startOpe').value;
-               if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(v)) return;
-               const h = parseInt(v.slice(0, 2), 10);
-               byId('shift').value = (h >= 18 || h < 6) ? 'true' : 'false';
+               const v = this.normalizeTime(byId('startOpe').value);
+               if (!v) return;
+
+               const [h, m] = v.split(':').map(Number);
+               const mins = h * 60 + m;
+
+               const isDay = mins >= EfficiencyManageController.DAY_START &&
+                   mins < EfficiencyManageController.NIGHT_START;
+
+               this.isNight = !isDay;
            }
 
            bindEvents() {
@@ -325,6 +371,11 @@
                        this.calcForm();
                        if (id === 'startOpe') this.autoShift();
                    });
+
+                   // NEW: also fires on autofill / paste / programmatic commit
+                   if (id === 'startOpe') {
+                       el.addEventListener('change', () => this.autoShift());
+                   }
                });
 
 
@@ -415,19 +466,19 @@
                this.tbody.innerHTML = list.map(r => `
                    <tr data-id="${r.EfficiencyID}">
                        <td>${this.esc(r.WorkDateText)}</td>
-                       <td>${this.esc(r.ShiftCode)}</td>
+                      <td>${this.shiftBadge(String(r.ShiftCode ?? '').toUpperCase().startsWith('N'))}</td>
                        <td>${this.esc(r.MachineNo)}</td>
-                       <td>${this.esc(r.ShopOrder)}</td>
+                       <td style='color: #4338ca; font-weight: 600;'>${this.esc(r.ShopOrder)}</td>
 
                        <td class="ShopOrderLayout " style="text-align: left;">
-                          <span class='ShopOrderLayout_ShopOrder' style='font-size: .8rem;'>${this.esc(r.Partnumber) }</span>
+                          <span class='ShopOrderLayout_ShopOrder' style='font-size: .7rem; font-weight: 800;'>${this.esc(r.Partnumber) }</span>
                           <p style="margin:.2em 0;color:#8a8f9e; font-size: .7rem;">${this.esc(r.getModel ?? r.Model) }</p>
                        </td>
 
                        <td>${this.esc(r.ProcessName)}</td>
 
                        <td class="ShopOrderLayout " style="text-align: left;">
-                            <span class='ShopOrderLayout_ShopOrder' style='font-size: .8rem;'>${this.esc(r.EffyCode)}</span>
+                            <span class='ShopOrderLayout_ShopOrder' style='font-size: .7rem;'>${this.esc(r.EffyCode)}</span>
                             <p style="margin:.2em 0;color:#8a8f9e; font-size: .7rem;">${this.esc(r.FullName ) }</p>     
                        </td>
                        <td class="num">${this.fmt(r.Output)}</td>
@@ -453,9 +504,13 @@
                if (!r) return;
 
                this.editIndexInput.value = id;
-               // byId('processId').value = r.ProcessId;
+               byId('ProcessId').value = r.ProcessId ?? '';
+
+               byId('ProcessName').value =
+                   this.processName(r.ProcessId) || r.ProcessName || '';
+
                byId('workDate').value = r.WorkDate;
-               byId('shift').value = String(r.ShiftRaw);
+               this.isNight = r.ShiftRaw === true || String(r.ShiftRaw).toLowerCase() === 'true';
                byId('machineNo').value = r.MachineNo;
                byId('shopOrder').value = r.ShopOrder;
                byId('output').value = r.Output;
@@ -499,9 +554,9 @@
 
                 if (this.isSubmitting) return;
                 this.isSubmitting = true;
-              this.submitBtn.disabled = true;
+                this.submitBtn.disabled = true;
 
-              let saved = false;   // <-- new
+                let saved = false;   // <-- new
 
                 try {
                     const effyCode = byId('employeeCode').value.trim();
@@ -518,26 +573,37 @@
                         return;
                     }
 
-                    if (!byId('ProcessName').value) {
-                        this.showToast('Select a part number to set the process.', false);
-                        byId('Partnumber').focus();
+                    const processId = parseInt(byId('ProcessId').value, 10);
+                    const processName = byId('ProcessName').value.trim();
+
+                    if (!processName || !Number.isInteger(processId) || processId <= 0) {
+                        this.showToast('Please select a valid process.', false);
+                        byId('ProcessName').focus();
                         return;
                     }
 
                     const payload = {
                         WorkDate: byId('workDate').value,
-                        Shift: byId('shift').value === 'true',
+                        Shift: this.isNight,   
                         MachineNo: byId('machineNo').value,
                         ShopOrder: byId('shopOrder').value.trim(),
+
                         EffyCode: emp.EffyCode,
+
                         getModel: byId('model').value.trim(),
                         Partnumber: byId('Partnumber').value.trim(),
-                        ProcessName : byId('ProcessName').value.trim(),
+
+                        // Process information
+                        ProcessId: processId,
+                        ProcessName: byId('ProcessName').value.trim(),
+
                         Output: parseInt(byId('output').value, 10) || 0,
                         DowntimeMin: parseInt(byId('downtimeMin').value, 10) || 0,
                         StartOpe: byId('startOpe').value,
                         EndOpe: byId('endOpe').value
                     };
+
+                    console.log(payload);
 
                     const res = await postMethod('@Url.Action("AddRecordForMonitoring", "Rotor")', payload);
                     if (!res?.Success) {
@@ -586,12 +652,11 @@
                byId('employeeName').value = '';
                byId('model').value = '';
                byId('ProcessName').value = '';
+               byId('ProcessId').value = '';
 
                // restore Date | Shift | Machine No.
                if (keep) {
                    byId('workDate').value = keep.workDate;
-                   byId('shift').value = keep.shift;
-                   byId('machineNo').value = keep.machineNo;
                    byId('machineNo').value = keep.machineNo;
                }
 
@@ -661,11 +726,14 @@
                    : 0;
 
 
-               console.log("Target : " + target);
-               console.log("Cycle Time : " + cycleTimeSec.toFixed(2));
-               console.log("D.T. IN PCS: " + dtpics);
-               console.log("Target less DP: " + targetless);
-               console.log(`Final Efficiency : ${output}  / ${targetless} : ${targetEfficient}`);
+               // console.log("Target : " + target);
+               // console.log("Cycle Time : " + cycleTimeSec.toFixed(2));
+               // console.log("D.T. IN PCS: " + dtpics);
+               // console.log("Target less DP: " + targetless);
+               // console.log(`Final Efficiency : ${output}  / ${targetless} : ${targetEfficient}`);
+               const box = document.querySelector('.calc-box');
+               box.classList.toggle('is-night', this.isNight && !!byId('startOpe').value);
+
 
                // Display Summary
                byId('aSpan').textContent =
@@ -679,6 +747,13 @@
                byId('aTarget').textContent = target.toLocaleString();
                byId('aTargetEased').textContent = targetEased.toLocaleString();
                byId('aEff').textContent = `${targetEfficient.toFixed(2)}%`;
+
+               const shiftEl = byId('aShift');
+               if (byId('startOpe').value) {
+                   shiftEl.innerHTML = this.shiftBadge(this.isNight);
+               } else {
+                   shiftEl.textContent = '—';
+               }
            }
 
 
@@ -746,29 +821,30 @@
                 return p.ProcessName ?? p.Process ?? p.processName ?? p.process ?? p.Name ?? p.name ?? '';
             }
             procId(p) {
-                return p.ProcessId ?? p.processId ?? p.Id ?? p.id ?? null;
+               return parseInt(p?.ProcessId, 10) || 0;
             }
 
-            async loadProcessList() {
-                const sel = byId('filterProcess');
-                try {
-                    const res = await getMethod('@Url.Action("GetProcessList", "Rotor")');
-                    const list = res?.data ?? res?.Data ?? (Array.isArray(res) ? res : []);
-                    this.processes = (res?.Success === false) ? [] : list;
-                } catch (error) {
-                    console.error('Error loading processes:', error);
-                    this.processes = [];
-                }
+           async loadProcessList() {
+               // Use the fixed process master list
+               this.processes = PROCESS_LIST;
 
-                const current = sel.value;
-                sel.innerHTML = '<option value="">All processes</option>' +
-                    this.processes
-                        .map(p => this.procName(p))
-                        .filter(Boolean)
-                        .map(n => `<option value="${this.esc(n)}">${this.esc(n)}</option>`)
-                        .join('');
-                sel.value = current;
-            }
+               // Populate the table filter dropdown
+               const filter = byId('filterProcess');
+
+               if (filter) {
+                   const currentValue = filter.value;
+
+                   filter.innerHTML =
+                       '<option value="">All processes</option>' +
+                       this.processes.map(p => `
+                        <option value="${this.esc(p.ProcessName)}">
+                            ${this.esc(p.ProcessName)}
+                        </option>
+                    `).join('');
+
+                   filter.value = currentValue;
+               }
+           }
 
            bindDataMenu() {
                const modal = byId('dataMenuModal');
@@ -939,18 +1015,28 @@
 
                // Employee Code → fills Employee Name
                this.createCombo('employeeCode', {
-                   getItems: () => this.employees
-                       .filter(e => e.EffyCode)                       // only employees that have an Effy Code
-                       .map(e => ({
-                           value: String(e.EffyCode),
-                           text: String(e.EffyCode),
-                           sub: `${e.FullName ?? ''} · ${e.EmployeeCode ?? ''}`,   // typing a name or employee code still finds them
-                           data: e
-                       })),
-                   emptyText: 'No matching Effy Code',
-                   invalidMsg: 'Select an Effy Code from the list.',
-                   onSelect: item => { byId('employeeName').value = item.data.FullName ?? ''; },
-                   onClear: () => { byId('employeeName').value = ''; }
+                   getItems: () => this.employees.map(emp => ({
+                       value: emp.EffyCode,
+                       text: emp.EffyCode,
+                       sub: `${emp.FullName} | ${emp.EmployeeCode}`,
+                       data: emp
+                   })),
+                   emptyText: 'No matching employee found',
+                   invalidMsg: 'Select a valid Employee Code.',
+                   selectFirstOnEnter: true,
+
+                   onSelect: item => {
+                       const emp = item.data;
+
+                       byId('employeeCode').value = emp.EffyCode;
+                       byId('employeeName').value = emp.FullName || '';
+
+                       console.log('Selected Employee:', emp);
+                   },
+
+                   onClear: () => {
+                       byId('employeeName').value = '';
+                   }
                });
 
                // Shop Order → searched on the server, fills Model + Cycle Time
@@ -971,143 +1057,381 @@
                             console.error('Error searching shop orders:', error);
                             return [];
                         }
-                    },
+                   },
+
+                   getItems: () => this.shopOrders.map(order => ({
+                       value: order.ShopOrder,
+                       text: order.ShopOrder,
+                       sub: `${order.Partnumber} | ${order.Model}`,
+                       data: order
+                   })),
+
                    emptyText: 'Type at least 3 characters',
                    invalidMsg: 'Select a shop order from the list.',
+                   selectFirstOnEnter: true,
                    onSelect: item => {
-                       const s = item.data;
-                       const part = String(s.Partnumber ?? s.PartNumber ?? '').trim();
-                       const currentProc = byId('ProcessName').value.trim().toLowerCase();
-                       const procOf = x => String(x.ProcessName ?? this.processName(x.ProcessId)).toLowerCase();
+                       const order = item.data;
 
-                       let m = null;
+                       byId('shopOrder').value = order.ShopOrder;
 
-                       if (part) {
-                           // 1) The shop order has a part number → use it to find the cycle-time record
-                           const byPart = this.models.filter(x =>
-                               String(x.Partnumber ?? '').trim().toLowerCase() === part.toLowerCase());
-                           m = byPart.find(x => procOf(x) === currentProc) ?? byPart[0] ?? null;
+                       // Populate related model information
+                       this.applyModel(order);
 
-                           if (!m) {
-                               // Part number is not in the cycle-time master: still fill what we know
-                               this.applyModel(null);
-                               byId('Partnumber').value = part;
-                               byId('model').value = s.Model ?? '';
-                               this.showToast('No cycle time found for this part number.', false);
-                               return;
-                           }
-                       } else {
-                           // 2) No part number on the shop order → fall back to matching by model
-                           const matches = this.models.filter(x => x.Model === s.Model);
-                           m = matches.find(x => procOf(x) === currentProc) ?? matches[0] ?? null;
-
-                           if (!m) {
-                               this.applyModel(null);
-                               byId('model').value = s.Model ?? '';
-                               this.showToast('No cycle time found for this model.', false);
-                               return;
-                           }
-                       }
-
-                       this.applyModel(m);   // sets Partnumber, Model, Process and the cycle time
+                       console.log('Selected Shop Order:', order);
                    },
-                   onClear: () => { }
+
+                   onClear: () => {
+                       this.applyModel(null);
+                   }
                });
+
+
+               // Process → Search Process Name and store numeric ProcessId
+               this.createCombo('ProcessName', {
+                   getItems: () => this.processes.map(p => ({
+                       value: p.ProcessName,
+                       text: p.ProcessName,
+                       sub: `Process ID: ${p.ProcessId}`,
+                       data: p
+                   })),
+
+                   emptyText: 'No matching process',
+                   invalidMsg: 'Select or enter a valid process name.',
+
+                   // Allow Enter to select the first item when the search is empty
+                   selectFirstOnEnter: true,
+
+                   onSelect: item => {
+                       byId('ProcessId').value = item.data.ProcessId;
+                       byId('ProcessName').value = item.data.ProcessName;
+
+                       console.log('Selected Process:', {
+                           ProcessId: item.data.ProcessId,
+                           ProcessName: item.data.ProcessName
+                       });
+                   },
+
+                   onClear: () => {
+                       byId('ProcessId').value = '';
+                   }
+               });
+
+               // Clear ProcessId immediately when the user starts typing again.
+               byId('ProcessName').addEventListener('input', () => {
+                   byId('ProcessId').value = '';
+               });
+
+
+
            }
 
+
+           async searchShopOrders(query) {
+               try {
+                   const response = await fetch('/YourController/SearchByShopOrderFromCSV', {
+                       method: 'POST',
+                       headers: {
+                           'Content-Type': 'application/json'
+                       },
+                       body: JSON.stringify({
+                           ShopOrders: query
+                       })
+                   });
+
+                   if (!response.ok) {
+                       throw new Error(`HTTP Error: ${response.status}`);
+                   }
+
+                   const result = await response.json();
+
+                   return result.data || [];
+
+               } catch (error) {
+                   console.error('Search Shop Orders Error:', error);
+                   return [];
+               }
+           }
+
+
+
            // Reusable searchable select. Items: { value, text, sub?, data? }. The search matches text and sub.
-           // Reusable searchable select. Items: { value, text, sub?, data? }. The search matches text and sub.
-           createCombo(inputId, { getItems, remote, onSelect, onClear, normalize, emptyText = 'No match', invalidMsg = 'Select a value from the list.' }) {
+           createCombo(inputId, {
+               getItems,
+               remote,
+               onSelect,
+               onClear,
+               normalize,
+               selectFirstOnEnter = false,
+               emptyText = 'No match',
+               invalidMsg = 'Select a value from the list.'
+           }) {
                const input = byId(inputId);
+
+               if (!input) {
+                   console.error(`Combo input not found: ${inputId}`);
+                   return;
+               }
+
                const combo = input.closest('.combo');
-               const list = combo.querySelector('.combo-list');
+               const list = combo?.querySelector('.combo-list');
+
+               if (!combo || !list) {
+                   console.error(`Combo container or list not found: ${inputId}`);
+                   return;
+               }
+
                const MAX = 100;
-               let shown = [], active = -1, selected = null, cache = [], timer;
 
-               const highlight = () => {
-                   const els = [...list.querySelectorAll('li[data-n]')];
-                   els.forEach((el, i) => el.classList.toggle('active', i === active));
-                   els[active]?.scrollIntoView({ block: 'nearest' });
-               };
+               let shown = [];
+               let active = -1;
+               let selected = null;
+               let cache = [];
+               let timer = null;
 
+               // Render the matching items
                const render = () => {
                    const q = input.value.trim().toLowerCase();
+
                    const items = remote
                        ? cache
-                       : getItems().filter(i => `${i.text} ${i.sub ?? ''}`.toLowerCase().includes(q));
+                       : (getItems ? getItems() : []).filter(i =>
+                           `${i.text} ${i.sub ?? ''}`.toLowerCase().includes(q)
+                       );
+
                    shown = items.slice(0, MAX);
+
                    list.innerHTML = shown.length
-                       ? shown.map((i, n) => `<li role="option" data-n="${n}">${this.esc(i.text)}${i.sub ? `<small>${this.esc(i.sub)}</small>` : ''}</li>`).join('')
+                       ? shown.map((item, index) => `
+                <li role="option" data-n="${index}">
+                    ${this.esc(item.text)}
+                    ${item.sub ? `<small>${this.esc(item.sub)}</small>` : ''}
+                </li>
+            `).join('')
                        : `<li class="empty">${this.esc(emptyText)}</li>`;
 
-                   // Highlight the first result so the user can see what Enter will pick
                    active = shown.length ? 0 : -1;
+
                    highlight();
                };
 
-               const open = () => { render(); combo.classList.add('open'); };
-               const close = () => combo.classList.remove('open');
-               const choose = item => { selected = item; input.value = item.value; close(); onSelect?.(item, true); };
+               // Highlight selected dropdown item
+               const highlight = () => {
+                   const elements = [...list.querySelectorAll('li[data-n]')];
 
-               input.addEventListener('focus', open);
+                   elements.forEach((el, index) => {
+                       el.classList.toggle('active', index === active);
+                   });
 
+                   if (active >= 0) {
+                       elements[active]?.scrollIntoView({
+                           block: 'nearest'
+                       });
+                   }
+               };
+
+               const open = () => {
+                   if (remote) {
+                       render();
+                   } else {
+                       render();
+                   }
+
+                   combo.classList.add('open');
+               };
+
+               const close = () => {
+                   combo.classList.remove('open');
+               };
+
+               // Select an item
+               const choose = item => {
+                   if (!item) return;
+
+                   selected = item;
+
+                   input.value = item.value;
+
+                   close();
+
+                   onSelect?.(item, true);
+               };
+
+               // Find an exact matching item first
+               const findExact = (value, items) => {
+                   const search = String(value ?? '').trim().toLowerCase();
+
+                   return items.find(item =>
+                       String(item.value ?? '').trim().toLowerCase() === search ||
+                       String(item.text ?? '').trim().toLowerCase() === search
+                   );
+               };
+
+               // Focus opens dropdown
+               input.addEventListener('focus', () => {
+                   open();
+               });
+
+               // Search while typing
                input.addEventListener('input', () => {
                    selected = null;
+
+                   onClear?.();
+
                    combo.classList.add('open');
-                   if (!remote) return render();
+
+                   if (!remote) {
+                       render();
+                       return;
+                   }
+
                    clearTimeout(timer);
+
                    timer = setTimeout(async () => {
                        const q = input.value.trim();
-                       const items = await remote(q);
-                       if (q !== input.value.trim()) return;   // a newer keystroke superseded this result
-                       cache = items;
-                       render();
+
+                       try {
+                           const items = await remote(q);
+
+                           // Ignore old search results
+                           if (q !== input.value.trim()) return;
+
+                           cache = items || [];
+
+                           render();
+                       } catch (error) {
+                           console.error(`Combo search error: ${inputId}`, error);
+                           cache = [];
+                           render();
+                       }
                    }, 250);
                });
 
+               // Validate manually typed values when leaving the field
                input.addEventListener('blur', async () => {
                    close();
-                   if (selected && selected.value === input.value) return;
 
-                   const v = normalize ? normalize(input.value) : input.value.trim();
-                   const pool = (remote && v) ? await remote(v) : (getItems ? getItems() : []);
-                   const hit = pool.find(i => i.value === v);
-                   if (hit) { selected = hit; input.value = hit.value; onSelect?.(hit, false); return; }
+                   if (selected && selected.value === input.value) {
+                       return;
+                   }
 
-                   if (input.value.trim()) this.showToast(invalidMsg, false);
-                   input.value = '';
-                   selected = null;
-                   onClear?.();
+                   const value = input.value.trim();
+
+                   if (!value) {
+                       selected = null;
+                       onClear?.();
+                       return;
+                   }
+
+                   try {
+                       const searchValue = normalize
+                           ? normalize(value)
+                           : value;
+
+                       const pool = remote
+                           ? await remote(searchValue)
+                           : (getItems ? getItems() : []);
+
+                       const hit = findExact(searchValue, pool || []);
+
+                       if (hit) {
+                           selected = hit;
+                           input.value = hit.value;
+                           onSelect?.(hit, false);
+                           return;
+                       }
+
+                       this.showToast(invalidMsg, false);
+
+                       input.value = '';
+                       selected = null;
+
+                       onClear?.();
+
+                   } catch (error) {
+                       console.error(`Combo validation error: ${inputId}`, error);
+                   }
                });
 
+               // Keyboard navigation
                input.addEventListener('keydown', e => {
+
                    if (e.key === 'ArrowDown') {
                        e.preventDefault();
-                       if (!combo.classList.contains('open')) open();
-                       active = Math.min(active + 1, shown.length - 1); highlight();
-                   } else if (e.key === 'ArrowUp') {
-                       e.preventDefault();
-                       active = Math.max(active - 1, 0); highlight();
-                   } else if (e.key === 'Enter') {
-                       e.preventDefault();                                   // a combo never submits the form itself
-                       if (!input.value.trim()) return;                      // empty: stay here
 
-                       const isChosen = selected && selected.value === input.value;
-                       if (isChosen) { this.focusNext(input); return; }      // already confirmed → go to next field
+                       if (!combo.classList.contains('open')) {
+                           open();
+                       }
 
-                       if (!combo.classList.contains('open')) open();        // re-run the search if the list was closed
                        if (shown.length) {
-                           choose(shown[active >= 0 ? active : 0]);          // pick the first / highlighted result
+                           active = Math.min(active + 1, shown.length - 1);
+                           highlight();
+                       }
+
+                       return;
+                   }
+
+                   if (e.key === 'ArrowUp') {
+                       e.preventDefault();
+
+                       if (shown.length) {
+                           active = Math.max(active - 1, 0);
+                           highlight();
+                       }
+
+                       return;
+                   }
+
+                   if (e.key === 'Enter') {
+                       e.preventDefault();
+
+                       if (!combo.classList.contains('open')) {
+                           open();
+                       }
+
+                       // Already selected: move to next field
+                       if (selected && selected.value === input.value) {
+                           this.focusNext(input);
+                           return;
+                       }
+
+                       const value = input.value.trim();
+
+                       // Try exact match first
+                       let hit = findExact(value, shown);
+
+                       // If there is no exact match, use the highlighted item
+                       if (!hit && shown.length) {
+                           if (!value && !selectFirstOnEnter) {
+                               return;
+                           }
+
+                           hit = shown[active >= 0 ? active : 0];
+                       }
+
+                       if (hit) {
+                           choose(hit);
                            this.focusNext(input);
                        }
-                   } else if (e.key === 'Escape') {
+
+                       return;
+                   }
+
+                   if (e.key === 'Escape') {
                        close();
                    }
                });
 
-               list.addEventListener('mousedown', e => {
+               // Mouse and touch selection
+               list.addEventListener('pointerdown', e => {
                    const li = e.target.closest('li[data-n]');
-                   if (li) { e.preventDefault(); choose(shown[+li.dataset.n]); }
+
+                   if (!li) return;
+
+                   e.preventDefault();
+
+                   const item = shown[parseInt(li.dataset.n, 10)];
+
+                   choose(item);
                });
            }
 
@@ -1383,16 +1707,38 @@
 
            // Reads the label straight from the Process <select>, so it stays in sync with the HTML
            processName(id) {
-               const p = this.processes.find(x => String(this.procId(x)) === String(id));
-               return p ? this.procName(p) : '';
+               const process = this.processes.find(
+                   x => String(x.ProcessId) === String(id)
+               );
+
+               return process ? process.ProcessName : '';
            }
 
            // Single place that applies a chosen model record to the form
            applyModel(m) {
                this.cycle = m ?? null;
+
                byId('model').value = m?.Model ?? '';
                byId('Partnumber').value = m?.Partnumber ?? '';
-               // byId('ProcessName').value = m ? (m.ProcessName ?? this.processName(m.ProcessId)) : '';
+
+               // Automatically set Process Name and Process ID
+               if (m && m.ProcessId != null) {
+
+                   const process = this.processes.find(
+                       p => String(this.procId(p)) === String(m.ProcessId)
+                   );
+
+                   byId('ProcessName').value = process
+                       ? this.procName(process)
+                       : (m.ProcessName ?? '');
+
+                   byId('ProcessId').value = parseInt(m.ProcessId, 10);
+
+               } else {
+                   byId('ProcessName').value = '';
+                   byId('ProcessId').value = '';
+               }
+
                this.calcForm();
            }
            // Moves focus to the next editable field. Returns false when there is none (last field).
@@ -1421,6 +1767,34 @@
                if (+h > 23 || +m > 59) return null;
                return `${h.padStart(2, '0')}:${m}`;
            }
+
+           // Get Process Name using Process ID
+           // processName(id) {
+           //     const process = PROCESS_LIST.find(
+           //         x => x.ProcessId === parseInt(id, 10)
+           //     );
+
+           //     return process ? process.ProcessName : '';
+           // }
+         
+           // Get Process ID using Process Name
+           getProcessId(name) {
+               if (!name) return 0;
+
+               const process = PROCESS_LIST.find(
+                   x => x.ProcessName.toLowerCase() === name.trim().toLowerCase()
+               );
+
+               return process ? process.ProcessId : 0;
+           }
+
+
+           shiftBadge(isNight) {
+               return isNight
+                   ? `<span class="shift-badge night">${ICON_MOON}<span>NS</span></span>`
+                   : `<span class="shift-badge day">${ICON_SUN}<span>DS</span></span>`;
+           }
+
        }
 
        document.addEventListener('DOMContentLoaded', function () {

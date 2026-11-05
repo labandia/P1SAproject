@@ -301,12 +301,13 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 
             // 3. If it doesn't exist, insert the new record into the database
             return await SqlDataAcess_Test.ExecuteAsync(
-                @"INSERT INTO EfficiencyCycleTime (Partnumber, CycleTimeSec)
-                  VALUES (@Partnumber, @CycleTimeSec)",
+                @"INSERT INTO EfficiencyCycleTime (Partnumber, CycleTimeSec, Model)
+                  VALUES (@Partnumber, @CycleTimeSec, @Model)",
                 new
                 {
                     cycleTime.Partnumber,
-                    cycleTime.CycleTimeSec
+                    cycleTime.CycleTimeSec,
+                    cycleTime.Model 
                 }) > 0;
         }
 
@@ -340,5 +341,137 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         }
 
         
+
+        public Task<EfficiencyDailySummary> GetEfficiencySummary(
+            EfficiencyDailySummary filter, 
+            DateTime? customStart = null, 
+            DateTime? customEnd = null)
+        {
+            //        DateTime today = DateTime.Today;
+
+            //        DateTime start;
+            //        DateTime end;
+
+            //        switch (filter)
+            //        {
+            //            case EfficiencyDateFilter.Today:
+            //                start = today;
+            //                end = today;
+            //                break;
+
+            //            case EfficiencyDateFilter.ThisWeek:
+            //                // Monday to Sunday
+            //                int diff = (7 + (int)today.DayOfWeek - (int)DayOfWeek.Monday) % 7;
+            //                start = today.AddDays(-diff);
+            //                end = start.AddDays(6);
+            //                break;
+
+            //            case EfficiencyDateFilter.ThisMonth:
+            //                start = new DateTime(today.Year, today.Month, 1);
+            //                end = start.AddMonths(1).AddDays(-1);
+            //                break;
+
+            //            case EfficiencyDateFilter.Custom:
+            //                if (!customStart.HasValue || !customEnd.HasValue)
+            //                    throw new ArgumentException("Custom date range is required.");
+
+            //                start = customStart.Value.Date;
+            //                end = customEnd.Value.Date;
+
+            //                if (start > end)
+            //                    throw new ArgumentException("Start date cannot be greater than end date.");
+
+            //                break;
+
+            //            default:
+            //                start = today;
+            //                end = today;
+            //                break;
+            //        }
+
+            //        const string sql = @"
+            //    SELECT
+            //        COUNT(m.EfficiencyID) AS TotalRecords,
+
+            //        ISNULL(SUM(m.Output), 0) AS TotalOutput,
+
+            //        ISNULL(SUM(x.Target), 0) AS TotalTarget,
+
+            //        ISNULL(SUM(x.TargetLessDP), 0) AS TotalTargetLessDP,
+
+            //        CAST(
+            //            CASE
+            //                WHEN ISNULL(SUM(x.TargetLessDP), 0) = 0 THEN 0
+            //                ELSE SUM(m.Output) * 100.0 /
+            //                     SUM(x.TargetLessDP)
+            //            END
+            //            AS DECIMAL(10,2)
+            //        ) AS EfficiencyRate
+
+            //    FROM EfficiencyDailyMonitor m
+
+            //    LEFT JOIN EfficiencyCycleTime c
+            //        ON c.Partnumber = m.Partnumber
+
+            //    CROSS APPLY (
+            //        SELECT
+            //            CASE
+            //                WHEN DATEDIFF(MINUTE,
+            //                    CAST(m.StartOpe AS time),
+            //                    CAST(m.EndOpe AS time)) < 0
+            //                THEN DATEDIFF(MINUTE,
+            //                    CAST(m.StartOpe AS time),
+            //                    CAST(m.EndOpe AS time)) + 1440
+            //                ELSE DATEDIFF(MINUTE,
+            //                    CAST(m.StartOpe AS time),
+            //                    CAST(m.EndOpe AS time))
+            //            END AS WorkMinutes
+            //    ) w
+
+            //    CROSS APPLY (
+            //        SELECT
+            //            CAST(
+            //                ROUND(
+            //                    (w.WorkMinutes * 60.0) /
+            //                    NULLIF(c.CycleTimeSec, 0), 0
+            //                ) AS INT
+            //            ) AS Target,
+
+            //            CAST(
+            //                ROUND(
+            //                    (m.DowntimeMin * 60.0) /
+            //                    NULLIF(c.CycleTimeSec, 0), 0
+            //                ) AS INT
+            //            ) AS DTPics
+            //    ) a
+
+            //    CROSS APPLY (
+            //        SELECT
+            //            a.Target,
+            //            a.Target - a.DTPics AS TargetLessDP
+            //    ) x
+
+            //    WHERE m.WorkDate >= @start
+            //      AND m.WorkDate < DATEADD(DAY, 1, @end);
+            //";
+
+            //        return SqlDataAcess_Test.QuerySingleAsync<EfficiencyDailySummary>(
+            //            sql,
+            //            new { start, end }
+            //        );
+
+            throw new NotImplementedException();
+        }
+
+
+        public enum EfficiencyDateFilter
+        {
+            Today = 1,
+            ThisWeek = 2,
+            ThisMonth = 3,
+            Custom = 4
+        }
+
+
     }
 }

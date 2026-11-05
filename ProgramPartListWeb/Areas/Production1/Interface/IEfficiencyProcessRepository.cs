@@ -17,6 +17,12 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
         Task<int> AddEfficiencyRecord(EfficiencyDailyMonitor row);
 
 
+        Task<EfficiencyDailySummary> GetEfficiencySummary
+            (EfficiencyDailySummary filter,
+            DateTime? customStart = null,
+             DateTime? customEnd = null);
+
+
         /// <summary>
         ///     EFFICIENCY PROCESS
         /// </summary>

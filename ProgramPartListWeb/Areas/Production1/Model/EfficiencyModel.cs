@@ -115,11 +115,22 @@ namespace ProgramPartListWeb.Areas.Production1.Model
     }
 
 
+    public class EfficiencyDailySummary
+    {
+        public int TotalRecords { get; set; }
+
+        public long TotalOutput { get; set; }
+
+        public long TotalTarget { get; set; }
+
+        public long TotalTargetLessDP { get; set; }
+
+        public decimal EfficiencyRate { get; set; }
+    }
 
 
 
 
 
- 
 
 }

@@ -125,7 +125,7 @@
                         <div class="dw-panel-heading">
                             <div>
                                 <h3>Import Data</h3>
-                                <p>Upload an Excel or CSV file, review the validation result, then submit the valid rows.</p>
+                                <p>Upload one Excel file containing the Cycle Time, Employee Codes and Shop Orders sheets, review the validation result, then submit the valid rows.</p>
                             </div>
                             <span class="dw-ready-badge"><i class="fa-solid fa-circle-check"></i> Available</span>
                         </div>
@@ -135,7 +135,7 @@
                                 <div class="dw-action-icon"><i class="fa-solid fa-file-excel"></i></div>
                                 <div class="dw-action-copy">
                                     <strong>Upload File</strong>
-                                    <span>Excel (.xlsx, .xls) or CSV. Sheets: Cycle Time, Employee Codes, Shop Orders</span>
+                                    <span>One Excel file (.xlsx, .xls) with all three sheets: Cycle Time, Employee Codes, Shop Orders</span>
                                 </div>
                                 <i class="fa-solid fa-chevron-right dw-chevron"></i>
                             </button>
@@ -144,7 +144,7 @@
                                 <div class="dw-action-icon"><i class="fa-solid fa-download"></i></div>
                                 <div class="dw-action-copy">
                                     <strong>Download Template</strong>
-                                    <span>Excel workbook with one sheet per data type</span>
+                                    <span>Excel workbook with the three sheets, ready to fill in</span>
                                 </div>
                                 <i class="fa-solid fa-chevron-right dw-chevron"></i>
                             </button>
@@ -355,7 +355,7 @@
         </form>
     </div>
 
-    <!-- ========== IMPORT DIALOG (Excel / CSV) ========== -->
+    <!-- ========== IMPORT DIALOG (Excel) ========== -->
     <div class="form-overlay" id="importOverlay" aria-hidden="true">
         <div class="fm-card fm-wide" role="dialog" aria-modal="true" aria-labelledby="importTitle">
             <header class="fm-head">
@@ -370,9 +370,9 @@
             <div class="fm-body fm-stack">
                 <label class="imp-drop" id="importDrop" for="importFile">
                     <i class="fa-solid fa-cloud-arrow-up"></i>
-                    <strong id="importFileName">Choose an Excel/CSV file or drop it here</strong>
+                    <strong id="importFileName">Choose an Excel file or drop it here</strong>
                     <span>First row of each sheet must be the header row.</span>
-                    <input type="file" id="importFile" accept=".xlsx,.xls,.csv,text/csv" hidden>
+                    <input type="file" id="importFile" accept=".xlsx,.xls" hidden>
                 </label>
 
                 <div class="imp-tabs" id="importTabs" hidden></div>
@@ -419,7 +419,7 @@
             fields: ['Partnumber', 'Model', 'ProcessName',  'CycleTimeSec'],
             cols:    ['Partnumber', 'Model', 'ProcessName', 'CycleTimeSec'],
             listUrl: '@Url.Action("GetModelList", "Rotor")',
-            saveUrl: '@Url.Action("SaveEditCycleTime", "Rotor")',
+            saveUrl: '@Url.Action("SaveCycleTime", "Rotor")',
             deleteUrl: '@Url.Action("DeleteCycleTime", "Rotor")',
             describe: r => `${r.Partnumber} `
         },
@@ -430,7 +430,7 @@
             fields:  ['EffyCode', 'EmployeeCode'],
             cols:    ['EffyCode', 'EmployeeCode', 'FullName', 'Process', 'AgencyName'],
             listUrl: '@Url.Action("GetEmployeeList", "Rotor")',
-            saveUrl: '@Url.Action("SaveEditEmployeeCode", "Rotor")',
+            saveUrl: '@Url.Action("SaveEmployeeCode", "Rotor")',
             deleteUrl: '@Url.Action("DeleteEmployeeCode", "Rotor")',
             describe: r => `${r.EffyCode} (${r.FullName || 'no name'})`
         },
@@ -447,44 +447,74 @@
         }
     };
 
+    // ======================================================================
+    // IMPORT CONFIG - rows are sent with the SAME property names / types as the C# models:
+    //   cycle     -> EfficiencyCycleTime         { Partnumber, Model, ProcessId (byte), CycleTimeSec (decimal 9,2) }
+    //   employee  -> EfficiencyEmployeeCode      { EffyCode, EmployeeCode }
+    //   shoporder -> EfficiencyShopOrderStaging  { ShopOrder, Partnumber, Model }
     // Header names are matched after lower-casing and stripping everything except a-z / 0-9.
+    // ======================================================================
+    // Same mapping as EfficiencyCycleTime.ProcessId (1 = COVER DRILLING, 2 = IMPELLER, 3 = EPIFORM)
+    const PROCESSES = [
+        { id: 1, name: 'COVER DRILLING' },
+        { id: 2, name: 'IMPELLER' },
+        { id: 3, name: 'EPIFORM' }
+    ];
+    const norm = s => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    // accepts the process name (any spacing/case) or the numeric ProcessId 1/2/3
+    const findProcess = v => PROCESSES.find(p => norm(p.name) === norm(v) || String(p.id) === String(v).trim());
+
     const IMPORTS = {
         cycle: {
             title: 'Import Cycle Time Data',
             url: '@Url.Action("ImportCycleTime", "Rotor")',
             columns: [
-                { key: 'Partnumber',   aliases: ['partnumber', 'partno', 'partnum'], required: true },
-                { key: 'Model',        aliases: ['model'], required: true },
-                { key: 'ProcessName',  aliases: ['processname', 'process'], required: true },
-                { key: 'CycleTimeSec', aliases: ['cycletimesec', 'cycletime', 'ct'], required: true,
-                  validate: v => (v !== '' && !isNaN(v) && Number(v) >= 0) ? '' : 'must be a number ≥ 0' }
-            ]
+                { key: 'Partnumber',   aliases: ['partnumber', 'partno', 'partnum'], required: true, maxLen: 50 },   // NVARCHAR(50)
+                { key: 'Model',        aliases: ['model'], required: false, maxLen: 100 },                          // NVARCHAR(100) NULL
+                { key: 'ProcessName',  aliases: ['processname', 'process', 'processid'], required: true,           // -> ProcessId (FK EfficiencyProcess)
+                  normalize: v => findProcess(v)?.name ?? v,
+                  validate: v => findProcess(v) ? '' : 'must be COVER DRILLING, IMPELLER or EPIFORM (or 1/2/3)' },
+                { key: 'CycleTimeSec', aliases: ['cycletimesec', 'cycletime', 'ct'], required: true,               // DECIMAL(9,2), > 0
+                  validate: v => (v !== '' && !isNaN(v) && Number(v) > 0 && Number(v) <= 9999999.99) ? '' : 'must be a number > 0 (max 9,999,999.99)' }
+            ],
+            // shape sent to the server = EfficiencyCycleTime
+            toPayload: o => ({
+                Partnumber: o.Partnumber,
+                Model: o.Model || null,
+                ProcessId: findProcess(o.ProcessName).id,
+                CycleTimeSec: Math.round(Number(o.CycleTimeSec) * 100) / 100
+            }),
+            dupKey: o => (o.Partnumber + '|' + findProcess(o.ProcessName)?.id).toLowerCase()   // unique per Partnumber + ProcessId
         },
         employee: {
             title: 'Import Employee Codes',
             url: '@Url.Action("ImportEmployeeCodes", "Rotor")',
             columns: [
-                { key: 'EffyCode',     aliases: ['effycode', 'code'], required: true },
-                { key: 'EmployeeCode', aliases: ['employeecode', 'employeeid', 'empid'], required: true }
-            ]
+                { key: 'EffyCode',     aliases: ['effycode', 'code'], required: true, maxLen: 20 },                  // NVARCHAR(20), PK
+                { key: 'EmployeeCode', aliases: ['employeecode', 'employeeid', 'empid'], required: true, maxLen: 20 } // NVARCHAR(20), FK -> P1SA_Employees_Temp
+            ],
+            // shape sent to the server = EfficiencyEmployeeCode (EmployID / FullName / Process / AgencyName are filled by the DB)
+            toPayload: o => ({ EffyCode: o.EffyCode, EmployeeCode: o.EmployeeCode }),
+            dupKey: o => o.EffyCode.toLowerCase()
         },
         shoporder: {
             title: 'Import Shop Order Data',
             url: '@Url.Action("ImportShopOrders", "Rotor")',
             columns: [
-                { key: 'ShopOrder',   aliases: ['shoporder', 'so'], required: true,
+                { key: 'ShopOrder',   aliases: ['shoporder', 'so'], required: true, maxLen: 20,                     // NVARCHAR(20)
                   validate: v => /^\d{12}$/.test(v) ? '' : 'must be 12 digits' },
-                { key: 'Partnumber',  aliases: ['partnumber', 'partno', 'partnum'], required: true },
-                { key: 'Model',       aliases: ['model'], required: false }
-            ]
+                { key: 'Partnumber',  aliases: ['partnumber', 'partno', 'partnum'], required: true, maxLen: 50 },
+                { key: 'Model',       aliases: ['model'], required: false, maxLen: 50 }
+            ],
+            // shape sent to the server = EfficiencyShopOrderStaging
+            toPayload: o => ({ ShopOrder: o.ShopOrder, Partnumber: o.Partnumber, Model: o.Model || null }),
+            dupKey: o => o.ShopOrder.toLowerCase()
         }
     };
 
     // ======================================================================
     // Import helpers (SheetJS reads .xlsx, .xls and .csv)
     // ======================================================================
-    const norm = s => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
-
     const SHEET_NAMES = { cycle: 'Cycle Time', employee: 'Employee Codes', shoporder: 'Shop Orders' };
     const cellText = v => (v instanceof Date) ? v.toISOString().slice(0, 10) : String(v ?? '').trim();
 
@@ -517,7 +547,6 @@
             this.filters = { cycle: '', employee: '', shoporder: '' };
             this.importState = null;
             this.modal = byId('dataMenuModal');
-            this.processSelect = byId('cyProcessName');
             this.bindModal();
             this.bindEvents();
             this.bindImport();
@@ -759,9 +788,9 @@
         openImport(pickNow) {
             this.importState = { datasets: [], active: 0 };
             byId('importTitle').textContent = 'Import Data';
-            byId('importHint').textContent = 'Excel or CSV. Data type is detected from the column headers.';
+            byId('importHint').textContent = 'One Excel file with the sheets: Cycle Time, Employee Codes, Shop Orders. All sheets found are imported together.';
             byId('importFile').value = '';
-            byId('importFileName').textContent = 'Choose an Excel/CSV file or drop it here';
+            byId('importFileName').textContent = 'Choose an Excel file or drop it here';
             byId('importSummary').hidden = true;
             byId('importTabs').hidden = true;
             byId('importPreviewWrap').hidden = true;
@@ -814,16 +843,18 @@
                     if (key === 'shoporder' && c.key === 'ShopOrder' && typeof raw === 'number' && /^\d{1,11}$/.test(v)) {
                         v = v.padStart(12, '0');
                     }
+                    if (v !== '' && c.normalize) v = c.normalize(v);
                     obj[c.key] = v;
                     if (c.required && v === '') problems.push(`${c.key} is empty`);
+                    else if (v !== '' && c.maxLen && v.length > c.maxLen) problems.push(`${c.key} is longer than ${c.maxLen} characters`);
                     else if (v !== '' && c.validate) { const m = c.validate(v); if (m) problems.push(`${c.key} ${m}`); }
                 });
 
-                // duplicate rows inside the same sheet (by the column(s) that act as the key)
-                const dupKey = (key === 'cycle')
-                    ? (obj.Partnumber + '|' + obj.ProcessName).toLowerCase()
-                    : (obj[cfg.columns[0].key] || '').toLowerCase();
-                if (!problems.length) { if (seen.has(dupKey)) problems.push('duplicate in file'); else seen.add(dupKey); }
+                // duplicate rows inside the same sheet (same key the database uses)
+                if (!problems.length) {
+                    const dk = cfg.dupKey(obj);
+                    if (seen.has(dk)) problems.push('duplicate in file'); else seen.add(dk);
+                }
 
                 const line = i + 2; // 1-based, header is line 1
                 problems.length ? invalid.push({ line, obj, problems }) : valid.push(obj);
@@ -835,7 +866,7 @@
             const err = byId('importError');
             err.textContent = '';
             if (!sheetJsReady()) return;
-            if (!/\.(xlsx|xls|csv)$/i.test(file.name)) { err.textContent = 'Please choose an .xlsx, .xls or .csv file.'; return; }
+            if (!/\.(xlsx|xls)$/i.test(file.name)) { err.textContent = 'Please choose an Excel file (.xlsx or .xls).'; return; }
             byId('importFileName').textContent = file.name;
 
             let wb;
@@ -843,20 +874,41 @@
                 wb = XLSX.read(await file.arrayBuffer(), { type: 'array' });
             } catch (ex) {
                 console.error(ex);
-                err.textContent = 'Unable to read the file. Is it a valid Excel/CSV file?';
+                err.textContent = 'Unable to read the file. Is it a valid Excel file?';
                 return;
             }
 
-            const datasets = [], skipped = [];
+            const datasets = [], skipped = [], problems = [];
             wb.SheetNames.forEach(name => {
                 const rows = XLSX.utils.sheet_to_json(wb.Sheets[name], { header: 1, defval: '', raw: true, blankrows: false });
                 if (!rows.length) return;
                 const headers = rows[0].map(norm);
-                const key = this.detectEntity(headers);
+
+                // 1) match by sheet name (Cycle Time / Employee Codes / Shop Orders), 2) fall back to the column headers
+                const byName = Object.keys(SHEET_NAMES).find(k => norm(SHEET_NAMES[k]) === norm(name));
+                let key = byName;
+                if (byName) {
+                    const missing = IMPORTS[byName].columns
+                        .filter(c => c.required && !headers.some(h => c.aliases.includes(h)))
+                        .map(c => c.key);
+                    if (missing.length) { problems.push(`${name}: missing column(s) ${missing.join(', ')}`); return; }
+                } else {
+                    key = this.detectEntity(headers);
+                }
                 if (!key) { skipped.push(name); return; }
                 if (rows.length < 2) { skipped.push(name + ' (no data rows)'); return; }
                 datasets.push(this.validateSheet(key, name, rows, headers));
             });
+
+            // always show the sheets in the same order: Cycle Time, Employee Codes, Shop Orders
+            const order = Object.keys(IMPORTS);
+            datasets.sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key));
+
+            const notes = [];
+            if (problems.length) notes.push(problems.join('; '));
+            const absent = order.filter(k => !datasets.some(d => d.key === k)).map(k => SHEET_NAMES[k]);
+            if (datasets.length && absent.length) notes.push('Not in this file (nothing imported for): ' + absent.join(', '));
+            if (skipped.length) notes.push('Skipped sheet(s): ' + skipped.join(', '));
 
             if (!datasets.length) {
                 this.importState.datasets = [];
@@ -864,15 +916,15 @@
                 byId('importTabs').hidden = true;
                 byId('importPreviewWrap').hidden = true;
                 this.setImportBtn(false);
-                err.textContent = 'No importable sheet found. Check the column headers (use Download Template).'
-                    + (skipped.length ? ' Skipped: ' + skipped.join(', ') : '');
+                err.textContent = 'No importable sheet found. Use Download Template and keep the sheet names and column headers.'
+                    + (notes.length ? ' ' + notes.join(' | ') : '');
                 return;
             }
 
             this.importState.datasets = datasets;
             this.importState.active = 0;
             this.renderImportPreview();
-            if (skipped.length) err.textContent = 'Skipped sheet(s): ' + skipped.join(', ');
+            if (notes.length) err.textContent = notes.join(' | ');
         }
 
         switchDataset(i) {
@@ -939,7 +991,7 @@
                     let inserted = 0, updated = 0;
 
                     for (let i = 0; i < ds.valid.length; i += CHUNK) {
-                        const res = await postMethod(cfg.url, { rows: ds.valid.slice(i, i + CHUNK) });
+                        const res = await postMethod(cfg.url, { rows: ds.valid.slice(i, i + CHUNK).map(cfg.toPayload) });
                         if (!res?.Success) {
                             err.textContent = `${SHEET_NAMES[ds.key]}: ${res?.Message || 'Import failed.'}`
                                 + (i ? ` (${i} rows were already imported)` : '');

@@ -28,7 +28,6 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
         /// <summary>
         ///     Shop Order Efficiency
         /// </summary>
-        Task<List<EfficiencyShopOrderStaging>> GetEfficiencyShopOrder();
         Task<List<EfficiencyShopOrderStaging>> GetEfficientShopOrders(string ShopOrder);
         Task<bool> UploadShopOrderCSV(EfficiencyShopOrderStaging shop);
 
@@ -41,6 +40,7 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
         Task<bool> UploadOrAddCycleTime(EfficiencyCycleTime shop);
         Task<bool> AddCycleTime(EfficiencyCycleTime cycleTime);
         Task<bool> UpdateCycleTime(EfficiencyCycleTime cycleTime);
+        Task<bool> DeleteCycleTime(int cycleId);
         /// <summary>
         ///     EmployeeCode 
         /// </summary>
@@ -48,7 +48,7 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
         Task<List<EfficiencyEmployeeCode>> GetEmployeeName(string search);
         Task<bool> AdditionalEmployeeCode(EfficiencyEmployeeCode employeeCode);
         Task<bool> EditEmployeeCode(EfficiencyEmployeeCode employeeCode);
-
+        Task<bool> DeleteEmployeeCode(int EmployID);
 
         Task <List<string>> GetProcessFilter();
 

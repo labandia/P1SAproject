@@ -4,6 +4,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using ProgramPartListWeb.Areas.Production1.Interface;
 using ProgramPartListWeb.Areas.Production1.Model;
 using ProgramPartListWeb.Helper;
+using ProgramPartListWeb.Models;
 using ProgramPartListWeb.Utilities.DataAccess;
 using System;
 using System.Collections.Generic;
@@ -178,19 +179,37 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         // ============================================================
         // ===================== SHOP ORDERS DATA ==========================
         //=============================================================
-        public Task<List<EfficiencyShopOrderStaging>> GetEfficiencyShopOrder()
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<List<EfficiencyShopOrderStaging>> GetEfficientShopOrders(string ShopOrder)
         {
-            return SqlDataAcess_Test.QueryAsync<EfficiencyShopOrderStaging>(@"
-                SELECT TOP 20 StagingId, ShopOrder, Partnumber, Model
-                FROM EfficiencyShopOrder_Staging
-                WHERE ShopOrder LIKE @ShopOrder + '%'
-                ORDER BY ShopOrder",
-               new { ShopOrder });
+            bool hasShopOrder = !string.IsNullOrWhiteSpace(ShopOrder);
+
+            string limit = hasShopOrder ? "TOP 100" : "TOP 20";
+
+            string query = $@"
+                    SELECT {limit}
+                        StagingId,
+                        ShopOrder,
+                        Partnumber,
+                        Model
+                    FROM EfficiencyShopOrder_Staging
+                    WHERE 1 = 1 ";
+
+            var parameters = new DynamicParameters();
+
+            // Filter only when ShopOrder has a value
+            if (hasShopOrder)
+            {
+                query += " AND ShopOrder LIKE @ShopOrder + '%' ";
+
+                parameters.Add("@ShopOrder", ShopOrder.Trim());
+            }
+
+            query += " ORDER BY ShopOrder ASC";
+
+            return SqlDataAcess_Test.QueryAsync<EfficiencyShopOrderStaging>(
+                query,
+                parameters
+            );
         }
         public Task<bool> UpdateEfficiencyRecord(EfficiencyDailyMonitor row)
         {
@@ -207,7 +226,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         public Task<List<EfficiencyEmployeeCode>> GetEmployeeName(string searchText)
         {
             string query = $@"
-                   SELECT f.EffyCode, e.EmployeeCode, e.FullName, e.Process, e.AgencyName
+                   SELECT f.EmployID, f.EffyCode, e.EmployeeCode, e.FullName, e.Process, e.AgencyName
                    FROM EfficiencyEmployeeCode f
                    INNER JOIN P1SA_Employees_Temp e ON e.EmployeeCode = f.EmployeeCode
                    WHERE 1 = 1 ";
@@ -259,22 +278,67 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                     employeeCode.EmployeeCode
                 }) > 0;
         }
+        public async Task<bool> DeleteEmployeeCode(int EmployID)
+        {
+            return await SqlDataAcess_Test.ExecuteAsync(
+             @"DELETE FROM EfficiencyEmployeeCode
+                  WHERE EmployID = @EmployID",
+             new { EmployID = EmployID }) > 0;
+        }
+
         // ============================================================
         // ===================== CYCLE TIME ==========================
         //=============================================================
-        public Task<bool> AddCycleTime(EfficiencyCycleTime cycleTime)
+        public async Task<bool> AddCycleTime(EfficiencyCycleTime cycleTime)
         {
-            throw new NotImplementedException();
+            // 1. Check if the EffyCode already exists in the database
+            bool IsExist = await SqlDataAcess_Test.ExistsAsync(
+                "SELECT COUNT(1) FROM EfficiencyCycleTime WHERE Partnumber = @Partnumber",
+                new { cycleTime.Partnumber });
+
+            // 2. If it exists, return false or throw an exception
+            if (IsExist) return false;
+
+            // 3. If it doesn't exist, insert the new record into the database
+            return await SqlDataAcess_Test.ExecuteAsync(
+                @"INSERT INTO EfficiencyCycleTime (Partnumber, CycleTimeSec)
+                  VALUES (@Partnumber, @CycleTimeSec)",
+                new
+                {
+                    cycleTime.Partnumber,
+                    cycleTime.CycleTimeSec
+                }) > 0;
         }
 
-        public Task<bool> UpdateCycleTime(EfficiencyCycleTime cycleTime)
+        public async Task<bool> UpdateCycleTime(EfficiencyCycleTime cycleTime)
         {
-            throw new NotImplementedException();
+            // 3. If it doesn't exist, insert the new record into the database
+            return await SqlDataAcess_Test.ExecuteAsync(
+                @"UPDATE EfficiencyCycleTime SET CycleTimeSec =@CycleTimeSec, 
+                  Partnumber =@Partnumber, Model =@Model
+                  WHERE CycleID = @CycleID",
+                new
+                {
+                    cycleTime.CycleTimeSec,
+                    cycleTime.Partnumber,
+                    cycleTime.Model,
+                    cycleTime.CycleID
+                }) > 0;
         }
 
         public Task<bool> UploadOrAddCycleTime(EfficiencyCycleTime shop)
         {
             throw new NotImplementedException();
         }
+
+        public async Task<bool> DeleteCycleTime(int cycleId)
+        {
+            return await SqlDataAcess_Test.ExecuteAsync(
+              @"DELETE FROM EfficiencyCycleTime
+                  WHERE CycleID = @CycleID",
+              new  {  CycleID = cycleId }) > 0;
+        }
+
+        
     }
 }

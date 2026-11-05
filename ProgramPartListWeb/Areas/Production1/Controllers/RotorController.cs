@@ -99,6 +99,38 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
             return JsonSuccess(res);
         }
 
+        [HttpPost]
+        public async Task<ActionResult> SaveEditEmployeeCode(EfficiencyEmployeeCode model)
+        {
+            Debug.WriteLine("========== Employee Code ==========");
+            Debug.WriteLine($"Model is null: {model == null}");
+            Debug.WriteLine($"ID : {model.EmployID}");
+            if (model == null)
+                return JsonPostError("Request body could not be bound.");
+
+
+            bool IdCheck = model.EmployID > 0;
+
+            bool results = IdCheck ? await _emp.EditEmployeeCode(model) : await _emp.AdditionalEmployeeCode(model);
+            if (!results)
+                return JsonPostError("Failed to Add a New Employee Code");
+
+            return JsonSuccess();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteEmployeeCode(int EmployID)
+        {
+            Debug.WriteLine("========== EfficiencyDaily DELETE EMPLOYEE CODE ==========");
+            Debug.WriteLine($"EmployID: {EmployID}");
+
+            bool deleted = await _emp.DeleteEmployeeCode(EmployID);
+            if (!deleted)
+                return JsonPostError("Failed to delete Employee Code");
+
+            return JsonSuccess();
+        }
+
         // ─────────────────────────────────────────────────────────────────
         // GET: /Production1/Employees/GetModelList
         // Gets the List of Employee Details
@@ -113,6 +145,38 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
             return JsonSuccess(res);
         }
 
+
+
+        [HttpPost]
+        public async Task<ActionResult> SaveEditCycleTime()
+        {
+            Request.InputStream.Position = 0;
+            string raw;
+            using (var sr = new System.IO.StreamReader(Request.InputStream))
+                raw = await sr.ReadToEndAsync();
+
+            var model = Newtonsoft.Json.JsonConvert.DeserializeObject<EfficiencyCycleTime>(raw);
+            if (model == null)
+                return JsonPostError("Request body could not be bound.");
+
+            bool IdCheck = model.CycleID > 0;
+
+            bool result = IdCheck ? await _emp.UpdateCycleTime(model) : await _emp.AddCycleTime(model);
+            return result ? JsonSuccess() : JsonPostError("Failed to Add a New Process");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteCycleTime(int CycleID)
+        {
+            Debug.WriteLine("========== EfficiencyDaily DELETE CYCLE TIME ==========");
+            Debug.WriteLine($"CycleID: {CycleID}");
+
+            bool deleted = await _emp.DeleteCycleTime(CycleID);
+            if (!deleted)
+                return JsonPostError("Failed to delete Cycle Time");
+
+            return JsonSuccess();
+        }
 
         // GET: Production1/Rotor
         public ActionResult Encoder()

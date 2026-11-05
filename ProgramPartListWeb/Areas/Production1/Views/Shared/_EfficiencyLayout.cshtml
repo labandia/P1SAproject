@@ -29,33 +29,28 @@
                 <div class="header-title">
                     <h1>Efficiency Daily Monitor</h1>
                 </div>
-                <p class="header-subtitle">Digital Encoder · Rotor  Section</p>
+                <p class="header-subtitle">Digital Encoder · Rotor Section</p>
             </div>
         </div>
         <div class="header-right">
             <div class="nav-group">
-
-                <a href="/Production1/Rotor/Dashboard" class="nav-btn"
-                   style="text-decoration: none; color: inherit; display: block;">
-                    <i class="fa-regular fa-keyboard"></i><span class="nav-text">Dashboard</span>
+                <a href="/Production1/Rotor/Dashboard" class="nav-btn" style="text-decoration:none;">
+                    <i class="fa-solid fa-gauge-high"></i><span class="nav-text">Dashboard</span>
                 </a>
-                <a class="nav-btn" href="/Production1/Rotor/Encoder">
+                <a class="nav-btn" href="/Production1/Rotor/Encoder" style="text-decoration:none;">
                     <i class="fa-regular fa-keyboard"></i><span class="nav-text">Encoder</span>
                 </a>
                 <button class="nav-btn" id="dataMenuBtn" type="button"
-                        aria-haspopup="dialog"
-                        aria-controls="dataMenuModal">
+                        aria-haspopup="dialog" aria-controls="dataMenuModal">
                     <i class="fa-solid fa-cloud-arrow-up"></i>
                     <span class="nav-text">Data</span>
                 </button>
-
             </div>
             <div class="live-clock" id="liveClock">--:--:--</div>
             <div class="db-status" title="Database Connected: PMACS_TEST">
                 <i class="fa-solid fa-database"></i>
                 <span class="dot"></span>
             </div>
-
         </div>
     </header>
 
@@ -66,115 +61,56 @@
 
 
 
-    <!-- DATA & OPERATIONS WORKSPACE -->
-    <div class="data-workspace-overlay"
-         id="dataMenuModal"
-         aria-hidden="true">
+    <!-- ========== DATA & OPERATIONS WORKSPACE ========== -->
+    <div class="data-workspace-overlay" id="dataMenuModal" aria-hidden="true">
+        <section class="data-workspace" role="dialog" aria-modal="true" aria-labelledby="dataWorkspaceTitle">
 
-        <section class="data-workspace"
-                 role="dialog"
-                 aria-modal="true"
-                 aria-labelledby="dataWorkspaceTitle">
-
-            <!-- HEADER -->
             <header class="dw-header">
                 <div class="dw-brand">
-                    <div class="dw-brand-icon">
-                        <i class="fa-solid fa-table-cells-large"></i>
-                    </div>
-
+                    <div class="dw-brand-icon"><i class="fa-solid fa-table-cells-large"></i></div>
                     <div class="dw-heading">
                         <div class="dw-title-row">
-                            <h2 id="dataWorkspaceTitle">
-                                Data &amp; Operations Workspace
-                            </h2>
-
-                            <span class="dw-status">
-                                <span class="dw-status-dot"></span>
-                                SYNC ONLINE
-                            </span>
+                            <h2 id="dataWorkspaceTitle">Data &amp; Operations Workspace</h2>
+                            <span class="dw-status"><span class="dw-status-dot"></span>SYNC ONLINE</span>
                         </div>
-
-                        <p>
-                            Manage data synchronization, cycle times,
-                            and production efficiency records.
-                        </p>
+                        <p>Manage data synchronization, cycle times, and production efficiency records.</p>
                     </div>
                 </div>
-
                 <div class="dw-window-actions">
-                    <button type="button"
-                            class="dw-icon-btn"
-                            id="closeDataModal"
-                            aria-label="Close workspace">
+                    <button type="button" class="dw-icon-btn" id="closeDataModal" aria-label="Close workspace">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
             </header>
 
-            <!-- WORKSPACE BODY -->
             <div class="dw-body">
-
-                <!-- SIDEBAR -->
                 <aside class="dw-sidebar">
-                    <div class="dw-sidebar-label">
-                        WORKSPACE MODULES
-                    </div>
+                    <div class="dw-sidebar-label">WORKSPACE MODULES</div>
 
-                    <button type="button"
-                            class="dw-module active"
-                            data-workspace="csv">
+                    <button type="button" class="dw-module active" data-workspace="csv">
                         <i class="fa-regular fa-file-lines"></i>
-
-                        <span class="dw-module-text">
-                            Import CSV files
-                        </span>
-
+                        <span class="dw-module-text">Import data</span>
                         <span class="dw-module-badge">Ready</span>
                     </button>
-
-                    <button type="button"
-                            class="dw-module"
-                            data-workspace="cycle">
+                    <button type="button" class="dw-module" data-workspace="cycle">
                         <i class="fa-solid fa-stopwatch"></i>
-
-                        <span class="dw-module-text">
-                            Cycle Time Master
-                        </span>
+                        <span class="dw-module-text">Cycle Time Master</span>
+                        <span class="dw-module-badge" data-count="cycle">0</span>
                     </button>
-
-                    <button type="button"
-                            class="dw-module"
-                            data-workspace="records">
-                        <i class="fa-solid fa-database"></i>
-
-                        <span class="dw-module-text">
-                            Employees Codes
-                        </span>
+                    <button type="button" class="dw-module" data-workspace="records">
+                        <i class="fa-solid fa-id-badge"></i>
+                        <span class="dw-module-text">Employee Codes</span>
+                        <span class="dw-module-badge" data-count="employee">0</span>
                     </button>
-
-                    <button type="button"
-                            class="dw-module"
-                            data-workspace="shoporder">
-                        <i class="fa-solid fa-database"></i>
-
-                        <span class="dw-module-text">
-                            Shop Orders 
-                        </span>
+                    <button type="button" class="dw-module" data-workspace="shoporder">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                        <span class="dw-module-text">Shop Orders</span>
+                        <span class="dw-module-badge" data-count="shoporder">0</span>
                     </button>
-
-
 
                     <div class="dw-sidebar-bottom">
-                        <div class="dw-capacity">
-                            <span>DATA OPERATIONS</span>
-                            <strong>READY</strong>
-                        </div>
-
-                        <div class="dw-capacity-bar">
-                            <span></span>
-                        </div>
-
+                        <div class="dw-capacity"><span>DATA OPERATIONS</span><strong>READY</strong></div>
+                        <div class="dw-capacity-bar"><span></span></div>
                         <div class="dw-help">
                             <i class="fa-regular fa-circle-question"></i>
                             <span>Workspace documentation</span>
@@ -182,152 +118,91 @@
                     </div>
                 </aside>
 
-                <!-- MAIN CONTENT -->
                 <div class="dw-content">
 
-                    <!-- CSV PANEL -->
-                    <section class="dw-panel active"
-                             id="dwPanelCsv">
-
+                    <!-- IMPORT PANEL -->
+                    <section class="dw-panel active" id="dwPanelCsv">
                         <div class="dw-panel-heading">
                             <div>
-                                <h3>CSV Import &amp; Export</h3>
-                                <p>
-                                    Import production data or export
-                                    your efficiency records.
-                                </p>
+                                <h3>Import Data</h3>
+                                <p>Upload an Excel or CSV file, review the validation result, then submit the valid rows.</p>
                             </div>
-
-                            <span class="dw-ready-badge">
-                                <i class="fa-solid fa-circle-check"></i>
-                                Available
-                            </span>
+                            <span class="dw-ready-badge"><i class="fa-solid fa-circle-check"></i> Available</span>
                         </div>
 
                         <div class="dw-action-grid">
-
-                            <button type="button"
-                                    class="dw-action-card"
-                                    id="openCsvUpload">
-                                <div class="dw-action-icon">
-                                    <i class="fa-solid fa-file-arrow-up"></i>
-                                </div>
-
+                            <button type="button" class="dw-action-card" data-upload>
+                                <div class="dw-action-icon"><i class="fa-solid fa-file-excel"></i></div>
                                 <div class="dw-action-copy">
-                                    <strong>Import Cycle Time Data</strong>
-                                    <span>
-                                        Upload and validate a CSV file
-                                        before importing records.
-                                    </span>
+                                    <strong>Upload File</strong>
+                                    <span>Excel (.xlsx, .xls) or CSV. Sheets: Cycle Time, Employee Codes, Shop Orders</span>
                                 </div>
-
                                 <i class="fa-solid fa-chevron-right dw-chevron"></i>
                             </button>
 
-                            <button type="button"
-                                    class="dw-action-card"
-                                    id="exportEfficiencyCsv">
-                                <div class="dw-action-icon">
-                                    <i class="fa-solid fa-file-arrow-down"></i>
-                                </div>
-
+                            <button type="button" class="dw-action-card" data-template>
+                                <div class="dw-action-icon"><i class="fa-solid fa-download"></i></div>
                                 <div class="dw-action-copy">
-                                    <strong>Import Efficiency Data</strong>
-                                    <span>
-                                        Upload and validate a CSV file
-                                        before importing records.
-                                    </span>
+                                    <strong>Download Template</strong>
+                                    <span>Excel workbook with one sheet per data type</span>
                                 </div>
-
                                 <i class="fa-solid fa-chevron-right dw-chevron"></i>
                             </button>
-
-
-                            <button type="button"
-                                    class="dw-action-card"
-                                    id="exportEfficiencyCsv">
-                                <div class="dw-action-icon">
-                                    <i class="fa-solid fa-file-arrow-up"></i>
-                                </div>
-
-                                <div class="dw-action-copy">
-                                    <strong>Import Shop Order Data</strong>
-                                    
-                                </div>
-
-                                <i class="fa-solid fa-chevron-right dw-chevron"></i>
-                            </button>
-
-
                         </div>
 
                         <div class="dw-info">
                             <i class="fa-solid fa-circle-info"></i>
-                            <span>
-                                Review imported data before submitting
-                                it to the server.
-                            </span>
+                            <span>The data type is detected from the column headers. Existing records are updated and new ones are added. Invalid rows are skipped and listed in the preview.</span>
                         </div>
                     </section>
 
                     <!-- CYCLE TIME PANEL -->
                     <section class="dw-panel" id="dwPanelCycle">
-
                         <div class="dw-panel-heading">
                             <div>
                                 <h3>Cycle Time Master</h3>
-                                <p>
-                                    Maintain process cycle times used
-                                    in efficiency calculations.
-                                </p>
+                                <p>Maintain process cycle times used in efficiency calculations.</p>
                             </div>
-
-
-                            <button type="button" class="dw-add-btn" data-add="cycle">
-                                <i class="fa-solid fa-plus"></i> Add
-                            </button>
+                            <div class="dw-tools">
+                                <input type="search" class="dw-search" data-search="cycle" placeholder="Search...">
+                                <button type="button" class="dw-add-btn" data-add="cycle"><i class="fa-solid fa-plus"></i> Add</button>
+                            </div>
                         </div>
-                        <!-- TABLE -->
-                        <div class="table-scroll" style="margin-top: 1em;">
+                        <div class="table-scroll dw-table-wrap">
                             <table class="data-table">
                                 <thead>
                                     <tr>
                                         <th>Part number</th>
                                         <th>Model</th>
-                                        <th>ProcessName</th>
-                                        <th>CycleTimeSec</th>
+                                        <th>Process name</th>
+                                        <th>Cycle time (sec)</th>
                                         <th class="col-actions">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="CycleTimeBody"></tbody>
                             </table>
                         </div>
-
                     </section>
 
-                    <!-- EFFICIENCY RECORDS PANEL -->
+                    <!-- EMPLOYEE CODES PANEL -->
                     <section class="dw-panel" id="dwPanelRecords">
-
                         <div class="dw-panel-heading">
                             <div>
-                                <h3>Employees  Management Code</h3>
-
-
-
+                                <h3>Employee Code Management</h3>
+                                <p>Map each efficiency code to an employee ID.</p>
                             </div>
-
-                            <button type="button" class="dw-add-btn" data-add="employee">
-                                <i class="fa-solid fa-plus"></i> Add
-                            </button>
+                            <div class="dw-tools">
+                                <input type="search" class="dw-search" data-search="employee" placeholder="Search...">
+                                <button type="button" class="dw-add-btn" data-add="employee"><i class="fa-solid fa-plus"></i> Add</button>
+                            </div>
                         </div>
-                        <!-- TABLE -->
-                        <div class="table-scroll" style="margin-top: 1em;">
+                        <div class="table-scroll dw-table-wrap">
                             <table class="data-table">
                                 <thead>
                                     <tr>
-                                        <th>Employee Code</th>
+                                        <th>Employee code</th>
                                         <th>Employee ID</th>
-                                        <th>Full Name </th>
+                                        <th>Full name</th>
                                         <th>Process</th>
                                         <th>Affiliation</th>
                                         <th class="col-actions">Actions</th>
@@ -336,176 +211,423 @@
                                 <tbody id="EmployeeBody"></tbody>
                             </table>
                         </div>
-
                     </section>
 
-                    <!-- SHOPORDER PANEL -->
+                    <!-- SHOP ORDER PANEL -->
                     <section class="dw-panel" id="dwPanelShoporder">
-
                         <div class="dw-panel-heading">
                             <div>
-                                <h3>SHOP ORDER   Management </h3>
-
-
-
+                                <h3>Shop Order Management</h3>
+                                <p>Shop orders used to auto-fill part number and model in the encoder.</p>
                             </div>
-
-                            <button type="button" class="dw-add-btn" id="addShopOrderBtn">
-                                <i class="fa-solid fa-plus"></i> Add
-                            </button>
+                            <div class="dw-tools">
+                                <input type="search" class="dw-search" data-search="shoporder" placeholder="Search...">
+                                <button type="button" class="dw-add-btn" data-add="shoporder"><i class="fa-solid fa-plus"></i> Add</button>
+                            </div>
                         </div>
-                       
-
+                        <div class="table-scroll dw-table-wrap">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Shop order</th>
+                                        <th>Part number</th>
+                                        <th>Model</th>
+                                        <th class="col-actions">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ShopOrderBody"></tbody>
+                            </table>
+                        </div>
                     </section>
 
                 </div>
             </div>
-
-
         </section>
     </div>
 
-
-
     <!-- ========== CYCLE TIME FORM ========== -->
     <div class="form-overlay" id="cycleFormOverlay" aria-hidden="true">
-        <form id="cycleForm" novalidate>
-            <h3 id="cycleFormTitle"></h3>
+        <form id="cycleForm" class="fm-card" novalidate>
+            <header class="fm-head">
+                <div class="fm-icon"><i class="fa-solid fa-stopwatch"></i></div>
+                <div class="fm-titles">
+                    <h3 id="cycleFormTitle"></h3>
+                    <p>Cycle time per part number and process.</p>
+                </div>
+                <button type="button" class="fm-x" data-close-form aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+            </header>
+            <div class="fm-body">
+                <input type="hidden" name="Id" value="0">
+                <div class="fm-field fm-span-2">
+                    <label for="cyPartnumber">Part number <span class="fm-req">*</span></label>
+                    <input type="text" id="cyPartnumber" name="Partnumber" placeholder="e.g. 00847759-01" required maxlength="50" autocomplete="off">
+                </div>
+                <div class="fm-field fm-span-2">
+                    <label for="cyModel">Model <span class="fm-req">*</span></label>
+                    <input type="text" id="cyModel" name="Model" placeholder="e.g. LG92*38" required maxlength="50" autocomplete="off">
+                </div>
+                <div class="fm-field">
+                    <label for="cyProcessName">Process name <span class="fm-req">*</span></label>
+                    <select id="cyProcessName" name="ProcessName" required>
+                        <option value="">Select process</option>
+                        <option value="COVER DRILLING">COVER DRILLING</option>
+                        <option value="IMPELLER">IMPELLER</option>
+                        <option value="EPIFORM">EPIFORM</option>
+                    </select>
+                </div>
+                <div class="fm-field">
+                    <label for="cyCycleTimeSec">Cycle time (sec) <span class="fm-req">*</span></label>
+                    <input type="number" id="cyCycleTimeSec" name="CycleTimeSec" step="0.01" min="0" placeholder="0.00" required>
+                </div>
 
-            <input type="hidden" name="Id" value="0">
 
-            <label for="cyPartnumber">Part number</label>
-            <input type="text" id="cyPartnumber" name="Partnumber" required>
-
-            <label for="cyModel">Model</label>
-            <input type="text" id="cyModel" name="Model" required>
-
-            <label for="cyProcessName">Process name</label>
-            <input type="text" id="cyProcessName" name="ProcessName" required>
-
-            <label for="cyCycleTimeSec">Cycle time (sec)</label>
-            <input type="number" id="cyCycleTimeSec" name="CycleTimeSec" step="0.01" min="0" required>
-
-            <div id="cycleFormError" role="alert"></div>
-
-            <button type="button" data-close-form>Cancel</button>
-            <button type="submit">Save</button>
+            </div>
+            <div id="cycleFormError" class="fm-error" role="alert"></div>
+            <footer class="fm-foot">
+                <button type="button" class="fm-btn" data-close-form>Cancel</button>
+                <button type="submit" class="fm-btn fm-btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+            </footer>
         </form>
     </div>
 
     <!-- ========== EMPLOYEE CODE FORM ========== -->
     <div class="form-overlay" id="employeeFormOverlay" aria-hidden="true">
-        <form id="employeeForm" novalidate>
-            <h3 id="employeeFormTitle"></h3>
-
-            <input type="hidden" name="Id" value="0">
-
-            <label for="emEffyCode">Employee Code (Effy)</label>
-            <input type="text" id="emEffyCode" name="EffyCode" required>
-
-            <label for="emEmployeeCode">Employee ID</label>
-            <input type="text" id="emEmployeeCode" name="EmployeeCode" required>
-
-            <div id="employeeFormError" role="alert"></div>
-
-            <button type="button" data-close-form>Cancel</button>
-            <button type="submit">Save</button>
+        <form id="employeeForm" class="fm-card" novalidate>
+            <header class="fm-head">
+                <div class="fm-icon"><i class="fa-solid fa-id-badge"></i></div>
+                <div class="fm-titles">
+                    <h3 id="employeeFormTitle"></h3>
+                    <p>Links an efficiency code to an employee ID.</p>
+                </div>
+                <button type="button" class="fm-x" data-close-form aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+            </header>
+            <div class="fm-body">
+                <input type="hidden" name="Id" value="0">
+                <div class="fm-field">
+                    <label for="emEffyCode">Employee code (Effy) <span class="fm-req">*</span></label>
+                    <input type="text" id="emEffyCode" name="EffyCode" placeholder="e.g. S2CR1040" required maxlength="30" autocomplete="off">
+                </div>
+                <div class="fm-field">
+                    <label for="emEmployeeCode">Employee ID <span class="fm-req">*</span></label>
+                    <input type="text" id="emEmployeeCode" name="EmployeeCode" placeholder="e.g. 12345" required maxlength="30" autocomplete="off">
+                </div>
+            </div>
+            <div id="employeeFormError" class="fm-error" role="alert"></div>
+            <footer class="fm-foot">
+                <button type="button" class="fm-btn" data-close-form>Cancel</button>
+                <button type="submit" class="fm-btn fm-btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+            </footer>
         </form>
     </div>
 
+    <!-- ========== SHOP ORDER FORM ========== -->
+    <div class="form-overlay" id="shoporderFormOverlay" aria-hidden="true">
+        <form id="shoporderForm" class="fm-card" novalidate>
+            <header class="fm-head">
+                <div class="fm-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+                <div class="fm-titles">
+                    <h3 id="shoporderFormTitle"></h3>
+                    <p>12-digit shop order with its part number and model.</p>
+                </div>
+                <button type="button" class="fm-x" data-close-form aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+            </header>
+            <div class="fm-body">
+                <input type="hidden" name="Id" value="0">
+                <div class="fm-field fm-span-2">
+                    <label for="soShopOrder">Shop order <span class="fm-req">*</span></label>
+                    <input type="text" id="soShopOrder" name="ShopOrder" placeholder="12 digits" required
+                           inputmode="numeric" pattern="\d{12}" maxlength="12" title="Exactly 12 digits" autocomplete="off">
+                </div>
+                <div class="fm-field">
+                    <label for="soPartnumber">Part number <span class="fm-req">*</span></label>
+                    <input type="text" id="soPartnumber" name="Partnumber" placeholder="e.g. 00885817-01" required maxlength="50" autocomplete="off">
+                </div>
+                <div class="fm-field">
+                    <label for="soModel">Model</label>
+                    <input type="text" id="soModel" name="Model" placeholder="e.g. LG92*38" maxlength="50" autocomplete="off">
+                </div>
+            </div>
+            <div id="shoporderFormError" class="fm-error" role="alert"></div>
+            <footer class="fm-foot">
+                <button type="button" class="fm-btn" data-close-form>Cancel</button>
+                <button type="submit" class="fm-btn fm-btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+            </footer>
+        </form>
+    </div>
+
+    <!-- ========== IMPORT DIALOG (Excel / CSV) ========== -->
+    <div class="form-overlay" id="importOverlay" aria-hidden="true">
+        <div class="fm-card fm-wide" role="dialog" aria-modal="true" aria-labelledby="importTitle">
+            <header class="fm-head">
+                <div class="fm-icon"><i class="fa-solid fa-file-arrow-up"></i></div>
+                <div class="fm-titles">
+                    <h3 id="importTitle">Import Data</h3>
+                    <p id="importHint"></p>
+                </div>
+                <button type="button" class="fm-x" data-close-import aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+            </header>
+
+            <div class="fm-body fm-stack">
+                <label class="imp-drop" id="importDrop" for="importFile">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <strong id="importFileName">Choose an Excel/CSV file or drop it here</strong>
+                    <span>First row of each sheet must be the header row.</span>
+                    <input type="file" id="importFile" accept=".xlsx,.xls,.csv,text/csv" hidden>
+                </label>
+
+                <div class="imp-tabs" id="importTabs" hidden></div>
+
+                <div class="imp-summary" id="importSummary" hidden></div>
+
+                <div class="imp-preview" id="importPreviewWrap" hidden>
+                    <table class="data-table">
+                        <thead id="importHead"></thead>
+                        <tbody id="importBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="importError" class="fm-error" role="alert"></div>
+            <footer class="fm-foot">
+                <button type="button" class="fm-btn fm-btn-left" id="importTemplateBtn">
+                    <i class="fa-solid fa-download"></i> Template
+                </button>
+                <button type="button" class="fm-btn" data-close-import>Cancel</button>
+                <button type="button" class="fm-btn fm-btn-primary" id="importSubmitBtn" disabled>
+                    <i class="fa-solid fa-cloud-arrow-up"></i> <span>Import</span>
+                </button>
+            </footer>
+        </div>
+    </div>
+
+
 
     <script type="module">
-    import { getMethod, postMethod, formatDate } from '@Url.Content("~/Scripts/modules/index.js")';
+    import { getMethod, postMethod } from '@Url.Content("~/Scripts/modules/index.js")';
 
     const byId = id => document.getElementById(id);
+    const CHUNK = 500; // rows per import request (keeps JSON payloads under MVC's default limit)
 
-    // Maps each table to its static form. Field names must match the inputs' name attributes.
+    // ======================================================================
+    // CONFIG
+    // ======================================================================
     const ENTITIES = {
         cycle: {
-            label: 'Cycle Time',
-            overlayId: 'cycleFormOverlay',
-            formId:    'cycleForm',
-            titleId:   'cycleFormTitle',
-            errorId:   'cycleFormError',
-            fields:    ['Partnumber', 'Model', 'ProcessName', 'CycleTimeSec'],
-            saveUrl:   '@Url.Action("SaveCycleTime", "Rotor")',
+            label: 'Cycle Time', panel: 'cycle', bodyId: 'CycleTimeBody',
+            overlayId: 'cycleFormOverlay', formId: 'cycleForm', titleId: 'cycleFormTitle', errorId: 'cycleFormError',
+            idKey: 'CycleID',
+            fields: ['Partnumber', 'Model', 'ProcessName',  'CycleTimeSec'],
+            cols:    ['Partnumber', 'Model', 'ProcessName', 'CycleTimeSec'],
+            listUrl: '@Url.Action("GetModelList", "Rotor")',
+            saveUrl: '@Url.Action("SaveEditCycleTime", "Rotor")',
             deleteUrl: '@Url.Action("DeleteCycleTime", "Rotor")',
-            describe:  r => `${r.Partnumber} / ${r.ProcessName}`
+            describe: r => `${r.Partnumber} `
         },
         employee: {
-            label: 'Employee Code',
-            overlayId: 'employeeFormOverlay',
-            formId:    'employeeForm',
-            titleId:   'employeeFormTitle',
-            errorId:   'employeeFormError',
-            fields:    ['EffyCode', 'EmployeeCode'],
-            saveUrl:   '@Url.Action("SaveEmployeeCode", "Rotor")',
+            label: 'Employee Code', panel: 'records', bodyId: 'EmployeeBody',
+            overlayId: 'employeeFormOverlay', formId: 'employeeForm', titleId: 'employeeFormTitle', errorId: 'employeeFormError',
+            idKey: 'EmployID',
+            fields:  ['EffyCode', 'EmployeeCode'],
+            cols:    ['EffyCode', 'EmployeeCode', 'FullName', 'Process', 'AgencyName'],
+            listUrl: '@Url.Action("GetEmployeeList", "Rotor")',
+            saveUrl: '@Url.Action("SaveEditEmployeeCode", "Rotor")',
             deleteUrl: '@Url.Action("DeleteEmployeeCode", "Rotor")',
-            describe:  r => `${r.EffyCode} (${r.FullName})`
+            describe: r => `${r.EffyCode} (${r.FullName || 'no name'})`
+        },
+        shoporder: {
+            label: 'Shop Order', panel: 'shoporder', bodyId: 'ShopOrderBody',
+            overlayId: 'shoporderFormOverlay', formId: 'shoporderForm', titleId: 'shoporderFormTitle', errorId: 'shoporderFormError',
+            idKey: 'StagingId',
+            fields:  ['ShopOrder', 'Partnumber', 'Model'],
+            cols:    ['ShopOrder', 'Partnumber', 'Model'],
+            listUrl: '@Url.Action("SearchByShopOrderFromCSV", "Rotor")',
+            saveUrl: '@Url.Action("SaveShopOrder", "Rotor")',
+            deleteUrl: '@Url.Action("DeleteShopOrder", "Rotor")',
+            describe: r => `${r.ShopOrder}`
         }
     };
 
+    // Header names are matched after lower-casing and stripping everything except a-z / 0-9.
+    const IMPORTS = {
+        cycle: {
+            title: 'Import Cycle Time Data',
+            url: '@Url.Action("ImportCycleTime", "Rotor")',
+            columns: [
+                { key: 'Partnumber',   aliases: ['partnumber', 'partno', 'partnum'], required: true },
+                { key: 'Model',        aliases: ['model'], required: true },
+                { key: 'ProcessName',  aliases: ['processname', 'process'], required: true },
+                { key: 'CycleTimeSec', aliases: ['cycletimesec', 'cycletime', 'ct'], required: true,
+                  validate: v => (v !== '' && !isNaN(v) && Number(v) >= 0) ? '' : 'must be a number ≥ 0' }
+            ]
+        },
+        employee: {
+            title: 'Import Employee Codes',
+            url: '@Url.Action("ImportEmployeeCodes", "Rotor")',
+            columns: [
+                { key: 'EffyCode',     aliases: ['effycode', 'code'], required: true },
+                { key: 'EmployeeCode', aliases: ['employeecode', 'employeeid', 'empid'], required: true }
+            ]
+        },
+        shoporder: {
+            title: 'Import Shop Order Data',
+            url: '@Url.Action("ImportShopOrders", "Rotor")',
+            columns: [
+                { key: 'ShopOrder',   aliases: ['shoporder', 'so'], required: true,
+                  validate: v => /^\d{12}$/.test(v) ? '' : 'must be 12 digits' },
+                { key: 'Partnumber',  aliases: ['partnumber', 'partno', 'partnum'], required: true },
+                { key: 'Model',       aliases: ['model'], required: false }
+            ]
+        }
+    };
+
+    // ======================================================================
+    // Import helpers (SheetJS reads .xlsx, .xls and .csv)
+    // ======================================================================
+    const norm = s => String(s ?? '').toLowerCase().replace(/[^a-z0-9]/g, '');
+
+    const SHEET_NAMES = { cycle: 'Cycle Time', employee: 'Employee Codes', shoporder: 'Shop Orders' };
+    const cellText = v => (v instanceof Date) ? v.toISOString().slice(0, 10) : String(v ?? '').trim();
+
+    // SheetJS is a classic script loaded in <head>; check it actually loaded (CDN may be blocked on the factory network)
+    function sheetJsReady() {
+        if (typeof window.XLSX !== 'undefined') return true;
+        alert('The Excel library (SheetJS) failed to load. Check the internet connection, or host xlsx.full.min.js locally and update the <script> tag in the layout.');
+        return false;
+    }
+
+    function downloadTemplate() {
+        if (!sheetJsReady()) return;
+        const wb = XLSX.utils.book_new();
+        Object.keys(IMPORTS).forEach(key => {
+            const headers = IMPORTS[key].columns.map(c => c.key);
+            const ws = XLSX.utils.aoa_to_sheet([headers]);
+            ws['!cols'] = headers.map(h => ({ wch: Math.max(16, h.length + 4) }));
+            XLSX.utils.book_append_sheet(wb, ws, SHEET_NAMES[key]);
+        });
+        XLSX.writeFile(wb, 'Efficiency_Import_Template.xlsx');
+    }
+
+    // ======================================================================
+    // MAIN CONTROLLER
+    // ======================================================================
     class DataManagementController {
         constructor() {
-            this.employBody = byId('EmployeeBody');
-            this.CycleBody  = byId('CycleTimeBody');
-            this.rows = { cycle: [], employee: [] };   // cached so Edit can prefill without another request
+            this.rows = { cycle: [], employee: [], shoporder: [] };
+            this.loaded = {};
+            this.filters = { cycle: '', employee: '', shoporder: '' };
+            this.importState = null;
+            this.modal = byId('dataMenuModal');
+            this.processSelect = byId('cyProcessName');
+            this.bindModal();
             this.bindEvents();
+            this.bindImport();
         }
 
-        async init() {
-            await this.loadEmployees();
-            await this.loadCycleTime();
+        // ---------- workspace modal ----------
+        bindModal() {
+            byId('dataMenuBtn').addEventListener('click', () => this.openModal());
+            byId('closeDataModal').addEventListener('click', () => this.closeModal());
+            this.modal.addEventListener('mousedown', e => { if (e.target === this.modal) this.closeModal(); });
+
+            document.querySelectorAll('.dw-module').forEach(btn =>
+                btn.addEventListener('click', () => this.showModule(btn.dataset.workspace)));
+
+            document.addEventListener('keydown', e => {
+                if (e.key !== 'Escape') return;
+                // close the top-most layer first
+                const imp = byId('importOverlay');
+                if (imp.classList.contains('open')) return this.closeImport();
+                const form = Object.keys(ENTITIES).find(k => byId(ENTITIES[k].overlayId).classList.contains('open'));
+                if (form) return this.closeForm(form);
+                if (this.modal.classList.contains('show')) this.closeModal();
+            });
         }
 
-        // ---------- events ----------
+        openModal() {
+            this.modal.classList.add('show');
+            this.modal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            this.ensureLoaded('cycle'); this.ensureLoaded('employee'); this.ensureLoaded('shoporder');
+        }
+
+        closeModal() {
+            this.modal.classList.remove('show');
+            this.modal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        }
+
+        showModule(name) {
+            const panels = { csv: 'dwPanelCsv', cycle: 'dwPanelCycle', records: 'dwPanelRecords', shoporder: 'dwPanelShoporder' };
+            document.querySelectorAll('.dw-module').forEach(b => b.classList.toggle('active', b.dataset.workspace === name));
+            Object.entries(panels).forEach(([k, id]) => byId(id).classList.toggle('active', k === name));
+        }
+
+        // ---------- events (CRUD) ----------
         bindEvents() {
-            // Table buttons are delegated because rows are re-rendered after every save/delete.
             document.addEventListener('click', e => {
                 const add = e.target.closest('[data-add]');
                 if (add) return this.openForm(add.dataset.add, null);
 
+                // single Upload File button (Excel / CSV)
+                if (e.target.closest('[data-upload]')) return this.openImport(true);
+
+                // Download Template button
+                if (e.target.closest('[data-template]')) return downloadTemplate();
+
                 const btn = e.target.closest('.row-btn');
                 if (!btn) return;
                 const { entity, id } = btn.dataset;
-                const row = this.rows[entity].find(r => String(r.Id) === id);
+                const row = this.rows[entity].find(r => String(this.getId(entity, r)) === id);
                 if (!row) return;
-
                 if (btn.classList.contains('edit'))   this.openForm(entity, row);
                 if (btn.classList.contains('delete')) this.deleteRow(entity, row);
             });
 
-            // The forms are static, so wire each one once here.
+            document.addEventListener('input', e => {
+                const s = e.target.closest('[data-search]');
+                if (!s) return;
+
+                this.filters[s.dataset.search] = s.value.trim().toLowerCase();
+                this.render(s.dataset.search);
+            });
+
             Object.keys(ENTITIES).forEach(key => {
                 const cfg = ENTITIES[key];
-                byId(cfg.formId).addEventListener('submit', e => {
-                    e.preventDefault();
-                    this.submitForm(key);
-                });
-                byId(cfg.overlayId).querySelectorAll('[data-close-form]')
-                    .forEach(b => b.addEventListener('click', () => this.closeForm(key)));
+                const overlay = byId(cfg.overlayId);
+                byId(cfg.formId).addEventListener('submit', e => { e.preventDefault(); this.submitForm(key); });
+                overlay.querySelectorAll('[data-close-form]').forEach(b => b.addEventListener('click', () => this.closeForm(key)));
+                overlay.addEventListener('mousedown', e => { if (e.target === overlay) this.closeForm(key); });
             });
         }
 
-        // ---------- add / edit form ----------
         openForm(key, row) {
-            const cfg  = ENTITIES[key];
-            const form = byId(cfg.formId);
+            const cfg = ENTITIES[key], form = byId(cfg.formId);
+
+
+            if (row) {
+                const id = row[cfg.idKey];
+                if (id === undefined || id === null) {
+                    console.error(`idKey "${cfg.idKey}" not found in row`, row);
+                    alert('Cannot edit: record ID is missing from the list data.');
+                    return;
+                }
+                form.elements['Id'].value = id;
+            } else {
+                form.elements['Id'].value = 0;
+            }
 
             form.reset();
-            form.elements['Id'].value = row ? row.Id : 0;     // 0 tells the server it's an insert
-            // Setting .value is safe: no HTML is parsed, so no escaping needed here.
-            cfg.fields.forEach(name => {
-                form.elements[name].value = row ? (row[name] ?? '') : '';
+            form.elements['Id'].value = row ? this.getId(key, row) : 0;   // 0 = insert
+            cfg.fields.forEach(n => {
+                const el = form.elements[n];
+                if (el) el.value = row ? (row[n] ?? '') : '';
             });
-
             byId(cfg.titleId).textContent = (row ? 'Edit ' : 'Add ') + cfg.label;
             byId(cfg.errorId).textContent = '';
-
             const overlay = byId(cfg.overlayId);
             overlay.classList.add('open');
             overlay.setAttribute('aria-hidden', 'false');
-            form.elements[cfg.fields[0]].focus();
+            form.elements[cfg.fields[0]]?.focus();
         }
 
         closeForm(key) {
@@ -515,116 +637,343 @@
         }
 
         async submitForm(key) {
-            const cfg  = ENTITIES[key];
-            const form = byId(cfg.formId);
-            const err  = byId(cfg.errorId);
+            const cfg = ENTITIES[key], form = byId(cfg.formId);
+            byId(cfg.errorId).textContent = '';
 
-            // Uses your inputs' own required/min/step attributes, so the rules live in your markup.
             if (!form.reportValidity()) return;
 
-            const payload = { Id: Number(form.elements['Id'].value) || 0 };
-            cfg.fields.forEach(name => { payload[name] = form.elements[name].value.trim(); });
+            // Use the entity-specific key (CycleId / EmployeeId / ShopOrderId)
+            const payload = { [cfg.idKey]: Number(form.elements['Id'].value) || 0 };
+            cfg.fields.forEach(n => {
+                const el = form.elements[n];
+                if (!el) { console.warn(`Field "${n}" not found in ${cfg.formId}`); return; }
+                payload[n] = el.value.trim();
+            });
 
             const saveBtn = form.querySelector('[type="submit"]');
-            saveBtn.disabled = true;           // block double-submit
+            saveBtn.disabled = true;
+
+            console.log("URL" + cfg.saveUrl);
+            console.log(payload);
             try {
                 const res = await postMethod(cfg.saveUrl, payload);
-                if (!res?.Success) { err.textContent = res?.Message || 'Save failed.'; return; }
+                console.log(res);
+                if (!res?.Success) {
+                    this.showError(key, res?.Message || `Unable to save ${cfg.label.toLowerCase()}.`);
+                    return;
+                }
                 this.closeForm(key);
-                await this.reload(key);
+                await this.load(key);
             } catch (ex) {
                 console.error('Save failed:', ex);
-                err.textContent = 'Unexpected error while saving.';
-            } finally {
-                saveBtn.disabled = false;
-            }
+                this.showError(key, ex?.message || 'Unexpected error while saving.');
+            } finally { saveBtn.disabled = false; }
         }
 
         async deleteRow(key, row) {
             const cfg = ENTITIES[key];
             if (!confirm(`Delete ${cfg.describe(row)}? This cannot be undone.`)) return;
             try {
-                const res = await postMethod(cfg.deleteUrl, { id: row.Id });
+                const res = await postMethod(cfg.deleteUrl, { [cfg.idKey]: this.getId(key, row) });
                 if (!res?.Success) { alert(res?.Message || 'Delete failed.'); return; }
-                await this.reload(key);
+                await this.load(key);
             } catch (ex) {
                 console.error('Delete failed:', ex);
                 alert('Unexpected error while deleting.');
             }
         }
 
-        reload(key) {
-            return key === 'cycle' ? this.loadCycleTime() : this.loadEmployees();
+        showError(key, msg) {
+            const el = byId(ENTITIES[key].errorId);
+            el.textContent = msg;
+            el.classList.remove('shake');
+            void el.offsetWidth;            // restart the animation if the same error repeats
+            el.classList.add('shake');
         }
 
-        // ---------- loading ----------
-        async loadCycleTime() {
+        // ---------- loading / rendering ----------
+        ensureLoaded(key) { if (!this.loaded[key]) { this.loaded[key] = true; return this.load(key); } }
+
+        async load(key) {
             try {
-                const res = await getMethod('@Url.Action("GetModelList", "Rotor")');
-                this.rows.cycle = res?.Success ? (res.data || []) : [];
-            } catch (error) {
-                console.error('Error loading cycle times:', error);
-                this.rows.cycle = [];
+                const res = await getMethod(ENTITIES[key].listUrl);
+                this.rows[key] = res?.Success ? (res.data || []) : [];
+                console.log(key, Object.keys(this.rows[key][0] || {}));
+            } catch (ex) {
+                console.error(`Error loading ${key}:`, ex);
+                this.rows[key] = [];
             }
-            this.renderCycletTime(this.rows.cycle);
+            this.render(key);
         }
 
-        async loadEmployees() {
-            try {
-                const res = await getMethod('@Url.Action("GetEmployeeList", "Rotor")');
-                this.rows.employee = res?.Success ? (res.data || []) : [];
-            } catch (error) {
-                console.error('Error loading employees:', error);
-                this.rows.employee = [];
-            }
-            this.renderEmployeeTable(this.rows.employee);
+        render(key) {
+            const cfg = ENTITIES[key], f = this.filters[key];
+            const list = f
+                ? this.rows[key].filter(r => cfg.cols.some(c => String(r[c] ?? '').toLowerCase().includes(f)))
+                : this.rows[key];
+
+            const badge = document.querySelector(`[data-count="${key}"]`);
+            if (badge) badge.textContent = this.rows[key].length;
+
+            byId(cfg.bodyId).innerHTML = list.map(r => `
+                <tr>
+                    ${cfg.cols.map(c => `<td>${this.esc(r[c])}</td>`).join('')}
+                    ${this.actionCell(key, r)}
+                </tr>`).join('') ||
+                `<tr><td colspan="${cfg.cols.length + 1}" class="empty">No records found.</td></tr>`;
         }
 
-        // ---------- rendering ----------
         actionCell(entity, r) {
-            const id = this.esc(r.Id);
+            const id = this.esc(this.getId(entity, r));
             return `
                 <td class="col-actions">
                     <div class="row-actions">
-                        <button type="button" class="row-btn edit" title="Edit"
-                                data-entity="${entity}" data-id="${id}"><i class="fa-solid fa-pen"></i></button>
-                        <button type="button" class="row-btn delete" title="Delete"
-                                data-entity="${entity}" data-id="${id}"><i class="fa-solid fa-trash"></i></button>
+                        <button type="button" class="row-btn edit" title="Edit" data-entity="${entity}" data-id="${id}"><i class="fa-solid fa-pen"></i></button>
+                        <button type="button" class="row-btn delete" title="Delete" data-entity="${entity}" data-id="${id}"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </td>`;
         }
 
-        renderCycletTime(list) {
-            this.CycleBody.innerHTML = list.map(r => `
-                <tr>
-                    <td>${this.esc(r.Partnumber)}</td>
-                    <td>${this.esc(r.Model)}</td>
-                    <td>${this.esc(r.ProcessName)}</td>
-                    <td>${this.esc(r.CycleTimeSec)}</td>
-                    ${this.actionCell('cycle', r)}
-                </tr>`).join('') || '<tr><td colspan="5" class="empty">No records found.</td></tr>';
-        }
-
-        renderEmployeeTable(list) {
-            this.employBody.innerHTML = list.map(r => `
-                <tr>
-                    <td>${this.esc(r.EffyCode)}</td>
-                    <td>${this.esc(r.EmployeeCode)}</td>
-                    <td>${this.esc(r.FullName)}</td>
-                    <td>${this.esc(r.Process)}</td>
-                    <td>${this.esc(r.AgencyName)}</td>
-                    ${this.actionCell('employee', r)}
-                </tr>`).join('') || '<tr><td colspan="6" class="empty">No records found.</td></tr>';
-        }
-
-        // Values come from the database, so escape them before putting them in innerHTML.
         esc(s) {
             return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
         }
+
+        // ======================================================================
+        // EXCEL / CSV IMPORT
+        // ======================================================================
+        bindImport() {
+            const overlay = byId('importOverlay'), file = byId('importFile'), drop = byId('importDrop');
+
+            overlay.querySelectorAll('[data-close-import]').forEach(b => b.addEventListener('click', () => this.closeImport()));
+            overlay.addEventListener('mousedown', e => { if (e.target === overlay) this.closeImport(); });
+
+            file.addEventListener('change', () => { if (file.files[0]) this.readFile(file.files[0]); });
+            ['dragenter', 'dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+            ['dragleave', 'drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+            drop.addEventListener('drop', e => { const f = e.dataTransfer.files[0]; if (f) this.readFile(f); });
+
+            byId('importSubmitBtn').addEventListener('click', () => this.submitImport());
+            byId('importTemplateBtn').addEventListener('click', () => downloadTemplate());
+        }
+
+        openImport(pickNow) {
+            this.importState = { datasets: [], active: 0 };
+            byId('importTitle').textContent = 'Import Data';
+            byId('importHint').textContent = 'Excel or CSV. Data type is detected from the column headers.';
+            byId('importFile').value = '';
+            byId('importFileName').textContent = 'Choose an Excel/CSV file or drop it here';
+            byId('importSummary').hidden = true;
+            byId('importTabs').hidden = true;
+            byId('importPreviewWrap').hidden = true;
+            byId('importError').textContent = '';
+            this.setImportBtn(false);
+
+            const overlay = byId('importOverlay');
+            overlay.classList.add('open');
+            overlay.setAttribute('aria-hidden', 'false');
+            if (pickNow) byId('importFile').click();   // still inside the user's click, so the browser allows it
+        }
+
+        closeImport() {
+            const overlay = byId('importOverlay');
+            overlay.classList.remove('open');
+            overlay.setAttribute('aria-hidden', 'true');
+            this.importState = null;
+        }
+
+        setImportBtn(enabled, label) {
+            const b = byId('importSubmitBtn');
+            b.disabled = !enabled;
+            b.querySelector('span').textContent = label || 'Import';
+        }
+
+        // Which entity does this header row belong to? (all required columns must be present)
+        detectEntity(headers) {
+            let best = null, bestScore = 0;
+            Object.keys(IMPORTS).forEach(key => {
+                const cols = IMPORTS[key].columns;
+                const found = cols.filter(c => headers.some(h => c.aliases.includes(h)));
+                const allRequired = cols.filter(c => c.required).every(c => headers.some(h => c.aliases.includes(h)));
+                if (allRequired && found.length > bestScore) { best = key; bestScore = found.length; }
+            });
+            return best;
+        }
+
+        validateSheet(key, sheetName, rows, headers) {
+            const cfg = IMPORTS[key];
+            const idx = {};
+            cfg.columns.forEach(c => { idx[c.key] = headers.findIndex(h => c.aliases.includes(h)); });
+
+            const valid = [], invalid = [], seen = new Set();
+            rows.slice(1).forEach((r, i) => {
+                const obj = {}, problems = [];
+                cfg.columns.forEach(c => {
+                    const raw = idx[c.key] >= 0 ? r[idx[c.key]] : '';
+                    let v = cellText(raw);
+                    // Excel strips leading zeros from numeric shop orders, so restore them
+                    if (key === 'shoporder' && c.key === 'ShopOrder' && typeof raw === 'number' && /^\d{1,11}$/.test(v)) {
+                        v = v.padStart(12, '0');
+                    }
+                    obj[c.key] = v;
+                    if (c.required && v === '') problems.push(`${c.key} is empty`);
+                    else if (v !== '' && c.validate) { const m = c.validate(v); if (m) problems.push(`${c.key} ${m}`); }
+                });
+
+                // duplicate rows inside the same sheet (by the column(s) that act as the key)
+                const dupKey = (key === 'cycle')
+                    ? (obj.Partnumber + '|' + obj.ProcessName).toLowerCase()
+                    : (obj[cfg.columns[0].key] || '').toLowerCase();
+                if (!problems.length) { if (seen.has(dupKey)) problems.push('duplicate in file'); else seen.add(dupKey); }
+
+                const line = i + 2; // 1-based, header is line 1
+                problems.length ? invalid.push({ line, obj, problems }) : valid.push(obj);
+            });
+            return { key, sheetName, total: rows.length - 1, valid, invalid, done: false };
+        }
+
+        async readFile(file) {
+            const err = byId('importError');
+            err.textContent = '';
+            if (!sheetJsReady()) return;
+            if (!/\.(xlsx|xls|csv)$/i.test(file.name)) { err.textContent = 'Please choose an .xlsx, .xls or .csv file.'; return; }
+            byId('importFileName').textContent = file.name;
+
+            let wb;
+            try {
+                wb = XLSX.read(await file.arrayBuffer(), { type: 'array' });
+            } catch (ex) {
+                console.error(ex);
+                err.textContent = 'Unable to read the file. Is it a valid Excel/CSV file?';
+                return;
+            }
+
+            const datasets = [], skipped = [];
+            wb.SheetNames.forEach(name => {
+                const rows = XLSX.utils.sheet_to_json(wb.Sheets[name], { header: 1, defval: '', raw: true, blankrows: false });
+                if (!rows.length) return;
+                const headers = rows[0].map(norm);
+                const key = this.detectEntity(headers);
+                if (!key) { skipped.push(name); return; }
+                if (rows.length < 2) { skipped.push(name + ' (no data rows)'); return; }
+                datasets.push(this.validateSheet(key, name, rows, headers));
+            });
+
+            if (!datasets.length) {
+                this.importState.datasets = [];
+                byId('importSummary').hidden = true;
+                byId('importTabs').hidden = true;
+                byId('importPreviewWrap').hidden = true;
+                this.setImportBtn(false);
+                err.textContent = 'No importable sheet found. Check the column headers (use Download Template).'
+                    + (skipped.length ? ' Skipped: ' + skipped.join(', ') : '');
+                return;
+            }
+
+            this.importState.datasets = datasets;
+            this.importState.active = 0;
+            this.renderImportPreview();
+            if (skipped.length) err.textContent = 'Skipped sheet(s): ' + skipped.join(', ');
+        }
+
+        switchDataset(i) {
+            this.importState.active = i;
+            this.renderImportPreview();
+        }
+
+        renderImportPreview() {
+            const st = this.importState;
+            const ds = st.datasets[st.active], cfg = IMPORTS[ds.key];
+            const { valid, invalid, total } = ds;
+
+            // tabs (only when more than one sheet was detected)
+            const tabs = byId('importTabs');
+            tabs.hidden = st.datasets.length < 2;
+            tabs.innerHTML = st.datasets.map((d, i) =>
+                `<button type="button" class="imp-chip ${i === st.active ? 'active' : ''}" data-tab="${i}">${this.esc(SHEET_NAMES[d.key])} (${d.valid.length})</button>`
+            ).join('');
+            tabs.querySelectorAll('[data-tab]').forEach(b => b.addEventListener('click', () => this.switchDataset(Number(b.dataset.tab))));
+
+            const sum = byId('importSummary');
+            sum.hidden = false;
+            sum.innerHTML = `
+                <span class="imp-chip"><i class="fa-solid fa-table"></i> ${this.esc(SHEET_NAMES[ds.key])}</span>
+                <span class="imp-chip">${total} rows</span>
+                <span class="imp-chip ok"><i class="fa-solid fa-check"></i> ${valid.length} valid</span>
+                <span class="imp-chip ${invalid.length ? 'bad' : ''}"><i class="fa-solid fa-triangle-exclamation"></i> ${invalid.length} invalid</span>`;
+
+            const cols = cfg.columns.map(c => c.key);
+            byId('importHead').innerHTML = `<tr><th>Line</th>${cols.map(c => `<th>${c}</th>`).join('')}<th>Status</th></tr>`;
+
+            const LIMIT = 100;
+            const all = [
+                ...invalid.map(x => ({ line: x.line, obj: x.obj, msg: x.problems.join('; '), bad: true })),
+                ...valid.map(o => ({ line: '', obj: o, msg: 'OK', bad: false }))
+            ].slice(0, LIMIT);
+
+            byId('importBody').innerHTML = all.map(r => `
+                <tr class="${r.bad ? 'imp-bad' : ''}">
+                    <td>${r.line}</td>
+                    ${cols.map(c => `<td>${this.esc(r.obj[c])}</td>`).join('')}
+                    <td class="imp-msg">${this.esc(r.msg)}</td>
+                </tr>`).join('');
+            byId('importPreviewWrap').hidden = false;
+
+            byId('importError').textContent = total > LIMIT ? `Preview shows the first ${LIMIT} rows (invalid rows first).` : '';
+
+            const totalValid = st.datasets.reduce((n, d) => n + (d.done ? 0 : d.valid.length), 0);
+            this.setImportBtn(totalValid > 0, totalValid ? `Import ${totalValid} row${totalValid > 1 ? 's' : ''}` : 'Import');
+        }
+
+        async submitImport() {
+            const st = this.importState;
+            if (!st || !st.datasets.length) return;
+            const err = byId('importError');
+            err.textContent = '';
+            this.setImportBtn(false, 'Importing...');
+
+            const report = [];
+            try {
+                for (const ds of st.datasets) {
+                    if (ds.done || !ds.valid.length) continue;
+                    const cfg = IMPORTS[ds.key];
+                    let inserted = 0, updated = 0;
+
+                    for (let i = 0; i < ds.valid.length; i += CHUNK) {
+                        const res = await postMethod(cfg.url, { rows: ds.valid.slice(i, i + CHUNK) });
+                        if (!res?.Success) {
+                            err.textContent = `${SHEET_NAMES[ds.key]}: ${res?.Message || 'Import failed.'}`
+                                + (i ? ` (${i} rows were already imported)` : '');
+                            this.setImportBtn(true, 'Retry');
+                            return;
+                        }
+                        inserted += res.Inserted || 0;
+                        updated  += res.Updated  || 0;
+                    }
+                    ds.done = true;
+                    report.push(`${SHEET_NAMES[ds.key]}: added ${inserted}, updated ${updated}, skipped ${ds.invalid.length}`);
+                }
+
+                alert('Import complete.\n' + report.join('\n'));
+                const keys = [...new Set(st.datasets.map(d => d.key))];
+                this.closeImport();
+                for (const k of keys) if (this.loaded[k]) await this.load(k);
+            } catch (ex) {
+                console.error('Import failed:', ex);
+                err.textContent = 'Unexpected error while importing.';
+                this.setImportBtn(true, 'Retry');
+            }
+        }
+
+        // inside the class
+        getId(entity, row) {
+            const want = ENTITIES[entity].idKey.toLowerCase();
+            const k = Object.keys(row).find(p => p.toLowerCase() === want);
+            return k ? row[k] : undefined;
+        }
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        new DataManagementController().init();
+    document.addEventListener('DOMContentLoaded', () => {
+        window.dataMgmt = new DataManagementController();   // data loads the first time the workspace opens
     });
     </script>
 </body>

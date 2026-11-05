@@ -21,7 +21,7 @@ namespace ProgramPartListWeb.Areas.Production1.Model
     public class EfficiencyCycleTime
     {
         public int CycleID { get; set; }                    // INT IDENTITY, PK
-        public byte ProcessId { get; set; }                 // FK -> EfficiencyProcess
+        public byte ProcessId { get; set; } = 1;              // FK -> EfficiencyProcess
         public string Partnumber { get; set; } = string.Empty;    // NVARCHAR(50)
         public string Model { get; set; }                   // NVARCHAR(100) NULL
         public decimal CycleTimeSec { get; set; }           // DECIMAL(9,2), > 0 (current)
@@ -44,6 +44,7 @@ namespace ProgramPartListWeb.Areas.Production1.Model
     /// </summary>
     public class EfficiencyEmployeeCode
     {
+        public int EmployID { get; set; }                 // INT IDENTITY, PK
         public string EffyCode { get; set; } = string.Empty;      // NVARCHAR(20), PK (e.g. S2CR1040)
         public string EmployeeCode { get; set; } = string.Empty;  // NVARCHAR(20), FK -> P1SA_Employees_Temp
         public string FullName { get; set; } = string.Empty;

@@ -537,33 +537,87 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             };
         }
 
-        public async Task<ImportResult> UploadCycleTimes(List<EfficiencyCycleTime> rows)
+
+        public async Task<ImportResult> UploadCycleTimes(
+            List<EfficiencyCycleTime> rows)
         {
-            const string sql = @"
-                MERGE EfficiencyCycleTime AS t
-                USING (SELECT * FROM OPENJSON(@json) WITH (
-                            Partnumber   NVARCHAR(50)  '$.Partnumber',
-                            Model        NVARCHAR(100) '$.Model',
-                            ProcessId    TINYINT       '$.ProcessId',
-                            CycleTimeSec DECIMAL(9,2)  '$.CycleTimeSec')) AS s
-                   ON t.Partnumber = s.Partnumber AND t.ProcessId = s.ProcessId
-                WHEN MATCHED THEN
-                    UPDATE SET t.Model = s.Model, t.CycleTimeSec = s.CycleTimeSec
-                WHEN NOT MATCHED THEN
-                    INSERT (Partnumber, Model, ProcessId, CycleTimeSec)
-                    VALUES (s.Partnumber, s.Model, s.ProcessId, s.CycleTimeSec)
-                OUTPUT $action;";
-
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(rows);
-
-            var actions = await SqlDataAcess_Test.QueryAsync<string>(sql, new { json });
-
-            return new ImportResult
+            try
             {
-                Inserted = actions.Count(a => a == "INSERT"),
-                Updated = actions.Count(a => a == "UPDATE")
-            };
+                if (rows == null || rows.Count == 0)
+                    return new ImportResult();
+
+                const string sql = @"
+            MERGE EfficiencyCycleTime_V2 AS t
+            USING
+            (
+                SELECT *
+                FROM OPENJSON(@json)
+                WITH
+                (
+                    Partnumber   NVARCHAR(50)  '$.Partnumber',
+                    Model        NVARCHAR(100) '$.Model',
+                    ProcessId    TINYINT       '$.ProcessId',
+                    CycleTimeSec DECIMAL(9,2)  '$.CycleTimeSec'
+                )
+            ) AS s
+
+            ON t.Partnumber = s.Partnumber
+            AND t.ProcessId = s.ProcessId
+
+            WHEN MATCHED THEN
+                UPDATE SET
+                    t.Model = s.Model,
+                    t.CycleTimeSec = s.CycleTimeSec
+
+            WHEN NOT MATCHED THEN
+                INSERT
+                (
+                    Partnumber,
+                    Model,
+                    ProcessId,
+                    CycleTimeSec
+                )
+                VALUES
+                (
+                    s.Partnumber,
+                    s.Model,
+                    s.ProcessId,
+                    s.CycleTimeSec
+                )
+
+            OUTPUT $action;
+        ";
+
+                var json = Newtonsoft.Json.JsonConvert.SerializeObject(rows);
+
+                var actions = await SqlDataAcess_Test.QueryAsync<string>(
+                    sql,
+                    new { json }
+                );
+
+                var result = new ImportResult
+                {
+                    Inserted = actions.Count(a => a == "INSERT"),
+                    Updated = actions.Count(a => a == "UPDATE")
+                };
+
+                Debug.WriteLine("========== CYCLE TIME IMPORT ==========");
+                Debug.WriteLine("Total Uploaded: " + rows.Count);
+                Debug.WriteLine("Inserted: " + result.Inserted);
+                Debug.WriteLine("Updated: " + result.Updated);
+                Debug.WriteLine("Total Processed: " +
+                    (result.Inserted + result.Updated));
+                Debug.WriteLine("========================================");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("CYCLE TIME IMPORT ERROR: " + ex);
+                throw;
+            }
         }
+
 
 
         public enum EfficiencyDateFilter

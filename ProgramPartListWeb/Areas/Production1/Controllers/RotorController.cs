@@ -214,7 +214,7 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
         // ─────────────────────────────────────────────────────────────────
         [HttpPost]
         public async Task<ActionResult> ImportEmployeeCode(
-    List<EfficiencyEmployeeCode> rows)
+            List<EfficiencyEmployeeCode> rows)
         {
             if (rows == null || rows.Count == 0)
                 return JsonPostError("No rows were received.");
@@ -248,39 +248,88 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
             }
         }
 
+
         // ─────────────────────────────────────────────────────────────────
         // POST: IMPORT CYCLE TIME
         // ─────────────────────────────────────────────────────────────────
         [HttpPost]
-        public async Task<ActionResult> ImportCycleTime(List<EfficiencyCycleTime> rows)
+        public async Task<ActionResult> ImportCycleTime(
+            List<EfficiencyCycleTime> rows)
         {
             if (rows == null || rows.Count == 0)
                 return JsonPostError("No rows were received.");
 
-            var bad = rows.FirstOrDefault(r =>
-                string.IsNullOrWhiteSpace(r.Partnumber) || r.Partnumber.Length > 50 ||
-                (r.Model != null && r.Model.Length > 100) ||
-                r.ProcessId < 1 || r.ProcessId > 3 ||
-                r.CycleTimeSec <= 0);
-            if (bad != null)
-                return JsonPostError($"Invalid row for part number '{bad.Partnumber}'.");
-
-            var dup = rows.GroupBy(r => new { P = r.Partnumber.Trim().ToLower(), r.ProcessId })
-                          .FirstOrDefault(g => g.Count() > 1);
-            if (dup != null)
-                return JsonPostError($"Duplicate part number / process in the request: '{dup.Key.P}'.");
-
             try
             {
+                // 1. Normalize incoming data.
+                foreach (var row in rows)
+                {
+                    if (row == null)
+                        return JsonPostError("Invalid empty row detected.");
+
+                    row.Partnumber = row.Partnumber?.Trim();
+                    row.Model = row.Model?.Trim();
+                }
+
+                // 2. Validate required fields.
+                var bad = rows.FirstOrDefault(r =>
+                    string.IsNullOrWhiteSpace(r.Partnumber) ||
+                    r.Partnumber.Length > 50 ||
+                    (r.Model != null && r.Model.Length > 100) ||
+                    r.ProcessId < 1 || r.ProcessId > 6 ||
+                    r.CycleTimeSec <= 0
+                );
+
+                if (bad != null)
+                {
+                    return JsonPostError(
+                        $"Invalid cycle time record. " +
+                        $"Partnumber: '{bad.Partnumber}', " +
+                        $"ProcessId: {bad.ProcessId}, " +
+                        $"CycleTimeSec: {bad.CycleTimeSec}."
+                    );
+                }
+
+                // 3. Check duplicate Partnumber + ProcessId.
+                var dup = rows
+                    .GroupBy(r => new
+                    {
+                        P = r.Partnumber.ToLowerInvariant(),
+                        r.ProcessId
+                    })
+                    .FirstOrDefault(g => g.Count() > 1);
+
+                if (dup != null)
+                {
+                    return JsonPostError(
+                        $"Duplicate Partnumber / ProcessId: " +
+                        $"'{dup.Key.P}' / Process ID {dup.Key.ProcessId}."
+                    );
+                }
+
+                // 4. Execute database import.
                 var result = await _emp.UploadCycleTimes(rows);
-                return Json(new { Success = true, Inserted = result.Inserted, Updated = result.Updated });
+
+                // 5. Return successful import result.
+                return Json(new
+                {
+                    Success = true,
+                    TotalUploaded = rows.Count,
+                    Inserted = result.Inserted,
+                    Updated = result.Updated,
+                    Message = "Cycle time import completed successfully."
+                });
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
-                return JsonPostError("Import failed: " + ex.Message);
+
+                return JsonPostError(
+                    "Cycle time import failed: " + ex.Message
+                );
             }
         }
+
 
         // GET: Production1/Rotor
         public ActionResult Encoder()

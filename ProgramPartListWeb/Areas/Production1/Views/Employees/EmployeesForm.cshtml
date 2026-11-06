@@ -3,136 +3,13 @@
     Layout = "~/Areas/Production1/Views/Shared/_EmployeesLayout.cshtml";
 }
 
-<!-- ============================================================
-      DESKTOP HEADER
-      ============================================================ -->
-<header class="desktop-header">
-    <div class="h-16 w-full px-gutter-desktop flex items-center justify-between gap-gutter-desktop">
-        <div class="flex items-center gap-space-xl">
-            <div class="flex items-center gap-space-sm">
-                <div class="w-9 h-9 rounded-lg bg-primary flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16">
-                        <path d="M0 0h16v16H0z" fill="none" />
-                        <g fill="currentColor">
-                            <path d="M11 6a3 3 0 1 1-6 0a3 3 0 0 1 6 0" />
-                            <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
-                        </g>
-                    </svg>
 
-                </div>
-                <div class="flex flex-col">
-                    <span class="font-title-md text-title-md text-on-surface leading-tight tracking-tight">SANYO DENKI</span>
-                    <span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">HR Encoder Portal</span>
-                </div>
-            </div>
-            <nav class="hidden lg:flex items-center gap-space-xs">
-                <a aria-current="page" class="px-space-md py-space-xs rounded-lg transition-colors bg-secondary-container text-on-secondary-container font-title-sm" href="#">Employee Records</a>
-                <a class="px-space-md py-space-xs rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" href="#">Batch Encoding</a>
-                <a class="px-space-md py-space-xs rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" href="#">Department Rosters</a>
-                <a class="px-space-md py-space-xs rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" href="#">Audit Logs</a>
-            </nav>
-        </div>
-        <div class="flex items-center gap-space-md">
-            <div class="relative hidden md:block w-72 lg:w-96">
-                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
-                    <path d="M0 0h24v24H0z" fill="none" />
-                    <g fill="none">
-                        <path fill="currentColor" d="M15.47 7.99a5.4 5.4 0 1 1-10.79 0a5.4 5.4 0 0 1 10.8 0" opacity=".2" />
-                        <path fill="currentColor" d="M16.93 21.84H1.78a8.4 8.4 0 0 1 8.3-8.46c1.96 0 4.2.82 5.87 2.34L14.8 17.9s.74 1.66 2.13 3.94" opacity=".2" />
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.47 7.99a5.4 5.4 0 0 1-5.4 5.4a5.4 5.4 0 1 1 5.4-5.4" />
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M1.78 21.68a8.3 8.3 0 0 1 11.28-7.74m7.3 6.68l1.88 1.87m-.98-4.36a3.2 3.2 0 0 1-3.2 3.2a3.2 3.2 0 1 1 3.2-3.2" />
-                    </g>
-                </svg>
-
-                <input class="w-full h-10 pl-10 pr-space-md rounded-lg bg-surface-container-low text-on-surface placeholder:text-outline text-body-sm font-body-sm focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container transition-all" placeholder="Search employee ID, badge, or name..." type="text">
-            </div>
-
-
-            <div class="h-8 w-px bg-surface-container-high mx-space-xs"></div>
-            <div class="flex items-center gap-space-sm pl-space-xs">
-                <div class="text-right hidden xl:block">
-                    <div class="font-label-lg text-label-lg text-on-surface">T. Morimoto</div>
-                    <div class="font-label-sm text-label-sm text-on-surface-variant">Lead Encoder (Admin)</div>
-                </div>
-                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none" />
-                        <g fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="7" r="5" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 14h.352a3 3 0 0 1 2.976 2.628l.391 3.124A2 2 0 0 1 18.734 22H5.266a2 2 0 0 1-1.985-2.248l.39-3.124A3 3 0 0 1 6.649 14H7" />
-                        </g>
-                    </svg>
-
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-
-<!-- ============================================================
-     MOBILE HEADER
-     ============================================================ -->
-<header class="mobile-header pt-safe">
-    <div class="h-44 flex flex-col justify-between">
-        <div class="h-6 px-4 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
-            <span class="font-semibold">9:41</span>
-            <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-[16px]">signal_cellular_alt</span>
-                <span class="material-symbols-outlined text-[16px]">wifi</span>
-                <span class="material-symbols-outlined text-[16px]">battery_full</span>
-            </div>
-        </div>
-        <div class="h-14 px-4 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-lg bg-primary flex items-center justify-center text-on-primary font-bold shadow-[0_2px_6px_rgba(0,73,190,0.25)]">
-                    <span class="material-symbols-outlined text-[20px]">precision_manufacturing</span>
-                </div>
-                <div class="flex flex-col">
-                    <span class="font-label-sm text-label-sm text-primary uppercase tracking-wider font-semibold">Sanyo Denki HR Portal</span>
-                    <span class="font-title-sm text-title-sm text-on-surface leading-tight font-semibold">Employee Encoder</span>
-                </div>
-            </div>
-            <div class="flex items-center gap-1">
-
-                <button class="w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-on-surface rounded-full transition-colors">
-                    <span class="material-symbols-outlined text-[22px]">help</span>
-                </button>
-                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center ml-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none" />
-                        <g fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="7" r="5" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 14h.352a3 3 0 0 1 2.976 2.628l.391 3.124A2 2 0 0 1 18.734 22H5.266a2 2 0 0 1-1.985-2.248l.39-3.124A3 3 0 0 1 6.649 14H7" />
-                        </g>
-                    </svg>
-
-                </div>
-            </div>
-        </div>
-        <div class="px-4 py-1 flex items-center justify-between">
-            <span class="font-label-md text-label-md text-on-surface-variant font-medium" id="mobileStepLabel">Personal Details</span>
-            <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-label-sm font-label-sm">
-                <span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
-                Draft Auto-Saved
-            </div>
-        </div>
-        <!-- Mobile step nav — functional -->
-        <nav class="h-12 overflow-x-auto no-scrollbar flex items-center px-4 gap-2" id="mobileStepNav">
-            <button class="step-tab step-tab--mobile is-active" data-step="1" type="button"><span class="step-tab__num">1</span>Personal Details</button>
-            <button class="step-tab step-tab--mobile" data-step="2" type="button"><span class="step-tab__num">2</span>Employment</button>
-            <button class="step-tab step-tab--mobile" data-step="3" type="button"><span class="step-tab__num">3</span>Address</button>
-            <button class="step-tab step-tab--mobile" data-step="4" type="button"><span class="step-tab__num">4</span>Education &amp; Skills</button>
-            <button class="step-tab step-tab--mobile" data-step="5" type="button"><span class="step-tab__num">5</span>Photo Upload</button>
-            <button class="step-tab step-tab--mobile" data-step="6" type="button"><span class="step-tab__num">6</span>Work History</button>
-        </nav>
-    </div>
-</header>
 
 <!-- ============================================================
      MOBILE MAIN
      ============================================================ -->
 <main class="mobile-main flex flex-col relative w-full bg-background min-h-screen" id="mobileMain">
-    <div class="flex flex-col w-full pb-8">
+    <div class="flex flex-col w-full ">
 
         <div class="flex items-center gap-2 mb-4 px-1">
             <span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
@@ -739,7 +616,11 @@
                         <span>Draft autosaved 38s ago</span>
                     </div>
                     <button class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-surface-container-lowest/80 text-secondary transition-colors" type="button">
-                        <span class="material-symbols-outlined text-[20px]">close</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="3em" height="3em" viewBox="0 0 1024 1024">
+                            <path d="M0 0h1024v1024H0z" fill="none" />
+                            <path fill="currentColor" fill-rule="evenodd" d="M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960S64 759.4 64 512S264.6 64 512 64m0 76c-205.4 0-372 166.6-372 372s166.6 372 372 372s372-166.6 372-372s-166.6-372-372-372m128.013 198.826c.023.007.042.018.083.059l45.02 45.019c.04.04.05.06.058.083a.12.12 0 0 1 0 .07c-.007.022-.018.041-.059.082L557.254 512l127.861 127.862a.3.3 0 0 1 .05.06l.009.023a.12.12 0 0 1 0 .07c-.007.022-.018.041-.059.082l-45.019 45.02c-.04.04-.06.05-.083.058a.12.12 0 0 1-.07 0c-.022-.007-.041-.018-.082-.059L512 557.254L384.14 685.115c-.042.041-.06.052-.084.059a.12.12 0 0 1-.07 0c-.022-.007-.041-.018-.082-.059l-45.02-45.019a.2.2 0 0 1-.058-.083a.12.12 0 0 1 0-.07c.007-.022.018-.041.059-.082L466.745 512l-127.86-127.86a.3.3 0 0 1-.05-.061l-.009-.023a.12.12 0 0 1 0-.07c.007-.022.018-.041.059-.082l45.019-45.02c.04-.04.06-.05.083-.058a.12.12 0 0 1 .07 0c.022.007.041.018.082.059L512 466.745l127.862-127.86c.04-.041.06-.052.083-.059a.12.12 0 0 1 .07 0Z" />
+                        </svg>
+
                     </button>
                 </div>
             </div>
@@ -1090,7 +971,12 @@
                                             <option value="AB-">AB Negative (AB-)</option>
                                             <option value="Unknown">Pending Lab Test</option>
                                         </select>
-                                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-secondary pointer-events-none text-[20px]">expand_more</span>
+                                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-secondary pointer-events-none text-[20px]">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                                                <path d="M0 0h24v24H0z" fill="none" />
+                                                <path fill="currentColor" d="M16.59 8.59L12 13.17L7.41 8.59L6 10l6 6l6-6z" />
+                                            </svg>
+                                        </span>
                                     </div>
                                     <span class="font-body-sm text-[11px] text-secondary">Essential for cleanroom &amp; factory emergency response</span>
                                 </div>

@@ -1396,7 +1396,7 @@ nav.mobile-bottom-nav {
     }
 
     main.desktop-main {
-        padding-top: 4rem;
+/*        padding-top: 4rem;*/
         min-height: 100vh;
         background-color: #f8f9ff;
     }

@@ -482,12 +482,13 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             const string missingSql = @"
                 SELECT DISTINCT s.EmployeeCode
                 FROM " + openJson + @" AS s
-                WHERE NOT EXISTS (SELECT 1 FROM dbo.P1SA_Employees_Temp e WHERE e.EmployeeCode = s.EmployeeCode);";
+                WHERE NOT EXISTS (SELECT 1 FROM dbo.P1SA_Employees_Temp e 
+                WHERE e.EmployeeCode = s.EmployeeCode);";
 
                     // 2) upsert on EffyCode; EmployeeCode is set on both insert and update
     
             const string mergeSql = @"
-                MERGE EfficiencyEmployeeCode_V2 AS t
+                MERGE EfficiencyEmployeeCode AS t
                 USING (SELECT s.* FROM " + openJson + @" AS s
                        WHERE EXISTS (SELECT 1 FROM dbo.P1SA_Employees_Temp e
                                      WHERE e.EmployeeCode = s.EmployeeCode)) AS s
@@ -513,7 +514,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         public async Task<ImportResult> UploadShopOrderCSV(List<EfficiencyShopOrderStaging> rows)
         {
             const string sql = @"
-                    MERGE EfficiencyShopOrder_Staging_V2 AS t
+                    MERGE EfficiencyShopOrder_Staging AS t
                     USING (SELECT * FROM OPENJSON(@json) WITH (
                                 ShopOrder  NVARCHAR(20) '$.ShopOrder',
                                 Partnumber NVARCHAR(50) '$.Partnumber',
@@ -547,7 +548,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                     return new ImportResult();
 
                 const string sql = @"
-            MERGE EfficiencyCycleTime_V2 AS t
+            MERGE EfficiencyCycleTime AS t
             USING
             (
                 SELECT *

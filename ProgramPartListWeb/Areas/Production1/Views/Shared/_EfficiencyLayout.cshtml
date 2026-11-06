@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="~/Content/css/EfficiencyDesign.css" rel="stylesheet" />
 
+    <script src="~/Scripts/xlsx.full.min.js"></script>
 
     @Styles.Render("~/Content/shared-css")
 
@@ -336,7 +337,7 @@
                 <div class="fm-field fm-span-2">
                     <label for="soShopOrder">Shop order <span class="fm-req">*</span></label>
                     <input type="text" id="soShopOrder" name="ShopOrder" placeholder="12 digits" required
-                           inputmode="numeric" pattern="\d{12}" maxlength="12" title="Exactly 12 digits" autocomplete="off">
+                           inputmode="numeric" pattern="\d{12}" title="Exactly 12 digits" autocomplete="off">
                 </div>
                 <div class="fm-field">
                     <label for="soPartnumber">Part number <span class="fm-req">*</span></label>
@@ -488,10 +489,10 @@
         },
         employee: {
             title: 'Import Employee Codes',
-            url: '@Url.Action("ImportEmployeeCodes", "Rotor")',
+            url: '@Url.Action("ImportEmployeeCode", "Rotor")',
             columns: [
-                { key: 'EffyCode',     aliases: ['effycode', 'code'], required: true, maxLen: 20 },                  // NVARCHAR(20), PK
-                { key: 'EmployeeCode', aliases: ['employeecode', 'employeeid', 'empid'], required: true, maxLen: 20 } // NVARCHAR(20), FK -> P1SA_Employees_Temp
+                { key: 'EffyCode', aliases: ['effycode', 'code'], required: true, maxLen: 20 },                  // NVARCHAR(20), PK
+                { key: 'EmployeeCode', aliases: ['employeecode', 'employeeid', 'empid', 'idnumber'], required: true, maxLen: 20 }
             ],
             // shape sent to the server = EfficiencyEmployeeCode (EmployID / FullName / Process / AgencyName are filled by the DB)
             toPayload: o => ({ EffyCode: o.EffyCode, EmployeeCode: o.EmployeeCode }),
@@ -515,7 +516,7 @@
     // ======================================================================
     // Import helpers (SheetJS reads .xlsx, .xls and .csv)
     // ======================================================================
-    const SHEET_NAMES = { cycle: 'Cycle Time', employee: 'Employee Codes', shoporder: 'Shop Orders' };
+     const SHEET_NAMES = { cycle: 'CYCLETIME', employee: 'CODE', shoporder: 'CSV' };
     const cellText = v => (v instanceof Date) ? v.toISOString().slice(0, 10) : String(v ?? '').trim();
 
     // SheetJS is a classic script loaded in <head>; check it actually loaded (CDN may be blocked on the factory network)
@@ -979,38 +980,67 @@
         async submitImport() {
             const st = this.importState;
             if (!st || !st.datasets.length) return;
+
             const err = byId('importError');
             err.textContent = '';
             this.setImportBtn(false, 'Importing...');
 
-            const report = [];
+            const report = [], failed = [];
+
             try {
                 for (const ds of st.datasets) {
                     if (ds.done || !ds.valid.length) continue;
+
                     const cfg = IMPORTS[ds.key];
-                    let inserted = 0, updated = 0;
+                    let inserted = 0, updated = 0, sent = 0, error = null;
 
                     for (let i = 0; i < ds.valid.length; i += CHUNK) {
-                        const res = await postMethod(cfg.url, { rows: ds.valid.slice(i, i + CHUNK).map(cfg.toPayload) });
-                        if (!res?.Success) {
-                            err.textContent = `${SHEET_NAMES[ds.key]}: ${res?.Message || 'Import failed.'}`
-                                + (i ? ` (${i} rows were already imported)` : '');
-                            this.setImportBtn(true, 'Retry');
-                            return;
+                        const rows = ds.valid.slice(i, i + CHUNK).map(cfg.toPayload);
+
+                        let res;
+                        try {
+                            res = await postMethod(cfg.url, { rows });
+                        } catch (ex) {
+                            res = { Success: false, Message: ex?.message };
                         }
-                        inserted += res.Inserted || 0;
-                        updated  += res.Updated  || 0;
+
+                        if (!res?.Success) { error = res?.Message || 'Import failed.'; break; }
+
+                        inserted += Number(res.Inserted || 0);
+                        updated += Number(res.Updated || 0);
+                        sent += rows.length;
                     }
+
+                    if (error) {
+                        // this sheet failed, but keep going with the others
+                        failed.push(`${SHEET_NAMES[ds.key]}: ${error}` + (sent ? ` (${sent} rows already saved)` : ''));
+                        continue;
+                    }
+
                     ds.done = true;
                     report.push(`${SHEET_NAMES[ds.key]}: added ${inserted}, updated ${updated}, skipped ${ds.invalid.length}`);
                 }
 
-                alert('Import complete.\n' + report.join('\n'));
-                const keys = [...new Set(st.datasets.map(d => d.key))];
-                this.closeImport();
-                for (const k of keys) if (this.loaded[k]) await this.load(k);
+                // refresh the lists for every sheet that finished
+                const doneKeys = [...new Set(st.datasets.filter(d => d.done).map(d => d.key))];
+                for (const k of doneKeys) {
+                    if (this.loaded[k]) await this.load(k);
+                }
+
+                if (!failed.length) {
+                    alert('Import complete.\n' + report.join('\n'));
+                    this.closeImport();
+                    return;
+                }
+
+                // partial success: keep the dialog open so the failed sheet can be fixed and retried
+                if (report.length) alert('Imported:\n' + report.join('\n') + '\n\nFailed:\n' + failed.join('\n'));
+                this.renderImportPreview();              // refreshes the button count (done sheets are excluded)
+                err.textContent = failed.join(' | ');    // set after the preview, which resets this text
+                this.setImportBtn(true, 'Retry failed sheets');
+
             } catch (ex) {
-                console.error('Import failed:', ex);
+                console.error('[IMPORT] Unexpected error:', ex);
                 err.textContent = 'Unexpected error while importing.';
                 this.setImportBtn(true, 'Retry');
             }

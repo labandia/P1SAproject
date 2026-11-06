@@ -35,7 +35,7 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
         ///     Shop Order Efficiency
         /// </summary>
         Task<List<EfficiencyShopOrderStaging>> GetEfficientShopOrders(string ShopOrder);
-        Task<bool> UploadShopOrderCSV(EfficiencyShopOrderStaging shop);
+        Task<bool> UploadShopOrderCSV(List<EfficiencyShopOrderStaging> model);
 
 
         /// <summary>

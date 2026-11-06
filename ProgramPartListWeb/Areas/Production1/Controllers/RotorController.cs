@@ -1,8 +1,10 @@
 ﻿
+using DocumentFormat.OpenXml.EMMA;
 using ProgramPartListWeb.Areas.Production1.Interface;
 using ProgramPartListWeb.Areas.Production1.Model;
 using ProgramPartListWeb.Controllers;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -174,6 +176,94 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
             bool deleted = await _emp.DeleteCycleTime(CycleID);
             if (!deleted)
                 return JsonPostError("Failed to delete Cycle Time");
+
+            return JsonSuccess();
+        }
+
+        // ─────────────────────────────────────────────────────────────────
+        // GET: IMPORT DATAS
+        // Gets the List of Employee Details
+        // ─────────────────────────────────────────────────────────────────
+        [HttpPost]
+        public async Task<ActionResult> ImportShopOrders(List<EfficiencyShopOrderStaging> rows)
+        {
+            Debug.WriteLine("========== IMPORT SHOP ORDERS ==========");
+            foreach (var items in rows)
+            {
+                Debug.WriteLine($"Partnumber METHOD DDDDD: {items.Partnumber}");
+                Debug.WriteLine($"ShopOrder METHOD D: {items.ShopOrder}");
+                Debug.WriteLine($"Model METHOD DDD : {items.Model}");
+            }
+
+            //Debug.WriteLine("========== EfficiencyDailyMonitor ==========");
+            //Debug.WriteLine($"Model is null: {model == null}");
+
+            //if (model == null)
+            //    return JsonPostError("Request body could not be bound.");
+
+
+
+            ////Debug.WriteLine($"WorkDate: {model.WorkDate:yyyy-MM-dd}");
+
+            //int added = await _emp.AddEfficiencyRecord(model);
+            //if (added == 0)
+            //    return JsonPostError("Failed to Add a New Process");
+
+            return JsonSuccess();
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> ImportEmployeeCode(List<EfficiencyEmployeeCode> rows)
+        {
+            Debug.WriteLine("========== IMPORT EMPLOYEE CODE     ==========");
+            foreach (var items in rows)
+            {
+                Debug.WriteLine($"EMPLOYEE CODE METHOD DDDDD: {items.EmployeeCode}");
+                Debug.WriteLine($"FULLNAME METHOD D: {items.FullName}");
+                Debug.WriteLine($"EFFY CODE : {items.EffyCode}");
+            }
+
+            //Debug.WriteLine("========== EfficiencyDailyMonitor ==========");
+            //Debug.WriteLine($"Model is null: {model == null}");
+
+            //if (model == null)
+            //    return JsonPostError("Request body could not be bound.");
+
+
+
+            ////Debug.WriteLine($"WorkDate: {model.WorkDate:yyyy-MM-dd}");
+
+            //int added = await _emp.AddEfficiencyRecord(model);
+            //if (added == 0)
+            //    return JsonPostError("Failed to Add a New Process");
+
+            return JsonSuccess();
+        }
+        [HttpPost]
+        public async Task<ActionResult> ImportCycleTime(List<EfficiencyCycleTime> rows)
+        {
+            Debug.WriteLine("========== IMPORT CYCLE TIME     ==========");
+            foreach (var items in rows)
+            {
+                Debug.WriteLine($"PARTNUMBER METHOD DDDDD: {items.Partnumber}");
+                Debug.WriteLine($"MODEL METHOD D: {items.Model}");
+                Debug.WriteLine($"PROCESS ID : {items.ProcessId }");
+            }
+
+            //Debug.WriteLine("========== EfficiencyDailyMonitor ==========");
+            //Debug.WriteLine($"Model is null: {model == null}");
+
+            //if (model == null)
+            //    return JsonPostError("Request body could not be bound.");
+
+
+
+            ////Debug.WriteLine($"WorkDate: {model.WorkDate:yyyy-MM-dd}");
+
+            //int added = await _emp.AddEfficiencyRecord(model);
+            //if (added == 0)
+            //    return JsonPostError("Failed to Add a New Process");
 
             return JsonSuccess();
         }

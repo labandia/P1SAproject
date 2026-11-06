@@ -350,6 +350,20 @@
                this.searchText.addEventListener('input', () => this.renderTable());
                this.filterShift.addEventListener('change', () => this.renderTable());
 
+               // Date filter: validate range, then reload from the server
+               const onDateChange = () => {
+                   const from = this.searchFrom.value;
+                   const to = this.searchTo.value;
+                   if (from && to && from > to) {
+                       this.showToast('"From" date cannot be later than "To" date.', false);
+                       this.searchTo.value = from;
+                   }
+                   this.GetEfficiencyList();
+               };
+
+               this.searchFrom.addEventListener('change', onDateChange);
+               this.searchTo.addEventListener('change', onDateChange);
+
                // Military time inputs: auto-insert ":" while typing, normalize on blur
                ['startOpe', 'endOpe'].forEach(id => {
                    const el = byId(id);
@@ -425,6 +439,8 @@
                        from: this.searchFrom.value,
                        to: this.searchTo.value
                    });
+
+                   console.log(res);
 
                    if (!res?.Success) {
                        this.showToast(res?.Message || 'Failed to load records.', false);
@@ -606,6 +622,8 @@
                     console.log(payload);
 
                     const res = await postMethod('@Url.Action("AddRecordForMonitoring", "Rotor")', payload);
+
+                    console.log(res);
                     if (!res?.Success) {
                         this.showToast(res?.Message || 'Save failed.', false);
                         return;
@@ -636,11 +654,9 @@
             }
 
            resetRecordForm({ keepHeader = false } = {}) {
-               // remember the values before form.reset() wipes them
                const keep = keepHeader
                    ? {
                        workDate: byId('workDate').value,
-                       shift: byId('shift').value,
                        machineNo: byId('machineNo').value
                    }
                    : null;
@@ -648,20 +664,20 @@
                this.form.reset();
                this.editIndexInput.value = 0;
                this.cycle = null;
+               this.isNight = false;               // Start is cleared, so clear the shift too
                byId('workDate').value = this.todayValue;
                byId('employeeName').value = '';
                byId('model').value = '';
                byId('ProcessName').value = '';
                byId('ProcessId').value = '';
 
-               // restore Date | Shift | Machine No.
                if (keep) {
                    byId('workDate').value = keep.workDate;
                    byId('machineNo').value = keep.machineNo;
                }
 
                const title = byId('formTitle');
-               if (title) title.textContent = 'Production Order Entry';
+               if (title) title.textContent = 'Efficency Data  Entry';   // matches the page's original title
                this.submitBtn.textContent = 'Add Record';
                this.calcForm();
            }

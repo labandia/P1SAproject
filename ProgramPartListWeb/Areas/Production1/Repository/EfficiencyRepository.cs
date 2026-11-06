@@ -8,6 +8,8 @@ using ProgramPartListWeb.Models;
 using ProgramPartListWeb.Utilities.DataAccess;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -63,6 +65,8 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         }
         public Task<List<EfficiencyDailyMonitor>> GetEfficiencyDailyMonitors(DateTime? start, DateTime? end)
         {
+            Debug.WriteLine($@"Date Start : {start.ToString()} - Date End : {end.ToString()}");
+
             const string sql = @"
             SELECT
                         m.EfficiencyID,
@@ -112,8 +116,9 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                     LEFT JOIN P1SA_Employees_Temp t
                         ON t.EmployeeCode = e.EmployeeCode
 
-                    LEFT JOIN EfficiencyCycleTime c
+                   LEFT JOIN EfficiencyCycleTime c
                         ON c.Partnumber = m.Partnumber
+                       AND c.ProcessId  = m.ProcessId
 
                     CROSS APPLY (
                         SELECT
@@ -173,7 +178,16 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 
                     ORDER BY m.WorkDate DESC, m.EfficiencyID DESC;";
 
-            return SqlDataAcess_Test.QueryAsync<EfficiencyDailyMonitor>(sql, new { start, end });
+            //var p = new DynamicParameters();
+            //p.Add("@start", start?.Date, DbType.Date);
+            //p.Add("@end", end?.Date, DbType.Date);
+
+
+            return SqlDataAcess_Test.QueryAsync<EfficiencyDailyMonitor>(sql, new
+            {
+                start = start?.ToString("yyyy-MM-dd"),
+                end = end?.ToString("yyyy-MM-dd")
+            });
         }
 
         // ============================================================
@@ -215,7 +229,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         {
             throw new NotImplementedException();
         }
-        public Task<bool> UploadShopOrderCSV(EfficiencyShopOrderStaging shop)
+        public Task<bool> UploadShopOrderCSV(List<EfficiencyShopOrderStaging> shop)
         {
             throw new NotImplementedException();
         }

@@ -1,5 +1,6 @@
 ﻿
 using DocumentFormat.OpenXml.EMMA;
+using ProgramPartListWeb.Areas.PC.Models;
 using ProgramPartListWeb.Areas.Production1.Interface;
 using ProgramPartListWeb.Areas.Production1.Model;
 using ProgramPartListWeb.Controllers;
@@ -181,91 +182,104 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
         }
 
         // ─────────────────────────────────────────────────────────────────
-        // GET: IMPORT DATAS
-        // Gets the List of Employee Details
+        // POST: IMPORT SHOP ORDERS
         // ─────────────────────────────────────────────────────────────────
         [HttpPost]
         public async Task<ActionResult> ImportShopOrders(List<EfficiencyShopOrderStaging> rows)
         {
-            Debug.WriteLine("========== IMPORT SHOP ORDERS ==========");
-            foreach (var items in rows)
+            if (rows == null || rows.Count == 0)
+                return JsonPostError("No rows were received.");
+
+            var bad = rows.FirstOrDefault(r =>
+                string.IsNullOrWhiteSpace(r.ShopOrder) || r.ShopOrder.Length != 12 || !r.ShopOrder.All(char.IsDigit) ||
+                string.IsNullOrWhiteSpace(r.Partnumber) || r.Partnumber.Length > 50 ||
+                (r.Model != null && r.Model.Length > 50));
+            if (bad != null)
+                return JsonPostError($"Invalid row for shop order '{bad.ShopOrder}'.");
+
+            try
             {
-                Debug.WriteLine($"Partnumber METHOD DDDDD: {items.Partnumber}");
-                Debug.WriteLine($"ShopOrder METHOD D: {items.ShopOrder}");
-                Debug.WriteLine($"Model METHOD DDD : {items.Model}");
+                var result = await _emp.UploadShopOrderCSV(rows);
+                return Json(new { Success = true, Inserted = result.Inserted, Updated = result.Updated });
             }
-
-            //Debug.WriteLine("========== EfficiencyDailyMonitor ==========");
-            //Debug.WriteLine($"Model is null: {model == null}");
-
-            //if (model == null)
-            //    return JsonPostError("Request body could not be bound.");
-
-
-
-            ////Debug.WriteLine($"WorkDate: {model.WorkDate:yyyy-MM-dd}");
-
-            //int added = await _emp.AddEfficiencyRecord(model);
-            //if (added == 0)
-            //    return JsonPostError("Failed to Add a New Process");
-
-            return JsonSuccess();
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                return JsonPostError("Import failed: " + ex.Message);
+            }
         }
 
-
+        // ─────────────────────────────────────────────────────────────────
+        // POST: IMPORT EMPLOYEE CODES
+        // ─────────────────────────────────────────────────────────────────
         [HttpPost]
-        public async Task<ActionResult> ImportEmployeeCode(List<EfficiencyEmployeeCode> rows)
+        public async Task<ActionResult> ImportEmployeeCode(
+    List<EfficiencyEmployeeCode> rows)
         {
-            Debug.WriteLine("========== IMPORT EMPLOYEE CODE     ==========");
-            foreach (var items in rows)
+            if (rows == null || rows.Count == 0)
+                return JsonPostError("No rows were received.");
+
+            try
             {
-                Debug.WriteLine($"EMPLOYEE CODE METHOD DDDDD: {items.EmployeeCode}");
-                Debug.WriteLine($"FULLNAME METHOD D: {items.FullName}");
-                Debug.WriteLine($"EFFY CODE : {items.EffyCode}");
+                var result = await _emp.UploadEmployeeCodes(rows);
+
+                // Return success even if some employee codes are missing.
+                return Json(new
+                {
+                    Success = true,
+
+                    TotalUploaded = rows.Count,
+                    Inserted = result.Inserted,
+                    Updated = result.Updated,
+
+                    Missing = result.Missing,
+                    MissingCount = result.Missing.Count,
+
+                    Message = result.Missing.Count > 0
+                        ? "Import completed with skipped employees."
+                        : "Import completed successfully."
+                });
             }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
 
-            //Debug.WriteLine("========== EfficiencyDailyMonitor ==========");
-            //Debug.WriteLine($"Model is null: {model == null}");
-
-            //if (model == null)
-            //    return JsonPostError("Request body could not be bound.");
-
-
-
-            ////Debug.WriteLine($"WorkDate: {model.WorkDate:yyyy-MM-dd}");
-
-            //int added = await _emp.AddEfficiencyRecord(model);
-            //if (added == 0)
-            //    return JsonPostError("Failed to Add a New Process");
-
-            return JsonSuccess();
+                return JsonPostError("Import failed: " + ex.Message);
+            }
         }
+
+        // ─────────────────────────────────────────────────────────────────
+        // POST: IMPORT CYCLE TIME
+        // ─────────────────────────────────────────────────────────────────
         [HttpPost]
         public async Task<ActionResult> ImportCycleTime(List<EfficiencyCycleTime> rows)
         {
-            Debug.WriteLine("========== IMPORT CYCLE TIME     ==========");
-            foreach (var items in rows)
+            if (rows == null || rows.Count == 0)
+                return JsonPostError("No rows were received.");
+
+            var bad = rows.FirstOrDefault(r =>
+                string.IsNullOrWhiteSpace(r.Partnumber) || r.Partnumber.Length > 50 ||
+                (r.Model != null && r.Model.Length > 100) ||
+                r.ProcessId < 1 || r.ProcessId > 3 ||
+                r.CycleTimeSec <= 0);
+            if (bad != null)
+                return JsonPostError($"Invalid row for part number '{bad.Partnumber}'.");
+
+            var dup = rows.GroupBy(r => new { P = r.Partnumber.Trim().ToLower(), r.ProcessId })
+                          .FirstOrDefault(g => g.Count() > 1);
+            if (dup != null)
+                return JsonPostError($"Duplicate part number / process in the request: '{dup.Key.P}'.");
+
+            try
             {
-                Debug.WriteLine($"PARTNUMBER METHOD DDDDD: {items.Partnumber}");
-                Debug.WriteLine($"MODEL METHOD D: {items.Model}");
-                Debug.WriteLine($"PROCESS ID : {items.ProcessId }");
+                var result = await _emp.UploadCycleTimes(rows);
+                return Json(new { Success = true, Inserted = result.Inserted, Updated = result.Updated });
             }
-
-            //Debug.WriteLine("========== EfficiencyDailyMonitor ==========");
-            //Debug.WriteLine($"Model is null: {model == null}");
-
-            //if (model == null)
-            //    return JsonPostError("Request body could not be bound.");
-
-
-
-            ////Debug.WriteLine($"WorkDate: {model.WorkDate:yyyy-MM-dd}");
-
-            //int added = await _emp.AddEfficiencyRecord(model);
-            //if (added == 0)
-            //    return JsonPostError("Failed to Add a New Process");
-
-            return JsonSuccess();
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                return JsonPostError("Import failed: " + ex.Message);
+            }
         }
 
         // GET: Production1/Rotor

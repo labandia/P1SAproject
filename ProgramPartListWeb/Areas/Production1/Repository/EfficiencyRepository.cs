@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using Aspose.Cells;
+using Dapper;
 using DocumentFormat.OpenXml.EMMA;
 using DocumentFormat.OpenXml.Spreadsheet;
 using ProgramPartListWeb.Areas.Production1.Interface;
@@ -229,10 +230,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         {
             throw new NotImplementedException();
         }
-        public Task<bool> UploadShopOrderCSV(List<EfficiencyShopOrderStaging> shop)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         // ============================================================
         // ===================== EMPLOYEE CODE ==========================
@@ -341,10 +339,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                 }) > 0;
         }
 
-        public Task<bool> UploadOrAddCycleTime(EfficiencyCycleTime shop)
-        {
-            throw new NotImplementedException();
-        }
+      
 
         public async Task<bool> DeleteCycleTime(int cycleId)
         {
@@ -475,6 +470,99 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             //        );
 
             throw new NotImplementedException();
+        }
+
+        public async Task<ImportResult> UploadEmployeeCodes(List<EfficiencyEmployeeCode> rows)
+        {
+            const string openJson = @"OPENJSON(@json) WITH (
+            EffyCode     NVARCHAR(20) '$.EffyCode',
+            EmployeeCode NVARCHAR(20) '$.EmployeeCode')";
+
+            // 1) employee IDs that don't exist (the FK would fail the whole chunk)
+            const string missingSql = @"
+                SELECT DISTINCT s.EmployeeCode
+                FROM " + openJson + @" AS s
+                WHERE NOT EXISTS (SELECT 1 FROM dbo.P1SA_Employees_Temp e WHERE e.EmployeeCode = s.EmployeeCode);";
+
+                    // 2) upsert on EffyCode; EmployeeCode is set on both insert and update
+    
+            const string mergeSql = @"
+                MERGE EfficiencyEmployeeCode_V2 AS t
+                USING (SELECT s.* FROM " + openJson + @" AS s
+                       WHERE EXISTS (SELECT 1 FROM dbo.P1SA_Employees_Temp e
+                                     WHERE e.EmployeeCode = s.EmployeeCode)) AS s
+                   ON t.EffyCode = s.EffyCode
+                WHEN MATCHED THEN
+                    UPDATE SET t.EmployeeCode = s.EmployeeCode
+                WHEN NOT MATCHED THEN
+                    INSERT (EffyCode, EmployeeCode)
+                    VALUES (s.EffyCode, s.EmployeeCode)
+                OUTPUT $action;";
+
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(rows);
+            var result = new ImportResult();
+
+            result.Missing = await SqlDataAcess_Test.QueryAsync<string>(missingSql, new { json });   // still computed, no early return
+
+            var actions = await SqlDataAcess_Test.QueryAsync<string>(mergeSql, new { json });
+            result.Inserted = actions.Count(a => a == "INSERT");
+            result.Updated = actions.Count(a => a == "UPDATE");
+            return result;
+        }
+
+        public async Task<ImportResult> UploadShopOrderCSV(List<EfficiencyShopOrderStaging> rows)
+        {
+            const string sql = @"
+                    MERGE EfficiencyShopOrder_Staging_V2 AS t
+                    USING (SELECT * FROM OPENJSON(@json) WITH (
+                                ShopOrder  NVARCHAR(20) '$.ShopOrder',
+                                Partnumber NVARCHAR(50) '$.Partnumber',
+                                Model      NVARCHAR(50) '$.Model')) AS s
+                       ON t.ShopOrder = s.ShopOrder
+                    WHEN MATCHED THEN
+                        UPDATE SET t.Partnumber = s.Partnumber, t.Model = s.Model
+                    WHEN NOT MATCHED THEN
+                        INSERT (ShopOrder, Partnumber, Model)
+                        VALUES (s.ShopOrder, s.Partnumber, s.Model)
+                    OUTPUT $action;";
+
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(rows);
+
+            var actions = await SqlDataAcess_Test.QueryAsync<string>(sql, new { json });
+
+            return new ImportResult
+            {
+                Inserted = actions.Count(a => a == "INSERT"),
+                Updated = actions.Count(a => a == "UPDATE")
+            };
+        }
+
+        public async Task<ImportResult> UploadCycleTimes(List<EfficiencyCycleTime> rows)
+        {
+            const string sql = @"
+                MERGE EfficiencyCycleTime AS t
+                USING (SELECT * FROM OPENJSON(@json) WITH (
+                            Partnumber   NVARCHAR(50)  '$.Partnumber',
+                            Model        NVARCHAR(100) '$.Model',
+                            ProcessId    TINYINT       '$.ProcessId',
+                            CycleTimeSec DECIMAL(9,2)  '$.CycleTimeSec')) AS s
+                   ON t.Partnumber = s.Partnumber AND t.ProcessId = s.ProcessId
+                WHEN MATCHED THEN
+                    UPDATE SET t.Model = s.Model, t.CycleTimeSec = s.CycleTimeSec
+                WHEN NOT MATCHED THEN
+                    INSERT (Partnumber, Model, ProcessId, CycleTimeSec)
+                    VALUES (s.Partnumber, s.Model, s.ProcessId, s.CycleTimeSec)
+                OUTPUT $action;";
+
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(rows);
+
+            var actions = await SqlDataAcess_Test.QueryAsync<string>(sql, new { json });
+
+            return new ImportResult
+            {
+                Inserted = actions.Count(a => a == "INSERT"),
+                Updated = actions.Count(a => a == "UPDATE")
+            };
         }
 
 

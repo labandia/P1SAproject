@@ -516,7 +516,8 @@
     // ======================================================================
     // Import helpers (SheetJS reads .xlsx, .xls and .csv)
     // ======================================================================
-     const SHEET_NAMES = { cycle: 'CYCLETIME', employee: 'CODE', shoporder: 'CSV' };
+const SHEET_NAMES = { cycle: 'CYCLETIME', employee: 'CODE', shoporder: 'CSV' };
+        const ACTIVE_IMPORTS = ['shoporder', 'employee'];   // add 'employee' / 'cycle' here when ready
     const cellText = v => (v instanceof Date) ? v.toISOString().slice(0, 10) : String(v ?? '').trim();
 
     // SheetJS is a classic script loaded in <head>; check it actually loaded (CDN may be blocked on the factory network)
@@ -887,6 +888,8 @@
 
                 // 1) match by sheet name (Cycle Time / Employee Codes / Shop Orders), 2) fall back to the column headers
                 const byName = Object.keys(SHEET_NAMES).find(k => norm(SHEET_NAMES[k]) === norm(name));
+                if (byName && !ACTIVE_IMPORTS.includes(byName)) return;   // disabled for now, ignore silently
+
                 let key = byName;
                 if (byName) {
                     const missing = IMPORTS[byName].columns
@@ -896,6 +899,7 @@
                 } else {
                     key = this.detectEntity(headers);
                 }
+                if (key && !ACTIVE_IMPORTS.includes(key)) return;         // header-detected but disabled
                 if (!key) { skipped.push(name); return; }
                 if (rows.length < 2) { skipped.push(name + ' (no data rows)'); return; }
                 datasets.push(this.validateSheet(key, name, rows, headers));
@@ -977,74 +981,165 @@
             this.setImportBtn(totalValid > 0, totalValid ? `Import ${totalValid} row${totalValid > 1 ? 's' : ''}` : 'Import');
         }
 
+
         async submitImport() {
             const st = this.importState;
             if (!st || !st.datasets.length) return;
 
             const err = byId('importError');
             err.textContent = '';
+
             this.setImportBtn(false, 'Importing...');
 
-            const report = [], failed = [];
+            const report = [];
+            const failed = [];
 
             try {
                 for (const ds of st.datasets) {
                     if (ds.done || !ds.valid.length) continue;
 
                     const cfg = IMPORTS[ds.key];
-                    let inserted = 0, updated = 0, sent = 0, error = null;
+
+                    let inserted = 0;
+                    let updated = 0;
+                    let skipped = 0;
+                    let sent = 0;
+                    let error = null;
+
+                    console.log(`========== IMPORT: ${SHEET_NAMES[ds.key]} ==========`);
+
+                    console.log('Total Valid Rows:', ds.valid.length);
+                    console.log('Total Invalid Rows:', ds.invalid.length);
 
                     for (let i = 0; i < ds.valid.length; i += CHUNK) {
-                        const rows = ds.valid.slice(i, i + CHUNK).map(cfg.toPayload);
+
+                        const rows = ds.valid
+                            .slice(i, i + CHUNK)
+                            .map(cfg.toPayload);
+
+                        console.log(`[IMPORT] Chunk ${Math.floor(i / CHUNK) + 1}`);
+                        console.log('[IMPORT] Rows:', rows.length);
+                        console.log('[IMPORT] Payload:', rows);
 
                         let res;
+
                         try {
                             res = await postMethod(cfg.url, { rows });
+
+                            console.log('[IMPORT] Server Response:', res);
+
                         } catch (ex) {
-                            res = { Success: false, Message: ex?.message };
+                            console.error('[IMPORT] Request Error:', ex);
+
+                            res = {
+                                Success: false,
+                                Message: ex?.message || 'Request failed.'
+                            };
                         }
 
-                        if (!res?.Success) { error = res?.Message || 'Import failed.'; break; }
+                        if (!res?.Success) {
+                            error = res?.Message || 'Import failed.';
+                            console.error('[IMPORT] Failed:', error);
+                            break;
+                        }
 
-                        inserted += Number(res.Inserted || 0);
-                        updated += Number(res.Updated || 0);
+                        const chunkInserted = Number(res.Inserted || 0);
+                        const chunkUpdated = Number(res.Updated || 0);
+                        const chunkSkipped = Number(res.MissingCount || 0);
+
+                        inserted += chunkInserted;
+                        updated += chunkUpdated;
+                        skipped += chunkSkipped;
+
                         sent += rows.length;
+
+                        console.log('[IMPORT] Chunk Summary:', {
+                            Uploaded: rows.length,
+                            Inserted: chunkInserted,
+                            Updated: chunkUpdated,
+                            Skipped: chunkSkipped
+                        });
                     }
 
                     if (error) {
-                        // this sheet failed, but keep going with the others
-                        failed.push(`${SHEET_NAMES[ds.key]}: ${error}` + (sent ? ` (${sent} rows already saved)` : ''));
+                        failed.push(
+                            `${SHEET_NAMES[ds.key]}: ${error}` +
+                            (sent ? ` (${sent} rows already saved)` : '')
+                        );
+
                         continue;
                     }
 
+                    // Mark sheet as successfully imported.
                     ds.done = true;
-                    report.push(`${SHEET_NAMES[ds.key]}: added ${inserted}, updated ${updated}, skipped ${ds.invalid.length}`);
+
+                    report.push(
+                        `${SHEET_NAMES[ds.key]}: ` +
+                        `Uploaded ${sent}, ` +
+                        `Added ${inserted}, ` +
+                        `Updated ${updated}, ` +
+                        `Skipped ${skipped + ds.invalid.length}`
+                    );
+
+                    console.log('[IMPORT] SHEET COMPLETED:', {
+                        Sheet: SHEET_NAMES[ds.key],
+                        Uploaded: sent,
+                        Inserted: inserted,
+                        Updated: updated,
+                        Skipped: skipped + ds.invalid.length
+                    });
                 }
 
-                // refresh the lists for every sheet that finished
-                const doneKeys = [...new Set(st.datasets.filter(d => d.done).map(d => d.key))];
+                // Refresh successfully imported sheets.
+                const doneKeys = [
+                    ...new Set(
+                        st.datasets
+                            .filter(d => d.done)
+                            .map(d => d.key)
+                    )
+                ];
+
                 for (const k of doneKeys) {
-                    if (this.loaded[k]) await this.load(k);
+                    if (this.loaded[k]) {
+                        await this.load(k);
+                    }
                 }
 
                 if (!failed.length) {
-                    alert('Import complete.\n' + report.join('\n'));
+                    alert(
+                        'Import complete.\n\n' +
+                        (report.join('\n') || 'No pending records.')
+                    );
+
                     this.closeImport();
                     return;
                 }
 
-                // partial success: keep the dialog open so the failed sheet can be fixed and retried
-                if (report.length) alert('Imported:\n' + report.join('\n') + '\n\nFailed:\n' + failed.join('\n'));
-                this.renderImportPreview();              // refreshes the button count (done sheets are excluded)
-                err.textContent = failed.join(' | ');    // set after the preview, which resets this text
+                if (report.length) {
+                    alert(
+                        'Imported:\n' +
+                        report.join('\n') +
+                        '\n\nFailed:\n' +
+                        failed.join('\n')
+                    );
+                }
+
+                this.renderImportPreview();
+
+                err.textContent = failed.join(' | ');
+
                 this.setImportBtn(true, 'Retry failed sheets');
 
             } catch (ex) {
                 console.error('[IMPORT] Unexpected error:', ex);
-                err.textContent = 'Unexpected error while importing.';
+
+                err.textContent =
+                    'Unexpected error while importing: ' + ex.message;
+
                 this.setImportBtn(true, 'Retry');
             }
         }
+
 
         // inside the class
         getId(entity, row) {

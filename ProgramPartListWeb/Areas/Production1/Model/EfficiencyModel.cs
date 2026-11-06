@@ -130,6 +130,12 @@ namespace ProgramPartListWeb.Areas.Production1.Model
 
 
 
+    public class ImportResult
+    {
+        public int Inserted { get; set; }
+        public int Updated { get; set; }
+        public List<string> Missing { get; set; } = new List<string>();
+    }
 
 
 

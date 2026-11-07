@@ -117,9 +117,8 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                     LEFT JOIN P1SA_Employees_Temp t
                         ON t.EmployeeCode = e.EmployeeCode
 
-                   LEFT JOIN EfficiencyCycleTime c
-                        ON c.Partnumber = m.Partnumber
-                       AND c.ProcessId  = m.ProcessId
+                      LEFT JOIN EfficiencyCycleTime c
+                    ON c.Partnumber = m.Partnumber
 
                     CROSS APPLY (
                         SELECT

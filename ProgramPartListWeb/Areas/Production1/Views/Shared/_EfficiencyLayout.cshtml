@@ -270,10 +270,14 @@
                 <div class="fm-field">
                     <label for="cyProcessName">Process name <span class="fm-req">*</span></label>
                     <select id="cyProcessName" name="ProcessName" required>
-                        <option value="">Select process</option>
-                        <option value="COVER DRILLING">COVER DRILLING</option>
-                        <option value="IMPELLER">IMPELLER</option>
-                        <option value="EPIFORM">EPIFORM</option>
+                        <option value="0">Select process</option>
+                        <option value="1">3mm Cover Drilling</option>
+                        <option value="2">3mm Impeller Drilling</option>
+                        <option value="3">3mm Compound Application</option>
+
+                        <option value="4">5mm Compound Application</option>
+                        <option value="5">6mm Compound Application</option>
+                        <option value="6">8mm Compound Application</option>
                     </select>
                 </div>
                 <div class="fm-field">
@@ -431,7 +435,7 @@
             fields:  ['EffyCode', 'EmployeeCode'],
             cols:    ['EffyCode', 'EmployeeCode', 'FullName', 'Process', 'AgencyName'],
             listUrl: '@Url.Action("GetEmployeeList", "Rotor")',
-            saveUrl: '@Url.Action("SaveEmployeeCode", "Rotor")',
+            saveUrl: '@Url.Action("SaveEditEmployeeCode", "Rotor")',
             deleteUrl: '@Url.Action("DeleteEmployeeCode", "Rotor")',
             describe: r => `${r.EffyCode} (${r.FullName || 'no name'})`
         },

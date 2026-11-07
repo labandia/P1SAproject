@@ -55,7 +55,7 @@
                     </div>
 
                     <div class="field">
-                        <label>Model</label>
+                        <label>Model</label> 
                         <input id="model" readonly placeholder="from part number">
                     </div>
                 </div>
@@ -173,8 +173,7 @@
                         <th>Date</th>
                         <th>Shift</th>
                         <th>MC.#</th>
-                        <th>Shop Order</th>
-                        <th>Partnumber/ Model</th>
+                        <th>Shop Order/Partnumber/ Model</th>
                         <th>Process</th>
                         <th>Code / Full Name</th>
                         <th>Output</th>
@@ -484,9 +483,9 @@
                        <td>${this.esc(r.WorkDateText)}</td>
                       <td>${this.shiftBadge(String(r.ShiftCode ?? '').toUpperCase().startsWith('N'))}</td>
                        <td>${this.esc(r.MachineNo)}</td>
-                       <td style='color: #4338ca; font-weight: 600;'>${this.esc(r.ShopOrder)}</td>
 
                        <td class="ShopOrderLayout " style="text-align: left;">
+                          <p style="margin:.2em 0;color: #4338ca; font-weight: 600; font-size: .8rem">${this.esc(r.ShopOrder)}</p>
                           <span class='ShopOrderLayout_ShopOrder' style='font-size: .7rem; font-weight: 800;'>${this.esc(r.Partnumber) }</span>
                           <p style="margin:.2em 0;color:#8a8f9e; font-size: .7rem;">${this.esc(r.getModel ?? r.Model) }</p>
                        </td>
@@ -1025,6 +1024,10 @@
                    })),
                    emptyText: 'No matching part number',
                    invalidMsg: 'Select a part number from the list.',
+
+                   // Enter → Employee Code (skips Process), unless Process wasn't auto-filled
+                   nextId: () => byId('ProcessId').value ? 'employeeCode' : 'ProcessName',
+
                    onSelect: item => this.applyModel(item.data),
                    onClear: () => this.applyModel(null)
                });
@@ -1171,12 +1174,14 @@
 
 
            // Reusable searchable select. Items: { value, text, sub?, data? }. The search matches text and sub.
+           // nextId: id (or function returning an id) of the field to focus after Enter. Default = next field in order.
            createCombo(inputId, {
                getItems,
                remote,
                onSelect,
                onClear,
                normalize,
+               nextId = null,
                selectFirstOnEnter = false,
                emptyText = 'No match',
                invalidMsg = 'Select a value from the list.'
@@ -1204,6 +1209,19 @@
                let cache = [];
                let timer = null;
 
+               // Move focus after Enter: custom target if nextId is set, otherwise the next field in order
+               const goNext = () => {
+                   const id = typeof nextId === 'function' ? nextId() : nextId;
+                   const target = id ? byId(id) : null;
+
+                   if (target) {
+                       target.focus();
+                       try { target.select?.(); } catch { /* some inputs don't support select() */ }
+                   } else {
+                       this.focusNext(input);
+                   }
+               };
+
                // Render the matching items
                const render = () => {
                    const q = input.value.trim().toLowerCase();
@@ -1218,11 +1236,11 @@
 
                    list.innerHTML = shown.length
                        ? shown.map((item, index) => `
-                <li role="option" data-n="${index}">
-                    ${this.esc(item.text)}
-                    ${item.sub ? `<small>${this.esc(item.sub)}</small>` : ''}
-                </li>
-            `).join('')
+     <li role="option" data-n="${index}">
+         ${this.esc(item.text)}
+         ${item.sub ? `<small>${this.esc(item.sub)}</small>` : ''}
+     </li>
+ `).join('')
                        : `<li class="empty">${this.esc(emptyText)}</li>`;
 
                    active = shown.length ? 0 : -1;
@@ -1246,12 +1264,7 @@
                };
 
                const open = () => {
-                   if (remote) {
-                       render();
-                   } else {
-                       render();
-                   }
-
+                   render();
                    combo.classList.add('open');
                };
 
@@ -1406,7 +1419,7 @@
 
                        // Already selected: move to next field
                        if (selected && selected.value === input.value) {
-                           this.focusNext(input);
+                           goNext();
                            return;
                        }
 
@@ -1426,7 +1439,7 @@
 
                        if (hit) {
                            choose(hit);
-                           this.focusNext(input);
+                           goNext();
                        }
 
                        return;
@@ -1450,7 +1463,6 @@
                    choose(item);
                });
            }
-
            // ───────────────────────── CSV UPLOAD (panel not on page yet) ─────────────────────────
            parseCSV() {
                const file = byId('csvFile').files[0];

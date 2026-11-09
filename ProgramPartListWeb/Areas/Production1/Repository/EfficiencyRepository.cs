@@ -75,6 +75,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                         m.Shift,
                         m.MachineNo,
                         m.ShopOrder,
+                        m.ProcessId,
                         m.Partnumber,
                         m.Model AS getModel,
                         m.ProcessName,
@@ -618,7 +619,49 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             }
         }
 
+        public async Task<int> EditEfficiencyRecord(EfficiencyDailyMonitor result)
+        {
+            Debug.WriteLine("========== CYCLE TIME IMPORT ==========");
+            Debug.WriteLine("Efficiency : " + result.EfficiencyID);
+            Debug.WriteLine("MachineNo: " + result.MachineNo);
+            Debug.WriteLine("ShopOrder: " + result.ShopOrder);
+            Debug.WriteLine("Process ID: " + result.ProcessId);
+            Debug.WriteLine("Total Processed: " +
+                (result.Partnumber + result.getModel));
+            Debug.WriteLine("========================================");
 
+
+            return await SqlDataAcess_Test.ExecuteAsync(
+               @"UPDATE EfficiencyDailyMonitor SET WorkDate = @WorkDate, MachineNo = @MachineNo, 
+                 ShopOrder = @ShopOrder, Model = @Model, EffyCode = @EffyCode, Output = @Output, 
+                 DowntimeMin = @DowntimeMin, StartOpe = @StartOpe, EndOpe = @EndOpe, Partnumber = @Partnumber, 
+                 ProcessName = @ProcessName
+                 WHERE EfficiencyID = @EfficiencyID", new
+               {
+                   result.EfficiencyID,
+                   result.WorkDate,
+                   result.MachineNo,
+                   result.ShopOrder,
+                   Model = result.getModel,
+                   result.EffyCode,
+                   result.Output,
+                   result.DowntimeMin,
+                   result.StartOpe,
+                   result.EndOpe,
+                   result.Partnumber,
+                   result.ProcessName   
+               });
+
+        }
+
+        public async Task<bool> DeleteEfficiencyRecord(int ID)
+        {
+             int result = await SqlDataAcess_Test.ExecuteAsync(
+                @"DELETE FROM EfficiencyDailyMonitor WHERE EfficiencyID = @EfficiencyID",
+                new { EfficiencyID = ID });
+
+            return result > 0;  
+        }
 
         public enum EfficiencyDateFilter
         {

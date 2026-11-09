@@ -609,10 +609,14 @@ const SHEET_NAMES = { cycle: 'CYCLETIME', employee: 'CODE', shoporder: 'CSV' };
                 // Download Template button
                 if (e.target.closest('[data-template]')) return downloadTemplate();
 
-                const btn = e.target.closest('.row-btn');
+                const btn = e.target.closest('.row-btn[data-entity]');
                 if (!btn) return;
+
                 const { entity, id } = btn.dataset;
-                const row = this.rows[entity].find(r => String(this.getId(entity, r)) === id);
+                const list = this.rows[entity];
+                if (!list) return;
+
+                const row = list.find(r => String(this.getId(entity, r)) === id);
                 if (!row) return;
                 if (btn.classList.contains('edit'))   this.openForm(entity, row);
                 if (btn.classList.contains('delete')) this.deleteRow(entity, row);

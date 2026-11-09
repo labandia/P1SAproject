@@ -15,8 +15,8 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
         Task<List<EfficiencyDailyMonitor>> GetEfficiencyDailyMonitors(
             DateTime? start, DateTime? end);
         Task<int> AddEfficiencyRecord(EfficiencyDailyMonitor row);
-
-
+        Task<int> EditEfficiencyRecord(EfficiencyDailyMonitor row);
+        Task<bool> DeleteEfficiencyRecord(int ID);
         Task<EfficiencyDailySummary> GetEfficiencySummary
             (EfficiencyDailySummary filter,
             DateTime? customStart = null,

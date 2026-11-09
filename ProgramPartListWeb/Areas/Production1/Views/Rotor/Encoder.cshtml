@@ -182,6 +182,7 @@
                         <th>Work Hrs</th>
                         <th>Target</th>
                         <th>Eff.</th>
+                        <th style="text-align:center;">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
@@ -407,7 +408,7 @@
                //});
 
                // Row buttons (edit/delete) are not rendered yet; enable together with the buttons in renderTable
-               // this.tbody.addEventListener('click', e => this.onRecordTableClick(e));
+               this.tbody.addEventListener('click', e => this.onRecordTableClick(e));
 
                this.setupCombos();
 
@@ -428,7 +429,30 @@
                this.filterProcess.addEventListener('change', () => this.renderTable());
 
 
-               this.bindDataMenu();
+               // this.bindDataMenu();
+
+               document.addEventListener('click', e => {
+                   const add = e.target.closest('[data-add]');
+                   if (add) return this.openForm(add.dataset.add, null);
+
+                   if (e.target.closest('[data-upload]')) return this.openImport(true);
+                   if (e.target.closest('[data-template]')) return downloadTemplate();
+
+                   // only buttons that declare an entity belong to this controller
+                   const btn = e.target.closest('.row-btn[data-entity]');
+                   if (!btn) return;
+
+                   const { entity, id } = btn.dataset;
+                   const list = this.rows[entity];
+                   if (!list) return;
+
+                   const row = list.find(r => String(this.getId(entity, r)) === id);
+                   if (!row) return;
+
+                   if (btn.classList.contains('edit')) this.openForm(entity, row);
+                   if (btn.classList.contains('delete')) this.deleteRow(entity, row);
+               });
+
            }
 
            // ───────────────────────── READ ─────────────────────────
@@ -494,7 +518,7 @@
 
                        <td class="ShopOrderLayout " style="text-align: left;">
                             <span class='ShopOrderLayout_ShopOrder' style='font-size: .7rem;'>${this.esc(r.EffyCode)}</span>
-                            <p style="margin:.2em 0;color:#8a8f9e; font-size: .7rem;">${this.esc(r.FullName ) }</p>     
+                            <p style="margin:.2em 0;color:#8a8f9e; font-size: .7rem;">${this.esc(r.FullName ) }</p>
                        </td>
                        <td class="num">${this.fmt(r.Output)}</td>
                        <td class="num">${r.DowntimeMin}</td>
@@ -502,6 +526,16 @@
                        <td class="num">${this.fmt(r.WorkHours)}</td>
                        <td class="num">${r.Target ?? '—'}</td>
                        <td>${this.effPill(r.Efficiency)}</td>
+                       <td>
+                            <div class="row-actions">
+                                <button type="button" class="row-btn edit edit-record" data-id="${r.EfficiencyID}" title="Edit">
+                                    <i class="fa-solid fa-pen"></i> Edit
+                                </button>
+                                <button type="button" class="row-btn delete delete-record" data-id="${r.EfficiencyID}" title="Delete">
+                                    <i class="fa-solid fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </td>
                    </tr>
                `).join('') || '<tr><td colspan="15" class="empty">No records for this range.</td></tr>';
            }
@@ -519,48 +553,91 @@
                if (!r) return;
 
                this.editIndexInput.value = id;
+               console.log("WORKDATE VALUE " + r.WorkDate);
+               console.log("PROCESS SELECT" + r.ProcessId);
+
+               // highlight the row being edited
+               this.tbody.querySelectorAll('tr.editing').forEach(tr => tr.classList.remove('editing'));
+               this.tbody.querySelector(`tr[data-id="${id}"]`)?.classList.add('editing');
+
+               byId('workDate').value = this.toDateInputValue(r.WorkDate);
+               byId('machineNo').value = r.MachineNo ?? '';
+               byId('shopOrder').value = r.ShopOrder ?? '';
+
+               // Process
                byId('ProcessId').value = r.ProcessId ?? '';
+               byId('ProcessName').value = this.processName(r.ProcessId) || r.ProcessName || '';
 
-               byId('ProcessName').value =
-                   this.processName(r.ProcessId) || r.ProcessName || '';
+               const sameId = (a, b) => String(a ?? '').trim() === String(b ?? '').trim();
+               const sameText = (a, b) =>
+                   String(a ?? '').trim().toLowerCase() === String(b ?? '').trim().toLowerCase();
 
-               byId('workDate').value = r.WorkDate;
-               this.isNight = r.ShiftRaw === true || String(r.ShiftRaw).toLowerCase() === 'true';
-               byId('machineNo').value = r.MachineNo;
-               byId('shopOrder').value = r.ShopOrder;
-               byId('output').value = r.Output;
-               byId('downtimeMin').value = r.DowntimeMin;
-               byId('startOpe').value = String(r.StartOpe ?? '').slice(0, 5);
-               byId('endOpe').value = String(r.EndOpe ?? '').slice(0, 5);
+               this.cycle = this.findCycle(r);
+
+               // this.cycle =
+               //     this.models.find(x => sameId(x.ProcessId, r.ProcessId) && sameText(x.Partnumber, r.Partnumber)) ??
+               //     this.models.find(x => sameId(x.ProcessId, r.ProcessId) && sameText(x.Model, r.getModel ?? r.Model)) ??
+               //     null;
+
+
+               // Part number / model / cycle time
+               // this.cycle =
+               //     this.models.find(x => x.ProcessId === r.ProcessId && x.Partnumber === r.Partnumber) ??
+               //     this.models.find(x => x.ProcessId === r.ProcessId && x.Model === (r.getModel ?? r.Model)) ??
+               //     null;
+               byId('Partnumber').value = this.cycle?.Partnumber ?? r.Partnumber ?? '';
+               byId('model').value = this.cycle?.Model ?? r.getModel ?? r.Model ?? '';
+
+               // Employee
+               byId('employeeCode').value = r.EffyCode ?? '';
+               byId('employeeName').value =
+                   this.employees.find(e => String(e.EffyCode) === String(r.EffyCode))?.FullName ?? r.FullName ?? '';
+
+               // Times / numbers
+               byId('startOpe').value = String(r.StartOpeText ?? r.StartOpe ?? '').slice(0, 5);
+               byId('endOpe').value = String(r.EndOpeText ?? r.EndOpe ?? '').slice(0, 5);
+               byId('output').value = r.Output ?? 0;
+               byId('downtimeMin').value = r.DowntimeMin ?? 0;
+
+               // Shift
+               this.isNight = String(r.ShiftCode ?? '').toUpperCase().startsWith('N');
 
                byId('formTitle').textContent = `Edit Efficiency Record #${id}`;
                this.submitBtn.textContent = 'Update Record';
-
-               this.cycle = this.models.find(x => x.ProcessId === r.ProcessId && x.Partnumber === r.Partnumber)
-                   ?? this.models.find(x => x.ProcessId === r.ProcessId && x.Model === r.Model)
-                   ?? null;
-               byId('Partnumber').value = this.cycle?.Partnumber ?? r.Partnumber ?? '';
-               byId('model').value = this.cycle?.Model ?? r.Model ?? '';
-               byId('employeeCode').value = r.EffyCode ?? '';
-               byId('employeeName').value = this.employees.find(e => String(e.EffyCode) === String(r.EffyCode))?.FullName ?? '';
                this.calcForm();
+               byId('shopOrder').focus();
            }
 
            async onDeleteRecord(id) {
                if (!confirm('Delete this record?')) return;
                try {
                    // NOTE: other calls use the "Rotor" controller; confirm this one is correct
-                   const res = await postMethod('@Url.Action("DeleteEfficiencyRecord", "Efficiency")', { id });
+                   const res = await postMethod('@Url.Action("DeleteEfficiencyRecord", "Rotor")', { ID: id });
+                   console.log(res);
                    if (!res?.Success) {
-                       this.showToast(res?.Message || 'Delete failed.', false);
-                       return;
+                      this.showToast(res?.Message || 'Delete failed.', false);
+                      return;
                    }
                    this.showToast('Record deleted.', true);
+                   if (parseInt(this.editIndexInput.value, 10) === id) this.resetRecordForm();
                    await this.GetEfficiencyList();
                } catch (error) {
                    console.error('Error deleting record:', error);
                    this.showToast('Delete failed.', false);
                }
+           }
+
+           findCycle(r) {
+               const norm = v => String(v ?? '').trim().toLowerCase();
+
+               const pid = norm(r.ProcessId);
+               const pn = norm(r.Partnumber);
+               const model = norm(r.getModel ?? r.Model);
+
+               return this.models.find(x => norm(x.ProcessId) === pid && norm(x.Partnumber) === pn)
+                   ?? this.models.find(x => norm(x.ProcessId) === pid && norm(x.Model) === model)
+                   ?? this.models.find(x => norm(x.Partnumber) === pn)
+                   ?? null;
            }
 
            // ───────────────────────── CREATE ─────────────────────────
@@ -598,20 +675,16 @@
                     }
 
                     const payload = {
+                        EfficiencyID: parseInt(this.editIndexInput.value, 10) || 0,
                         WorkDate: byId('workDate').value,
-                        Shift: this.isNight,   
+                        Shift: this.isNight,
                         MachineNo: byId('machineNo').value,
                         ShopOrder: byId('shopOrder').value.trim(),
-
                         EffyCode: emp.EffyCode,
-
                         getModel: byId('model').value.trim(),
                         Partnumber: byId('Partnumber').value.trim(),
-
-                        // Process information
                         ProcessId: processId,
-                        ProcessName: byId('ProcessName').value.trim(),
-
+                        ProcessName: processName,
                         Output: parseInt(byId('output').value, 10) || 0,
                         DowntimeMin: parseInt(byId('downtimeMin').value, 10) || 0,
                         StartOpe: byId('startOpe').value,
@@ -723,7 +796,7 @@
 
                // Calculate Eased Target
                const targetEased = easedCycleTimeSec > 0
-                   ? Math.floor((workHours.toFixed(2) * 3600) / easedCycleTimeSec)
+                   ? Math.floor((Number(workHours.toFixed(2)) * 3600) / easedCycleTimeSec)
                    : 0;
 
                // Calculate Efficiency
@@ -731,11 +804,13 @@
                    ? (output / target) * 100
                    : 0;
 
-               const dtpics = Math.round((downtime * 60) / cycleTimeSec);
+               const dtpics = cycleTimeSec > 0
+                   ? Math.round((downtime * 60) / cycleTimeSec)
+                   : 0;
 
                // Target Less DP
-               const targetless = target - dtpics.toFixed(1);
-
+               const targetless = target - dtpics;
+           
                const targetEfficient = targetless > 0
                    ? (output / targetless) * 100
                    : 0;
@@ -1187,6 +1262,7 @@
                invalidMsg = 'Select a value from the list.'
            }) {
                const input = byId(inputId);
+               let typed = false; 
 
                if (!input) {
                    console.error(`Combo input not found: ${inputId}`);
@@ -1236,11 +1312,11 @@
 
                    list.innerHTML = shown.length
                        ? shown.map((item, index) => `
-     <li role="option" data-n="${index}">
-         ${this.esc(item.text)}
-         ${item.sub ? `<small>${this.esc(item.sub)}</small>` : ''}
-     </li>
- `).join('')
+                         <li role="option" data-n="${index}">
+                             ${this.esc(item.text)}
+                             ${item.sub ? `<small>${this.esc(item.sub)}</small>` : ''}
+                         </li>
+                     `).join('')
                        : `<li class="empty">${this.esc(emptyText)}</li>`;
 
                    active = shown.length ? 0 : -1;
@@ -1276,6 +1352,7 @@
                const choose = item => {
                    if (!item) return;
 
+                   typed = false;
                    selected = item;
 
                    input.value = item.value;
@@ -1297,14 +1374,17 @@
 
                // Focus opens dropdown
                input.addEventListener('focus', () => {
+                   // Don't open the list for a value that's already filled in
+                   if (input.value.trim()) return;
                    open();
                });
 
                // Search while typing
                input.addEventListener('input', () => {
+                   typed = true;
                    selected = null;
 
-                   onClear?.();
+                   // onClear?.();
 
                    combo.classList.add('open');
 
@@ -1338,6 +1418,14 @@
                // Validate manually typed values when leaving the field
                input.addEventListener('blur', async () => {
                    close();
+
+                   if (!typed) return;
+                   typed = false;
+
+                   if (selected && selected.value === input.value) {
+                       return;
+                   }
+
 
                    if (selected && selected.value === input.value) {
                        return;
@@ -1804,7 +1892,7 @@
 
            //     return process ? process.ProcessName : '';
            // }
-         
+
            // Get Process ID using Process Name
            getProcessId(name) {
                if (!name) return 0;
@@ -1821,6 +1909,25 @@
                return isNight
                    ? `<span class="shift-badge night">${ICON_MOON}<span>NS</span></span>`
                    : `<span class="shift-badge day">${ICON_SUN}<span>DS</span></span>`;
+           }
+
+           toDateInputValue(value) {
+               if (value == null || value === '') return '';
+
+               const s = String(value);
+
+               // ISO string, e.g. "2026-11-07" or "2026-11-07T00:00:00"
+               const iso = /^(\d{4}-\d{2}-\d{2})/.exec(s);
+               if (iso) return iso[1];
+
+               // .NET legacy JSON date, e.g. "/Date(1793980800000)/" or "/Date(1793980800000+0800)/"
+               const net = /\/Date\((-?\d+)(?:[+-]\d{4})?\)\//.exec(s);
+               const d = net ? new Date(Number(net[1])) : new Date(s);
+               if (isNaN(d)) return '';
+
+               // Local getters so the date matches the browser's timezone
+               const pad = n => String(n).padStart(2, '0');
+               return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
            }
 
        }

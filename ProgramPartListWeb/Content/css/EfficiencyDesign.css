@@ -4000,3 +4000,15 @@ button {
     .calc-box.is-night .calc-label {
         color: #a5b4fc;
     }*/
+
+
+
+
+.row-actions { display: flex; gap: 6px; justify-content: center; }
+.row-btn {
+    border: 1px solid #d1d5db; background: #fff; border-radius: 6px;
+    padding: 3px 8px; font-size: .7rem; font-weight: 600; cursor: pointer;
+}
+.row-btn.edit:hover   { background: #ecfdf5; border-color: #10b981; color: #047857; }
+.row-btn.delete:hover { background: #fef2f2; border-color: #ef4444; color: #b91c1c; }
+tr.editing { outline: 2px solid #10b981; outline-offset: -2px; background: #f0fdf4; }

@@ -75,18 +75,36 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
             if (model == null)
                 return JsonPostError("Request body could not be bound.");
 
-           
+
 
             //Debug.WriteLine($"WorkDate: {model.WorkDate:yyyy-MM-dd}");
-
-            int added = await _emp.AddEfficiencyRecord(model);
-            if (added == 0)
-                return JsonPostError("Failed to Add a New Process");
+            bool isEdit = model.EfficiencyID > 0;
+            //Debug.WriteLine($"Action : {IdCheck}");
+            int results = isEdit
+                    ? await _emp.EditEfficiencyRecord(model)
+                    : await _emp.AddEfficiencyRecord(model);
+            if (results == 0)
+                return JsonPostError(isEdit ? "Failed to update the record." : "Failed to add the record.");
 
             return JsonSuccess();
         }
+        [HttpPost]
+        public async Task<ActionResult> DeleteEfficiencyRecord(int ID)
+        {
+            Debug.WriteLine("========== EfficiencyDailyMonitor ==========");
+            Debug.WriteLine($"Record ID: {ID}");
 
+            //if (model == null)
+            //    return JsonPostError("Request body could not be bound.");
+            ////Debug.WriteLine($"WorkDate: {model.WorkDate:yyyy-MM-dd}");
+            //bool isEdit = model.EfficiencyID > 0;
+            ////Debug.WriteLine($"Action : {IdCheck}");
+            bool results = await _emp.DeleteEfficiencyRecord(ID);
+            if (!results)
+                return JsonPostError("Failed to Delete the record.");
 
+            return JsonSuccess();
+        }
 
         // ─────────────────────────────────────────────────────────────────
         // GET: /Production1/Employees/GetEmployeeList

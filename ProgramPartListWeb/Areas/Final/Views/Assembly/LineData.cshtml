@@ -57,7 +57,7 @@
     <div class="devices-table-wrapper">
         <div class="devices-table-wrapper">
             <div class="table-scroll TrackTable">
-                <table class="upload-table">
+                <table class="upload-table   line-Table">
                     <thead>
                         <tr>
                             <th>Line</th>
@@ -310,6 +310,31 @@
                     + '&id=' + encodeURIComponent(id);
             });
 
+
+          // Single-click table row -> Highlight selected row
+          this.tbody.addEventListener('click', (e) => {
+
+              if (e.target.closest('input, button, select, a')) return;
+
+              const row = e.target.closest('tr[data-order-line]');
+
+              if (!row) return;
+
+              this.tbody.querySelectorAll('.selected-row')
+                  .forEach(r => r.classList.remove('selected-row'));
+
+              row.classList.add('selected-row');
+
+              this.selectedID = row.dataset.id;
+              this.selectedLine = row.dataset.orderLine;
+
+              console.log('Selected Row:', {
+                  RecordID: this.selectedID,
+                  Line: this.selectedLine,
+                  ShopOrder: row.dataset.shopOrder
+              });
+          });
+
       }
 
       async LoadTotalPartsSummary() {
@@ -489,7 +514,7 @@
 
 
                 return `
-              <tr  class='fade-in'
+              <tr  class='fade-in' style ='cursor: text;'
                    data-order-line="${row.Line}"
                      data-shop-order="${row.FinalShopOrder}"
                      data-id="${row.RecordID}">
@@ -525,7 +550,23 @@
                         <td>${row.WithSR ? 'With SR': ''}</td>
                 </tr>`
 
-            }).join('');
+        }).join('');
+
+          // =====================================
+          // RESTORE SELECTED ROW AFTER RENDERING
+          // =====================================
+          if (this.selectedID) {
+
+              const selectedRow = [...this.tbody.querySelectorAll('tr[data-id]')]
+                  .find(row => row.dataset.id === String(this.selectedID));
+
+              if (selectedRow) {
+                  selectedRow.classList.add('selected-row');
+              } else {
+                  this.selectedID = 0;
+                  this.selectedLine = "";
+              }
+          }
      }
 
     showTableSkeleton() {

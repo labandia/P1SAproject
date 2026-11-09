@@ -213,7 +213,6 @@ namespace ProgramPartListWeb.Areas.Final.Services
             string query = $@"SELECT {SelectColumns} FROM {maintable} s WHERE Line = @Line AND IsOven IN (1, 2, 3)  ";
 
             return await SqlDataAcess_Test.QueryAsync<FanTraceabilityManufacturingOrder>(query, new { Line = Line });
-
         }
 
 
@@ -391,7 +390,6 @@ namespace ProgramPartListWeb.Areas.Final.Services
                         mo.RecordID ASC";
 
 
-                Debug.WriteLine(query);
 
 
                 return await SqlDataAcess_Test.QueryAsync<FanTraceabilityManufacturingOrder>(query, parameters);

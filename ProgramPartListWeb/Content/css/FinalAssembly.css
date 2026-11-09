@@ -63,10 +63,10 @@
     overflow: hidden
 }
 
-.TrackTable, .tab {
+/*.TrackTable, .tab {
     user-select: none
 }
-
+*/
 .data-table, .file-table, .tableUpload, table {
     border-collapse: collapse
 }
@@ -4070,4 +4070,25 @@ td.status-column {
     cursor: pointer;
     display: inline-flex;
     align-items: center;
+}
+
+
+.line-Table tbody tr {
+    cursor: text;
+    transition: background-color 0.15s ease;
+}
+
+.line-Table tbody tr:hover {
+    background-color: #f1f5f9;
+}
+
+/* Selected row */
+.line-Table tbody tr.selected-row,
+.line-Table tbody tr.selected-row td {
+    background-color: #dbeafe !important;
+}
+
+.line-Table tbody tr.selected-row {
+    outline: 2px solid #3b82f6;
+    outline-offset: -2px;
 }

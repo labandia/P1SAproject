@@ -18,6 +18,71 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
+    <!-- BEGIN: TopHeader -->
+    <header class="app-header" data-purpose="application-header">
+        <div class="page-container header-inner">
+            <!-- Left: Logo & Portal Title -->
+            <div class="header-left">
+                <div class="brand">
+                    <div class="brand-logo">
+                        <span class="material-symbols-outlined icon-22">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 36 36">
+                                <path d="M0 0h36v36H0z" fill="none" />
+                                <path fill="currentColor" d="M18 22a4.23 4.23 0 1 0-4.23-4.23A4.23 4.23 0 0 0 18 22m0-6.86a2.63 2.63 0 1 1-2.63 2.63A2.63 2.63 0 0 1 18 15.14" class="clr-i-outline clr-i-outline-path-1" />
+                                <path fill="currentColor" d="M22 4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v7h8Zm-2 5h-4V4h4Z" class="clr-i-outline clr-i-outline-path-2" />
+                                <path fill="currentColor" d="M26 30v-2.3a1.12 1.12 0 0 0-.26-.73A9.9 9.9 0 0 0 18 23.69A9.9 9.9 0 0 0 10.26 27a1.13 1.13 0 0 0-.26.73V30h1.6v-2.13a8.33 8.33 0 0 1 6.4-2.58a8.33 8.33 0 0 1 6.4 2.59V30Z" class="clr-i-outline clr-i-outline-path-3" />
+                                <path fill="currentColor" d="M28 6h-4v2h4v24H8V8h4V6H8a2 2 0 0 0-2 2v24a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2" class="clr-i-outline clr-i-outline-path-4" />
+                                <path fill="none" d="M0 0h36v36H0z" />
+                            </svg>
+                        </span>
+                    </div>
+                    <div>
+                        <div class="brand-title-row">
+                            <span class="brand-name">Employee Information System</span>
+                            <span class="badge-live">Live Encoder Mode</span>
+                        </div>
+                        <p class="brand-sub">Input Employee information Data...</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Right Status & User Meta -->
+            <div class="header-actions">
+                <!-- Autosave Notification -->
+                <div class="autosave">
+                    <span class="autosave-dot"></span>
+                    <span class="material-symbols-outlined icon-16 autosave-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 512 512">
+                            <path d="M0 0h512v512H0z" fill="none" />
+                            <path fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32" d="M400 240c-8.89-89.54-71-144-144-144c-69 0-113.44 48.2-128 96c-60 6-112 43.59-112 112c0 66 54 112 120 112h260c55 0 100-27.44 100-88c0-59.82-53-85.76-96-88Z" />
+                            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M317 208L209.2 336L163 284.8" />
+                        </svg>
+                    </span>
+                    <span>Draft autosaved <strong class="autosave-time">38s ago</strong></span>
+                </div>
+                <div class="header-divider"></div>
+                <!-- Encoder profile -->
+                <div class="profile">
+                    <div class="avatar">EM</div>
+                    <div class="profile-text">
+                        <p class="profile-name">E. Mendoza</p>
+                        <p class="profile-role">Lead HR Specialist</p>
+                    </div>
+                    <button class="icon-btn" title="Close / Exit Form">
+                        <span class="material-symbols-outlined icon-20">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 1024 1024">
+                                <path d="M0 0h1024v1024H0z" fill="none" />
+                                <path fill="currentColor" d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448s448-200.6 448-448S759.4 64 512 64m0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372s372 166.6 372 372s-166.6 372-372 372" />
+                                <path fill="currentColor" fill-opacity=".15" d="M512 140c-205.4 0-372 166.6-372 372s166.6 372 372 372s372-166.6 372-372s-166.6-372-372-372m171.8 527.1c1.2 1.5 1.9 3.3 1.9 5.2c0 4.5-3.6 8-8 8l-66-.3l-99.3-118.4l-99.3 118.5l-66.1.3c-4.4 0-8-3.6-8-8c0-1.9.7-3.7 1.9-5.2L471 512.3l-130.1-155a8.32 8.32 0 0 1-1.9-5.2c0-4.5 3.6-8 8-8l66.1.3l99.3 118.4l99.4-118.5l66-.3c4.4 0 8 3.6 8 8c0 1.9-.6 3.8-1.8 5.2l-130.1 155z" />
+                                <path fill="currentColor" d="M685.8 352c0-4.4-3.6-8-8-8l-66 .3l-99.4 118.5l-99.3-118.4l-66.1-.3c-4.4 0-8 3.5-8 8c0 1.9.7 3.7 1.9 5.2l130.1 155l-130.1 154.9a8.32 8.32 0 0 0-1.9 5.2c0 4.4 3.6 8 8 8l66.1-.3l99.3-118.5L611.7 680l66 .3c4.4 0 8-3.5 8-8c0-1.9-.7-3.7-1.9-5.2L553.9 512.2l130.1-155c1.2-1.4 1.8-3.3 1.8-5.2" />
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
 
     <div>
         @RenderBody()

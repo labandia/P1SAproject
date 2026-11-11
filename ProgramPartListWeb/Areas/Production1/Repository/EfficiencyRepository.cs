@@ -115,7 +115,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                     LEFT JOIN EfficiencyEmployeeCode e
                         ON e.EffyCode = m.EffyCode
 
-                    LEFT JOIN P1SA_Employees_Temp t
+                    LEFT JOIN P1SA_Employees t
                         ON t.EmployeeCode = e.EmployeeCode
 
                       LEFT JOIN EfficiencyCycleTime c
@@ -240,7 +240,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             string query = $@"
                    SELECT f.EmployID, f.EffyCode, e.EmployeeCode, e.FullName, e.Process, e.AgencyName
                    FROM EfficiencyEmployeeCode f
-                   INNER JOIN P1SA_Employees_Temp e ON e.EmployeeCode = f.EmployeeCode
+                   INNER JOIN P1SA_Employees e ON e.EmployeeCode = f.EmployeeCode
                    WHERE 1 = 1 ";
 
             var parameters = new DynamicParameters();
@@ -482,7 +482,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             const string missingSql = @"
                 SELECT DISTINCT s.EmployeeCode
                 FROM " + openJson + @" AS s
-                WHERE NOT EXISTS (SELECT 1 FROM dbo.P1SA_Employees_Temp e 
+                WHERE NOT EXISTS (SELECT 1 FROM dbo.P1SA_Employees e 
                 WHERE e.EmployeeCode = s.EmployeeCode);";
 
                     // 2) upsert on EffyCode; EmployeeCode is set on both insert and update
@@ -490,7 +490,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             const string mergeSql = @"
                 MERGE EfficiencyEmployeeCode AS t
                 USING (SELECT s.* FROM " + openJson + @" AS s
-                       WHERE EXISTS (SELECT 1 FROM dbo.P1SA_Employees_Temp e
+                       WHERE EXISTS (SELECT 1 FROM dbo.P1SA_Employees e
                                      WHERE e.EmployeeCode = s.EmployeeCode)) AS s
                    ON t.EffyCode = s.EffyCode
                 WHEN MATCHED THEN

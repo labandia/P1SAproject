@@ -1037,9 +1037,9 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                                 END
                             ) AS Overtime_3
 
-                        FROM PMACS_TEST.dbo.P1SA_AttendanceMonitor_Temp a
+                        FROM PMACS_TEST.dbo.P1SA_AttendanceMonitor a
 
-                        INNER JOIN PMACS_TEST.dbo.P1SA_Employees_Temp e
+                        INNER JOIN PMACS_TEST.dbo.P1SA_Employees e
                             ON e.EmployeeId = a.EmployeeId
 
                         WHERE
@@ -1137,9 +1137,9 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                             END
                         ) AS Overtime_3
 
-                    FROM PMACS_TEST.dbo.P1SA_AttendanceMonitor_Temp a
+                    FROM PMACS_TEST.dbo.P1SA_AttendanceMonitor a
 
-                    INNER JOIN PMACS_TEST.dbo.P1SA_Employees_Temp e
+                    INNER JOIN PMACS_TEST.dbo.P1SA_Employees e
                         ON e.EmployeeId = a.EmployeeId
 
                     WHERE
@@ -1363,8 +1363,8 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                 -- 19:30 and later = 0.00
                 ELSE 0.00
             END AS OvertimeHours
-        FROM [PMACS_TEST].[dbo].[P1SA_AttendanceMonitor_Temp] att
-        INNER JOIN [PMACS_TEST].[dbo].[P1SA_Employees_Temp] e
+        FROM [PMACS_TEST].[dbo].[P1SA_AttendanceMonitor] att
+        INNER JOIN [PMACS_TEST].[dbo].[P1SA_Employees] e
             ON e.EmployeeId = att.EmployeeId
         WHERE att.IsDeleted = 0
           AND e.IsDeleted = 0
@@ -1472,8 +1472,8 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                             a.DayShiftCount + a.NightShiftCount AS TotalHeadCount,
                             (
                                 SELECT COUNT(DISTINCT am.EmployeeId)
-                                FROM PMACS_TEST.dbo.P1SA_AttendanceMonitor_Temp am
-                                INNER JOIN PMACS_TEST.dbo.P1SA_Employees_Temp e 
+                                FROM PMACS_TEST.dbo.P1SA_AttendanceMonitor am
+                                INNER JOIN PMACS_TEST.dbo.P1SA_Employees e 
                                     ON e.EmployeeId = am.EmployeeId
                                 WHERE CAST(am.WorkDate AS DATE) = a.DateToday
                                   AND e.DepartmentId = a.DepartmentId
@@ -1512,8 +1512,8 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                                 -- Present Count
                                 (
                                     SELECT COUNT(DISTINCT am.EmployeeId)
-                                    FROM PMACS_TEST.dbo.P1SA_AttendanceMonitor_Temp am
-                                    INNER JOIN PMACS_TEST.dbo.P1SA_Employees_Temp e 
+                                    FROM PMACS_TEST.dbo.P1SA_AttendanceMonitor am
+                                    INNER JOIN PMACS_TEST.dbo.P1SA_Employees e 
                                         ON e.EmployeeId = am.EmployeeId
                                     WHERE CAST(am.WorkDate AS DATE) = CAST(a.DateToday AS DATE)
                                       AND e.DepartmentId = a.DepartmentId

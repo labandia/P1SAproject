@@ -4006,9 +4006,184 @@ button {
 
 .row-actions { display: flex; gap: 6px; justify-content: center; }
 .row-btn {
-    border: 1px solid #d1d5db; background: #fff; border-radius: 6px;
-    padding: 3px 8px; font-size: .7rem; font-weight: 600; cursor: pointer;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .75rem;
 }
 .row-btn.edit:hover   { background: #ecfdf5; border-color: #10b981; color: #047857; }
 .row-btn.delete:hover { background: #fef2f2; border-color: #ef4444; color: #b91c1c; }
 tr.editing { outline: 2px solid #10b981; outline-offset: -2px; background: #f0fdf4; }
+
+
+
+
+
+
+
+
+
+/* ===== Missing utilities for the Performance Dashboard layout ===== */
+
+/* Spacing & sizing */
+.gap-6 {
+    gap: 1.5rem;
+}
+
+.space-y-3 > * + * {
+    margin-top: 0.75rem;
+}
+
+.space-y-4 > * + * {
+    margin-top: 1rem;
+}
+
+.mt-3 {
+    margin-top: 0.75rem;
+}
+
+.mb-0\.5 {
+    margin-bottom: 0.125rem;
+}
+
+.mb-2 {
+    margin-bottom: 0.5rem;
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.pl-5 {
+    padding-left: 1.25rem;
+}
+
+.h-full {
+    height: 100%;
+}
+
+.w-px {
+    width: 1px;
+}
+
+/* Type */
+.text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+}
+
+.tracking-wide {
+    letter-spacing: 0.025em;
+}
+
+.whitespace-nowrap {
+    white-space: nowrap;
+}
+
+.list-disc {
+    list-style-type: disc;
+}
+
+/* Layout helpers */
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.items-end {
+    align-items: flex-end;
+}
+
+/* Colors */
+.bg-slate-300 {
+    background-color: #cbd5e1;
+}
+
+.bg-slate-50\/40 {
+    background-color: rgba(248, 250, 252, 0.4);
+}
+
+/* Table row dividers (used on <tbody>) */
+.divide-y > * + * {
+    border-top: 1px solid #e2e8f0;
+}
+
+/* Mobile/tablet: header stacks, then goes row at md */
+@media (min-width: 768px) {
+    .md\:flex-row {
+        flex-direction: row;
+    }
+
+    .md\:items-end {
+        align-items: flex-end;
+    }
+
+    .md\:justify-between {
+        justify-content: space-between;
+    }
+}
+
+/* Desktop: 12-column grid */
+@media (min-width: 1024px) {
+    .lg\:grid-cols-12 {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+
+    .lg\:col-span-3 {
+        grid-column: span 3 / span 3;
+    }
+
+    .lg\:col-span-4 {
+        grid-column: span 4 / span 4;
+    }
+
+    .lg\:col-span-5 {
+        grid-column: span 5 / span 5;
+    }
+
+    .lg\:col-span-9 {
+        grid-column: span 9 / span 9;
+    }
+}
+
+/* Wide screens: 4 small cards per row */
+@media (min-width: 1280px) {
+    .xl\:grid-cols-4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+
+
+
+
+/* ========== TOAST NOTIFICATION ========== */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(12px);
+    z-index: 11000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: min(360px, calc(100vw - 40px));
+    padding: 10px 16px;
+    font: 600 12px/1.4 var(--font-sans, Inter, 'Segoe UI', sans-serif);
+    color: #fff;
+    background: var(--accent-emerald-dark, #059669);
+    border-radius: var(--radius-sm, 8px);
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
+}
+
+    .toast.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+    }

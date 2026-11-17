@@ -392,7 +392,15 @@
                    }
                });
 
-
+               ['machineNo', 'employeeCode', 'shopOrder'].forEach(id => {
+                   byId(id).addEventListener('input', e => {
+                       const el = e.target;
+                       const start = el.selectionStart;
+                       const end = el.selectionEnd;
+                       el.value = el.value.toUpperCase();
+                       el.setSelectionRange(start, end);
+                   });
+               });
 
 
                ['startOpe', 'endOpe', 'output', 'downtimeMin'].forEach(id =>
@@ -431,27 +439,7 @@
 
                // this.bindDataMenu();
 
-               document.addEventListener('click', e => {
-                   const add = e.target.closest('[data-add]');
-                   if (add) return this.openForm(add.dataset.add, null);
-
-                   if (e.target.closest('[data-upload]')) return this.openImport(true);
-                   if (e.target.closest('[data-template]')) return downloadTemplate();
-
-                   // only buttons that declare an entity belong to this controller
-                   const btn = e.target.closest('.row-btn[data-entity]');
-                   if (!btn) return;
-
-                   const { entity, id } = btn.dataset;
-                   const list = this.rows[entity];
-                   if (!list) return;
-
-                   const row = list.find(r => String(this.getId(entity, r)) === id);
-                   if (!row) return;
-
-                   if (btn.classList.contains('edit')) this.openForm(entity, row);
-                   if (btn.classList.contains('delete')) this.deleteRow(entity, row);
-               });
+              
 
            }
 
@@ -528,11 +516,11 @@
                        <td>${this.effPill(r.Efficiency)}</td>
                        <td>
                             <div class="row-actions">
-                                <button type="button" class="row-btn edit edit-record" data-id="${r.EfficiencyID}" title="Edit">
-                                    <i class="fa-solid fa-pen"></i> Edit
+                                <button type="button" class="row-btn edit edit-record" data-id="${r.EfficiencyID}" title="Edit" aria-label="Edit">
+                                    <i class="fa-solid fa-pen"></i>
                                 </button>
-                                <button type="button" class="row-btn delete delete-record" data-id="${r.EfficiencyID}" title="Delete">
-                                    <i class="fa-solid fa-trash"></i> Delete
+                                <button type="button" class="row-btn delete delete-record" data-id="${r.EfficiencyID}" title="Delete" aria-label="Delete">
+                                    <i class="fa-solid fa-trash"></i>
                                 </button>
                             </div>
                         </td>

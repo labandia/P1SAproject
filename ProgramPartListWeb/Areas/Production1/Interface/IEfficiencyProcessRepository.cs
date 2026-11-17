@@ -9,6 +9,7 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
 {
     public interface IEfficiencyProcessRepository
     {
+
         /// <summary>
         ///     MONITORING PROCESS
         /// </summary>
@@ -17,8 +18,8 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
         Task<int> AddEfficiencyRecord(EfficiencyDailyMonitor row);
         Task<int> EditEfficiencyRecord(EfficiencyDailyMonitor row);
         Task<bool> DeleteEfficiencyRecord(int ID);
-        Task<EfficiencyDailySummary> GetEfficiencySummary
-            (EfficiencyDailySummary filter,
+        Task<List<EfficiencyDailySummary>> GetEfficiencySummary
+            (EfficiencyDateFilter filter,
             DateTime? customStart = null,
              DateTime? customEnd = null);
 

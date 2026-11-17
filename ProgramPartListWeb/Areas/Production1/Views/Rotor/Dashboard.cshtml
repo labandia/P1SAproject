@@ -1,445 +1,334 @@
-﻿
-@{
-    ViewBag.Title = "Dashboard";
+﻿@{
+    ViewBag.Title = "Performance Dashboard";
     Layout = "~/Areas/Production1/Views/Shared/_EfficiencyLayout.cshtml";
 }
 
-<!-- ========== MAIN ========== -->
-<main class="flex-1  py-6 space-y-6 px-6">
-
-    <!-- Top action bar -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-2 border-b border-slate-200">
+<div class="flex flex-wrap items-end gap-3 bg-white border border-slate-300 rounded-md p-4">
+    <div>
+        <label class="block text-xs text-slate-600 mb-1">Period</label>
+        <select id="filterType" class="border border-slate-300 rounded px-3 py-2 text-sm">
+            <option value="Today">Today</option>
+            <option value="ThisWeek">This Week</option>
+            <option value="ThisMonth">This Month</option>
+            <option value="Custom">Custom Range</option>
+        </select>
+    </div>
+    <div id="customRange" class="hidden flex gap-3">
         <div>
-            <h2 class="text-xl font-bold tracking-tight text-slate-900">Operational Overview</h2>
-            <p class="text-xs text-slate-500">Live production tracking for current shift cycles and automated machinery.</p>
+            <label class="block text-xs text-slate-600 mb-1">From</label>
+            <input type="date" id="customFrom" class="border border-slate-300 rounded px-3 py-2 text-sm" />
         </div>
-        <div class="flex items-center gap-2">
-            <span class="text-xs font-medium text-slate-500">Timeline:</span>
-            <div class="inline-flex rounded-md shadow-sm">
-                <button class="px-3 py-1.5 text-xs font-semibold text-indigo-600 bg-white border border-slate-300 rounded-l-md hover:bg-slate-50 shadow-xs" type="button">Today</button>
-                <button class="px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-50 border-t border-b border-r border-slate-300 hover:bg-slate-100" type="button">Yesterday</button>
-                <button class="px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-50 border-t border-b border-r border-slate-300 rounded-r-md hover:bg-slate-100" type="button">This Week</button>
-            </div>
-            <button class="inline-flex items-center px-2.5 py-1.5 border border-slate-300 text-xs font-medium rounded-md text-slate-700 bg-white hover:bg-slate-50 ml-1">
-                <svg class="w-3.5 h-3.5 mr-1 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                </svg>
-                Refresh
-            </button>
+        <div>
+            <label class="block text-xs text-slate-600 mb-1">To</label>
+            <input type="date" id="customTo" class="border border-slate-300 rounded px-3 py-2 text-sm" />
         </div>
     </div>
+</div>
 
-    <!-- ===== KPI CARDS ===== -->
-    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<main class="flex-1 px-6 py-6 space-y-6 bg-slate-50/40">
 
-        <!-- card 1 -->
-        <div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs hover:border-indigo-200 transition-all">
-            <div class="flex items-center justify-between">
-                <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Total Records</span>
-                <span class="p-1.5 rounded-md bg-blue-50 text-blue-600">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                    </svg>
-                </span>
-            </div>
-            <div class="mt-2 flex items-baseline gap-2">
-                <span class="text-3xl font-bold font-mono-numbers text-slate-900">1,248</span>
-                <span class="text-xs font-semibold text-emerald-600 flex items-center">
-                    <svg class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M5 10l7-7m0 0l7 7m-7-7v18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                    </svg>
-                    +12.4%
-                </span>
-            </div>
-            <p class="mt-2 text-xs text-slate-500">Encoded production entries</p>
+    <!-- ===== HEADER ===== -->
+    <header class="flex flex-col md:flex-row md:items-end md:justify-between gap-3 pb-4 border-b border-slate-300">
+        <div class="flex items-center gap-4">
+            <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">DYNAMIC BALANCE</h1>
+            <span class="h-8 w-px bg-slate-300"></span>
+            <h2 class="text-2xl font-light tracking-wide text-slate-700">PERFORMANCE DASHBOARD</h2>
         </div>
+        <nav class="flex flex-wrap items-center gap-2 text-sm text-slate-500">
+            <span>Manpower</span><span>&bull;</span>
+            <span>Efficiency</span><span>&bull;</span>
+            <span>Weekly Trend</span><span>&bull;</span>
+            <span>Monthly Summary</span>
+        </nav>
+    </header>
 
-        <!-- card 2 -->
-        <div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs hover:border-indigo-200 transition-all">
-            <div class="flex items-center justify-between">
-                <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Total Output</span>
-                <span class="p-1.5 rounded-md bg-indigo-50 text-indigo-600">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                    </svg>
-                </span>
-            </div>
-            <div class="mt-2 flex items-baseline gap-2">
-                <span class="text-3xl font-bold font-mono-numbers text-slate-900">48,250</span>
-                <span class="text-xs font-medium text-slate-500">pcs</span>
-            </div>
-            <div class="mt-2">
-                <div class="w-full bg-slate-100 rounded-full h-1.5">
-                    <div class="bg-indigo-600 h-1.5 rounded-full" style="width: 92.8%"></div>
-                </div>
-                <p class="mt-1.5 text-xs text-slate-500 flex justify-between">
-                    <span>Pieces produced</span>
-                    <span class="font-medium text-slate-700">92.8% of target</span>
-                </p>
-            </div>
-        </div>
+    <!-- ===== MAIN GRID ===== -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-        <!-- card 3 -->
-        <div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs hover:border-indigo-200 transition-all">
-            <div class="flex items-center justify-between">
-                <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Total Target</span>
-                <span class="p-1.5 rounded-md bg-amber-50 text-amber-600">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                    </svg>
-                </span>
-            </div>
-            <div class="mt-2 flex items-baseline gap-2">
-                <span class="text-3xl font-bold font-mono-numbers text-slate-900">52,000</span>
-                <span class="text-xs font-medium text-slate-500">pcs</span>
-            </div>
-            <p class="mt-2 text-xs text-slate-500">Planned pieces quota (All lines)</p>
-        </div>
+        <!-- ===== LEFT: MANPOWER STATUS (cols 1-5) ===== -->
+        <section class="lg:col-span-5 space-y-4">
+            <h3 class="text-lg font-bold text-slate-900 uppercase">1. Manpower Status</h3>
 
-        <!-- card 4 -->
-        <div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs ring-1 ring-emerald-500/20 hover:border-emerald-300 transition-all">
-            <div class="flex items-center justify-between">
-                <span class="text-xs font-medium text-slate-500 uppercase tracking-wider">Overall Efficiency</span>
-                <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-semibold bg-emerald-100 text-emerald-800">
-                    Normal
-                </span>
-            </div>
-            <div class="mt-2 flex items-baseline gap-2">
-                <span class="text-3xl font-bold font-mono-numbers text-emerald-600">92.8%</span>
-                <span class="text-xs font-medium text-slate-400">/ 90.0% goal</span>
-            </div>
-            <p class="mt-2 text-xs text-slate-400 italic">Total output ÷ total target</p>
-        </div>
-    </section>
-
-    <!-- ===== KPI CARDS ===== -->
-    <section class="grid grid-cols-2  gap-4">
-        <!-- ===== SHIFT PERFORMANCE ===== -->
-        <section class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 bg-gradient-to-r from-slate-50/50 to-white">
-                <div>
-                    <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-                        <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                        </svg>
-                        Shift Performance
-                    </h3>
-                    <p class="text-xs text-slate-500 mt-0.5">Output vs target across scheduled factory rotations</p>
-                </div>
-                <span class="text-xs font-mono bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md border border-slate-200/80">3 Active Shifts Tracked</span>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="border-b border-slate-200 bg-slate-50/75 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                            <th class="py-3.5 px-6" scope="col">Shift</th>
-                            <th class="py-3.5 px-6 text-right" scope="col">Records</th>
-                            <th class="py-3.5 px-6 text-right" scope="col">Output (pcs)</th>
-                            <th class="py-3.5 px-6 text-right" scope="col">Target (pcs)</th>
-                            <th class="py-3.5 px-6 w-1/4" scope="col">Efficiency</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100 text-sm">
-                        <tr class="hover:bg-indigo-50/30 transition-colors">
-                            <td class="py-4 px-6 font-medium text-slate-900 flex items-center gap-2.5">
-                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                                <span>Morning Shift (DS - Shift A)</span>
-                                <span class="text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded font-medium">Active</span>
-                            </td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-600">540</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers font-semibold text-slate-800">21,450</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-500">22,500</td>
-                            <td class="py-4 px-6">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-full bg-slate-200 rounded-full h-2">
-                                        <div class="bg-emerald-500 h-2 rounded-full" style="width: 95.3%"></div>
-                                    </div>
-                                    <span class="font-mono-numbers font-semibold text-xs text-emerald-700 w-12 text-right">95.3%</span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-indigo-50/30 transition-colors">
-                            <td class="py-4 px-6 font-medium text-slate-900 flex items-center gap-2.5">
-                                <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
-                                <span>Afternoon Shift (Shift B)</span>
-                            </td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-600">468</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers font-semibold text-slate-800">17,800</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-500">19,500</td>
-                            <td class="py-4 px-6">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-full bg-slate-200 rounded-full h-2">
-                                        <div class="bg-blue-600 h-2 rounded-full" style="width: 91.3%"></div>
-                                    </div>
-                                    <span class="font-mono-numbers font-semibold text-xs text-blue-700 w-12 text-right">91.3%</span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-indigo-50/30 transition-colors">
-                            <td class="py-4 px-6 font-medium text-slate-900 flex items-center gap-2.5">
-                                <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
-                                <span>Night Shift (NS - Shift C)</span>
-                            </td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-600">240</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers font-semibold text-slate-800">9,000</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-500">10,000</td>
-                            <td class="py-4 px-6">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-full bg-slate-200 rounded-full h-2">
-                                        <div class="bg-indigo-500 h-2 rounded-full" style="width: 90.0%"></div>
-                                    </div>
-                                    <span class="font-mono-numbers font-semibold text-xs text-indigo-700 w-12 text-right">90.0%</span>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- ===== MACHINE PERFORMANCE ===== -->
-        <section class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 bg-gradient-to-r from-slate-50/50 to-white">
-                <div>
-                    <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-                        <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                        </svg>
-                        Machine Performance
-                    </h3>
-                    <p class="text-xs text-slate-500 mt-0.5">By machine number, status, throughput &amp; efficiency quota</p>
-                </div>
-                <div class="flex items-center gap-3 text-xs">
-                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Running</span>
-                    <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Maint.</span>
-                </div>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="border-b border-slate-200 bg-slate-50/75 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                            <th class="py-3.5 px-6" scope="col">Machine</th>
-                            <th class="py-3.5 px-6" scope="col">Status</th>
-                            <th class="py-3.5 px-6 text-right" scope="col">Records</th>
-                            <th class="py-3.5 px-6 text-right" scope="col">Output (pcs)</th>
-                            <th class="py-3.5 px-6 text-right" scope="col">Target (pcs)</th>
-                            <th class="py-3.5 px-6 w-1/4" scope="col">Efficiency</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100 text-sm">
-                        <tr class="hover:bg-slate-50/80 transition-colors">
-                            <td class="py-4 px-6 font-semibold text-slate-900">Machine #01 <span class="text-xs font-normal text-slate-500">(Auto Rotor Assembler A)</span></td>
-                            <td class="py-4 px-6">
-                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span> Running
-                                </span>
-                            </td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-600">312</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers font-semibold text-slate-800">12,650</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-500">13,000</td>
-                            <td class="py-4 px-6">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-full bg-slate-200 rounded-full h-2">
-                                        <div class="bg-emerald-500 h-2 rounded-full" style="width: 97.3%"></div>
-                                    </div>
-                                    <span class="font-mono-numbers font-semibold text-xs text-emerald-700 w-12 text-right">97.3%</span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-slate-50/80 transition-colors">
-                            <td class="py-4 px-6 font-semibold text-slate-900">Machine #02 <span class="text-xs font-normal text-slate-500">(Auto Rotor Assembler B)</span></td>
-                            <td class="py-4 px-6">
-                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span> Running
-                                </span>
-                            </td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-600">320</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers font-semibold text-slate-800">12,100</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-500">13,000</td>
-                            <td class="py-4 px-6">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-full bg-slate-200 rounded-full h-2">
-                                        <div class="bg-indigo-600 h-2 rounded-full" style="width: 93.1%"></div>
-                                    </div>
-                                    <span class="font-mono-numbers font-semibold text-xs text-indigo-700 w-12 text-right">93.1%</span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-slate-50/80 transition-colors">
-                            <td class="py-4 px-6 font-semibold text-slate-900">Machine #03 <span class="text-xs font-normal text-slate-500">(Shaft Press Core unit)</span></td>
-                            <td class="py-4 px-6">
-                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5"></span> Calibration
-                                </span>
-                            </td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-600">296</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers font-semibold text-slate-800">11,200</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-500">13,000</td>
-                            <td class="py-4 px-6">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-full bg-slate-200 rounded-full h-2">
-                                        <div class="bg-amber-500 h-2 rounded-full" style="width: 86.2%"></div>
-                                    </div>
-                                    <span class="font-mono-numbers font-semibold text-xs text-amber-700 w-12 text-right">86.2%</span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-slate-50/80 transition-colors">
-                            <td class="py-4 px-6 font-semibold text-slate-900">Machine #04 <span class="text-xs font-normal text-slate-500">(Balancing &amp; Finishing)</span></td>
-                            <td class="py-4 px-6">
-                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span> Running
-                                </span>
-                            </td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-600">320</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers font-semibold text-slate-800">12,300</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-500">13,000</td>
-                            <td class="py-4 px-6">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-full bg-slate-200 rounded-full h-2">
-                                        <div class="bg-emerald-500 h-2 rounded-full" style="width: 94.6%"></div>
-                                    </div>
-                                    <span class="font-mono-numbers font-semibold text-xs text-emerald-700 w-12 text-right">94.6%</span>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-    </section>
-
-
-       
-
-        <!-- ===== PROCESS SUMMARY ===== -->
-        <section class="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
-            <div class="px-6 py-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 bg-gradient-to-r from-slate-50/50 to-white">
-                <div>
-                    <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-                        <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                        </svg>
-                        Process Summary
-                    </h3>
-                    <p class="text-xs text-slate-500 mt-0.5">Stage-by-stage efficiency breakdown across Rotor Section manufacturing steps</p>
-                </div>
-                <span class="text-xs text-slate-400 font-mono">5 Operational Stages</span>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="border-b border-slate-200 bg-slate-50/75 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                            <th class="py-3.5 px-6" scope="col">Process Stage</th>
-                            <th class="py-3.5 px-6 text-right" scope="col">Records</th>
-                            <th class="py-3.5 px-6 text-right" scope="col">Output (pcs)</th>
-                            <th class="py-3.5 px-6 text-right" scope="col">Target (pcs)</th>
-                            <th class="py-3.5 px-6 w-1/4" scope="col">Efficiency</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100 text-sm">
-                        <tr class="hover:bg-slate-50/80 transition-colors">
-                            <td class="py-4 px-6 font-medium text-slate-900 flex items-center gap-2">
-                                <span class="w-6 h-6 rounded bg-slate-100 text-slate-600 font-mono text-xs flex items-center justify-center font-bold">1</span>
-                                <span>Rotor Core Lamination</span>
-                            </td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-600">280</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers font-semibold text-slate-800">10,400</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-500">10,500</td>
-                            <td class="py-4 px-6">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-full bg-slate-200 rounded-full h-2">
-                                        <div class="bg-emerald-500 h-2 rounded-full" style="width: 99.0%"></div>
-                                    </div>
-                                    <span class="font-mono-numbers font-semibold text-xs text-emerald-700 w-12 text-right">99.0%</span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-slate-50/80 transition-colors">
-                            <td class="py-4 px-6 font-medium text-slate-900 flex items-center gap-2">
-                                <span class="w-6 h-6 rounded bg-slate-100 text-slate-600 font-mono text-xs flex items-center justify-center font-bold">2</span>
-                                <span>Winding &amp; Insertion</span>
-                            </td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-600">274</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers font-semibold text-slate-800">9,850</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-500">10,500</td>
-                            <td class="py-4 px-6">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-full bg-slate-200 rounded-full h-2">
-                                        <div class="bg-indigo-600 h-2 rounded-full" style="width: 93.8%"></div>
-                                    </div>
-                                    <span class="font-mono-numbers font-semibold text-xs text-indigo-700 w-12 text-right">93.8%</span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-slate-50/80 transition-colors">
-                            <td class="py-4 px-6 font-medium text-slate-900 flex items-center gap-2">
-                                <span class="w-6 h-6 rounded bg-slate-100 text-slate-600 font-mono text-xs flex items-center justify-center font-bold">3</span>
-                                <span>Commutator Welding</span>
-                            </td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-600">244</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers font-semibold text-slate-800">9,200</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-500">10,500</td>
-                            <td class="py-4 px-6">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-full bg-slate-200 rounded-full h-2">
-                                        <div class="bg-amber-500 h-2 rounded-full" style="width: 87.6%"></div>
-                                    </div>
-                                    <span class="font-mono-numbers font-semibold text-xs text-amber-700 w-12 text-right">87.6%</span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-slate-50/80 transition-colors">
-                            <td class="py-4 px-6 font-medium text-slate-900 flex items-center gap-2">
-                                <span class="w-6 h-6 rounded bg-slate-100 text-slate-600 font-mono text-xs flex items-center justify-center font-bold">4</span>
-                                <span>Dynamic Balancing</span>
-                            </td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-600">230</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers font-semibold text-slate-800">9,600</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-500">10,250</td>
-                            <td class="py-4 px-6">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-full bg-slate-200 rounded-full h-2">
-                                        <div class="bg-indigo-600 h-2 rounded-full" style="width: 93.6%"></div>
-                                    </div>
-                                    <span class="font-mono-numbers font-semibold text-xs text-indigo-700 w-12 text-right">93.6%</span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-slate-50/80 transition-colors">
-                            <td class="py-4 px-6 font-medium text-slate-900 flex items-center gap-2">
-                                <span class="w-6 h-6 rounded bg-slate-100 text-slate-600 font-mono text-xs flex items-center justify-center font-bold">5</span>
-                                <span>Optical &amp; Quality Inspection</span>
-                            </td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-600">220</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers font-semibold text-slate-800">9,200</td>
-                            <td class="py-4 px-6 text-right font-mono-numbers text-slate-500">10,250</td>
-                            <td class="py-4 px-6">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-full bg-slate-200 rounded-full h-2">
-                                        <div class="bg-indigo-600 h-2 rounded-full" style="width: 89.7%"></div>
-                                    </div>
-                                    <span class="font-mono-numbers font-semibold text-xs text-indigo-700 w-12 text-right">89.7%</span>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- ===== POLICY CALLOUT ===== -->
-        <div class="rounded-lg bg-indigo-50/70 border border-indigo-100 p-4 text-xs text-slate-600 flex items-start gap-3 shadow-2xs">
-            <svg class="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-            </svg>
             <div>
-                <p class="font-semibold text-slate-800 mb-0.5">Dashboard Calculation Policy</p>
-                <p class="leading-relaxed">
-                    Efficiency on this dashboard is recalculated as <span class="font-medium text-indigo-900">total output divided by total target</span>. The supplied <span class="font-semibold text-indigo-900">AVERAGE DS/NS</span> and <span class="font-semibold text-indigo-900">CRITERIA</span> fields are preserved as entered.
-                </p>
+                <h4 class="text-sm font-semibold text-slate-700 mb-2">A. Manpower Overview</h4>
+                <div class="grid grid-cols-2 xl:grid-cols-4 gap-3">
+                    <div class="bg-white border border-slate-300 rounded-md p-4 text-center">
+                        <p class="text-xs text-slate-600">Total Manpower</p>
+                        <p class="mt-2 text-3xl font-bold text-slate-900">828</p>
+                    </div>
+                    <div class="bg-white border border-slate-300 rounded-md p-4 text-center">
+                        <p class="text-xs text-slate-600">Remaining Manpower</p>
+                        <p class="mt-2 text-3xl font-bold text-slate-900">652</p>
+                    </div>
+                    <div class="bg-white border border-slate-300 rounded-md p-4 text-center">
+                        <p class="text-xs text-slate-600">Improved Count</p>
+                        <p class="mt-2 text-3xl font-bold text-slate-900">205</p>
+                    </div>
+                    <div class="bg-white border border-slate-300 rounded-md p-4 text-center">
+                        <p class="text-xs text-slate-600">Overall Rate</p>
+                        <p class="mt-2 text-3xl font-bold text-slate-900">31%</p>
+                    </div>
+                </div>
             </div>
-        </div>
+
+            <div>
+                <h4 class="text-sm font-semibold text-slate-700 mb-2">B. Manpower Breakdown</h4>
+                <div class="overflow-x-auto bg-white border border-slate-300 rounded-md">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-slate-100 text-slate-700">
+                            <tr>
+                                <th class="px-3 py-2 font-semibold">Process</th>
+                                <th class="px-3 py-2 font-semibold text-center">Manpower</th>
+                                <th class="px-3 py-2 font-semibold text-center">Remaining</th>
+                                <th class="px-3 py-2 font-semibold text-center">Improved</th>
+                                <th class="px-3 py-2 font-semibold text-center">Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 text-slate-700">
+                            <tr><td class="px-3 py-2">3mm Cover Drilling</td><td class="px-3 py-2 text-center">184</td><td class="px-3 py-2 text-center">153</td><td class="px-3 py-2 text-center">44</td><td class="px-3 py-2 text-center">29%</td></tr>
+                            <tr><td class="px-3 py-2">3mm Impeller Drilling</td><td class="px-3 py-2 text-center">80</td><td class="px-3 py-2 text-center">71</td><td class="px-3 py-2 text-center">22</td><td class="px-3 py-2 text-center">31%</td></tr>
+                            <tr><td class="px-3 py-2">3mm Compound Application</td><td class="px-3 py-2 text-center">515</td><td class="px-3 py-2 text-center">387</td><td class="px-3 py-2 text-center">129</td><td class="px-3 py-2 text-center">33%</td></tr>
+                            <tr><td class="px-3 py-2">5mm Compound Application</td><td class="px-3 py-2 text-center">17</td><td class="px-3 py-2 text-center">15</td><td class="px-3 py-2 text-center">4</td><td class="px-3 py-2 text-center">27%</td></tr>
+                            <tr><td class="px-3 py-2">6mm Compound Application</td><td class="px-3 py-2 text-center">29</td><td class="px-3 py-2 text-center">23</td><td class="px-3 py-2 text-center">5</td><td class="px-3 py-2 text-center">22%</td></tr>
+                            <tr><td class="px-3 py-2">8mm Compound Application</td><td class="px-3 py-2 text-center">3</td><td class="px-3 py-2 text-center">3</td><td class="px-3 py-2 text-center">1</td><td class="px-3 py-2 text-center">33%</td></tr>
+                        </tbody>
+                        <tfoot class="bg-slate-100 font-bold text-slate-900">
+                            <tr>
+                                <td class="px-3 py-2">TOTAL</td>
+                                <td class="px-3 py-2 text-center">828</td>
+                                <td class="px-3 py-2 text-center">652</td>
+                                <td class="px-3 py-2 text-center">205</td>
+                                <td class="px-3 py-2 text-center">31%</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== MIDDLE: EFFICIENCY MONITORING (cols 6-9) ===== -->
+        <section class="lg:col-span-4 space-y-4">
+            <h3 class="text-lg font-bold text-slate-900 uppercase">2. Efficiency Monitoring</h3>
+
+            <div>
+                <h4 class="text-sm font-semibold text-slate-700 mb-2">A. Monthly Efficiency Summary</h4>
+                <div class="grid grid-cols-2 xl:grid-cols-4 gap-3">
+                    <div class="bg-white border border-slate-300 rounded-md p-3 text-center">
+                        <p class="text-xs text-slate-600">July</p>
+                        <p class="mt-2 text-2xl font-bold text-slate-900">44%</p>
+                    </div>
+                    <div class="bg-white border border-slate-300 rounded-md p-3 text-center">
+                        <p class="text-xs text-slate-600">August</p>
+                        <p class="mt-2 text-2xl font-bold text-slate-900">50%</p>
+                    </div>
+                    <div class="bg-white border border-slate-300 rounded-md p-3 text-center">
+                        <p class="text-xs text-slate-600">September</p>
+                        <p class="mt-2 text-2xl font-bold text-slate-900">60%</p>
+                    </div>
+                    <div class="bg-white border border-slate-300 rounded-md p-3 text-center">
+                        <p class="text-xs text-slate-600">October<br />(to date)</p>
+                        <p class="mt-2 text-2xl font-bold text-slate-900">70%</p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="text-sm font-semibold text-slate-700 mb-2">B. Weekly Efficiency Trend</h4>
+                <div class="bg-white border border-slate-300 rounded-md p-4">
+                    <svg viewBox="0 0 480 220" class="w-full h-auto" role="img" aria-label="Weekly efficiency trend">
+                        <!-- gridlines and y-axis labels -->
+                        <g font-size="11" fill="#475569">
+                            <line x1="40" y1="10" x2="470" y2="10" stroke="#e2e8f0" />
+                            <line x1="40" y1="52.5" x2="470" y2="52.5" stroke="#e2e8f0" />
+                            <line x1="40" y1="95" x2="470" y2="95" stroke="#e2e8f0" />
+                            <line x1="40" y1="137.5" x2="470" y2="137.5" stroke="#e2e8f0" />
+                            <line x1="40" y1="180" x2="470" y2="180" stroke="#cbd5e1" />
+                            <text x="6" y="14">80%</text>
+                            <text x="6" y="56">60%</text>
+                            <text x="6" y="99">40%</text>
+                            <text x="6" y="141">20%</text>
+                            <text x="6" y="184">0%</text>
+                        </g>
+                        <!-- trend line -->
+                        <polyline fill="none" stroke="#334155" stroke-width="2.5" stroke-linejoin="round"
+                                  points="40,69.5 106.7,61 173.3,50.4 240,44 306.7,39.8 373.3,37.6 440,31.3" />
+                        <!-- points -->
+                        <g fill="#334155">
+                            <circle cx="40" cy="69.5" r="3.5" />
+                            <circle cx="106.7" cy="61" r="3.5" />
+                            <circle cx="173.3" cy="50.4" r="3.5" />
+                            <circle cx="240" cy="44" r="3.5" />
+                            <circle cx="306.7" cy="39.8" r="3.5" />
+                            <circle cx="373.3" cy="37.6" r="3.5" />
+                            <circle cx="440" cy="31.3" r="3.5" />
+                        </g>
+                        <!-- value labels -->
+                        <g font-size="11" fill="#1e293b" text-anchor="middle">
+                            <text x="40" y="62">52%</text>
+                            <text x="106.7" y="53">56%</text>
+                            <text x="173.3" y="43">61%</text>
+                            <text x="240" y="37">64%</text>
+                            <text x="306.7" y="33">66%</text>
+                            <text x="373.3" y="30">67%</text>
+                            <text x="440" y="24">70%</text>
+                        </g>
+                        <!-- x-axis labels -->
+                        <g font-size="11" fill="#475569" text-anchor="middle">
+                            <text x="40" y="200">W1</text>
+                            <text x="106.7" y="200">W2</text>
+                            <text x="173.3" y="200">W3</text>
+                            <text x="240" y="200">W4</text>
+                            <text x="306.7" y="200">W5</text>
+                            <text x="373.3" y="200">W6</text>
+                            <text x="440" y="200">W7</text>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== RIGHT: INSIGHTS PANEL (cols 10-12) ===== -->
+        <aside class="lg:col-span-3">
+            <div class="bg-white border border-slate-300 rounded-md p-5 h-full">
+                <h3 class="text-lg font-bold text-slate-900">4. Insights Panel</h3>
+                <h4 class="mt-3 mb-4 text-sm font-semibold text-slate-700">Key Observations</h4>
+                <ul class="space-y-6 text-sm text-slate-700 leading-relaxed list-disc pl-5">
+                    <li>3mm Cover Drilling shows consistent upward trend reaching 85%.</li>
+                    <li>8mm Compound Application has highest weekly improvement, peaking at 86%.</li>
+                    <li>Overall efficiency improved from 44% &rarr; 70% across the period.</li>
+                    <li>Remaining manpower distribution shows 59% concentration in 3mm Compound Application.</li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- ===== BOTTOM: PROCESS-LEVEL EFFICIENCY (full width of left + middle) ===== -->
+        <section class="lg:col-span-9 space-y-3">
+            <h3 class="text-lg font-bold text-slate-900 uppercase">3. Process-Level Efficiency</h3>
+            <div class="overflow-x-auto bg-white border border-slate-300 rounded-md">
+                <table class="w-full text-sm text-center whitespace-nowrap">
+                    <thead class="bg-slate-100 text-slate-700">
+                        <tr>
+                            <th class="px-3 py-2 text-left font-semibold">Process</th>
+                            <th class="px-3 py-2 font-semibold">Remaining %</th>
+                            <th class="px-3 py-2 font-semibold">Target</th>
+                            <th class="px-3 py-2 font-semibold">Jul</th>
+                            <th class="px-3 py-2 font-semibold">Aug</th>
+                            <th class="px-3 py-2 font-semibold">Sep</th>
+                            <th class="px-3 py-2 font-semibold">W1</th>
+                            <th class="px-3 py-2 font-semibold">W2</th>
+                            <th class="px-3 py-2 font-semibold">W3</th>
+                            <th class="px-3 py-2 font-semibold">W4</th>
+                            <th class="px-3 py-2 font-semibold">W5</th>
+                            <th class="px-3 py-2 font-semibold">W6</th>
+                            <th class="px-3 py-2 font-semibold">W7</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200 text-slate-700">
+                        <tr><td class="px-3 py-2 text-left">3mm Cover Drilling</td><td>23%</td><td>85%</td><td>55</td><td>60</td><td>71</td><td>66</td><td>70</td><td>75</td><td>78</td><td>81</td><td>83</td><td>85</td></tr>
+                        <tr><td class="px-3 py-2 text-left">3mm Impeller Drilling</td><td>11%</td><td>85%</td><td>49</td><td>50</td><td>53</td><td>46</td><td>54</td><td>56</td><td>57</td><td>57</td><td>58</td><td>59</td></tr>
+                        <tr><td class="px-3 py-2 text-left">3mm Compound Application</td><td>59%</td><td>85%</td><td>36</td><td>37</td><td>44</td><td>40</td><td>41</td><td>46</td><td>48</td><td>50</td><td>48</td><td>51</td></tr>
+                        <tr><td class="px-3 py-2 text-left">5mm Compound Application</td><td>2%</td><td>85%</td><td>40</td><td>49</td><td>61</td><td>52</td><td>55</td><td>63</td><td>62</td><td>65</td><td>66</td><td>74</td></tr>
+                        <tr><td class="px-3 py-2 text-left">6mm Compound Application</td><td>4%</td><td>85%</td><td>46</td><td>49</td><td>57</td><td>48</td><td>56</td><td>55</td><td>60</td><td>63</td><td>66</td><td>66</td></tr>
+                        <tr><td class="px-3 py-2 text-left">8mm Compound Application</td><td>0.5%</td><td>85%</td><td>36</td><td>56</td><td>72</td><td>59</td><td>61</td><td>74</td><td>76</td><td>81</td><td>81</td><td>86</td></tr>
+                    </tbody>
+                    <tfoot class="bg-slate-100 font-bold text-slate-900">
+                        <tr>
+                            <td class="px-3 py-2 text-left">TOTAL</td>
+                            <td>100%</td>
+                            <td>85%</td>
+                            <td>44</td>
+                            <td>50</td>
+                            <td>60</td>
+                            <td>52</td>
+                            <td>56</td>
+                            <td>61</td>
+                            <td>64</td>
+                            <td>66</td>
+                            <td>67</td>
+                            <td>70</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="flex flex-col sm:flex-row sm:justify-between gap-2 pt-4 border-t border-slate-300 text-xs text-slate-500">
+        <span>Prepared by: DYNAMIC BALANCE Production Monitoring</span>
+        <span>Updated: 27 October 2026</span>
+    </footer>
 
 </main>
+
+
+<script type="module">
+       import {
+           getMethod,
+           postMethod,
+           formatDate
+       } from '@Url.Content("~/Scripts/modules/index.js")';
+
+
+       class DashboardEfficiencyController {
+           constructor() {
+               this.filterType = document.getElementById('filterType');
+               this.customWrap = document.getElementById('customRange');
+
+               this.customFrom = document.getElementById('customFrom');
+               this.customTo = document.getElementById('customTo');
+           }
+
+           async init() {
+               this.filterType.addEventListener('change', () => {
+                   this.toggleCustom();
+                   console.log(this.filterType.value);
+                   // if (this.filterType.value !== 'Custom') this.load();
+               });
+           }
+
+           toggleCustom() {
+               this.customWrap.classList.toggle('hidden', this.filterType.value !== 'Custom');
+           }
+
+           onCustomChange() {
+               if (this.customFrom.value && this.customTo.value) this.load();
+           }
+
+           // ───────────────────────── READ ─────────────────────────
+           async GetSummaryManpowerList() {
+               const params = { filter: this.filterType.value };
+               console.log(params);
+                @*try {
+                    const res = await getMethod('@Url.Action("GetSummaryManpower", "Rotor")', {
+                        from: this.searchFrom.value,
+                        to: this.searchTo.value
+                    });
+
+                    console.log(res);
+
+                    if (!res?.Success) {
+                        this.showToast(res?.Message || 'Failed to load records.', false);
+                        return;
+                    }
+                    this.rows = res.data || [];
+                    this.renderTable();
+                } catch (error) {
+                    console.error('Error fetching efficiency records:', error);
+                    this.showToast('Failed to load records.', false);
+                }*@
+           }
+
+
+           showError(message) {
+               this.manpowerBody.innerHTML = `
+                <tr><td colspan="5" class="px-3 py-4 text-center text-red-600">${message}</td></tr>`;
+               this.manpowerFoot.innerHTML = '';
+           }
+       }
+
+      document.addEventListener('DOMContentLoaded', function() {
+           const controller = new DashboardEfficiencyController();
+           controller.init();
+       });
+</script>

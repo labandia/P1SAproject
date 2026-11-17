@@ -138,5 +138,11 @@ namespace ProgramPartListWeb.Areas.Production1.Model
     }
 
 
-
+    public enum EfficiencyDateFilter
+    {
+        Today,
+        ThisWeek,
+        ThisMonth,
+        Custom
+    }
 }

@@ -19,10 +19,18 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 {
     public class EfficiencyRepository : IEfficiencyProcessRepository
     {
+        public static int IsSwitch = 1;
+
+        string monitortbl = IsSwitch == 1 ? "EfficiencyDailyMonitor_V2" : "EfficiencyDailyMonitor";
+        string Cycletimetbl = IsSwitch == 0 ? "EfficiencyCycleTime_V2": "EfficiencyCycleTime";
+        string employeetbl = IsSwitch == 1 ?  "EfficiencyEmployeeCode_V2" : "EfficiencyEmployeeCode";
+        string stagingShoptbl = IsSwitch == 0 ? "EfficiencyShopOrder_Staging_V2" : "EfficiencyShopOrder_Staging";
+
+
         public Task<List<string>> GetProcessFilter()
         {
             return SqlDataAcess_Test.StringListAsync($@"SELECT ProcessName
-                FROM EfficiencyDailyMonitor
+                FROM {monitortbl}
                 WHERE ProcessName IS NOT NULL
                 GROUP BY ProcessName
                 ");
@@ -33,7 +41,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         //=============================================================
         public async Task<int> AddEfficiencyRecord(EfficiencyDailyMonitor row)
         {
-            return await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO EfficiencyDailyMonitor
+            return await SqlDataAcess_Test.ExecuteAsync($@"INSERT INTO {monitortbl}
                 (WorkDate, ProcessId, Shift, MachineNo,  ShopOrder, Model, EffyCode, Output, DowntimeMin, StartOpe, EndOpe, Partnumber, ProcessName) 
                 VALUES(@WorkDate, @ProcessId, @Shift, @MachineNo, @ShopOrder, @Model, @EffyCode, @Output, @DowntimeMin, @StartOpe, @EndOpe, @Partnumber, @ProcessName)", new
             {
@@ -62,13 +70,13 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                       ,Model
                       ,CycleTimeSec
                       ,TargetDivisor
-                  FROM EfficiencyCycleTime ORDER BY Model ASC");
+                  FROM {Cycletimetbl} ORDER BY Model ASC");
         }
         public Task<List<EfficiencyDailyMonitor>> GetEfficiencyDailyMonitors(DateTime? start, DateTime? end)
         {
             Debug.WriteLine($@"Date Start : {start.ToString()} - Date End : {end.ToString()}");
 
-            const string sql = @"
+             string sql = $@"
             SELECT
                         m.EfficiencyID,
                         m.WorkDate,
@@ -110,15 +118,15 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                             AS decimal(10,2)
                         ) AS Efficiency
 
-                    FROM EfficiencyDailyMonitor m
+                    FROM {monitortbl} m
 
-                    LEFT JOIN EfficiencyEmployeeCode e
+                    LEFT JOIN {employeetbl} e
                         ON e.EffyCode = m.EffyCode
 
                     LEFT JOIN P1SA_Employees t
                         ON t.EmployeeCode = e.EmployeeCode
 
-                      LEFT JOIN EfficiencyCycleTime c
+                      LEFT JOIN {Cycletimetbl} c
                     ON c.Partnumber = m.Partnumber
 
                     CROSS APPLY (
@@ -206,7 +214,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                         ShopOrder,
                         Partnumber,
                         Model
-                    FROM EfficiencyShopOrder_Staging
+                    FROM {stagingShoptbl}
                     WHERE 1 = 1 ";
 
             var parameters = new DynamicParameters();
@@ -239,7 +247,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         {
             string query = $@"
                    SELECT f.EmployID, f.EffyCode, e.EmployeeCode, e.FullName, e.Process, e.AgencyName
-                   FROM EfficiencyEmployeeCode f
+                   FROM {employeetbl} f
                    INNER JOIN P1SA_Employees e ON e.EmployeeCode = f.EmployeeCode
                    WHERE 1 = 1 ";
 
@@ -262,7 +270,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         {
             // 1. Check if the EffyCode already exists in the database
             bool IsExist = await SqlDataAcess_Test.ExistsAsync(
-                "SELECT COUNT(1) FROM EfficiencyEmployeeCode WHERE EffyCode = @EffyCode",
+                $@"SELECT COUNT(1) FROM {employeetbl} WHERE EffyCode = @EffyCode",
                 new { employeeCode.EffyCode });
 
             // 2. If it exists, return false or throw an exception
@@ -270,7 +278,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 
             // 3. If it doesn't exist, insert the new record into the database
             return await SqlDataAcess_Test.ExecuteAsync(
-                @"INSERT INTO EfficiencyEmployeeCode (EffyCode, EmployeeCode)
+                $@"INSERT INTO {employeetbl} (EffyCode, EmployeeCode)
                   VALUES (@EffyCode, @EmployeeCode)",
                 new
                 {
@@ -282,7 +290,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         {
             // 3. If it doesn't exist, insert the new record into the database
             return await SqlDataAcess_Test.ExecuteAsync(
-                @"UPDATE EfficiencyEmployeeCode SET EffyCode = @EffyCode 
+                $@"UPDATE {employeetbl} SET EffyCode = @EffyCode 
                   WHERE EmployeeCode = @EmployeeCode",
                 new
                 {
@@ -293,7 +301,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         public async Task<bool> DeleteEmployeeCode(int EmployID)
         {
             return await SqlDataAcess_Test.ExecuteAsync(
-             @"DELETE FROM EfficiencyEmployeeCode
+             $@"DELETE FROM {employeetbl}
                   WHERE EmployID = @EmployID",
              new { EmployID = EmployID }) > 0;
         }
@@ -305,7 +313,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         {
             // 1. Check if the EffyCode already exists in the database
             bool IsExist = await SqlDataAcess_Test.ExistsAsync(
-                "SELECT COUNT(1) FROM EfficiencyCycleTime WHERE Partnumber = @Partnumber",
+                $@"SELECT COUNT(1) FROM {Cycletimetbl} WHERE Partnumber = @Partnumber",
                 new { cycleTime.Partnumber });
 
             // 2. If it exists, return false or throw an exception
@@ -313,7 +321,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 
             // 3. If it doesn't exist, insert the new record into the database
             return await SqlDataAcess_Test.ExecuteAsync(
-                @"INSERT INTO EfficiencyCycleTime (Partnumber, CycleTimeSec, Model)
+                $@"INSERT INTO {Cycletimetbl} (Partnumber, CycleTimeSec, Model)
                   VALUES (@Partnumber, @CycleTimeSec, @Model)",
                 new
                 {
@@ -327,7 +335,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         {
             // 3. If it doesn't exist, insert the new record into the database
             return await SqlDataAcess_Test.ExecuteAsync(
-                @"UPDATE EfficiencyCycleTime SET CycleTimeSec =@CycleTimeSec, 
+                $@"UPDATE {Cycletimetbl} SET CycleTimeSec =@CycleTimeSec, 
                   Partnumber =@Partnumber, Model =@Model
                   WHERE CycleID = @CycleID",
                 new
@@ -344,132 +352,142 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         public async Task<bool> DeleteCycleTime(int cycleId)
         {
             return await SqlDataAcess_Test.ExecuteAsync(
-              @"DELETE FROM EfficiencyCycleTime
+              $@"DELETE FROM {Cycletimetbl}
                   WHERE CycleID = @CycleID",
               new  {  CycleID = cycleId }) > 0;
         }
 
         
 
-        public Task<EfficiencyDailySummary> GetEfficiencySummary(
-            EfficiencyDailySummary filter, 
-            DateTime? customStart = null, 
+        public async Task<List<EfficiencyDailySummary>> GetEfficiencySummary(
+            EfficiencyDateFilter filter,
+            DateTime? customStart = null,
             DateTime? customEnd = null)
         {
-            //        DateTime today = DateTime.Today;
+            DateTime today = DateTime.Today;
+            DateTime start;
+            DateTime end;
 
-            //        DateTime start;
-            //        DateTime end;
+            switch (filter)
+            {
+                case EfficiencyDateFilter.Today:
+                    start = today;
+                    end = today;
+                    break;
 
-            //        switch (filter)
-            //        {
-            //            case EfficiencyDateFilter.Today:
-            //                start = today;
-            //                end = today;
-            //                break;
+                case EfficiencyDateFilter.ThisWeek:
+                    // Monday to Sunday
+                    int diff = (7 + (int)today.DayOfWeek - (int)DayOfWeek.Monday) % 7;
+                    start = today.AddDays(-diff);
+                    end = start.AddDays(6);
+                    break;
 
-            //            case EfficiencyDateFilter.ThisWeek:
-            //                // Monday to Sunday
-            //                int diff = (7 + (int)today.DayOfWeek - (int)DayOfWeek.Monday) % 7;
-            //                start = today.AddDays(-diff);
-            //                end = start.AddDays(6);
-            //                break;
+                case EfficiencyDateFilter.ThisMonth:
+                    start = new DateTime(today.Year, today.Month, 1);
+                    end = start.AddMonths(1).AddDays(-1);
+                    break;
 
-            //            case EfficiencyDateFilter.ThisMonth:
-            //                start = new DateTime(today.Year, today.Month, 1);
-            //                end = start.AddMonths(1).AddDays(-1);
-            //                break;
+                case EfficiencyDateFilter.Custom:
+                    if (!customStart.HasValue || !customEnd.HasValue)
+                        throw new ArgumentException("Custom date range is required.");
 
-            //            case EfficiencyDateFilter.Custom:
-            //                if (!customStart.HasValue || !customEnd.HasValue)
-            //                    throw new ArgumentException("Custom date range is required.");
+                    start = customStart.Value.Date;
+                    end = customEnd.Value.Date;
 
-            //                start = customStart.Value.Date;
-            //                end = customEnd.Value.Date;
+                    if (start > end)
+                        throw new ArgumentException("Start date cannot be greater than end date.");
 
-            //                if (start > end)
-            //                    throw new ArgumentException("Start date cannot be greater than end date.");
+                    break;
 
-            //                break;
+                default:
+                    start = today;
+                    end = today;
+                    break;
+            }
 
-            //            default:
-            //                start = today;
-            //                end = today;
-            //                break;
-            //        }
+            const string sql = @"
+                ;WITH Processes AS (
+                    SELECT *
+                    FROM (VALUES
+                        (1, '3mm Cover Drilling'),
+                        (2, '3mm Impeller Drilling'),
+                        (3, '3mm Compound Application'),
+                        (4, '5mm Compound Application'),
+                        (5, '6mm Compound Application'),
+                        (6, '8mm Compound Application')
+                    ) AS p (ProcessId, ProcessName)
+                ),
+                Base AS (
+                    SELECT
+                        m.ProcessId,
+                        m.EffyCode,
+                        CASE
+                            WHEN x.Output * 100.0 / NULLIF(x.TargetLessDP, 0) >= 100 THEN 1
+                            ELSE 0
+                        END AS Achieved
+                    FROM EfficiencyDailyMonitor_V2 m
+                    LEFT JOIN EfficiencyCycleTime c
+                        ON c.Partnumber = m.Partnumber
+                       AND c.ProcessId  = m.ProcessId
+                    CROSS APPLY (
+                        SELECT CASE
+                            WHEN DATEDIFF(MINUTE, CAST(m.StartOpe AS time), CAST(m.EndOpe AS time)) < 0
+                            THEN DATEDIFF(MINUTE, CAST(m.StartOpe AS time), CAST(m.EndOpe AS time)) + 1440
+                            ELSE DATEDIFF(MINUTE, CAST(m.StartOpe AS time), CAST(m.EndOpe AS time))
+                        END AS WorkMinutes
+                    ) w
+                    CROSS APPLY (
+                        SELECT
+                            CAST(ROUND((w.WorkMinutes * 60.0) / NULLIF(c.CycleTimeSec, 0), 0) AS int) AS Target,
+                            CAST(ROUND((m.DowntimeMin * 60.0) / NULLIF(c.CycleTimeSec, 0), 0) AS int) AS DTPics
+                    ) a
+                    CROSS APPLY (
+                        SELECT a.Target - a.DTPics AS TargetLessDP,
+                               m.Output            AS Output
+                    ) x
+                    WHERE m.ProcessId BETWEEN 1 AND 6
+                      AND m.WorkDate >= @start
+                      AND m.WorkDate < DATEADD(DAY, 1, @end)
+                ),
+                Summary AS (
+                    SELECT
+                        p.ProcessId,
+                        p.ProcessName,
+                        COUNT(DISTINCT b.EffyCode)                             AS Manpower,
+                        COALESCE(SUM(CASE WHEN b.Achieved = 0 THEN 1 END), 0) AS Remaining,
+                        COALESCE(SUM(b.Achieved), 0)                           AS Improved
+                    FROM Processes p
+                    LEFT JOIN Base b
+                        ON b.ProcessId = p.ProcessId
+                    GROUP BY p.ProcessId, p.ProcessName
+                )
+                SELECT
+                    ProcessId,
+                    ProcessName,
+                    Manpower,
+                    Remaining,
+                    Improved,
+                    CAST(100.0 * Improved / NULLIF(Manpower, 0) AS decimal(10,2)) AS RatePct
+                FROM Summary
+                UNION ALL
+                SELECT
+                    99,
+                    'TOTAL',
+                    (SELECT COUNT(DISTINCT EffyCode) FROM Base),
+                    SUM(Remaining),
+                    SUM(Improved),
+                    CAST(100.0 * SUM(Improved) / NULLIF((SELECT COUNT(DISTINCT EffyCode) FROM Base), 0) AS decimal(10,2))
+                FROM Summary
+                ORDER BY ProcessId;";
 
-            //        const string sql = @"
-            //    SELECT
-            //        COUNT(m.EfficiencyID) AS TotalRecords,
+            var rows = await SqlDataAcess_Test.QueryAsync<EfficiencyDailySummary>(
+                sql,
+                new { start, end }
+            );
 
-            //        ISNULL(SUM(m.Output), 0) AS TotalOutput,
+            return rows;
 
-            //        ISNULL(SUM(x.Target), 0) AS TotalTarget,
-
-            //        ISNULL(SUM(x.TargetLessDP), 0) AS TotalTargetLessDP,
-
-            //        CAST(
-            //            CASE
-            //                WHEN ISNULL(SUM(x.TargetLessDP), 0) = 0 THEN 0
-            //                ELSE SUM(m.Output) * 100.0 /
-            //                     SUM(x.TargetLessDP)
-            //            END
-            //            AS DECIMAL(10,2)
-            //        ) AS EfficiencyRate
-
-            //    FROM EfficiencyDailyMonitor m
-
-            //    LEFT JOIN EfficiencyCycleTime c
-            //        ON c.Partnumber = m.Partnumber
-
-            //    CROSS APPLY (
-            //        SELECT
-            //            CASE
-            //                WHEN DATEDIFF(MINUTE,
-            //                    CAST(m.StartOpe AS time),
-            //                    CAST(m.EndOpe AS time)) < 0
-            //                THEN DATEDIFF(MINUTE,
-            //                    CAST(m.StartOpe AS time),
-            //                    CAST(m.EndOpe AS time)) + 1440
-            //                ELSE DATEDIFF(MINUTE,
-            //                    CAST(m.StartOpe AS time),
-            //                    CAST(m.EndOpe AS time))
-            //            END AS WorkMinutes
-            //    ) w
-
-            //    CROSS APPLY (
-            //        SELECT
-            //            CAST(
-            //                ROUND(
-            //                    (w.WorkMinutes * 60.0) /
-            //                    NULLIF(c.CycleTimeSec, 0), 0
-            //                ) AS INT
-            //            ) AS Target,
-
-            //            CAST(
-            //                ROUND(
-            //                    (m.DowntimeMin * 60.0) /
-            //                    NULLIF(c.CycleTimeSec, 0), 0
-            //                ) AS INT
-            //            ) AS DTPics
-            //    ) a
-
-            //    CROSS APPLY (
-            //        SELECT
-            //            a.Target,
-            //            a.Target - a.DTPics AS TargetLessDP
-            //    ) x
-
-            //    WHERE m.WorkDate >= @start
-            //      AND m.WorkDate < DATEADD(DAY, 1, @end);
-            //";
-
-            //        return SqlDataAcess_Test.QuerySingleAsync<EfficiencyDailySummary>(
-            //            sql,
-            //            new { start, end }
-            //        );
-
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public async Task<ImportResult> UploadEmployeeCodes(List<EfficiencyEmployeeCode> rows)
@@ -487,8 +505,8 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 
                     // 2) upsert on EffyCode; EmployeeCode is set on both insert and update
     
-            const string mergeSql = @"
-                MERGE EfficiencyEmployeeCode AS t
+             string mergeSql = $@"
+                MERGE {employeetbl} AS t
                 USING (SELECT s.* FROM " + openJson + @" AS s
                        WHERE EXISTS (SELECT 1 FROM dbo.P1SA_Employees e
                                      WHERE e.EmployeeCode = s.EmployeeCode)) AS s
@@ -513,8 +531,8 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 
         public async Task<ImportResult> UploadShopOrderCSV(List<EfficiencyShopOrderStaging> rows)
         {
-            const string sql = @"
-                    MERGE EfficiencyShopOrder_Staging AS t
+             string sql = $@"
+                    MERGE {stagingShoptbl} AS t
                     USING (SELECT * FROM OPENJSON(@json) WITH (
                                 ShopOrder  NVARCHAR(20) '$.ShopOrder',
                                 Partnumber NVARCHAR(50) '$.Partnumber',
@@ -547,8 +565,8 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                 if (rows == null || rows.Count == 0)
                     return new ImportResult();
 
-                const string sql = @"
-            MERGE EfficiencyCycleTime AS t
+                 string sql = $@"
+            MERGE {Cycletimetbl} AS t
             USING
             (
                 SELECT *
@@ -632,7 +650,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 
 
             return await SqlDataAcess_Test.ExecuteAsync(
-               @"UPDATE EfficiencyDailyMonitor SET WorkDate = @WorkDate, MachineNo = @MachineNo, 
+               $@"UPDATE {monitortbl} SET WorkDate = @WorkDate, MachineNo = @MachineNo, 
                  ShopOrder = @ShopOrder, Model = @Model, EffyCode = @EffyCode, Output = @Output, 
                  DowntimeMin = @DowntimeMin, StartOpe = @StartOpe, EndOpe = @EndOpe, Partnumber = @Partnumber, 
                  ProcessName = @ProcessName
@@ -657,19 +675,13 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
         public async Task<bool> DeleteEfficiencyRecord(int ID)
         {
              int result = await SqlDataAcess_Test.ExecuteAsync(
-                @"DELETE FROM EfficiencyDailyMonitor WHERE EfficiencyID = @EfficiencyID",
+                $@"DELETE FROM {monitortbl} WHERE EfficiencyID = @EfficiencyID",
                 new { EfficiencyID = ID });
 
             return result > 0;  
         }
 
-        public enum EfficiencyDateFilter
-        {
-            Today = 1,
-            ThisWeek = 2,
-            ThisMonth = 3,
-            Custom = 4
-        }
+        
 
 
     }

@@ -18,10 +18,17 @@ namespace ProgramPartListWeb.Areas.Production1.Interface
         Task<int> AddEfficiencyRecord(EfficiencyDailyMonitor row);
         Task<int> EditEfficiencyRecord(EfficiencyDailyMonitor row);
         Task<bool> DeleteEfficiencyRecord(int ID);
-        Task<List<EfficiencyDailySummary>> GetEfficiencySummary
+        Task<List<EfficiencyManpowerSummary>> GetEfficiencySummary
             (EfficiencyDateFilter filter,
             DateTime? customStart = null,
              DateTime? customEnd = null);
+
+
+        Task<EfficiencyProcessReportResponse> GetProcessLevelEfficiency(
+            int year,
+            int startMonth,
+            int endMonth
+        );
 
 
         /// <summary>

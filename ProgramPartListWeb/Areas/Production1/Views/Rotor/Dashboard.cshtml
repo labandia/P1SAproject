@@ -3,27 +3,6 @@
     Layout = "~/Areas/Production1/Views/Shared/_EfficiencyLayout.cshtml";
 }
 
-<div class="flex flex-wrap items-end gap-3 bg-white border border-slate-300 rounded-md p-4">
-    <div>
-        <label class="block text-xs text-slate-600 mb-1">Period</label>
-        <select id="filterType" class="border border-slate-300 rounded px-3 py-2 text-sm">
-            <option value="Today">Today</option>
-            <option value="ThisWeek">This Week</option>
-            <option value="ThisMonth">This Month</option>
-            <option value="Custom">Custom Range</option>
-        </select>
-    </div>
-    <div id="customRange" class="hidden flex gap-3">
-        <div>
-            <label class="block text-xs text-slate-600 mb-1">From</label>
-            <input type="date" id="customFrom" class="border border-slate-300 rounded px-3 py-2 text-sm" />
-        </div>
-        <div>
-            <label class="block text-xs text-slate-600 mb-1">To</label>
-            <input type="date" id="customTo" class="border border-slate-300 rounded px-3 py-2 text-sm" />
-        </div>
-    </div>
-</div>
 
 <main class="flex-1 px-6 py-6 space-y-6 bg-slate-50/40">
 
@@ -33,6 +12,28 @@
             <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">DYNAMIC BALANCE</h1>
             <span class="h-8 w-px bg-slate-300"></span>
             <h2 class="text-2xl font-light tracking-wide text-slate-700">PERFORMANCE DASHBOARD</h2>
+
+            <div>
+                <label class="block text-xs text-slate-600 mb-1">Period</label>
+                <select id="filterType" class="border border-slate-300 rounded px-3 py-2 text-sm">
+                    <option value="Today">Today</option>
+                    <option value="ThisWeek">This Week</option>
+                    <option value="ThisMonth">This Month</option>
+                    <option value="Custom">Custom Range</option>
+                </select>
+            </div>
+
+            <div id="customRange" class="hidden flex gap-3">
+                <div>
+                    <label class="block text-xs text-slate-600 mb-1">From</label>
+                    <input type="date" id="customFrom" class="border border-slate-300 rounded px-3 py-2 text-sm" />
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-600 mb-1">To</label>
+                    <input type="date" id="customTo" class="border border-slate-300 rounded px-3 py-2 text-sm" />
+                </div>
+            </div>
+
         </div>
         <nav class="flex flex-wrap items-center gap-2 text-sm text-slate-500">
             <span>Manpower</span><span>&bull;</span>
@@ -54,19 +55,19 @@
                 <div class="grid grid-cols-2 xl:grid-cols-4 gap-3">
                     <div class="bg-white border border-slate-300 rounded-md p-4 text-center">
                         <p class="text-xs text-slate-600">Total Manpower</p>
-                        <p class="mt-2 text-3xl font-bold text-slate-900">828</p>
+                        <p class="mt-2 text-3xl font-bold text-slate-900" id="kpiTotal">828</p>
                     </div>
                     <div class="bg-white border border-slate-300 rounded-md p-4 text-center">
                         <p class="text-xs text-slate-600">Remaining Manpower</p>
-                        <p class="mt-2 text-3xl font-bold text-slate-900">652</p>
+                        <p class="mt-2 text-3xl font-bold text-slate-900" id="kpiRemaining">652</p>
                     </div>
                     <div class="bg-white border border-slate-300 rounded-md p-4 text-center">
                         <p class="text-xs text-slate-600">Improved Count</p>
-                        <p class="mt-2 text-3xl font-bold text-slate-900">205</p>
+                        <p class="mt-2 text-3xl font-bold text-slate-900" id="kpiImproved">205</p>
                     </div>
                     <div class="bg-white border border-slate-300 rounded-md p-4 text-center">
                         <p class="text-xs text-slate-600">Overall Rate</p>
-                        <p class="mt-2 text-3xl font-bold text-slate-900">31%</p>
+                        <p class="mt-2 text-3xl font-bold text-slate-900" id="kpiRate">31%</p>
                     </div>
                 </div>
             </div>
@@ -84,7 +85,7 @@
                                 <th class="px-3 py-2 font-semibold text-center">Rate</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-200 text-slate-700">
+                        <tbody id="manpowerBody" class="divide-y divide-slate-200 text-slate-700">
                             <tr><td class="px-3 py-2">3mm Cover Drilling</td><td class="px-3 py-2 text-center">184</td><td class="px-3 py-2 text-center">153</td><td class="px-3 py-2 text-center">44</td><td class="px-3 py-2 text-center">29%</td></tr>
                             <tr><td class="px-3 py-2">3mm Impeller Drilling</td><td class="px-3 py-2 text-center">80</td><td class="px-3 py-2 text-center">71</td><td class="px-3 py-2 text-center">22</td><td class="px-3 py-2 text-center">31%</td></tr>
                             <tr><td class="px-3 py-2">3mm Compound Application</td><td class="px-3 py-2 text-center">515</td><td class="px-3 py-2 text-center">387</td><td class="px-3 py-2 text-center">129</td><td class="px-3 py-2 text-center">33%</td></tr>
@@ -92,7 +93,7 @@
                             <tr><td class="px-3 py-2">6mm Compound Application</td><td class="px-3 py-2 text-center">29</td><td class="px-3 py-2 text-center">23</td><td class="px-3 py-2 text-center">5</td><td class="px-3 py-2 text-center">22%</td></tr>
                             <tr><td class="px-3 py-2">8mm Compound Application</td><td class="px-3 py-2 text-center">3</td><td class="px-3 py-2 text-center">3</td><td class="px-3 py-2 text-center">1</td><td class="px-3 py-2 text-center">33%</td></tr>
                         </tbody>
-                        <tfoot class="bg-slate-100 font-bold text-slate-900">
+                        <tfoot id="manpowerFoot" class="bg-slate-100 font-bold text-slate-900">
                             <tr>
                                 <td class="px-3 py-2">TOTAL</td>
                                 <td class="px-3 py-2 text-center">828</td>
@@ -223,7 +224,7 @@
                             <th class="px-3 py-2 font-semibold">W7</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-200 text-slate-700">
+                    <tbody  id="efficiencyBody" class="divide-y divide-slate-200 text-slate-700">
                         <tr><td class="px-3 py-2 text-left">3mm Cover Drilling</td><td>23%</td><td>85%</td><td>55</td><td>60</td><td>71</td><td>66</td><td>70</td><td>75</td><td>78</td><td>81</td><td>83</td><td>85</td></tr>
                         <tr><td class="px-3 py-2 text-left">3mm Impeller Drilling</td><td>11%</td><td>85%</td><td>49</td><td>50</td><td>53</td><td>46</td><td>54</td><td>56</td><td>57</td><td>57</td><td>58</td><td>59</td></tr>
                         <tr><td class="px-3 py-2 text-left">3mm Compound Application</td><td>59%</td><td>85%</td><td>36</td><td>37</td><td>44</td><td>40</td><td>41</td><td>46</td><td>48</td><td>50</td><td>48</td><td>51</td></tr>
@@ -277,14 +278,29 @@
 
                this.customFrom = document.getElementById('customFrom');
                this.customTo = document.getElementById('customTo');
+               this.manpowerBody = document.getElementById('manpowerBody');
+               this.manpowerFoot = document.getElementById('manpowerFoot');
+
+               this.kpi = {
+                   total: document.getElementById('kpiTotal'),
+                   remaining: document.getElementById('kpiRemaining'),
+                   improved: document.getElementById('kpiImproved'),
+                   rate: document.getElementById('kpiRate')
+               };
            }
 
            async init() {
                this.filterType.addEventListener('change', () => {
                    this.toggleCustom();
-                   console.log(this.filterType.value);
-                   // if (this.filterType.value !== 'Custom') this.load();
+                   if (this.filterType.value !== 'Custom') this.load();
                });
+
+               this.customFrom.addEventListener('change', () => this.onCustomChange());
+               this.customTo.addEventListener('change', () => this.onCustomChange());
+
+               this.toggleCustom();
+               this.load();
+               this.loadEffiencyWeekly();
            }
 
            toggleCustom() {
@@ -296,27 +312,199 @@
            }
 
            // ───────────────────────── READ ─────────────────────────
-           async GetSummaryManpowerList() {
+           async load() {
                const params = { filter: this.filterType.value };
+
+               if (this.filterType.value === 'Custom') {
+                   if (!this.customFrom.value || !this.customTo.value) return;
+                   params.from = this.customFrom.value;
+                   params.to = this.customTo.value;
+               }
+
                console.log(params);
-                @*try {
-                    const res = await getMethod('@Url.Action("GetSummaryManpower", "Rotor")', {
-                        from: this.searchFrom.value,
-                        to: this.searchTo.value
-                    });
+                try {
+                    const res = await getMethod('@Url.Action("GetEfficiencySummary", "Rotor")', params);
 
                     console.log(res);
-
                     if (!res?.Success) {
-                        this.showToast(res?.Message || 'Failed to load records.', false);
+                        this.showError(res?.Message || 'Failed to load efficiency summary.');
                         return;
                     }
-                    this.rows = res.data || [];
-                    this.renderTable();
+                    this.render(res.data || []);
                 } catch (error) {
                     console.error('Error fetching efficiency records:', error);
                     this.showToast('Failed to load records.', false);
-                }*@
+                }
+           }
+
+
+
+            async loadEffiencyWeekly() {
+
+                const params = {
+                    filter: this.filterType.value
+                };
+
+                // Custom date range
+                if (this.filterType.value === 'Custom') {
+
+                    if (!this.customFrom.value || !this.customTo.value) {
+                        this.showError('Please select both start and end dates.');
+                        return;
+                    }
+
+                    if (this.customFrom.value > this.customTo.value) {
+                        this.showError('Start date cannot be greater than end date.');
+                        return;
+                    }
+
+                    params.from = this.customFrom.value;
+                    params.to = this.customTo.value;
+                }
+
+                console.log('Efficiency Weekly Parameters:', params);
+
+                try {
+
+                    const res = await getMethod(
+                        '@Url.Action("GetEfficiencyWeeklySummary", "Rotor")',
+                        params
+                    );
+                    console.log(res);
+                    //console.log('Efficiency Weekly Response:', res);
+
+                    //if (!res?.Success) {
+                    //    this.showError(
+                    //        res?.Message || 'Failed to load efficiency summary.'
+                    //    );
+                    //    return;
+                    //}
+
+                    //Response contains dynamic columns and process data
+                    //const result = res.data;
+
+                    //if (!result?.data || result.data.length === 0) {
+                    //    this.showError('No efficiency records found.');
+                    //    return;
+                    //}
+
+                    //this.renderWeeksummary(result);
+
+                } catch (error) {
+
+                    console.error('Error fetching efficiency records:', error);
+
+                    this.showToast('Failed to load records.', false);
+                }
+           }
+
+
+
+
+           renderWeeksummary(data) {
+
+               const header = document.getElementById('efficiencyHeader');
+               const body = document.getElementById('efficiencyBody');
+
+               header.innerHTML = '';
+               body.innerHTML = '';
+
+               // Fixed columns
+               const fixedColumns = [
+                   'Process',
+                   'Remaining %',
+                   'Target'
+               ];
+
+               fixedColumns.forEach(column => {
+                   const th = document.createElement('th');
+                   th.textContent = column;
+                   th.className = 'px-3 py-3 text-center';
+                   header.appendChild(th);
+               });
+
+               // Dynamic columns: Jan, Feb, Mar, Apr, W1, W2...
+               data.columns.forEach(column => {
+                   const th = document.createElement('th');
+                   th.textContent = column;
+                   th.className = 'px-3 py-3 text-center';
+                   header.appendChild(th);
+               });
+
+               // Process records
+               data.data.forEach(item => {
+
+                   const tr = document.createElement('tr');
+
+                   if (item.ProcessId === 99) {
+                       tr.className = 'font-bold bg-slate-100';
+                   } else {
+                       tr.className = 'border-b hover:bg-slate-50';
+                   }
+
+                   const values = [
+                       item.ProcessName,
+                       `${item.RemainingPct}%`,
+                       `${item.Target}%`
+                   ];
+
+                   values.forEach(value => {
+                       const td = document.createElement('td');
+                       td.textContent = value;
+                       td.className = 'px-3 py-3 text-center';
+                       tr.appendChild(td);
+                   });
+
+                   // Dynamic period values
+                   data.columns.forEach(column => {
+
+                       const td = document.createElement('td');
+
+                       const value = item.PeriodValues?.[column] ?? 0;
+
+                       td.textContent = Number(value).toLocaleString();
+
+                       td.className = 'px-3 py-3 text-center tabular-nums';
+
+                       tr.appendChild(td);
+                   });
+
+                   body.appendChild(tr);
+               });
+           }
+
+
+
+
+
+           render(rows) {
+               const total = rows.find(r => r.ProcessId === 99);
+               const processes = rows.filter(r => r.ProcessId !== 99);
+
+               this.manpowerBody.innerHTML = processes.map(r => `
+                <tr>
+                    <td class="px-3 py-2">${r.ProcessName}</td>
+                    <td class="px-3 py-2 text-center">${r.Manpower}</td>
+                    <td class="px-3 py-2 text-center">${r.Remaining}</td>
+                    <td class="px-3 py-2 text-center">${r.Improved}</td>
+                    <td class="px-3 py-2 text-center">${r.RatePct ?? 0}%</td>
+                </tr>`).join('');
+
+               if (total) {
+                   this.manpowerFoot.innerHTML = `
+                <tr>
+                    <td class="px-3 py-2">TOTAL</td>
+                    <td class="px-3 py-2 text-center">${total.Manpower}</td>
+                    <td class="px-3 py-2 text-center">${total.Remaining}</td>
+                    <td class="px-3 py-2 text-center">${total.Improved}</td>
+                    <td class="px-3 py-2 text-center">${total.RatePct ?? 0}%</td>
+                </tr>`;
+
+                   this.kpi.total.textContent = total.Manpower;
+                   this.kpi.remaining.textContent = total.Remaining;
+                   this.kpi.improved.textContent = total.Improved;
+                   this.kpi.rate.textContent = `${total.RatePct ?? 0}%`;
+               }
            }
 
 

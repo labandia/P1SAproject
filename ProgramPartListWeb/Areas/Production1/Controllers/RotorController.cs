@@ -3,6 +3,7 @@ using DocumentFormat.OpenXml.EMMA;
 using ProgramPartListWeb.Areas.PC.Models;
 using ProgramPartListWeb.Areas.Production1.Interface;
 using ProgramPartListWeb.Areas.Production1.Model;
+using ProgramPartListWeb.Areas.Production1.Repository;
 using ProgramPartListWeb.Controllers;
 using System;
 using System.Collections.Generic;
@@ -348,6 +349,99 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
             }
         }
 
+        // ─────────────────────────────────────────────────────────────────
+        // GET: /Production1/Rotor/GetEfficiencySummary?filter=ThisWeek
+        // GET: /Production1/Rotor/GetEfficiencySummary?filter=Custom&from=2026-11-01&to=2026-11-07
+        // Gets per-process and TOTAL efficiency summary for the selected period
+        // ─────────────────────────────────────────────────────────────────
+        [HttpGet]
+        public async Task<ActionResult> GetEfficiencySummary(
+            EfficiencyDateFilter filter = EfficiencyDateFilter.Today,
+            DateTime? from = null,
+            DateTime? to = null)
+        {
+            if (!ModelState.IsValid)
+                return JsonPostError("Invalid filter or date value.");
+
+            try
+            {
+                var rows = await _emp.GetEfficiencySummary(filter, from, to);
+
+                if (rows == null || !rows.Any())
+                    return JsonNotFound("No efficiency records found for the selected period.");
+
+                return JsonSuccess(rows);
+            }
+            catch (ArgumentException ex)
+            {
+                return JsonPostError(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetEfficiencyWeeklySummary(
+                EfficiencyDateFilter filter = EfficiencyDateFilter.Today,
+                DateTime? from = null,
+                DateTime? to = null)
+        {
+            if (!ModelState.IsValid)
+                return JsonPostError("Invalid filter or date value.");
+
+            try
+            {
+                // Default reporting period
+                int year = 2026;
+                int startMonth = 1;
+                int endMonth = 4;
+
+                // Use selected date range when supplied
+                if (from.HasValue && to.HasValue)
+                {
+                    if (from.Value > to.Value)
+                        return JsonPostError(
+                            "Start date cannot be greater than end date.");
+
+                    if (from.Value.Year != to.Value.Year)
+                        return JsonPostError(
+                            "The selected date range must be within the same year.");
+
+                    year = from.Value.Year;
+                    startMonth = from.Value.Month;
+                    endMonth = to.Value.Month;
+                }
+
+                var result = await _emp.GetProcessLevelEfficiency(
+                    year,
+                    startMonth,
+                    endMonth
+                );
+
+                if (result == null ||
+                    result.Data == null ||
+                    !result.Data.Any())
+                {
+                    return JsonNotFound(
+                        "No efficiency records found for the selected period.");
+                }
+
+                return JsonSuccess(new
+                {
+                    columns = result.PeriodColumns,
+                    data = result.Data
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return JsonPostError(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+
+                return JsonPostError(
+                    "An error occurred while retrieving efficiency records.");
+            }
+        }
 
         // GET: Production1/Rotor
         public ActionResult Encoder()

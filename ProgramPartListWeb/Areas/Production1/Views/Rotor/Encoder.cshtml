@@ -205,20 +205,6 @@
 <div id="toast" class="toast"><span id="toastMessage"></span></div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <script type="module">
        import {
            getMethod,
@@ -1085,13 +1071,30 @@
                        sub: `${m.Model} · ${this.processName(m.ProcessId)}`,
                        data: m
                    })),
+
                    emptyText: 'No matching part number',
                    invalidMsg: 'Select a part number from the list.',
 
-                   // Enter → Employee Code (skips Process), unless Process wasn't auto-filled
-                   nextId: () => byId('ProcessId').value ? 'employeeCode' : 'ProcessName',
+                   // Focus Process input when Cycle Time is available
+                   nextId: () => {
+                       const hasCycleTime = Number(this.cycle?.CycleTimeSec) > 0;
 
-                   onSelect: item => this.applyModel(item.data),
+                       if (hasCycleTime) {
+                           return 'ProcessName';
+                       }
+
+                       return byId('ProcessId').value
+                           ? 'employeeCode'
+                           : 'ProcessName';
+                   },
+
+                   onSelect: item => {
+                       this.applyModel(item.data);
+
+                       console.log('Selected Partnumber:', item.data);
+                       console.log('Cycle Time:', this.cycle?.CycleTimeSec);
+                   },
+
                    onClear: () => this.applyModel(null)
                });
 

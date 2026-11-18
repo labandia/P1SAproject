@@ -21,9 +21,9 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
     {
         public static int IsSwitch = 1;
 
-        string monitortbl = IsSwitch == 1 ? "EfficiencyDailyMonitor_V2" : "EfficiencyDailyMonitor";
+        string monitortbl = IsSwitch == 0 ? "EfficiencyDailyMonitor_V2" : "EfficiencyDailyMonitor";
         string Cycletimetbl = IsSwitch == 0 ? "EfficiencyCycleTime_V2": "EfficiencyCycleTime";
-        string employeetbl = IsSwitch == 1 ?  "EfficiencyEmployeeCode_V2" : "EfficiencyEmployeeCode";
+        string employeetbl = IsSwitch == 0 ?  "EfficiencyEmployeeCode_V2" : "EfficiencyEmployeeCode";
         string stagingShoptbl = IsSwitch == 0 ? "EfficiencyShopOrder_Staging_V2" : "EfficiencyShopOrder_Staging";
 
 
@@ -359,7 +359,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
 
         
 
-        public async Task<List<EfficiencyDailySummary>> GetEfficiencySummary(
+        public async Task<List<EfficiencyManpowerSummary>> GetEfficiencySummary(
             EfficiencyDateFilter filter,
             DateTime? customStart = null,
             DateTime? customEnd = null)
@@ -368,6 +368,8 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             DateTime start;
             DateTime end;
 
+
+            Debug.WriteLine("SElected Filter : " + filter);
             switch (filter)
             {
                 case EfficiencyDateFilter.Today:
@@ -404,6 +406,8 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                     end = today;
                     break;
             }
+
+            Debug.WriteLine($@"Date Start : {start} - Date End : {end}");
 
             const string sql = @"
                 ;WITH Processes AS (
@@ -480,7 +484,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                 FROM Summary
                 ORDER BY ProcessId;";
 
-            var rows = await SqlDataAcess_Test.QueryAsync<EfficiencyDailySummary>(
+            var rows = await SqlDataAcess_Test.QueryAsync<EfficiencyManpowerSummary>(
                 sql,
                 new { start, end }
             );
@@ -681,8 +685,440 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             return result > 0;  
         }
 
-        
+        public async Task<EfficiencyProcessReportResponse> GetProcessLevelEfficiency(int year, int startMonth, int endMonth)
+        {
+            try
+            {
+                // =====================================
+                // VALIDATION
+                // =====================================
+                if (year < 2000 || year > 9999)
+                    throw new ArgumentOutOfRangeException(nameof(year));
 
+                if (startMonth < 1 || startMonth > 12)
+                    throw new ArgumentOutOfRangeException(nameof(startMonth));
 
+                if (endMonth < 1 || endMonth > 12)
+                    throw new ArgumentOutOfRangeException(nameof(endMonth));
+
+                if (startMonth > endMonth)
+                    throw new ArgumentException(
+                        "Invalid month range.");
+
+                // =====================================
+                // SQL QUERY
+                // =====================================
+                string sql = @"
+
+        DECLARE @TargetPct DECIMAL(10,2) = 85.00;
+
+        DECLARE @ReportStart DATE =
+            DATEFROMPARTS(@Year, @StartMonth, 1);
+
+        DECLARE @ReportEndExclusive DATE =
+            DATEADD(
+                MONTH, 1,
+                DATEFROMPARTS(@Year, @EndMonth, 1)
+            );
+
+        ;WITH Processes AS
+        (
+            SELECT *
+            FROM (VALUES
+                (1, '3mm Cover Drilling'),
+                (2, '3mm Impeller Drilling'),
+                (3, '3mm Compound Application'),
+                (4, '5mm Compound Application'),
+                (5, '6mm Compound Application'),
+                (6, '8mm Compound Application')
+            ) AS p(ProcessId, ProcessName)
+        ),
+
+        -- =====================================
+        -- MONTH GENERATION
+        -- =====================================
+        Months AS
+        (
+            SELECT
+                1 AS n,
+                @ReportStart AS StartDate
+
+            UNION ALL
+
+            SELECT
+                n + 1,
+                DATEADD(MONTH, 1, StartDate)
+            FROM Months
+            WHERE DATEADD(MONTH, 1, StartDate)
+                  < @ReportEndExclusive
+        ),
+
+        -- =====================================
+        -- WEEK GENERATION
+        -- =====================================
+        Weeks AS
+        (
+            SELECT
+                CAST(1 AS INT) AS n,
+                @ReportStart AS StartDate
+
+            UNION ALL
+
+            SELECT
+                n + 1,
+                DATEADD(DAY, 7, StartDate)
+            FROM Weeks
+            WHERE DATEADD(DAY, 7, StartDate)
+                  < @ReportEndExclusive
+        ),
+
+        -- =====================================
+        -- MONTHLY + WEEKLY PERIODS
+        -- =====================================
+        Periods AS
+        (
+            SELECT
+                CASE MONTH(StartDate)
+                    WHEN 1 THEN 'Jan'
+                    WHEN 2 THEN 'Feb'
+                    WHEN 3 THEN 'Mar'
+                    WHEN 4 THEN 'Apr'
+                    WHEN 5 THEN 'May'
+                    WHEN 6 THEN 'Jun'
+                    WHEN 7 THEN 'Jul'
+                    WHEN 8 THEN 'Aug'
+                    WHEN 9 THEN 'Sep'
+                    WHEN 10 THEN 'Oct'
+                    WHEN 11 THEN 'Nov'
+                    WHEN 12 THEN 'Dec'
+                END AS PeriodKey,
+
+                n AS SortOrder,
+                StartDate,
+                DATEADD(MONTH, 1, StartDate) AS EndDate
+
+            FROM Months
+
+            UNION ALL
+
+            SELECT
+                'W' + CAST(n AS VARCHAR(3)),
+                1000 + n,
+                StartDate,
+
+                CASE
+                    WHEN DATEADD(DAY, 7, StartDate)
+                         > @ReportEndExclusive
+                    THEN @ReportEndExclusive
+
+                    ELSE DATEADD(DAY, 7, StartDate)
+                END
+
+            FROM Weeks
+        ),
+
+        -- =====================================
+        -- BASE PRODUCTION DATA
+        -- =====================================
+        Base AS
+        (
+            SELECT
+                m.ProcessId,
+                m.EffyCode,
+                m.WorkDate,
+                ISNULL(m.Output, 0) AS Output,
+
+                x.TargetLessDP,
+
+                CASE
+                    WHEN x.TargetLessDP > 0
+                         AND ISNULL(m.Output, 0) * 100.0 /
+                             NULLIF(x.TargetLessDP, 0) >= 100
+                    THEN 1
+                    ELSE 0
+                END AS Achieved
+
+            FROM EfficiencyDailyMonitor_V2 m
+
+            LEFT JOIN EfficiencyCycleTime c
+                ON c.Partnumber = m.Partnumber
+               AND c.ProcessId = m.ProcessId
+
+            CROSS APPLY
+            (
+                SELECT
+                    CASE
+                        WHEN DATEDIFF(
+                            MINUTE,
+                            CAST(m.StartOpe AS TIME),
+                            CAST(m.EndOpe AS TIME)
+                        ) < 0
+
+                        THEN DATEDIFF(
+                            MINUTE,
+                            CAST(m.StartOpe AS TIME),
+                            CAST(m.EndOpe AS TIME)
+                        ) + 1440
+
+                        ELSE DATEDIFF(
+                            MINUTE,
+                            CAST(m.StartOpe AS TIME),
+                            CAST(m.EndOpe AS TIME)
+                        )
+                    END AS WorkMinutes
+            ) w
+
+            CROSS APPLY
+            (
+                SELECT
+                    CAST(
+                        ROUND(
+                            w.WorkMinutes * 60.0 /
+                            NULLIF(c.CycleTimeSec, 0),
+                            0
+                        ) AS INT
+                    ) AS Target,
+
+                    CAST(
+                        ROUND(
+                            ISNULL(m.DowntimeMin, 0) * 60.0 /
+                            NULLIF(c.CycleTimeSec, 0),
+                            0
+                        ) AS INT
+                    ) AS DTPics
+            ) a
+
+            CROSS APPLY
+            (
+                SELECT
+                    a.Target - a.DTPics AS TargetLessDP
+            ) x
+
+            WHERE m.ProcessId BETWEEN 1 AND 6
+              AND m.WorkDate >= @ReportStart
+              AND m.WorkDate < @ReportEndExclusive
+        ),
+
+        -- =====================================
+        -- EMPLOYEE ACHIEVEMENT
+        -- =====================================
+        PersonProcess AS
+        (
+            SELECT
+                ProcessId,
+                EffyCode,
+                MAX(Achieved) AS Achieved
+
+            FROM Base
+
+            WHERE EffyCode IS NOT NULL
+
+            GROUP BY
+                ProcessId,
+                EffyCode
+        ),
+
+        -- =====================================
+        -- REMAINING MANPOWER
+        -- =====================================
+        Remain AS
+        (
+            SELECT
+                ProcessId,
+
+                SUM(
+                    CASE
+                        WHEN Achieved = 0 THEN 1
+                        ELSE 0
+                    END
+                ) AS RemainingCount
+
+            FROM PersonProcess
+
+            GROUP BY ProcessId
+        ),
+
+        -- =====================================
+        -- PROCESS MONTHLY AND WEEKLY OUTPUT
+        -- =====================================
+        ProcessPeriod AS
+        (
+            SELECT
+                p.ProcessId,
+                p.ProcessName,
+                per.PeriodKey,
+                per.SortOrder,
+
+                SUM(ISNULL(b.Output, 0)) AS PeriodValue
+
+            FROM Processes p
+
+            CROSS JOIN Periods per
+
+            LEFT JOIN Base b
+                ON b.ProcessId = p.ProcessId
+               AND b.WorkDate >= per.StartDate
+               AND b.WorkDate < per.EndDate
+
+            GROUP BY
+                p.ProcessId,
+                p.ProcessName,
+                per.PeriodKey,
+                per.SortOrder
+        ),
+
+        -- =====================================
+        -- TOTAL OUTPUT
+        -- =====================================
+        TotalPeriod AS
+        (
+            SELECT
+                99 AS ProcessId,
+                'TOTAL' AS ProcessName,
+                per.PeriodKey,
+                per.SortOrder,
+
+                SUM(ISNULL(b.Output, 0)) AS PeriodValue
+
+            FROM Periods per
+
+            LEFT JOIN Base b
+                ON b.WorkDate >= per.StartDate
+               AND b.WorkDate < per.EndDate
+
+            GROUP BY
+                per.PeriodKey,
+                per.SortOrder
+        ),
+
+        AllPeriodData AS
+        (
+            SELECT * FROM ProcessPeriod
+
+            UNION ALL
+
+            SELECT * FROM TotalPeriod
+        )
+
+        -- =====================================
+        -- FINAL RESULT
+        -- =====================================
+        SELECT
+            p.ProcessId,
+            p.ProcessName,
+
+            CAST(
+                CASE
+                    WHEN p.ProcessId = 99 THEN 100.0
+
+                    ELSE
+                        100.0 * ISNULL(r.RemainingCount, 0) /
+                        NULLIF(t.TotalRemaining, 0)
+                END AS DECIMAL(10,2)
+            ) AS RemainingPct,
+
+            @TargetPct AS Target,
+
+            p.PeriodKey,
+            p.SortOrder,
+
+            CAST(
+                ISNULL(p.PeriodValue, 0)
+                AS DECIMAL(18,2)
+            ) AS PeriodValue
+
+        FROM AllPeriodData p
+
+        LEFT JOIN Remain r
+            ON r.ProcessId = p.ProcessId
+
+        CROSS JOIN
+        (
+            SELECT SUM(RemainingCount) AS TotalRemaining
+            FROM Remain
+        ) t
+
+        ORDER BY
+            CASE WHEN p.ProcessId = 99 THEN 1 ELSE 0 END,
+            p.ProcessId,
+            p.SortOrder
+
+        OPTION (MAXRECURSION 100);
+        ";
+
+                // =====================================
+                // EXECUTE USING YOUR SQL HELPER
+                // =====================================
+                var parameters = new
+                {
+                    Year = year,
+                    StartMonth = startMonth,
+                    EndMonth = endMonth
+                };
+
+                List<EfficiencyPeriodResult> result =
+                    await SqlDataAcess_Test.QueryAsync<EfficiencyPeriodResult>(
+                        sql,
+                        parameters
+                    );
+
+                // =====================================
+                // BUILD DYNAMIC RESPONSE
+                // =====================================
+                var response = new EfficiencyProcessReportResponse();
+
+                response.PeriodColumns = result
+                    .GroupBy(x => new
+                    {
+                        x.PeriodKey,
+                        x.SortOrder
+                    })
+                    .OrderBy(x => x.Key.SortOrder)
+                    .Select(x => x.Key.PeriodKey)
+                    .ToList();
+
+                var grouped = result.GroupBy(x => new
+                {
+                    x.ProcessId,
+                    x.ProcessName
+                });
+
+                foreach (var group in grouped)
+                {
+                    var first = group.First();
+
+                    var item = new EfficiencyProcessReport
+                    {
+                        ProcessId = first.ProcessId,
+                        ProcessName = first.ProcessName,
+                        RemainingPct = first.RemainingPct,
+                        Target = first.Target
+                    };
+
+                    foreach (string column in response.PeriodColumns)
+                    {
+                        item.PeriodValues[column] = 0;
+                    }
+
+                    foreach (var period in group)
+                    {
+                        item.PeriodValues[period.PeriodKey] =
+                            period.PeriodValue;
+                    }
+
+                    response.Data.Add(item);
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(
+                    "GetProcessLevelEfficiency Error: " + ex
+                );
+
+                throw;
+            }
+        }
     }
 }

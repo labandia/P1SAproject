@@ -128,6 +128,18 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public decimal EfficiencyRate { get; set; }
     }
 
+    public class EfficiencyManpowerSummary
+    {
+        public int ProcessId { get; set; }
+
+        public string ProcessName { get; set; } = string.Empty;  
+        public int Manpower { get; set; }
+        public int Remaining { get; set; }
+        public int Improved { get; set; }
+
+        public int RatePct { get; set; }
+    }
+
 
 
     public class ImportResult
@@ -137,6 +149,48 @@ namespace ProgramPartListWeb.Areas.Production1.Model
         public List<string> Missing { get; set; } = new List<string>();
     }
 
+
+    public class EfficiencyProcessReport
+    {
+        public int ProcessId { get; set; }
+
+        public string ProcessName { get; set; }
+
+        public decimal RemainingPct { get; set; }
+
+        public decimal Target { get; set; }
+
+        // Dynamic monthly and weekly values.
+        // Example: Jan, Feb, Mar, Apr, W1, W2 ... W18.
+        public Dictionary<string, decimal> PeriodValues { get; set; }
+            = new Dictionary<string, decimal>();
+    }
+
+    public class EfficiencyProcessReportResponse
+    {
+        public List<string> PeriodColumns { get; set; }
+            = new List<string>();
+
+        public List<EfficiencyProcessReport> Data { get; set; }
+            = new List<EfficiencyProcessReport>();
+    }
+
+    public class EfficiencyPeriodResult
+    {
+        public int ProcessId { get; set; }
+
+        public string ProcessName { get; set; }
+
+        public decimal RemainingPct { get; set; }
+
+        public decimal Target { get; set; }
+
+        public string PeriodKey { get; set; }
+
+        public int SortOrder { get; set; }
+
+        public decimal PeriodValue { get; set; }
+    }
 
     public enum EfficiencyDateFilter
     {

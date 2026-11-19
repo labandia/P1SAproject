@@ -216,7 +216,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
         public async Task<bool> UpdateCycleTime(int RecordID, double CycleTime)
         {
 
-            int rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingOrder SET
+            int rows = await SqlDataAcess_Test.ExecuteAsync($@"UPDATE FanTraceabilityManufacturingOrder_Complete SET
                 CycleTime = @CycleTime WHERE RecordID = @RecordID", new
             {
                 CycleTime,

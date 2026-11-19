@@ -92,7 +92,7 @@
             await this.LoadActiveShopOrders();
             this.refreshInterval = setInterval(
                 () => this.LoadActiveShopOrders(),
-                30000
+                2 * 60 * 1000
             );
 
              // add reset button listener
@@ -269,7 +269,7 @@
 
 
         updateModalContent(item, options = {}) {
-
+            // console.log("HREE");
             // console.log(item);
             const { animateNextModel = false, showNext = true, root = this.currentCenteredCard } = options;
             if (!root) return;
@@ -464,14 +464,19 @@
             if (selectionStatus) {
                 if (item.IsOven == 1) {
                     selectionStatus.selectedIndex = 1;
+                    selectionStatus.disabled = true;
+
                 } else if (item.IsOven === 2) {
                     selectionStatus.selectedIndex = 3;
+                    selectionStatus.disabled = true;
+
                 } else if (item.IsOven === 3) {
                     selectionStatus.selectedIndex = 2;
+                    selectionStatus.disabled = true;
+
                 }
                    
                 // Make the dropdown read-only
-                selectionStatus.disabled = true;
 
                 selectionStatus.addEventListener('change', (e) => {
                     e.stopPropagation();
@@ -791,7 +796,7 @@
                                 <p class="card-footer-value">${o.InputQty ?? 0} / ${o.PlanQty ?? 0}</p>
                             </div>`).join('');
 
-                                            card.innerHTML = `
+                           card.innerHTML = `
                             <div class="card-header">
                                 <div class="card-header-left">
                                     <div class="line-id line-id-online">${item.Line}</div>

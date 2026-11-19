@@ -55,7 +55,7 @@ namespace ProgramPartListWeb.Areas.Final.Services
         // =====================================================================
         public Task<List<DownTimeModel>> GetDailyReportMonitor(string search, string Linename)
         {
-            string strsql = $@"SELECT 
+            string strsql = $@"SELECT TOP 100
                     m.RecordID,
                     FORMAT(m.DateStart, 'MM/dd/yy') AS DateStart,
                     m.Line,

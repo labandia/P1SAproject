@@ -77,7 +77,7 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
             Debug.WriteLine($@"Date Start : {start.ToString()} - Date End : {end.ToString()}");
 
              string sql = $@"
-            SELECT
+                SELECT
                         m.EfficiencyID,
                         m.WorkDate,
                         m.Shift,
@@ -570,46 +570,46 @@ namespace ProgramPartListWeb.Areas.Production1.Repository
                     return new ImportResult();
 
                  string sql = $@"
-            MERGE {Cycletimetbl} AS t
-            USING
-            (
-                SELECT *
-                FROM OPENJSON(@json)
-                WITH
-                (
-                    Partnumber   NVARCHAR(50)  '$.Partnumber',
-                    Model        NVARCHAR(100) '$.Model',
-                    ProcessId    TINYINT       '$.ProcessId',
-                    CycleTimeSec DECIMAL(9,2)  '$.CycleTimeSec'
-                )
-            ) AS s
+                    MERGE {Cycletimetbl} AS t
+                    USING
+                    (
+                        SELECT *
+                        FROM OPENJSON(@json)
+                        WITH
+                        (
+                            Partnumber   NVARCHAR(50)  '$.Partnumber',
+                            Model        NVARCHAR(100) '$.Model',
+                            ProcessId    TINYINT       '$.ProcessId',
+                            CycleTimeSec DECIMAL(9,2)  '$.CycleTimeSec'
+                        )
+                    ) AS s
 
-            ON t.Partnumber = s.Partnumber
-            AND t.ProcessId = s.ProcessId
+                    ON t.Partnumber = s.Partnumber
+                    AND t.ProcessId = s.ProcessId
 
-            WHEN MATCHED THEN
-                UPDATE SET
-                    t.Model = s.Model,
-                    t.CycleTimeSec = s.CycleTimeSec
+                    WHEN MATCHED THEN
+                        UPDATE SET
+                            t.Model = s.Model,
+                            t.CycleTimeSec = s.CycleTimeSec
 
-            WHEN NOT MATCHED THEN
-                INSERT
-                (
-                    Partnumber,
-                    Model,
-                    ProcessId,
-                    CycleTimeSec
-                )
-                VALUES
-                (
-                    s.Partnumber,
-                    s.Model,
-                    s.ProcessId,
-                    s.CycleTimeSec
-                )
+                    WHEN NOT MATCHED THEN
+                        INSERT
+                        (
+                            Partnumber,
+                            Model,
+                            ProcessId,
+                            CycleTimeSec
+                        )
+                        VALUES
+                        (
+                            s.Partnumber,
+                            s.Model,
+                            s.ProcessId,
+                            s.CycleTimeSec
+                        )
 
-            OUTPUT $action;
-        ";
+                    OUTPUT $action;
+                ";
 
                 var json = Newtonsoft.Json.JsonConvert.SerializeObject(rows);
 

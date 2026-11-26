@@ -145,24 +145,96 @@ namespace ProgramPartListWeb.Areas.Final.Services
 
         public Task<List<DownTimeModel>> GetDowntimeMonitor(string search, string Linename)
         {
+            string strsql = @"
+        SELECT *
+        FROM
+        (
+            -- 1. Original Manufacturing Order
+            SELECT
+                i.DownTimeID,
+                FORMAT(i.DateStart, 'MM/dd/yy') AS DateStart,
+                m.Line,
+                i.FinalShopOrder,
+                m.ItemNo,
+                m.Model,
+                m.PlanQty,
+                i.DownTimeCode,
+                t.DownTimeType,
+                i.TimeStart,
+                i.TimeEnd,
+                i.Downtime,
+                i.PIC,
+                i.Details,
+                t.GroupName,
+                i.CycleTime,
+                CAST(
+                    CASE
+                        WHEN i.CycleTime = 0 THEN 0
+                        WHEN (8.0 / NULLIF(i.CycleTime, 0) * 100) > 100 THEN 100
+                        ELSE CEILING(8.0 / NULLIF(i.CycleTime, 0) * 100)
+                    END
+                    AS DECIMAL(10,0)
+                ) AS OperationRate
+            FROM FanTraceabilityDownTimeInput i
+            INNER JOIN FanTraceabilityManufacturingOrder m
+                ON i.FinalShopOrder = m.FinalShopOrder
+            INNER JOIN FanTraceabilityDownTimeType t
+                ON t.DownTimeCode = i.DownTimeCode
+
+            UNION ALL
+
+            -- 2. Completed Manufacturing Order
+            SELECT
+                i.DownTimeID,
+                FORMAT(i.DateStart, 'MM/dd/yy') AS DateStart,
+                m.Line,
+                i.FinalShopOrder,
+                m.ItemNo,
+                m.Model,
+                m.PlanQty,
+                i.DownTimeCode,
+                t.DownTimeType,
+                i.TimeStart,
+                i.TimeEnd,
+                i.Downtime,
+                i.PIC,
+                i.Details,
+                t.GroupName,
+                i.CycleTime,
+                CAST(
+                    CASE
+                        WHEN i.CycleTime = 0 THEN 0
+                        WHEN (8.0 / NULLIF(i.CycleTime, 0) * 100) > 100 THEN 100
+                        ELSE CEILING(8.0 / NULLIF(i.CycleTime, 0) * 100)
+                    END
+                    AS DECIMAL(10,0)
+                ) AS OperationRate
+            FROM FanTraceabilityDownTimeInput i
+            INNER JOIN FanTraceabilityManufacturingOrder_Complete m
+                ON i.FinalShopOrder = m.FinalShopOrder
+            INNER JOIN FanTraceabilityDownTimeType t
+                ON t.DownTimeCode = i.DownTimeCode
+
+        ) AS CombinedData
+        WHERE 1 = 1 ";
+
             var parameters = new DynamicParameters();
 
             // Line filter
             if (!string.IsNullOrWhiteSpace(Linename))
             {
-                strsql += " AND m.Line = @Line";
+                strsql += " AND Line = @Line ";
                 parameters.Add("@Line", Linename);
             }
 
+            // Search filter
             if (!string.IsNullOrWhiteSpace(search))
             {
-                strsql += @" AND (
-                        m.FinalShopOrder LIKE @SearchPrefix)";
-
+                strsql += " AND FinalShopOrder LIKE @SearchPrefix ";
                 parameters.Add("@SearchPrefix", $"{search}%");
             }
 
-            strsql += " ORDER BY i.DownTimeID DESC";
+            strsql += " ORDER BY DownTimeID DESC ";
 
 
             return SqlDataAcess_Test.QueryAsync<DownTimeModel>(strsql, parameters);

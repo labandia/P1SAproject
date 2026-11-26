@@ -98,7 +98,7 @@
                             <th>Down time</th>
                             <th>Group</th>
                             <th>Code</th>
-                            <th>Downtime Type</th>
+                            <th style="width: 200px; ">Downtime Type</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -209,7 +209,7 @@
                     <td>${row.Downtime || ''}</td>
                     <td class="status-column">${row.GroupName || ''}</td>
                     <td>${row.DownTimeCode || '-'}</td>
-                    <td>${row.Details || ''}</td>
+                    <td ><p style="width: 200px;">${row.Details || ''}</p></td>
             </tr>`
 
           }).join('');

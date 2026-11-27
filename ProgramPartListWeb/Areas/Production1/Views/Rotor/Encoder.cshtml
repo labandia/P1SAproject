@@ -2,204 +2,216 @@
     Layout = "~/Areas/Production1/Views/Shared/_EfficiencyLayout.cshtml";
 }
 
-<!-- ========== MAIN LAYOUT ========== -->
-<main class="main-layout">
+<!-- ═══ Main Workspace ═══ -->
+<main class="main-workspace">
 
-    <!-- ========== FORM PANEL (LEFT) ========== -->
-    <aside class="form-panel" data-purpose="efficiency-entry-sidebar">
-        <div class="form-header">
-            <div class="form-header-top" style="display: flex; justify-content: space-between;">
-                <h2 id="formTitle">Efficency Data  Entry</h2>
-
-                <div class="calc-item" style="display: flex; justify-content: space-between;"><span class="calc-value" id="aShift">—</span></div>
-            </div>
+    <!-- ▸ Entry Form -->
+    <section class="card entry-section" aria-label="Efficiency Data Entry">
+        <div class="entry-header">
+            <h2 id="formTitle">Efficiency Data Entry</h2>
+            <span class="material-symbols-outlined" aria-hidden="true">remove</span>
         </div>
 
-        <form class="form-body" id="dataForm" autocomplete="off">
+        <form id="dataForm" autocomplete="off">
             <input type="hidden" id="editIndex" value="0">
-            <div class="form-fields">
 
-                <!-- Date | Machine -->
-                <div class="field-row">
-                    <div class="field"><label>Date <span class="req">*</span></label><input id="workDate" type="date" required></div>
-
-                    
-                    <div class="field">
-                        <label>Machine No. <span class="req">*</span></label>
-                        <div class="combo" id="machineCombo">
-                            <input id="machineNo" placeholder="D-1 … D-200" autocomplete="off" required>
-                            <ul class="combo-list" id="machineList" role="listbox"></ul>
-                        </div>
-                    </div>
-
-                </div>
+            <!-- Date | Machine -->
+            <div class="field-row">
+                <div class="field"><label>Date <span class="req">*</span></label><input id="workDate" type="date" required></div>
 
                 <div class="field">
-                    <label>Shop Order <span class="req">*</span></label>
+                    <label>Machine No. <span class="req">*</span></label>
+                    <div class="combo" id="machineCombo">
+                        <input id="machineNo" placeholder="D-1 … D-200" autocomplete="off" required>
+                        <ul class="combo-list" id="machineList" role="listbox"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shop Order -->
+            <div class="field">
+                <label>Shop Order <span class="req">*</span></label>
+                <div class="combo">
+                    <input id="shopOrder" placeholder="Enter shop order" autocomplete="off" required>
+                    <ul class="combo-list" role="listbox"></ul>
+                </div>
+            </div>
+
+            <!-- Partnumber | Model -->
+            <div class="field-row">
+                <div class="field">
+                    <label>Partnumber <span class="req">*</span></label>
                     <div class="combo">
-                        <input id="shopOrder" placeholder="Enter shop order" autocomplete="off" required>
+                        <input id="Partnumber" placeholder="Search part number…" autocomplete="off" required>
                         <ul class="combo-list" role="listbox"></ul>
                     </div>
                 </div>
 
-
-
-                <!-- Shop Order -->
-                <div class="field-row">
-                    <div class="field">
-                        <label>Partnumber <span class="req">*</span></label>
-                        <div class="combo">
-                            <input id="Partnumber" placeholder="Search part number…" autocomplete="off" required>
-                            <ul class="combo-list" role="listbox"></ul>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label>Model</label> 
-                        <input id="model" readonly placeholder="from part number">
-                    </div>
-                </div>
-
-                <!-- Model | Process -->
                 <div class="field">
-                    <label>Process <span class="req">*</span></label>
+                    <label>Model</label>
+                    <input id="model" readonly placeholder="from part number">
+                </div>
+            </div>
 
+            <!-- Process -->
+            <div class="field">
+                <label>Process <span class="req">*</span></label>
+                <div class="combo">
+                    <input id="ProcessName" placeholder="Search process..." autocomplete="off" required>
+                    <input type="hidden" id="ProcessId" />
+                    <ul class="combo-list" role="listbox"></ul>
+                </div>
+            </div>
+
+            <!-- Employee code | name -->
+            <div class="field-row">
+                <div class="field">
+                    <label>Employee Code <span class="req">*</span></label>
                     <div class="combo">
-                        <input id="ProcessName"
-                               placeholder="Search process..."
-                               autocomplete="off"
-                               required>
-
-                        <input type="hidden" id="ProcessId" />
-
+                        <input id="employeeCode" placeholder="Effy code / name" autocomplete="off" required>
                         <ul class="combo-list" role="listbox"></ul>
                     </div>
                 </div>
-
-                <!-- Employee code | name -->
-                <div class="field-row">
-                    <div class="field">
-                        <label>Employee Code <span class="req">*</span></label>
-                        <div class="combo">
-                            <input id="employeeCode" placeholder="Effy code / name" autocomplete="off" required>
-                            <ul class="combo-list" role="listbox"></ul>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label>Employee Name</label>
-                        <input id="employeeName" readonly placeholder="from employee code">
-                    </div>
+                <div class="field">
+                    <label>Employee Name</label>
+                    <input id="employeeName" readonly placeholder="from employee code">
                 </div>
+            </div>
 
-                <!-- Shift | Start | End -->
-                <div class="field-row">
-                    <div class="field">
-                        <label>Start <span class="req">*</span></label>
-                        <input id="startOpe" type="text" inputmode="numeric" maxlength="5"
-                               placeholder="HH:mm" pattern="([01][0-9]|2[0-3]):[0-5][0-9]"
-                               title="24-hour time, e.g. 07:30 or 19:45" autocomplete="off" required>
-                    </div>
-                    <div class="field">
-                        <label>End <span class="req">*</span></label>
-                        <input id="endOpe" type="text" inputmode="numeric" maxlength="5"
-                               placeholder="HH:mm" pattern="([01][0-9]|2[0-3]):[0-5][0-9]"
-                               title="24-hour time, e.g. 07:30 or 19:45" autocomplete="off" required>
-                    </div>
+            <!-- Start | End -->
+            <div class="field-row">
+                <div class="field">
+                    <label>Start <span class="req">*</span></label>
+                    <input id="startOpe" type="text" inputmode="numeric" maxlength="5"
+                           placeholder="HH:mm" pattern="([01][0-9]|2[0-3]):[0-5][0-9]"
+                           title="24-hour time, e.g. 07:30 or 19:45" autocomplete="off" required>
                 </div>
+                <div class="field">
+                    <label>End <span class="req">*</span></label>
+                    <input id="endOpe" type="text" inputmode="numeric" maxlength="5"
+                           placeholder="HH:mm" pattern="([01][0-9]|2[0-3]):[0-5][0-9]"
+                           title="24-hour time, e.g. 07:30 or 19:45" autocomplete="off" required>
+                </div>
+            </div>
 
-                <!-- Output | Downtime -->
-                <div class="field-row">
-                    <div class="field"><label>Output <span class="req">*</span></label><input id="output" type="number" min="0" step="1" required placeholder="0"></div>
-                    <div class="field"><label>Downtime (min)</label><input id="downtimeMin" type="number" min="0" step="1" value="0"></div>
-                </div>
-
-                <!-- AUTO CALC SUMMARY -->
-                <div class="calc-box">
-                    <div class="calc-box-header">
-                        <span>Auto-Calculated Summary</span>
-                        <i class="fa-solid fa-calculator"></i>
-                    </div>
-                    <div class="calc-grid-3">
-                        <div class="calc-item"><span class="calc-label">Span (min)</span><span class="calc-value" id="aSpan">—</span></div>
-                        <div class="calc-item"><span class="calc-label">Work Hours</span><span class="calc-value" id="aHours">—</span></div>
-                        <div class="calc-item"><span class="calc-label">Cycle Time</span><span class="calc-value blue" id="aCycle">—</span></div>
-                    </div>
-                    <br />
-                    <div class="calc-grid-3">
-                        <div class="calc-item"><span class="calc-label">Target</span><span class="calc-value" id="aTarget">—</span></div>
-                        <div class="calc-item"><span class="calc-label">Target (Eased)</span><span class="calc-value" id="aTargetEased">—</span></div>
-                        <div class="calc-item"><span class="calc-label">Efficiency</span><span class="calc-value emerald" id="aEff">—</span></div>
-                    </div>
-                </div>
+            <!-- Output | Downtime -->
+            <div class="field-row">
+                <div class="field"><label>Output <span class="req">*</span></label><input id="output" type="number" min="0" step="1" required placeholder="0"></div>
+                <div class="field"><label>Downtime (min)</label><input id="downtimeMin" type="number" min="0" step="1" value="0"></div>
             </div>
 
             <!-- ACTIONS -->
             <div class="form-actions">
-                <button type="submit" class="btn btn-primary" id="submitBtn">Add Record</button>
                 <button type="button" class="btn btn-outline-emerald" id="cancelBtn">Clear Form</button>
+                <button type="submit" class="btn btn-primary" id="submitBtn">Add Record</button>
             </div>
         </form>
-    </aside>
+    </section>
 
-    <!-- ========== TABLE PANEL (RIGHT) ========== -->
-    <section class="table-panel" data-purpose="records-view-panel">
+    <!-- ▸ Bottom Split -->
+    <div class="bottom-split">
 
-        <!-- TOOLBAR -->
-        <div class="table-toolbar">
-            <div class="toolbar-item"><label>From</label><input id="searchFrom" type="date" class="mono"></div>
-            <div class="toolbar-item"><label>To</label><input id="searchTo" type="date" class="mono"></div>
-            <button id="searchBtn" class="toolbar-btn emerald" type="button"><i class="fa-solid fa-rotate"></i> Load</button>
-            <div class="toolbar-item"><input id="searchText" placeholder="Search machine, code, shop order, model…"></div>
-            <div class="toolbar-item">
-                <select id="filterShift">
+        <!-- ── Table ── -->
+        <section class="card table-section" aria-label="Production Efficiency Records">
+
+            <!-- Filter Toolbar -->
+            <div class="filter-toolbar">
+                <div class="filter-group">
+                    <label class="filter-label" for="searchFrom">From</label>
+                    <input type="date" id="searchFrom" class="filter-date">
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label" for="searchTo">To</label>
+                    <input type="date" id="searchTo" class="filter-date">
+                </div>
+
+                <button type="button" class="btn-with-icon" id="searchBtn">
+                    <span class="material-symbols-outlined" aria-hidden="true">refresh</span>
+                    <span>Load</span>
+                </button>
+
+                <input type="search" id="searchText" class="filter-input"
+                       placeholder="Search machine, code, shop order, model…" aria-label="Search records">
+
+                <select id="filterShift" class="filter-select" aria-label="Filter by shift">
                     <option value="">All shifts</option>
                     <option value="D">Day (D)</option>
                     <option value="N">Night (N)</option>
                 </select>
-            </div>
 
-            <div class="toolbar-item">
-                <select id="filterProcess">
+                <select id="filterProcess" class="filter-select" aria-label="Filter by process">
                     <option value="">All processes</option>
                 </select>
             </div>
-        </div>
 
-        <!-- TABLE -->
-        <div class="table-scroll">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Shift</th>
-                        <th>MC.#</th>
-                        <th>Shop Order/Partnumber/ Model</th>
-                        <th>Process</th>
-                        <th>Code / Full Name</th>
-                        <th>Output</th>
-                        <th>DT (min)</th>
-                        <th>Start - End</th>
-                        <th>Work Hrs</th>
-                        <th>Target</th>
-                        <th>Eff.</th>
-                        <th style="text-align:center;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody"></tbody>
-            </table>
-        </div>
-
-        <!-- FOOTER SUMMARY -->
-        <div class="pagination">
-            <div class="page-info"><strong id="recordCount">0 entries</strong></div>
-            <div class="kpis">
-                <span>Output<strong id="kOutput">0</strong></span>
-                <span>Target<strong id="kTarget">0</strong></span>
-                <span>Efficiency<strong id="kEff">—</strong></span>
+            <!-- Data Table -->
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Shift</th>
+                            <th scope="col">MC.#</th>
+                            <th scope="col">Shop Order / Partnumber / Model</th>
+                            <th scope="col">Process</th>
+                            <th scope="col">Code / Full Name</th>
+                            <th scope="col" class="text-right">Output</th>
+                            <th scope="col" class="text-right">DT (min)</th>
+                            <th scope="col">Start - End</th>
+                            <th scope="col" class="text-right">Work Hrs</th>
+                            <th scope="col" class="text-right">Target</th>
+                            <th scope="col" class="text-right">Eff.</th>
+                            <th scope="col" class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr id="empty-row">
+                            <td colspan="13">No records for this range.</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-        </div>
 
-    </section>
+            <!-- Footer -->
+            <footer class="table-footer">
+                <span id="recordCount" class="table-footer__entries">0 entries</span>
+                <div class="table-footer__stats">
+                    <div class="stat-item">
+                        <span class="stat-item__label">Output</span>
+                        <span id="kOutput" class="stat-item__value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-item__label">Target</span>
+                        <span id="kTarget" class="stat-item__value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-item__label">Efficiency</span>
+                        <span id="kEff" class="stat-item__value">—</span>
+                    </div>
+                </div>
+            </footer>
+        </section>
+
+        <!-- ── Auto-Calculated Summary ── -->
+        <aside class="summary-aside calc-box" aria-label="Auto-Calculated Summary">
+            <header class="summary-aside__header">
+                <h2>Auto-Calculated Summary</h2>
+                <span class="material-symbols-outlined" aria-hidden="true">calculate</span>
+            </header>
+
+            <div class="summary-body">
+                <div class="calc-item"><span class="calc-label">Shift</span><span class="calc-value" id="aShift">—</span></div>
+                <div class="calc-item"><span class="calc-label">Span (min)</span><span class="calc-value" id="aSpan">—</span></div>
+                <div class="calc-item"><span class="calc-label">Work Hours</span><span class="calc-value" id="aHours">—</span></div>
+                <div class="calc-item"><span class="calc-label">Cycle Time</span><span class="calc-value blue" id="aCycle">—</span></div>
+                <div class="calc-item"><span class="calc-label">Target</span><span class="calc-value" id="aTarget">—</span></div>
+                <div class="calc-item"><span class="calc-label">Target (Eased)</span><span class="calc-value" id="aTargetEased">—</span></div>
+                <div class="calc-item"><span class="calc-label">Efficiency</span><span class="calc-value emerald" id="aEff">—</span></div>
+            </div>
+        </aside>
+
+    </div>
 </main>
 
 <div id="toast" class="toast"><span id="toastMessage"></span></div>
@@ -215,13 +227,10 @@
        const byId = id => document.getElementById(id);
 
         const PROCESS_LIST = [
-            { ProcessId: 1, ProcessName: '3mm Cover Drilling' },
-            { ProcessId: 2, ProcessName: '3mm Impeller Drilling' },
-            { ProcessId: 3, ProcessName: '3mm Compound Application' },
-            { ProcessId: 4, ProcessName: '5mm Compound Application' },
-            { ProcessId: 5, ProcessName: '6mm Compound Application' },
-            { ProcessId: 6, ProcessName: '8mm Compound Application' }
-         ];
+            { ProcessId: 1, ProcessName: 'COVER DRILLING' },
+            { ProcessId: 2, ProcessName: 'IMPELLER' },
+            { ProcessId: 3, ProcessName: 'EPIFORM' }
+        ];
 
          const ICON_SUN = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
 	            <path d="M0 0h24v24H0z" fill="none" />
@@ -424,9 +433,6 @@
 
 
                // this.bindDataMenu();
-
-              
-
            }
 
            // ───────────────────────── READ ─────────────────────────
@@ -511,7 +517,7 @@
                             </div>
                         </td>
                    </tr>
-               `).join('') || '<tr><td colspan="15" class="empty">No records for this range.</td></tr>';
+               `).join('') || `<tr><td colspan="13" class="empty">No records for this range.</td></tr>`;
            }
 
            // ───────────────────────── EDIT / DELETE (row buttons, not enabled yet) ─────────────────────────
@@ -784,7 +790,7 @@
 
                // Target Less DP
                const targetless = target - dtpics;
-           
+
                const targetEfficient = targetless > 0
                    ? (output / targetless) * 100
                    : 0;
@@ -796,27 +802,26 @@
                // console.log("Target less DP: " + targetless);
                // console.log(`Final Efficiency : ${output}  / ${targetless} : ${targetEfficient}`);
                const box = document.querySelector('.calc-box');
-               box.classList.toggle('is-night', this.isNight && !!byId('startOpe').value);
+               if (box) box.classList.toggle('is-night', this.isNight && !!byId('startOpe').value);
 
+               // Null-safe writes: a missing element won't stop the rest of the calculation
+               const setText = (id, text) => {
+                   const el = byId(id);
+                   if (el) el.textContent = text;
+               };
 
-               // Display Summary
-               byId('aSpan').textContent =
-                   `${Math.floor(span / 60)}h ${span % 60}m`;
-
-               byId('aHours').textContent = workHours.toFixed(2);
-               byId('aCycle').textContent = cycleTimeSec > 0
-                   ? cycleTimeSec.toFixed(2)
-                   : '—';
-
-               byId('aTarget').textContent = target.toLocaleString();
-               byId('aTargetEased').textContent = targetEased.toLocaleString();
-               byId('aEff').textContent = `${targetEfficient.toFixed(2)}%`;
+               setText('aSpan', `${Math.floor(span / 60)}h ${span % 60}m`);
+               setText('aHours', workHours.toFixed(2));
+               setText('aCycle', cycleTimeSec > 0 ? cycleTimeSec.toFixed(2) : '—');
+               setText('aTarget', target.toLocaleString());
+               setText('aTargetEased', targetEased.toLocaleString());
+               setText('aEff', `${targetEfficient.toFixed(2)}%`);
 
                const shiftEl = byId('aShift');
-               if (byId('startOpe').value) {
-                   shiftEl.innerHTML = this.shiftBadge(this.isNight);
-               } else {
-                   shiftEl.textContent = '—';
+               if (shiftEl) {
+                   shiftEl.innerHTML = byId('startOpe').value
+                       ? this.shiftBadge(this.isNight)
+                       : '—';
                }
            }
 
@@ -1144,12 +1149,12 @@
                         }
                    },
 
-                   getItems: () => this.shopOrders.map(order => ({
-                       value: order.ShopOrder,
-                       text: order.ShopOrder,
-                       sub: `${order.Partnumber} | ${order.Model}`,
-                       data: order
-                   })),
+                   //getItems: () => this.shopOrders.map(order => ({
+                   //    value: order.ShopOrder,
+                   //    text: order.ShopOrder,
+                   //    sub: `${order.Partnumber} | ${order.Model}`,
+                   //    data: order
+                   //})),
 
                    emptyText: 'Type at least 3 characters',
                    invalidMsg: 'Select a shop order from the list.',
@@ -1253,7 +1258,7 @@
                invalidMsg = 'Select a value from the list.'
            }) {
                const input = byId(inputId);
-               let typed = false; 
+               let typed = false;
 
                if (!input) {
                    console.error(`Combo input not found: ${inputId}`);

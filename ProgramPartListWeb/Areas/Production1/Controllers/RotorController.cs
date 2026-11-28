@@ -444,14 +444,11 @@ namespace ProgramPartListWeb.Areas.Production1.Controllers
         }
 
         // GET: Production1/Rotor
-        public ActionResult Encoder()
+        public ActionResult Summary()
         {
             return View();
         }
-
-        public ActionResult Dashboard()
-        {
-            return View();
-        }
+        public ActionResult Encoder() =>  View();
+        public ActionResult Dashboard() => View();
     }
 }
